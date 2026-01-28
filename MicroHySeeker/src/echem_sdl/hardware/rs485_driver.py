@@ -1,0 +1,138 @@
+"""RS485 serial driver for pump communications."""
+
+from __future__ import annotations
+
+import threading
+import time
+from collections.abc import Callable
+
+from .rs485_protocol import FrameStreamParser, ParsedFrame
+
+try:
+    import serial  # type: ignore
+    import serial.tools.list_ports  # type: ignore
+except Exception:  # pragma: no cover - optional dependency
+    serial = None  # type: ignore
+
+from ..services.logger import LoggerService
+
+
+class RS485Driver:
+    """Threaded serial driver with incremental frame parsing."""
+
+    def __init__(self, logger: LoggerService | None = None) -> None:
+        self._logger = logger
+        self._port = serial.Serial() if serial is not None else None
+        self._write_lock = threading.Lock()
+        self._stop_event = threading.Event()
+        self._reader_thread: threading.Thread | None = None
+        self._parser = FrameStreamParser()
+
+        self._frame_handlers: list[Callable[[ParsedFrame], None]] = []
+        self._raw_handlers: list[Callable[[bytes], None]] = []
+        self._error_handlers: list[Callable[[BaseException], None]] = []
+        self._state_handlers: list[Callable[[bool], None]] = []
+
+    @staticmethod
+    def list_ports() -> list[str]:
+        if serial is None:
+            return []
+        return [p.device for p in serial.tools.list_ports.comports()]
+
+    def is_open(self) -> bool:
+        return bool(self._port and self._port.is_open)
+
+    def on_frame(self, handler: Callable[[ParsedFrame], None]) -> None:
+        self._frame_handlers.append(handler)
+
+    def on_raw(self, handler: Callable[[bytes], None]) -> None:
+        self._raw_handlers.append(handler)
+
+    def on_error(self, handler: Callable[[BaseException], None]) -> None:
+        self._error_handlers.append(handler)
+
+    def on_state(self, handler: Callable[[bool], None]) -> None:
+        self._state_handlers.append(handler)
+
+    def open(self, port: str, baudrate: int, timeout: float = 0.1) -> None:
+        if serial is None or self._port is None:
+            raise RuntimeError("pyserial is required for RS485Driver")
+        if self._port.is_open:
+            return
+
+        self._port.port = port
+        self._port.baudrate = int(baudrate)
+        self._port.timeout = float(timeout)
+        self._port.open()
+
+        self._parser.clear()
+        self._stop_event.clear()
+        self._reader_thread = threading.Thread(target=self._read_loop, daemon=True)
+        self._reader_thread.start()
+        self._emit_state(True)
+
+    def close(self) -> None:
+        if not self.is_open():
+            return
+        self._stop_event.set()
+        if self._reader_thread is not None:
+            self._reader_thread.join(timeout=0.8)
+            self._reader_thread = None
+        if self._port is not None:
+            self._port.close()
+        self._emit_state(False)
+
+    def write(self, data: bytes) -> None:
+        if not self.is_open() or self._port is None:
+            raise RuntimeError("RS485 port is not open")
+        with self._write_lock:
+            self._port.write(data)
+
+    def dispose(self) -> None:
+        self.close()
+
+    def _read_loop(self) -> None:
+        assert self._port is not None
+        while not self._stop_event.is_set():
+            try:
+                waiting = self._port.in_waiting
+                if not waiting:
+                    time.sleep(0.01)
+                    continue
+                data = self._port.read(waiting)
+                if not data:
+                    continue
+
+                for handler in list(self._raw_handlers):
+                    try:
+                        handler(data)
+                    except Exception:
+                        pass
+
+                frames = self._parser.push(data)
+                for frame in frames:
+                    for handler in list(self._frame_handlers):
+                        try:
+                            handler(frame)
+                        except Exception:
+                            pass
+            except Exception as exc:
+                self._log_error("rs485 read loop error", exc)
+                for handler in list(self._error_handlers):
+                    try:
+                        handler(exc)
+                    except Exception:
+                        pass
+                time.sleep(0.1)
+
+    def _emit_state(self, open_state: bool) -> None:
+        for handler in list(self._state_handlers):
+            try:
+                handler(open_state)
+            except Exception:
+                pass
+
+    def _log_error(self, msg: str, exc: BaseException) -> None:
+        if self._logger is not None:
+            self._logger.error(msg)
+            self._logger.exception(msg, exc=exc)

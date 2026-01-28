@@ -1,0 +1,10 @@
+{
+  "language": "zh_CN",
+  "rs485_port": "COM1",
+  "rs485_baudrate": 9600,
+  "stop_on_error": false,
+  "data_path": "./data",
+  "ocpt_enabled": true,
+  "channels": [],
+  "flush_settings": []
+}
