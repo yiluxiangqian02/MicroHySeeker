@@ -1,0 +1,53 @@
+{
+  "program_id": "example_program_001",
+  "program_name": "示例程序",
+  "ocpt_enabled": true,
+  "notes": "这是一个示例实验程序",
+  "created_at": "2026-01-28",
+  "modified_at": "2026-01-28",
+  "steps": [
+    {
+      "step_id": 1,
+      "step_type": "配液",
+      "step_name": "初始配液",
+      "solution_type": "溶液A",
+      "high_concentration": 1.0,
+      "target_volume": 10.0,
+      "volume_unit": "mL",
+      "pump_address": 1,
+      "pump_speed": 10.0,
+      "enabled": true,
+      "notes": "配制初始溶液"
+    },
+    {
+      "step_id": 2,
+      "step_type": "电化学",
+      "step_name": "电位扫描",
+      "potential": 0.5,
+      "current_limit": 0.1,
+      "duration": 60.0,
+      "ocpt_enabled": true,
+      "enabled": true,
+      "notes": "从 0V 扫描到 1V"
+    },
+    {
+      "step_id": 3,
+      "step_type": "冲洗",
+      "step_name": "系统冲洗",
+      "flush_pump_address": 10,
+      "flush_volume": 5.0,
+      "flush_cycles": 3,
+      "flush_direction": "正向",
+      "enabled": true,
+      "notes": "使用冲洗泵清洗系统"
+    },
+    {
+      "step_id": 4,
+      "step_type": "空白",
+      "step_name": "等待",
+      "delay_time": 10.0,
+      "enabled": true,
+      "notes": "等待系统稳定"
+    }
+  ]
+}

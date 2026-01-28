@@ -1,0 +1,22 @@
+{
+  "locale": "zh",
+  "data_path": "data/",
+  "export_dir": "exports/",
+  "diluter_pumps": [
+    {"name": "A", "address": 1, "high_conc": 1.0, "pump_speed": 120, "divpermL": 19416},
+    {"name": "B", "address": 2, "high_conc": 0.5, "pump_speed": 100, "divpermL": 20000},
+    {"name": "C", "address": 3, "high_conc": 1.0, "pump_speed": 100, "divpermL": 19416},
+    {"name": "D", "address": 4, "high_conc": 1.0, "pump_speed": 100, "divpermL": 19416},
+    {"name": "E", "address": 5, "high_conc": 1.0, "pump_speed": 100, "divpermL": 19416},
+    {"name": "F", "address": 6, "high_conc": 1.0, "pump_speed": 100, "divpermL": 19416}
+  ],
+  "flusher_pumps": {
+    "inlet":   {"address": 10, "pump_rpm": 200, "direction": "forward", "cycle_duration": 30},
+    "outlet":  {"address": 11, "pump_rpm": 200, "direction": "forward", "cycle_duration": 30},
+    "transfer":{"address": 12, "pump_rpm": 200, "direction": "forward", "cycle_duration": 30}
+  },
+  "rs485": {"port": "COM3", "baudrate": 38400},
+  "positioner": {"port": "COM5", "baudrate": 115200},
+  "kafka": {"bootstrap.servers": "broker:9092", "username": "", "password": ""},
+  "engineering_mode": false
+}
