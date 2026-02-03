@@ -13,7 +13,7 @@ class ProgramStepType(str, Enum):
     TRANSFER = "transfer"
     PREP_SOL = "prep_sol"
     FLUSH = "flush"
-    EChem = "echem"
+    ECHEM = "echem"
     BLANK = "blank"
     EVACUATE = "evacuate"  # 排空 - Flusher的outlet阶段
 
