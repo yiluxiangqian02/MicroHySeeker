@@ -34,10 +34,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    
-    # 运行应用
-    sys.exit(app.exec())
-
-
-if __name__ == "__main__":
-    main()
