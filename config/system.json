@@ -1,0 +1,119 @@
+{
+  "rs485_port": "COM3",
+  "rs485_baudrate": 38400,
+  "mock_mode": false,
+  "pumps": [
+    {
+      "address": 1,
+      "name": "Pump_1",
+      "direction": "FWD",
+      "default_rpm": 120,
+      "calibration": {
+        "ul_per_sec": 0.5
+      }
+    },
+    {
+      "address": 2,
+      "name": "Pump_2",
+      "direction": "FWD",
+      "default_rpm": 120,
+      "calibration": {
+        "ul_per_sec": 0.5
+      }
+    },
+    {
+      "address": 3,
+      "name": "Pump_3",
+      "direction": "FWD",
+      "default_rpm": 120,
+      "calibration": {
+        "ul_per_sec": 0.5
+      }
+    },
+    {
+      "address": 4,
+      "name": "Pump_4",
+      "direction": "FWD",
+      "default_rpm": 120,
+      "calibration": {
+        "ul_per_sec": 0.5
+      }
+    },
+    {
+      "address": 5,
+      "name": "Pump_5",
+      "direction": "FWD",
+      "default_rpm": 120,
+      "calibration": {
+        "ul_per_sec": 0.5
+      }
+    },
+    {
+      "address": 6,
+      "name": "Pump_6",
+      "direction": "FWD",
+      "default_rpm": 120,
+      "calibration": {
+        "ul_per_sec": 0.5
+      }
+    },
+    {
+      "address": 7,
+      "name": "Pump_7",
+      "direction": "FWD",
+      "default_rpm": 120,
+      "calibration": {
+        "ul_per_sec": 0.5
+      }
+    },
+    {
+      "address": 8,
+      "name": "Pump_8",
+      "direction": "FWD",
+      "default_rpm": 120,
+      "calibration": {
+        "ul_per_sec": 0.5
+      }
+    },
+    {
+      "address": 9,
+      "name": "Pump_9",
+      "direction": "FWD",
+      "default_rpm": 120,
+      "calibration": {
+        "ul_per_sec": 0.5
+      }
+    },
+    {
+      "address": 10,
+      "name": "Pump_10",
+      "direction": "FWD",
+      "default_rpm": 120,
+      "calibration": {
+        "ul_per_sec": 0.5
+      }
+    },
+    {
+      "address": 11,
+      "name": "Pump_11",
+      "direction": "FWD",
+      "default_rpm": 120,
+      "calibration": {
+        "ul_per_sec": 0.5
+      }
+    },
+    {
+      "address": 12,
+      "name": "Pump_12",
+      "direction": "FWD",
+      "default_rpm": 120,
+      "calibration": {
+        "ul_per_sec": 0.5
+      }
+    }
+  ],
+  "dilution_channels": [],
+  "flush_channels": [],
+  "calibration_data": {},
+  "data_dir": "./data"
+}
