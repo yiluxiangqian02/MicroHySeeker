@@ -5,6 +5,34 @@
   "stop_on_error": false,
   "data_path": "./data",
   "ocpt_enabled": true,
-  "channels": [],
-  "flush_settings": []
+  "dilution_channels": [
+    {
+      "channel_id": "1",
+      "solution_name": "H2SO4 (酸)",
+      "stock_concentration": 1.0,
+      "pump_address": 1,
+      "direction": "FWD",
+      "default_rpm": 120,
+      "color": "#FF4444"
+    },
+    {
+      "channel_id": "2",
+      "solution_name": "NaOH (碱)",
+      "stock_concentration": 1.0,
+      "pump_address": 2,
+      "direction": "FWD",
+      "default_rpm": 120,
+      "color": "#4444FF"
+    },
+    {
+      "channel_id": "3",
+      "solution_name": "去离子水 (溶剂)",
+      "stock_concentration": 0.0,
+      "pump_address": 3,
+      "direction": "FWD",
+      "default_rpm": 150,
+      "color": "#44FF44"
+    }
+  ],
+  "flush_channels": []
 }

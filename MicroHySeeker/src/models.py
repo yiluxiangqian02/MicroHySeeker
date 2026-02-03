@@ -60,12 +60,17 @@ class DilutionChannel:
     direction: str = "FWD"
     default_rpm: int = 120
     color: str = "#00FF00"
+    tube_diameter_mm: float = 1.0  # 管道内径 (mm)，用于计算位移和体积
 
     def to_dict(self) -> Dict[str, Any]:
         return asdict(self)
 
     @staticmethod
     def from_dict(data: Dict[str, Any]) -> 'DilutionChannel':
+        # 向后兼容: 旧配置可能没有tube_diameter_mm
+        data = data.copy()
+        if 'tube_diameter_mm' not in data:
+            data['tube_diameter_mm'] = 1.0
         return DilutionChannel(**data)
 
 
@@ -79,12 +84,17 @@ class FlushChannel:
     rpm: int = 100
     cycle_duration_s: float = 30.0
     work_type: str = "Transfer"  # Inlet, Transfer, Outlet
+    tube_diameter_mm: float = 1.0  # 管道内径 (mm)，用于计算位移和体积
 
     def to_dict(self) -> Dict[str, Any]:
         return asdict(self)
 
     @staticmethod
     def from_dict(data: Dict[str, Any]) -> 'FlushChannel':
+        # 向后兼容: 旧配置可能没有tube_diameter_mm
+        data = data.copy()
+        if 'tube_diameter_mm' not in data:
+            data['tube_diameter_mm'] = 1.0
         return FlushChannel(**data)
 
 

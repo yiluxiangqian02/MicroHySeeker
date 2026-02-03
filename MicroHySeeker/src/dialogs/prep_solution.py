@@ -43,13 +43,34 @@ class PrepSolutionWorker(QThread):
     def run(self):
         """执行配液 - 后端接口调用点"""
         try:
-            # 计算各溶液注入量
+            # 1. 先配置配液通道
+            if not self.rs485.is_connected():
+                self.progress.emit(0, "错误：RS485未连接")
+                self.finished.emit(False)
+                return
+            
+            self.progress.emit(5, "配置配液通道...")
+            success = self.rs485.configure_dilution_channels(self.channels)
+            if not success:
+                self.progress.emit(0, "错误：配置通道失败")
+                self.finished.emit(False)
+                return
+            
+            # 2. 计算各溶液注入量
             volumes = self._calculate_volumes()
             
             total_steps = len([v for v in volumes if v > 0])
+            if total_steps == 0:
+                self.progress.emit(0, "错误：没有需要注入的溶液")
+                self.finished.emit(False)
+                return
+            
             current_step = 0
             
-            for i, (ch, vol) in enumerate(zip(self.channels, volumes)):
+            # 3. 依次执行配液
+            for i, (ch, vol, target, is_solvent) in enumerate(zip(
+                self.channels, volumes, self.target_concs, self.is_solvents
+            )):
                 if self._abort:
                     self.progress.emit(0, "配液已取消")
                     self.finished.emit(False)
@@ -59,22 +80,90 @@ class PrepSolutionWorker(QThread):
                     continue
                 
                 current_step += 1
-                progress = int(current_step / total_steps * 100)
-                self.progress.emit(progress, f"正在注入 {ch.solution_name}: {vol:.2f} μL")
+                base_progress = int(((current_step - 1) / total_steps) * 90) + 10
                 
-                # === 后端接口调用 ===
-                # self.rs485.start_pump(ch.pump_address, ch.direction, ch.default_rpm)
-                # 计算注入时间（基于校准参数）
-                # time.sleep(inject_time)
-                # self.rs485.stop_pump(ch.pump_address)
+                # 准备配液
+                channel_id = ch.pump_address
+                self.progress.emit(
+                    base_progress, 
+                    f"准备通道 {channel_id} ({ch.solution_name}): {vol:.2f} μL"
+                )
                 
-                # 模拟延时
-                self.msleep(500)
+                # 使用准备方法计算体积（如果不是溶剂）
+                if not is_solvent:
+                    calc_vol = self.rs485.prepare_dilution(
+                        channel_id, 
+                        target, 
+                        self.total_volume
+                    )
+                    if abs(calc_vol - vol) > 1.0:  # 允许1μL误差
+                        print(f"⚠️ 体积计算差异: 预期{vol:.2f}μL, 实际{calc_vol:.2f}μL")
+                        vol = calc_vol
+                
+                # 开始配液
+                self.progress.emit(
+                    base_progress + 2,
+                    f"注入 {ch.solution_name}: {vol:.2f} μL"
+                )
+                
+                success = self.rs485.start_dilution(channel_id, vol)
+                if not success:
+                    self.progress.emit(0, f"错误：启动通道 {channel_id} 失败")
+                    self.finished.emit(False)
+                    return
+                
+                # 等待配液完成
+                import time
+                from echem_sdl.hardware.diluter import Diluter
+                duration = Diluter.calculate_duration(vol, ch.default_rpm)
+                max_wait = duration + 5.0  # 最多等待额外5秒
+                start_time = time.time()
+                
+                while True:
+                    if self._abort:
+                        self.rs485.stop_dilution(channel_id)
+                        self.progress.emit(0, "配液已取消")
+                        self.finished.emit(False)
+                        return
+                    
+                    # 查询进度
+                    progress_info = self.rs485.get_dilution_progress(channel_id)
+                    state = progress_info.get('state', 'unknown')
+                    percent = progress_info.get('progress', 0)
+                    
+                    # 更新显示
+                    step_progress = base_progress + int(percent * 0.8)  # 每步最多80%进度
+                    self.progress.emit(
+                        step_progress,
+                        f"注入 {ch.solution_name}: {percent:.1f}%"
+                    )
+                    
+                    if state == 'completed':
+                        break
+                    elif state == 'error':
+                        self.progress.emit(0, f"错误：通道 {channel_id} 配液失败")
+                        self.finished.emit(False)
+                        return
+                    
+                    # 超时检查
+                    if time.time() - start_time > max_wait:
+                        self.progress.emit(0, f"错误：通道 {channel_id} 配液超时")
+                        self.finished.emit(False)
+                        return
+                    
+                    self.msleep(200)  # 每200ms查询一次
+                
+                self.progress.emit(
+                    base_progress + 8,
+                    f"通道 {channel_id} ({ch.solution_name}) 完成"
+                )
             
             self.progress.emit(100, "配液完成")
             self.finished.emit(True)
             
         except Exception as e:
+            import traceback
+            traceback.print_exc()
             self.progress.emit(0, f"配液失败: {e}")
             self.finished.emit(False)
     
@@ -248,10 +337,13 @@ class PrepSolutionDialog(QDialog):
             QMessageBox.warning(self, "警告", "请至少设置一个目标浓度或选择溶剂")
             return
         
+        # 将mL转换为μL（UI显示mL，后端使用μL）
+        total_volume_ul = self.total_vol_spin.value() * 1000.0
+        
         # 启动工作线程
         self.worker = PrepSolutionWorker(
             channels, target_concs, is_solvents,
-            self.total_vol_spin.value(), self.rs485
+            total_volume_ul, self.rs485
         )
         self.worker.progress.connect(self._on_progress)
         self.worker.finished.connect(self._on_finished)

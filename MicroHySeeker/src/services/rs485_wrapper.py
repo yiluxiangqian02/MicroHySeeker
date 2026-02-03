@@ -551,10 +551,60 @@ class RS485Wrapper:
 # 全局单例
 _rs485_instance: Optional[RS485Wrapper] = None
 
-def get_rs485_instance() -> RS485Wrapper:
-    """获取RS485实例单例"""
+def get_rs485_instance(force_reload: bool = False) -> RS485Wrapper:
+    """获取RS485实例单例
+    
+    Args:
+        force_reload: 强制重新创建实例（用于配置更改后重载）
+    
+    Mock模式下自动连接，无需真实串口。
+    """
     global _rs485_instance
-    if _rs485_instance is None:
+    if _rs485_instance is None or force_reload:
+        if _rs485_instance and force_reload:
+            try:
+                _rs485_instance.close_port()
+            except:
+                pass
+        
         _rs485_instance = RS485Wrapper()
-        _rs485_instance.set_mock_mode(True)
+        
+        # 读取系统配置确定模式
+        try:
+            import json
+            from pathlib import Path
+            config_path = Path("config/system.json")
+            
+            if config_path.exists():
+                with open(config_path, 'r', encoding='utf-8') as f:
+                    config = json.load(f)
+                mock_mode = config.get('mock_mode', True)
+                rs485_port = config.get('rs485_port', 'COM3')
+                baudrate = config.get('rs485_baudrate', 38400)
+            else:
+                mock_mode = True
+                rs485_port = 'COM3'
+                baudrate = 38400
+            
+        except Exception as e:
+            print(f"⚠️ 读取配置失败，使用默认Mock模式: {e}")
+            mock_mode = True
+            rs485_port = 'COM3'
+            baudrate = 38400
+        
+        _rs485_instance.set_mock_mode(mock_mode)
+        
+        # 自动连接
+        if mock_mode:
+            _rs485_instance.open_port("MOCK_PORT", baudrate)
+            print("✅ RS485Wrapper: Mock模式自动连接完成")
+        else:
+            success = _rs485_instance.open_port(rs485_port, baudrate)
+            if success:
+                print(f"✅ RS485Wrapper: 真实硬件模式连接成功 ({rs485_port})")
+            else:
+                print(f"❌ RS485Wrapper: 真实硬件连接失败，回退到Mock模式")
+                _rs485_instance.set_mock_mode(True)
+                _rs485_instance.open_port("MOCK_PORT", baudrate)
+    
     return _rs485_instance

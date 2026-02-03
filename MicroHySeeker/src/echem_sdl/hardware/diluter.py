@@ -3,12 +3,22 @@ Diluter - 配液器驱动模块
 
 控制单通道蠕动泵进行精确体积注液。
 支持Mock模式和真实硬件模式。
+支持两种控制模式：
+1. 速度模式（传统）：基于时间估算的注液
+2. 位置模式（SR_VFOC）：基于编码器位移的精确控制
 """
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import Enum
 from typing import Optional, Callable
 import threading
 import time
+import math
+
+from ..utils.constants import (
+    ENCODER_DIVISIONS_PER_REV,
+    DEFAULT_DILUTION_ACCELERATION,
+    DEFAULT_DILUTION_SPEED,
+)
 
 
 class DiluterState(Enum):
@@ -28,6 +38,11 @@ class DiluterConfig:
     ul_per_division: float = 0.1    # 每分度对应的微升数（标定因子）
     default_rpm: int = 120          # 默认转速
     default_direction: str = "FWD"  # 默认方向
+    tube_diameter_mm: float = 1.0   # 管道内径 (mm)，用于位置模式计算
+    
+    # 位置模式校准参数 (由校准流程填充)
+    ul_per_encoder_count: float = 0.0  # 每编码器计数对应的微升数 (校准值)
+    calibration_valid: bool = False    # 校准是否有效
 
 
 class Diluter:
@@ -229,11 +244,22 @@ class Diluter:
         # 真实硬件：通过 PumpManager 启动泵
         try:
             direction = "FWD" if forward else "REV"
+            
+            # 已知响应不稳定的泵，自动使用fire_and_forget模式
+            RESPONSE_UNSTABLE_PUMPS = [1, 11]
+            use_fire_and_forget = self.config.address in RESPONSE_UNSTABLE_PUMPS
+            
+            if use_fire_and_forget and self._logger:
+                self._logger.warning(
+                    f"{self.config.name} (地址{self.config.address}) 响应不稳定，使用fire_and_forget模式",
+                    module="Diluter"
+                )
+            
             success = self._pump_manager.start_pump(
                 self.config.address,
                 direction,
                 rpm,
-                fire_and_forget=False
+                fire_and_forget=use_fire_and_forget
             )
             
             if success:
@@ -291,8 +317,16 @@ class Diluter:
         
         # 真实硬件：通过 PumpManager 停止泵
         try:
-            success = self._pump_manager.stop_pump(self.config.address)
-            if success:
+            # 已知响应不稳定的泵，自动使用fire_and_forget模式
+            RESPONSE_UNSTABLE_PUMPS = [1, 11]
+            use_fire_and_forget = self.config.address in RESPONSE_UNSTABLE_PUMPS
+            
+            success = self._pump_manager.stop_pump(
+                self.config.address, 
+                fire_and_forget=use_fire_and_forget
+            )
+            
+            if success or use_fire_and_forget:
                 self._state = DiluterState.IDLE
                 if self._logger:
                     self._logger.info(f"{self.config.name} 注液已停止", module="Diluter")
@@ -410,7 +444,14 @@ class Diluter:
         # 停止泵
         if not self._mock_mode:
             try:
-                self._pump_manager.stop_pump(self.config.address)
+                # 已知响应不稳定的泵，自动使用fire_and_forget模式
+                RESPONSE_UNSTABLE_PUMPS = [1, 11]
+                use_fire_and_forget = self.config.address in RESPONSE_UNSTABLE_PUMPS
+                
+                self._pump_manager.stop_pump(
+                    self.config.address, 
+                    fire_and_forget=use_fire_and_forget
+                )
             except:
                 pass
         
@@ -421,3 +462,230 @@ class Diluter:
             except Exception as e:
                 if self._logger:
                     self._logger.error(f"回调函数执行失败: {e}", module="Diluter")
+
+    # ==================== SR_VFOC 位置模式方法 ====================
+
+    def calculate_encoder_counts(self, volume_ul: float) -> int:
+        """计算指定体积对应的编码器计数
+        
+        使用校准系数将体积转换为编码器位移。
+        如果没有校准，使用默认估算值。
+        
+        Args:
+            volume_ul: 体积 (μL)
+            
+        Returns:
+            int: 编码器计数 (16384 = 1圈)
+        """
+        if self.config.calibration_valid and self.config.ul_per_encoder_count > 0:
+            # 使用校准值
+            counts = int(volume_ul / self.config.ul_per_encoder_count)
+        else:
+            # 使用默认估算: 假设每圈100μL (典型蠕动泵)
+            ul_per_rev = 100.0  # 每圈微升数
+            revolutions = volume_ul / ul_per_rev
+            counts = int(revolutions * ENCODER_DIVISIONS_PER_REV)
+        
+        if self._logger:
+            revolutions = counts / ENCODER_DIVISIONS_PER_REV
+            self._logger.debug(
+                f"{self.config.name}: {volume_ul:.2f}μL -> {counts} counts ({revolutions:.3f}圈)",
+                module="Diluter"
+            )
+        
+        return counts
+
+    def infuse_by_position(
+        self,
+        volume_ul: Optional[float] = None,
+        speed: int = DEFAULT_DILUTION_SPEED,
+        acceleration: int = DEFAULT_DILUTION_ACCELERATION,
+        forward: bool = True,
+        wait_complete: bool = True,
+        timeout_s: float = 60.0,
+        callback: Optional[Callable] = None,
+    ) -> bool:
+        """使用位置模式进行精确注液（推荐用于SR_VFOC模式）
+        
+        使用编码器位置精确控制位移量，不依赖时间估算。
+        这是SR_VFOC矢量控制模式下推荐的配液方式。
+        
+        Args:
+            volume_ul: 注液体积 (μL)，默认使用prepare设置的值
+            speed: 运行速度 (RPM, 0-3000), 默认100
+            acceleration: 加速度参数 (0-255), 默认2(平滑)
+            forward: 方向，True=正转(出液), False=反转(吸液)
+            wait_complete: 是否等待完成
+            timeout_s: 等待超时（秒）
+            callback: 完成回调函数
+            
+        Returns:
+            bool: 是否成功
+            
+        Example:
+            >>> diluter.infuse_by_position(volume_ul=100, speed=150)
+            True
+        """
+        if self.is_infusing:
+            if self._logger:
+                self._logger.warning(
+                    f"{self.config.name} 正在注液中，无法重复启动", 
+                    module="Diluter"
+                )
+            return False
+        
+        # 设置体积
+        if volume_ul is not None:
+            self.target_volume_ul = volume_ul
+        
+        if self.target_volume_ul <= 0:
+            if self._logger:
+                self._logger.warning(
+                    f"{self.config.name} 目标体积为0，跳过注液", 
+                    module="Diluter"
+                )
+            return False
+        
+        # 保存回调
+        self._completion_callback = callback
+        
+        # 计算编码器位移
+        encoder_counts = self.calculate_encoder_counts(self.target_volume_ul)
+        
+        # 方向处理
+        if not forward:
+            encoder_counts = -encoder_counts
+        
+        # 更新状态
+        self._state = DiluterState.INFUSING
+        self.infused_volume_ul = 0.0
+        self._start_time = time.time()
+        
+        if self._logger:
+            direction_text = "正转(出液)" if forward else "反转(吸液)"
+            self._logger.info(
+                f"开始位置模式注液: {self.config.name}, "
+                f"体积={self.target_volume_ul:.2f}μL, "
+                f"编码器={encoder_counts} counts, "
+                f"速度={speed}RPM, {direction_text}",
+                module="Diluter"
+            )
+        
+        # Mock模式：模拟注液
+        if self._mock_mode:
+            # 计算模拟时间
+            revolutions = abs(encoder_counts) / ENCODER_DIVISIONS_PER_REV
+            minutes = revolutions / speed if speed > 0 else 0
+            duration = minutes * 60.0
+            
+            def mock_complete():
+                self.infused_volume_ul = self.target_volume_ul
+                self._state = DiluterState.COMPLETED
+                if self._logger:
+                    self._logger.info(
+                        f"{self.config.name} 位置模式注液完成 (Mock): "
+                        f"{self.target_volume_ul:.2f}μL",
+                        module="Diluter"
+                    )
+                if self._completion_callback:
+                    try:
+                        self._completion_callback()
+                    except Exception as e:
+                        if self._logger:
+                            self._logger.error(f"回调函数执行失败: {e}", module="Diluter")
+            
+            if wait_complete:
+                time.sleep(duration)
+                mock_complete()
+            else:
+                self._progress_timer = threading.Timer(duration, mock_complete)
+                self._progress_timer.start()
+            
+            return True
+        
+        # 真实硬件：使用PumpManager的位置控制
+        try:
+            success = self._pump_manager.dispense_by_encoder(
+                addr=self.config.address,
+                encoder_counts=encoder_counts,
+                speed=speed,
+                acceleration=acceleration,
+                wait_complete=wait_complete,
+                timeout_s=timeout_s,
+            )
+            
+            if success:
+                self.infused_volume_ul = self.target_volume_ul
+                self._state = DiluterState.COMPLETED
+                
+                if self._logger:
+                    elapsed = time.time() - self._start_time
+                    self._logger.info(
+                        f"{self.config.name} 位置模式注液完成: "
+                        f"{self.target_volume_ul:.2f}μL, 耗时 {elapsed:.1f}s",
+                        module="Diluter"
+                    )
+                
+                # 执行回调
+                if self._completion_callback:
+                    try:
+                        self._completion_callback()
+                    except Exception as e:
+                        if self._logger:
+                            self._logger.error(f"回调函数执行失败: {e}", module="Diluter")
+                
+                return True
+            else:
+                self._state = DiluterState.ERROR
+                if self._logger:
+                    self._logger.error(
+                        f"{self.config.name} 位置模式注液失败", 
+                        module="Diluter"
+                    )
+                return False
+                
+        except Exception as e:
+            self._state = DiluterState.ERROR
+            if self._logger:
+                self._logger.error(
+                    f"{self.config.name} 位置模式注液异常: {e}", 
+                    module="Diluter"
+                )
+            return False
+
+    def read_current_position(self) -> Optional[int]:
+        """读取当前编码器位置
+        
+        Returns:
+            int | None: 编码器累加值，None表示读取失败
+        """
+        if self._mock_mode:
+            return 0
+        
+        try:
+            return self._pump_manager.read_encoder_accum(self.config.address)
+        except Exception as e:
+            if self._logger:
+                self._logger.debug(f"{self.config.name} 读取编码器失败: {e}", module="Diluter")
+            return None
+
+    def set_calibration(self, ul_per_encoder_count: float) -> None:
+        """设置校准参数
+        
+        Args:
+            ul_per_encoder_count: 每编码器计数对应的微升数
+        """
+        self.config.ul_per_encoder_count = ul_per_encoder_count
+        self.config.calibration_valid = ul_per_encoder_count > 0
+        
+        if self._logger:
+            if self.config.calibration_valid:
+                ul_per_rev = ul_per_encoder_count * ENCODER_DIVISIONS_PER_REV
+                self._logger.info(
+                    f"{self.config.name} 校准设置: "
+                    f"{ul_per_encoder_count:.6f} μL/count, "
+                    f"{ul_per_rev:.2f} μL/圈",
+                    module="Diluter"
+                )
+            else:
+                self._logger.info(f"{self.config.name} 校准已清除", module="Diluter")

@@ -31,7 +31,7 @@ STEP_TYPE_COLORS = {
     ProgramStepType.TRANSFER: "#2196F3",   # 蓝色 - 移液
     ProgramStepType.PREP_SOL: "#4CAF50",   # 绿色 - 配液
     ProgramStepType.FLUSH: "#FF9800",      # 橙色 - 冲洗
-    ProgramStepType.EChem: "#9C27B0",      # 紫色 - 电化学
+    ProgramStepType.ECHEM: "#9C27B0",      # 紫色 - 电化学
     ProgramStepType.BLANK: "#607D8B",      # 灰色 - 空白
     ProgramStepType.EVACUATE: "#795548",   # 棕色 - 排空
 }
@@ -40,7 +40,7 @@ STEP_TYPE_NAMES = {
     ProgramStepType.TRANSFER: "移液",
     ProgramStepType.PREP_SOL: "配液",
     ProgramStepType.FLUSH: "冲洗",
-    ProgramStepType.EChem: "电化学",
+    ProgramStepType.ECHEM: "电化学",
     ProgramStepType.BLANK: "空白",
     ProgramStepType.EVACUATE: "排空",
 }

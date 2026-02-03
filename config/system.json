@@ -1,7 +1,7 @@
 {
   "rs485_port": "COM3",
   "rs485_baudrate": 38400,
-  "mock_mode": false,
+  "mock_mode": true,
   "pumps": [
     {
       "address": 1,
@@ -112,7 +112,35 @@
       }
     }
   ],
-  "dilution_channels": [],
+  "dilution_channels": [
+    {
+      "channel_id": "1",
+      "solution_name": "fe",
+      "stock_concentration": 1.0,
+      "pump_address": 1,
+      "direction": "FWD",
+      "default_rpm": 100,
+      "color": "#00FF00"
+    },
+    {
+      "channel_id": "2",
+      "solution_name": "cu",
+      "stock_concentration": 0.5,
+      "pump_address": 2,
+      "direction": "FWD",
+      "default_rpm": 100,
+      "color": "#00FF00"
+    },
+    {
+      "channel_id": "3",
+      "solution_name": "h2o",
+      "stock_concentration": 1.0,
+      "pump_address": 3,
+      "direction": "FWD",
+      "default_rpm": 120,
+      "color": "#00FF00"
+    }
+  ],
   "flush_channels": [],
   "calibration_data": {},
   "data_dir": "./data"

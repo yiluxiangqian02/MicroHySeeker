@@ -175,6 +175,13 @@ class ConfigDialog(QDialog):
         self.dil_rpm_input.setValue(120)
         input_layout.addRow("转速(RPM):", self.dil_rpm_input)
         
+        self.dil_tube_input = QDoubleSpinBox()
+        self.dil_tube_input.setRange(0.1, 10.0)
+        self.dil_tube_input.setDecimals(2)
+        self.dil_tube_input.setSingleStep(0.1)
+        self.dil_tube_input.setValue(1.0)
+        input_layout.addRow("管道内径(mm):", self.dil_tube_input)
+        
         self.dil_color_btn = QPushButton()
         self.dil_color_btn.setStyleSheet("background-color: #00FF00; border: 1px solid #ccc;")
         self.dil_color_btn.setFixedSize(80, 25)
@@ -198,11 +205,11 @@ class ConfigDialog(QDialog):
         btn_layout.addStretch()
         layout.addLayout(btn_layout)
         
-        # 表格列：通道(序号), 溶液名称, 原浓度(mol/L), 泵地址, 方向, 转速(RPM), 颜色
+        # 表格列：通道(序号), 溶液名称, 原浓度(mol/L), 泵地址, 方向, 转速(RPM), 管道内径(mm), 颜色
         self.dilution_table = QTableWidget()
-        self.dilution_table.setColumnCount(7)
+        self.dilution_table.setColumnCount(8)
         self.dilution_table.setHorizontalHeaderLabels([
-            "通道", "溶液名称", "原浓度(mol/L)", "泵地址", "方向", "转速(RPM)", "颜色"
+            "通道", "溶液名称", "原浓度(mol/L)", "泵地址", "方向", "转速(RPM)", "管道内径(mm)", "颜色"
         ])
         self.dilution_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.dilution_table.setFont(FONT_NORMAL)
@@ -242,6 +249,13 @@ class ConfigDialog(QDialog):
         self.flush_duration_input.setValue(30.00)
         input_layout.addRow("循环时长(秒):", self.flush_duration_input)
         
+        self.flush_tube_input = QDoubleSpinBox()
+        self.flush_tube_input.setRange(0.1, 10.0)
+        self.flush_tube_input.setDecimals(2)
+        self.flush_tube_input.setSingleStep(0.1)
+        self.flush_tube_input.setValue(1.0)
+        input_layout.addRow("管道内径(mm):", self.flush_tube_input)
+        
         layout.addWidget(input_group)
         
         # 按钮
@@ -258,11 +272,11 @@ class ConfigDialog(QDialog):
         btn_layout.addStretch()
         layout.addLayout(btn_layout)
         
-        # 表格列：通道, 泵地址, 方向, 工作类型, 转速(RPM), 循环时长(s)
+        # 表格列：通道, 泵地址, 方向, 工作类型, 转速(RPM), 循环时长(s), 管道内径(mm)
         self.flush_table = QTableWidget()
-        self.flush_table.setColumnCount(6)
+        self.flush_table.setColumnCount(7)
         self.flush_table.setHorizontalHeaderLabels([
-            "通道", "泵地址", "方向", "工作类型", "转速(RPM)", "循环时长(s)"
+            "通道", "泵地址", "方向", "工作类型", "转速(RPM)", "循环时长(s)", "管道内径(mm)"
         ])
         self.flush_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.flush_table.setFont(FONT_NORMAL)
@@ -342,11 +356,20 @@ class ConfigDialog(QDialog):
             rpm_spin.valueChanged.connect(lambda val, r=row: self._on_dilution_param_changed(r, 'default_rpm', val))
             self.dilution_table.setCellWidget(row, 5, rpm_spin)
             
+            # 管道内径 (可编辑)
+            tube_spin = QDoubleSpinBox()
+            tube_spin.setRange(0.1, 10.0)
+            tube_spin.setDecimals(2)
+            tube_spin.setSingleStep(0.1)
+            tube_spin.setValue(channel.tube_diameter_mm)
+            tube_spin.valueChanged.connect(lambda val, r=row: self._on_dilution_param_changed(r, 'tube_diameter_mm', val))
+            self.dilution_table.setCellWidget(row, 6, tube_spin)
+            
             # 颜色按钮
             color_btn = QPushButton()
             color_btn.setStyleSheet(f"background-color: {channel.color}; border: none;")
             color_btn.setFixedSize(60, 25)
-            self.dilution_table.setCellWidget(row, 6, color_btn)
+            self.dilution_table.setCellWidget(row, 7, color_btn)
     
     def _on_dilution_param_changed(self, row: int, field: str, value):
         """配液通道参数变更"""
@@ -400,6 +423,15 @@ class ConfigDialog(QDialog):
             dur_spin.setValue(channel.cycle_duration_s)
             dur_spin.valueChanged.connect(lambda val, r=row: self._on_flush_param_changed(r, 'cycle_duration_s', val))
             self.flush_table.setCellWidget(row, 5, dur_spin)
+            
+            # 管道内径 (可编辑)
+            tube_spin = QDoubleSpinBox()
+            tube_spin.setRange(0.1, 10.0)
+            tube_spin.setDecimals(2)
+            tube_spin.setSingleStep(0.1)
+            tube_spin.setValue(channel.tube_diameter_mm)
+            tube_spin.valueChanged.connect(lambda val, r=row: self._on_flush_param_changed(r, 'tube_diameter_mm', val))
+            self.flush_table.setCellWidget(row, 6, tube_spin)
     
     def _on_flush_param_changed(self, row: int, field: str, value):
         """冲洗通道参数变更"""
@@ -420,7 +452,8 @@ class ConfigDialog(QDialog):
             pump_address=int(self.dil_addr_input.currentText()),
             direction="FWD" if self.dil_dir_input.currentText() == "正向" else "REV",
             default_rpm=self.dil_rpm_input.value(),
-            color=self.dil_current_color
+            color=self.dil_current_color,
+            tube_diameter_mm=round(self.dil_tube_input.value(), 2)
         )
         self.config.dilution_channels.append(new_channel)
         self._refresh_dilution_table()
@@ -444,7 +477,8 @@ class ConfigDialog(QDialog):
             direction="FWD" if self.flush_dir_input.currentText() == "正向" else "REV",
             work_type=self.flush_type_input.currentText(),
             rpm=self.flush_rpm_input.value(),
-            cycle_duration_s=round(self.flush_duration_input.value(), 2)
+            cycle_duration_s=round(self.flush_duration_input.value(), 2),
+            tube_diameter_mm=round(self.flush_tube_input.value(), 2)
         )
         self.config.flush_channels.append(new_channel)
         self._refresh_flush_table()

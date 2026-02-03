@@ -15,6 +15,8 @@ from ..utils.constants import (
     TX_HEADER, RX_HEADER,
     CMD_ENABLE, CMD_SPEED, CMD_POSITION,
     CMD_READ_ENCODER, CMD_READ_SPEED, CMD_READ_VERSION,
+    CMD_READ_ENCODER_ACCUM, CMD_READ_RUN_STATUS,
+    CMD_POSITION_REL, CMD_POSITION_ABS, CMD_STOP_EMERGENCY,
     ENCODER_DIVISIONS_PER_REV, MAX_RPM, MIN_RPM,
     DEFAULT_ACCELERATION,
     DIRECTION_FORWARD, DIRECTION_REVERSE
@@ -430,6 +432,117 @@ def encode_enable(enable: bool) -> bytes:
 
 
 # ============================================================================
+# 累加编码器值编解码 (位置模式专用)
+# ============================================================================
+
+def decode_encoder_accum(data: bytes) -> int:
+    """解码累加制多圈编码器值 (0x31命令返回)
+    
+    这是用于位置模式的累加坐标值，支持多圈记录。
+    数据格式为6字节有符号整数（int48, 大端序）。
+    
+    Args:
+        data: 6字节累加编码器数据
+        
+    Returns:
+        int: 累加坐标值 (16384单位 = 1圈)
+             正值 = 正转累计，负值 = 反转累计
+        
+    Example:
+        >>> decode_encoder_accum(b'\\x00\\x00\\x00\\x00\\x40\\x00')  # 1圈
+        16384
+        >>> decode_encoder_accum(b'\\xFF\\xFF\\xFF\\xFF\\xC0\\x00')  # -1圈
+        -16384
+    """
+    if len(data) < 6:
+        return 0
+    
+    # 6字节有符号大端序
+    # Python没有直接的int48支持，需要手动处理符号位
+    raw_value = int.from_bytes(data[:6], 'big')
+    
+    # 检查符号位 (第48位)
+    if raw_value & 0x800000000000:  # 如果最高位为1
+        # 负数：需要转换为有符号值
+        raw_value = raw_value - 0x1000000000000
+    
+    return raw_value
+
+
+def encode_axis_value(axis: int) -> bytes:
+    """编码坐标值为4字节有符号整数
+    
+    用于位置模式3/4的坐标参数。
+    
+    Args:
+        axis: 坐标值 (int32, 16384单位 = 1圈)
+        
+    Returns:
+        bytes: 4字节坐标编码（有符号大端序）
+        
+    Example:
+        >>> encode_axis_value(16384).hex()  # 正转1圈
+        '00004000'
+        >>> encode_axis_value(-16384).hex()  # 反转1圈
+        'ffffc000'
+    """
+    # 限制到int32范围
+    axis = max(-2147483648, min(2147483647, axis))
+    return axis.to_bytes(4, 'big', signed=True)
+
+
+def decode_axis_value(data: bytes) -> int:
+    """解码4字节有符号坐标值
+    
+    Args:
+        data: 4字节坐标数据
+        
+    Returns:
+        int: 坐标值 (有符号)
+    """
+    if len(data) < 4:
+        return 0
+    return int.from_bytes(data[:4], 'big', signed=True)
+
+
+def decode_run_status(data: bytes) -> int:
+    """解码运行状态 (0xF1命令返回)
+    
+    Args:
+        data: 1字节状态数据
+        
+    Returns:
+        int: 运行状态码
+            1 = 电机停止
+            2 = 电机加速中
+            3 = 电机减速中
+            4 = 电机全速运行中
+            5 = 电机归零中
+            6 = 电机校准中
+    """
+    if len(data) < 1:
+        return 0
+    return data[0]
+
+
+def decode_position_response(data: bytes) -> int:
+    """解码位置模式响应 (0xF4/0xF5命令返回)
+    
+    Args:
+        data: 1字节状态数据
+        
+    Returns:
+        int: 响应状态码
+            1 = 指令开始执行
+            2 = 指令执行完成
+            3 = 运行中触碰限位
+    """
+    if len(data) < 1:
+        return 0
+    return data[0]
+
+
+# ============================================================================
 # 高级命令帧构建
 # ============================================================================
 
@@ -491,6 +604,227 @@ def build_position_frame(
     pos_data = encode_position(divisions)
     payload = speed_data + bytes([acceleration & 0xFF]) + pos_data
     return build_frame(addr, CMD_POSITION, payload)
+
+
+def build_position_rel_frame(
+    addr: int,
+    rel_axis: int,
+    speed: int = 100,
+    acceleration: int = DEFAULT_ACCELERATION
+) -> bytes:
+    """构建位置模式3命令帧 - 按坐标值相对运动 (0xF4)
+    
+    使用编码器坐标值(16384/圈)作为单位。
+    这是SR_VFOC模式下推荐的位置控制方式。
+    
+    帧格式: FA addr F4 speed(2) acc relAxis(4,signed) CRC
+    
+    Args:
+        addr: 设备地址 (1-255)
+        rel_axis: 相对坐标值 (int32, 16384单位 = 1圈)
+                  正值=正转, 负值=反转
+        speed: 运行速度 (0-3000 RPM)
+        acceleration: 加速度参数 (0-255)
+        
+    Returns:
+        bytes: 完整命令帧 (11字节)
+        
+    Example:
+        >>> build_position_rel_frame(1, 16384, 600, 2).hex()  # 正转1圈
+        'fa01f402580200004000xx'
+    """
+    # 速度: 2字节大端序 (无符号)
+    speed = max(0, min(3000, speed))
+    speed_bytes = speed.to_bytes(2, 'big')
+    
+    # 加速度: 1字节
+    acc_byte = bytes([acceleration & 0xFF])
+    
+    # 相对坐标: 4字节有符号大端序
+    rel_axis_bytes = rel_axis.to_bytes(4, 'big', signed=True)
+    
+    payload = speed_bytes + acc_byte + rel_axis_bytes
+    return build_frame(addr, CMD_POSITION_REL, payload)
+
+
+def build_position_abs_frame(
+    addr: int,
+    abs_axis: int,
+    speed: int = 100,
+    acceleration: int = DEFAULT_ACCELERATION
+) -> bytes:
+    """构建位置模式4命令帧 - 按坐标值绝对运动 (0xF5)
+    
+    使用编码器坐标值(16384/圈)作为单位。
+    支持速度和坐标实时更新。
+    
+    帧格式: FA addr F5 speed(2) acc absAxis(4,signed) CRC
+    
+    Args:
+        addr: 设备地址 (1-255)
+        abs_axis: 绝对坐标值 (int32, 16384单位 = 1圈)
+        speed: 运行速度 (0-3000 RPM)
+        acceleration: 加速度参数 (0-255)
+        
+    Returns:
+        bytes: 完整命令帧 (11字节)
+        
+    Example:
+        >>> build_position_abs_frame(1, 0x4000, 600, 2).hex()  # 绝对运动到1圈位置
+        'fa01f502580200004000xx'
+    """
+    # 速度: 2字节大端序 (无符号)
+    speed = max(0, min(3000, speed))
+    speed_bytes = speed.to_bytes(2, 'big')
+    
+    # 加速度: 1字节
+    acc_byte = bytes([acceleration & 0xFF])
+    
+    # 绝对坐标: 4字节有符号大端序
+    abs_axis_bytes = abs_axis.to_bytes(4, 'big', signed=True)
+    
+    payload = speed_bytes + acc_byte + abs_axis_bytes
+    return build_frame(addr, CMD_POSITION_ABS, payload)
+
+
+def build_position_stop_frame(
+    addr: int,
+    acceleration: int = DEFAULT_ACCELERATION,
+    cmd: int = CMD_POSITION_REL
+) -> bytes:
+    """构建位置模式停止命令帧
+    
+    当acc≠0时减速停止，acc=0时立即停止。
+    
+    Args:
+        addr: 设备地址
+        acceleration: 减速度 (0=立即停止, 其他=减速停止)
+        cmd: 使用的位置命令 (CMD_POSITION_REL 或 CMD_POSITION_ABS)
+        
+    Returns:
+        bytes: 完整命令帧
+    """
+    # 速度=0, acc, 坐标=0
+    payload = bytes([0x00, 0x00, acceleration & 0xFF, 0x00, 0x00, 0x00, 0x00])
+    return build_frame(addr, cmd, payload)
+
+
+def build_speed_mode_frame(
+    addr: int,
+    rpm: int,
+    forward: bool = True,
+    acceleration: int = DEFAULT_ACCELERATION
+) -> bytes:
+    """构建速度控制模式命令帧 (0xF6)
+    
+    SR_VFOC模式下的速度控制。
+    
+    帧格式: FA addr F6 dir|speed_hi speed_lo acc CRC
+    其中: 字节4最高位=方向, 低4位+字节5=速度
+    
+    Args:
+        addr: 设备地址 (1-255)
+        rpm: 转速 (0-3000 RPM)
+        forward: 是否正转 (True=CCW/0, False=CW/1)
+        acceleration: 加速度参数 (0-255)
+        
+    Returns:
+        bytes: 完整命令帧 (7字节)
+        
+    Example:
+        >>> build_speed_mode_frame(1, 640, True, 2).hex()
+        'fa01f6028002xx'  # speed=0x280, acc=2, dir=0
+    """
+    rpm = max(0, min(3000, rpm))
+    
+    # 方向位在字节4的bit7
+    dir_bit = 0x00 if forward else 0x80
+    
+    # 速度分成高4位和低8位
+    speed_hi = (rpm >> 8) & 0x0F  # 低4位
+    speed_lo = rpm & 0xFF
+    
+    # 字节4 = 方向位 | 速度高4位
+    byte4 = dir_bit | speed_hi
+    
+    payload = bytes([byte4, speed_lo, acceleration & 0xFF])
+    return build_frame(addr, CMD_SPEED, payload)
+
+
+def build_speed_stop_frame(
+    addr: int,
+    acceleration: int = DEFAULT_ACCELERATION
+) -> bytes:
+    """构建速度模式停止命令帧
+    
+    当acc≠0时减速停止，acc=0时立即停止。
+    
+    Args:
+        addr: 设备地址
+        acceleration: 减速度 (0=立即停止, 其他=减速停止)
+        
+    Returns:
+        bytes: 完整命令帧
+    """
+    # speed=0, acc
+    payload = bytes([0x00, 0x00, acceleration & 0xFF])
+    return build_frame(addr, CMD_SPEED, payload)
+
+
+def build_read_encoder_accum_frame(addr: int) -> bytes:
+    """构建读取累加制多圈编码器值命令帧 (0x31)
+    
+    用于获取位置模式下的坐标值。
+    
+    Args:
+        addr: 设备地址
+        
+    Returns:
+        bytes: 完整命令帧
+    """
+    return build_frame(addr, CMD_READ_ENCODER_ACCUM)
+
+
+def build_read_run_status_frame(addr: int) -> bytes:
+    """构建读取运行状态命令帧 (0xF1)
+    
+    Args:
+        addr: 设备地址
+        
+    Returns:
+        bytes: 完整命令帧
+    """
+    return build_frame(addr, CMD_READ_RUN_STATUS)
+
+
+def build_serial_enable_frame(addr: int, enable: bool = True) -> bytes:
+    """构建串行模式使能/禁用命令帧 (0xF3)
+    
+    在SR_VFOC模式下，使能状态由此命令控制，不受En引脚影响。
+    
+    Args:
+        addr: 设备地址
+        enable: 是否使能
+        
+    Returns:
+        bytes: 完整命令帧
+    """
+    payload = bytes([0x01 if enable else 0x00])
+    return build_frame(addr, CMD_ENABLE, payload)
+
+
+def build_emergency_stop_frame(addr: int) -> bytes:
+    """构建紧急停止命令帧 (0xF7)
+    
+    警告: 电机转速超过1000RPM时不建议使用！
+    
+    Args:
+        addr: 设备地址
+        
+    Returns:
+        bytes: 完整命令帧
+    """
+    return build_frame(addr, CMD_STOP_EMERGENCY)
 
 
 def build_read_encoder_frame(addr: int) -> bytes:

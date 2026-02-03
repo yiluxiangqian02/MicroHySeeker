@@ -15,12 +15,32 @@ from ..utils.constants import (
     CMD_READ_FAULT,
     CMD_READ_RUN_STATUS,
     CMD_READ_SPEED,
-    CMD_SPEED
+    CMD_SPEED,
+    CMD_POSITION_REL,
+    CMD_POSITION_ABS,
+    CMD_READ_ENCODER_ACCUM,
+    RUN_STATUS_STOPPED,
+    RUN_STATUS_ACCEL,
+    RUN_STATUS_DECEL,
+    RUN_STATUS_FULL,
+    POS_CTRL_START,
+    POS_CTRL_COMPLETE,
+    POS_CTRL_LIMIT,
+    ENCODER_DIVISIONS_PER_REV,
+    DEFAULT_DILUTION_ACCELERATION,
+    DEFAULT_DILUTION_SPEED,
 )
 from .rs485_driver import RS485Driver
 from .rs485_protocol import (
     ParsedFrame,
     build_frame,
+    build_position_rel_frame,
+    build_position_abs_frame,
+    build_read_encoder_accum_frame,
+    build_read_run_status_frame,
+    decode_encoder_accum,
+    decode_run_status,
+    decode_position_response,
 )
 
 
@@ -584,3 +604,333 @@ class PumpManager:
         """
         with self._states_lock:
             return {addr: replace(state) for addr, state in self._states.items()}
+
+    # ==================== SR_VFOC 位置模式方法 ====================
+
+    def move_position_rel(
+        self,
+        addr: int,
+        encoder_counts: int,
+        speed: int = DEFAULT_DILUTION_SPEED,
+        acceleration: int = DEFAULT_DILUTION_ACCELERATION,
+        fire_and_forget: bool = False,
+    ) -> int | None:
+        """位置模式3: 按坐标值相对运动 (0xF4)
+        
+        SR_VFOC模式下的精确位置控制。使用编码器坐标值。
+        电机需要先使能才能执行位置命令。
+        
+        Args:
+            addr: 泵地址 (1-12)
+            encoder_counts: 相对坐标值 (int32, 16384 = 1圈)
+                           正值=正转, 负值=反转
+            speed: 运行速度 (RPM, 0-3000), 默认100
+            acceleration: 加速度参数 (0-255), 默认2(平滑)
+            fire_and_forget: 如果True，发送命令后不等待响应
+            
+        Returns:
+            int | None: 响应状态码
+                1 = 开始执行
+                2 = 执行完成
+                3 = 触碰限位
+                None = 无响应或fire_and_forget模式
+                
+        Example:
+            >>> manager.move_position_rel(1, 16384)  # 正转1圈
+            1
+        """
+        if self._logger:
+            direction = "正转" if encoder_counts >= 0 else "反转"
+            revolutions = abs(encoder_counts) / ENCODER_DIVISIONS_PER_REV
+            self._logger.debug(
+                f"泵 {addr}: 位置相对运动 {direction} {revolutions:.3f}圈 "
+                f"({encoder_counts} counts), speed={speed}RPM, acc={acceleration}"
+            )
+        
+        frame_data = build_position_rel_frame(addr, encoder_counts, speed, acceleration)
+        
+        if fire_and_forget:
+            try:
+                self.driver.write(frame_data)
+                return None
+            except Exception as e:
+                if self._logger:
+                    self._logger.debug(f"泵 {addr}: fire_and_forget 发送异常 - {e}")
+                return None
+        
+        try:
+            frame = self.request(addr, CMD_POSITION_REL, frame_data[3:-1])  # payload部分
+            if frame and frame.payload:
+                status = decode_position_response(frame.payload)
+                if self._logger:
+                    status_text = {
+                        POS_CTRL_START: "开始执行",
+                        POS_CTRL_COMPLETE: "执行完成",
+                        POS_CTRL_LIMIT: "触碰限位"
+                    }.get(status, f"未知({status})")
+                    self._logger.debug(f"泵 {addr}: 位置命令响应 - {status_text}")
+                return status
+        except TimeoutError:
+            if self._logger:
+                self._logger.warning(f"泵 {addr}: 位置命令超时")
+        except Exception as e:
+            if self._logger:
+                self._logger.error(f"泵 {addr}: 位置命令异常 - {e}")
+        
+        return None
+
+    def move_position_abs(
+        self,
+        addr: int,
+        encoder_counts: int,
+        speed: int = DEFAULT_DILUTION_SPEED,
+        acceleration: int = DEFAULT_DILUTION_ACCELERATION,
+        fire_and_forget: bool = False,
+    ) -> int | None:
+        """位置模式4: 按坐标值绝对运动 (0xF5)
+        
+        SR_VFOC模式下的精确位置控制。运动到指定的绝对坐标位置。
+        支持运行中实时更新目标位置和速度。
+        
+        Args:
+            addr: 泵地址 (1-12)
+            encoder_counts: 绝对坐标值 (int32, 16384 = 1圈)
+            speed: 运行速度 (RPM, 0-3000), 默认100
+            acceleration: 加速度参数 (0-255), 默认2(平滑)
+            fire_and_forget: 如果True，发送命令后不等待响应
+            
+        Returns:
+            int | None: 响应状态码 (同 move_position_rel)
+        """
+        if self._logger:
+            revolutions = encoder_counts / ENCODER_DIVISIONS_PER_REV
+            self._logger.debug(
+                f"泵 {addr}: 位置绝对运动到 {revolutions:.3f}圈 "
+                f"({encoder_counts} counts), speed={speed}RPM, acc={acceleration}"
+            )
+        
+        frame_data = build_position_abs_frame(addr, encoder_counts, speed, acceleration)
+        
+        if fire_and_forget:
+            try:
+                self.driver.write(frame_data)
+                return None
+            except Exception as e:
+                if self._logger:
+                    self._logger.debug(f"泵 {addr}: fire_and_forget 发送异常 - {e}")
+                return None
+        
+        try:
+            frame = self.request(addr, CMD_POSITION_ABS, frame_data[3:-1])
+            if frame and frame.payload:
+                status = decode_position_response(frame.payload)
+                if self._logger:
+                    status_text = {
+                        POS_CTRL_START: "开始执行",
+                        POS_CTRL_COMPLETE: "执行完成",
+                        POS_CTRL_LIMIT: "触碰限位"
+                    }.get(status, f"未知({status})")
+                    self._logger.debug(f"泵 {addr}: 绝对位置命令响应 - {status_text}")
+                return status
+        except TimeoutError:
+            if self._logger:
+                self._logger.warning(f"泵 {addr}: 绝对位置命令超时")
+        except Exception as e:
+            if self._logger:
+                self._logger.error(f"泵 {addr}: 绝对位置命令异常 - {e}")
+        
+        return None
+
+    def read_encoder_accum(self, addr: int) -> int | None:
+        """读取累加制多圈编码器值 (0x31)
+        
+        获取当前的编码器累加坐标，用于位置模式的控制和监测。
+        
+        Args:
+            addr: 泵地址 (1-12)
+            
+        Returns:
+            int | None: 累加编码器值 (int48)
+                16384 = 正转1圈
+                -16384 = 反转1圈
+                None = 无响应
+                
+        Example:
+            >>> pos = manager.read_encoder_accum(1)
+            >>> print(f"当前位置: {pos / 16384:.2f} 圈")
+        """
+        try:
+            frame_data = build_read_encoder_accum_frame(addr)
+            frame = self.request(addr, CMD_READ_ENCODER_ACCUM)
+            if frame and len(frame.payload) >= 6:
+                value = decode_encoder_accum(frame.payload)
+                if self._logger:
+                    revolutions = value / ENCODER_DIVISIONS_PER_REV
+                    self._logger.debug(f"泵 {addr}: 编码器位置 = {value} ({revolutions:.3f}圈)")
+                return value
+        except TimeoutError:
+            if self._logger:
+                self._logger.debug(f"泵 {addr}: 读取编码器超时")
+        except Exception as e:
+            if self._logger:
+                self._logger.debug(f"泵 {addr}: 读取编码器异常 - {e}")
+        
+        return None
+
+    def read_run_status(self, addr: int) -> int | None:
+        """读取运行状态 (0xF1)
+        
+        用于检查电机当前的运行状态。
+        
+        Args:
+            addr: 泵地址 (1-12)
+            
+        Returns:
+            int | None: 运行状态码
+                1 = 停止
+                2 = 加速中
+                3 = 减速中
+                4 = 全速运行
+                5 = 归零中
+                6 = 校准中
+                None = 无响应
+        """
+        try:
+            frame_data = build_read_run_status_frame(addr)
+            frame = self.request(addr, CMD_READ_RUN_STATUS)
+            if frame and frame.payload:
+                status = decode_run_status(frame.payload)
+                if self._logger:
+                    status_text = {
+                        RUN_STATUS_STOPPED: "停止",
+                        RUN_STATUS_ACCEL: "加速中",
+                        RUN_STATUS_DECEL: "减速中",
+                        RUN_STATUS_FULL: "全速运行",
+                        5: "归零中",
+                        6: "校准中"
+                    }.get(status, f"未知({status})")
+                    self._logger.debug(f"泵 {addr}: 运行状态 = {status_text}")
+                return status
+        except TimeoutError:
+            if self._logger:
+                self._logger.debug(f"泵 {addr}: 读取运行状态超时")
+        except Exception as e:
+            if self._logger:
+                self._logger.debug(f"泵 {addr}: 读取运行状态异常 - {e}")
+        
+        return None
+
+    def wait_for_position_complete(
+        self,
+        addr: int,
+        timeout_s: float = 60.0,
+        poll_interval_s: float = 0.1,
+    ) -> bool:
+        """等待位置命令执行完成
+        
+        轮询运行状态，直到电机停止或超时。
+        
+        Args:
+            addr: 泵地址 (1-12)
+            timeout_s: 最大等待时间（秒）
+            poll_interval_s: 轮询间隔（秒）
+            
+        Returns:
+            bool: True = 已完成, False = 超时或错误
+        """
+        start_time = time.time()
+        
+        while (time.time() - start_time) < timeout_s:
+            status = self.read_run_status(addr)
+            
+            if status == RUN_STATUS_STOPPED:
+                if self._logger:
+                    elapsed = time.time() - start_time
+                    self._logger.debug(f"泵 {addr}: 位置运动完成 (耗时 {elapsed:.2f}s)")
+                return True
+            
+            time.sleep(poll_interval_s)
+        
+        if self._logger:
+            self._logger.warning(f"泵 {addr}: 等待位置完成超时 ({timeout_s}s)")
+        return False
+
+    def dispense_by_encoder(
+        self,
+        addr: int,
+        encoder_counts: int,
+        speed: int = DEFAULT_DILUTION_SPEED,
+        acceleration: int = DEFAULT_DILUTION_ACCELERATION,
+        wait_complete: bool = True,
+        timeout_s: float = 60.0,
+    ) -> bool:
+        """使用编码器位置模式进行精确配液
+        
+        这是配液操作的核心方法。使用SR_VFOC位置模式精确控制位移。
+        
+        Args:
+            addr: 泵地址 (1-12)
+            encoder_counts: 目标位移 (编码器计数, 16384 = 1圈)
+                           正值=正转(通常是出液), 负值=反转(通常是吸液)
+            speed: 运行速度 (RPM, 0-3000)
+            acceleration: 加速度参数 (0-255)
+            wait_complete: 是否等待完成
+            timeout_s: 等待超时（秒）
+            
+        Returns:
+            bool: 是否成功
+            
+        Example:
+            >>> # 正转0.5圈出液
+            >>> manager.dispense_by_encoder(1, 8192)
+            True
+        """
+        try:
+            # 1. 使能电机
+            if self._logger:
+                self._logger.info(
+                    f"泵 {addr}: 开始配液, 位移={encoder_counts} counts "
+                    f"({encoder_counts / ENCODER_DIVISIONS_PER_REV:.3f}圈)"
+                )
+            
+            enable_result = self.set_enable(addr, True)
+            if enable_result is None:
+                if self._logger:
+                    self._logger.error(f"泵 {addr}: 使能失败")
+                return False
+            
+            time.sleep(0.02)  # 使能后短暂延迟
+            
+            # 2. 发送位置命令
+            status = self.move_position_rel(
+                addr, 
+                encoder_counts, 
+                speed=speed, 
+                acceleration=acceleration,
+                fire_and_forget=not wait_complete
+            )
+            
+            if not wait_complete:
+                # fire_and_forget模式，直接返回
+                return True
+            
+            if status not in (POS_CTRL_START, POS_CTRL_COMPLETE):
+                if self._logger:
+                    self._logger.warning(f"泵 {addr}: 位置命令未正确响应 (status={status})")
+                # 尝试继续等待
+            
+            # 3. 等待完成
+            if wait_complete:
+                if not self.wait_for_position_complete(addr, timeout_s):
+                    if self._logger:
+                        self._logger.error(f"泵 {addr}: 配液超时")
+                    return False
+            
+            if self._logger:
+                self._logger.info(f"泵 {addr}: 配液完成")
+            return True
+            
+        except Exception as e:
+            if self._logger:
+                self._logger.error(f"泵 {addr}: 配液异常 - {e}")
+            return False
