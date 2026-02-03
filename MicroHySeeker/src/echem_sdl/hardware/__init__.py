@@ -1,6 +1,4 @@
-from .pump_manager import PumpManager, PumpState
-from .rs485_driver import RS485Driver
-from .rs485_protocol import (
+from ..utils.constants import (
     CMD_ENABLE,
     CMD_READ_ENABLE,
     CMD_READ_FAULT,
@@ -8,6 +6,10 @@ from .rs485_protocol import (
     CMD_SPEED,
     RX_HEADER,
     TX_HEADER,
+)
+from .pump_manager import PumpManager, PumpState
+from .rs485_driver import RS485Driver
+from .rs485_protocol import (
     FrameStreamParser,
     ParsedFrame,
     build_frame,

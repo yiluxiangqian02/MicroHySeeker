@@ -127,8 +127,9 @@ class PumpControlWidget(QFrame):
             QMessageBox.warning(self, "错误", f"泵 {self.pump_address} 停止失败")
     
     def force_stop(self):
-        """强制停止"""
-        self.rs485.stop_pump(self.pump_address)
+        """强制停止（不等待响应，用于快速关闭）"""
+        # 使用fire_and_forget模式，不等待响应
+        self.rs485.stop_pump_fast(self.pump_address)
         self.is_running = False
         self.status_indicator.setStyleSheet("color: gray; font-size: 20px;")
 
@@ -271,5 +272,12 @@ class ManualControlDialog(QDialog):
     
     def closeEvent(self, event):
         """窗口关闭事件"""
-        self._on_stop_all()
+        # 只停止正在运行的泵，使用快速模式
+        running_addrs = [pw.pump_address for pw in self.pump_widgets if pw.is_running]
+        if running_addrs:
+            self.rs485.stop_pumps_fast(running_addrs)
+            for pw in self.pump_widgets:
+                if pw.is_running:
+                    pw.is_running = False
+                    pw.status_indicator.setStyleSheet("color: gray; font-size: 20px;")
         event.accept()

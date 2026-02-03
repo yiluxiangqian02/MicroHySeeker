@@ -10,7 +10,7 @@ from PySide6.QtWidgets import (
     QDialog, QVBoxLayout, QHBoxLayout, QLabel, QComboBox, QPushButton,
     QTableWidget, QTableWidgetItem, QTabWidget, QWidget, QColorDialog,
     QMessageBox, QSpinBox, QDoubleSpinBox, QHeaderView, QLineEdit,
-    QGroupBox, QFormLayout
+    QGroupBox, QFormLayout, QCheckBox
 )
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QColor, QFont
@@ -50,6 +50,17 @@ class ConfigDialog(QDialog):
         """获取可用泵地址列表"""
         return [str(i) for i in range(1, 13)]
     
+    def showEvent(self, event):
+        """对话框显示时更新UI状态"""
+        super().showEvent(event)
+        # 更新连接按钮状态
+        if self.rs485.is_connected():
+            self.connect_btn.setText("断开")
+            self.scan_btn.setEnabled(True)
+        else:
+            self.connect_btn.setText("连接")
+            self.scan_btn.setEnabled(False)
+    
     def _init_ui(self):
         """初始化 UI"""
         layout = QVBoxLayout(self)
@@ -60,8 +71,23 @@ class ConfigDialog(QDialog):
         conn_layout = QHBoxLayout(conn_group)
         conn_layout.addWidget(QLabel("端口:"))
         self.port_combo = QComboBox()
-        self.port_combo.addItems(['COM1', 'COM2', 'COM3', 'COM4', 'COM5', 'COM6', 'COM7', 'COM8'])
+        
+        # 加载实际检测到的串口
+        available_ports = self.rs485.list_available_ports()
+        if available_ports:
+            self.port_combo.addItems(available_ports)
+        else:
+            # 如果检测失败，提供默认选项
+            self.port_combo.addItems(['COM1', 'COM2', 'COM3', 'COM4', 'COM5'])
+        
         conn_layout.addWidget(self.port_combo)
+        
+        # 刷新端口按钮
+        refresh_btn = QPushButton("🔄")
+        refresh_btn.setMaximumWidth(40)
+        refresh_btn.setToolTip("刷新端口列表")
+        refresh_btn.clicked.connect(self._on_refresh_ports)
+        conn_layout.addWidget(refresh_btn)
         
         conn_layout.addWidget(QLabel("波特率:"))
         self.baud_combo = QComboBox()
@@ -76,6 +102,14 @@ class ConfigDialog(QDialog):
         self.scan_btn.clicked.connect(self._on_scan)
         self.scan_btn.setEnabled(False)
         conn_layout.addWidget(self.scan_btn)
+        
+        # Mock模式开关
+        self.mock_checkbox = QCheckBox("Mock模式 (开发测试)")
+        self.mock_checkbox.setFont(FONT_NORMAL)
+        self.mock_checkbox.setChecked(True)  # 默认开启Mock
+        self.mock_checkbox.setToolTip("勾选=模拟硬件(测试)\n取消勾选=真实硬件")
+        self.mock_checkbox.stateChanged.connect(self._on_mock_mode_changed)
+        conn_layout.addWidget(self.mock_checkbox)
         
         conn_layout.addStretch()
         layout.addWidget(conn_group)
@@ -247,8 +281,21 @@ class ConfigDialog(QDialog):
         """加载配置到 UI"""
         self.port_combo.setCurrentText(self.config.rs485_port)
         self.baud_combo.setCurrentText(str(self.config.rs485_baudrate))
+        
+        # 加载Mock模式状态
+        self.mock_checkbox.setChecked(self.config.mock_mode)
+        self.rs485.set_mock_mode(self.config.mock_mode)
+        
         self._refresh_dilution_table()
         self._refresh_flush_table()
+        
+        # 更新连接状态显示
+        if self.rs485.is_connected():
+            self.connect_btn.setText("断开")
+            self.scan_btn.setEnabled(True)
+        else:
+            self.connect_btn.setText("连接")
+            self.scan_btn.setEnabled(False)
     
     def _refresh_dilution_table(self):
         """刷新配液通道表格 - 参数可编辑"""
@@ -409,6 +456,23 @@ class ConfigDialog(QDialog):
             del self.config.flush_channels[row]
             self._refresh_flush_table()
     
+    def _on_refresh_ports(self):
+        """刷新端口列表"""
+        current_port = self.port_combo.currentText()
+        self.port_combo.clear()
+        
+        available_ports = self.rs485.list_available_ports()
+        if available_ports:
+            self.port_combo.addItems(available_ports)
+            # 尝试恢复之前选择的端口
+            index = self.port_combo.findText(current_port)
+            if index >= 0:
+                self.port_combo.setCurrentIndex(index)
+            print(f"✅ 刷新端口列表: {available_ports}")
+        else:
+            self.port_combo.addItems(['COM1', 'COM2', 'COM3'])
+            QMessageBox.warning(self, "警告", "未检测到可用串口")
+    
     def _on_connect(self):
         """连接/断开 RS485 - 后端接口调用点"""
         if self.rs485.is_connected():
@@ -435,10 +499,36 @@ class ConfigDialog(QDialog):
         msg = f"扫描完成，找到泵地址: {available}" if available else "未找到任何泵"
         QMessageBox.information(self, "扫描结果", msg)
     
+    def _on_mock_mode_changed(self, state):
+        """Mock模式切换"""
+        is_mock = (state == 2)  # Qt.Checked = 2
+        
+        # 记住当前连接状态
+        was_connected = self.rs485.is_connected()
+        port = self.port_combo.currentText()
+        baud = int(self.baud_combo.currentText())
+        
+        # 设置新模式（这会关闭现有连接）
+        self.rs485.set_mock_mode(is_mock)
+        
+        # 如果之前已连接，需要用新模式重新连接
+        if was_connected:
+            if self.rs485.open_port(port, baud):
+                mode_str = "Mock模式 (模拟)" if is_mock else "真实硬件模式"
+                print(f"✅ 已切换到 {mode_str}")
+                self.connect_btn.setText("断开")
+                self.scan_btn.setEnabled(True)
+            else:
+                self.connect_btn.setText("连接")
+                self.scan_btn.setEnabled(False)
+                mode_str = "Mock模式 (模拟)" if is_mock else "真实硬件模式"
+                QMessageBox.warning(self, "警告", f"切换到{mode_str}后重连失败")
+    
     def _on_save(self):
         """保存配置"""
         self.config.rs485_port = self.port_combo.currentText()
         self.config.rs485_baudrate = int(self.baud_combo.currentText())
+        self.config.mock_mode = self.mock_checkbox.isChecked()  # 保存Mock模式状态
         
         # 保存到文件
         self.config.save_to_file("./config/system.json")

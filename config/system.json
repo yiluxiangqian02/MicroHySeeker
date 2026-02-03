@@ -1,5 +1,5 @@
 {
-  "rs485_port": "COM7",
+  "rs485_port": "COM3",
   "rs485_baudrate": 38400,
   "mock_mode": false,
   "pumps": [
@@ -112,73 +112,8 @@
       }
     }
   ],
-  "dilution_channels": [
-    {
-      "channel_id": "1",
-      "solution_name": "Ni(OH)2",
-      "stock_concentration": 2.0,
-      "pump_address": 1,
-      "direction": "FWD",
-      "default_rpm": 120,
-      "color": "#00FF00"
-    },
-    {
-      "channel_id": "2",
-      "solution_name": "Fe(OH)2",
-      "stock_concentration": 1.0,
-      "pump_address": 2,
-      "direction": "FWD",
-      "default_rpm": 120,
-      "color": "#ffaaff"
-    },
-    {
-      "channel_id": "3",
-      "solution_name": "H2O",
-      "stock_concentration": 1.0,
-      "pump_address": 6,
-      "direction": "FWD",
-      "default_rpm": 120,
-      "color": "#aaffff"
-    },
-    {
-      "channel_id": "4",
-      "solution_name": "test1",
-      "stock_concentration": 1.0,
-      "pump_address": 5,
-      "direction": "FWD",
-      "default_rpm": 120,
-      "color": "#00FF00"
-    }
-  ],
-  "flush_channels": [
-    {
-      "channel_id": "2",
-      "pump_name": "A",
-      "pump_address": 3,
-      "direction": "FWD",
-      "rpm": 100,
-      "cycle_duration_s": 30.0,
-      "work_type": "Inlet"
-    },
-    {
-      "channel_id": "2",
-      "pump_name": "B",
-      "pump_address": 4,
-      "direction": "FWD",
-      "rpm": 100,
-      "cycle_duration_s": 30.0,
-      "work_type": "Transfer"
-    },
-    {
-      "channel_id": "3",
-      "pump_name": "C",
-      "pump_address": 5,
-      "direction": "FWD",
-      "rpm": 100,
-      "cycle_duration_s": 30.0,
-      "work_type": "Outlet"
-    }
-  ],
+  "dilution_channels": [],
+  "flush_channels": [],
   "calibration_data": {},
   "data_dir": "./data"
 }
