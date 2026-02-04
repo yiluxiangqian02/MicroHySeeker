@@ -1,0 +1,174 @@
+{
+  "rs485_port": "COM1",
+  "rs485_baudrate": 9600,
+  "pumps": [
+    {
+      "address": 1,
+      "name": "Pump_1",
+      "direction": "FWD",
+      "default_rpm": 120,
+      "calibration": {
+        "ul_per_sec": 0.5
+      }
+    },
+    {
+      "address": 2,
+      "name": "Pump_2",
+      "direction": "FWD",
+      "default_rpm": 120,
+      "calibration": {
+        "ul_per_sec": 0.5
+      }
+    },
+    {
+      "address": 3,
+      "name": "Pump_3",
+      "direction": "FWD",
+      "default_rpm": 120,
+      "calibration": {
+        "ul_per_sec": 0.5
+      }
+    },
+    {
+      "address": 4,
+      "name": "Pump_4",
+      "direction": "FWD",
+      "default_rpm": 120,
+      "calibration": {
+        "ul_per_sec": 0.5
+      }
+    },
+    {
+      "address": 5,
+      "name": "Pump_5",
+      "direction": "FWD",
+      "default_rpm": 120,
+      "calibration": {
+        "ul_per_sec": 0.5
+      }
+    },
+    {
+      "address": 6,
+      "name": "Pump_6",
+      "direction": "FWD",
+      "default_rpm": 120,
+      "calibration": {
+        "ul_per_sec": 0.5
+      }
+    },
+    {
+      "address": 7,
+      "name": "Pump_7",
+      "direction": "FWD",
+      "default_rpm": 120,
+      "calibration": {
+        "ul_per_sec": 0.5
+      }
+    },
+    {
+      "address": 8,
+      "name": "Pump_8",
+      "direction": "FWD",
+      "default_rpm": 120,
+      "calibration": {
+        "ul_per_sec": 0.5
+      }
+    },
+    {
+      "address": 9,
+      "name": "Pump_9",
+      "direction": "FWD",
+      "default_rpm": 120,
+      "calibration": {
+        "ul_per_sec": 0.5
+      }
+    },
+    {
+      "address": 10,
+      "name": "Pump_10",
+      "direction": "FWD",
+      "default_rpm": 120,
+      "calibration": {
+        "ul_per_sec": 0.5
+      }
+    },
+    {
+      "address": 11,
+      "name": "Pump_11",
+      "direction": "FWD",
+      "default_rpm": 120,
+      "calibration": {
+        "ul_per_sec": 0.5
+      }
+    },
+    {
+      "address": 12,
+      "name": "Pump_12",
+      "direction": "FWD",
+      "default_rpm": 120,
+      "calibration": {
+        "ul_per_sec": 0.5
+      }
+    }
+  ],
+  "dilution_channels": [
+    {
+      "channel_id": "1",
+      "solution_name": "Ni(OH)2",
+      "stock_concentration": 2.0,
+      "pump_address": 1,
+      "direction": "FWD",
+      "default_rpm": 120,
+      "color": "#00FF00"
+    },
+    {
+      "channel_id": "2",
+      "solution_name": "Fe(OH)2",
+      "stock_concentration": 1.0,
+      "pump_address": 2,
+      "direction": "FWD",
+      "default_rpm": 120,
+      "color": "#ffaaff"
+    },
+    {
+      "channel_id": "3",
+      "solution_name": "H2O",
+      "stock_concentration": 1.0,
+      "pump_address": 6,
+      "direction": "FWD",
+      "default_rpm": 120,
+      "color": "#aaffff"
+    }
+  ],
+  "flush_channels": [
+    {
+      "channel_id": "2",
+      "pump_name": "A",
+      "pump_address": 3,
+      "direction": "FWD",
+      "rpm": 100,
+      "cycle_duration_s": 30.0,
+      "work_type": "Inlet"
+    },
+    {
+      "channel_id": "2",
+      "pump_name": "B",
+      "pump_address": 4,
+      "direction": "FWD",
+      "rpm": 100,
+      "cycle_duration_s": 30.0,
+      "work_type": "Transfer"
+    },
+    {
+      "channel_id": "3",
+      "pump_name": "C",
+      "pump_address": 5,
+      "direction": "FWD",
+      "rpm": 100,
+      "cycle_duration_s": 30.0,
+      "work_type": "Outlet"
+    }
+  ],
+  "calibration_data": {},
+  "data_dir": "./data"
+}

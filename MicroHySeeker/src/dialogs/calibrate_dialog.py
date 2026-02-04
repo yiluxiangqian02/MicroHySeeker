@@ -43,6 +43,8 @@ class CalibrateDialog(QDialog):
         vol_layout.addWidget(QLabel("目标体积 (uL):"))
         self.target_volume = QDoubleSpinBox()
         self.target_volume.setRange(0, 10000)
+        self.target_volume.setDecimals(2)
+        self.target_volume.setSingleStep(0.01)
         self.target_volume.setValue(1000)
         vol_layout.addWidget(self.target_volume)
         layout.addLayout(vol_layout)
@@ -75,6 +77,8 @@ class CalibrateDialog(QDialog):
         actual_vol_layout.addWidget(QLabel("实际体积 (uL):"))
         self.actual_volume = QDoubleSpinBox()
         self.actual_volume.setRange(0, 10000)
+        self.actual_volume.setDecimals(2)
+        self.actual_volume.setSingleStep(0.01)
         actual_vol_layout.addWidget(self.actual_volume)
         layout.addLayout(actual_vol_layout)
         

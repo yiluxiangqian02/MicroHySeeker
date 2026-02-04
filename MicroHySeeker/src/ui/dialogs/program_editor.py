@@ -284,10 +284,12 @@ class ProgramEditorDialog(QDialog):
         self.param_layout.addRow("溶液种类", self.solution_type_combo)
         
         self.conc_spin = QDoubleSpinBox()
+        self.conc_spin.setSingleStep(0.01)
         self.conc_spin.setValue(step.high_concentration or 1.0)
         self.param_layout.addRow("浓缩液浓度 (M)", self.conc_spin)
         
         self.volume_spin = QDoubleSpinBox()
+        self.volume_spin.setSingleStep(0.01)
         self.volume_spin.setValue(step.target_volume or 10.0)
         self.param_layout.addRow("目标体积 (mL)", self.volume_spin)
         
@@ -301,6 +303,7 @@ class ProgramEditorDialog(QDialog):
         self.param_layout.addRow("泵地址", self.pump_addr_spin)
         
         self.pump_speed_spin = QDoubleSpinBox()
+        self.pump_speed_spin.setSingleStep(0.01)
         self.pump_speed_spin.setValue(step.pump_speed or 10.0)
         self.param_layout.addRow("泵转速 (RPM)", self.pump_speed_spin)
     
@@ -309,14 +312,17 @@ class ProgramEditorDialog(QDialog):
         self.potential_spin = QDoubleSpinBox()
         self.potential_spin.setMinimum(-2.0)
         self.potential_spin.setMaximum(2.0)
+        self.potential_spin.setSingleStep(0.01)
         self.potential_spin.setValue(step.potential or 0.0)
         self.param_layout.addRow("电位 (V)", self.potential_spin)
         
         self.current_limit_spin = QDoubleSpinBox()
+        self.current_limit_spin.setSingleStep(0.01)
         self.current_limit_spin.setValue(step.current_limit or 0.1)
         self.param_layout.addRow("电流限制 (mA)", self.current_limit_spin)
         
         self.duration_spin = QDoubleSpinBox()
+        self.duration_spin.setSingleStep(0.01)
         self.duration_spin.setValue(step.duration or 60.0)
         self.param_layout.addRow("时间 (s)", self.duration_spin)
         
@@ -331,6 +337,7 @@ class ProgramEditorDialog(QDialog):
         self.param_layout.addRow("泵选择", self.flush_pump_combo)
         
         self.flush_volume_spin = QDoubleSpinBox()
+        self.flush_volume_spin.setSingleStep(0.01)
         self.flush_volume_spin.setValue(step.flush_volume or 5.0)
         self.param_layout.addRow("冲洗体积 (mL)", self.flush_volume_spin)
         
@@ -353,16 +360,19 @@ class ProgramEditorDialog(QDialog):
         self.param_layout.addRow("目标位置", self.target_edit)
         
         self.transfer_volume_spin = QDoubleSpinBox()
+        self.transfer_volume_spin.setSingleStep(0.01)
         self.transfer_volume_spin.setValue(step.transfer_volume or 100.0)
         self.param_layout.addRow("移液体积 (µL)", self.transfer_volume_spin)
         
         self.transfer_speed_spin = QDoubleSpinBox()
+        self.transfer_speed_spin.setSingleStep(0.01)
         self.transfer_speed_spin.setValue(step.transfer_speed or 50.0)
         self.param_layout.addRow("移液速度 (µL/s)", self.transfer_speed_spin)
     
     def _create_blank_params(self, step: ProgStep) -> None:
         """空白参数面板。"""
         self.delay_spin = QDoubleSpinBox()
+        self.delay_spin.setSingleStep(0.01)
         self.delay_spin.setValue(step.delay_time or 5.0)
         self.param_layout.addRow("延时时间 (s)", self.delay_spin)
     

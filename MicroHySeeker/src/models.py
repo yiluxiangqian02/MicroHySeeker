@@ -15,6 +15,7 @@ class ProgramStepType(str, Enum):
     FLUSH = "flush"
     EChem = "echem"
     BLANK = "blank"
+    EVACUATE = "evacuate"  # 排空 - Flusher的outlet阶段
 
 
 class ECTechnique(str, Enum):
@@ -22,6 +23,7 @@ class ECTechnique(str, Enum):
     CV = "CV"
     LSV = "LSV"
     I_T = "i-t"
+    OCPT = "OCPT"  # 开路电位计时法
 
 
 class OCPTAction(str, Enum):
@@ -76,6 +78,7 @@ class FlushChannel:
     direction: str = "FWD"
     rpm: int = 100
     cycle_duration_s: float = 30.0
+    work_type: str = "Transfer"  # Inlet, Transfer, Outlet
 
     def to_dict(self) -> Dict[str, Any]:
         return asdict(self)
@@ -151,6 +154,10 @@ class ProgStep:
     volume_ul: Optional[float] = None
     duration_s: Optional[float] = None
     
+    # 移液持续时间（替代体积）
+    transfer_duration: Optional[float] = None  # 持续时间数值
+    transfer_duration_unit: str = "s"  # 单位: ms, s, min, hr, cycle
+    
     # PrepSol 特定字段
     prep_sol_params: Optional[PrepSolStep] = None
     
@@ -159,6 +166,7 @@ class ProgStep:
     flush_rpm: Optional[int] = None
     flush_cycle_duration_s: Optional[float] = None
     flush_cycles: int = 1
+    evacuate_only: bool = False  # 仅排空，不注水冲洗
     
     # EChem 特定字段
     ec_settings: Optional[ECSettings] = None

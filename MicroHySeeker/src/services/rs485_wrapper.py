@@ -7,13 +7,61 @@ import time
 from typing import List, Optional, Callable
 from pathlib import Path
 
-# 添加 485test/通讯 到 Python 路径
-comm_path = Path(__file__).parent.parent.parent / "485test" / "通讯"
-if str(comm_path) not in sys.path:
-    sys.path.insert(0, str(comm_path))
+# 添加 485test/通讯 到 Python 路径（向上到 workspace 根再拼接）
+# rs485_wrapper.py 路径: ...\MicroHySeeker\src\services\rs485_wrapper.py
+# workspace 根目录为 parents[3]
+base = Path(__file__).resolve().parents[3]
+comm_path = base / "485test" / "通讯"
+if comm_path.exists():
+    if str(comm_path) not in sys.path:
+        sys.path.insert(0, str(comm_path))
+else:
+    # 兼容英文目录名或不同结构
+    alt = base / "485test" / "comm"
+    if alt.exists() and str(alt) not in sys.path:
+        sys.path.insert(0, str(alt))
 
-from comm.serial_comm import SerialComm
-from comm.protocol import build_frame, verify_frame, parse_frame, CMD_ENABLE, CMD_SPEED
+# 优先尝试导入真实的 comm 实现；导入失败时提供一个轻量级模拟实现，
+# 使得 UI 在没有硬件或依赖时也能启动用于调试/演示。
+try:
+    from comm.serial_comm import SerialComm
+    from comm.protocol import build_frame, verify_frame, parse_frame, CMD_ENABLE, CMD_SPEED
+except Exception:
+    # 轻量模拟类
+    class SerialComm:
+        def __init__(self, *args, **kwargs):
+            self._is_open = False
+            class _Sig:
+                def connect(self, *a, **k):
+                    pass
+            self.data_received = _Sig()
+            self.error = _Sig()
+            self.state_changed = _Sig()
+
+        def open(self, *args, **kwargs):
+            self._is_open = True
+
+        def close(self):
+            self._is_open = False
+
+        def is_open(self):
+            return self._is_open
+
+        def send(self, data: bytes):
+            # 不做任何实际发送，仅模拟成功
+            return True
+
+    def build_frame(address, cmd, payload=b""):
+        return b""
+
+    def verify_frame(data):
+        return True
+
+    def parse_frame(data):
+        return {}
+
+    CMD_ENABLE = 0x10
+    CMD_SPEED = 0x11
 
 
 class RS485Wrapper:
@@ -145,6 +193,14 @@ class RS485Wrapper:
     def stop_pump(self, address: int) -> bool:
         """停止泵"""
         return self.set_pump_speed(address, 0x00, 0)
+    
+    def stop_all(self) -> bool:
+        """停止所有泵（1-12）"""
+        success = True
+        for addr in range(1, 13):
+            if not self.stop_pump(addr):
+                success = False
+        return success
     
     def get_pump_speed(self, address: int) -> Optional[int]:
         """读取泵当前转速（模拟实现，实际需根据协议）"""

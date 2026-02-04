@@ -77,12 +77,14 @@ class ManualDialog(QDialog):
         self.syringe_speed = QDoubleSpinBox()
         self.syringe_speed.setMinimum(0.1)
         self.syringe_speed.setMaximum(100.0)
+        self.syringe_speed.setSingleStep(0.01)
         self.syringe_speed.setValue(10.0)
         ctrl_form.addRow("转速 (mL/min)", self.syringe_speed)
         
         self.syringe_volume = QDoubleSpinBox()
         self.syringe_volume.setMinimum(0.0)
         self.syringe_volume.setMaximum(10.0)
+        self.syringe_volume.setSingleStep(0.01)
         self.syringe_volume.setValue(1.0)
         ctrl_form.addRow("体积 (mL)", self.syringe_volume)
         
@@ -160,6 +162,7 @@ class ManualDialog(QDialog):
         self.peristaltic_speed = QDoubleSpinBox()
         self.peristaltic_speed.setMinimum(0.0)
         self.peristaltic_speed.setMaximum(500.0)
+        self.peristaltic_speed.setSingleStep(0.01)
         self.peristaltic_speed.setValue(100.0)
         ctrl_form.addRow("转速 (RPM)", self.peristaltic_speed)
         
@@ -170,12 +173,14 @@ class ManualDialog(QDialog):
         self.peristaltic_volume = QDoubleSpinBox()
         self.peristaltic_volume.setMinimum(0.0)
         self.peristaltic_volume.setMaximum(100.0)
+        self.peristaltic_volume.setSingleStep(0.01)
         self.peristaltic_volume.setValue(10.0)
         ctrl_form.addRow("体积 (mL)", self.peristaltic_volume)
         
         self.peristaltic_cycle_time = QDoubleSpinBox()
         self.peristaltic_cycle_time.setMinimum(0.1)
         self.peristaltic_cycle_time.setMaximum(60.0)
+        self.peristaltic_cycle_time.setSingleStep(0.01)
         self.peristaltic_cycle_time.setValue(1.0)
         ctrl_form.addRow("周期 (s)", self.peristaltic_cycle_time)
         
