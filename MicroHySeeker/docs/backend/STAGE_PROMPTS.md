@@ -750,7 +750,7 @@ class Flusher:
 
 ### 请按以下顺序工作：
 
-#### 1. 阅读文档（1.5小时）
+#### 1. 阅读文档
 
 请依次阅读：
 
@@ -760,7 +760,7 @@ class Flusher:
 - docs/backend/10_EXPERIMENT_ENGINE.md - 实验引擎规范
 - docs/backend/06_CHI_INSTRUMENT.md - CHI仪器规范
 
-#### 2. 前端需求分析（1小时）
+#### 2. 前端需求分析
 
 查看前端代码：
 
@@ -801,19 +801,19 @@ class Flusher:
 - 步骤执行逻辑
 - CHI通信协议
 
-#### 4. 实现模块（6小时）
+#### 4. 实现模块
 
-**4.1 实现 ProgStep** (1小时)
+**4.1 实现 ProgStep** 
 文件: src/echem_sdl/core/prog_step.py
 
-**4.2 实现 ExpProgram** (1小时)
+**4.2 实现 ExpProgram** 
 文件: src/echem_sdl/core/exp_program.py
 
-**4.3 实现 CHInstrument** (2小时)
+**4.3 实现 CHInstrument**
 文件: src/echem_sdl/hardware/chi_instrument.py
 注意：Mock模式实现
 
-**4.4 实现 ExperimentEngine** (2小时)
+**4.4 实现 ExperimentEngine**
 文件: src/echem_sdl/engine/experiment_engine.py
 
 关键接口：
@@ -837,7 +837,7 @@ class ExperimentEngine:
         ...
 ```
 
-#### 5. 实现辅助服务（2小时）
+#### 5. 实现辅助服务
 
 **5.1 TranslatorService**
 文件: src/echem_sdl/services/translator_service.py
@@ -847,7 +847,7 @@ class ExperimentEngine:
 文件: src/echem_sdl/services/data_exporter.py
 （参考 15_DATA_EXPORTER.md）
 
-#### 6. 创建测试（2小时）
+#### 6. 创建测试
 
 文件: test_stage5_integration.py
 
@@ -859,7 +859,7 @@ class ExperimentEngine:
 - CHI Mock模式
 - 数据导出
 
-#### 7. 验证（2小时）
+#### 7. 验证
 
 ⚠️ **重要：必须先Mock后硬件**
 
@@ -881,7 +881,7 @@ class ExperimentEngine:
    - ✅ 数据是否正确保存？
    - ✅ CHI Mock模式是否工作？
 
-**第二步：硬件集成测试** (30分钟)
+**第二步：硬件集成测试**
 
 1. 切换到硬件模式
 2. 连接所有真实设备：

@@ -38,10 +38,14 @@ class RS485Wrapper:
         self._mock_mode = True  # 默认使用Mock模式
         self._pump_states: Dict[int, dict] = {}  # 泵状态缓存
         self._state_callback: Optional[Callable] = None  # 状态变化回调
+        self._current_port: str = ""  # 当前连接的端口名
         
         # 配液功能
         self._diluters: Dict[int, Diluter] = {}  # 地址 -> Diluter实例
         self._logger = get_logger()  # 获取日志实例
+        
+        # 冲洗功能
+        self._flusher: Optional["Flusher"] = None  # Flusher实例
         
     def set_mock_mode(self, mock_mode: bool):
         """设置模拟模式
@@ -90,6 +94,7 @@ class RS485Wrapper:
             # 连接串口
             self._pump_manager.connect(port, baudrate, timeout=0.1)
             self._connected = True
+            self._current_port = port  # 保存当前端口名以供状态显示
             
             print(f"✅ RS485Wrapper: 连接成功 {port}@{baudrate} (Mock={self._mock_mode})")
             return True
@@ -246,6 +251,69 @@ class RS485Wrapper:
             print(f"❌ RS485Wrapper: 停止泵 {address} 异常 {e}")
             return False
     
+    def run_position_rel(self, address: int, encoder_counts: int, speed: int, 
+                         acceleration: int = 2, direction: int = 0) -> bool:
+        """位置模式运行 - 相对位移
+        
+        使用SR_VFOC位置模式，通过编码器计数精确控制泵位移。
+        
+        Args:
+            address: 泵地址 (1-12)
+            encoder_counts: 编码器计数（正数正转，负数反转）。16384 counts = 1圈
+            speed: 运行速度 RPM (0-1000)
+            acceleration: 加速度等级 (0-255, 默认2)
+            direction: 0=使用encoder_counts符号判断, 1=强制正转, -1=强制反转
+            
+        Returns:
+            bool: 命令发送是否成功
+        """
+        if not self.is_connected():
+            print(f"❌ RS485Wrapper: 未连接，无法执行位置运动 泵{address}")
+            return False
+        
+        # 已知响应不稳定的泵，始终使用fire_and_forget模式
+        RESPONSE_UNSTABLE_PUMPS = [1, 11]
+        use_fire_and_forget = address in RESPONSE_UNSTABLE_PUMPS
+        
+        if use_fire_and_forget:
+            print(f"⚠️ RS485Wrapper: 泵 {address} 响应不稳定，使用fire_and_forget模式")
+        
+        try:
+            # 使用 PumpManager 的位置模式方法
+            success = self._pump_manager.move_position_rel(
+                address, 
+                encoder_counts,
+                speed,
+                acceleration,
+                fire_and_forget=use_fire_and_forget
+            )
+            
+            # 更新状态缓存
+            dir_str = "正向" if encoder_counts >= 0 else "反向"
+            self._pump_states[address] = {
+                "address": address,
+                "online": True,
+                "enabled": True,
+                "speed": speed,
+                "direction": dir_str,
+                "position_mode": True,
+                "target_counts": encoder_counts
+            }
+            
+            if success or use_fire_and_forget:
+                revs = abs(encoder_counts) / 16384.0
+                print(f"✅ RS485Wrapper: 泵 {address} 位置运动已启动 {dir_str} {revs:.2f}圈 @{speed}RPM")
+                return True
+            else:
+                print(f"❌ RS485Wrapper: 泵 {address} 位置运动启动失败")
+                return False
+            
+        except Exception as e:
+            print(f"❌ RS485Wrapper: 泵 {address} 位置运动异常 {e}")
+            import traceback
+            traceback.print_exc()
+            return False
+    
     def stop_pump_fast(self, address: int) -> bool:
         """快速停止泵（不等待响应确认）
         
@@ -358,11 +426,16 @@ class RS485Wrapper:
     
     # ========== 配液功能接口 ==========
     
-    def configure_dilution_channels(self, channels: List[DilutionChannel]) -> bool:
+    def configure_dilution_channels(
+        self, 
+        channels: List[DilutionChannel],
+        calibration_data: Optional[Dict[int, Dict[str, float]]] = None
+    ) -> bool:
         """配置配液通道
         
         Args:
             channels: 配液通道列表（来自前端配置对话框）
+            calibration_data: 校准数据字典 {pump_address: {"ul_per_encoder_count": float}}
             
         Returns:
             bool: 是否配置成功
@@ -380,7 +453,8 @@ class RS485Wrapper:
             ...         color="#FF0000"
             ...     )
             ... ]
-            >>> wrapper.configure_dilution_channels(channels)
+            >>> calibration = {1: {"ul_per_encoder_count": 0.00006}}
+            >>> wrapper.configure_dilution_channels(channels, calibration)
         """
         if not self.is_connected():
             print("❌ RS485Wrapper: 未连接，无法配置配液通道")
@@ -397,7 +471,8 @@ class RS485Wrapper:
                     name=channel.solution_name,
                     stock_concentration=channel.stock_concentration,
                     default_rpm=channel.default_rpm,
-                    default_direction=channel.direction
+                    default_direction=channel.direction,
+                    tube_diameter_mm=getattr(channel, 'tube_diameter_mm', 1.0)
                 )
                 
                 diluter = Diluter(
@@ -406,6 +481,13 @@ class RS485Wrapper:
                     logger=self._logger,
                     mock_mode=self._mock_mode
                 )
+                
+                # 应用校准数据
+                if calibration_data and channel.pump_address in calibration_data:
+                    cal = calibration_data[channel.pump_address]
+                    if 'ul_per_encoder_count' in cal:
+                        diluter.set_calibration(cal['ul_per_encoder_count'])
+                        print(f"  ✅ 已应用校准数据: {cal['ul_per_encoder_count']:.8f} μL/count")
                 
                 self._diluters[channel.pump_address] = diluter
                 
@@ -546,6 +628,355 @@ class RS485Wrapper:
         except Exception as e:
             print(f"❌ RS485Wrapper: 准备配液异常: {e}")
             return 0.0
+    
+    def start_dilution_by_position(
+        self, 
+        channel_id: int, 
+        volume_ul: float,
+        speed: int = 100,
+        acceleration: int = 2,
+        wait_complete: bool = True,
+        callback: Optional[Callable] = None
+    ) -> bool:
+        """使用位置模式开始配液（SR_VFOC推荐）
+        
+        使用编码器位移精确控制体积，不依赖时间估算。
+        
+        Args:
+            channel_id: 通道ID（即泵地址）
+            volume_ul: 体积（微升）
+            speed: 转速 RPM (0-1000)
+            acceleration: 加速度等级 (0-255)
+            wait_complete: 是否等待完成
+            callback: 完成回调函数
+            
+        Returns:
+            bool: 是否成功
+        """
+        if not self.is_connected():
+            print(f"❌ RS485Wrapper: 未连接，无法启动位置模式配液")
+            return False
+        
+        if channel_id not in self._diluters:
+            print(f"❌ RS485Wrapper: 通道 {channel_id} 未配置")
+            return False
+        
+        try:
+            diluter = self._diluters[channel_id]
+            success = diluter.infuse_by_position(
+                volume_ul=volume_ul,
+                speed=speed,
+                acceleration=acceleration,
+                wait_complete=wait_complete,
+                callback=callback
+            )
+            
+            if success:
+                print(f"✅ RS485Wrapper: 通道 {channel_id} 位置模式配液完成 {volume_ul:.2f}μL")
+            else:
+                print(f"❌ RS485Wrapper: 通道 {channel_id} 位置模式配液失败")
+            
+            return success
+            
+        except Exception as e:
+            print(f"❌ RS485Wrapper: 位置模式配液异常: {e}")
+            import traceback
+            traceback.print_exc()
+            return False
+    
+    def set_diluter_calibration(self, channel_id: int, ul_per_encoder_count: float) -> bool:
+        """设置配液器校准参数
+        
+        Args:
+            channel_id: 通道ID（即泵地址）
+            ul_per_encoder_count: 每编码器计数对应的微升数
+            
+        Returns:
+            bool: 是否成功
+        """
+        if channel_id not in self._diluters:
+            print(f"❌ RS485Wrapper: 通道 {channel_id} 未配置")
+            return False
+        
+        try:
+            diluter = self._diluters[channel_id]
+            diluter.set_calibration(ul_per_encoder_count)
+            print(f"✅ RS485Wrapper: 通道 {channel_id} 校准已设置: {ul_per_encoder_count:.8f} μL/count")
+            return True
+        except Exception as e:
+            print(f"❌ RS485Wrapper: 设置校准异常: {e}")
+            return False
+
+    # ========================================
+    # 冲洗功能 (Flusher)
+    # ========================================
+    
+    def configure_flush_channels(
+        self,
+        inlet_address: int,
+        transfer_address: int,
+        outlet_address: int,
+        inlet_rpm: int = 200,
+        transfer_rpm: int = 200,
+        outlet_rpm: int = 200,
+        inlet_duration_s: float = 10.0,
+        transfer_duration_s: float = 10.0,
+        outlet_duration_s: float = 10.0,
+        default_cycles: int = 3
+    ) -> bool:
+        """配置冲洗通道
+        
+        Args:
+            inlet_address: 进水泵地址 (1-12)
+            transfer_address: 移液泵地址 (1-12)
+            outlet_address: 出水泵地址 (1-12)
+            inlet_rpm: 进水泵转速
+            transfer_rpm: 移液泵转速
+            outlet_rpm: 出水泵转速
+            inlet_duration_s: 进水持续时间（秒）
+            transfer_duration_s: 移液持续时间（秒）
+            outlet_duration_s: 出水持续时间（秒）
+            default_cycles: 默认循环数
+            
+        Returns:
+            bool: 是否配置成功
+        """
+        if not BACKEND_AVAILABLE:
+            print("❌ RS485Wrapper: 后端不可用，无法配置冲洗")
+            return False
+        
+        try:
+            from src.echem_sdl.hardware.flusher import (
+                Flusher, FlusherConfig, FlusherPumpConfig
+            )
+            
+            config = FlusherConfig(
+                inlet=FlusherPumpConfig(
+                    address=inlet_address,
+                    name="Inlet",
+                    rpm=inlet_rpm,
+                    direction="FWD",
+                    duration_s=inlet_duration_s
+                ),
+                transfer=FlusherPumpConfig(
+                    address=transfer_address,
+                    name="Transfer",
+                    rpm=transfer_rpm,
+                    direction="FWD",
+                    duration_s=transfer_duration_s
+                ),
+                outlet=FlusherPumpConfig(
+                    address=outlet_address,
+                    name="Outlet",
+                    rpm=outlet_rpm,
+                    direction="FWD",
+                    duration_s=outlet_duration_s
+                ),
+                default_cycles=default_cycles
+            )
+            
+            self._flusher = Flusher(
+                config=config,
+                pump_manager=self._pump_manager,
+                logger=self._logger,
+                mock_mode=self._mock_mode
+            )
+            
+            print(f"✅ RS485Wrapper: 冲洗配置完成 - "
+                  f"Inlet:{inlet_address}, Transfer:{transfer_address}, Outlet:{outlet_address}")
+            return True
+            
+        except Exception as e:
+            print(f"❌ RS485Wrapper: 冲洗配置失败: {e}")
+            import traceback
+            traceback.print_exc()
+            return False
+    
+    def configure_flush_from_config(self, flush_channels: List) -> bool:
+        """从FlushChannel配置列表配置Flusher
+        
+        Args:
+            flush_channels: FlushChannel列表
+            
+        Returns:
+            bool: 是否配置成功
+        """
+        inlet = None
+        transfer = None
+        outlet = None
+        
+        for ch in flush_channels:
+            work_type = getattr(ch, 'work_type', '').lower()
+            if work_type == 'inlet':
+                inlet = ch
+            elif work_type == 'transfer':
+                transfer = ch
+            elif work_type == 'outlet':
+                outlet = ch
+        
+        if not all([inlet, transfer, outlet]):
+            print("❌ RS485Wrapper: 冲洗配置不完整，需要Inlet/Transfer/Outlet三个通道")
+            return False
+        
+        return self.configure_flush_channels(
+            inlet_address=inlet.pump_address,
+            transfer_address=transfer.pump_address,
+            outlet_address=outlet.pump_address,
+            inlet_rpm=getattr(inlet, 'rpm', 200),
+            transfer_rpm=getattr(transfer, 'rpm', 200),
+            outlet_rpm=getattr(outlet, 'rpm', 200),
+            inlet_duration_s=getattr(inlet, 'cycle_duration_s', 10.0),
+            transfer_duration_s=getattr(transfer, 'cycle_duration_s', 10.0),
+            outlet_duration_s=getattr(outlet, 'cycle_duration_s', 10.0)
+        )
+    
+    def start_flush(
+        self,
+        cycles: Optional[int] = None,
+        on_phase_change: Optional[Callable] = None,
+        on_cycle_complete: Optional[Callable] = None,
+        on_complete: Optional[Callable] = None,
+        on_error: Optional[Callable] = None
+    ) -> bool:
+        """开始冲洗循环
+        
+        Args:
+            cycles: 循环次数（可选，默认使用配置值）
+            on_phase_change: 阶段变化回调
+            on_cycle_complete: 循环完成回调
+            on_complete: 全部完成回调
+            on_error: 错误回调
+            
+        Returns:
+            bool: 是否成功启动
+        """
+        if self._flusher is None:
+            print("❌ RS485Wrapper: Flusher未配置")
+            return False
+        
+        try:
+            # 注册回调
+            if on_phase_change:
+                self._flusher.on_phase_change(on_phase_change)
+            if on_cycle_complete:
+                self._flusher.on_cycle_complete(on_cycle_complete)
+            if on_complete:
+                self._flusher.on_complete(on_complete)
+            if on_error:
+                self._flusher.on_error(on_error)
+            
+            # 设置循环数
+            if cycles is not None:
+                self._flusher.set_cycles(cycles)
+            
+            return self._flusher.start()
+            
+        except Exception as e:
+            print(f"❌ RS485Wrapper: 启动冲洗失败: {e}")
+            return False
+    
+    def stop_flush(self) -> bool:
+        """停止冲洗
+        
+        Returns:
+            bool: 是否成功停止
+        """
+        if self._flusher is None:
+            print("❌ RS485Wrapper: Flusher未配置")
+            return False
+        
+        try:
+            return self._flusher.stop()
+        except Exception as e:
+            print(f"❌ RS485Wrapper: 停止冲洗失败: {e}")
+            return False
+    
+    def pause_flush(self) -> bool:
+        """暂停冲洗"""
+        if self._flusher is None:
+            return False
+        return self._flusher.pause()
+    
+    def resume_flush(self) -> bool:
+        """恢复冲洗"""
+        if self._flusher is None:
+            return False
+        return self._flusher.resume()
+    
+    def start_evacuate(
+        self,
+        duration_s: Optional[float] = None,
+        on_complete: Optional[Callable] = None
+    ) -> bool:
+        """开始排空操作
+        
+        Args:
+            duration_s: 排空持续时间（秒）
+            on_complete: 完成回调
+            
+        Returns:
+            bool: 是否成功启动
+        """
+        if self._flusher is None:
+            print("❌ RS485Wrapper: Flusher未配置")
+            return False
+        
+        try:
+            if on_complete:
+                self._flusher.on_complete(on_complete)
+            return self._flusher.evacuate(duration_s)
+        except Exception as e:
+            print(f"❌ RS485Wrapper: 启动排空失败: {e}")
+            return False
+    
+    def start_transfer(
+        self,
+        duration_s: Optional[float] = None,
+        forward: bool = True,
+        on_complete: Optional[Callable] = None
+    ) -> bool:
+        """开始移液操作
+        
+        Args:
+            duration_s: 移液持续时间（秒）
+            forward: 方向（True=正向）
+            on_complete: 完成回调
+            
+        Returns:
+            bool: 是否成功启动
+        """
+        if self._flusher is None:
+            print("❌ RS485Wrapper: Flusher未配置")
+            return False
+        
+        try:
+            if on_complete:
+                self._flusher.on_complete(on_complete)
+            return self._flusher.transfer(duration_s, forward)
+        except Exception as e:
+            print(f"❌ RS485Wrapper: 启动移液失败: {e}")
+            return False
+    
+    def get_flush_status(self) -> Optional[Dict]:
+        """获取冲洗状态
+        
+        Returns:
+            dict: 状态信息，包含 state, phase, current_cycle, total_cycles, progress 等
+        """
+        if self._flusher is None:
+            return None
+        return self._flusher.get_status()
+    
+    def is_flushing(self) -> bool:
+        """是否正在冲洗"""
+        if self._flusher is None:
+            return False
+        return self._flusher.is_running
+    
+    def reset_flusher(self) -> None:
+        """重置Flusher状态"""
+        if self._flusher:
+            self._flusher.reset()
 
 
 # 全局单例

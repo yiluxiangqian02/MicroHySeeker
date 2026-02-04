@@ -1,7 +1,7 @@
 {
-  "rs485_port": "COM3",
+  "rs485_port": "COM7",
   "rs485_baudrate": 38400,
-  "mock_mode": true,
+  "mock_mode": false,
   "pumps": [
     {
       "address": 1,
@@ -120,7 +120,8 @@
       "pump_address": 1,
       "direction": "FWD",
       "default_rpm": 100,
-      "color": "#00FF00"
+      "color": "#00FF00",
+      "tube_diameter_mm": 2.06
     },
     {
       "channel_id": "2",
@@ -129,7 +130,8 @@
       "pump_address": 2,
       "direction": "FWD",
       "default_rpm": 100,
-      "color": "#00FF00"
+      "color": "#00FF00",
+      "tube_diameter_mm": 2.06
     },
     {
       "channel_id": "3",
@@ -137,11 +139,33 @@
       "stock_concentration": 1.0,
       "pump_address": 3,
       "direction": "FWD",
-      "default_rpm": 120,
-      "color": "#00FF00"
+      "default_rpm": 100,
+      "color": "#00FF00",
+      "tube_diameter_mm": 2.06
     }
   ],
-  "flush_channels": [],
+  "flush_channels": [
+    {
+      "channel_id": "1",
+      "pump_name": "冲洗泵1",
+      "pump_address": 6,
+      "direction": "FWD",
+      "rpm": 100,
+      "cycle_duration_s": 30.0,
+      "work_type": "Inlet",
+      "tube_diameter_mm": 1.0
+    },
+    {
+      "channel_id": "2",
+      "pump_name": "冲洗泵2",
+      "pump_address": 7,
+      "direction": "FWD",
+      "rpm": 100,
+      "cycle_duration_s": 30.0,
+      "work_type": "Transfer",
+      "tube_diameter_mm": 1.0
+    }
+  ],
   "calibration_data": {},
   "data_dir": "./data"
 }

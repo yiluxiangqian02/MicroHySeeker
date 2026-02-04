@@ -2,17 +2,21 @@
 手动控制对话框 - 12 台蠕动泵手动控制
 参照 C# ManMotorsOnRS485
 - 统一更大字体
+- 支持速度模式和位置模式(SR_VFOC)控制
 """
 from PySide6.QtWidgets import (
     QDialog, QVBoxLayout, QHBoxLayout, QGridLayout, QLabel, QComboBox,
-    QPushButton, QSpinBox, QTextEdit, QMessageBox, QGroupBox, QFrame,
+    QPushButton, QSpinBox, QDoubleSpinBox, QTextEdit, QMessageBox, QGroupBox, QFrame,
     QWidget, QScrollArea
 )
-from PySide6.QtCore import Qt, Signal, QTimer
+from PySide6.QtCore import Qt, Signal, QTimer, QThread
 from PySide6.QtGui import QFont
 
 from src.models import SystemConfig, PumpConfig
 from src.services.rs485_wrapper import get_rs485_instance
+
+# 编码器常量
+ENCODER_DIVISIONS_PER_REV = 16384
 
 # 全局字体
 FONT_NORMAL = QFont("Microsoft YaHei", 10)
@@ -84,6 +88,20 @@ class PumpControlWidget(QFrame):
         self.dir_combo.addItems(["正向", "反向"])
         layout.addWidget(self.dir_combo)
         
+        # === 位置控制（转几圈）===
+        pos_layout = QHBoxLayout()
+        pos_label = QLabel("圈数:")
+        pos_label.setFont(FONT_NORMAL)
+        pos_layout.addWidget(pos_label)
+        self.revolutions_spin = QDoubleSpinBox()
+        self.revolutions_spin.setFont(FONT_NORMAL)
+        self.revolutions_spin.setRange(0.1, 100.0)
+        self.revolutions_spin.setValue(1.0)
+        self.revolutions_spin.setDecimals(2)
+        self.revolutions_spin.setSingleStep(0.5)
+        pos_layout.addWidget(self.revolutions_spin)
+        layout.addLayout(pos_layout)
+        
         # 控制按钮
         btn_layout = QGridLayout()
         
@@ -98,6 +116,14 @@ class PumpControlWidget(QFrame):
         self.stop_btn.setStyleSheet("background-color: #f44336; color: white;")
         self.stop_btn.clicked.connect(self._on_stop)
         btn_layout.addWidget(self.stop_btn, 0, 1)
+        
+        # 位置模式按钮
+        self.pos_run_btn = QPushButton("位移运行")
+        self.pos_run_btn.setFont(FONT_NORMAL)
+        self.pos_run_btn.setStyleSheet("background-color: #2196F3; color: white;")
+        self.pos_run_btn.setToolTip("使用位置模式(SR_VFOC)精确转动指定圈数")
+        self.pos_run_btn.clicked.connect(self._on_position_run)
+        btn_layout.addWidget(self.pos_run_btn, 1, 0, 1, 2)
         
         layout.addLayout(btn_layout)
     
@@ -132,6 +158,54 @@ class PumpControlWidget(QFrame):
         self.rs485.stop_pump_fast(self.pump_address)
         self.is_running = False
         self.status_indicator.setStyleSheet("color: gray; font-size: 20px;")
+    
+    def _on_position_run(self):
+        """位置模式运行 - 使用SR_VFOC编码器精确控制"""
+        direction = "FWD" if self.dir_combo.currentText() == "正向" else "REV"
+        rpm = self.speed_spin.value()
+        revolutions = self.revolutions_spin.value()
+        
+        # 计算编码器位移
+        encoder_counts = int(revolutions * ENCODER_DIVISIONS_PER_REV)
+        if direction == "REV":
+            encoder_counts = -encoder_counts
+        
+        # 更新状态
+        self.is_running = True
+        self.status_indicator.setStyleSheet("color: #2196F3; font-size: 20px;")  # 蓝色表示位置模式
+        self.pos_run_btn.setEnabled(False)
+        self.pos_run_btn.setText(f"运行中...")
+        
+        # === 后端接口: 位置模式运行 ===
+        try:
+            success = self.rs485.run_position_rel(
+                self.pump_address, 
+                encoder_counts, 
+                rpm, 
+                acceleration=2  # 平滑加速
+            )
+            
+            if success:
+                # 启动定时器检查完成（估算时间）
+                estimated_time_ms = int((revolutions / (rpm / 60.0) + 1.0) * 1000)
+                QTimer.singleShot(estimated_time_ms, self._on_position_complete)
+            else:
+                self._on_position_complete()
+                QMessageBox.warning(self, "错误", f"泵 {self.pump_address} 位置命令失败")
+        except AttributeError:
+            # rs485_wrapper可能没有这个方法
+            self._on_position_complete()
+            QMessageBox.warning(self, "提示", "位置模式需要升级RS485驱动")
+        except Exception as e:
+            self._on_position_complete()
+            QMessageBox.warning(self, "错误", f"位置命令异常: {e}")
+    
+    def _on_position_complete(self):
+        """位置运动完成"""
+        self.is_running = False
+        self.status_indicator.setStyleSheet("color: gray; font-size: 20px;")
+        self.pos_run_btn.setEnabled(True)
+        self.pos_run_btn.setText("位移运行")
 
 
 class ManualControlDialog(QDialog):

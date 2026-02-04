@@ -438,6 +438,22 @@ class ConfigDialog(QDialog):
         if 0 <= row < len(self.config.flush_channels):
             setattr(self.config.flush_channels[row], field, value)
     
+    def _get_used_pump_addresses(self) -> set:
+        """获取所有已被配置的泵地址（配液+冲洗）"""
+        used = set()
+        for ch in self.config.dilution_channels:
+            used.add(ch.pump_address)
+        for ch in self.config.flush_channels:
+            used.add(ch.pump_address)
+        return used
+    
+    def _get_used_flush_work_types(self) -> set:
+        """获取所有已被配置的冲洗工作类型"""
+        used = set()
+        for ch in self.config.flush_channels:
+            used.add(ch.work_type)
+        return used
+    
     def _add_dilution_channel(self):
         """添加配液通道 - 使用输入框的值"""
         name = self.dil_name_input.text().strip()
@@ -445,11 +461,18 @@ class ConfigDialog(QDialog):
             QMessageBox.warning(self, "警告", "请输入溶液名称")
             return
         
+        # 检查泵地址是否已被使用
+        pump_addr = int(self.dil_addr_input.currentText())
+        used_addrs = self._get_used_pump_addresses()
+        if pump_addr in used_addrs:
+            QMessageBox.warning(self, "警告", f"泵地址 {pump_addr} 已被配置，请选择其他地址")
+            return
+        
         new_channel = DilutionChannel(
             channel_id=str(len(self.config.dilution_channels) + 1),
             solution_name=name,
             stock_concentration=round(self.dil_conc_input.value(), 2),
-            pump_address=int(self.dil_addr_input.currentText()),
+            pump_address=pump_addr,
             direction="FWD" if self.dil_dir_input.currentText() == "正向" else "REV",
             default_rpm=self.dil_rpm_input.value(),
             color=self.dil_current_color,
@@ -470,12 +493,26 @@ class ConfigDialog(QDialog):
     
     def _add_flush_channel(self):
         """添加冲洗通道 - 使用输入框的值"""
+        # 检查泵地址是否已被使用
+        pump_addr = int(self.flush_addr_input.currentText())
+        used_addrs = self._get_used_pump_addresses()
+        if pump_addr in used_addrs:
+            QMessageBox.warning(self, "警告", f"泵地址 {pump_addr} 已被配置，请选择其他地址")
+            return
+        
+        # 检查工作类型是否已被配置
+        work_type = self.flush_type_input.currentText()
+        used_types = self._get_used_flush_work_types()
+        if work_type in used_types:
+            QMessageBox.warning(self, "警告", f"工作类型 '{work_type}' 已被配置，每种类型只能配置一次")
+            return
+        
         new_channel = FlushChannel(
             channel_id=str(len(self.config.flush_channels) + 1),
             pump_name=f"冲洗泵{len(self.config.flush_channels) + 1}",
-            pump_address=int(self.flush_addr_input.currentText()),
+            pump_address=pump_addr,
             direction="FWD" if self.flush_dir_input.currentText() == "正向" else "REV",
-            work_type=self.flush_type_input.currentText(),
+            work_type=work_type,
             rpm=self.flush_rpm_input.value(),
             cycle_duration_s=round(self.flush_duration_input.value(), 2),
             tube_diameter_mm=round(self.flush_tube_input.value(), 2)

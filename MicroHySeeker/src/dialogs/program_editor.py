@@ -34,7 +34,7 @@ STEP_TYPE_NAMES = {
     ProgramStepType.TRANSFER: "移液",
     ProgramStepType.PREP_SOL: "配液",
     ProgramStepType.FLUSH: "冲洗",
-    ProgramStepType.EChem: "电化学",
+    ProgramStepType.ECHEM: "电化学",
     ProgramStepType.BLANK: "空白",
     ProgramStepType.EVACUATE: "排空",
 }
@@ -121,7 +121,7 @@ class ProgramEditorDialog(QDialog):
         self.type_combo.addItem("移液", ProgramStepType.TRANSFER)
         self.type_combo.addItem("配液", ProgramStepType.PREP_SOL)
         self.type_combo.addItem("冲洗", ProgramStepType.FLUSH)
-        self.type_combo.addItem("电化学", ProgramStepType.EChem)
+        self.type_combo.addItem("电化学", ProgramStepType.ECHEM)
         self.type_combo.addItem("空白", ProgramStepType.BLANK)
         self.type_combo.addItem("排空", ProgramStepType.EVACUATE)
         self.type_combo.currentIndexChanged.connect(self._on_step_type_changed)
@@ -623,7 +623,7 @@ class ProgramEditorDialog(QDialog):
             ProgramStepType.TRANSFER: 0,
             ProgramStepType.PREP_SOL: 1,
             ProgramStepType.FLUSH: 2,
-            ProgramStepType.EChem: 3,
+            ProgramStepType.ECHEM: 3,
             ProgramStepType.BLANK: 4,
             ProgramStepType.EVACUATE: 5,
         }.get(step.step_type, 0)
@@ -640,7 +640,7 @@ class ProgramEditorDialog(QDialog):
             self._load_prep_sol(step)
         elif step.step_type == ProgramStepType.FLUSH:
             self._load_flush(step)
-        elif step.step_type == ProgramStepType.EChem:
+        elif step.step_type == ProgramStepType.ECHEM:
             self._load_echem(step)
         elif step.step_type == ProgramStepType.BLANK:
             self._load_blank(step)
@@ -774,7 +774,7 @@ class ProgramEditorDialog(QDialog):
             step.flush_cycle_duration_s = round(self.fl_duration_spin.value(), 2)
             step.flush_cycles = self.fl_cycles_spin.value()
             
-        elif step.step_type == ProgramStepType.EChem:
+        elif step.step_type == ProgramStepType.ECHEM:
             if not step.ec_settings:
                 step.ec_settings = ECSettings()
             ec = step.ec_settings

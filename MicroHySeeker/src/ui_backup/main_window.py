@@ -467,10 +467,6 @@ class MainWindow(QMainWindow):
         manual_btn = QAction("手动控制", self)
         manual_btn.triggered.connect(self._on_manual)
         toolbar.addAction(manual_btn)
-        
-        flush_btn = QAction("冲洗", self)
-        flush_btn.triggered.connect(self._on_flush)
-        toolbar.addAction(flush_btn)
     
     def _create_central_widget(self):
         """创建中央区域"""
@@ -688,8 +684,6 @@ class MainWindow(QMainWindow):
         dialog = ConfigDialog(self.config, self)
         dialog.config_saved.connect(self._on_config_saved)
         dialog.exec()
-        # 对话框关闭后更新RS485状态
-        self.update_rs485_status()
     
     def _on_manual(self):
         """手动控制"""
@@ -698,28 +692,15 @@ class MainWindow(QMainWindow):
         dialog.exec()
     
     def _on_calibrate(self):
-        """泵校准 - 直接打开位置模式校准对话框"""
-        from src.dialogs.position_calibrate_dialog import PositionCalibrateDialog
-        dialog = PositionCalibrateDialog(self.config, self)
-        dialog.calibration_saved.connect(self._on_position_calibration_saved)
+        """泵校准"""
+        from src.dialogs.calibrate_dialog import CalibrateDialog
+        dialog = CalibrateDialog(self.config, self)
         dialog.exec()
-    
-    def _on_position_calibration_saved(self, pump_address: int, ul_per_encoder_count: float):
-        """位置校准保存后回调"""
-        self._log(f"泵 {pump_address} 位置校准已保存: {ul_per_encoder_count:.8f} μL/count")
-        # 保存配置
-        self._save_config()
     
     def _on_prep_solution(self):
         """配制溶液"""
         from src.dialogs.prep_solution import PrepSolutionDialog
         dialog = PrepSolutionDialog(self.config, self)
-        dialog.exec()
-    
-    def _on_flush(self):
-        """冲洗"""
-        from src.dialogs.flusher_dialog import FlusherDialog
-        dialog = FlusherDialog(self.config, self)
         dialog.exec()
     
     def _on_about(self):
@@ -901,31 +882,3 @@ class MainWindow(QMainWindow):
         for i in range(12):
             self.pump_diagram.set_pump_running(i + 1, False)
         self.process_widget.set_pump_states(False, False, False)
-
-    def closeEvent(self, event):
-        """关闭窗口时自动断开RS485连接"""
-        try:
-            from src.services.rs485_wrapper import get_rs485_instance
-            rs485 = get_rs485_instance()
-            if rs485.is_connected():
-                rs485.close_port()
-                print("✅ 已自动断开RS485连接")
-        except Exception as e:
-            print(f"⚠️ 关闭RS485时出错: {e}")
-        super().closeEvent(event)
-    
-    def update_rs485_status(self):
-        """更新RS485连接状态显示"""
-        try:
-            from src.services.rs485_wrapper import get_rs485_instance
-            rs485 = get_rs485_instance()
-            if rs485.is_connected():
-                port = getattr(rs485, '_current_port', '')
-                self.status_rs485.setText(f"RS485: 已连接 ({port})")
-                self.status_rs485.setStyleSheet("color: green;")
-            else:
-                self.status_rs485.setText("RS485: 未连接")
-                self.status_rs485.setStyleSheet("color: red;")
-        except Exception as e:
-            self.status_rs485.setText("RS485: 状态未知")
-            self.status_rs485.setStyleSheet("color: gray;")

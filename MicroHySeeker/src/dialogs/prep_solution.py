@@ -3,11 +3,13 @@
 选择溶液配方，设置目标浓度，执行配液
 - 总体积单位改为mL
 - 所有小数保留两位
+- 支持位置模式(SR_VFOC)精确配液
 """
 from PySide6.QtWidgets import (
     QDialog, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
     QTableWidget, QTableWidgetItem, QHeaderView, QDoubleSpinBox,
-    QCheckBox, QMessageBox, QGroupBox, QFormLayout, QProgressBar, QWidget
+    QCheckBox, QMessageBox, QGroupBox, QFormLayout, QProgressBar, QWidget,
+    QComboBox
 )
 from PySide6.QtCore import Qt, Signal, QThread, Slot
 from PySide6.QtGui import QFont
@@ -28,13 +30,16 @@ class PrepSolutionWorker(QThread):
     finished = Signal(bool)  # 是否成功
     
     def __init__(self, channels: List[DilutionChannel], target_concs: List[float], 
-                 is_solvents: List[bool], total_volume: float, rs485):
+                 is_solvents: List[bool], total_volume: float, rs485,
+                 use_position_mode: bool = False, calibration_data: dict = None):
         super().__init__()
         self.channels = channels
         self.target_concs = target_concs
         self.is_solvents = is_solvents
         self.total_volume = total_volume
         self.rs485 = rs485
+        self.use_position_mode = use_position_mode
+        self.calibration_data = calibration_data or {}
         self._abort = False
     
     def abort(self):
@@ -50,7 +55,10 @@ class PrepSolutionWorker(QThread):
                 return
             
             self.progress.emit(5, "配置配液通道...")
-            success = self.rs485.configure_dilution_channels(self.channels)
+            success = self.rs485.configure_dilution_channels(
+                self.channels, 
+                calibration_data=self.calibration_data
+            )
             if not success:
                 self.progress.emit(0, "错误：配置通道失败")
                 self.finished.emit(False)
@@ -66,6 +74,7 @@ class PrepSolutionWorker(QThread):
                 return
             
             current_step = 0
+            mode_text = "位置模式" if self.use_position_mode else "速度模式"
             
             # 3. 依次执行配液
             for i, (ch, vol, target, is_solvent) in enumerate(zip(
@@ -86,7 +95,7 @@ class PrepSolutionWorker(QThread):
                 channel_id = ch.pump_address
                 self.progress.emit(
                     base_progress, 
-                    f"准备通道 {channel_id} ({ch.solution_name}): {vol:.2f} μL"
+                    f"[{mode_text}] 准备通道 {channel_id} ({ch.solution_name}): {vol:.2f} μL"
                 )
                 
                 # 使用准备方法计算体积（如果不是溶剂）
@@ -103,60 +112,45 @@ class PrepSolutionWorker(QThread):
                 # 开始配液
                 self.progress.emit(
                     base_progress + 2,
-                    f"注入 {ch.solution_name}: {vol:.2f} μL"
+                    f"[{mode_text}] 注入 {ch.solution_name}: {vol:.2f} μL"
                 )
                 
-                success = self.rs485.start_dilution(channel_id, vol)
-                if not success:
-                    self.progress.emit(0, f"错误：启动通道 {channel_id} 失败")
-                    self.finished.emit(False)
-                    return
-                
-                # 等待配液完成
-                import time
-                from echem_sdl.hardware.diluter import Diluter
-                duration = Diluter.calculate_duration(vol, ch.default_rpm)
-                max_wait = duration + 5.0  # 最多等待额外5秒
-                start_time = time.time()
-                
-                while True:
-                    if self._abort:
-                        self.rs485.stop_dilution(channel_id)
-                        self.progress.emit(0, "配液已取消")
-                        self.finished.emit(False)
-                        return
-                    
-                    # 查询进度
-                    progress_info = self.rs485.get_dilution_progress(channel_id)
-                    state = progress_info.get('state', 'unknown')
-                    percent = progress_info.get('progress', 0)
-                    
-                    # 更新显示
-                    step_progress = base_progress + int(percent * 0.8)  # 每步最多80%进度
-                    self.progress.emit(
-                        step_progress,
-                        f"注入 {ch.solution_name}: {percent:.1f}%"
+                # 根据模式选择配液方法
+                if self.use_position_mode:
+                    # 位置模式 - 阻塞等待完成
+                    success = self.rs485.start_dilution_by_position(
+                        channel_id, 
+                        vol,
+                        speed=ch.default_rpm,
+                        wait_complete=True
                     )
-                    
-                    if state == 'completed':
-                        break
-                    elif state == 'error':
-                        self.progress.emit(0, f"错误：通道 {channel_id} 配液失败")
+                    if success:
+                        self.progress.emit(
+                            base_progress + 8,
+                            f"通道 {channel_id} ({ch.solution_name}) 完成"
+                        )
+                    else:
+                        self.progress.emit(0, f"错误：通道 {channel_id} 位置模式配液失败")
+                        self.finished.emit(False)
+                        return
+                else:
+                    # 速度模式 - 原有逻辑
+                    success = self.rs485.start_dilution(channel_id, vol)
+                    if not success:
+                        self.progress.emit(0, f"错误：启动通道 {channel_id} 失败")
                         self.finished.emit(False)
                         return
                     
-                    # 超时检查
-                    if time.time() - start_time > max_wait:
-                        self.progress.emit(0, f"错误：通道 {channel_id} 配液超时")
+                    # 等待配液完成 (速度模式)
+                    wait_result = self._wait_dilution_complete(channel_id, ch, vol, base_progress)
+                    if not wait_result:
                         self.finished.emit(False)
                         return
                     
-                    self.msleep(200)  # 每200ms查询一次
-                
-                self.progress.emit(
-                    base_progress + 8,
-                    f"通道 {channel_id} ({ch.solution_name}) 完成"
-                )
+                    self.progress.emit(
+                        base_progress + 8,
+                        f"通道 {channel_id} ({ch.solution_name}) 完成"
+                    )
             
             self.progress.emit(100, "配液完成")
             self.finished.emit(True)
@@ -166,6 +160,50 @@ class PrepSolutionWorker(QThread):
             traceback.print_exc()
             self.progress.emit(0, f"配液失败: {e}")
             self.finished.emit(False)
+    
+    def _wait_dilution_complete(self, channel_id: int, ch, vol: float, base_progress: int) -> bool:
+        """等待速度模式配液完成
+        
+        Returns:
+            bool: True=成功完成, False=失败或取消
+        """
+        import time
+        from echem_sdl.hardware.diluter import Diluter
+        
+        duration = Diluter.calculate_duration(vol, ch.default_rpm)
+        max_wait = duration + 5.0  # 最多等待额外5秒
+        start_time = time.time()
+        
+        while True:
+            if self._abort:
+                self.rs485.stop_dilution(channel_id)
+                self.progress.emit(0, "配液已取消")
+                return False
+            
+            # 查询进度
+            progress_info = self.rs485.get_dilution_progress(channel_id)
+            state = progress_info.get('state', 'unknown')
+            percent = progress_info.get('progress', 0)
+            
+            # 更新显示
+            step_progress = base_progress + int(percent * 0.8)  # 每步最多80%进度
+            self.progress.emit(
+                step_progress,
+                f"注入 {ch.solution_name}: {percent:.1f}%"
+            )
+            
+            if state == 'completed':
+                return True
+            elif state == 'error':
+                self.progress.emit(0, f"错误：通道 {channel_id} 配液失败")
+                return False
+            
+            # 超时检查
+            if time.time() - start_time > max_wait:
+                self.progress.emit(0, f"错误：通道 {channel_id} 配液超时")
+                return False
+            
+            self.msleep(200)  # 每200ms查询一次
     
     def _calculate_volumes(self) -> List[float]:
         """计算各溶液注入量"""
@@ -246,6 +284,25 @@ class PrepSolutionDialog(QDialog):
         self.total_vol_spin.setDecimals(2)
         self.total_vol_spin.setValue(1.00)
         vol_layout.addWidget(self.total_vol_spin)
+        
+        vol_layout.addSpacing(30)
+        
+        # 配液模式选择
+        mode_label = QLabel("配液模式:")
+        mode_label.setFont(FONT_NORMAL)
+        vol_layout.addWidget(mode_label)
+        self.mode_combo = QComboBox()
+        self.mode_combo.setFont(FONT_NORMAL)
+        self.mode_combo.addItems([
+            "位置模式 (SR_VFOC推荐)", 
+            "速度模式 (传统)"
+        ])
+        self.mode_combo.setToolTip(
+            "位置模式：使用编码器精确控制位移，推荐用于SR_VFOC驱动\n"
+            "速度模式：使用时间估算控制体积，传统方式"
+        )
+        vol_layout.addWidget(self.mode_combo)
+        
         vol_layout.addStretch()
         layout.addLayout(vol_layout)
         
@@ -340,17 +397,28 @@ class PrepSolutionDialog(QDialog):
         # 将mL转换为μL（UI显示mL，后端使用μL）
         total_volume_ul = self.total_vol_spin.value() * 1000.0
         
+        # 获取配液模式
+        use_position_mode = self.mode_combo.currentIndex() == 0  # 0=位置模式
+        
+        # 获取校准数据
+        calibration_data = getattr(self.config, 'calibration_data', {})
+        
+        mode_text = "位置模式" if use_position_mode else "速度模式"
+        print(f"🧪 开始配液 ({mode_text}), 总体积={total_volume_ul:.2f}μL")
+        
         # 启动工作线程
         self.worker = PrepSolutionWorker(
             channels, target_concs, is_solvents,
-            total_volume_ul, self.rs485
+            total_volume_ul, self.rs485,
+            use_position_mode=use_position_mode,
+            calibration_data=calibration_data
         )
         self.worker.progress.connect(self._on_progress)
         self.worker.finished.connect(self._on_finished)
         self.worker.start()
         
         self.start_btn.setEnabled(False)
-        self.status_label.setText("正在配制...")
+        self.status_label.setText(f"正在配制 ({mode_text})...")
     
     def _on_cancel(self):
         """取消"""
