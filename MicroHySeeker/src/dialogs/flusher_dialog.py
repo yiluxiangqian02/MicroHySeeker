@@ -2,8 +2,8 @@
 冲洗对话框 - Flusher Dialog
 
 提供冲洗功能的图形界面：
-1. 配置冲洗通道（Inlet/Transfer/Outlet）
-2. 设置冲洗参数（循环数、持续时间、转速）
+1. 显示系统配置中的冲洗通道（只读，配置在系统设置中修改）
+2. 设置冲洗参数（循环数）
 3. 执行冲洗循环
 4. 单独执行排空或移液
 """
@@ -29,12 +29,33 @@ class FlusherDialog(QDialog):
         from src.services.rs485_wrapper import get_rs485_instance
         self.rs485 = get_rs485_instance()
         
+        # 解析冲洗通道配置
+        self._inlet_channel = None
+        self._transfer_channel = None
+        self._outlet_channel = None
+        self._parse_flush_channels()
+        
         self._init_ui()
         self._load_config()
         
         # 状态更新定时器
         self._status_timer = QTimer(self)
         self._status_timer.timeout.connect(self._update_status)
+    
+    def _parse_flush_channels(self):
+        """解析系统配置中的冲洗通道"""
+        for ch in self.config.flush_channels:
+            work_type = getattr(ch, 'work_type', '').lower()
+            if work_type == 'inlet':
+                self._inlet_channel = ch
+            elif work_type == 'transfer':
+                self._transfer_channel = ch
+            elif work_type == 'outlet':
+                self._outlet_channel = ch
+    
+    def _check_config_complete(self) -> bool:
+        """检查冲洗配置是否完整"""
+        return all([self._inlet_channel, self._transfer_channel, self._outlet_channel])
     
     def _init_ui(self):
         """初始化UI"""
@@ -43,65 +64,56 @@ class FlusherDialog(QDialog):
         
         layout = QVBoxLayout(self)
         
-        # 冲洗通道配置
-        config_group = QGroupBox("冲洗通道配置")
+        # 配置状态提示
+        if not self._check_config_complete():
+            warning_label = QLabel("⚠️ 冲洗通道配置不完整！请在 [系统配置] 中添加 Inlet、Transfer、Outlet 三个冲洗通道。")
+            warning_label.setStyleSheet("color: #f44336; font-weight: bold; padding: 10px; background-color: #ffebee; border-radius: 5px;")
+            warning_label.setWordWrap(True)
+            layout.addWidget(warning_label)
+        
+        # 冲洗通道配置 (只读显示)
+        config_group = QGroupBox("冲洗通道配置 (在系统配置中修改)")
         config_layout = QGridLayout(config_group)
         
+        # 表头
+        config_layout.addWidget(QLabel("<b>类型</b>"), 0, 0)
+        config_layout.addWidget(QLabel("<b>泵地址</b>"), 0, 1)
+        config_layout.addWidget(QLabel("<b>方向</b>"), 0, 2)
+        config_layout.addWidget(QLabel("<b>转速</b>"), 0, 3)
+        config_layout.addWidget(QLabel("<b>时长(秒)</b>"), 0, 4)
+        
         # Inlet
-        config_layout.addWidget(QLabel("进水泵 (Inlet):"), 0, 0)
-        self.inlet_addr_combo = QComboBox()
-        self.inlet_addr_combo.addItems([f"泵 {i}" for i in range(1, 13)])
-        config_layout.addWidget(self.inlet_addr_combo, 0, 1)
-        
-        config_layout.addWidget(QLabel("转速:"), 0, 2)
-        self.inlet_rpm_spin = QSpinBox()
-        self.inlet_rpm_spin.setRange(10, 500)
-        self.inlet_rpm_spin.setValue(200)
-        config_layout.addWidget(self.inlet_rpm_spin, 0, 3)
-        
-        config_layout.addWidget(QLabel("时长(秒):"), 0, 4)
-        self.inlet_duration_spin = QDoubleSpinBox()
-        self.inlet_duration_spin.setRange(0.5, 120.0)
-        self.inlet_duration_spin.setValue(10.0)
-        config_layout.addWidget(self.inlet_duration_spin, 0, 5)
+        config_layout.addWidget(QLabel("进水泵 (Inlet):"), 1, 0)
+        self.inlet_addr_label = QLabel(self._get_channel_display(self._inlet_channel, 'address'))
+        config_layout.addWidget(self.inlet_addr_label, 1, 1)
+        self.inlet_dir_label = QLabel(self._get_channel_display(self._inlet_channel, 'direction'))
+        config_layout.addWidget(self.inlet_dir_label, 1, 2)
+        self.inlet_rpm_label = QLabel(self._get_channel_display(self._inlet_channel, 'rpm'))
+        config_layout.addWidget(self.inlet_rpm_label, 1, 3)
+        self.inlet_duration_label = QLabel(self._get_channel_display(self._inlet_channel, 'duration'))
+        config_layout.addWidget(self.inlet_duration_label, 1, 4)
         
         # Transfer
-        config_layout.addWidget(QLabel("移液泵 (Transfer):"), 1, 0)
-        self.transfer_addr_combo = QComboBox()
-        self.transfer_addr_combo.addItems([f"泵 {i}" for i in range(1, 13)])
-        self.transfer_addr_combo.setCurrentIndex(1)  # 默认泵2
-        config_layout.addWidget(self.transfer_addr_combo, 1, 1)
-        
-        config_layout.addWidget(QLabel("转速:"), 1, 2)
-        self.transfer_rpm_spin = QSpinBox()
-        self.transfer_rpm_spin.setRange(10, 500)
-        self.transfer_rpm_spin.setValue(200)
-        config_layout.addWidget(self.transfer_rpm_spin, 1, 3)
-        
-        config_layout.addWidget(QLabel("时长(秒):"), 1, 4)
-        self.transfer_duration_spin = QDoubleSpinBox()
-        self.transfer_duration_spin.setRange(0.5, 120.0)
-        self.transfer_duration_spin.setValue(10.0)
-        config_layout.addWidget(self.transfer_duration_spin, 1, 5)
+        config_layout.addWidget(QLabel("移液泵 (Transfer):"), 2, 0)
+        self.transfer_addr_label = QLabel(self._get_channel_display(self._transfer_channel, 'address'))
+        config_layout.addWidget(self.transfer_addr_label, 2, 1)
+        self.transfer_dir_label = QLabel(self._get_channel_display(self._transfer_channel, 'direction'))
+        config_layout.addWidget(self.transfer_dir_label, 2, 2)
+        self.transfer_rpm_label = QLabel(self._get_channel_display(self._transfer_channel, 'rpm'))
+        config_layout.addWidget(self.transfer_rpm_label, 2, 3)
+        self.transfer_duration_label = QLabel(self._get_channel_display(self._transfer_channel, 'duration'))
+        config_layout.addWidget(self.transfer_duration_label, 2, 4)
         
         # Outlet
-        config_layout.addWidget(QLabel("出水泵 (Outlet):"), 2, 0)
-        self.outlet_addr_combo = QComboBox()
-        self.outlet_addr_combo.addItems([f"泵 {i}" for i in range(1, 13)])
-        self.outlet_addr_combo.setCurrentIndex(2)  # 默认泵3
-        config_layout.addWidget(self.outlet_addr_combo, 2, 1)
-        
-        config_layout.addWidget(QLabel("转速:"), 2, 2)
-        self.outlet_rpm_spin = QSpinBox()
-        self.outlet_rpm_spin.setRange(10, 500)
-        self.outlet_rpm_spin.setValue(200)
-        config_layout.addWidget(self.outlet_rpm_spin, 2, 3)
-        
-        config_layout.addWidget(QLabel("时长(秒):"), 2, 4)
-        self.outlet_duration_spin = QDoubleSpinBox()
-        self.outlet_duration_spin.setRange(0.5, 120.0)
-        self.outlet_duration_spin.setValue(10.0)
-        config_layout.addWidget(self.outlet_duration_spin, 2, 5)
+        config_layout.addWidget(QLabel("出水泵 (Outlet):"), 3, 0)
+        self.outlet_addr_label = QLabel(self._get_channel_display(self._outlet_channel, 'address'))
+        config_layout.addWidget(self.outlet_addr_label, 3, 1)
+        self.outlet_dir_label = QLabel(self._get_channel_display(self._outlet_channel, 'direction'))
+        config_layout.addWidget(self.outlet_dir_label, 3, 2)
+        self.outlet_rpm_label = QLabel(self._get_channel_display(self._outlet_channel, 'rpm'))
+        config_layout.addWidget(self.outlet_rpm_label, 3, 3)
+        self.outlet_duration_label = QLabel(self._get_channel_display(self._outlet_channel, 'duration'))
+        config_layout.addWidget(self.outlet_duration_label, 3, 4)
         
         layout.addWidget(config_group)
         
@@ -117,10 +129,11 @@ class FlusherDialog(QDialog):
         
         params_layout.addStretch()
         
-        # 配置按钮
-        self.apply_config_btn = QPushButton("应用配置")
-        self.apply_config_btn.clicked.connect(self._apply_config)
-        params_layout.addWidget(self.apply_config_btn)
+        # 刷新配置按钮
+        self.refresh_config_btn = QPushButton("🔄 刷新配置")
+        self.refresh_config_btn.setToolTip("从系统配置重新加载冲洗通道")
+        self.refresh_config_btn.clicked.connect(self._refresh_config)
+        params_layout.addWidget(self.refresh_config_btn)
         
         layout.addWidget(params_group)
         
@@ -214,69 +227,97 @@ class FlusherDialog(QDialog):
         line.setFrameShadow(QFrame.Sunken)
         return line
     
-    def _load_config(self):
-        """从配置加载冲洗通道"""
-        for ch in self.config.flush_channels:
-            work_type = getattr(ch, 'work_type', '').lower()
-            addr = ch.pump_address - 1  # ComboBox索引从0开始
-            rpm = getattr(ch, 'rpm', 200)
-            duration = getattr(ch, 'cycle_duration_s', 10.0)
-            
-            if addr < 0 or addr >= 12:
-                continue
-                
-            if work_type == 'inlet':
-                self.inlet_addr_combo.setCurrentIndex(addr)
-                self.inlet_rpm_spin.setValue(rpm)
-                self.inlet_duration_spin.setValue(duration)
-            elif work_type == 'transfer':
-                self.transfer_addr_combo.setCurrentIndex(addr)
-                self.transfer_rpm_spin.setValue(rpm)
-                self.transfer_duration_spin.setValue(duration)
-            elif work_type == 'outlet':
-                self.outlet_addr_combo.setCurrentIndex(addr)
-                self.outlet_rpm_spin.setValue(rpm)
-                self.outlet_duration_spin.setValue(duration)
-        
-        self._log("配置已加载")
+    def _get_channel_display(self, channel: FlushChannel, field: str) -> str:
+        """获取通道显示文本"""
+        if channel is None:
+            return "<未配置>"
+        if field == 'address':
+            return f"泵 {channel.pump_address}"
+        elif field == 'direction':
+            return "正向" if channel.direction == "FWD" else "反向"
+        elif field == 'rpm':
+            return str(channel.rpm)
+        elif field == 'duration':
+            return f"{channel.cycle_duration_s:.1f}"
+        return "-"
     
-    def _apply_config(self):
-        """应用当前配置"""
-        inlet_addr = self.inlet_addr_combo.currentIndex() + 1
-        transfer_addr = self.transfer_addr_combo.currentIndex() + 1
-        outlet_addr = self.outlet_addr_combo.currentIndex() + 1
+    def _refresh_config(self):
+        """从系统配置刷新冲洗通道"""
+        self._parse_flush_channels()
+        self._update_display()
+        self._apply_config_to_backend()
+        self._log("配置已刷新")
+    
+    def _update_display(self):
+        """更新显示"""
+        # 更新 Inlet
+        self.inlet_addr_label.setText(self._get_channel_display(self._inlet_channel, 'address'))
+        self.inlet_dir_label.setText(self._get_channel_display(self._inlet_channel, 'direction'))
+        self.inlet_rpm_label.setText(self._get_channel_display(self._inlet_channel, 'rpm'))
+        self.inlet_duration_label.setText(self._get_channel_display(self._inlet_channel, 'duration'))
         
-        # 检查地址冲突
-        addrs = [inlet_addr, transfer_addr, outlet_addr]
-        if len(set(addrs)) != 3:
-            QMessageBox.warning(self, "配置错误", "三个冲洗泵不能使用相同的地址！")
-            return
+        # 更新 Transfer
+        self.transfer_addr_label.setText(self._get_channel_display(self._transfer_channel, 'address'))
+        self.transfer_dir_label.setText(self._get_channel_display(self._transfer_channel, 'direction'))
+        self.transfer_rpm_label.setText(self._get_channel_display(self._transfer_channel, 'rpm'))
+        self.transfer_duration_label.setText(self._get_channel_display(self._transfer_channel, 'duration'))
+        
+        # 更新 Outlet
+        self.outlet_addr_label.setText(self._get_channel_display(self._outlet_channel, 'address'))
+        self.outlet_dir_label.setText(self._get_channel_display(self._outlet_channel, 'direction'))
+        self.outlet_rpm_label.setText(self._get_channel_display(self._outlet_channel, 'rpm'))
+        self.outlet_duration_label.setText(self._get_channel_display(self._outlet_channel, 'duration'))
+        
+        # 更新按钮状态
+        config_complete = self._check_config_complete()
+        self.start_btn.setEnabled(config_complete)
+        self.evacuate_btn.setEnabled(config_complete)
+        self.transfer_btn.setEnabled(config_complete)
+    
+    def _load_config(self):
+        """从配置加载冲洗通道并应用到后端"""
+        self._apply_config_to_backend()
+        if self._check_config_complete():
+            self._log("冲洗配置已加载")
+        else:
+            missing = []
+            if not self._inlet_channel:
+                missing.append("Inlet")
+            if not self._transfer_channel:
+                missing.append("Transfer")
+            if not self._outlet_channel:
+                missing.append("Outlet")
+            self._log(f"⚠️ 缺少冲洗通道配置: {', '.join(missing)}")
+    
+    def _apply_config_to_backend(self):
+        """应用当前配置到后端"""
+        if not self._check_config_complete():
+            return False
         
         result = self.rs485.configure_flush_channels(
-            inlet_address=inlet_addr,
-            transfer_address=transfer_addr,
-            outlet_address=outlet_addr,
-            inlet_rpm=self.inlet_rpm_spin.value(),
-            transfer_rpm=self.transfer_rpm_spin.value(),
-            outlet_rpm=self.outlet_rpm_spin.value(),
-            inlet_duration_s=self.inlet_duration_spin.value(),
-            transfer_duration_s=self.transfer_duration_spin.value(),
-            outlet_duration_s=self.outlet_duration_spin.value(),
+            inlet_address=self._inlet_channel.pump_address,
+            transfer_address=self._transfer_channel.pump_address,
+            outlet_address=self._outlet_channel.pump_address,
+            inlet_rpm=self._inlet_channel.rpm,
+            transfer_rpm=self._transfer_channel.rpm,
+            outlet_rpm=self._outlet_channel.rpm,
+            inlet_duration_s=self._inlet_channel.cycle_duration_s,
+            transfer_duration_s=self._transfer_channel.cycle_duration_s,
+            outlet_duration_s=self._outlet_channel.cycle_duration_s,
             default_cycles=self.cycles_spin.value()
         )
-        
-        if result:
-            self._log(f"✅ 冲洗配置已应用: Inlet={inlet_addr}, Transfer={transfer_addr}, Outlet={outlet_addr}")
-            QMessageBox.information(self, "成功", "冲洗配置已应用")
-        else:
-            self._log("❌ 冲洗配置失败")
-            QMessageBox.critical(self, "错误", "冲洗配置失败，请检查RS485连接")
+        return result
     
     def _start_flush(self):
         """开始冲洗"""
+        if not self._check_config_complete():
+            QMessageBox.warning(self, "配置不完整", 
+                "请先在 [系统配置] 中添加完整的冲洗通道配置（Inlet、Transfer、Outlet）")
+            return
+        
         # 确保已配置
         if not self.rs485.get_flush_status():
-            self._apply_config()
+            self._apply_config_to_backend()
         
         cycles = self.cycles_spin.value()
         
@@ -295,7 +336,7 @@ class FlusherDialog(QDialog):
             self.stop_btn.setEnabled(True)
             self.evacuate_btn.setEnabled(False)
             self.transfer_btn.setEnabled(False)
-            self.apply_config_btn.setEnabled(False)
+            self.refresh_config_btn.setEnabled(False)
             
             # 启动状态更新定时器
             self._status_timer.start(100)  # 每100ms更新
@@ -311,11 +352,16 @@ class FlusherDialog(QDialog):
     
     def _start_evacuate(self):
         """开始排空"""
+        if not self._check_config_complete():
+            QMessageBox.warning(self, "配置不完整", 
+                "请先在 [系统配置] 中添加完整的冲洗通道配置")
+            return
+        
         # 确保已配置
         if not self.rs485.get_flush_status():
-            self._apply_config()
+            self._apply_config_to_backend()
         
-        duration = self.outlet_duration_spin.value()
+        duration = self._outlet_channel.cycle_duration_s if self._outlet_channel else 10.0
         self._log(f"开始排空: {duration}秒")
         
         result = self.rs485.start_evacuate(
@@ -333,11 +379,16 @@ class FlusherDialog(QDialog):
     
     def _start_transfer(self):
         """开始移液"""
+        if not self._check_config_complete():
+            QMessageBox.warning(self, "配置不完整", 
+                "请先在 [系统配置] 中添加完整的冲洗通道配置")
+            return
+        
         # 确保已配置
         if not self.rs485.get_flush_status():
-            self._apply_config()
+            self._apply_config_to_backend()
         
-        duration = self.transfer_duration_spin.value()
+        duration = self._transfer_channel.cycle_duration_s if self._transfer_channel else 10.0
         self._log(f"开始移液: {duration}秒")
         
         result = self.rs485.start_transfer(
@@ -356,11 +407,12 @@ class FlusherDialog(QDialog):
     
     def _set_running_state(self, running: bool):
         """设置运行状态UI"""
-        self.start_btn.setEnabled(not running)
+        config_complete = self._check_config_complete()
+        self.start_btn.setEnabled(not running and config_complete)
         self.stop_btn.setEnabled(running)
-        self.evacuate_btn.setEnabled(not running)
-        self.transfer_btn.setEnabled(not running)
-        self.apply_config_btn.setEnabled(not running)
+        self.evacuate_btn.setEnabled(not running and config_complete)
+        self.transfer_btn.setEnabled(not running and config_complete)
+        self.refresh_config_btn.setEnabled(not running)
     
     def _reset_ui(self):
         """重置UI状态"""

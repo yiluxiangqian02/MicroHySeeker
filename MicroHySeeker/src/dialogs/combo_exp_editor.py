@@ -29,7 +29,7 @@ STEP_TYPE_NAMES = {
     ProgramStepType.TRANSFER: "移液",
     ProgramStepType.PREP_SOL: "配液",
     ProgramStepType.FLUSH: "冲洗",
-    ProgramStepType.EChem: "电化学",
+    ProgramStepType.ECHEM: "电化学",
     ProgramStepType.BLANK: "空白",
     ProgramStepType.EVACUATE: "排空",
 }

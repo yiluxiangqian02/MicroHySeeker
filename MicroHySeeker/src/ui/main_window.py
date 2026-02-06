@@ -350,8 +350,8 @@ class MainWindow(QMainWindow):
         self.current_combo_index = 0
         self.total_combo_count = 0
         
-        # 运行引擎
-        self.runner = ExperimentRunner()
+        # 运行引擎 (传入系统配置)
+        self.runner = ExperimentRunner(config=self.config)
         self.runner.step_started.connect(self._on_step_started)
         self.runner.step_finished.connect(self._on_step_finished)
         self.runner.log_message.connect(self._on_log_message)
@@ -740,6 +740,20 @@ class MainWindow(QMainWindow):
             QMessageBox.warning(self, "警告", "请先编辑单次实验程序")
             return
         
+        # --- 运行前预检查 ---
+        errors = self.runner.pre_check_experiment(self.single_experiment)
+        if errors:
+            error_text = "\n".join(f"• {e}" for e in errors)
+            QMessageBox.critical(
+                self, "预检查失败",
+                f"发现 {len(errors)} 个问题，无法启动实验：\n\n{error_text}\n\n"
+                f"请修正后重试。"
+            )
+            self.log_message(f"预检查失败: {len(errors)} 个错误", "error")
+            for err in errors:
+                self.log_message(f"  ✖ {err}", "error")
+            return
+        
         self._refresh_step_list()
         self.runner.run_experiment(self.single_experiment)
         self.status_exp.setText("状态: 运行中")
@@ -751,10 +765,109 @@ class MainWindow(QMainWindow):
             QMessageBox.warning(self, "警告", "请先编辑组合实验程序")
             return
         
+        if not self.single_experiment:
+            QMessageBox.warning(self, "警告", "请先编辑单次实验程序")
+            return
+        
+        # --- 运行前预检查（用基础实验做检查） ---
+        errors = self.runner.pre_check_experiment(self.single_experiment)
+        if errors:
+            error_text = "\n".join(f"• {e}" for e in errors)
+            QMessageBox.critical(
+                self, "预检查失败",
+                f"发现 {len(errors)} 个问题，无法启动组合实验：\n\n{error_text}\n\n"
+                f"请修正后重试。"
+            )
+            self.log_message(f"组合实验预检查失败: {len(errors)} 个错误", "error")
+            for err in errors:
+                self.log_message(f"  ✖ {err}", "error")
+            return
+        
         self.current_combo_index = 0
         self.total_combo_count = len(self.combo_params)
         self.process_widget.set_combo_progress(1, self.total_combo_count)
         self.log_message(f"开始运行组合实验，共 {self.total_combo_count} 组", "info")
+        
+        # 应用第一组参数并运行
+        self._apply_combo_params_and_run(0)
+    
+    def _apply_combo_params_and_run(self, combo_index: int):
+        """应用组合参数并运行实验
+        
+        Args:
+            combo_index: 组合参数索引
+        """
+        if combo_index >= len(self.combo_params):
+            self.log_message("所有组合实验完成", "success")
+            return
+        
+        params = self.combo_params[combo_index]
+        self.log_message(f"应用组合 {combo_index + 1} 参数: {params}", "info")
+        
+        # 将参数应用到实验步骤
+        import copy
+        experiment_copy = copy.deepcopy(self.single_experiment)
+        
+        for param_key, param_value in params.items():
+            # param_key 格式: "步骤序号:参数名" 或 "步骤序号:溶液/参数名"
+            if ':' in param_key:
+                parts = param_key.split(':', 1)
+                step_idx = int(parts[0]) - 1
+                param_name = parts[1]
+                
+                if 0 <= step_idx < len(experiment_copy.steps):
+                    step = experiment_copy.steps[step_idx]
+                    self._apply_param_to_step(step, param_name, param_value)
+        
+        # 运行实验
+        self.runner.run_experiment(experiment_copy)
+        self.status_exp.setText(f"状态: 运行中 (组合 {combo_index + 1}/{self.total_combo_count})")
+    
+    def _apply_param_to_step(self, step, param_name: str, param_value: float):
+        """将参数值应用到步骤
+        
+        Args:
+            step: 步骤对象
+            param_name: 参数名
+            param_value: 参数值
+        """
+        from src.models import ProgramStepType
+        
+        # 根据步骤类型和参数名设置值
+        if step.step_type == ProgramStepType.TRANSFER:
+            if param_name == "转速(RPM)":
+                step.pump_rpm = int(param_value)
+            elif param_name == "持续时间(s)":
+                step.transfer_duration = param_value
+        elif step.step_type == ProgramStepType.FLUSH:
+            if param_name == "转速(RPM)":
+                step.flush_rpm = int(param_value)
+            elif param_name == "单次时长(s)":
+                step.flush_cycle_duration_s = param_value
+            elif param_name == "循环次数":
+                step.flush_cycles = int(param_value)
+        elif step.step_type == ProgramStepType.EVACUATE:
+            if param_name == "转速(RPM)":
+                step.pump_rpm = int(param_value)
+            elif param_name == "单次时长(s)":
+                step.transfer_duration = param_value
+            elif param_name == "循环次数":
+                step.flush_cycles = int(param_value)
+        elif step.step_type == ProgramStepType.ECHEM:
+            if step.ec_settings:
+                if param_name == "扫描速率":
+                    step.ec_settings.scan_rate = param_value
+                elif param_name == "初始电位":
+                    step.ec_settings.e0 = param_value
+                elif param_name == "上限电位":
+                    step.ec_settings.eh = param_value
+                elif param_name == "下限电位":
+                    step.ec_settings.el = param_value
+                elif param_name == "运行时间":
+                    step.ec_settings.run_time_s = param_value
+        elif step.step_type == ProgramStepType.BLANK:
+            if param_name == "持续时间(s)":
+                step.duration_s = param_value
     
     def _on_stop(self):
         """停止实验"""
@@ -829,6 +942,8 @@ class MainWindow(QMainWindow):
         self.config = config
         self.pump_diagram.update_config(config)
         self.process_widget.update_config(config)
+        # 同步更新 runner 的配置
+        self.runner.set_config(config)
         self.log_message("系统配置已更新", "info")
     
     def _refresh_step_list(self):

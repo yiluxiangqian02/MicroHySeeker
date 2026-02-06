@@ -140,17 +140,56 @@ class ECSettings:
 @dataclass
 class PrepSolStep:
     """配液步骤参数"""
-    target_concentration: float  # mol/L
-    is_solvent: bool = False
-    injection_order: List[str] = field(default_factory=list)  # 按注液顺序列出通道 ID
-    total_volume_ul: float = 100.0
+    target_concentration: float = 0.0  # 废弃，保留兼容
+    is_solvent: bool = False  # 废弃，保留兼容
+    injection_order: List[str] = field(default_factory=list)  # 按注液顺序列出溶液名称
+    total_volume_ul: float = 100000.0  # 默认100mL = 100000μL
+    
+    # 新增：每个溶液的目标浓度 {溶液名称: 目标浓度}
+    target_concentrations: Dict[str, float] = field(default_factory=dict)
+    # 新增：溶剂标记 {溶液名称: 是否为溶剂}
+    solvent_flags: Dict[str, bool] = field(default_factory=dict)
+    # 新增：是否选中 {溶液名称: 是否选中}
+    selected_solutions: Dict[str, bool] = field(default_factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
         return asdict(self)
 
     @staticmethod
     def from_dict(data: Dict[str, Any]) -> 'PrepSolStep':
+        # 确保新字段存在
+        if 'target_concentrations' not in data:
+            data['target_concentrations'] = {}
+        if 'solvent_flags' not in data:
+            data['solvent_flags'] = {}
+        if 'selected_solutions' not in data:
+            data['selected_solutions'] = {}
         return PrepSolStep(**data)
+    
+    def get_summary(self) -> str:
+        """获取配液步骤摘要"""
+        selected = [name for name, sel in self.selected_solutions.items() if sel]
+        if not selected:
+            return "无配液"
+        
+        parts = []
+        for name in self.injection_order:
+            if name in selected:
+                conc = self.target_concentrations.get(name, 0)
+                is_solvent = self.solvent_flags.get(name, False)
+                if is_solvent:
+                    parts.append(f"{name}(溶剂)")
+                elif conc > 0:
+                    parts.append(f"{name}:{conc:.3f}M")
+        
+        vol_ml = self.total_volume_ul / 1000.0
+        # 为大体积添加千位分隔符显示
+        if vol_ml >= 1000:
+            vol_str = f"{vol_ml:,.1f}mL"
+        else:
+            vol_str = f"{vol_ml:.1f}mL"
+        
+        return vol_str + (", " + ", ".join(parts) if parts else "")
 
 
 @dataclass

@@ -988,7 +988,7 @@ def get_rs485_instance(force_reload: bool = False) -> RS485Wrapper:
     Args:
         force_reload: 强制重新创建实例（用于配置更改后重载）
     
-    Mock模式下自动连接，无需真实串口。
+    不再自动连接，需要手动调用 open_port() 连接。
     """
     global _rs485_instance
     if _rs485_instance is None or force_reload:
@@ -1025,17 +1025,7 @@ def get_rs485_instance(force_reload: bool = False) -> RS485Wrapper:
         
         _rs485_instance.set_mock_mode(mock_mode)
         
-        # 自动连接
-        if mock_mode:
-            _rs485_instance.open_port("MOCK_PORT", baudrate)
-            print("✅ RS485Wrapper: Mock模式自动连接完成")
-        else:
-            success = _rs485_instance.open_port(rs485_port, baudrate)
-            if success:
-                print(f"✅ RS485Wrapper: 真实硬件模式连接成功 ({rs485_port})")
-            else:
-                print(f"❌ RS485Wrapper: 真实硬件连接失败，回退到Mock模式")
-                _rs485_instance.set_mock_mode(True)
-                _rs485_instance.open_port("MOCK_PORT", baudrate)
+        # 不再自动连接，等待手动连接
+        print(f"✅ RS485Wrapper: 实例已创建 (Mock模式: {mock_mode})，请手动连接")
     
     return _rs485_instance

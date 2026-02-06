@@ -367,6 +367,76 @@ class PrepSolutionDialog(QDialog):
             solvent_check = QCheckBox()
             self.recipe_table.setCellWidget(row, 4, solvent_check)
     
+    def _check_dilution_feasibility(self, channels, target_concs, is_solvents):
+        """检查配液可行性，返回错误信息列表"""
+        errors = []
+        total_vol = self.total_vol_spin.value() * 1000.0  # 转换为μL
+        
+        # 1. 检查浓度关系（稀释原理：目标浓度不能高于储备浓度）
+        for ch, target, is_solvent in zip(channels, target_concs, is_solvents):
+            if not is_solvent and target > 0:
+                if ch.stock_concentration <= 0:
+                    errors.append(f"• {ch.solution_name}: 储备浓度为0或未设置，无法计算")
+                elif target > ch.stock_concentration:
+                    errors.append(
+                        f"• {ch.solution_name}: 目标浓度 {target:.3f} mol/L "
+                        f"高于储备浓度 {ch.stock_concentration:.3f} mol/L，违反稀释原理"
+                    )
+        
+        # 2. 检查溶剂配置
+        solvent_count = sum(is_solvents)
+        if solvent_count > 1:
+            errors.append("• 只能选择一种溶剂，当前选择了多种")
+        
+        # 3. 检查体积计算
+        volumes = self._calculate_volumes_for_validation(channels, target_concs, is_solvents, total_vol)
+        non_solvent_total = 0
+        
+        for i, (ch, vol, target, is_solvent) in enumerate(zip(channels, volumes, target_concs, is_solvents)):
+            if not is_solvent and vol > 0:
+                non_solvent_total += vol
+                # 检查单个溶液体积是否过大
+                if vol > total_vol * 0.95:  # 单个溶液占总体积95%以上
+                    errors.append(
+                        f"• {ch.solution_name}: 需要注入 {vol:.1f} μL，"
+                        f"占总体积 {vol/total_vol*100:.1f}%，比例过高"
+                    )
+        
+        # 4. 检查溶剂体积是否合理
+        solvent_vol = total_vol - non_solvent_total
+        if solvent_count == 1 and solvent_vol < total_vol * 0.05:  # 溶剂少于5%
+            errors.append(f"• 溶剂体积仅 {solvent_vol:.1f} μL ({solvent_vol/total_vol*100:.1f}%)，过少")
+        
+        # 5. 检查总体积是否超出限制
+        if non_solvent_total > total_vol:
+            errors.append(
+                f"• 所需溶质总体积 {non_solvent_total:.1f} μL "
+                f"超过目标总体积 {total_vol:.1f} μL"
+            )
+        
+        # 6. 检查是否存在可配制的溶液
+        if all(vol <= 0 for vol in volumes):
+            errors.append("• 没有任何溶液需要注入，请检查浓度设置")
+        
+        return errors
+    
+    def _calculate_volumes_for_validation(self, channels, target_concs, is_solvents, total_vol):
+        """用于验证的体积计算（与 _calculate_volumes 逻辑相同）"""
+        volumes = []
+        
+        for ch, target, is_solvent in zip(channels, target_concs, is_solvents):
+            if is_solvent:
+                volumes.append(0)  # 溶剂先占位
+            else:
+                if target > 0 and ch.stock_concentration > 0:
+                    # V = C_target * V_total / C_stock
+                    vol = target * total_vol / ch.stock_concentration
+                    volumes.append(vol)
+                else:
+                    volumes.append(0)
+        
+        return volumes
+    
     def _on_start(self):
         """开始配制"""
         if self.worker and self.worker.isRunning():
@@ -389,9 +459,16 @@ class PrepSolutionDialog(QDialog):
                 solvent_check = self.recipe_table.cellWidget(row, 4)
                 is_solvents.append(solvent_check.isChecked())
         
-        # 验证
+        # 验证基本条件
         if not any(c > 0 for c in target_concs) and not any(is_solvents):
             QMessageBox.warning(self, "警告", "请至少设置一个目标浓度或选择溶剂")
+            return
+        
+        # 配液可行性验证
+        feasibility_errors = self._check_dilution_feasibility(channels, target_concs, is_solvents)
+        if feasibility_errors:
+            error_msg = "很遗憾，这个溶液配不出来：\n\n" + "\n".join(feasibility_errors)
+            QMessageBox.critical(self, "配液不可行", error_msg)
             return
         
         # 将mL转换为μL（UI显示mL，后端使用μL）

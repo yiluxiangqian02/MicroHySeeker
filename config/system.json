@@ -164,6 +164,16 @@
       "cycle_duration_s": 30.0,
       "work_type": "Transfer",
       "tube_diameter_mm": 1.0
+    },
+    {
+      "channel_id": "3",
+      "pump_name": "冲洗泵3",
+      "pump_address": 9,
+      "direction": "FWD",
+      "rpm": 100,
+      "cycle_duration_s": 30.0,
+      "work_type": "Outlet",
+      "tube_diameter_mm": 1.0
     }
   ],
   "calibration_data": {},

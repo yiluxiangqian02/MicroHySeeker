@@ -3,11 +3,26 @@ LibContext - 依赖注入容器
 统一管理系统组件实例，为前端提供后端服务访问入口
 
 这是前端和后端的桥梁模块
+
+泵工作类型定义：
+- Inlet: 用于冲洗步骤的进液泵
+- Transfer: 用于移液步骤的转移泵
+- Outlet: 用于排空步骤的出液泵
+- Diluter: 用于配液步骤的稀释泵（从DilutionChannel获取）
 """
 
-from typing import Optional, Callable
+from typing import Optional, Callable, Dict, List
 from .hardware.rs485_driver import RS485Driver
 from .utils.constants import DEFAULT_BAUDRATE
+
+
+# 泵工作类型枚举
+class PumpWorkType:
+    """泵工作类型"""
+    INLET = "Inlet"       # 冲洗用进液泵
+    TRANSFER = "Transfer" # 移液用转移泵  
+    OUTLET = "Outlet"     # 排空用出液泵
+    DILUTER = "Diluter"   # 配液用稀释泵
 
 
 class RS485DriverAdapter:
@@ -71,12 +86,94 @@ class RS485DriverAdapter:
 
 
 class LibContext:
-    """依赖注入容器 - 系统组件单例管理"""
+    """依赖注入容器 - 系统组件单例管理
+    
+    管理系统中各硬件组件的实例，提供泵工作类型映射。
+    
+    泵工作类型映射：
+    - 移液(transfer): 使用 work_type="Transfer" 的泵
+    - 冲洗(flush): 使用 work_type="Inlet" 的泵
+    - 排空(evacuate): 使用 work_type="Outlet" 的泵
+    - 配液(prep_sol): 使用 DilutionChannel 中配置的泵
+    """
     
     _pump_manager: Optional['PumpManager'] = None
     _rs485_driver: Optional[RS485Driver] = None
     _logger: Optional['LoggerService'] = None
     _current_mock_mode: Optional[bool] = None  # 跟踪当前的mock模式
+    
+    # 泵工作类型到地址的映射（从配置加载）
+    _pump_type_map: Dict[str, int] = {}
+    
+    # 稀释通道映射（channel_id -> pump_address）
+    _diluter_channels: Dict[str, int] = {}
+    
+    @classmethod
+    def configure_pumps_from_config(cls, system_config) -> None:
+        """从系统配置加载泵映射
+        
+        Args:
+            system_config: SystemConfig 对象（来自前端 models.py）
+        """
+        cls._pump_type_map.clear()
+        cls._diluter_channels.clear()
+        
+        # 从 flush_channels 获取工作类型映射
+        if hasattr(system_config, 'flush_channels'):
+            for ch in system_config.flush_channels:
+                work_type = getattr(ch, 'work_type', 'Transfer')
+                pump_addr = getattr(ch, 'pump_address', 0)
+                if work_type and pump_addr > 0:
+                    cls._pump_type_map[work_type] = pump_addr
+                    print(f"  泵映射: {work_type} -> 泵{pump_addr}")
+        
+        # 从 dilution_channels 获取稀释泵映射
+        if hasattr(system_config, 'dilution_channels'):
+            for ch in system_config.dilution_channels:
+                channel_id = getattr(ch, 'channel_id', '')
+                pump_addr = getattr(ch, 'pump_address', 0)
+                if channel_id and pump_addr > 0:
+                    cls._diluter_channels[channel_id] = pump_addr
+                    print(f"  稀释通道: {channel_id} -> 泵{pump_addr}")
+    
+    @classmethod
+    def get_pump_for_work_type(cls, work_type: str) -> int:
+        """根据工作类型获取泵地址
+        
+        Args:
+            work_type: 工作类型 (Inlet/Transfer/Outlet)
+            
+        Returns:
+            int: 泵地址，未找到返回0
+        """
+        return cls._pump_type_map.get(work_type, 0)
+    
+    @classmethod
+    def get_inlet_pump(cls) -> int:
+        """获取进液泵地址（用于冲洗）"""
+        return cls._pump_type_map.get(PumpWorkType.INLET, 1)
+    
+    @classmethod
+    def get_transfer_pump(cls) -> int:
+        """获取转移泵地址（用于移液）"""
+        return cls._pump_type_map.get(PumpWorkType.TRANSFER, 2)
+    
+    @classmethod
+    def get_outlet_pump(cls) -> int:
+        """获取出液泵地址（用于排空）"""
+        return cls._pump_type_map.get(PumpWorkType.OUTLET, 3)
+    
+    @classmethod
+    def get_diluter_pump(cls, channel_id: str) -> int:
+        """获取稀释泵地址
+        
+        Args:
+            channel_id: 稀释通道ID (如 "D1", "D2")
+            
+        Returns:
+            int: 泵地址，未找到返回0
+        """
+        return cls._diluter_channels.get(channel_id, 0)
     
     @classmethod
     def get_pump_manager(cls, mock_mode: bool = True) -> 'PumpManager':
