@@ -374,6 +374,41 @@ class ConfigDialog(QDialog):
     def _on_dilution_param_changed(self, row: int, field: str, value):
         """配液通道参数变更"""
         if 0 <= row < len(self.config.dilution_channels):
+            # 泵地址变更时检查冲突
+            if field == 'pump_address':
+                new_addr = value
+                # 检查配液通道中是否有冲突（排除当前行）
+                for i, ch in enumerate(self.config.dilution_channels):
+                    if i != row and ch.pump_address == new_addr:
+                        QMessageBox.warning(
+                            self, "泵地址冲突",
+                            f"泵地址 {new_addr} 已被配液通道 '{ch.solution_name}' 使用！\n"
+                            f"请选择其他地址。"
+                        )
+                        # 恢复原来的值
+                        old_addr = self.config.dilution_channels[row].pump_address
+                        combo = self.dilution_table.cellWidget(row, 3)
+                        if combo:
+                            combo.blockSignals(True)
+                            combo.setCurrentText(str(old_addr))
+                            combo.blockSignals(False)
+                        return
+                # 检查冲洗通道中是否有冲突
+                for ch in self.config.flush_channels:
+                    if ch.pump_address == new_addr:
+                        work_type = getattr(ch, 'work_type', '')
+                        QMessageBox.warning(
+                            self, "泵地址冲突",
+                            f"泵地址 {new_addr} 已被冲洗通道 ({work_type}) 使用！\n"
+                            f"请选择其他地址。"
+                        )
+                        old_addr = self.config.dilution_channels[row].pump_address
+                        combo = self.dilution_table.cellWidget(row, 3)
+                        if combo:
+                            combo.blockSignals(True)
+                            combo.setCurrentText(str(old_addr))
+                            combo.blockSignals(False)
+                        return
             setattr(self.config.dilution_channels[row], field, value)
     
     def _refresh_flush_table(self):
@@ -436,6 +471,56 @@ class ConfigDialog(QDialog):
     def _on_flush_param_changed(self, row: int, field: str, value):
         """冲洗通道参数变更"""
         if 0 <= row < len(self.config.flush_channels):
+            # 泵地址变更时检查冲突
+            if field == 'pump_address':
+                new_addr = value
+                # 检查冲洗通道中是否有冲突（排除当前行）
+                for i, ch in enumerate(self.config.flush_channels):
+                    if i != row and ch.pump_address == new_addr:
+                        work_type = getattr(ch, 'work_type', '')
+                        QMessageBox.warning(
+                            self, "泵地址冲突",
+                            f"泵地址 {new_addr} 已被冲洗通道 ({work_type}) 使用！\n"
+                            f"请选择其他地址。"
+                        )
+                        old_addr = self.config.flush_channels[row].pump_address
+                        combo = self.flush_table.cellWidget(row, 1)
+                        if combo:
+                            combo.blockSignals(True)
+                            combo.setCurrentText(str(old_addr))
+                            combo.blockSignals(False)
+                        return
+                # 检查配液通道中是否有冲突
+                for ch in self.config.dilution_channels:
+                    if ch.pump_address == new_addr:
+                        QMessageBox.warning(
+                            self, "泵地址冲突",
+                            f"泵地址 {new_addr} 已被配液通道 '{ch.solution_name}' 使用！\n"
+                            f"请选择其他地址。"
+                        )
+                        old_addr = self.config.flush_channels[row].pump_address
+                        combo = self.flush_table.cellWidget(row, 1)
+                        if combo:
+                            combo.blockSignals(True)
+                            combo.setCurrentText(str(old_addr))
+                            combo.blockSignals(False)
+                        return
+            # 工作类型变更时检查重复
+            if field == 'work_type':
+                for i, ch in enumerate(self.config.flush_channels):
+                    if i != row and getattr(ch, 'work_type', '') == value:
+                        QMessageBox.warning(
+                            self, "工作类型冲突",
+                            f"工作类型 '{value}' 已被其他冲洗通道使用！\n"
+                            f"每种工作类型只能配置一次。"
+                        )
+                        old_type = getattr(self.config.flush_channels[row], 'work_type', 'Transfer')
+                        combo = self.flush_table.cellWidget(row, 3)
+                        if combo:
+                            combo.blockSignals(True)
+                            combo.setCurrentText(old_type)
+                            combo.blockSignals(False)
+                        return
             setattr(self.config.flush_channels[row], field, value)
     
     def _get_used_pump_addresses(self) -> set:
@@ -599,7 +684,33 @@ class ConfigDialog(QDialog):
         """保存配置"""
         self.config.rs485_port = self.port_combo.currentText()
         self.config.rs485_baudrate = int(self.baud_combo.currentText())
-        self.config.mock_mode = self.mock_checkbox.isChecked()  # 保存Mock模式状态
+        self.config.mock_mode = self.mock_checkbox.isChecked()
+        
+        # 整体校验泵地址冲突
+        all_addrs = {}
+        for i, ch in enumerate(self.config.dilution_channels):
+            addr = ch.pump_address
+            label = f"配液通道 '{ch.solution_name}'"
+            if addr in all_addrs:
+                QMessageBox.critical(
+                    self, "泵地址冲突",
+                    f"泵地址 {addr} 同时被 {all_addrs[addr]} 和 {label} 使用！\n"
+                    f"请修正后再保存。"
+                )
+                return
+            all_addrs[addr] = label
+        for i, ch in enumerate(self.config.flush_channels):
+            addr = ch.pump_address
+            work_type = getattr(ch, 'work_type', '')
+            label = f"冲洗通道 ({work_type})"
+            if addr in all_addrs:
+                QMessageBox.critical(
+                    self, "泵地址冲突",
+                    f"泵地址 {addr} 同时被 {all_addrs[addr]} 和 {label} 使用！\n"
+                    f"请修正后再保存。"
+                )
+                return
+            all_addrs[addr] = label
         
         # 保存到文件
         self.config.save_to_file("./config/system.json")

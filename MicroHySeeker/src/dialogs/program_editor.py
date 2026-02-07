@@ -83,6 +83,7 @@ class ProgramEditorDialog(QDialog):
         
         self.step_list = QListWidget()
         self.step_list.setFont(FONT_NORMAL)
+        self.step_list.setWordWrap(True)
         self.step_list.itemClicked.connect(self._on_step_selected)
         left_layout.addWidget(self.step_list)
         

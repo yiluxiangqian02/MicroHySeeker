@@ -1,0 +1,67 @@
+{
+  "exp_id": "single_001",
+  "exp_name": "单次实验",
+  "steps": [
+    {
+      "step_id": "step_1",
+      "step_type": "prep_sol",
+      "pump_address": 7,
+      "pump_direction": "FWD",
+      "pump_rpm": 100,
+      "volume_ul": null,
+      "duration_s": null,
+      "transfer_duration": 10.0,
+      "transfer_duration_unit": "s",
+      "prep_sol_params": {
+        "target_concentration": 0.0,
+        "is_solvent": false,
+        "injection_order": [
+          "fe",
+          "cu",
+          "h2o"
+        ],
+        "total_volume_ul": 100000.0,
+        "target_concentrations": {
+          "fe": 0.01,
+          "cu": 0.01,
+          "h2o": 0.01
+        },
+        "solvent_flags": {
+          "fe": false,
+          "cu": false,
+          "h2o": false
+        },
+        "selected_solutions": {
+          "fe": true,
+          "cu": true,
+          "h2o": true
+        }
+      },
+      "flush_channel_id": null,
+      "flush_rpm": null,
+      "flush_cycle_duration_s": null,
+      "flush_cycles": 1,
+      "ec_settings": null,
+      "notes": ""
+    },
+    {
+      "step_id": "step_2",
+      "step_type": "prep_sol",
+      "pump_address": null,
+      "pump_direction": null,
+      "pump_rpm": null,
+      "volume_ul": null,
+      "duration_s": null,
+      "transfer_duration": null,
+      "transfer_duration_unit": "s",
+      "prep_sol_params": null,
+      "flush_channel_id": null,
+      "flush_rpm": null,
+      "flush_cycle_duration_s": null,
+      "flush_cycles": 1,
+      "ec_settings": null,
+      "notes": ""
+    }
+  ],
+  "notes": ""
+}

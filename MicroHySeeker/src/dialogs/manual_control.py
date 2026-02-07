@@ -129,6 +129,15 @@ class PumpControlWidget(QFrame):
     
     def _on_run(self):
         """启动泵 - 后端接口调用点"""
+        # 检查RS485连接
+        if not self.rs485.is_connected():
+            QMessageBox.critical(
+                self, "RS485 未连接",
+                f"无法启动泵 {self.pump_address}：RS485 端口未连接。\n\n"
+                f"请先在“系统配置”中连接串口，或启用 Mock 模式。"
+            )
+            return
+        
         direction = "FWD" if self.dir_combo.currentText() == "正向" else "REV"
         rpm = self.speed_spin.value()
         
@@ -139,7 +148,7 @@ class PumpControlWidget(QFrame):
             self.is_running = True
             self.status_indicator.setStyleSheet("color: #4CAF50; font-size: 20px;")
         else:
-            QMessageBox.warning(self, "错误", f"泵 {self.pump_address} 启动失败")
+            QMessageBox.warning(self, "错误", f"泵 {self.pump_address} 启动失败，请检查硬件连接")
     
     def _on_stop(self):
         """停止泵 - 后端接口调用点"""
@@ -161,6 +170,15 @@ class PumpControlWidget(QFrame):
     
     def _on_position_run(self):
         """位置模式运行 - 使用SR_VFOC编码器精确控制"""
+        # 检查RS485连接
+        if not self.rs485.is_connected():
+            QMessageBox.critical(
+                self, "RS485 未连接",
+                f"无法启动泵 {self.pump_address}：RS485 端口未连接。\n\n"
+                f"请先在“系统配置”中连接串口，或启用 Mock 模式。"
+            )
+            return
+        
         direction = "FWD" if self.dir_combo.currentText() == "正向" else "REV"
         rpm = self.speed_spin.value()
         revolutions = self.revolutions_spin.value()

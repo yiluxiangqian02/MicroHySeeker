@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 18
+VisualStudioVersion = 18.1.11304.174
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eChemSDL", "eChemSDL\eChemSDL.csproj", "{C28B54A4-60A7-4479-BE3C-1BB1D23BDED9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C28B54A4-60A7-4479-BE3C-1BB1D23BDED9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C28B54A4-60A7-4479-BE3C-1BB1D23BDED9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C28B54A4-60A7-4479-BE3C-1BB1D23BDED9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C28B54A4-60A7-4479-BE3C-1BB1D23BDED9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B8FFDA36-1E0E-4E24-87E6-71B071B9AC8D}
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,107 @@
+{
+  "exp_id": "single_001",
+  "exp_name": "单次实验",
+  "steps": [
+    {
+      "step_id": "step_1",
+      "step_type": "prep_sol",
+      "pump_address": null,
+      "pump_direction": null,
+      "pump_rpm": null,
+      "volume_ul": null,
+      "duration_s": null,
+      "transfer_duration": null,
+      "transfer_duration_unit": "s",
+      "prep_sol_params": {
+        "target_concentration": 0.0,
+        "is_solvent": true,
+        "injection_order": [
+          "Ni(OH)2",
+          "Fe(OH)2",
+          "123",
+          "321"
+        ],
+        "total_volume_ul": 100000.0,
+        "target_concentrations": {
+          "Ni(OH)2": 1.0,
+          "Fe(OH)2": 0.5,
+          "123": 0.0,
+          "321": 0.0
+        },
+        "solvent_flags": {
+          "Ni(OH)2": false,
+          "Fe(OH)2": false,
+          "123": true,
+          "321": false
+        },
+        "selected_solutions": {
+          "Ni(OH)2": true,
+          "Fe(OH)2": true,
+          "123": true,
+          "321": true
+        }
+      },
+      "flush_channel_id": null,
+      "flush_rpm": null,
+      "flush_cycle_duration_s": null,
+      "flush_cycles": 1,
+      "ec_settings": null,
+      "notes": ""
+    },
+    {
+      "step_id": "step_2",
+      "step_type": "transfer",
+      "pump_address": 10,
+      "pump_direction": "FWD",
+      "pump_rpm": 100,
+      "volume_ul": null,
+      "duration_s": null,
+      "transfer_duration": 10.0,
+      "transfer_duration_unit": "s",
+      "prep_sol_params": null,
+      "flush_channel_id": null,
+      "flush_rpm": null,
+      "flush_cycle_duration_s": null,
+      "flush_cycles": 1,
+      "ec_settings": null,
+      "notes": ""
+    },
+    {
+      "step_id": "step_3",
+      "step_type": "flush",
+      "pump_address": 9,
+      "pump_direction": "FWD",
+      "pump_rpm": 100,
+      "volume_ul": null,
+      "duration_s": null,
+      "transfer_duration": 10.0,
+      "transfer_duration_unit": "s",
+      "prep_sol_params": null,
+      "flush_channel_id": null,
+      "flush_rpm": 100,
+      "flush_cycle_duration_s": 30.0,
+      "flush_cycles": 1,
+      "ec_settings": null,
+      "notes": ""
+    },
+    {
+      "step_id": "step_4",
+      "step_type": "evacuate",
+      "pump_address": 11,
+      "pump_direction": "FWD",
+      "pump_rpm": 100,
+      "volume_ul": null,
+      "duration_s": null,
+      "transfer_duration": 30.0,
+      "transfer_duration_unit": "s",
+      "prep_sol_params": null,
+      "flush_channel_id": null,
+      "flush_rpm": 100,
+      "flush_cycle_duration_s": 30.0,
+      "flush_cycles": 1,
+      "ec_settings": null,
+      "notes": ""
+    }
+  ],
+  "notes": ""
+}

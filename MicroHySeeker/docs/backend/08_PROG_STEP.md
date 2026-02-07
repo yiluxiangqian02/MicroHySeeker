@@ -1,8 +1,8 @@
 # 08 - ProgStep 模块规范
 
-> **文件路径**: `src/echem_sdl/core/prog_step.py`  
-> **优先级**: P0 (核心模块)  
-> **依赖**: 无  
+> **文件路径**: `src/echem_sdl/core/prog_step.py`
+> **优先级**: P0 (核心模块)
+> **依赖**: 无
 > **原C#参考**: `D:\AI4S\eChemSDL\eChemSDL\ProgStep.cs`
 
 ---
@@ -10,6 +10,7 @@
 ## 一、模块职责
 
 ProgStep 是实验程序的基本执行单元，负责：
+
 1. 定义单个实验步骤的类型和参数
 2. 支持多种步骤类型（配液、转移、冲洗、电化学等）
 3. 提供步骤验证
@@ -38,15 +39,15 @@ class StepType(str, Enum):
 
 ### 2.2 各类型说明
 
-| 类型 | 说明 | 主要参数 |
-|------|------|----------|
-| `PREP_SOL` | 配液操作 | 通道列表、浓度、总体积 |
-| `TRANSFER` | 转移溶液 | 源位置、目标位置、体积 |
-| `FLUSH` | 冲洗管路 | 冲洗轮数 |
-| `ECHEM` | 电化学测量 | EC技术、参数 |
-| `BLANK` | 等待/延时 | 等待时间 |
-| `EVACUATE` | 抽空池体 | 抽空时间 |
-| `POSITION` | 移动位置 | 目标位置 |
+| 类型         | 说明       | 主要参数               |
+| ------------ | ---------- | ---------------------- |
+| `PREP_SOL` | 配液操作   | 通道列表、浓度、总体积 |
+| `TRANSFER` | 转移溶液   | 源位置、目标位置、体积 |
+| `FLUSH`    | 冲洗管路   | 冲洗轮数               |
+| `ECHEM`    | 电化学测量 | EC技术、参数           |
+| `BLANK`    | 等待/延时  | 等待时间               |
+| `EVACUATE` | 抽空池体   | 抽空时间               |
+| `POSITION` | 移动位置   | 目标位置               |
 
 ---
 
@@ -71,11 +72,11 @@ class PrepSolConfig:
     mix_count: int = 0
     # 混合体积 (uL)
     mix_volume_ul: float = 50.0
-    
+  
     def get_concentration(self, channel_id: str) -> float:
         """获取通道浓度"""
         return self.concentrations.get(channel_id, 0.0)
-    
+  
     def get_injection_order(self) -> List[str]:
         """获取注液顺序"""
         if self.injection_order:
@@ -177,9 +178,9 @@ class EvacuateConfig:
 @dataclass
 class ProgStep:
     """程序步骤
-    
+  
     表示实验程序中的单个执行步骤。
-    
+  
     Attributes:
         step_type: 步骤类型
         name: 步骤名称
@@ -190,7 +191,7 @@ class ProgStep:
         ec_config: 电化学配置
         blank_config: 空白配置
         evacuate_config: 抽空配置
-        
+      
     Example:
         >>> step = ProgStep(
         ...     step_type=StepType.ECHEM,
@@ -202,7 +203,7 @@ class ProgStep:
     step_type: StepType
     name: str = ""
     enabled: bool = True
-    
+  
     # 各类型配置（仅对应类型有效）
     prep_sol_config: Optional[PrepSolConfig] = None
     transfer_config: Optional[TransferConfig] = None
@@ -235,7 +236,7 @@ def get_config(self) -> Optional[object]:
 ```python
 def get_duration(self) -> float:
     """获取步骤预估时长（秒）
-    
+  
     Returns:
         float: 预估执行时间
     """
@@ -245,14 +246,14 @@ def get_duration(self) -> float:
             return 0.0
         # 每个通道约 10 秒
         return len(config.concentrations) * 10.0
-    
+  
     elif self.step_type == StepType.FLUSH:
         config = self.flush_config
         if config is None:
             return 0.0
         # 每轮约 15 秒
         return config.cycles * 15.0
-    
+  
     elif self.step_type == StepType.ECHEM:
         config = self.ec_config
         if config is None:
@@ -266,21 +267,21 @@ def get_duration(self) -> float:
         elif config.technique == "OCPT":
             return config.quiet_time + config.run_time
         return 60.0
-    
+  
     elif self.step_type == StepType.BLANK:
         config = self.blank_config
         return config.wait_time if config else 5.0
-    
+  
     elif self.step_type == StepType.EVACUATE:
         config = self.evacuate_config
         return config.evacuate_time if config else 10.0
-    
+  
     elif self.step_type == StepType.TRANSFER:
         config = self.transfer_config
         if config is None:
             return 0.0
         return config.volume_ul / config.speed_ul_per_s
-    
+  
     return 0.0
 ```
 
@@ -289,33 +290,33 @@ def get_duration(self) -> float:
 ```python
 def validate(self) -> List[str]:
     """验证步骤配置
-    
+  
     Returns:
         List[str]: 错误消息列表（空表示有效）
     """
     errors = []
-    
+  
     config = self.get_config()
     if config is None:
         errors.append(f"步骤类型 {self.step_type} 缺少配置")
         return errors
-    
+  
     if self.step_type == StepType.PREP_SOL:
         if not config.concentrations:
             errors.append("配液配置缺少通道")
         if config.total_volume_ul <= 0:
             errors.append("总体积必须大于0")
-    
+  
     elif self.step_type == StepType.ECHEM:
         if config.e_high <= config.e_low:
             errors.append("最高电位必须大于最低电位")
         if config.scan_rate <= 0:
             errors.append("扫描速率必须大于0")
-    
+  
     elif self.step_type == StepType.FLUSH:
         if config.cycles <= 0:
             errors.append("冲洗轮数必须大于0")
-    
+  
     return errors
 ```
 
@@ -329,24 +330,24 @@ def to_dict(self) -> dict:
         "name": self.name,
         "enabled": self.enabled,
     }
-    
+  
     config = self.get_config()
     if config:
         result[f"{self.step_type.value}_config"] = asdict(config)
-    
+  
     return result
 
 @classmethod
 def from_dict(cls, data: dict) -> "ProgStep":
     """从字典创建"""
     step_type = StepType(data.get("step_type", "blank"))
-    
+  
     step = cls(
         step_type=step_type,
         name=data.get("name", ""),
         enabled=data.get("enabled", True),
     )
-    
+  
     # 加载对应配置
     config_key = f"{step_type.value}_config"
     if config_key in data:
@@ -356,7 +357,7 @@ def from_dict(cls, data: dict) -> "ProgStep":
         elif step_type == StepType.ECHEM:
             step.ec_config = ECConfig(**config_data)
         # ... 其他类型
-    
+  
     return step
 ```
 
@@ -367,7 +368,7 @@ def from_dict(cls, data: dict) -> "ProgStep":
 ```python
 class ProgStepFactory:
     """步骤工厂"""
-    
+  
     @staticmethod
     def create_prep_sol(
         name: str,
@@ -383,7 +384,7 @@ class ProgStepFactory:
                 total_volume_ul=total_volume_ul
             )
         )
-    
+  
     @staticmethod
     def create_cv(
         name: str = "CV",
@@ -406,7 +407,7 @@ class ProgStepFactory:
                 segments=segments
             )
         )
-    
+  
     @staticmethod
     def create_flush(
         name: str = "冲洗",
@@ -418,7 +419,7 @@ class ProgStepFactory:
             name=name,
             flush_config=FlushConfig(cycles=cycles)
         )
-    
+  
     @staticmethod
     def create_blank(
         name: str = "等待",
@@ -430,7 +431,7 @@ class ProgStepFactory:
             name=name,
             blank_config=BlankConfig(wait_time=wait_time)
         )
-    
+  
     @staticmethod
     def create_evacuate(
         name: str = "抽空",
@@ -468,7 +469,7 @@ class TestProgStep:
         assert step.step_type == StepType.BLANK
         assert step.name == "测试步骤"
         assert step.enabled == True
-    
+  
     def test_get_config(self):
         """测试获取配置"""
         step = ProgStep(
@@ -478,7 +479,7 @@ class TestProgStep:
         config = step.get_config()
         assert config is not None
         assert config.technique == "CV"
-    
+  
     def test_duration_cv(self):
         """测试CV时长计算"""
         step = ProgStep(
@@ -495,13 +496,13 @@ class TestProgStep:
         duration = step.get_duration()
         # 2 + (1.0 * 2 / 0.1) = 2 + 20 = 22
         assert duration == pytest.approx(22.0)
-    
+  
     def test_validate_valid_step(self):
         """测试验证有效步骤"""
         step = ProgStepFactory.create_cv()
         errors = step.validate()
         assert len(errors) == 0
-    
+  
     def test_validate_invalid_step(self):
         """测试验证无效步骤"""
         step = ProgStep(
@@ -510,12 +511,12 @@ class TestProgStep:
         )
         errors = step.validate()
         assert len(errors) > 0
-    
+  
     def test_serialization(self):
         """测试序列化"""
         step = ProgStepFactory.create_cv("测试CV")
         data = step.to_dict()
-        
+      
         restored = ProgStep.from_dict(data)
         assert restored.step_type == StepType.ECHEM
         assert restored.name == "测试CV"
@@ -531,7 +532,7 @@ class TestProgStepFactory:
         )
         assert step.step_type == StepType.PREP_SOL
         assert step.prep_sol_config.concentrations["D1"] == 0.5
-    
+  
     def test_create_flush(self):
         """测试创建冲洗步骤"""
         step = ProgStepFactory.create_flush(cycles=5)

@@ -1,0 +1,453 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AutoSens" xml:space="preserve">
+    <value>Auto sensitivity (at scan rate &lt; 10 mV/s)</value>
+  </data>
+  <data name="BeforeListParam" xml:space="preserve">
+    <value>Please reset combo progress or save changes before listing parameters.</value>
+  </data>
+  <data name="Blank" xml:space="preserve">
+    <value>Blank</value>
+  </data>
+  <data name="CannotMakeSol" xml:space="preserve">
+    <value>Sorry, this solution cannot be prepared.</value>
+  </data>
+  <data name="ChangeFlushCycle" xml:space="preserve">
+    <value>Because the designated flush time is too short to complete one flush cycle, the flush time was changed to a minimum to allow one flush cycle.</value>
+  </data>
+  <data name="Channel" xml:space="preserve">
+    <value>Channel</value>
+  </data>
+  <data name="Chinese" xml:space="preserve">
+    <value>Chinese</value>
+  </data>
+  <data name="CmbExpCnt" xml:space="preserve">
+    <value>Number of combo experiments</value>
+  </data>
+  <data name="ComboExpProgress" xml:space="preserve">
+    <value>Combo experiment progress</value>
+  </data>
+  <data name="Conc" xml:space="preserve">
+    <value>Concentration</value>
+  </data>
+  <data name="ConstConCmbExpCnt" xml:space="preserve">
+    <value>Number of experiments if a constant total concentration is provided: </value>
+  </data>
+  <data name="CurrentStep" xml:space="preserve">
+    <value>Current step</value>
+  </data>
+  <data name="Duration" xml:space="preserve">
+    <value>Duration</value>
+  </data>
+  <data name="DurationSec" xml:space="preserve">
+    <value>Duration (sec)</value>
+  </data>
+  <data name="E0" xml:space="preserve">
+    <value>Initial potential (V)</value>
+  </data>
+  <data name="ECDataSaved" xml:space="preserve">
+    <value>Experimental data saved.</value>
+  </data>
+  <data name="EChem" xml:space="preserve">
+    <value>Electrochemistry</value>
+  </data>
+  <data name="ECParams" xml:space="preserve">
+    <value>Electrochemical parameters</value>
+  </data>
+  <data name="ECStation" xml:space="preserve">
+    <value>Potentiostat</value>
+  </data>
+  <data name="EF" xml:space="preserve">
+    <value>Final potential (V)</value>
+  </data>
+  <data name="EH" xml:space="preserve">
+    <value>Upper potential (V)</value>
+  </data>
+  <data name="EL" xml:space="preserve">
+    <value>Lower potential (V)</value>
+  </data>
+  <data name="Electrolyte" xml:space="preserve">
+    <value>Electrolyte</value>
+  </data>
+  <data name="English" xml:space="preserve">
+    <value>English</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="EvacOnly" xml:space="preserve">
+    <value>Evacuate only, do not flush.</value>
+  </data>
+  <data name="FinalValue" xml:space="preserve">
+    <value>Final value</value>
+  </data>
+  <data name="Flush" xml:space="preserve">
+    <value>Flush</value>
+  </data>
+  <data name="FlushPumpComError" xml:space="preserve">
+    <value>The flush pumps are not responding.</value>
+  </data>
+  <data name="forward" xml:space="preserve">
+    <value>Forward</value>
+  </data>
+  <data name="HWBusy" xml:space="preserve">
+    <value>Device busy!</value>
+  </data>
+  <data name="idle" xml:space="preserve">
+    <value>Idle</value>
+  </data>
+  <data name="IncludeInTotalConc" xml:space="preserve">
+    <value>Include in total concentration.</value>
+  </data>
+  <data name="Info" xml:space="preserve">
+    <value>Information</value>
+  </data>
+  <data name="InitialValue" xml:space="preserve">
+    <value>Initial value</value>
+  </data>
+  <data name="InjectOrder" xml:space="preserve">
+    <value>Inject order</value>
+  </data>
+  <data name="Interval" xml:space="preserve">
+    <value>Interval</value>
+  </data>
+  <data name="IsSolvent" xml:space="preserve">
+    <value>Solvent</value>
+  </data>
+  <data name="LowConc" xml:space="preserve">
+    <value>Target conentration (/L):</value>
+  </data>
+  <data name="MaxSpeed" xml:space="preserve">
+    <value>Max speed</value>
+  </data>
+  <data name="MotorAd" xml:space="preserve">
+    <value>Motor address</value>
+  </data>
+  <data name="MotorState" xml:space="preserve">
+    <value>Motor status</value>
+  </data>
+  <data name="NegScan" xml:space="preserve">
+    <value>Reverse</value>
+  </data>
+  <data name="NoConnection" xml:space="preserve">
+    <value>is not connected. Please check.</value>
+  </data>
+  <data name="None" xml:space="preserve">
+    <value>None</value>
+  </data>
+  <data name="Notice" xml:space="preserve">
+    <value>Notice</value>
+  </data>
+  <data name="OperType" xml:space="preserve">
+    <value>Type of operation</value>
+  </data>
+  <data name="OutOfRange" xml:space="preserve">
+    <value>Out of range</value>
+  </data>
+  <data name="OutOfRangeLong" xml:space="preserve">
+    <value>The entered number is out of range!</value>
+  </data>
+  <data name="Param" xml:space="preserve">
+    <value>Parameters</value>
+  </data>
+  <data name="ParamCountError" xml:space="preserve">
+    <value>Number of parameters does not match!</value>
+  </data>
+  <data name="Port" xml:space="preserve">
+    <value>Port</value>
+  </data>
+  <data name="PosScan" xml:space="preserve">
+    <value>Forward</value>
+  </data>
+  <data name="PrepSol" xml:space="preserve">
+    <value>Prepare solution</value>
+  </data>
+  <data name="PrimeDesc" xml:space="preserve">
+    <value>Prior to prime syringes, please ensure that piston is at fully withdrawn position.</value>
+  </data>
+  <data name="ProgramSavedandClose" xml:space="preserve">
+    <value>Changes saved, close the editor?</value>
+  </data>
+  <data name="QuietTime" xml:space="preserve">
+    <value>Quite time (sec)</value>
+  </data>
+  <data name="Receive" xml:space="preserve">
+    <value>Receive</value>
+  </data>
+  <data name="ReturnBytes" xml:space="preserve">
+    <value>Device returns data in bytes: </value>
+  </data>
+  <data name="reverse" xml:space="preserve">
+    <value>Reverse</value>
+  </data>
+  <data name="RunTime" xml:space="preserve">
+    <value>Run time (sec)</value>
+  </data>
+  <data name="SamplingInterval" xml:space="preserve">
+    <value>Sampling interval</value>
+  </data>
+  <data name="SaveToCalCnt" xml:space="preserve">
+    <value>If a constant total concentration is provided, please save changes to calculate number of experiments.</value>
+  </data>
+  <data name="ScanDir" xml:space="preserve">
+    <value>Scan direction</value>
+  </data>
+  <data name="ScanRate" xml:space="preserve">
+    <value>Scan rate (V/s)</value>
+  </data>
+  <data name="SegNum" xml:space="preserve">
+    <value>Number of segments</value>
+  </data>
+  <data name="Send" xml:space="preserve">
+    <value>Send</value>
+  </data>
+  <data name="Sensitivity" xml:space="preserve">
+    <value>Sensitivity</value>
+  </data>
+  <data name="SetSpeed" xml:space="preserve">
+    <value>Set speed</value>
+  </data>
+  <data name="SettingsSavedandClose" xml:space="preserve">
+    <value>Settings saved, close the dialog?</value>
+  </data>
+  <data name="SimExp" xml:space="preserve">
+    <value>Simulation (random number generator) started.</value>
+  </data>
+  <data name="Sol" xml:space="preserve">
+    <value>Solution</value>
+  </data>
+  <data name="SolRcp" xml:space="preserve">
+    <value>Solution recipe</value>
+  </data>
+  <data name="Solvent" xml:space="preserve">
+    <value>Solvent</value>
+  </data>
+  <data name="Source" xml:space="preserve">
+    <value>Source</value>
+  </data>
+  <data name="StopLogging" xml:space="preserve">
+    <value>Stop logging.</value>
+  </data>
+  <data name="Technique" xml:space="preserve">
+    <value>Technique</value>
+  </data>
+  <data name="TimeProgress" xml:space="preserve">
+    <value>Running time</value>
+  </data>
+  <data name="TotalVol" xml:space="preserve">
+    <value>Total volume (mL):</value>
+  </data>
+  <data name="two_way" xml:space="preserve">
+    <value>Two-way</value>
+  </data>
+  <data name="Warning" xml:space="preserve">
+    <value>Warning</value>
+  </data>
+  <data name="WrongFormat" xml:space="preserve">
+    <value>Wrong format</value>
+  </data>
+  <data name="WrongVolFormat" xml:space="preserve">
+    <value>Please enter a correct number (without unit)!</value>
+  </data>
+  <data name="About" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="Version" xml:space="preserve">
+    <value>Version</value>
+  </data>
+  <data name="Transfer" xml:space="preserve">
+    <value>Transfer</value>
+  </data>
+  <data name="PumpAddress" xml:space="preserve">
+    <value>Pump address</value>
+  </data>
+  <data name="Direction" xml:space="preserve">
+    <value>Direction</value>
+  </data>
+  <data name="JumptoExp" xml:space="preserve">
+    <value>Jump to experiment</value>
+  </data>
+  <data name="CFMRun" xml:space="preserve">
+    <value>Please confirm to start a single experiment.</value>
+  </data>
+  <data name="CFMRunCombo" xml:space="preserve">
+    <value>Please confirm to start combo experiments.</value>
+  </data>
+  <data name="CFMStop" xml:space="preserve">
+    <value>Please confirm to stop a running experiment.</value>
+  </data>
+  <data name="NoExpDefined" xml:space="preserve">
+    <value>No experiment defined. Please create or load one.</value>
+  </data>
+  <data name="NoBaseExp" xml:space="preserve">
+    <value>Please define a base experiment program first.</value>
+  </data>
+  <data name="ComboNotValid" xml:space="preserve">
+    <value>Combo experiments are not initialized, please use the combo editor.</value>
+  </data>
+  <data name="CannotJump" xml:space="preserve">
+    <value>Cannot jump to another experiment when one experiment is running!</value>
+  </data>
+  <data name="ComboExp" xml:space="preserve">
+    <value>Combo</value>
+  </data>
+  <data name="CurrentExp" xml:space="preserve">
+    <value>Current</value>
+  </data>
+  <data name="Change" xml:space="preserve">
+    <value>Change</value>
+  </data>
+  <data name="Custom" xml:space="preserve">
+    <value>Custom</value>
+  </data>
+  <data name="Simple" xml:space="preserve">
+    <value>Simple</value>
+  </data>
+  <data name="Move" xml:space="preserve">
+    <value>Move</value>
+  </data>
+  <data name="Style" xml:space="preserve">
+    <value>Style</value>
+  </data>
+  <data name="PickandPlace" xml:space="preserve">
+    <value>Pick and place</value>
+  </data>
+  <data name="Positioner" xml:space="preserve">
+    <value>The positioner </value>
+  </data>
+  <data name="StopOnError" xml:space="preserve">
+    <value>Stop the execution of the experiment when an [Error] arises.</value>
+  </data>
+  <data name="IllegalCommand" xml:space="preserve">
+    <value>Illegal command!</value>
+  </data>
+  <data name="PortOccupied" xml:space="preserve">
+    <value>Port is occupied, by mistake probably. Please restart the program or change to another port.</value>
+  </data>
+  <data name="Address" xml:space="preserve">
+    <value>Address</value>
+  </data>
+  <data name="Inlet" xml:space="preserve">
+    <value>Inlet</value>
+  </data>
+  <data name="Outlet" xml:space="preserve">
+    <value>Outlet</value>
+  </data>
+</root>
