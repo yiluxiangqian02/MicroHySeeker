@@ -1,0 +1,82 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>Peak Parameter Plot command (Graphics menu)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=8" />
+<meta name="generator" content="HelpSmith 6.1.3 (Build 16.428)" />
+<style type="text/css" media="screen">
+html {
+  height: 100%;
+}
+body {
+  background-color: White;
+  margin: 0 0 0 0;
+}
+</style>
+<link type="text/css" href="styles.css" rel="stylesheet" />
+</head>
+<body>
+<div align="left">
+  <table class="tbl0">
+    <tr class="row0">
+      <td class="cell0">
+        <p class="ps0"><span class="ts0">Peak Parameter Plot command (Graphics menu)</span></p>
+      </td>
+      <td class="cell1">
+        <p class="ps1"><a href="hid_graphics_xyplot.htm"><img width="33" height="36" border="0" src="Images/btn_prev_n.gif" /></a><a href="menu_graphics.htm"><img width="22" height="36" border="0" src="Images/btn_home_n.gif" /></a><a href="hid_graphics_semilog.htm"><img width="36" height="36" border="0" src="Images/btn_next_n.gif" /></a></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell2" colspan="2">
+        <p>&nbsp;</p>
+      </td>
+    </tr>
+  </table>
+</div>
+<p class="ps2"><span class="ts35">This command opens the </span><a href="hidd_dialog_ipv.htm" class="hs0">Peak Parameter vs Scan Rate Plot dialog box</a><span class="ts35">. Use this command to plot peak current or potential against the scan rate. This command can also perform a linear fit to the data.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">This command works only for cyclic voltammetric (CV) or linear sweep voltammetric (LSV) data. For CV data, the system only searches for the currently active data segment.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">After specifying the peak potential window and selecting the proper files, click OK to render the plot. The resulting plot is temporary and will disappear if other data display commands are invoked. You can use the </span><a href="hid_graphics_option.htm" class="hs0">Graph Option</a><span class="ts35">, </span><a href="hid_graphics_color.htm" class="hs0">Color and Legend</a><span class="ts35">, and </span><a href="hid_graphics_font.htm" class="hs0">Font</a><span class="ts35">&nbsp;commands to customize your plot.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">The </span><a href="hid_graphics_ipv.htm" class="hs0">Peak Parameter Plot</a><span class="ts35">&nbsp;command opens this dialog box.</span></p>
+<p class="ps25"><img width="819" height="484" border="0" src="Images/Image(124).png" /></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Peak Potential Window</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">Specify the potential range in which the program will search for peaks. The first peak in this potential range will be used for plotting.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Type of Plot</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">Plot peak current versus the scan rate, peak current versus the square root of the scan rate, peak potential versus the logarithm of the scan rate, or rotating disk electrode Levich plot and Koutecky-Levich plot. </span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">For a reversible surface reaction, the peak current is proportional to the scan rate. For a reversible diffusive system, the peak current is proportional to the square root of the scan rate. </span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">The peak potential should be independent of the scan rate for a reversible reaction. A change in peak potential with scan rate indicates either slow kinetics or chemical complexity.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Linear Curve Fitting</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">Checking this box will generate a linear least squares best fit line on the plot.</span></p>
+<p class="ps17"><span class="ts37">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Intercept = 0</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">Checking this box will generate a linear least squares best fit line on the plot with intercept pass zero.</span></p>
+<p class="ps17"><span class="ts38">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Report Parameter</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">Checking this box will report a data parameter for Levich plot and Koutecky-Levich plot, if four other parameters are know. There are total 5 parameters: Concentration, Electrode Area, Kinetic Viscosity, Electron Transfer Number, and Diffusion Coefficient.</span></p>
+<p class="ps17"><span class="ts37">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Select Files</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps22"><span class="ts35">Select data files to be plotted (CV or LSV only). Select at least three data files obtained at different experimental parameters such as scan rates, RDE rotation rates. At least three files with peak height or wave height are needed to make the plot and fitting. The following plot may be obtained:</span></p>
+<p class="ps21"><img width="1260" height="487" border="0" src="Images/Image(121).png" /></p>
+<p class="ps21">&nbsp;</p>
+<p class="ps22"><span class="ts36">Enter Known Parameters, Select a Parameter to Report</span></p>
+<p class="ps22"><span class="ts35">&nbsp;</span></p>
+<p class="ps22"><span class="ts35">One can select a data parameter to report, in order to do so, one needs to know (or a reasonable guess) all other 4 parameters. If Report Parameter option is selected, all five parameters will be displayed with the peak parameter plot, with the unknown reported at the bottom.</span></p>
+<p class="ps22"><span class="ts37">&nbsp;</span></p>
+<p class="ps22"><span class="ts37">&nbsp;</span></p>
+
+</body>
+</html>

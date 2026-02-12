@@ -1,0 +1,579 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>HID_BUTTON_SIM_OPEN</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=8" />
+<meta name="generator" content="HelpSmith 6.1.3 (Build 16.428)" />
+<style type="text/css" media="screen">
+html {
+  height: 100%;
+}
+body {
+  background-color: White;
+  margin: 0 0 0 0;
+}
+</style>
+<link type="text/css" href="styles.css" rel="stylesheet" />
+</head>
+<body>
+<p class="ps2"><span class="ts35">An impedance simulator is integrated into the program. To use the impedance simulator, you need to set </span><a href="hid_setup_tech.htm" class="hs0">Technique</a><span class="ts35">&nbsp;to AC Impedance (IMP) and then use the </span><a href="hid_sim_mechanism.htm" class="hs0">Mechanism</a><span class="ts35">&nbsp;command to enter the equivalent circuitry. </span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">Once the Mechanism command has been invoked, the original toolbar will be replaced by a new one containing symbols for components and commands.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<div align="left">
+  <table class="tbl2">
+    <tr class="row0">
+      <td class="cell277">
+        <p class="ps42"><img width="16" height="15" border="0" src="Images/hid_sim_mechanism_imp_undo.png" /></p>
+      </td>
+      <td class="cell278">
+        <p class="ps18"><span class="ts35">Undo previous action.</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell277">
+        <p class="ps42"><img width="16" height="15" border="0" src="Images/hid_sim_mechanism_imp_redo.png" /></p>
+      </td>
+      <td class="cell278">
+        <p class="ps18"><span class="ts35">Redo previous action.</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell277">
+        <p class="ps42"><img width="16" height="15" border="0" src="Images/hid_sim_mechanism_imp_rearr.png" /></p>
+      </td>
+      <td class="cell278">
+        <p class="ps18"><span class="ts35">Rearrange components.</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell277">
+        <p class="ps42"><img width="16" height="15" border="0" src="Images/hid_sim_mechanism_imp_move.png" /></p>
+      </td>
+      <td class="cell278">
+        <p class="ps18"><span class="ts35">Move components left, right, up, or down.</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell277">
+        <p class="ps42"><img width="16" height="15" border="0" src="Images/hid_sim_mechanism_imp_clear.png" /></p>
+      </td>
+      <td class="cell278">
+        <p class="ps18"><span class="ts35">Clear all components.</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell277">
+        <p class="ps42"><img width="16" height="15" border="0" src="Images/hid_sim_mechanism_imp_cut.png" /></p>
+      </td>
+      <td class="cell278">
+        <p class="ps18"><span class="ts35">Cut (remove) circuit element or connection.</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell277">
+        <p class="ps42"><img width="15" height="15" border="0" src="Images/hid_sim_mechanism_imp_res.png" /></p>
+      </td>
+      <td class="cell278">
+        <p class="ps18"><span class="ts35">Add </span><a href="hidd_dialog_sim_r.htm" class="hs0">resistor</a><span class="ts35">&nbsp;(Ohms).</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell277">
+        <p class="ps42"><img width="17" height="15" border="0" src="Images/hid_sim_mechanism_imp_cap.png" /></p>
+      </td>
+      <td class="cell278">
+        <p class="ps18"><span class="ts35">Add </span><a href="hidd_dialog_sim_c.htm" class="hs0">capacitor</a><span class="ts35">&nbsp;(Farads).</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell277">
+        <p class="ps42"><img width="16" height="15" border="0" src="Images/hid_sim_mechanism_imp_ind.png" /></p>
+      </td>
+      <td class="cell278">
+        <p class="ps18"><span class="ts35">Add </span><a href="hidd_dialog_sim_l.htm" class="hs0">inductor</a><span class="ts35">&nbsp;(Henries).</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell277">
+        <p class="ps42"><img width="16" height="15" border="0" src="Images/hid_sim_mechanism_imp_warburg.png" /></p>
+      </td>
+      <td class="cell278">
+        <p class="ps18"><span class="ts35">Add </span><a href="hidd_dialog_sim_w.htm" class="hs0">Warburg</a><span class="ts35">&nbsp;impedance.</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell277">
+        <p class="ps42"><img width="16" height="15" border="0" src="Images/hid_sim_mechanism_imp_phase.png" /></p>
+      </td>
+      <td class="cell278">
+        <p class="ps18"><span class="ts35">Add </span><a href="hidd_dialog_sim_q.htm" class="hs0">constant phase element</a><span class="ts35">.</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell277">
+        <p class="ps42"><img width="17" height="15" border="0" src="Images/hid_sim_mechanism_imp_cc.png" /></p>
+      </td>
+      <td class="cell278">
+        <p class="ps18"><span class="ts35">Add </span><a href="hidd_dialog_sim_cc.htm" class="hs0">Cole-Cole</a><span class="ts35">&nbsp;impedance.</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell277">
+        <p class="ps42"><img width="17" height="15" border="0" src="Images/hid_sim_mechanism_imp_cd.png" /></p>
+      </td>
+      <td class="cell278">
+        <p class="ps18"><span class="ts35">Add </span><a href="hidd_dialog_sim_cd.htm" class="hs0">Cole-Davidson</a><span class="ts35">&nbsp;impedance.</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell277">
+        <p class="ps42"><img width="17" height="15" border="0" src="Images/hid_sim_mechanism_imp_t.png" /></p>
+      </td>
+      <td class="cell278">
+        <p class="ps18"><span class="ts35">Add </span><a href="hidd_dialog_sim_t.htm" class="hs0">Finite Length Diffusion</a><span class="ts35">&nbsp;impedance.</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell277">
+        <p class="ps42"><img width="17" height="15" border="0" src="Images/hid_sim_mechanism_imp_o.png" /></p>
+      </td>
+      <td class="cell278">
+        <p class="ps18"><span class="ts35">Add </span><a href="hidd_dialog_sim_o.htm" class="hs0">Open Finite Length Diffusion</a><span class="ts35">&nbsp;impedance.</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell277">
+        <p class="ps42"><img width="17" height="15" border="0" src="Images/hid_sim_mechanism_imp_g.png" /></p>
+      </td>
+      <td class="cell278">
+        <p class="ps18"><span class="ts35">Add </span><a href="hidd_dialog_sim_g.htm" class="hs0">Gerischer</a><span class="ts35">&nbsp;impedance.</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell277">
+        <p class="ps42"><img width="16" height="15" border="0" src="Images/hid_sim_mechanism_imp_param.png" /></p>
+      </td>
+      <td class="cell278">
+        <p class="ps18"><span class="ts35">Change simulation parameters (e.g., frequency range).</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell277">
+        <p class="ps42"><img width="17" height="15" border="0" src="Images/hid_sim_mechanism_imp_open.png" /></p>
+      </td>
+      <td class="cell278">
+        <p class="ps18"><span class="ts35">Open equivalent circuit file for simulation or fitting.</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell277">
+        <p class="ps42"><img width="15" height="15" border="0" src="Images/hid_sim_mechanism_imp_save.png" /></p>
+      </td>
+      <td class="cell278">
+        <p class="ps18"><span class="ts35">Save current equivalent circuit.</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell277">
+        <p class="ps42"><img width="16" height="15" border="0" src="Images/hid_sim_mechanism_imp_sim.png" /></p>
+      </td>
+      <td class="cell278">
+        <p class="ps18"><span class="ts35">Run impedance simulator.</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell277">
+        <p class="ps42"><img width="16" height="15" border="0" src="Images/hid_sim_mechanism_imp_fit.png" /></p>
+      </td>
+      <td class="cell278">
+        <p class="ps18"><span class="ts35">Run impedance fitting program.</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell277">
+        <p class="ps42"><img width="16" height="15" border="0" src="Images/hid_sim_mechanism_imp_stop.png" /></p>
+      </td>
+      <td class="cell278">
+        <p class="ps18"><span class="ts35">Stop fitting in progress.</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell277">
+        <p class="ps42"><img width="16" height="15" border="0" src="Images/hid_sim_mechanism_imp_exit.png" /></p>
+      </td>
+      <td class="cell278">
+        <p class="ps18"><span class="ts35">Exit mechanism editor simulation environment.</span></p>
+      </td>
+    </tr>
+  </table>
+</div>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Circuit Editor</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">The equivalent circuit editor is fully graphical. To add a circuit element, click the appropriate symbol on the toolbar and click in the main window to place the component. Double-click the component to specify the name and value of the circuit element.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">Connect two elements by moving the cursor to the left or to the right of an element. When the mouse cursor is close to the left or right side of an element, a black dot will appear. Left-click and drag the mouse cursor to the left or right of the other element, releasing the left mouse button when a black dot appears on beside the other component. The two elements will now be connected. </span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">To remove a circuit element or connection wire, left-click to select it. The color of the element or wire will change to red. Click the Cut button on the toolbar to remove the element or wire. When an element is deleted, all of its connections are deleted with it. You can also remove a component by left-clicking it and dragging it out of the window.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">To move elements and wires, left-click and drag, releasing the left mouse button at the desired location in the window. Alternatively, use the Move button on the toolbar to move all components left, right, up, or down. </span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">To rearrange components and connection wires automatically, click the Rearrange button on the toolbar. However, there are only four modes and they may not create an ideal diagram. You may have to redraw the diagram manually.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">To finish the equivalent circuit drawing, you need to connect to the two big dots on the left and the right sides of the window. If you do not connect these two dots, the program will be unable to determine the two terminals of your circuit and to start the simulation.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">Other potentially useful toolbar buttons have been included to: undo or redo your actions; remove all components and connection wires; save your equivalent circuit drawing to file and read it back later; and change the impedance simulation parameters, such as frequency range and number of data points per decade of frequency. </span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Simulation and Fitting</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">Please notice that the equivalent circuit you draw can be used for both simulation and fitting. </span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">To perform a simulation, click the Sim button; the program will close the circuit editor in order to display the simulated data on the screen. Warning: unsaved data will be erased when a new simulation starts. Save your existing data before starting a simulation. </span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">Data fitting requires an equivalent circuit as well as a set of impedance data, obtained from impedance measurements or even from a preceding simulation. A poor fit may indicate an equivalent circuit that is a poor approximation to your physical system. You may need to revise your proposed equivalent circuit to obtain a better fit.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">The fitting program has known limitations. Sometimes, a poor fit will be obtained even with a known (simulated) data set. Results may also depend on the initial values of the components. If you experience problems, please send the data to info@chinstruments.com. We will try to study and improve it, but cannot guarantee better results. Efficient fitting algorithms are difficult and complicated to obtain.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">Click the Fit button on the toolbar to start the fitting process. During fitting, the elapsed time, fitting error, and evolution of circuit element parameters will be displayed. The fitting process is complete when the component values have converged; the resulting values value of circuit elements as well as fitting error will be displayed. To stop the fitting process, click the Exit button on the toolbar. The original and fitted data will be overlaid and displayed.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">To exit the circuit editor and return to the main program, click the Exit button.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Notes</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">Before you run the fitting program, make sure the instrument is correctly connected to your PC, e.g. by running the </span><a href="hid_setup_test.htm" class="hs0">Self Test</a><span class="ts35">&nbsp;command. The program will verify that your instrument model is supported. This check only needs to be performed once after the program is started. After the first fit, you do not need to have the instrument connected anymore.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">When carrying out impedance simulation and fitting, do not run other techniques or read data files other than impedance measurements. Otherwise the circuit editor may not function correctly.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts41">Circuit Element Notation and Ranges</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<div align="left">
+  <table class="tbl2">
+    <tr class="row0">
+      <td class="cell303">
+        <p class="ps18"><span class="ts36">Circuit Element</span></p>
+      </td>
+      <td class="cell304">
+        <p class="ps18"><span class="ts36">Abbrev.</span></p>
+      </td>
+      <td class="cell305">
+        <p class="ps18"><span class="ts36">Units</span></p>
+      </td>
+      <td class="cell75">
+        <p class="ps18"><span class="ts36">Range</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell303">
+        <p class="ps18"><span class="ts35">Resistor</span></p>
+      </td>
+      <td class="cell304">
+        <p class="ps18"><span class="ts35">R</span></p>
+      </td>
+      <td class="cell305">
+        <p class="ps18"><span class="ts35">Ohm</span></p>
+      </td>
+      <td class="cell75">
+        <p class="ps18"><span class="ts35">0.001 to 1e12</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell303">
+        <p class="ps18"><span class="ts35">Capacitor</span></p>
+      </td>
+      <td class="cell304">
+        <p class="ps18"><span class="ts35">C</span></p>
+      </td>
+      <td class="cell305">
+        <p class="ps18"><span class="ts35">Farad</span></p>
+      </td>
+      <td class="cell75">
+        <p class="ps18"><span class="ts35">1e-12 to 1</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell303">
+        <p class="ps18"><span class="ts35">Inductor</span></p>
+      </td>
+      <td class="cell304">
+        <p class="ps18"><span class="ts35">L</span></p>
+      </td>
+      <td class="cell305">
+        <p class="ps18"><span class="ts35">Henry</span></p>
+      </td>
+      <td class="cell75">
+        <p class="ps18"><span class="ts35">1e-12 to 1</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell303">
+        <p class="ps18"><span class="ts35">Warburg Impedance</span></p>
+      </td>
+      <td class="cell304">
+        <p class="ps18"><span class="ts35">W</span></p>
+      </td>
+      <td class="cell305">
+        <p class="ps41"><span class="ts40">Siemens sec</span><span class="ts46">1/2</span></p>
+      </td>
+      <td class="cell75">
+        <p class="ps18"><span class="ts35">1e-6 to 1</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell303">
+        <p class="ps18"><span class="ts35">Constant Phase</span></p>
+      </td>
+      <td class="cell304">
+        <p class="ps18"><span class="ts35">Q</span></p>
+      </td>
+      <td class="cell305">
+        <p class="ps41"><span class="ts40">Siemens sec</span><span class="ts46">n</span></p>
+      </td>
+      <td class="cell75">
+        <p class="ps18"><span class="ts35">1e-12 to 1000</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell303">
+        <p class="ps18"><span class="ts35">Cole-Cole</span></p>
+      </td>
+      <td class="cell304">
+        <p class="ps18"><span class="ts35">CC</span></p>
+      </td>
+      <td class="cell305">
+        <p class="ps18"><span class="ts35">Ohm</span></p>
+      </td>
+      <td class="cell75">
+        <p class="ps18"><span class="ts35">0.001 to 1e12</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell303">
+        <p class="ps18"><span class="ts35">Cole-Davidson</span></p>
+      </td>
+      <td class="cell304">
+        <p class="ps18"><span class="ts35">CD</span></p>
+      </td>
+      <td class="cell305">
+        <p class="ps18"><span class="ts35">Ohm</span></p>
+      </td>
+      <td class="cell75">
+        <p class="ps18"><span class="ts35">0.001 to 1e12</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell303">
+        <p class="ps18"><span class="ts35">Finite Layer Diffusion</span></p>
+      </td>
+      <td class="cell304">
+        <p class="ps18"><span class="ts35">FD</span></p>
+      </td>
+      <td class="cell305">
+        <p class="ps41"><span class="ts40">Siemens sec</span><span class="ts46">1/2</span></p>
+      </td>
+      <td class="cell75">
+        <p class="ps41"><span class="ts40">Y</span><span class="ts46">o</span><span class="ts40">&nbsp;= 1e-12 to 1e12</span></p>
+        <p class="ps18"><span class="ts35">d/√D = 1e-6 to 1000</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell303">
+        <p class="ps18"><span class="ts35">Open Finite Layer Diffusion</span></p>
+      </td>
+      <td class="cell304">
+        <p class="ps18"><span class="ts35">OFD</span></p>
+      </td>
+      <td class="cell305">
+        <p class="ps41"><span class="ts40">Siemens sec</span><span class="ts46">1/2</span></p>
+      </td>
+      <td class="cell75">
+        <p class="ps41"><span class="ts40">Y</span><span class="ts46">o</span><span class="ts40">&nbsp;= 1e-12 to 1e12</span></p>
+        <p class="ps18"><span class="ts35">d/√D = 1e-6 to 1000</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell303">
+        <p class="ps18"><span class="ts35">Gerischer Impedance</span></p>
+      </td>
+      <td class="cell304">
+        <p class="ps18"><span class="ts35">GI</span></p>
+      </td>
+      <td class="cell305">
+        <p class="ps41"><span class="ts40">Siemens sec</span><span class="ts46">1/2</span></p>
+      </td>
+      <td class="cell75">
+        <p class="ps41"><span class="ts40">Y</span><span class="ts46">o</span><span class="ts40">&nbsp;= 1e-12 to 1e12</span></p>
+        <p class="ps18"><span class="ts35">k = 1e-12 to 1e12</span></p>
+      </td>
+    </tr>
+  </table>
+</div>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts41">Circuit Element Properties</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<div align="left">
+  <table class="tbl2">
+    <tr class="row0">
+      <td class="cell281">
+        <p class="ps18"><span class="ts36">Element</span></p>
+      </td>
+      <td class="cell282">
+        <p class="ps18"><span class="ts36">Impedance</span></p>
+      </td>
+      <td class="cell283">
+        <p class="ps18"><span class="ts36">Conductance</span></p>
+      </td>
+      <td class="cell284">
+        <p class="ps18"><span class="ts36">Phase</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell281">
+        <p class="ps18"><span class="ts35">R (resistor)</span></p>
+      </td>
+      <td class="cell282">
+        <p class="ps41"><span class="ts40">Z</span><span class="ts46">R</span><span class="ts40">&nbsp;= R</span></p>
+      </td>
+      <td class="cell283">
+        <p class="ps41"><span class="ts40">Y</span><span class="ts46">R</span><span class="ts40">&nbsp;= 1/R</span></p>
+      </td>
+      <td class="cell284">
+        <p class="ps18"><span class="ts62">φ</span><span class="ts35">&nbsp;= 0 (frequency-independent)</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell281">
+        <p class="ps18"><span class="ts35">C (capacitor)</span></p>
+      </td>
+      <td class="cell282">
+        <p class="ps41"><span class="ts40">Z</span><span class="ts46">C</span><span class="ts40">&nbsp;= -j/</span><span class="ts47">ω</span><span class="ts40">C</span></p>
+      </td>
+      <td class="cell283">
+        <p class="ps41"><span class="ts40">Y</span><span class="ts46">C</span><span class="ts40">&nbsp;= j</span><span class="ts47">ω</span><span class="ts40">C</span></p>
+      </td>
+      <td class="cell284">
+        <p class="ps18"><span class="ts62">φ</span><span class="ts35">&nbsp;= </span><span class="ts62">π</span><span class="ts35">/2</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell281">
+        <p class="ps18"><span class="ts35">L (inductor)</span></p>
+      </td>
+      <td class="cell282">
+        <p class="ps41"><span class="ts40">Z</span><span class="ts46">L</span><span class="ts40">&nbsp;= j</span><span class="ts47">ω</span><span class="ts40">L</span></p>
+      </td>
+      <td class="cell283">
+        <p class="ps41"><span class="ts40">Y</span><span class="ts46">L</span><span class="ts40">&nbsp;= -j/</span><span class="ts47">ω</span><span class="ts40">L</span></p>
+      </td>
+      <td class="cell284">
+        <p class="ps18"><span class="ts62">φ</span><span class="ts35">&nbsp;= -</span><span class="ts62">π</span><span class="ts35">/2</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell281">
+        <p class="ps18"><span class="ts35">W (Warburg)</span></p>
+      </td>
+      <td class="cell282">
+        <p class="ps41"><span class="ts40">Z</span><span class="ts46">W</span><span class="ts40">&nbsp;= (j</span><span class="ts47">ω</span><span class="ts40">)</span><span class="ts46">-1/2</span><span class="ts40">/Y</span><span class="ts46">o</span></p>
+      </td>
+      <td class="cell283">
+        <p class="ps41"><span class="ts40">Y</span><span class="ts46">W</span><span class="ts40">&nbsp;= (j</span><span class="ts47">ω</span><span class="ts40">)</span><span class="ts46">1/2 </span><span class="ts40">Y</span><span class="ts46">o</span></p>
+      </td>
+      <td class="cell284">
+        <p class="ps18"><span class="ts62">φ</span><span class="ts35">&nbsp;= </span><span class="ts62">π</span><span class="ts35">/4</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell281">
+        <p class="ps18"><span class="ts35">Q (phase)</span></p>
+      </td>
+      <td class="cell282">
+        <p class="ps41"><span class="ts40">Z</span><span class="ts46">Q</span><span class="ts40">&nbsp;= (j</span><span class="ts47">ω</span><span class="ts40">)</span><span class="ts46">-n</span><span class="ts40">/Y</span><span class="ts46">o</span></p>
+      </td>
+      <td class="cell283">
+        <p class="ps41"><span class="ts40">Y</span><span class="ts46">Q</span><span class="ts40">&nbsp;= (j</span><span class="ts47">ω</span><span class="ts40">)</span><span class="ts46">n </span><span class="ts40">Y</span><span class="ts46">o</span></p>
+      </td>
+      <td class="cell284">
+        <p class="ps18"><span class="ts62">φ</span><span class="ts35">&nbsp;= n</span><span class="ts62">π</span><span class="ts35">/2, 0 &lt; n &lt; 1</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell281">
+        <p class="ps18"><span class="ts35">CC (Cole-Cole)</span></p>
+      </td>
+      <td class="cell282">
+        <p class="ps41"><span class="ts40">Z</span><span class="ts46">CC</span><span class="ts40">&nbsp;= R / [1+(j</span><span class="ts47">ωτ</span><span class="ts40">)</span><span class="ts64">α</span><span class="ts40">]</span></p>
+      </td>
+      <td class="cell283">
+        <p class="ps41"><span class="ts40">Y</span><span class="ts46">CC</span><span class="ts40">&nbsp;= [1+(j</span><span class="ts47">ωτ</span><span class="ts40">)</span><span class="ts64">α</span><span class="ts40">] / R</span></p>
+      </td>
+      <td class="cell284">
+        <p class="ps41"><span class="ts40">tan </span><span class="ts47">φ</span><span class="ts40">&nbsp;= (</span><span class="ts47">ωτ</span><span class="ts40">)</span><span class="ts64">α</span><span class="ts40">sin(</span><span class="ts47">απ</span><span class="ts40">/2) / [1+(</span><span class="ts47">ωτ</span><span class="ts40">)</span><span class="ts64">α</span><span class="ts40">cos(</span><span class="ts47">απ</span><span class="ts40">/2)]</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell281">
+        <p class="ps18"><span class="ts35">CD (Cole-Davidson)</span></p>
+      </td>
+      <td class="cell282">
+        <p class="ps41"><span class="ts40">Z</span><span class="ts46">CD</span><span class="ts40">&nbsp;= R / (1+j</span><span class="ts47">ωτ</span><span class="ts40">)</span><span class="ts64">α</span></p>
+      </td>
+      <td class="cell283">
+        <p class="ps41"><span class="ts40">Y</span><span class="ts46">CD</span><span class="ts40">&nbsp;= (1+j</span><span class="ts47">ωτ</span><span class="ts40">)</span><span class="ts64">α </span><span class="ts40">/ R</span></p>
+      </td>
+      <td class="cell284">
+        <p class="ps18"><span class="ts35">tan (</span><span class="ts62">φ</span><span class="ts35">/</span><span class="ts62">α</span><span class="ts35">) = </span><span class="ts62">ωτ</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell281">
+        <p class="ps18"><span class="ts35">FD (Finite Layer Diffusion)</span></p>
+      </td>
+      <td class="cell282">
+        <p class="ps41"><span class="ts40">Z</span><span class="ts46">FD</span><span class="ts40">&nbsp;= 1/Y</span><span class="ts46">FD</span></p>
+      </td>
+      <td class="cell283">
+        <p class="ps41"><span class="ts40">Y</span><span class="ts46">FD</span><span class="ts40">&nbsp;= Y</span><span class="ts46">o</span><span class="ts40">&nbsp;sqrt(j</span><span class="ts47">ω</span><span class="ts40">) </span></p>
+        <p class="ps18"><span class="ts35">tanh[</span><span class="ts62">δ</span><span class="ts35">&nbsp;sqrt(j</span><span class="ts62">ω</span><span class="ts35">/D)]</span></p>
+      </td>
+      <td class="cell284">
+        <p class="ps41"><span class="ts40">tan (</span><span class="ts47">φ</span><span class="ts40">) = arg (Y</span><span class="ts46">FD</span><span class="ts40">)</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell281">
+        <p class="ps18"><span class="ts35">OFD (Open Finite Layer Diffusion)</span></p>
+      </td>
+      <td class="cell282">
+        <p class="ps41"><span class="ts40">Z</span><span class="ts46">OFD</span><span class="ts40">&nbsp;= 1/Y</span><span class="ts46">OFD</span></p>
+      </td>
+      <td class="cell283">
+        <p class="ps41"><span class="ts40">Y</span><span class="ts46">OFD</span><span class="ts40">&nbsp;= Y</span><span class="ts46">o</span><span class="ts40">&nbsp;sqrt(j</span><span class="ts47">ω</span><span class="ts40">) </span></p>
+        <p class="ps18"><span class="ts35">coth[</span><span class="ts62">δ</span><span class="ts35">&nbsp;sqrt(j</span><span class="ts62">ω</span><span class="ts35">/D)]</span></p>
+      </td>
+      <td class="cell284">
+        <p class="ps41"><span class="ts40">tan (</span><span class="ts47">φ</span><span class="ts40">) = arg (Y</span><span class="ts46">OFD</span><span class="ts40">)</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell281">
+        <p class="ps18"><span class="ts35">GI (Gerischer Impedance)</span></p>
+      </td>
+      <td class="cell282">
+        <p class="ps41"><span class="ts40">Z</span><span class="ts46">GI</span><span class="ts40">&nbsp;= 1/Y</span><span class="ts46">GI</span></p>
+      </td>
+      <td class="cell283">
+        <p class="ps41"><span class="ts40">Y</span><span class="ts46">GI</span><span class="ts40">&nbsp;= Y</span><span class="ts46">o</span><span class="ts40">&nbsp;sqrt(k + j</span><span class="ts47">ω</span><span class="ts40">)</span></p>
+      </td>
+      <td class="cell284">
+        <p class="ps41"><span class="ts40">tan (</span><span class="ts47">φ</span><span class="ts40">) = arg (Y</span><span class="ts46">GI</span><span class="ts40">)</span></p>
+      </td>
+    </tr>
+  </table>
+</div>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps22"><span class="ts35">For more information, refer to J. R. Macdonald, Ann. Biomed. Eng., 20, 289-305 (1992) or &quot;Impedance Spectroscopy&quot;, E. Barsoukov and J. R. Macdonald, Wiley, Hoboken, 1987 (1st ed), 2005 (2nd ed).</span></p>
+
+</body>
+</html>

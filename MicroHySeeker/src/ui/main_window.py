@@ -17,8 +17,9 @@ from PySide6.QtCore import Qt, Slot, QSize, QRectF, QTimer, QPointF
 from PySide6.QtGui import QAction, QIcon, QFont, QColor, QPainter, QPen, QBrush, QLinearGradient, QPainterPath, QPolygonF
 from pathlib import Path
 
-from src.models import SystemConfig, Experiment, ProgStep, ProgramStepType
+from src.models import SystemConfig, Experiment, ProgStep, ProgramStepType, ECSettings
 from src.engine.runner import ExperimentRunner
+from src.services.i18n import tr, get_lang, set_lang
 
 
 # 全局字体设置
@@ -36,14 +37,39 @@ STEP_TYPE_COLORS = {
     ProgramStepType.EVACUATE: "#795548",   # 棕色 - 排空
 }
 
-STEP_TYPE_NAMES = {
-    ProgramStepType.TRANSFER: "移液",
-    ProgramStepType.PREP_SOL: "配液",
-    ProgramStepType.FLUSH: "冲洗",
-    ProgramStepType.ECHEM: "电化学",
-    ProgramStepType.BLANK: "空白",
-    ProgramStepType.EVACUATE: "排空",
+def _step_type_names():
+    """动态获取步骤类型名称 (支持i18n)"""
+    return {
+        ProgramStepType.TRANSFER: tr("step_transfer"),
+        ProgramStepType.PREP_SOL: tr("step_prep_sol"),
+        ProgramStepType.FLUSH: tr("step_flush"),
+        ProgramStepType.ECHEM: tr("step_echem"),
+        ProgramStepType.BLANK: tr("step_blank"),
+        ProgramStepType.EVACUATE: tr("step_evacuate"),
+    }
+
+# 向后兼容 - 旧代码引用 STEP_TYPE_NAMES 的地方不用全改
+STEP_TYPE_NAMES = _step_type_names()
+
+# ── 泵颜色辅助函数 (从 layout_params 读取) ──
+_PUMP_STYLE_DEFAULTS = {
+    0: {"bg": "#E5E7EB", "border": "", "indicator": "#9CA3AF"},
+    1: {"bg": "#BBF7D0", "border": "", "indicator": "#22C55E"},
+    2: {"bg": "#FDE68A", "border": "", "indicator": "#EAB308"},
 }
+_PUMP_STATE_PREFIX = {0: "pump_idle", 1: "pump_run", 2: "pump_pend"}
+
+def _pump_style(state: int, params: dict = None) -> dict:
+    """Return {bg, border, indicator} QColor-ready strings for a pump state."""
+    prefix = _PUMP_STATE_PREFIX.get(state, "pump_idle")
+    defaults = _PUMP_STYLE_DEFAULTS.get(state, _PUMP_STYLE_DEFAULTS[0])
+    if params:
+        return {
+            "bg":        params.get(f"{prefix}_bg", defaults["bg"]),
+            "border":    params.get(f"{prefix}_border", defaults["border"]),
+            "indicator": params.get(f"{prefix}_indicator", defaults["indicator"]),
+        }
+    return dict(defaults)
 
 
 class PumpDiagramWidget(QFrame):
@@ -58,9 +84,17 @@ class PumpDiagramWidget(QFrame):
         self.config = config
         self.pump_states = [0] * 12  # 0=空闲, 1=运行中(绿), 2=待运行(黄)
         self.setMinimumSize(600, 200)
+        # 加载泵颜色参数
+        from src.ui.layout_tuner import load_saved_layout_params
+        self._color_params = load_saved_layout_params() or {}
     
     def update_config(self, config: SystemConfig):
         self.config = config
+        self.update()
+    
+    def update_pump_colors(self, params: dict):
+        """Update pump color params (called when layout tuner saves)."""
+        self._color_params = params
         self.update()
     
     def set_pump_running(self, pump_id: int, running: bool):
@@ -101,6 +135,9 @@ class PumpDiagramWidget(QFrame):
         pump_w = int(cell_w * 0.85)
         pump_h = int(cell_h * 0.45)
         
+        # 字体缩放系数 (基准: cell_w=100, cell_h=100)
+        self._fs = max(0.6, min(2.0, min(cell_w / 100, cell_h / 100)))
+        
         for i in range(12):
             row = i // cols
             col = i % cols
@@ -114,54 +151,51 @@ class PumpDiagramWidget(QFrame):
             self._draw_pump(painter, px, py, pump_w, pump_h, i + 1)
     
     def _draw_pump(self, painter: QPainter, x: int, y: int, w: int, h: int, pump_id: int):
-        """绘制单个泵 - 更大更美观"""
+        """绘制单个泵 - Win11 扁平风格"""
         state = self.pump_states[pump_id - 1]
         label = self._get_pump_label(pump_id)
+        style = _pump_style(state, self._color_params)
         
-        # 泵主体 - 圆角矩形
         body_rect = QRectF(x, y, w, h)
-        gradient = QLinearGradient(x, y, x, y + h)
-        if state == 1:  # 运行中 - 绿色
-            gradient.setColorAt(0, QColor("#66BB6A"))
-            gradient.setColorAt(1, QColor("#388E3C"))
-        elif state == 2:  # 待运行 - 黄色
-            gradient.setColorAt(0, QColor("#FFD54F"))
-            gradient.setColorAt(1, QColor("#FFA000"))
-        else:  # 空闲 - 纯灰色系
-            gradient.setColorAt(0, QColor("#D5D5D5"))
-            gradient.setColorAt(1, QColor("#A0A0A0"))
+        bg_color = QColor(style["bg"])
+        indicator_color = QColor(style["indicator"])
+        border_val = style["border"].strip() if style["border"] else ""
         
-        painter.setPen(QPen(QColor("#757575"), 1.5))
-        painter.setBrush(QBrush(gradient))
-        painter.drawRoundedRect(body_rect, 6, 6)
+        # 泵主体
+        if border_val:
+            painter.setPen(QPen(QColor(border_val), 1.5))
+        else:
+            painter.setPen(Qt.NoPen)
+        painter.setBrush(QBrush(bg_color))
+        painter.drawRoundedRect(body_rect, 8, 8)
         
-        # 中心指示灯 (圆形)
+        # 中心指示灯
         indicator_r = min(w, h) // 5
         cx = x + w // 2
         cy = y + h // 2
-        
-        if state == 1:  # 运行中 - 亮绿灯
-            painter.setBrush(QBrush(QColor("#00E676")))
-            painter.setPen(QPen(QColor("#1B5E20"), 1))
-        elif state == 2:  # 待运行 - 亮黄灯
-            painter.setBrush(QBrush(QColor("#FFEB3B")))
-            painter.setPen(QPen(QColor("#F57F17"), 1))
-        else:  # 空闲 - 暗灰
-            painter.setBrush(QBrush(QColor("#888888")))
-            painter.setPen(QPen(QColor("#666666"), 1))
+        painter.setBrush(QBrush(indicator_color))
+        painter.setPen(Qt.NoPen)
         painter.drawEllipse(cx - indicator_r, cy - indicator_r, indicator_r * 2, indicator_r * 2)
         
-        # 泵编号 (在圆形中)
+        # 泵编号
+        fs = getattr(self, '_fs', 1.0)
         painter.setPen(Qt.white)
-        painter.setFont(QFont("Microsoft YaHei", max(9, indicator_r), QFont.Bold))
-        painter.drawText(cx - indicator_r, cy - indicator_r, indicator_r * 2, indicator_r * 2, 
+        painter.setFont(QFont("Microsoft YaHei", max(8, int(9 * fs)), QFont.Bold))
+        painter.drawText(cx - indicator_r, cy - indicator_r, indicator_r * 2, indicator_r * 2,
                          Qt.AlignCenter, str(pump_id))
         
-        # 下方标签 - 字体与步骤进度列表一致 (11号)
-        painter.setPen(QColor("#333333"))
-        painter.setFont(QFont("Microsoft YaHei", 11))
-        label_text = label if label else f"泵{pump_id}"
-        painter.drawText(x - 5, y + h + 2, w + 10, 20, Qt.AlignCenter, label_text)
+        # 从布局参数获取统一字号和颜色
+        base_sz = int(self._color_params.get("label_font_size", 10))
+        lbl_color = str(self._color_params.get("label_color", "#374151"))
+        
+        # 下方标签: 溶液名/工作类型 + 泵地址在同一行
+        if label:
+            label_text = f"{label} ({tr('pump_n', n=pump_id)})"
+        else:
+            label_text = tr("pump_n", n=pump_id)
+        painter.setPen(QColor(lbl_color))
+        painter.setFont(QFont("Microsoft YaHei", max(7, int(base_sz * fs))))
+        painter.drawText(x - 5, y + h + 2, w + 10, int(20 * fs), Qt.AlignCenter, label_text)
 
 
 class ExperimentProcessWidget(QFrame):
@@ -181,8 +215,19 @@ class ExperimentProcessWidget(QFrame):
         self.combo_progress = "0/0"
         self.setMinimumSize(600, 300)
         
+        # ======== 工作站状态 ========
+        # "disconnected" | "connected" | "failed"
+        self.ws_connection_status = "disconnected"
+        # "" | "即将开始CV测量" | "CV测量中..." | "测量完成" 等
+        self.ws_measurement_status = ""
+        
+        # ======== 电化学结果图像 ========
+        self._echem_pixmap = None  # QPixmap, 由 set_echem_result 生成
+        
         # ======== 布局参数（每个形状独立 dx/dy/w/h, 每条管道独立偏移） ========
         self.layout_params = self._default_layout_params()
+        # 尝试从文件加载已保存的参数
+        self._load_saved_layout_params()
         
         # 波形数据 (模拟)
         self.curve_data = [0] * 50
@@ -190,6 +235,18 @@ class ExperimentProcessWidget(QFrame):
         self.anim_timer = QTimer(self)
         self.anim_timer.timeout.connect(self._update_animation)
         self.anim_timer.start(100)
+
+    def _load_saved_layout_params(self):
+        """尝试从配置文件加载布局参数"""
+        try:
+            from src.ui.layout_tuner import load_saved_layout_params
+            saved = load_saved_layout_params()
+            if saved:
+                # 用保存的值覆盖默认值（保留默认值中有但保存文件中没有的键）
+                self.layout_params.update(saved)
+                print("[ExperimentProcess] 已从文件加载布局参数")
+        except Exception as e:
+            print(f"[ExperimentProcess] 加载布局参数失败: {e}")
 
     @staticmethod
     def _default_layout_params():
@@ -250,35 +307,57 @@ class ExperimentProcessWidget(QFrame):
             "def_ws_w_ratio": 0.90,
             "tank_btm_margin": 20,      # 烧杯底部留白
             
-            # ── 管道 1: Inlet→混合烧杯 ──
-            "pipe1_sx": 0, "pipe1_sy": 0,   # 起点偏移
-            "pipe1_ex": 0, "pipe1_ey": 0,   # 终点偏移
-            "pipe1_mode": 0,  # 0=V_H, 1=H_V, 2=Direct
-            "pipe1_radius": 20,
+            # ── 烧杯临界线高度 (0.0~1.0) ──
+            "tank1_critical": 0.80,  # 混合烧杯临界线位置
+            "tank2_critical": 0.80,  # 反应烧杯临界线位置
             
-            # ── 管道 2: 混合烧杯→Transfer ──
-            "pipe2_sx": 0, "pipe2_sy": 0,
-            "pipe2_ex": 0, "pipe2_ey": 0,
-            "pipe2_mode": 1,
-            "pipe2_radius": 20,
+            # ── 电极线 1 (绿色) ──
+            "wire1_color": "#4CAF50",  # 线颜色
+            "wire1_sx": 10,   # 起点X偏移(相对工作站左上)
+            "wire1_sy": 10,   # 起点Y偏移(相对工作站左上)
+            "wire1_ex": -5,   # 终点X偏移(相对烧杯中心)
+            "wire1_ey": 20,   # 终点Y偏移(相对烧杯顶部)
+            "wire1_bend": 1,  # 拐弯次数 0=直线, 1=L型拐一次弯
+            "wire1_bh": 0,    # 拐弯横向偏移(相对起点X)
+            "wire1_bv": 0,    # 拐弯纵向偏移(相对终点Y)
             
-            # ── 管道 3: Transfer→反应烧杯 ──
-            "pipe3_sx": 0, "pipe3_sy": 0,
-            "pipe3_ex": 0, "pipe3_ey": 0,
-            "pipe3_mode": 1,
-            "pipe3_radius": 20,
+            # ── 电极线 2 (蓝色) ──
+            "wire2_color": "#2196F3",
+            "wire2_sx": 15,
+            "wire2_sy": 10,
+            "wire2_ex": 0,
+            "wire2_ey": 20,
+            "wire2_bend": 1,
+            "wire2_bh": 0,
+            "wire2_bv": 0,
             
-            # ── 管道 4: 反应烧杯→Outlet ──
-            "pipe4_sx": 0, "pipe4_sy": 0,
-            "pipe4_ex": 0, "pipe4_ey": 0,
-            "pipe4_mode": 1,
-            "pipe4_radius": 20,
+            # ── 电极线 3 (红色) ──
+            "wire3_color": "#F44336",
+            "wire3_sx": 20,
+            "wire3_sy": 10,
+            "wire3_ex": 5,
+            "wire3_ey": 20,
+            "wire3_bend": 1,
+            "wire3_bh": 0,
+            "wire3_bv": 0,
             
-            # ── 管道 5: Outlet→废液 ──
-            "pipe5_len": 40,
+            # ── 泵颜色 · 空闲 ──
+            "pump_idle_bg":        "#E5E7EB",
+            "pump_idle_border":    "",          # 空=无边框
+            "pump_idle_indicator": "#9CA3AF",
+            # ── 泵颜色 · 运行中 ──
+            "pump_run_bg":        "#BBF7D0",
+            "pump_run_border":    "",
+            "pump_run_indicator": "#22C55E",
+            # ── 泵颜色 · 待运行 ──
+            "pump_pend_bg":        "#FDE68A",
+            "pump_pend_border":    "",
+            "pump_pend_indicator": "#EAB308",
             
-            # ── 电极线 ──
-            "wire_bridge_dy": -10,  # 飞线顶部相对泵顶的偏移
+            # ── 标签字体 ──
+            "label_font_size":     10,          # 标签基础字号 (px)
+            "label_color":         "#374151",   # 标签文字颜色 (统一)
+            "uncfg_color":         "#DC2626",   # 未配置文字颜色
         }
 
     def contextMenuEvent(self, event):
@@ -330,6 +409,90 @@ class ExperimentProcessWidget(QFrame):
         self.tank2_level = max(0, min(1, tank2))
         self.update()
     
+    def set_ws_connection_status(self, status: str):
+        """设置工作站连接状态: 'disconnected' | 'connected' | 'failed'"""
+        self.ws_connection_status = status
+        self.update()
+    
+    def set_ws_measurement_status(self, text: str):
+        """设置工作站测量状态文字，如 '即将开始CV测量' / 'CV测量中...' / ''"""
+        self.ws_measurement_status = text
+        self.update()
+    
+    def set_echem_result(self, technique: str, data_points: list, headers: list):
+        """接收电化学结果数据，使用 matplotlib 生成白底红线图像并显示在工作站屏幕区域"""
+        try:
+            import matplotlib
+            matplotlib.use('Agg')
+            import matplotlib.pyplot as plt
+            from matplotlib.figure import Figure
+            from matplotlib.backends.backend_agg import FigureCanvasAgg
+            import numpy as np
+            
+            if not data_points:
+                return
+            
+            arr = np.array(data_points)
+            fig = Figure(figsize=(6, 4.5), dpi=200, facecolor='white')
+            canvas = FigureCanvasAgg(fig)
+            ax = fig.add_subplot(111)
+            ax.set_facecolor('white')
+            
+            line_color = '#D32F2F'  # 红线
+            lw = 1.8  # 线宽
+            tech_upper = technique.upper()
+            if tech_upper == "CV" and arr.shape[1] >= 3:
+                ax.plot(arr[:, 1], arr[:, 2], color=line_color, linewidth=lw)
+                ax.set_xlabel('E / V', fontsize=15, fontweight='bold')
+                ax.set_ylabel('I / A', fontsize=15, fontweight='bold')
+                ax.set_title('Cyclic Voltammetry (CV)', fontsize=16, fontweight='bold')
+            elif tech_upper == "LSV" and arr.shape[1] >= 3:
+                ax.plot(arr[:, 1], arr[:, 2], color=line_color, linewidth=lw)
+                ax.set_xlabel('E / V', fontsize=15, fontweight='bold')
+                ax.set_ylabel('I / A', fontsize=15, fontweight='bold')
+                ax.set_title('Linear Sweep Voltammetry (LSV)', fontsize=16, fontweight='bold')
+            elif tech_upper in ("I-T", "IT") and arr.shape[1] >= 3:
+                ax.plot(arr[:, 0], arr[:, 2], color=line_color, linewidth=lw)
+                ax.set_xlabel('t / s', fontsize=15, fontweight='bold')
+                ax.set_ylabel('I / A', fontsize=15, fontweight='bold')
+                ax.set_title('Amperometric i-t Curve', fontsize=16, fontweight='bold')
+            elif tech_upper == "OCPT" and arr.shape[1] >= 2:
+                ax.plot(arr[:, 0], arr[:, 1], color='#1565C0', linewidth=lw)
+                ax.set_xlabel('t / s', fontsize=15, fontweight='bold')
+                ax.set_ylabel('E / V', fontsize=15, fontweight='bold')
+                ax.set_title('Open Circuit Potential (OCPT)', fontsize=16, fontweight='bold')
+            elif tech_upper == "EIS" and arr.shape[1] >= 2:
+                ax.plot(arr[:, 0], -arr[:, 1], color=line_color, linewidth=lw, marker='o', markersize=3)
+                ax.set_xlabel("Z' / Ω", fontsize=15, fontweight='bold')
+                ax.set_ylabel("-Z'' / Ω", fontsize=15, fontweight='bold')
+                ax.set_title('Nyquist Plot (EIS)', fontsize=16, fontweight='bold')
+            else:
+                ax.plot(arr[:, 0], arr[:, 1] if arr.shape[1] >= 2 else arr[:, 0],
+                        color=line_color, linewidth=lw)
+                ax.set_title(tech_upper, fontsize=16, fontweight='bold')
+            
+            ax.tick_params(labelsize=12, width=1.5)
+            ax.grid(True, alpha=0.3, color='#CCCCCC')
+            for spine in ax.spines.values():
+                spine.set_linewidth(1.5)
+            fig.tight_layout(pad=1.0)
+            
+            canvas.draw()
+            buf = canvas.buffer_rgba()
+            w, h = canvas.get_width_height()
+            
+            from PySide6.QtGui import QImage, QPixmap
+            qimg = QImage(bytes(buf), w, h, QImage.Format_RGBA8888)
+            self._echem_pixmap = QPixmap.fromImage(qimg)
+            plt.close(fig)
+            
+            self.ws_measurement_status = tr("ws_done", tech=tech_upper)
+            self.update()
+        except Exception as e:
+            print(f"[ExperimentProcess] 生成电化学图像失败: {e}")
+            import traceback
+            traceback.print_exc()
+    
     def _update_animation(self):
         # 简单的随机游走波形
         import random
@@ -338,17 +501,6 @@ class ExperimentProcessWidget(QFrame):
         new_val = max(-1.0, min(1.0, new_val))
         self.curve_data.pop(0)
         self.curve_data.append(new_val)
-        self.update()
-
-    def set_pump_states(self, inlet: bool, transfer: bool, outlet: bool):
-        self.inlet_active = inlet
-        self.transfer_active = transfer
-        self.outlet_active = outlet
-        self.update()
-    
-    def set_tank_levels(self, tank1: float, tank2: float):
-        self.tank1_level = max(0, min(1, tank1))
-        self.tank2_level = max(0, min(1, tank2))
         self.update()
     
     def set_combo_progress(self, current: int, total: int):
@@ -360,6 +512,10 @@ class ExperimentProcessWidget(QFrame):
         painter.setRenderHint(QPainter.Antialiasing)
         
         w, h = self.width(), self.height()
+        
+        # 字体缩放系数 (基准: 600x300)
+        self._fs = max(0.65, min(2.2, min(w / 600, h / 300)))
+        
         p = self.layout_params  # 简写
         
         mx = int(p["margin_x"])
@@ -424,10 +580,12 @@ class ExperimentProcessWidget(QFrame):
         ws_auto_h = (t2y + t2h) - ws_y if ws_dh <= 0 else ws_dh
         
         # ── 绘制组件 ──
+        t1_crit = float(p.get("tank1_critical", 0.80))
+        t2_crit = float(p.get("tank2_critical", 0.80))
         self._draw_beaker(painter, t1x, t1y, t1w, t1h,
-                          "混合烧杯", self.tank1_level, QColor("#90CAF9"), QColor("#42A5F5"))
+                          tr("mix_beaker"), self.tank1_level, QColor("#90CAF9"), QColor("#42A5F5"), t1_crit)
         self._draw_beaker(painter, t2x, t2y, t2w, t2h,
-                          "反应烧杯", self.tank2_level, QColor("#CE93D8"), QColor("#AB47BC"))
+                          tr("react_beaker"), self.tank2_level, QColor("#CE93D8"), QColor("#AB47BC"), t2_crit)
         self._draw_workstation(painter, ws_x, ws_y, ws_auto_w, ws_auto_h)
         
         self._draw_pump_like_status(painter, ix, iy, iw, ih,
@@ -437,124 +595,92 @@ class ExperimentProcessWidget(QFrame):
         self._draw_pump_like_status(painter, ox, oy, ow, oh,
                                     "Outlet", self.outlet_pump, self.outlet_active)
         
-        # ── 管道绘制 (每条管道独立可调) ──
-        PIPE_MODES = ["V_H", "H_V", "Direct"]
-        
-        def _pipe_mode(n):
-            m = int(p.get(f"pipe{n}_mode", 0))
-            return PIPE_MODES[m % len(PIPE_MODES)]
-        
-        # Pipe 1: Inlet Bottom Center → Tank1 Left
-        p1_sx = ix + iw / 2 + p["pipe1_sx"]
-        p1_sy = iy + ih + p["pipe1_sy"]
-        p1_ex = t1x + 5 + p["pipe1_ex"]
-        p1_ey = t1y + 30 + p["pipe1_ey"]
-        self._draw_rounded_pipe(painter,
-                                QPointF(p1_sx, p1_sy), QPointF(p1_ex, p1_ey),
-                                self.inlet_active, _pipe_mode(1), p["pipe1_radius"])
-        
-        # Pipe 2: Tank1 Right → Transfer Bottom
-        p2_sx = t1x + t1w + p["pipe2_sx"]
-        p2_sy = t1y + t1h - 40 + p["pipe2_sy"]
-        p2_ex = tx + 5 + p["pipe2_ex"]
-        p2_ey = ty + th + 10 + p["pipe2_ey"]
-        self._draw_rounded_pipe(painter,
-                                QPointF(p2_sx, p2_sy), QPointF(p2_ex, p2_ey),
-                                self.transfer_active, _pipe_mode(2), p["pipe2_radius"])
-        
-        # Pipe 3: Transfer Right → Tank2 Top-Left
-        p3_sx = tx + tw_ + p["pipe3_sx"]
-        p3_sy = ty + th / 2 + p["pipe3_sy"]
-        p3_ex = t2x + 20 + p["pipe3_ex"]
-        p3_ey = t2y + 10 + p["pipe3_ey"]
-        self._draw_rounded_pipe(painter,
-                                QPointF(p3_sx, p3_sy), QPointF(p3_ex, p3_ey),
-                                self.transfer_active, _pipe_mode(3), p["pipe3_radius"])
-        
-        # Pipe 4: Tank2 Right → Outlet Bottom
-        p4_sx = t2x + t2w + p["pipe4_sx"]
-        p4_sy = t2y + t2h - 40 + p["pipe4_sy"]
-        p4_ex = ox + ow / 2 + p["pipe4_ex"]
-        p4_ey = oy + oh + 10 + p["pipe4_ey"]
-        self._draw_rounded_pipe(painter,
-                                QPointF(p4_sx, p4_sy), QPointF(p4_ex, p4_ey),
-                                self.outlet_active, _pipe_mode(4), p["pipe4_radius"])
-        
-        # Pipe 5: Outlet Right → Waste
-        waste_len = int(p.get("pipe5_len", 40))
-        self._draw_rounded_pipe(painter,
-                                QPointF(ox + ow, oy + oh / 2),
-                                QPointF(ox + ow + waste_len, oy + oh / 2),
-                                self.outlet_active, "Direct", 0)
-        painter.setPen(QColor("#795548"))
-        painter.drawText(int(ox + ow + 5), int(oy + oh / 2 + 20), "废液")
-        
-        # ── 电极线 ──
-        wire_y = iy + int(p.get("wire_bridge_dy", -10))
-        colors = [QColor("#4CAF50"), QColor("#2196F3"), QColor("#F44336")]
-        for i, color in enumerate(colors):
+        # ── 电极线 (颜色可配置, 工作站↔反应烧杯) ──
+        wire_prefixes = ["wire1", "wire2", "wire3"]
+        wire_defaults = ["#4CAF50", "#2196F3", "#F44336"]
+        for prefix, def_color in zip(wire_prefixes, wire_defaults):
+            color = QColor(str(p.get(f"{prefix}_color", def_color)))
             painter.setPen(QPen(color, 2))
             painter.setBrush(Qt.NoBrush)
+            # 起点: 工作站左上角 + 偏移
+            sx_ = ws_x + p.get(f"{prefix}_sx", 10)
+            sy_ = ws_y + p.get(f"{prefix}_sy", 10)
+            # 终点: 反应烧杯中心顶部 + 偏移
+            ex_ = t2x + t2w / 2 + p.get(f"{prefix}_ex", 0)
+            ey_ = t2y + p.get(f"{prefix}_ey", 20)
+            bend = int(p.get(f"{prefix}_bend", 1))
             path = QPainterPath()
-            sx_ = ws_x + 10 + i * 5
-            sy_ = ws_y + 10
-            target_x = t2x + t2w / 2 + i * 5
-            target_y = t2y + 20
             path.moveTo(sx_, sy_)
-            path.lineTo(sx_, wire_y)
-            path.lineTo(target_x, wire_y)
-            path.lineTo(target_x, target_y)
+            if bend == 0:
+                # 直线
+                path.lineTo(ex_, ey_)
+            else:
+                # L型拐一次弯: 先竖后横
+                bh = p.get(f"{prefix}_bh", 0)
+                bv = p.get(f"{prefix}_bv", 0)
+                corner_x = sx_ + bh
+                corner_y = ey_ + bv
+                path.lineTo(corner_x, corner_y)
+                path.lineTo(ex_, corner_y)
+                path.lineTo(ex_, ey_)
             painter.drawPath(path)
             painter.setBrush(QBrush(color))
-            painter.drawEllipse(QPointF(target_x, target_y), 2, 2)
+            painter.drawEllipse(QPointF(ex_, ey_), 2, 2)
         
         # 组合进程
+        fs = self._fs
+        p = self.layout_params
+        base_sz = int(p.get("label_font_size", 10))
         painter.setPen(QColor("#1565C0"))
-        painter.setFont(QFont("Microsoft YaHei", 12, QFont.Bold))
-        painter.drawText(w - 200, 5, 190, 22, Qt.AlignRight, f"组合: {self.combo_progress}")
+        painter.setFont(QFont("Microsoft YaHei", max(7, int(base_sz * fs)), QFont.Bold))
+        combo_w = int(200 * fs)
+        painter.drawText(w - combo_w, 5, combo_w - 10, int(22 * fs), Qt.AlignRight, f"{tr('combo_label')}: {self.combo_progress}")
 
     def _draw_pump_like_status(self, painter, x, y, w, h, label, pump_id, active):
-        """绘制与PumpDiagramWidget风格一致的泵"""
+        """绘制与PumpDiagramWidget风格一致的泵 - Win11扁平风格"""
         state = 1 if active else 0
+        style = _pump_style(state, self.layout_params)
         
-        # 泵主体 - 圆角矩形
         body_rect = QRectF(x, y, w, h)
-        gradient = QLinearGradient(x, y, x, y + h)
-        if state == 1:  # 运行中 - 绿色
-            gradient.setColorAt(0, QColor("#66BB6A"))
-            gradient.setColorAt(1, QColor("#388E3C"))
-        else:  # 空闲 - 纯灰色系
-            gradient.setColorAt(0, QColor("#D5D5D5"))
-            gradient.setColorAt(1, QColor("#A0A0A0"))
+        bg_color = QColor(style["bg"])
+        indicator_color = QColor(style["indicator"])
+        border_val = style["border"].strip() if style["border"] else ""
         
-        painter.setPen(QPen(QColor("#757575"), 1.5))
-        painter.setBrush(QBrush(gradient))
-        painter.drawRoundedRect(body_rect, 6, 6)
+        if border_val:
+            painter.setPen(QPen(QColor(border_val), 1.5))
+        else:
+            painter.setPen(Qt.NoPen)
+        painter.setBrush(QBrush(bg_color))
+        painter.drawRoundedRect(body_rect, 8, 8)
         
-        # 中心指示灯 (圆形)
-        indicator_r = min(w, h) // 4 # 稍微大一点
+        # 中心指示灯
+        indicator_r = min(w, h) // 4
         cx = x + w // 2
         cy = y + h // 2
-        
-        if state == 1:
-            painter.setBrush(QBrush(QColor("#00E676")))
-        else:
-            painter.setBrush(QBrush(QColor("#888888")))
+        painter.setBrush(QBrush(indicator_color))
         painter.setPen(Qt.NoPen)
         painter.drawEllipse(cx - indicator_r, cy - indicator_r, indicator_r * 2, indicator_r * 2)
         
-        # 顶部标签 (Inlet/Transfer/Outlet)
-        painter.setPen(QColor("#333333"))
-        painter.setFont(QFont("Microsoft YaHei", 10, QFont.Bold))
-        painter.drawText(x, y - 20, w, 20, Qt.AlignCenter, label)
+        # 从布局参数获取统一字号和颜色
+        fs = getattr(self, '_fs', 1.0)
+        p = self.layout_params
+        base_sz = int(p.get("label_font_size", 10))
+        lbl_color = str(p.get("label_color", "#374151"))
+        uncfg_clr = str(p.get("uncfg_color", "#DC2626"))
         
-        # 底部状态 (未配置/地址)
-        painter.setFont(QFont("Microsoft YaHei", 9))
+        # 顶部标签 (Inlet/Transfer/Outlet)
+        painter.setPen(QColor(lbl_color))
+        painter.setFont(QFont("Microsoft YaHei", max(7, int(base_sz * fs))))
+        painter.drawText(x, y - int(20 * fs), w, int(20 * fs), Qt.AlignCenter, label)
+        
+        # 底部状态
+        painter.setFont(QFont("Microsoft YaHei", max(7, int(base_sz * fs))))
         if pump_id > 0:
-            painter.drawText(x, y + h + 2, w, 15, Qt.AlignCenter, f"泵{pump_id}")
+            painter.setPen(QColor(lbl_color))
+            painter.drawText(x, y + h + 2, w, int(15 * fs), Qt.AlignCenter, tr("pump_n", n=pump_id))
         else:
-            painter.setPen(QColor("#D32F2F"))
-            painter.drawText(x, y + h + 2, w, 15, Qt.AlignCenter, "未配置")
+            painter.setPen(QColor(uncfg_clr))
+            painter.drawText(x, y + h + 2, w, int(15 * fs), Qt.AlignCenter, tr("not_configured"))
 
     def _draw_rounded_pipe(self, painter, p1, p2, active, mode, radius):
         """画带圆角的管路"""
@@ -604,22 +730,38 @@ class ExperimentProcessWidget(QFrame):
             painter.drawEllipse(mid, 3, 3)
 
     def _draw_workstation(self, painter: QPainter, x: int, y: int, w: int, h: int):
-        """绘制电化学工作站"""
-        # ...existing code...
+        """绘制电化学工作站 - 含连接状态和测量状态"""
         # 外壳
         painter.setPen(QPen(Qt.black, 2))
         painter.setBrush(QBrush(QColor("#F5F5F5")))
         painter.drawRoundedRect(x, y, w, h, 8, 8)
         
-        # 标题栏
-        painter.setBrush(QBrush(QColor("#E0E0E0")))
-        painter.drawRoundedRect(x, y, w, 25, 8, 8) # 顶部圆角会被上面覆盖吗？
-        # 修复顶部圆角的绘制: 单独画下半部分矩形覆盖上面的圆角
-        painter.drawRect(x, y + 10, w, 15)
+        # 标题栏 - 使用 QPainterPath 实现仅上半部分圆角
+        title_h = 25
+        title_path = QPainterPath()
+        title_path.moveTo(x, y + title_h)
+        title_path.lineTo(x, y + 8)
+        title_path.quadTo(x, y, x + 8, y)
+        title_path.lineTo(x + w - 8, y)
+        title_path.quadTo(x + w, y, x + w, y + 8)
+        title_path.lineTo(x + w, y + title_h)
+        title_path.closeSubpath()
         
-        painter.setPen(QColor("#333333"))
-        painter.setFont(QFont("Microsoft YaHei", 9, QFont.Bold))
-        painter.drawText(x, y, w, 25, Qt.AlignCenter, "电化学工作站")
+        painter.setPen(Qt.NoPen)
+        painter.setBrush(QBrush(QColor("#E0E0E0")))
+        painter.drawPath(title_path)
+        # 标题栏边框
+        painter.setPen(QPen(Qt.black, 2))
+        painter.setBrush(Qt.NoBrush)
+        painter.drawPath(title_path)
+        
+        fs = getattr(self, '_fs', 1.0)
+        p = self.layout_params
+        base_sz = int(p.get("label_font_size", 10))
+        lbl_color = str(p.get("label_color", "#374151"))
+        painter.setPen(QColor(lbl_color))
+        painter.setFont(QFont("Microsoft YaHei", max(7, int(base_sz * fs))))
+        painter.drawText(x, y, w, title_h, Qt.AlignCenter, tr("ws_title"))
         
         # 屏幕区域
         screen_m = 10
@@ -628,74 +770,90 @@ class ExperimentProcessWidget(QFrame):
         screen_w = w - screen_m * 2
         screen_h = h - 40
         
-        painter.setPen(QPen(QColor("#424242"), 2))
-        painter.setBrush(QBrush(Qt.black))
-        painter.drawRoundedRect(screen_x, screen_y, screen_w, screen_h, 4, 4)
-        
-        # 绘制波形图
-        painter.setPen(QPen(QColor("#00E676"), 1.5))
-        painter.setBrush(Qt.NoBrush)
-        
-        if screen_w > 0 and screen_h > 0:
-            path = QPainterPath()
-            x_step = screen_w / (len(self.curve_data) - 1) if len(self.curve_data) > 1 else 0
+        if self._echem_pixmap:
+            # 有图像时 —— 白色背景
+            painter.setPen(QPen(QColor("#BDBDBD"), 2))
+            painter.setBrush(QBrush(Qt.white))
+            painter.drawRoundedRect(screen_x, screen_y, screen_w, screen_h, 4, 4)
             
-            for i, val in enumerate(self.curve_data):
-                px = screen_x + i * x_step
-                # val is -1 to 1 -> map to screen_h
-                py = screen_y + screen_h / 2 - val * (screen_h / 2 - 5)
-                if i == 0:
-                    path.moveTo(px, py)
-                else:
-                    path.lineTo(px, py)
-            painter.drawPath(path)
+            # 绘制电化学结果图像
+            from PySide6.QtCore import QRectF
+            img_margin = 4
+            target_rect = QRectF(screen_x + img_margin, screen_y + img_margin,
+                                 screen_w - img_margin * 2, screen_h - img_margin * 2)
+            painter.drawPixmap(target_rect.toRect(), self._echem_pixmap)
+        else:
+            # 无图像时 —— 浅灰色背景 + 居中深灰文字
+            painter.setPen(QPen(QColor("#BDBDBD"), 2))
+            painter.setBrush(QBrush(QColor("#EEEEEE")))
+            painter.drawRoundedRect(screen_x, screen_y, screen_w, screen_h, 4, 4)
+            
+            # 连接状态 + 等待文字居中显示
+            status_map = {
+                "disconnected": tr("ws_disconnected"),
+                "connected":    tr("ws_connected"),
+                "failed":       tr("ws_failed"),
+            }
+            status_text = status_map.get(self.ws_connection_status, tr("ws_disconnected"))
+            display_text = f"{status_text} · {tr('ws_waiting')}"
+            if self.ws_measurement_status:
+                display_text = self.ws_measurement_status
+            painter.setPen(QColor("#9E9E9E"))
+            painter.setFont(QFont("Microsoft YaHei", max(8, int(10 * fs))))
+            painter.drawText(screen_x, screen_y, screen_w, screen_h,
+                             Qt.AlignCenter, display_text)
 
     def _draw_process_pump(self, painter: QPainter, x: int, y: int, w: int, h: int,
                            name: str, pump_id: int, is_active: bool):
-        """绘制过程泵 - 带指示灯"""
-        # 泵主体
-        gradient = QLinearGradient(x, y, x, y + h)
-        if is_active:
-            gradient.setColorAt(0, QColor("#66BB6A"))
-            gradient.setColorAt(1, QColor("#2E7D32"))
-        else:
-            gradient.setColorAt(0, QColor("#D5D5D5"))
-            gradient.setColorAt(1, QColor("#A0A0A0"))
+        """绘制过程泵 - Win11扁平风格"""
+        state = 1 if is_active else 0
+        style = _pump_style(state, self.layout_params)
         
-        painter.setPen(QPen(QColor("#757575"), 1.5))
-        painter.setBrush(QBrush(gradient))
-        painter.drawRoundedRect(QRectF(x, y, w, h), 6, 6)
+        bg_color = QColor(style["bg"])
+        indicator_color = QColor(style["indicator"])
+        border_val = style["border"].strip() if style["border"] else ""
+        
+        if border_val:
+            painter.setPen(QPen(QColor(border_val), 1.5))
+        else:
+            painter.setPen(Qt.NoPen)
+        painter.setBrush(QBrush(bg_color))
+        painter.drawRoundedRect(QRectF(x, y, w, h), 8, 8)
         
         # 指示灯 (中心圆)
         indicator_r = min(w, h) // 4
         cx = x + w // 2
         cy = y + h // 2
         
-        if is_active:
-            painter.setBrush(QBrush(QColor("#00E676")))
-            painter.setPen(QPen(QColor("#1B5E20"), 1))
-        else:
-            painter.setBrush(QBrush(QColor("#888888")))
-            painter.setPen(QPen(QColor("#666666"), 1))
+        painter.setBrush(QBrush(indicator_color))
+        painter.setPen(Qt.NoPen)
         painter.drawEllipse(cx - indicator_r, cy - indicator_r, indicator_r * 2, indicator_r * 2)
         
-        # 泵名称 (上方) - 11号字体
-        painter.setPen(QColor("#333333"))
-        painter.setFont(QFont("Microsoft YaHei", 11, QFont.Bold))
-        painter.drawText(x - 5, y - 20, w + 10, 18, Qt.AlignCenter, name)
+        # 从布局参数获取统一字号和颜色
+        fs = getattr(self, '_fs', 1.0)
+        p = self.layout_params
+        base_sz = int(p.get("label_font_size", 10))
+        lbl_color = str(p.get("label_color", "#374151"))
+        uncfg_clr = str(p.get("uncfg_color", "#DC2626"))
         
-        # 泵地址 (下方) - 11号字体
+        # 泵名称 (上方)
+        painter.setPen(QColor(lbl_color))
+        painter.setFont(QFont("Microsoft YaHei", max(7, int(base_sz * fs))))
+        painter.drawText(x - 5, y - int(20 * fs), w + 10, int(18 * fs), Qt.AlignCenter, name)
+        
+        # 泵地址 (下方)
+        painter.setFont(QFont("Microsoft YaHei", max(7, int(base_sz * fs))))
         if pump_id > 0:
-            painter.setFont(QFont("Microsoft YaHei", 11))
-            painter.drawText(x - 5, y + h + 2, w + 10, 20, Qt.AlignCenter, f"泵{pump_id}")
+            painter.setPen(QColor(lbl_color))
+            painter.drawText(x - 5, y + h + 2, w + 10, int(20 * fs), Qt.AlignCenter, tr("pump_n", n=pump_id))
         else:
-            painter.setPen(QColor("#E53935"))
-            painter.setFont(QFont("Microsoft YaHei", 10))
-            painter.drawText(x - 5, y + h + 2, w + 10, 20, Qt.AlignCenter, "未配置")
+            painter.setPen(QColor(uncfg_clr))
+            painter.drawText(x - 5, y + h + 2, w + 10, int(20 * fs), Qt.AlignCenter, tr("not_configured"))
     
     def _draw_beaker(self, painter: QPainter, x: int, y: int, w: int, h: int,
-                     name: str, level: float, liquid_color: QColor, border_color: QColor):
-        """绘制烧杯造型 - U型容器(无上边，圆角底) + 液位"""
+                     name: str, level: float, liquid_color: QColor, border_color: QColor,
+                     critical_level: float = 0.80):
+        """绘制烧杯造型 - U型容器(无上边，圆角底) + 液位 + 可调临界线"""
         r = 20  # 底部圆角半径 (加大)
 
         # 容器路径 (U型)
@@ -707,18 +865,20 @@ class ExperimentProcessWidget(QFrame):
         container_path.quadTo(x + w, y + h, x + w, y + h - r) # 右下圆角
         container_path.lineTo(x + w, y)                     # 右边线
         
-        # 容器背景 - 获取闭合路径用于填充
+        # 容器背景 - 闭合路径(用于液体裁剪, 不填充白底)
         bg_path = QPainterPath(container_path)
-        bg_path.closeSubpath() # 闭合上边以进行填充
+        bg_path.closeSubpath()
         
-        painter.setPen(Qt.NoPen)
-        painter.setBrush(QBrush(QColor(255, 255, 255, 220)))
-        painter.drawPath(bg_path)
-        
-        # 容器轮廓 - 黑色加粗
+        # 容器轮廓 - 黑色加粗 (无白色底色填充)
         painter.setPen(QPen(Qt.black, 3))
         painter.setBrush(Qt.NoBrush)
         painter.drawPath(container_path)
+        
+        # 临界线 - 浅灰色虚线 (高度可配置)
+        crit_level = max(0.0, min(1.0, critical_level))
+        critical_y = y + h - int(h * crit_level * 0.9)
+        painter.setPen(QPen(QColor(180, 180, 180, 160), 1, Qt.DashLine))
+        painter.drawLine(x + 5, critical_y, x + w - 5, critical_y)
         
         # 液体
         if level > 0:
@@ -749,15 +909,19 @@ class ExperimentProcessWidget(QFrame):
             painter.drawLine(x + 3, int(liquid_y), x + w - 3, int(liquid_y))
         
         # 容器名称
-        painter.setPen(QColor("#333333"))
-        painter.setFont(QFont("Microsoft YaHei", 11, QFont.Bold))
-        painter.drawText(x - 10, y + h + 5, w + 20, 20, Qt.AlignCenter, name)
+        fs = getattr(self, '_fs', 1.0)
+        p = self.layout_params
+        base_sz = int(p.get("label_font_size", 10))
+        lbl_color = str(p.get("label_color", "#374151"))
+        painter.setPen(QColor(lbl_color))
+        painter.setFont(QFont("Microsoft YaHei", max(7, int(base_sz * fs))))
+        painter.drawText(x - 10, y + h + 5, w + 20, int(20 * fs), Qt.AlignCenter, name)
         
         # 液位百分比
         if level > 0:
             painter.setPen(QColor("#455A64"))
-            painter.setFont(QFont("Microsoft YaHei", 9))
-            painter.drawText(x, y + h // 2, w, 14, Qt.AlignCenter, f"{level*100:.0f}%")
+            painter.setFont(QFont("Microsoft YaHei", max(7, int(9 * fs))))
+            painter.drawText(x, y + h // 2, w, int(14 * fs), Qt.AlignCenter, f"{level*100:.0f}%")
     
     def _draw_pipe(self, painter: QPainter, x1: int, y1: int, x2: int, y2: int, active: bool):
         """绘制管道连接线"""
@@ -780,7 +944,7 @@ class MainWindow(QMainWindow):
     
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("MicroHySeeker - 自动化实验平台")
+        self.setWindowTitle(tr("app_title"))
         self.setGeometry(100, 100, 1550, 1000)
         self.setFont(FONT_NORMAL)
         
@@ -802,16 +966,28 @@ class MainWindow(QMainWindow):
         self.runner.step_finished.connect(self._on_step_finished)
         self.runner.log_message.connect(self._on_log_message)
         self.runner.experiment_finished.connect(self._on_experiment_finished)
+        self.runner.echem_result.connect(self._on_echem_result)
+        self.runner.pump_batch_update.connect(self._on_pump_batch_update)
+        
+        # 电化学实时截图定时器 (测量期间捕获CHI660F窗口)
+        self._echem_capture_timer = QTimer(self)
+        self._echem_capture_timer.timeout.connect(self._capture_chi_window)
+        self._echem_capturing = False
         
         self._create_menu_bar()
         self._create_toolbar()
         self._create_central_widget()
         self._create_status_bar()
         
+        # EChem 连接状态轮询定时器 (每3秒检查 CHI660F 窗口是否存在)
+        self._chi_status_timer = QTimer(self)
+        self._chi_status_timer.timeout.connect(self._poll_chi_status)
+        self._chi_status_timer.start(3000)
+        
         # 加载上次保存的实验
         self._load_last_experiment()
         
-        self.log_message("系统已启动，欢迎使用 MicroHySeeker", "info")
+        self.log_message(tr("sys_started"), "info")
     
     def _create_menu_bar(self):
         """创建菜单栏"""
@@ -819,57 +995,57 @@ class MainWindow(QMainWindow):
         menubar.setFont(FONT_NORMAL)
         
         # 文件菜单
-        file_menu = menubar.addMenu("文件(&F)")
+        file_menu = menubar.addMenu(tr("file"))
         
-        single_action = QAction("单次实验(&S)", self)
+        single_action = QAction(tr("single_exp"), self)
         single_action.triggered.connect(self._on_single_exp)
         file_menu.addAction(single_action)
         
-        combo_action = QAction("组合实验(&C)", self)
+        combo_action = QAction(tr("combo_exp"), self)
         combo_action.triggered.connect(self._on_combo_exp)
         file_menu.addAction(combo_action)
         
         file_menu.addSeparator()
         
-        load_action = QAction("载入实验(&L)", self)
+        load_action = QAction(tr("load_exp"), self)
         load_action.triggered.connect(self._on_load_exp)
         file_menu.addAction(load_action)
         
-        save_action = QAction("保存实验(&V)", self)
+        save_action = QAction(tr("save_exp"), self)
         save_action.triggered.connect(self._on_save_exp)
         file_menu.addAction(save_action)
         
         file_menu.addSeparator()
         
-        exit_action = QAction("退出(&X)", self)
+        exit_action = QAction(tr("exit"), self)
         exit_action.triggered.connect(self.close)
         file_menu.addAction(exit_action)
         
         # 工具菜单
-        tools_menu = menubar.addMenu("工具(&T)")
+        tools_menu = menubar.addMenu(tr("tools"))
         
-        config_action = QAction("系统配置(&S)", self)
+        config_action = QAction(tr("sys_config"), self)
         config_action.triggered.connect(self._on_config)
         tools_menu.addAction(config_action)
         
-        manual_action = QAction("手动控制(&M)", self)
+        manual_action = QAction(tr("manual_ctrl"), self)
         manual_action.triggered.connect(self._on_manual)
         tools_menu.addAction(manual_action)
         
-        calibrate_action = QAction("泵校准(&C)", self)
+        calibrate_action = QAction(tr("calibrate"), self)
         calibrate_action.triggered.connect(self._on_calibrate)
         tools_menu.addAction(calibrate_action)
         
         tools_menu.addSeparator()
         
-        prep_action = QAction("配制溶液(&P)", self)
+        prep_action = QAction(tr("prep_solution"), self)
         prep_action.triggered.connect(self._on_prep_solution)
         tools_menu.addAction(prep_action)
         
         # 帮助菜单
-        help_menu = menubar.addMenu("帮助(&H)")
+        help_menu = menubar.addMenu(tr("help"))
         
-        about_action = QAction("关于(&A)", self)
+        about_action = QAction(tr("about"), self)
         about_action.triggered.connect(self._on_about)
         help_menu.addAction(about_action)
     
@@ -881,43 +1057,43 @@ class MainWindow(QMainWindow):
         toolbar.setFont(FONT_NORMAL)
         self.addToolBar(toolbar)
         
-        single_btn = QAction("单次实验", self)
+        single_btn = QAction(tr("tb_single_exp"), self)
         single_btn.triggered.connect(self._on_single_exp)
         toolbar.addAction(single_btn)
         
-        combo_btn = QAction("组合实验", self)
+        combo_btn = QAction(tr("tb_combo_exp"), self)
         combo_btn.triggered.connect(self._on_combo_exp)
         toolbar.addAction(combo_btn)
         
         toolbar.addSeparator()
         
-        load_btn = QAction("载入实验", self)
+        load_btn = QAction(tr("tb_load"), self)
         load_btn.triggered.connect(self._on_load_exp)
         toolbar.addAction(load_btn)
         
-        save_btn = QAction("保存实验", self)
+        save_btn = QAction(tr("tb_save"), self)
         save_btn.triggered.connect(self._on_save_exp)
         toolbar.addAction(save_btn)
         
         toolbar.addSeparator()
         
-        prep_btn = QAction("配制溶液", self)
+        prep_btn = QAction(tr("tb_prep"), self)
         prep_btn.triggered.connect(self._on_prep_solution)
         toolbar.addAction(prep_btn)
         
-        config_btn = QAction("系统设置", self)
+        config_btn = QAction(tr("tb_config"), self)
         config_btn.triggered.connect(self._on_config)
         toolbar.addAction(config_btn)
         
-        calibrate_btn = QAction("泵校准", self)
+        calibrate_btn = QAction(tr("tb_calibrate"), self)
         calibrate_btn.triggered.connect(self._on_calibrate)
         toolbar.addAction(calibrate_btn)
         
-        manual_btn = QAction("手动控制", self)
+        manual_btn = QAction(tr("tb_manual"), self)
         manual_btn.triggered.connect(self._on_manual)
         toolbar.addAction(manual_btn)
         
-        flush_btn = QAction("冲洗", self)
+        flush_btn = QAction(tr("tb_flush"), self)
         flush_btn.triggered.connect(self._on_flush)
         toolbar.addAction(flush_btn)
     
@@ -935,7 +1111,7 @@ class MainWindow(QMainWindow):
         left_layout = QVBoxLayout(left_frame)
         
         # 泵状态指示
-        pumps_group = QGroupBox("泵状态指示")
+        pumps_group = QGroupBox(tr("pump_status"))
         pumps_group.setFont(FONT_TITLE)
         pumps_layout = QVBoxLayout(pumps_group)
         self.pump_diagram = PumpDiagramWidget(self.config)
@@ -943,12 +1119,15 @@ class MainWindow(QMainWindow):
         left_layout.addWidget(pumps_group, 4)  # 权重 4
         
         # 实验过程
-        process_group = QGroupBox("实验过程")
+        process_group = QGroupBox(tr("exp_process"))
         process_group.setFont(FONT_TITLE)
         process_layout = QVBoxLayout(process_group)
         self.process_widget = ExperimentProcessWidget(self.config)
         process_layout.addWidget(self.process_widget)
         left_layout.addWidget(process_group, 6)  # 权重 6
+        
+        # 让 PumpDiagramWidget 共享 ExperimentProcessWidget 的 layout_params（同一个 dict 引用）
+        self.pump_diagram._color_params = self.process_widget.layout_params
         
         top_splitter.addWidget(left_frame)
         
@@ -957,7 +1136,7 @@ class MainWindow(QMainWindow):
         right_layout = QVBoxLayout(right_widget)
         
         # 步骤进度
-        step_group = QGroupBox("步骤进度")
+        step_group = QGroupBox(tr("step_progress"))
         step_group.setFont(FONT_TITLE)
         step_layout = QVBoxLayout(step_group)
         self.step_list = QListWidget()
@@ -967,12 +1146,12 @@ class MainWindow(QMainWindow):
         right_layout.addWidget(step_group)
         
         # 运行日志 - 白色背景
-        log_group = QGroupBox("运行日志")
+        log_group = QGroupBox(tr("run_log"))
         log_group.setFont(FONT_TITLE)
         log_layout = QVBoxLayout(log_group)
         self.log_text = QTextEdit()
         self.log_text.setReadOnly(True)
-        self.log_text.setFont(QFont("Microsoft YaHei", 11))
+        self.log_text.setFont(FONT_NORMAL)
         self.log_text.setStyleSheet("""
             QTextEdit {
                 background-color: white;
@@ -995,15 +1174,15 @@ class MainWindow(QMainWindow):
     
     def _create_control_buttons(self, parent_layout):
         """创建控制按钮区"""
-        btn_frame = QGroupBox("实验控制")
+        btn_frame = QGroupBox(tr("exp_control"))
         btn_frame.setFont(FONT_TITLE)
         btn_layout = QHBoxLayout(btn_frame)
         
         # 单次实验
-        single_group = QGroupBox("单次实验")
+        single_group = QGroupBox(tr("single_exp_ctrl"))
         single_layout = QHBoxLayout(single_group)
         
-        self.btn_run_single = QPushButton("开始单次实验")
+        self.btn_run_single = QPushButton(tr("start_single"))
         self.btn_run_single.setStyleSheet("background-color: #4CAF50; color: white; padding: 10px 18px; font-size: 12px;")
         self.btn_run_single.clicked.connect(self._on_run_single)
         single_layout.addWidget(self.btn_run_single)
@@ -1011,40 +1190,40 @@ class MainWindow(QMainWindow):
         btn_layout.addWidget(single_group)
         
         # 组合实验
-        combo_group = QGroupBox("组合实验")
+        combo_group = QGroupBox(tr("combo_exp_ctrl"))
         combo_layout = QHBoxLayout(combo_group)
         
-        self.btn_run_combo = QPushButton("开始组合实验")
+        self.btn_run_combo = QPushButton(tr("start_combo"))
         self.btn_run_combo.setStyleSheet("background-color: #2196F3; color: white; padding: 10px 18px; font-size: 12px;")
         self.btn_run_combo.clicked.connect(self._on_run_combo)
         combo_layout.addWidget(self.btn_run_combo)
         
-        self.btn_prev = QPushButton("上一个")
+        self.btn_prev = QPushButton(tr("prev"))
         self.btn_prev.clicked.connect(self._on_prev_combo)
         combo_layout.addWidget(self.btn_prev)
         
-        self.btn_next = QPushButton("下一个")
+        self.btn_next = QPushButton(tr("next"))
         self.btn_next.clicked.connect(self._on_next_combo)
         combo_layout.addWidget(self.btn_next)
         
-        combo_layout.addWidget(QLabel("跳至:"))
+        combo_layout.addWidget(QLabel(tr("jump_to")))
         self.jump_spin = QSpinBox()
         self.jump_spin.setRange(1, 1000)
         self.jump_spin.setFont(FONT_NORMAL)
         combo_layout.addWidget(self.jump_spin)
         
-        self.btn_jump = QPushButton("跳转")
+        self.btn_jump = QPushButton(tr("jump"))
         self.btn_jump.clicked.connect(self._on_jump_combo)
         combo_layout.addWidget(self.btn_jump)
         
         # 复位组合实验
-        self.btn_reset_combo = QPushButton("复位组合实验进程")
+        self.btn_reset_combo = QPushButton(tr("reset_combo"))
         self.btn_reset_combo.setStyleSheet("padding: 10px 12px; font-size: 11px;")
         self.btn_reset_combo.clicked.connect(self._on_reset_combo)
         combo_layout.addWidget(self.btn_reset_combo)
         
         # 列出参数
-        self.btn_list_params = QPushButton("列出参数")
+        self.btn_list_params = QPushButton(tr("list_params"))
         self.btn_list_params.setStyleSheet("padding: 10px 12px; font-size: 11px;")
         self.btn_list_params.clicked.connect(self._on_list_params)
         combo_layout.addWidget(self.btn_list_params)
@@ -1052,7 +1231,7 @@ class MainWindow(QMainWindow):
         btn_layout.addWidget(combo_group)
         
         # 停止按钮
-        self.btn_stop = QPushButton("停止实验")
+        self.btn_stop = QPushButton(tr("stop_exp"))
         self.btn_stop.setStyleSheet("background-color: #f44336; color: white; padding: 10px 18px; font-size: 12px;")
         self.btn_stop.clicked.connect(self._on_stop)
         btn_layout.addWidget(self.btn_stop)
@@ -1065,9 +1244,9 @@ class MainWindow(QMainWindow):
         self.status_bar.setFont(FONT_NORMAL)
         self.setStatusBar(self.status_bar)
         
-        self.status_rs485 = QLabel("RS485: 未连接")
-        self.status_chi = QLabel("电化学仪: 未连接")
-        self.status_exp = QLabel("状态: 就绪")
+        self.status_rs485 = QLabel(tr("rs485_status"))
+        self.status_chi = QLabel(tr("echem_status"))
+        self.status_exp = QLabel(tr("status_idle"))
         
         self.status_bar.addWidget(self.status_rs485)
         self.status_bar.addWidget(QLabel(" | "))
@@ -1076,6 +1255,27 @@ class MainWindow(QMainWindow):
         self.status_bar.addPermanentWidget(self.status_exp)
     
     # === 菜单事件 ===
+    
+    def _switch_language(self, lang: str):
+        """切换语言并刷新 UI"""
+        old_lang = get_lang()
+        if lang == old_lang:
+            return
+        set_lang(lang)
+        lang_label = "English" if lang == "en" else "简体中文"
+        QMessageBox.information(
+            self, tr("info"),
+            tr("lang_restart_hint", lang=lang_label)
+        )
+        # 动态刷新可直接更新的部分
+        self.setWindowTitle(tr("app_title"))
+        self.status_rs485.setText(tr("rs485_status"))
+        self.status_chi.setText(tr("echem_status"))
+        self.status_exp.setText(tr("status_idle"))
+        if self.single_experiment:
+            self._refresh_step_list()
+        self.process_widget.update()
+        self.pump_diagram.update()
     
     def _on_single_exp(self):
         """编辑单次实验"""
@@ -1091,7 +1291,7 @@ class MainWindow(QMainWindow):
     def _on_combo_exp(self):
         """编辑组合实验"""
         if not self.single_experiment or not self.single_experiment.steps:
-            QMessageBox.warning(self, "警告", "请先编辑单次实验程序")
+            QMessageBox.warning(self, tr("warning"), tr("no_steps_warning"))
             return
         
         from src.dialogs.combo_exp_editor import ComboExpEditorDialog
@@ -1102,7 +1302,7 @@ class MainWindow(QMainWindow):
     def _on_load_exp(self):
         """载入实验"""
         file_path, _ = QFileDialog.getOpenFileName(
-            self, "载入实验", "./experiments", "JSON文件 (*.json)"
+            self, tr("load_exp"), "./experiments", "JSON (*.json)"
         )
         if file_path:
             try:
@@ -1111,16 +1311,16 @@ class MainWindow(QMainWindow):
                 self._refresh_step_list()
                 self.log_message(f"已载入实验: {file_path}", "info")
             except Exception as e:
-                QMessageBox.critical(self, "错误", f"载入失败: {e}")
+                QMessageBox.critical(self, tr("error"), f"Load failed: {e}")
     
     def _on_save_exp(self):
         """保存实验"""
         if not self.single_experiment:
-            QMessageBox.warning(self, "警告", "没有可保存的实验")
+            QMessageBox.warning(self, tr("warning"), tr("no_exp_to_save"))
             return
         
         file_path, _ = QFileDialog.getSaveFileName(
-            self, "保存实验", "./experiments", "JSON文件 (*.json)"
+            self, tr("save_exp"), "./experiments", "JSON (*.json)"
         )
         if file_path:
             try:
@@ -1129,7 +1329,7 @@ class MainWindow(QMainWindow):
                     f.write(self.single_experiment.to_json_str())
                 self.log_message(f"实验已保存: {file_path}", "info")
             except Exception as e:
-                QMessageBox.critical(self, "错误", f"保存失败: {e}")
+                QMessageBox.critical(self, tr("error"), f"Save failed: {e}")
     
     def _on_config(self):
         """系统配置"""
@@ -1155,9 +1355,13 @@ class MainWindow(QMainWindow):
     
     def _on_position_calibration_saved(self, pump_address: int, ul_per_encoder_count: float):
         """位置校准保存后回调"""
-        self._log(f"泵 {pump_address} 位置校准已保存: {ul_per_encoder_count:.8f} μL/count")
-        # 保存配置
-        self._save_config()
+        self.log_message(f"泵 {pump_address} 位置校准已保存: {ul_per_encoder_count:.8f} μL/count")
+        # 保存配置到磁盘
+        try:
+            self.config.save_to_file(str(self.config_file))
+            self.log_message("校准数据已持久化到配置文件")
+        except Exception as e:
+            self.log_message(f"保存校准数据失败: {e}", "error")
     
     def _on_prep_solution(self):
         """配制溶液"""
@@ -1186,15 +1390,15 @@ class MainWindow(QMainWindow):
     def _on_run_single(self):
         """运行单次实验"""
         if not self.single_experiment or not self.single_experiment.steps:
-            QMessageBox.warning(self, "警告", "请先编辑单次实验程序")
+            QMessageBox.warning(self, tr("warning"), tr("no_steps_warning"))
             return
         
-        # --- 运行前预检查 ---
+        # --- 运前前预检查 ---
         errors = self.runner.pre_check_experiment(self.single_experiment)
         if errors:
             error_text = "\n".join(f"• {e}" for e in errors)
             QMessageBox.critical(
-                self, "预检查失败",
+                self, tr("precheck_fail"),
                 f"发现 {len(errors)} 个问题，无法启动实验：\n\n{error_text}\n\n"
                 f"请修正后重试。"
             )
@@ -1205,17 +1409,17 @@ class MainWindow(QMainWindow):
         
         self._refresh_step_list()
         self.runner.run_experiment(self.single_experiment)
-        self.status_exp.setText("状态: 运行中")
+        self.status_exp.setText(tr("status_running"))
         self.log_message("开始运行单次实验...", "info")
     
     def _on_run_combo(self):
         """运行组合实验"""
         if not self.combo_params:
-            QMessageBox.warning(self, "警告", "请先编辑组合实验程序")
+            QMessageBox.warning(self, tr("warning"), tr("no_steps_warning"))
             return
         
         if not self.single_experiment:
-            QMessageBox.warning(self, "警告", "请先编辑单次实验程序")
+            QMessageBox.warning(self, tr("warning"), tr("no_steps_warning"))
             return
         
         # --- 运行前预检查（用基础实验做检查） ---
@@ -1319,8 +1523,19 @@ class MainWindow(QMainWindow):
                 step.duration_s = param_value
     
     def _on_stop(self):
-        """停止实验"""
+        """停止实验 - 设标志 + 立即停止所有硬件泵"""
         self.runner.stop()
+        
+        # 立即发送硬件停止命令给所有泵
+        try:
+            from src.services.rs485_wrapper import get_rs485_instance
+            rs485 = get_rs485_instance()
+            if rs485.is_connected():
+                rs485.stop_all()
+                self.log_message("已发送停止命令到所有泵", "warning")
+        except Exception as e:
+            self.log_message(f"停止泵异常: {e}", "error")
+        
         self.status_exp.setText("状态: 已停止")
         self.log_message("实验已停止", "warning")
         
@@ -1395,13 +1610,22 @@ class MainWindow(QMainWindow):
         # 同步更新 runner 的配置
         self.runner.set_config(config)
         self.log_message("系统配置已更新", "info")
+        # 刷新语言相关 UI
+        self.setWindowTitle(tr("app_title"))
+        self.status_rs485.setText(tr("rs485_status"))
+        self.status_chi.setText(tr("echem_status"))
+        if self.single_experiment:
+            self._refresh_step_list()
+        self.process_widget.update()
+        self.pump_diagram.update()
     
     def _refresh_step_list(self):
         """刷新步骤列表 - 中文显示，不同类型不同颜色，带详细参数"""
         self.step_list.clear()
+        names = _step_type_names()
         if self.single_experiment:
             for i, step in enumerate(self.single_experiment.steps):
-                type_name = STEP_TYPE_NAMES.get(step.step_type, str(step.step_type))
+                type_name = names.get(step.step_type, str(step.step_type))
                 color = STEP_TYPE_COLORS.get(step.step_type, "#000000")
                 detail = self._get_step_detail(step)
                 
@@ -1435,7 +1659,32 @@ class MainWindow(QMainWindow):
             if step.ec_settings:
                 tech = step.ec_settings.technique
                 tv = tech.value if hasattr(tech, 'value') else str(tech)
-                return tv.upper()
+                tv_upper = tv.upper()
+                ec = step.ec_settings
+                parts = [tv_upper]
+                if tv_upper in ("CV", "LSV"):
+                    parts.append(f"E0={ec.e0 or 0:.2f}V")
+                    if ec.eh is not None:
+                        parts.append(f"Eh={ec.eh:.2f}V")
+                    if ec.el is not None:
+                        parts.append(f"El={ec.el:.2f}V")
+                    parts.append(f"{tr('scan_rate')}={ec.scan_rate or 0.05}V/s")
+                    if tv_upper == "CV":
+                        parts.append(f"{tr('segments')}={ec.seg_num}")
+                elif tv_upper in ("I-T", "IT"):
+                    parts.append(f"E0={ec.e0 or 0:.2f}V")
+                    parts.append(f"{tr('run_time')}={ec.run_time_s or 60}s")
+                elif tv_upper == "OCPT":
+                    parts.append(f"{tr('run_time')}={ec.run_time_s or 60}s")
+                elif tv_upper == "EIS":
+                    parts.append(f"{tr('freq_range')}={ec.freq_low}-{ec.freq_high}Hz")
+                    parts.append(f"{tr('amplitude')}={ec.amplitude}V")
+                if ec.sensitivity is not None and not ec.autosensitivity:
+                    parts.append(f"{tr('sensitivity')}={ec.sensitivity:g}")
+                dummy = getattr(ec, 'use_dummy_cell', None)
+                if dummy:
+                    parts.append("Dummy")
+                return ", ".join(parts)
             return ""
         elif step.step_type == ProgramStepType.BLANK:
             d = step.duration_s or 0
@@ -1466,7 +1715,7 @@ class MainWindow(QMainWindow):
         }
         color = color_map.get(msg_type, "#000000")
         
-        self.log_text.append(f'<span style="color:{color}; font-size:13px;">[{timestamp}] {msg}</span>')
+        self.log_text.append(f'<span style="color:{color};">[{timestamp}] {msg}</span>')
     
     @Slot(str)
     def _on_log_message(self, msg: str):
@@ -1490,10 +1739,22 @@ class MainWindow(QMainWindow):
         
         if self.single_experiment and index < len(self.single_experiment.steps):
             step = self.single_experiment.steps[index]
-            type_name = STEP_TYPE_NAMES.get(step.step_type, str(step.step_type))
+            names = _step_type_names()
+            type_name = names.get(step.step_type, str(step.step_type))
             detail = self._get_step_detail(step)
             msg_type = step.step_type.value if hasattr(step.step_type, 'value') else "info"
             self.log_message(f"▶ 步骤 {index+1} 开始: [{type_name}] {detail or step_id}", msg_type)
+            
+            # 电化学步骤 - 更新工作站显示状态 + 启动实时截图
+            if step.step_type == ProgramStepType.ECHEM and step.ec_settings:
+                tech = step.ec_settings.technique
+                tv = tech.value if hasattr(tech, 'value') else str(tech)
+                self.process_widget.set_ws_connection_status("connected")
+                self.process_widget.set_ws_measurement_status(
+                    tr("ws_measuring", tech=tv.upper())
+                )
+                # 启动 CHI 窗口实时截图 (每1秒捕获一次)
+                self._start_echem_capture()
             
             # 更新泵指示灯 - 当前步骤绿色
             self._update_pump_indicators(step, running=True)
@@ -1529,13 +1790,14 @@ class MainWindow(QMainWindow):
         stype = step.step_type
         
         if stype == ProgramStepType.PREP_SOL:
-            # 配液时: 对应的配液泵亮绿灯
-            if step.prep_sol_params:
+            # 配液时: 步骤开始时将所有配液泵设为黄色(等待)
+            # 后续由 pump_batch_update 信号动态更新为绿色(运行中)
+            if running and step.prep_sol_params:
                 for sol_name in step.prep_sol_params.injection_order:
                     if step.prep_sol_params.selected_solutions.get(sol_name, False):
                         for ch in self.config.dilution_channels:
                             if ch.solution_name == sol_name:
-                                self.pump_diagram.set_pump_state(ch.pump_address, 1 if running else 0)
+                                self.pump_diagram.set_pump_state(ch.pump_address, 2)  # 黄色=等待
             self.process_widget.set_pump_states(False, False, False)
         
         elif stype == ProgramStepType.TRANSFER:
@@ -1577,18 +1839,45 @@ class MainWindow(QMainWindow):
         detail = ""
         if self.single_experiment and index < len(self.single_experiment.steps):
             step = self.single_experiment.steps[index]
-            type_name = STEP_TYPE_NAMES.get(step.step_type, str(step.step_type))
+            type_name = _step_type_names().get(step.step_type, str(step.step_type))
             detail = f" [{type_name}]"
             # 关闭当前步骤的指示灯
             self._update_pump_indicators(step, running=False)
+            # 电化学步骤完成 - 停止实时截图
+            if step.step_type == ProgramStepType.ECHEM:
+                self._stop_echem_capture()
         
-        self.log_message(f"{status} 步骤 {index+1}{detail} {'完成' if success else '失败'}", msg_type)
+        self.log_message(f"{status} 步骤 {index+1}{detail} {tr('completed') if success else tr('failed')}", msg_type)
+    
+    @Slot(list, list)
+    def _on_pump_batch_update(self, running_addrs: list, waiting_addrs: list):
+        """配液批次更新 - 按注入顺序号动态更新泵颜色
+        
+        running_addrs: 当前正在运行的泵地址列表（绿色）
+        waiting_addrs: 排队等待的泵地址列表（黄色）
+        """
+        # 先将所有泵重置为灰色
+        for i in range(12):
+            self.pump_diagram.set_pump_state(i + 1, 0)
+        
+        # 等待中的泵 → 黄色
+        for addr in waiting_addrs:
+            if 1 <= addr <= 12:
+                self.pump_diagram.set_pump_state(addr, 2)
+        
+        # 正在运行的泵 → 绿色（覆盖黄色）
+        for addr in running_addrs:
+            if 1 <= addr <= 12:
+                self.pump_diagram.set_pump_state(addr, 1)
     
     @Slot(bool)
     def _on_experiment_finished(self, success: bool):
         """实验完成"""
-        status = "成功完成" if success else "异常结束"
-        self.status_exp.setText(f"状态: {status}")
+        # 确保停止 CHI 截图
+        self._stop_echem_capture()
+        
+        status = tr("exp_done_ok") if success else tr("exp_done_fail")
+        self.status_exp.setText(tr("status_done") if success else tr("status_failed"))
         msg_type = "success" if success else "error"
         self.log_message(f"实验{status}", msg_type)
         
@@ -1600,6 +1889,55 @@ class MainWindow(QMainWindow):
         # 清除步骤列表高亮
         for i in range(self.step_list.count()):
             self.step_list.item(i).setBackground(QColor(Qt.transparent))
+
+    # ── 电化学实时截图 ──────────────────────────────────
+    
+    def _start_echem_capture(self):
+        """启动 CHI660F 窗口实时截图，每1秒捕获一次"""
+        if not self._echem_capturing:
+            self._echem_capturing = True
+            self._echem_capture_timer.start(1000)  # 每1秒
+            print("[MainWindow] EChem 实时截图已启动")
+    
+    def _stop_echem_capture(self):
+        """停止 CHI660F 窗口实时截图"""
+        if self._echem_capturing:
+            self._echem_capture_timer.stop()
+            self._echem_capturing = False
+            print("[MainWindow] EChem 实时截图已停止")
+    
+    def _capture_chi_window(self):
+        """定时回调: 捕获 CHI660F 窗口画面并显示在工作站区域"""
+        try:
+            from src.utils.window_capture import capture_chi_to_qpixmap
+            pixmap = capture_chi_to_qpixmap()
+            if pixmap and not pixmap.isNull():
+                self.process_widget._echem_pixmap = pixmap
+                self.process_widget.update()
+        except Exception as e:
+            # 捕获失败时静默处理，不影响测量
+            pass
+
+    def _poll_chi_status(self):
+        """定时轮询: 检测 CHI660F 窗口是否存在，更新状态栏"""
+        try:
+            from src.utils.window_capture import find_chi_window
+            hwnd = find_chi_window()
+            if hwnd:
+                self.status_chi.setText("电化学仪: ✅ 已连接")
+                self.status_chi.setStyleSheet("color: #2E7D32;")
+            else:
+                self.status_chi.setText("电化学仪: 未连接")
+                self.status_chi.setStyleSheet("color: #757575;")
+        except Exception:
+            self.status_chi.setText("电化学仪: 未连接")
+            self.status_chi.setStyleSheet("color: #757575;")
+
+    def _on_echem_result(self, technique: str, data_points: list, headers: list):
+        """接收电化学测量结果，在实验过程区域显示图像"""
+        # 停止实时截图，切换为最终结果图
+        self._stop_echem_capture()
+        self.process_widget.set_echem_result(technique, data_points, headers)
 
     def _save_last_experiment(self):
         """保存当前实验到文件，下次启动时自动加载"""
@@ -1619,7 +1957,11 @@ class MainWindow(QMainWindow):
         if last_exp_file.exists():
             try:
                 with open(last_exp_file, 'r', encoding='utf-8') as f:
-                    self.single_experiment = Experiment.from_json_str(f.read())
+                    content = f.read().strip()
+                if not content:
+                    print("⚠️ last_experiment.json 为空，跳过加载")
+                    return
+                self.single_experiment = Experiment.from_json_str(content)
                 self._refresh_step_list()
                 self.log_message(f"已加载上次实验: {self.single_experiment.exp_name}", "info")
             except Exception as e:
@@ -1627,6 +1969,10 @@ class MainWindow(QMainWindow):
     
     def closeEvent(self, event):
         """关闭窗口时自动断开RS485连接并保存实验"""
+        # 停止轮询定时器
+        if hasattr(self, '_chi_status_timer'):
+            self._chi_status_timer.stop()
+        
         # 保存当前实验
         self._save_last_experiment()
         

@@ -1,0 +1,104 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>Some Useful Tips</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=8" />
+<meta name="generator" content="HelpSmith 6.1.3 (Build 16.428)" />
+<style type="text/css" media="screen">
+html {
+  height: 100%;
+}
+body {
+  margin: 4.25pt 4.25pt 4.25pt 4.25pt;
+}
+</style>
+<link type="text/css" href="styles.css" rel="stylesheet" />
+</head>
+<body>
+<div align="left">
+  <table class="tbl1">
+    <tr class="row0">
+      <td class="cell0">
+        <p class="ps0"><span class="ts0">Some Useful Tips</span></p>
+      </td>
+      <td class="cell1">
+        <p class="ps1"><a href="menu_setup.htm"><img width="33" height="36" border="0" src="Images/Image(1).gif" /></a><a href="menu_setup.htm"><img width="22" height="36" border="0" src="Images/Image(2).gif" /></a><a href="IDH_900D.htm"><img width="36" height="36" border="0" src="Images/Image(3).gif" /></a></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell2" colspan="2">
+        <p>&nbsp;</p>
+      </td>
+    </tr>
+  </table>
+</div>
+<p><span class="ts33">Sensitivity setting</span></p>
+<p class="ps5"><span class="ts2">&nbsp;</span></p>
+<p class="ps5"><span class="ts1">Please use the highest sensitivity as possible that does not cause overflow. We define 1e-6A/V higher sensitivity than 1e-5A/V. This is for fully utilizing the analog-to-digital converter (ADC) resolution. The full scale current equals to the sensitivity scale times 10V. For instance, if you set sensitivity at 1e-5A/V, the maximum current is 1e-5A/V * 10V = 1e-4A.</span></p>
+<p class="ps5"><span class="ts2">&nbsp;</span></p>
+<p class="ps5"><span class="ts1">For example, if your maximum current is 3e-6A, the best sensitivity setting will be 1e-6A/V, because the full scale is 1e-5A. If you choose 1e-7A/V, the sensitivity setting is too high, and the current will overflow. If you set a sensitivity of 1e-6A/V, it should work properly. However, if you use 1e-4A/V or lower, the sensitivity setting is too low, because 3e-6A current will only generate 3e-6A/1e-4A/V = 0.03V voltage signal after current-to-voltage converter. The ADC with 10V full scale can not resolve it very well.</span></p>
+<p class="ps5"><span class="ts2">&nbsp;</span></p>
+<p class="ps5"><span class="ts1">Also all amplifiers have offset. Normally the offset is around +/-1 mV. With 10V full scale, this is only 0.01% of full scale. However, if your sensitivity setting is too low, this offset could have significant contribution to the measurement error. For instance, for a 3e-6A signal, if the sensitivity setting is 1e-3A/V, the signal will only generate 3 mV voltage signal. +/-1 mV offset could make the reading to be 2 mV or 4 mV. The error is significant. If a sensitivity of 1e-6A/V is chosen, the signal will be 3V. +/-1mV will make the signal reading of 2.999V or 3.001V. The error is negligible.</span></p>
+<p class="ps5"><span class="ts2">&nbsp;</span></p>
+<p class="ps5"><span class="ts1">The sensitivity setting could also affect the low pass filter associated with the current sensing resistor. When the sensitivity setting is too low, the cutoff frequency may not reach the desired value which could cause higher noise level.</span></p>
+<p class="ps5"><span class="ts2">&nbsp;</span></p>
+<p><span class="ts33">Noise due to Line Frequency (50 Hz or 60 Hz) Interference</span></p>
+<p>&nbsp;</p>
+<p class="ps5"><span class="ts1">Most times the measurement noise is from the line frequency pickup. </span></p>
+<p class="ps5"><span class="ts2">&nbsp;</span></p>
+<p class="ps5"><span class="ts1">In case the line frequency is 50 Hz, if the scan rate is set at 0.1V/s, you will see two parallel lines. If the scan rate is set at 0.15V/s, you will see three lines. If you set the scan rate at 0.05V/s, 0.025V/s, or 0.01V/s, the noise will be gone. This is because now you sample in multiple period of line frequency.</span></p>
+<p class="ps5"><span class="ts1">If you run CV at 0.2V/s and do Fourier Spectrum (choosing 1/sec as X Scale) under the DataProc menu, you will see a spike at 50 Hz. It is another evidence of 50Hz line frequency interference.</span></p>
+<p class="ps5"><span class="ts2">&nbsp;</span></p>
+<p class="ps5"><span class="ts1">In case the line frequency is 60 Hz, if the scan rate is set at 0.12V/s, you will see two parallel lines. If the scan rate is set at 0.18V/s, you will see three lines. If you set the scan rate at 0.06V/s, 0.03V/s, 0.02V/s, or 0.01V/s, the noise will be gone. This is because now you sample in multiple period of line frequency.</span></p>
+<p class="ps5"><span class="ts1">If you run CV at 0.2V/s and do Fourier Spectrum (choosing 1/sec as X Scale) under the DataProc menu, you will see a spike at 60 Hz. It is another evidence of 60Hz line frequency interference.</span></p>
+<p class="ps5"><span class="ts2">&nbsp;</span></p>
+<p class="ps5"><span class="ts1">To reduce the line frequency interference, the best thing to do is to use a Faraday cage (a grounded metal box). You may consider our CHI200B Picoamp Booster and Faraday Cage (check the compatibility with your potentiostat). The instrument has built-in low pass filters. At scan rate above 0.05V/s, the automatic cutoff frequency setting is 150 Hz or 320 Hz. This will not damp the line frequency noise. You can manually set the cutoff frequency for the i/E converter and Signal Filter to 32Hz or 15 Hz to reduce the line frequency noise. </span></p>
+<p class="ps5"><span class="ts2">&nbsp;</span></p>
+<p class="ps5"><span class="ts1">However, if you scan rate is above 0.2V/s, you will see the CV curve distorted. Please set it back to Automatic after you change scan rate again.</span></p>
+<p class="ps5"><span class="ts2">&nbsp;</span></p>
+<p class="ps5"><span class="ts1">If you can move your cell away from power lines, computer screen, and other electrical devices, it may help to certain degree.</span></p>
+<p class="ps5"><span class="ts2">&nbsp;</span></p>
+<p class="ps5"><span class="ts1">Also reducing the reference electrode resistance will help.</span></p>
+<p class="ps5"><span class="ts2">&nbsp;</span></p>
+<p><span class="ts33">Hardware Test</span></p>
+<p class="ps5"><span class="ts2">&nbsp;</span></p>
+<p class="ps5"><span class="ts1">If you see instrument behave abnormal and doubt if the problem is due to instrument hardware error, you can do Hardware under the Setup menu.</span></p>
+<p class="ps5"><span class="ts2">&nbsp;</span></p>
+<p class="ps5"><span class="ts1">Please turn off the instrument and close the program. Wait for a few seconds and turn on the instrument and restart the program again. Now do hardware test. </span></p>
+<p class="ps5"><span class="ts2">&nbsp;</span></p>
+<p class="ps5"><span class="ts1">If you can see errors in hardware test, please repeat the above sequence several times. If the error message occurs consistently every time you do hardware test, there might be a hardware problem. Please use Alt_PrtSc key to copy the screen and paste to the Word and e-mail to info@chinstruments.com.</span></p>
+<p class="ps5"><span class="ts2">&nbsp;</span></p>
+<p class="ps5"><span class="ts1">If the hardware test is okay, please try to run CV with the internal dummy cell. You can use the Cell command under the Control menu to check &quot;Test with Internal Dummy Cell&quot; option. The internal dummy cell is a 1K ohm resistor (10K ohm for model 1000C and 1400 series, 1M ohm for CHI800D series). The potential range of CV can be 0.5V to -0.5V with sensitivity at 1e-4A/V (or 1e-5A/V, or 1e-7A/V depending on the dummy cell resistance). Please see if the dummy cell test is okay. The data should obey Ohm's law. Please e-mail to info@chinstruments.com the binary data files (*.bin).</span></p>
+<p class="ps5"><span class="ts2">&nbsp;</span></p>
+<p class="ps5"><span class="ts1">If the internal dummy cell data is okay, please try the external resistor dummy cell. You need to uncheck the &quot;Test with internal dummy cell&quot; option first. You can use the same resistor value (if you can not find the same resistor value, other resistor value is fine too, but make sure you set sensitivity scale correctly). The reference electrode clip (white) and counter electrode clip (red) should be connected together to one end of the resistor. The working electrode clip (green) should be connected to the other end of the resistor. You may e-mail to info@chinstruments.com the external dummy cell test file in binary format.</span></p>
+<p class="ps5"><span class="ts2">&nbsp;</span></p>
+<p class="ps5"><span class="ts1">If the internal dummy cell is okay but the external dummy cell is not, something wrong with the electrode leads.</span></p>
+<p class="ps5"><span class="ts2">&nbsp;</span></p>
+<p class="ps5"><span class="ts1">If both internal and external dummy cell tests are okay, you may want to check your electrochemical cell, particularly the reference electrode. Please make sure there are no air bubbles inside the reference electrode chamber and no air bubbles are trapped underneath the porous glass tip of the reference electrode.</span></p>
+<p class="ps5"><span class="ts2">&nbsp;</span></p>
+<p class="ps5"><span class="ts1">If you wish, you may want to test with some simple electrochemical systems, such as ferricyanide solution. Please report the problem and e-mail the binary data files (*.bin) to info@chinstruments.com.</span></p>
+<p class="ps5"><span class="ts2">&nbsp;</span></p>
+<p><span class="ts34">Text File Conversion problem</span></p>
+<p class="ps5"><span class="ts2">&nbsp;</span></p>
+<p class="ps5"><span class="ts1">The problem might be due to the filename or directory (file folder) name. Please make sure that there is no period &quot;.&quot; in the filename and folder name. Anything after a period will be regarded as file extension. You may try to move the file to a directory with simple name (such as c:\chi), and rename the filename to a simple one (such as a1.bin). In general, please use 26 letters and 10 digits to name a file and folder. Please try to avoid use other symbols. </span></p>
+<p>&nbsp;</p>
+<p><span class="ts33">Software Use</span></p>
+<p class="ps5"><span class="ts2">&nbsp;</span></p>
+<p class="ps5"><span class="ts1">If you are comfortable with Windows applications, you may not have any problem using the instrument.</span></p>
+<p class="ps5"><span class="ts1">Most of the following tips are intended for users who do not have much experience with Windows, but may still be useful even for experienced users.</span></p>
+<p class="ps5"><span class="ts2">&nbsp;</span></p>
+<p class="ps5"><span class="ts1">1. Familiarize yourself with with the toolbar (the bar with many buttons under the main menu bar), which provides quick access to the most commonly used commands. Hover the mouse cursor over a button without clicking to display a descriptive comment in the lower-left corner of the main window.</span></p>
+<p class="ps5"><span class="ts2">&nbsp;</span></p>
+<p class="ps5"><span class="ts1">2. To select multiple filenames for multiple file printing, overlay plots, parallel plots, etc., left-click on the name of the first file you want to select and drag the mouse while holding the left button to select multiple files. If the files you want are scattered in the directory (i.e., non-consecutive), you can select them by holding down the Ctrl key and clicking on each filename.</span></p>
+<p class="ps5"><span class="ts2">&nbsp;</span></p>
+<p class="ps5"><span class="ts1">3. If the Y axis title is oriented in the wrong direction, use the Font command under the Graphics menu to change the rotation angle of the Y axis for printing.</span></p>
+<p class="ps5"><span class="ts2">&nbsp;</span></p>
+<p class="ps5"><span class="ts1">4. To select a file or technique, you can double-click the item. This is equivalent to clicking the item and then click OK.</span></p>
+<p class="ps5"><span class="ts2">&nbsp;</span></p>
+<p class="ps5"><span class="ts1">5. To change parameters in a dialog box, you can use the Tab key to cycle through its fields. Text in the edit box will become highlighted, and you can type directly to replace the highlighted text. This can sometimes be much more convenient and faster than using the mouse. Advanced users should also consider memorizing frequently used keyboard shortcuts (press the Alt key to move focus to the menu bar, then type underlined letters to enter menus and run commands).</span></p>
+<p class="ps5"><span class="ts2">&nbsp;</span></p>
+<p class="ps5"><span class="ts1">6. Use the Graph Options command under the Graphics menu to adjust the way data is displayed; see Chapter 6 for more information on the wide variety of options available.</span></p>
+
+</body>
+</html>

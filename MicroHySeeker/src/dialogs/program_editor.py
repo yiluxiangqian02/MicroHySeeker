@@ -16,7 +16,7 @@ from PySide6.QtWidgets import (
     QTableWidgetItem, QHeaderView, QGridLayout, QButtonGroup, QLineEdit
 )
 from PySide6.QtCore import Qt, Signal
-from PySide6.QtGui import QFont
+from PySide6.QtGui import QFont, QBrush, QColor
 from typing import Optional, List
 
 from src.models import (
@@ -306,10 +306,25 @@ class ProgramEditorDialog(QDialog):
         
         return panel
     
+    def _get_inlet_pump_info(self):
+        """获取 Inlet 泵信息（用作溶剂/H2O泵）"""
+        for ch in self.config.flush_channels:
+            if ch.work_type == "Inlet":
+                return {"address": ch.pump_address, "direction": ch.direction, "name": ch.pump_name}
+        return None
+    
     def _refresh_recipe_table(self):
-        """刷新溶液配方表格 - 包含目标浓度列"""
+        """刷新溶液配方表格 - 包含目标浓度列
+        
+        自动追加 H2O 行：使用 Inlet 泵作为溶剂泵，泵地址实时同步，
+        溶剂标记默认勾选且不可取消，目标浓度不可设置。
+        """
         channels = self.config.dilution_channels
-        self.recipe_table.setRowCount(len(channels))
+        inlet_info = self._get_inlet_pump_info()
+        
+        # 行数 = 配液通道 + 1 (H2O溶剂行)
+        total_rows = len(channels) + (1 if inlet_info else 0)
+        self.recipe_table.setRowCount(total_rows)
         
         for row, ch in enumerate(channels):
             # 选择复选框
@@ -355,11 +370,84 @@ class ProgramEditorDialog(QDialog):
             solvent_layout.setContentsMargins(0, 0, 0, 0)
             self.recipe_table.setCellWidget(row, 5, solvent_widget)
             
-            # 注液顺序 (可编辑)
+            # 溶剂勾选后禁用目标浓度
+            _target = target_spin  # capture for lambda
+            solvent_check.toggled.connect(
+                lambda checked, ts=_target: self._on_solvent_toggled(checked, ts)
+            )
+            
+            # 注液顺序 (可编辑, 允许相同编号表示同时注液)
             order_spin = QSpinBox()
             order_spin.setRange(1, 20)
             order_spin.setValue(row + 1)
             self.recipe_table.setCellWidget(row, 6, order_spin)
+        
+        # === H2O 溶剂行 (Inlet泵) ===
+        if inlet_info:
+            h2o_row = len(channels)
+            
+            # 选择复选框 - 默认选中
+            check = QCheckBox()
+            check.setChecked(True)
+            check_widget = QWidget()
+            check_layout = QHBoxLayout(check_widget)
+            check_layout.addWidget(check)
+            check_layout.setAlignment(Qt.AlignCenter)
+            check_layout.setContentsMargins(0, 0, 0, 0)
+            self.recipe_table.setCellWidget(h2o_row, 0, check_widget)
+            
+            # 溶液名称 - H2O (只读, 蓝色底色)
+            name_item = QTableWidgetItem("H2O")
+            name_item.setFlags(name_item.flags() & ~Qt.ItemIsEditable)
+            name_item.setBackground(QBrush(QColor("#E3F2FD")))
+            self.recipe_table.setItem(h2o_row, 1, name_item)
+            
+            # 原浓度 - 0 (溶剂无浓度)
+            conc_item = QTableWidgetItem("溶剂")
+            conc_item.setFlags(conc_item.flags() & ~Qt.ItemIsEditable)
+            conc_item.setTextAlignment(Qt.AlignCenter)
+            conc_item.setBackground(QBrush(QColor("#E3F2FD")))
+            self.recipe_table.setItem(h2o_row, 2, conc_item)
+            
+            # 泵端口 - 实时从 Inlet 同步
+            port_item = QTableWidgetItem(str(inlet_info["address"]))
+            port_item.setFlags(port_item.flags() & ~Qt.ItemIsEditable)
+            port_item.setTextAlignment(Qt.AlignCenter)
+            port_item.setBackground(QBrush(QColor("#E3F2FD")))
+            self.recipe_table.setItem(h2o_row, 3, port_item)
+            
+            # 目标浓度 - 不可设置 (溶剂自动补足)
+            target_spin = QDoubleSpinBox()
+            target_spin.setRange(0, 0)
+            target_spin.setDecimals(2)
+            target_spin.setValue(0.0)
+            target_spin.setEnabled(False)
+            target_spin.setStyleSheet("background-color: #E3F2FD;")
+            self.recipe_table.setCellWidget(h2o_row, 4, target_spin)
+            
+            # 是否溶剂 - 强制勾选, 不可取消
+            solvent_check = QCheckBox()
+            solvent_check.setChecked(True)
+            solvent_check.setEnabled(False)  # 不可取消
+            solvent_widget = QWidget()
+            solvent_layout = QHBoxLayout(solvent_widget)
+            solvent_layout.addWidget(solvent_check)
+            solvent_layout.setAlignment(Qt.AlignCenter)
+            solvent_layout.setContentsMargins(0, 0, 0, 0)
+            solvent_widget.setStyleSheet("background-color: #E3F2FD;")
+            self.recipe_table.setCellWidget(h2o_row, 5, solvent_widget)
+            
+            # 注液顺序 - 默认最后
+            order_spin = QSpinBox()
+            order_spin.setRange(1, 20)
+            order_spin.setValue(total_rows)
+            self.recipe_table.setCellWidget(h2o_row, 6, order_spin)
+    
+    def _on_solvent_toggled(self, checked: bool, target_spin: QDoubleSpinBox):
+        """溶剂勾选后禁用目标浓度输入（溶剂自动补充到总体积）"""
+        target_spin.setEnabled(not checked)
+        if checked:
+            target_spin.setValue(0.0)
     
     def _create_flush_panel(self) -> QWidget:
         """冲洗参数面板 - 泵地址和方向只读显示"""
@@ -398,186 +486,243 @@ class ProgramEditorDialog(QDialog):
         return panel
     
     def _create_echem_panel(self) -> QWidget:
-        """电化学参数面板 - 技术和参数在一个框内，OCPT检测单独框"""
+        """电化学参数面板 - 5个技术类型按钮直接切换，参数随技术变化"""
         panel = QWidget()
         main_layout = QVBoxLayout(panel)
+        main_layout.setSpacing(6)
         
-        # === 电化学技术参数 (一个框内) ===
+        # === 技术类型按钮行 ===
         tech_group = QGroupBox("电化学技术")
         tech_group.setFont(FONT_TITLE)
-        tech_layout = QVBoxLayout(tech_group)
+        tech_outer = QVBoxLayout(tech_group)
         
-        # 技术类型选择
-        type_row = QHBoxLayout()
-        type_row.addWidget(QLabel("技术类型:"))
+        btn_row = QHBoxLayout()
+        btn_row.setSpacing(4)
+        self._ec_tech_buttons: dict = {}   # ECTechnique -> QPushButton
+        self._ec_current_tech: ECTechnique = ECTechnique.CV
+        
+        TECH_LABELS = [
+            (ECTechnique.CV,   "CV\n循环伏安"),
+            (ECTechnique.LSV,  "LSV\n线性扫描"),
+            (ECTechnique.I_T,  "i-t\n计时电流"),
+            (ECTechnique.EIS,  "EIS\n交流阻抗"),
+            (ECTechnique.OCPT, "OCPT\n开路电位"),
+        ]
+        
+        _ACTIVE_STYLE = (
+            "QPushButton{background:#1976D2;color:white;font-weight:bold;"
+            "border:2px solid #0D47A1;border-radius:6px;padding:8px 4px;}"
+        )
+        _IDLE_STYLE = (
+            "QPushButton{background:#F5F5F5;color:#333;border:1px solid #BDBDBD;"
+            "border-radius:6px;padding:8px 4px;}"
+            "QPushButton:hover{background:#E0E0E0;}"
+        )
+        
+        for tech, label in TECH_LABELS:
+            btn = QPushButton(label)
+            btn.setFont(QFont("Microsoft YaHei", 9))
+            btn.setMinimumHeight(44)
+            btn.setCursor(Qt.PointingHandCursor)
+            btn.setStyleSheet(_IDLE_STYLE)
+            btn.clicked.connect(lambda checked=False, t=tech: self._on_ec_tech_btn_clicked(t))
+            btn_row.addWidget(btn)
+            self._ec_tech_buttons[tech] = btn
+        
+        self._ec_active_style = _ACTIVE_STYLE
+        self._ec_idle_style = _IDLE_STYLE
+        tech_outer.addLayout(btn_row)
+        
+        # 保留兼容: ec_tech_combo (hidden) 用于 save/load
         self.ec_tech_combo = QComboBox()
-        self.ec_tech_combo.addItem("循环伏安法 (CV)", ECTechnique.CV)
-        self.ec_tech_combo.addItem("线性扫描伏安法 (LSV)", ECTechnique.LSV)
-        self.ec_tech_combo.addItem("计时电流法 (i-t)", ECTechnique.I_T)
-        # 不包含OCPT
-        self.ec_tech_combo.currentIndexChanged.connect(self._on_ec_tech_changed)
-        type_row.addWidget(self.ec_tech_combo)
-        type_row.addStretch()
-        tech_layout.addLayout(type_row)
+        self.ec_tech_combo.addItem("CV", ECTechnique.CV)
+        self.ec_tech_combo.addItem("LSV", ECTechnique.LSV)
+        self.ec_tech_combo.addItem("I_T", ECTechnique.I_T)
+        self.ec_tech_combo.addItem("EIS", ECTechnique.EIS)
+        self.ec_tech_combo.addItem("OCPT", ECTechnique.OCPT)
+        self.ec_tech_combo.hide()
+        tech_outer.addWidget(self.ec_tech_combo)
         
-        # 参数区 (使用Grid布局)
-        params_widget = QWidget()
-        params_layout = QGridLayout(params_widget)
-        params_layout.setSpacing(10)
+        # ---- 各技术参数区 (使用 QStackedWidget) ----
+        self._ec_params_stack = QStackedWidget()
         
-        # 第一行: 初始电位, 上限电位
-        params_layout.addWidget(QLabel("初始电位(V):"), 0, 0)
-        self.ec_e0_spin = QDoubleSpinBox()
-        self.ec_e0_spin.setRange(-10, 10)
-        self.ec_e0_spin.setDecimals(2)
-        params_layout.addWidget(self.ec_e0_spin, 0, 1)
+        # --- CV 参数页 (index 0) ---
+        cv_page = QWidget()
+        cv_lay = QGridLayout(cv_page); cv_lay.setSpacing(8)
+        cv_lay.addWidget(QLabel("初始电位 E0(V):"), 0, 0)
+        self.ec_e0_spin = QDoubleSpinBox(); self.ec_e0_spin.setRange(-10,10); self.ec_e0_spin.setDecimals(3)
+        cv_lay.addWidget(self.ec_e0_spin, 0, 1)
+        cv_lay.addWidget(QLabel("上限电位 Eh(V):"), 0, 2)
+        self.ec_eh_spin = QDoubleSpinBox(); self.ec_eh_spin.setRange(-10,10); self.ec_eh_spin.setDecimals(3); self.ec_eh_spin.setValue(0.8)
+        cv_lay.addWidget(self.ec_eh_spin, 0, 3)
+        cv_lay.addWidget(QLabel("下限电位 El(V):"), 1, 0)
+        self.ec_el_spin = QDoubleSpinBox(); self.ec_el_spin.setRange(-10,10); self.ec_el_spin.setDecimals(3); self.ec_el_spin.setValue(-0.2)
+        cv_lay.addWidget(self.ec_el_spin, 1, 1)
+        cv_lay.addWidget(QLabel("终止电位 Ef(V):"), 1, 2)
+        self.ec_ef_spin = QDoubleSpinBox(); self.ec_ef_spin.setRange(-10,10); self.ec_ef_spin.setDecimals(3)
+        cv_lay.addWidget(self.ec_ef_spin, 1, 3)
+        cv_lay.addWidget(QLabel("扫描速率(V/s):"), 2, 0)
+        self.ec_scanrate_spin = QDoubleSpinBox(); self.ec_scanrate_spin.setRange(0.0001,10); self.ec_scanrate_spin.setDecimals(4); self.ec_scanrate_spin.setValue(0.05)
+        cv_lay.addWidget(self.ec_scanrate_spin, 2, 1)
+        cv_lay.addWidget(QLabel("扫描方向:"), 2, 2)
+        self.ec_scandir_combo = QComboBox(); self.ec_scandir_combo.addItems(["正向","反向"])
+        cv_lay.addWidget(self.ec_scandir_combo, 2, 3)
+        cv_lay.addWidget(QLabel("扫描段数:"), 3, 0)
+        self.ec_segments_spin = QSpinBox(); self.ec_segments_spin.setRange(1,100); self.ec_segments_spin.setValue(2)
+        cv_lay.addWidget(self.ec_segments_spin, 3, 1)
+        cv_lay.addWidget(QLabel("灵敏度(A/V):"), 3, 2)
+        self.ec_sensitivity_edit = QLineEdit("1e-1")
+        self.ec_sensitivity_edit.setToolTip("科学计数法，如 1e-1, 1e-3, 1e-6")
+        self.ec_sensitivity_edit.setPlaceholderText("如 1e-1")
+        cv_lay.addWidget(self.ec_sensitivity_edit, 3, 3)
+        cv_lay.addWidget(QLabel("记录间隔(mV):"), 4, 0)
+        self.ec_interval_spin = QDoubleSpinBox(); self.ec_interval_spin.setRange(0.1,100); self.ec_interval_spin.setDecimals(2); self.ec_interval_spin.setValue(1.0)
+        cv_lay.addWidget(self.ec_interval_spin, 4, 1)
+        cv_lay.addWidget(QLabel("静置时间(s):"), 4, 2)
+        self.ec_quiettime_spin = QDoubleSpinBox(); self.ec_quiettime_spin.setRange(0,1000); self.ec_quiettime_spin.setDecimals(2); self.ec_quiettime_spin.setValue(2.0)
+        cv_lay.addWidget(self.ec_quiettime_spin, 4, 3)
+        self._ec_params_stack.addWidget(cv_page)  # index 0
         
-        params_layout.addWidget(QLabel("上限电位(V):"), 0, 2)
-        self.ec_eh_spin = QDoubleSpinBox()
-        self.ec_eh_spin.setRange(-10, 10)
-        self.ec_eh_spin.setDecimals(2)
-        self.ec_eh_spin.setValue(0.80)
-        params_layout.addWidget(self.ec_eh_spin, 0, 3)
+        # --- LSV 参数页 (index 1) ---
+        lsv_page = QWidget()
+        lsv_lay = QGridLayout(lsv_page); lsv_lay.setSpacing(8)
+        lsv_lay.addWidget(QLabel("初始电位 E0(V):"), 0, 0)
+        self._lsv_e0 = QDoubleSpinBox(); self._lsv_e0.setRange(-10,10); self._lsv_e0.setDecimals(3)
+        lsv_lay.addWidget(self._lsv_e0, 0, 1)
+        lsv_lay.addWidget(QLabel("终止电位 Ef(V):"), 0, 2)
+        self._lsv_ef = QDoubleSpinBox(); self._lsv_ef.setRange(-10,10); self._lsv_ef.setDecimals(3); self._lsv_ef.setValue(1.0)
+        lsv_lay.addWidget(self._lsv_ef, 0, 3)
+        lsv_lay.addWidget(QLabel("扫描速率(V/s):"), 1, 0)
+        self._lsv_scanrate = QDoubleSpinBox(); self._lsv_scanrate.setRange(0.0001,10); self._lsv_scanrate.setDecimals(4); self._lsv_scanrate.setValue(0.05)
+        lsv_lay.addWidget(self._lsv_scanrate, 1, 1)
+        lsv_lay.addWidget(QLabel("灵敏度(A/V):"), 1, 2)
+        self._lsv_sensitivity = QLineEdit("1e-1")
+        self._lsv_sensitivity.setPlaceholderText("如 1e-1")
+        lsv_lay.addWidget(self._lsv_sensitivity, 1, 3)
+        lsv_lay.addWidget(QLabel("记录间隔(mV):"), 2, 0)
+        self._lsv_interval = QDoubleSpinBox(); self._lsv_interval.setRange(0.1,100); self._lsv_interval.setDecimals(2); self._lsv_interval.setValue(1.0)
+        lsv_lay.addWidget(self._lsv_interval, 2, 1)
+        lsv_lay.addWidget(QLabel("静置时间(s):"), 2, 2)
+        self._lsv_quiettime = QDoubleSpinBox(); self._lsv_quiettime.setRange(0,1000); self._lsv_quiettime.setDecimals(2); self._lsv_quiettime.setValue(2.0)
+        lsv_lay.addWidget(self._lsv_quiettime, 2, 3)
+        self._ec_params_stack.addWidget(lsv_page)  # index 1
         
-        # 第二行: 下限电位, 终止电位
-        params_layout.addWidget(QLabel("下限电位(V):"), 1, 0)
-        self.ec_el_spin = QDoubleSpinBox()
-        self.ec_el_spin.setRange(-10, 10)
-        self.ec_el_spin.setDecimals(2)
-        self.ec_el_spin.setValue(-0.20)
-        params_layout.addWidget(self.ec_el_spin, 1, 1)
+        # --- i-t 参数页 (index 2) ---
+        it_page = QWidget()
+        it_lay = QGridLayout(it_page); it_lay.setSpacing(8)
+        it_lay.addWidget(QLabel("恒电位 E0(V):"), 0, 0)
+        self._it_e0 = QDoubleSpinBox(); self._it_e0.setRange(-10,10); self._it_e0.setDecimals(3); self._it_e0.setValue(0.2)
+        it_lay.addWidget(self._it_e0, 0, 1)
+        it_lay.addWidget(QLabel("运行时间(s):"), 0, 2)
+        self.ec_runtime_spin = QDoubleSpinBox(); self.ec_runtime_spin.setRange(0,100000); self.ec_runtime_spin.setDecimals(2); self.ec_runtime_spin.setValue(60.0)
+        it_lay.addWidget(self.ec_runtime_spin, 0, 3)
+        it_lay.addWidget(QLabel("采样间隔(ms):"), 1, 0)
+        self._it_interval = QDoubleSpinBox(); self._it_interval.setRange(0.1,10000); self._it_interval.setDecimals(2); self._it_interval.setValue(100.0)
+        it_lay.addWidget(self._it_interval, 1, 1)
+        it_lay.addWidget(QLabel("灵敏度(A/V):"), 1, 2)
+        self._it_sensitivity = QLineEdit("1e-4")
+        self._it_sensitivity.setPlaceholderText("如 1e-4")
+        it_lay.addWidget(self._it_sensitivity, 1, 3)
+        it_lay.addWidget(QLabel("静置时间(s):"), 2, 0)
+        self._it_quiettime = QDoubleSpinBox(); self._it_quiettime.setRange(0,1000); self._it_quiettime.setDecimals(2); self._it_quiettime.setValue(2.0)
+        it_lay.addWidget(self._it_quiettime, 2, 1)
+        self._ec_params_stack.addWidget(it_page)  # index 2
         
-        params_layout.addWidget(QLabel("终止电位(V):"), 1, 2)
-        self.ec_ef_spin = QDoubleSpinBox()
-        self.ec_ef_spin.setRange(-10, 10)
-        self.ec_ef_spin.setDecimals(2)
-        params_layout.addWidget(self.ec_ef_spin, 1, 3)
+        # --- EIS 参数页 (index 3) ---
+        eis_page = QWidget()
+        eis_lay = QGridLayout(eis_page); eis_lay.setSpacing(8)
+        eis_lay.addWidget(QLabel("偏置电位 E0(V):"), 0, 0)
+        self._eis_e0 = QDoubleSpinBox(); self._eis_e0.setRange(-10,10); self._eis_e0.setDecimals(3)
+        eis_lay.addWidget(self._eis_e0, 0, 1)
+        eis_lay.addWidget(QLabel("高频率(Hz):"), 0, 2)
+        self.ec_freqhigh_spin = QDoubleSpinBox(); self.ec_freqhigh_spin.setRange(0.0001,3000000); self.ec_freqhigh_spin.setDecimals(1); self.ec_freqhigh_spin.setValue(100000.0)
+        eis_lay.addWidget(self.ec_freqhigh_spin, 0, 3)
+        eis_lay.addWidget(QLabel("低频率(Hz):"), 1, 0)
+        self.ec_freqlow_spin = QDoubleSpinBox(); self.ec_freqlow_spin.setRange(0.00001,100000); self.ec_freqlow_spin.setDecimals(4); self.ec_freqlow_spin.setValue(1.0)
+        eis_lay.addWidget(self.ec_freqlow_spin, 1, 1)
+        eis_lay.addWidget(QLabel("AC振幅(V):"), 1, 2)
+        self.ec_amplitude_spin = QDoubleSpinBox(); self.ec_amplitude_spin.setRange(0.001,0.7); self.ec_amplitude_spin.setDecimals(4); self.ec_amplitude_spin.setValue(0.005)
+        eis_lay.addWidget(self.ec_amplitude_spin, 1, 3)
+        eis_lay.addWidget(QLabel("偏置模式:"), 2, 0)
+        self.ec_bias_combo = QComboBox(); self.ec_bias_combo.addItem("vs Eref",0); self.ec_bias_combo.addItem("vs Eoc",1)
+        eis_lay.addWidget(self.ec_bias_combo, 2, 1)
+        eis_lay.addWidget(QLabel("灵敏度(A/V):"), 2, 2)
+        self._eis_sensitivity = QLineEdit("1e-3")
+        self._eis_sensitivity.setPlaceholderText("如 1e-3")
+        eis_lay.addWidget(self._eis_sensitivity, 2, 3)
+        eis_lay.addWidget(QLabel("静置时间(s):"), 3, 0)
+        self._eis_quiettime = QDoubleSpinBox(); self._eis_quiettime.setRange(0,1000); self._eis_quiettime.setDecimals(2); self._eis_quiettime.setValue(2.0)
+        eis_lay.addWidget(self._eis_quiettime, 3, 1)
+        self._ec_params_stack.addWidget(eis_page)  # index 3
         
-        # 第三行: 扫速, 扫描方向
-        params_layout.addWidget(QLabel("扫描速率(V/s):"), 2, 0)
-        self.ec_scanrate_spin = QDoubleSpinBox()
-        self.ec_scanrate_spin.setRange(0.0001, 10)
-        self.ec_scanrate_spin.setDecimals(4)
-        self.ec_scanrate_spin.setValue(0.05)
-        params_layout.addWidget(self.ec_scanrate_spin, 2, 1)
+        # --- OCPT 参数页 (index 4) ---
+        ocpt_page = QWidget()
+        ocpt_lay = QGridLayout(ocpt_page); ocpt_lay.setSpacing(8)
+        ocpt_lay.addWidget(QLabel("运行时间(s):"), 0, 0)
+        self._ocpt_runtime = QDoubleSpinBox(); self._ocpt_runtime.setRange(0,100000); self._ocpt_runtime.setDecimals(2); self._ocpt_runtime.setValue(60.0)
+        ocpt_lay.addWidget(self._ocpt_runtime, 0, 1)
+        ocpt_lay.addWidget(QLabel("采样间隔(ms):"), 0, 2)
+        self._ocpt_interval = QDoubleSpinBox(); self._ocpt_interval.setRange(0.1,10000); self._ocpt_interval.setDecimals(2); self._ocpt_interval.setValue(1000.0)
+        ocpt_lay.addWidget(self._ocpt_interval, 0, 3)
+        ocpt_lay.addWidget(QLabel("上限电位 Eh(V):"), 1, 0)
+        self._ocpt_eh = QDoubleSpinBox(); self._ocpt_eh.setRange(-10,10); self._ocpt_eh.setDecimals(3); self._ocpt_eh.setValue(10.0)
+        ocpt_lay.addWidget(self._ocpt_eh, 1, 1)
+        ocpt_lay.addWidget(QLabel("下限电位 El(V):"), 1, 2)
+        self._ocpt_el = QDoubleSpinBox(); self._ocpt_el.setRange(-10,10); self._ocpt_el.setDecimals(3); self._ocpt_el.setValue(-10.0)
+        ocpt_lay.addWidget(self._ocpt_el, 1, 3)
+        self._ec_params_stack.addWidget(ocpt_page)  # index 4
         
-        params_layout.addWidget(QLabel("扫描方向:"), 2, 2)
-        self.ec_scandir_combo = QComboBox()
-        self.ec_scandir_combo.addItems(["正向", "反向"])
-        params_layout.addWidget(self.ec_scandir_combo, 2, 3)
+        tech_outer.addWidget(self._ec_params_stack)
         
-        # 第四行: 扫描段数, 灵敏度
-        params_layout.addWidget(QLabel("扫描段数:"), 3, 0)
-        self.ec_segments_spin = QSpinBox()
-        self.ec_segments_spin.setRange(1, 100)
-        self.ec_segments_spin.setValue(2)
-        params_layout.addWidget(self.ec_segments_spin, 3, 1)
+        # Dummy Cell 模式选项
+        dummy_row = QHBoxLayout()
+        self.ec_dummy_cell = QCheckBox("使用 Dummy Cell (内置模拟电极，用于测试)")
+        self.ec_dummy_cell.setChecked(True)
+        self.ec_dummy_cell.setToolTip("勾选：使用 CHI 内置模拟电极进行测试\n取消勾选：连接真实电化学电极进行测量")
+        dummy_row.addWidget(self.ec_dummy_cell)
+        dummy_row.addStretch()
+        tech_outer.addLayout(dummy_row)
         
-        params_layout.addWidget(QLabel("灵敏度(V):"), 3, 2)
-        self.ec_sensitivity_spin = QDoubleSpinBox()
-        self.ec_sensitivity_spin.setRange(0.001, 100)
-        self.ec_sensitivity_spin.setDecimals(3)
-        self.ec_sensitivity_spin.setValue(1.00)
-        params_layout.addWidget(self.ec_sensitivity_spin, 3, 3)
-        
-        # 第五行: 记录间隔, 自动灵敏度
-        params_layout.addWidget(QLabel("记录间隔(mV):"), 4, 0)
-        self.ec_interval_spin = QDoubleSpinBox()
-        self.ec_interval_spin.setRange(0.1, 100)
-        self.ec_interval_spin.setDecimals(2)
-        self.ec_interval_spin.setValue(1.00)
-        params_layout.addWidget(self.ec_interval_spin, 4, 1)
-        
-        self.ec_autosens_check = QCheckBox("自动灵敏度")
-        self.ec_autosens_check.setToolTip("仅在扫速低于10mV/s时有效")
-        params_layout.addWidget(self.ec_autosens_check, 4, 2, 1, 2)
-        
-        # 第六行: 静置时间, 运行时间(i-t用)
-        params_layout.addWidget(QLabel("静置时间(秒):"), 5, 0)
-        self.ec_quiettime_spin = QDoubleSpinBox()
-        self.ec_quiettime_spin.setRange(0, 1000)
-        self.ec_quiettime_spin.setDecimals(2)
-        self.ec_quiettime_spin.setValue(2.00)
-        params_layout.addWidget(self.ec_quiettime_spin, 5, 1)
-        
-        params_layout.addWidget(QLabel("运行时间(秒):"), 5, 2)
-        self.ec_runtime_spin = QDoubleSpinBox()
-        self.ec_runtime_spin.setRange(0, 10000)
-        self.ec_runtime_spin.setDecimals(2)
-        self.ec_runtime_spin.setValue(60.00)
-        params_layout.addWidget(self.ec_runtime_spin, 5, 3)
-        
-        tech_layout.addWidget(params_widget)
         main_layout.addWidget(tech_group)
         
-        # === OCPT 反向电流检测 (单独框) ===
-        ocpt_group = QGroupBox("OCPT 反向电流检测")
-        ocpt_group.setFont(FONT_TITLE)
-        ocpt_layout = QFormLayout(ocpt_group)
-        
-        self.ec_ocpt_enable = QCheckBox("启用 OCPT 检测")
-        ocpt_layout.addRow("", self.ec_ocpt_enable)
-        
-        self.ec_ocpt_threshold = QDoubleSpinBox()
-        self.ec_ocpt_threshold.setRange(-1000, 0)
-        self.ec_ocpt_threshold.setDecimals(2)
-        self.ec_ocpt_threshold.setValue(-50.00)
-        ocpt_layout.addRow("阈值电流(μA):", self.ec_ocpt_threshold)
-        
-        self.ec_ocpt_duration = QDoubleSpinBox()
-        self.ec_ocpt_duration.setRange(0, 10000)
-        self.ec_ocpt_duration.setDecimals(2)
-        self.ec_ocpt_duration.setValue(5.00)
-        ocpt_layout.addRow("持续时间(秒):", self.ec_ocpt_duration)
-        
+        # 隐藏的 OCPT 反向电流检测控件 (保留兼容性, 默认值)
+        self.ec_ocpt_enable = QCheckBox(); self.ec_ocpt_enable.hide()
+        self.ec_ocpt_threshold = QDoubleSpinBox(); self.ec_ocpt_threshold.setValue(-50.0); self.ec_ocpt_threshold.hide()
+        self.ec_ocpt_duration = QDoubleSpinBox(); self.ec_ocpt_duration.setValue(5.0); self.ec_ocpt_duration.hide()
         self.ec_ocpt_action = QComboBox()
         self.ec_ocpt_action.addItem("仅记录", OCPTAction.LOG)
         self.ec_ocpt_action.addItem("暂停实验", OCPTAction.PAUSE)
         self.ec_ocpt_action.addItem("终止实验", OCPTAction.ABORT)
-        ocpt_layout.addRow("触发动作:", self.ec_ocpt_action)
+        self.ec_ocpt_action.hide()
         
-        main_layout.addWidget(ocpt_group)
         main_layout.addStretch()
         
-        # 初始化时更新参数可用性
-        self._on_ec_tech_changed(0)
+        # 初始化: 选中 CV
+        self._on_ec_tech_btn_clicked(ECTechnique.CV)
         
         return panel
     
+    def _on_ec_tech_btn_clicked(self, tech: ECTechnique):
+        """技术按钮点击 — 切换参数页 & 高亮"""
+        self._ec_current_tech = tech
+        
+        # 更新按钮样式
+        for t, btn in self._ec_tech_buttons.items():
+            btn.setStyleSheet(self._ec_active_style if t == tech else self._ec_idle_style)
+        
+        # 切换 stacked widget
+        idx_map = {ECTechnique.CV: 0, ECTechnique.LSV: 1, ECTechnique.I_T: 2, ECTechnique.EIS: 3, ECTechnique.OCPT: 4}
+        self._ec_params_stack.setCurrentIndex(idx_map.get(tech, 0))
+        
+        # 同步 hidden combo (用于 save/load)
+        combo_idx = {ECTechnique.CV: 0, ECTechnique.LSV: 1, ECTechnique.I_T: 2, ECTechnique.EIS: 3, ECTechnique.OCPT: 4}
+        self.ec_tech_combo.setCurrentIndex(combo_idx.get(tech, 0))
+    
     def _on_ec_tech_changed(self, index: int):
-        """电化学技术类型改变时更新参数可用性"""
+        """兼容: combo index 变化时同步按钮 (load 时调用)"""
         tech = self.ec_tech_combo.currentData()
-        
-        # CV: 所有参数可用
-        # LSV: 上限电位、下限电位、扫描方向、扫描段数变灰
-        # i-t: 上限电位、下限电位、扫描方向、扫描段数、终止电位、扫速、自动灵敏度变灰
-        
-        # 先全部启用
-        self.ec_e0_spin.setEnabled(True)
-        self.ec_eh_spin.setEnabled(True)
-        self.ec_el_spin.setEnabled(True)
-        self.ec_ef_spin.setEnabled(True)
-        self.ec_scanrate_spin.setEnabled(True)
-        self.ec_scandir_combo.setEnabled(True)
-        self.ec_segments_spin.setEnabled(True)
-        self.ec_autosens_check.setEnabled(True)
-        self.ec_runtime_spin.setEnabled(True)
-        
-        if tech == ECTechnique.LSV:
-            # LSV: 上限电位、下限电位、扫描方向、扫描段数变灰
-            self.ec_eh_spin.setEnabled(False)
-            self.ec_el_spin.setEnabled(False)
-            self.ec_scandir_combo.setEnabled(False)
-            self.ec_segments_spin.setEnabled(False)
-        elif tech == ECTechnique.I_T:
-            # i-t: 上限电位、下限电位、扫描方向、扫描段数、终止电位、扫速、自动灵敏度变灰
-            self.ec_eh_spin.setEnabled(False)
-            self.ec_el_spin.setEnabled(False)
-            self.ec_scandir_combo.setEnabled(False)
-            self.ec_segments_spin.setEnabled(False)
-            self.ec_ef_spin.setEnabled(False)
-            self.ec_scanrate_spin.setEnabled(False)
-            self.ec_autosens_check.setEnabled(False)
+        if tech:
+            self._on_ec_tech_btn_clicked(tech)
     
     def _create_blank_panel(self) -> QWidget:
         """空白步骤面板"""
@@ -666,8 +811,38 @@ class ProgramEditorDialog(QDialog):
         
         elif step.step_type == ProgramStepType.ECHEM:
             if step.ec_settings:
-                tech = step.ec_settings.technique.value if step.ec_settings.technique else "?"
-                return f"{tech.upper()}"
+                ec = step.ec_settings
+                t = ec.technique
+                if isinstance(t, ECTechnique):
+                    tech = t.value
+                elif isinstance(t, str):
+                    tech = t
+                else:
+                    tech = "?"
+                tv = tech.upper()
+                parts = [tv]
+                if tv in ("CV", "LSV"):
+                    parts.append(f"E0={ec.e0 or 0:.2f}V")
+                    if ec.eh is not None:
+                        parts.append(f"Eh={ec.eh:.2f}V")
+                    if ec.el is not None:
+                        parts.append(f"El={ec.el:.2f}V")
+                    parts.append(f"扫速={ec.scan_rate or 0.05}V/s")
+                    if tv == "CV" and ec.seg_num:
+                        parts.append(f"段数={ec.seg_num}")
+                elif tv in ("I-T", "IT"):
+                    parts.append(f"E0={ec.e0 or 0:.2f}V")
+                    parts.append(f"时间={ec.run_time_s or 60}s")
+                elif tv == "OCPT":
+                    parts.append(f"时间={ec.run_time_s or 60}s")
+                elif tv == "EIS":
+                    parts.append(f"频率={ec.freq_low}-{ec.freq_high}Hz")
+                    parts.append(f"幅值={ec.amplitude}V")
+                if ec.sensitivity is not None and not ec.autosensitivity:
+                    parts.append(f"灵敏度={ec.sensitivity:g}")
+                if getattr(ec, 'use_dummy_cell', False):
+                    parts.append("Dummy")
+                return ", ".join(parts)
             return ""
         
         elif step.step_type == ProgramStepType.BLANK:
@@ -682,14 +857,17 @@ class ProgramEditorDialog(QDialog):
         return ""
     
     def _on_step_selected(self, item: QListWidgetItem):
-        """选中步骤"""
-        self._save_current_step()
-        
+        """选中步骤 - 在右侧面板查看参数（只读展示，不可修改回步骤）"""
         index = self.step_list.row(item)
         if 0 <= index < len(self.experiment.steps):
+            step = self.experiment.steps[index]
+            # 临时设置 current_step 以便 _load_step_to_ui 正常工作
+            self.current_step = step
             self.current_step_index = index
-            self.current_step = self.experiment.steps[index]
             self._load_step_to_ui()
+            # 立即清除，防止 UI 修改被保存回步骤
+            self.current_step = None
+            self.current_step_index = -1
     
     def _load_step_to_ui(self):
         """将步骤数据加载到 UI"""
@@ -754,39 +932,50 @@ class ProgramEditorDialog(QDialog):
             vol_ml = params.total_volume_ul / 1000.0
             self.ps_vol_spin.setValue(round(vol_ml, 2))
             
-            # 加载每个溶液的配置
+            # 加载每行溶液的配置（按溶液名称匹配）
             for row in range(self.recipe_table.rowCount()):
-                if row < len(self.config.dilution_channels):
-                    ch = self.config.dilution_channels[row]
-                    sol_name = ch.solution_name
-                    
-                    # 加载选中状态
-                    check_widget = self.recipe_table.cellWidget(row, 0)
-                    if check_widget:
-                        check = check_widget.findChild(QCheckBox)
-                        if check:
-                            selected = params.selected_solutions.get(sol_name, True)
-                            check.setChecked(selected)
-                    
-                    # 加载目标浓度
-                    target_spin = self.recipe_table.cellWidget(row, 4)
-                    if target_spin:
-                        target_conc = params.target_concentrations.get(sol_name, 0.0)
-                        target_spin.setValue(target_conc)
-                    
-                    # 加载溶剂标记
-                    solvent_widget = self.recipe_table.cellWidget(row, 5)
-                    if solvent_widget:
-                        solvent_check = solvent_widget.findChild(QCheckBox)
-                        if solvent_check:
-                            is_solvent = params.solvent_flags.get(sol_name, False)
-                            solvent_check.setChecked(is_solvent)
-                    
-                    # 加载注液顺序
-                    order_spin = self.recipe_table.cellWidget(row, 6)
-                    if order_spin and sol_name in params.injection_order:
+                name_item = self.recipe_table.item(row, 1)
+                if not name_item:
+                    continue
+                sol_name = name_item.text()
+                
+                # 加载选中状态
+                check_widget = self.recipe_table.cellWidget(row, 0)
+                if check_widget:
+                    check = check_widget.findChild(QCheckBox)
+                    if check:
+                        selected = params.selected_solutions.get(sol_name, True)
+                        check.setChecked(selected)
+                
+                # 加载目标浓度
+                target_spin = self.recipe_table.cellWidget(row, 4)
+                if target_spin and target_spin.isEnabled():
+                    target_conc = params.target_concentrations.get(sol_name, 0.0)
+                    target_spin.setValue(target_conc)
+                
+                # 加载溶剂标记 (H2O 行始终勾选且不可改)
+                solvent_widget = self.recipe_table.cellWidget(row, 5)
+                if solvent_widget:
+                    solvent_check = solvent_widget.findChild(QCheckBox)
+                    if solvent_check and solvent_check.isEnabled():
+                        is_solvent = params.solvent_flags.get(sol_name, False)
+                        solvent_check.setChecked(is_solvent)
+                
+                # 加载注液顺序 (优先用 injection_order_numbers)
+                order_spin = self.recipe_table.cellWidget(row, 6)
+                if order_spin:
+                    if params.injection_order_numbers and sol_name in params.injection_order_numbers:
+                        order_spin.setValue(params.injection_order_numbers[sol_name])
+                    elif sol_name in params.injection_order:
                         order_idx = params.injection_order.index(sol_name) + 1
                         order_spin.setValue(order_idx)
+                
+                # 溶剂勾选后禁用目标浓度
+                if target_spin and solvent_widget:
+                    solvent_check_2 = solvent_widget.findChild(QCheckBox)
+                    if solvent_check_2 and solvent_check_2.isChecked():
+                        target_spin.setEnabled(False)
+                        target_spin.setValue(0.0)
         else:
             # 没有配液参数时使用默认值
             self.ps_vol_spin.setValue(100.00)
@@ -802,25 +991,67 @@ class ProgramEditorDialog(QDialog):
     def _load_echem(self, step: ProgStep):
         if step.ec_settings:
             ec = step.ec_settings
-            # 技术类型 (不含OCPT)
+            # 技术类型映射
             tech_idx = {
-                ECTechnique.CV: 0, ECTechnique.LSV: 1, ECTechnique.I_T: 2
+                ECTechnique.CV: 0, ECTechnique.LSV: 1,
+                ECTechnique.I_T: 2, ECTechnique.EIS: 3, ECTechnique.OCPT: 4,
             }.get(ec.technique, 0)
             self.ec_tech_combo.setCurrentIndex(tech_idx)
             self._on_ec_tech_changed(tech_idx)
             
-            self.ec_e0_spin.setValue(round(ec.e0 or 0, 2))
-            self.ec_eh_spin.setValue(round(ec.eh or 0.8, 2))
-            self.ec_el_spin.setValue(round(ec.el or -0.2, 2))
-            self.ec_ef_spin.setValue(round(ec.ef or 0, 2))
-            self.ec_scanrate_spin.setValue(ec.scan_rate or 0.05)
-            self.ec_segments_spin.setValue(ec.seg_num)
-            self.ec_quiettime_spin.setValue(round(ec.quiet_time_s, 2))
-            self.ec_runtime_spin.setValue(round(ec.run_time_s or 60, 2))
-            self.ec_autosens_check.setChecked(ec.autosensitivity)
+            tech = ec.technique
+            
+            if tech == ECTechnique.CV:
+                self.ec_e0_spin.setValue(round(ec.e0 or 0, 3))
+                self.ec_eh_spin.setValue(round(ec.eh or 0.8, 3))
+                self.ec_el_spin.setValue(round(ec.el or -0.2, 3))
+                self.ec_ef_spin.setValue(round(ec.ef or 0, 3))
+                self.ec_scanrate_spin.setValue(ec.scan_rate or 0.05)
+                self.ec_segments_spin.setValue(ec.seg_num)
+                if ec.sensitivity is not None:
+                    self.ec_sensitivity_edit.setText(str(ec.sensitivity))
+                self.ec_interval_spin.setValue(ec.sample_interval_ms if ec.sample_interval_ms else 1.0)
+                self.ec_quiettime_spin.setValue(round(ec.quiet_time_s, 2))
+                
+            elif tech == ECTechnique.LSV:
+                self._lsv_e0.setValue(round(ec.e0 or 0, 3))
+                self._lsv_ef.setValue(round(ec.ef or 1.0, 3))
+                self._lsv_scanrate.setValue(ec.scan_rate or 0.05)
+                if ec.sensitivity is not None:
+                    self._lsv_sensitivity.setText(str(ec.sensitivity))
+                self._lsv_interval.setValue(ec.sample_interval_ms if ec.sample_interval_ms else 1.0)
+                self._lsv_quiettime.setValue(round(ec.quiet_time_s, 2))
+                
+            elif tech == ECTechnique.I_T:
+                self._it_e0.setValue(round(ec.e0 or 0.2, 3))
+                self.ec_runtime_spin.setValue(round(ec.run_time_s or 60, 2))
+                self._it_interval.setValue(ec.sample_interval_ms if ec.sample_interval_ms else 100.0)
+                if ec.sensitivity is not None:
+                    self._it_sensitivity.setText(str(ec.sensitivity))
+                self._it_quiettime.setValue(round(ec.quiet_time_s, 2))
+                
+            elif tech == ECTechnique.EIS:
+                self._eis_e0.setValue(round(ec.e0 or 0, 3))
+                self.ec_freqhigh_spin.setValue(ec.freq_high or 100000.0)
+                self.ec_freqlow_spin.setValue(ec.freq_low or 1.0)
+                self.ec_amplitude_spin.setValue(ec.amplitude or 0.005)
+                bias_idx = {0: 0, 1: 1}.get(ec.bias_mode, 0)
+                self.ec_bias_combo.setCurrentIndex(bias_idx)
+                if ec.sensitivity is not None:
+                    self._eis_sensitivity.setText(str(ec.sensitivity))
+                self._eis_quiettime.setValue(round(ec.quiet_time_s, 2))
+                
+            elif tech == ECTechnique.OCPT:
+                self._ocpt_runtime.setValue(round(ec.run_time_s or 60, 2))
+                self._ocpt_interval.setValue(ec.sample_interval_ms if ec.sample_interval_ms else 1000.0)
+                self._ocpt_eh.setValue(round(ec.eh or 10, 3))
+                self._ocpt_el.setValue(round(ec.el or -10, 3))
+            
+            # Dummy Cell
+            self.ec_dummy_cell.setChecked(getattr(ec, 'use_dummy_cell', True))
+            # OCPT检测 (隐藏兼容)
             self.ec_ocpt_enable.setChecked(ec.ocpt_enabled)
             self.ec_ocpt_threshold.setValue(round(ec.ocpt_threshold_uA, 2))
-            
             action_idx = {OCPTAction.LOG: 0, OCPTAction.PAUSE: 1, OCPTAction.ABORT: 2}.get(ec.ocpt_action, 0)
             self.ec_ocpt_action.setCurrentIndex(action_idx)
     
@@ -905,6 +1136,12 @@ class ProgramEditorDialog(QDialog):
             params.target_concentrations = target_concentrations
             params.solvent_flags = solvent_flags
             
+            # 保存注液顺序编号 (允许相同编号 = 同时注液)
+            order_numbers = {}
+            for order_num, sol_name in order_data:
+                order_numbers[sol_name] = order_num
+            params.injection_order_numbers = order_numbers
+            
             # 按注液顺序排序
             order_data.sort(key=lambda x: x[0])
             params.injection_order = [x[1] for x in order_data]
@@ -925,19 +1162,69 @@ class ProgramEditorDialog(QDialog):
             if not step.ec_settings:
                 step.ec_settings = ECSettings()
             ec = step.ec_settings
-            ec.technique = self.ec_tech_combo.currentData()
-            ec.e0 = round(self.ec_e0_spin.value(), 2)
-            ec.eh = round(self.ec_eh_spin.value(), 2)
-            ec.el = round(self.ec_el_spin.value(), 2)
-            ec.ef = round(self.ec_ef_spin.value(), 2)
-            ec.scan_rate = self.ec_scanrate_spin.value()
-            ec.seg_num = self.ec_segments_spin.value()
-            ec.quiet_time_s = round(self.ec_quiettime_spin.value(), 2)
-            ec.run_time_s = round(self.ec_runtime_spin.value(), 2)
-            ec.autosensitivity = self.ec_autosens_check.isChecked()
+            tech = self.ec_tech_combo.currentData()
+            ec.technique = tech
+            ec.autosensitivity = False
+            
+            if tech == ECTechnique.CV:
+                ec.e0 = round(self.ec_e0_spin.value(), 3)
+                ec.eh = round(self.ec_eh_spin.value(), 3)
+                ec.el = round(self.ec_el_spin.value(), 3)
+                ec.ef = round(self.ec_ef_spin.value(), 3)
+                ec.scan_rate = self.ec_scanrate_spin.value()
+                ec.seg_num = self.ec_segments_spin.value()
+                ec.quiet_time_s = round(self.ec_quiettime_spin.value(), 2)
+                ec.sample_interval_ms = int(self.ec_interval_spin.value())
+                try:
+                    ec.sensitivity = float(self.ec_sensitivity_edit.text())
+                except ValueError:
+                    ec.sensitivity = 0.1
+                    
+            elif tech == ECTechnique.LSV:
+                ec.e0 = round(self._lsv_e0.value(), 3)
+                ec.ef = round(self._lsv_ef.value(), 3)
+                ec.scan_rate = self._lsv_scanrate.value()
+                ec.quiet_time_s = round(self._lsv_quiettime.value(), 2)
+                ec.sample_interval_ms = int(self._lsv_interval.value())
+                try:
+                    ec.sensitivity = float(self._lsv_sensitivity.text())
+                except ValueError:
+                    ec.sensitivity = 0.1
+                    
+            elif tech == ECTechnique.I_T:
+                ec.e0 = round(self._it_e0.value(), 3)
+                ec.run_time_s = round(self.ec_runtime_spin.value(), 2)
+                ec.sample_interval_ms = int(self._it_interval.value())
+                ec.quiet_time_s = round(self._it_quiettime.value(), 2)
+                try:
+                    ec.sensitivity = float(self._it_sensitivity.text())
+                except ValueError:
+                    ec.sensitivity = 1e-4
+                    
+            elif tech == ECTechnique.EIS:
+                ec.e0 = round(self._eis_e0.value(), 3)
+                ec.freq_high = self.ec_freqhigh_spin.value()
+                ec.freq_low = self.ec_freqlow_spin.value()
+                ec.amplitude = self.ec_amplitude_spin.value()
+                ec.bias_mode = self.ec_bias_combo.currentData() or 0
+                ec.quiet_time_s = round(self._eis_quiettime.value(), 2)
+                try:
+                    ec.sensitivity = float(self._eis_sensitivity.text())
+                except ValueError:
+                    ec.sensitivity = 1e-3
+                    
+            elif tech == ECTechnique.OCPT:
+                ec.run_time_s = round(self._ocpt_runtime.value(), 2)
+                ec.sample_interval_ms = int(self._ocpt_interval.value())
+                ec.eh = round(self._ocpt_eh.value(), 3)
+                ec.el = round(self._ocpt_el.value(), 3)
+            
+            # OCPT 检测 (兼容)
             ec.ocpt_enabled = self.ec_ocpt_enable.isChecked()
             ec.ocpt_threshold_uA = round(self.ec_ocpt_threshold.value(), 2)
             ec.ocpt_action = self.ec_ocpt_action.currentData()
+            # Dummy Cell
+            ec.use_dummy_cell = self.ec_dummy_cell.isChecked()
             
         elif step.step_type == ProgramStepType.BLANK:
             step.duration_s = round(self.bl_duration_spin.value(), 2)
@@ -954,7 +1241,7 @@ class ProgramEditorDialog(QDialog):
             step.flush_cycles = self.ev_cycles_spin.value()
     
     def _on_type_button_clicked(self, button: QPushButton):
-        """操作类型按钮点击处理"""
+        """操作类型按钮点击处理 - 仅切换参数面板"""
         # 更新所有按钮样式
         for btn in self.type_buttons.values():
             if btn == button:
@@ -973,49 +1260,8 @@ class ProgramEditorDialog(QDialog):
         # 根据操作类型自动设置对应的泵地址和方向
         self._apply_pump_defaults_for_type(step_type)
         
-        # 只有在有选中步骤时才更新步骤类型
-        if self.current_step and self.current_step_index >= 0:
-            # 先保存当前步骤的旧参数
-            self._save_current_step()
-            
-            # 更新步骤类型
-            self.current_step.step_type = step_type
-            
-            # 根据新类型设置默认泵参数
-            if step_type == ProgramStepType.TRANSFER:
-                pump_info = self._get_pump_info_for_type("Transfer")
-                self.current_step.pump_address = pump_info["address"]
-                self.current_step.pump_direction = pump_info["direction"]
-                self.current_step.pump_rpm = pump_info["rpm"]
-                if not hasattr(self.current_step, 'transfer_duration') or not self.current_step.transfer_duration:
-                    self.current_step.transfer_duration = 10.0
-            elif step_type == ProgramStepType.FLUSH:
-                pump_info = self._get_pump_info_for_type("Inlet")
-                self.current_step.pump_address = pump_info["address"]
-                self.current_step.pump_direction = pump_info["direction"]
-                self.current_step.flush_rpm = pump_info["rpm"]
-                if not hasattr(self.current_step, 'flush_cycle_duration_s') or not self.current_step.flush_cycle_duration_s:
-                    self.current_step.flush_cycle_duration_s = 30.0
-                if not hasattr(self.current_step, 'flush_cycles') or not self.current_step.flush_cycles:
-                    self.current_step.flush_cycles = 1
-            elif step_type == ProgramStepType.EVACUATE:
-                pump_info = self._get_pump_info_for_type("Outlet")
-                self.current_step.pump_address = pump_info["address"]
-                self.current_step.pump_direction = pump_info["direction"]
-                self.current_step.pump_rpm = pump_info["rpm"]
-                if not hasattr(self.current_step, 'transfer_duration') or not self.current_step.transfer_duration:
-                    self.current_step.transfer_duration = 30.0
-                if not hasattr(self.current_step, 'flush_cycles') or not self.current_step.flush_cycles:
-                    self.current_step.flush_cycles = 1
-            elif step_type == ProgramStepType.BLANK:
-                if not hasattr(self.current_step, 'duration_s') or not self.current_step.duration_s:
-                    self.current_step.duration_s = 5.0
-            
-            # 重新加载UI以反映新参数
-            self._load_step_to_ui()
-            self._refresh_step_list()
-            # 保持选中状态
-            self.step_list.setCurrentRow(self.current_step_index)
+        # 清除步骤列表选中状态（表示当前在配置新步骤）
+        self.step_list.clearSelection()
         
         # 如果切换到配液，刷新溶液配方
         if panel_index == 1:
@@ -1110,10 +1356,11 @@ class ProgramEditorDialog(QDialog):
         return ProgramStepType.TRANSFER  # 默认
     
     def _on_add_step(self):
-        """添加步骤 - 使用当前选中的类型"""
-        # 先保存当前步骤
-        self._save_current_step()
+        """添加步骤 - 从右侧面板当前配置创建新步骤
         
+        工作流程：用户先在右侧配置参数，然后点击"添加"将步骤
+        加入列表。步骤一旦添加到列表即为最终状态，不可修改。
+        """
         # 获取当前选中的类型
         selected_type = self._get_selected_step_type()
         
@@ -1143,18 +1390,23 @@ class ProgramEditorDialog(QDialog):
             new_step.pump_rpm = pump_info["rpm"]
             new_step.transfer_duration = 30.0
             new_step.flush_cycles = 1
+        elif selected_type == ProgramStepType.ECHEM:
+            new_step.ec_settings = ECSettings()
         elif selected_type == ProgramStepType.BLANK:
             new_step.duration_s = 5.0
         
+        # 临时设置 current_step，然后从 UI 读取参数填充到 new_step
+        self.current_step = new_step
+        self._save_current_step()
+        
+        # 添加到步骤列表
         self.experiment.steps.append(new_step)
         self._refresh_step_list()
         
-        # 选中新添加的步骤
-        new_index = len(self.experiment.steps) - 1
-        self.step_list.setCurrentRow(new_index)
-        self.current_step = new_step
-        self.current_step_index = new_index
-        self._load_step_to_ui()
+        # 清除 current_step（步骤已最终确定）
+        self.current_step = None
+        self.current_step_index = -1
+        self.step_list.clearSelection()
     
     def _on_delete_step(self):
         """删除步骤"""
@@ -1184,10 +1436,7 @@ class ProgramEditorDialog(QDialog):
             self.step_list.setCurrentRow(index + 1)
     
     def _on_save_program(self):
-        """保存程序"""
-        # 保存当前正在编辑的步骤
-        self._save_current_step()
-        
+        """保存程序 - 所有步骤在添加时已最终确定"""
         # 收集所有验证错误
         errors = []
         warnings = []

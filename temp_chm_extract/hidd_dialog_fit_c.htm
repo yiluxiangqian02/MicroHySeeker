@@ -1,0 +1,399 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>HIDD_DIALOG_FIT_C</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=8" />
+<meta name="generator" content="HelpSmith 6.1.3 (Build 16.428)" />
+<style type="text/css" media="screen">
+html {
+  height: 100%;
+}
+body {
+  background-color: White;
+  margin: 0 0 0 0;
+}
+</style>
+<link type="text/css" href="styles.css" rel="stylesheet" />
+</head>
+<body>
+<div class="block9" align="left">
+  <table class="tbl2">
+    <tr class="row0">
+      <td class="cell315">
+        <p class="ps18"><span class="ts41">Parameter</span></p>
+      </td>
+      <td class="cell316">
+        <p class="ps18"><span class="ts41">Range</span></p>
+      </td>
+      <td class="cell211">
+        <p class="ps18"><span class="ts41">Description</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell315">
+        <p class="ps18"><span class="ts36">Name</span></p>
+      </td>
+      <td class="cell316">
+        <p class="ps18"><span class="ts35">0&nbsp;&nbsp; -&nbsp;&nbsp; 9 characters</span></p>
+      </td>
+      <td class="cell211">
+        <p class="ps18"><span class="ts35">Display name</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell315">
+        <p class="ps18"><span class="ts36">Value (Farad)</span></p>
+      </td>
+      <td class="cell316">
+        <p class="ps18"><span class="ts35">1e-12&nbsp;&nbsp; -&nbsp;&nbsp; 1</span></p>
+      </td>
+      <td class="cell211">
+        <p class="ps18"><span class="ts35">Capacitance in Farads</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell315">
+        <p class="ps18"><span class="ts36">Fix</span></p>
+      </td>
+      <td class="cell316">
+        <p class="ps18"><span class="ts35">Check or uncheck</span></p>
+      </td>
+      <td class="cell211">
+        <p class="ps18"><span class="ts35">If checked, value (brown) will not be varied during fitting</span></p>
+      </td>
+    </tr>
+  </table>
+</div>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts41">Circuit Element Notation and Ranges</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<div align="left">
+  <table class="tbl2">
+    <tr class="row0">
+      <td class="cell303">
+        <p class="ps18"><span class="ts36">Circuit Element</span></p>
+      </td>
+      <td class="cell304">
+        <p class="ps18"><span class="ts36">Abbrev.</span></p>
+      </td>
+      <td class="cell305">
+        <p class="ps18"><span class="ts36">Units</span></p>
+      </td>
+      <td class="cell75">
+        <p class="ps18"><span class="ts36">Range</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell303">
+        <p class="ps18"><span class="ts35">Resistor</span></p>
+      </td>
+      <td class="cell304">
+        <p class="ps18"><span class="ts35">R</span></p>
+      </td>
+      <td class="cell305">
+        <p class="ps18"><span class="ts35">Ohm</span></p>
+      </td>
+      <td class="cell75">
+        <p class="ps18"><span class="ts35">0.001 to 1e12</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell303">
+        <p class="ps18"><span class="ts35">Capacitor</span></p>
+      </td>
+      <td class="cell304">
+        <p class="ps18"><span class="ts35">C</span></p>
+      </td>
+      <td class="cell305">
+        <p class="ps18"><span class="ts35">Farad</span></p>
+      </td>
+      <td class="cell75">
+        <p class="ps18"><span class="ts35">1e-12 to 1</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell303">
+        <p class="ps18"><span class="ts35">Inductor</span></p>
+      </td>
+      <td class="cell304">
+        <p class="ps18"><span class="ts35">L</span></p>
+      </td>
+      <td class="cell305">
+        <p class="ps18"><span class="ts35">Henry</span></p>
+      </td>
+      <td class="cell75">
+        <p class="ps18"><span class="ts35">1e-12 to 1</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell303">
+        <p class="ps18"><span class="ts35">Warburg Impedance</span></p>
+      </td>
+      <td class="cell304">
+        <p class="ps18"><span class="ts35">W</span></p>
+      </td>
+      <td class="cell305">
+        <p class="ps41"><span class="ts40">Siemens sec</span><span class="ts46">1/2</span></p>
+      </td>
+      <td class="cell75">
+        <p class="ps18"><span class="ts35">1e-6 to 1</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell303">
+        <p class="ps18"><span class="ts35">Constant Phase</span></p>
+      </td>
+      <td class="cell304">
+        <p class="ps18"><span class="ts35">Q</span></p>
+      </td>
+      <td class="cell305">
+        <p class="ps41"><span class="ts40">Siemens sec</span><span class="ts46">n</span></p>
+      </td>
+      <td class="cell75">
+        <p class="ps18"><span class="ts35">1e-12 to 1000</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell303">
+        <p class="ps18"><span class="ts35">Cole-Cole</span></p>
+      </td>
+      <td class="cell304">
+        <p class="ps18"><span class="ts35">CC</span></p>
+      </td>
+      <td class="cell305">
+        <p class="ps18"><span class="ts35">Ohm</span></p>
+      </td>
+      <td class="cell75">
+        <p class="ps18"><span class="ts35">0.001 to 1e12</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell303">
+        <p class="ps18"><span class="ts35">Cole-Davidson</span></p>
+      </td>
+      <td class="cell304">
+        <p class="ps18"><span class="ts35">CD</span></p>
+      </td>
+      <td class="cell305">
+        <p class="ps18"><span class="ts35">Ohm</span></p>
+      </td>
+      <td class="cell75">
+        <p class="ps18"><span class="ts35">0.001 to 1e12</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell303">
+        <p class="ps18"><span class="ts35">Finite Layer Diffusion</span></p>
+      </td>
+      <td class="cell304">
+        <p class="ps18"><span class="ts35">FD</span></p>
+      </td>
+      <td class="cell305">
+        <p class="ps41"><span class="ts40">Siemens sec</span><span class="ts46">1/2</span></p>
+      </td>
+      <td class="cell75">
+        <p class="ps41"><span class="ts40">Y</span><span class="ts46">o</span><span class="ts40">&nbsp;= 1e-12 to 1e12</span></p>
+        <p class="ps18"><span class="ts35">d/√D = 1e-6 to 1000</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell303">
+        <p class="ps18"><span class="ts35">Open Finite Layer Diffusion</span></p>
+      </td>
+      <td class="cell304">
+        <p class="ps18"><span class="ts35">OFD</span></p>
+      </td>
+      <td class="cell305">
+        <p class="ps41"><span class="ts40">Siemens sec</span><span class="ts46">1/2</span></p>
+      </td>
+      <td class="cell75">
+        <p class="ps41"><span class="ts40">Y</span><span class="ts46">o</span><span class="ts40">&nbsp;= 1e-12 to 1e12</span></p>
+        <p class="ps18"><span class="ts35">d/√D = 1e-6 to 1000</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell303">
+        <p class="ps18"><span class="ts35">Gerischer Impedance</span></p>
+      </td>
+      <td class="cell304">
+        <p class="ps18"><span class="ts35">GI</span></p>
+      </td>
+      <td class="cell305">
+        <p class="ps41"><span class="ts40">Siemens sec</span><span class="ts46">1/2</span></p>
+      </td>
+      <td class="cell75">
+        <p class="ps41"><span class="ts40">Y</span><span class="ts46">o</span><span class="ts40">&nbsp;= 1e-12 to 1e12</span></p>
+        <p class="ps18"><span class="ts35">k = 1e-12 to 1e12</span></p>
+      </td>
+    </tr>
+  </table>
+</div>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts41">Circuit Element Properties</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<div align="left">
+  <table class="tbl2">
+    <tr class="row0">
+      <td class="cell281">
+        <p class="ps18"><span class="ts36">Element</span></p>
+      </td>
+      <td class="cell282">
+        <p class="ps18"><span class="ts36">Impedance</span></p>
+      </td>
+      <td class="cell283">
+        <p class="ps18"><span class="ts36">Conductance</span></p>
+      </td>
+      <td class="cell284">
+        <p class="ps18"><span class="ts36">Phase</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell281">
+        <p class="ps18"><span class="ts35">R (resistor)</span></p>
+      </td>
+      <td class="cell282">
+        <p class="ps41"><span class="ts40">Z</span><span class="ts46">R</span><span class="ts40">&nbsp;= R</span></p>
+      </td>
+      <td class="cell283">
+        <p class="ps41"><span class="ts40">Y</span><span class="ts46">R</span><span class="ts40">&nbsp;= 1/R</span></p>
+      </td>
+      <td class="cell284">
+        <p class="ps18"><span class="ts62">φ</span><span class="ts35">&nbsp;= 0 (frequency-independent)</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell281">
+        <p class="ps18"><span class="ts35">C (capacitor)</span></p>
+      </td>
+      <td class="cell282">
+        <p class="ps41"><span class="ts40">Z</span><span class="ts46">C</span><span class="ts40">&nbsp;= -j/</span><span class="ts47">ω</span><span class="ts40">C</span></p>
+      </td>
+      <td class="cell283">
+        <p class="ps41"><span class="ts40">Y</span><span class="ts46">C</span><span class="ts40">&nbsp;= j</span><span class="ts47">ω</span><span class="ts40">C</span></p>
+      </td>
+      <td class="cell284">
+        <p class="ps18"><span class="ts62">φ</span><span class="ts35">&nbsp;= </span><span class="ts62">π</span><span class="ts35">/2</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell281">
+        <p class="ps18"><span class="ts35">L (inductor)</span></p>
+      </td>
+      <td class="cell282">
+        <p class="ps41"><span class="ts40">Z</span><span class="ts46">L</span><span class="ts40">&nbsp;= j</span><span class="ts47">ω</span><span class="ts40">L</span></p>
+      </td>
+      <td class="cell283">
+        <p class="ps41"><span class="ts40">Y</span><span class="ts46">L</span><span class="ts40">&nbsp;= -j/</span><span class="ts47">ω</span><span class="ts40">L</span></p>
+      </td>
+      <td class="cell284">
+        <p class="ps18"><span class="ts62">φ</span><span class="ts35">&nbsp;= -</span><span class="ts62">π</span><span class="ts35">/2</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell281">
+        <p class="ps18"><span class="ts35">W (Warburg)</span></p>
+      </td>
+      <td class="cell282">
+        <p class="ps41"><span class="ts40">Z</span><span class="ts46">W</span><span class="ts40">&nbsp;= (j</span><span class="ts47">ω</span><span class="ts40">)</span><span class="ts46">-1/2</span><span class="ts40">/Y</span><span class="ts46">o</span></p>
+      </td>
+      <td class="cell283">
+        <p class="ps41"><span class="ts40">Y</span><span class="ts46">W</span><span class="ts40">&nbsp;= (j</span><span class="ts47">ω</span><span class="ts40">)</span><span class="ts46">1/2 </span><span class="ts40">Y</span><span class="ts46">o</span></p>
+      </td>
+      <td class="cell284">
+        <p class="ps18"><span class="ts62">φ</span><span class="ts35">&nbsp;= </span><span class="ts62">π</span><span class="ts35">/4</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell281">
+        <p class="ps18"><span class="ts35">Q (phase)</span></p>
+      </td>
+      <td class="cell282">
+        <p class="ps41"><span class="ts40">Z</span><span class="ts46">Q</span><span class="ts40">&nbsp;= (j</span><span class="ts47">ω</span><span class="ts40">)</span><span class="ts46">-n</span><span class="ts40">/Y</span><span class="ts46">o</span></p>
+      </td>
+      <td class="cell283">
+        <p class="ps41"><span class="ts40">Y</span><span class="ts46">Q</span><span class="ts40">&nbsp;= (j</span><span class="ts47">ω</span><span class="ts40">)</span><span class="ts46">n </span><span class="ts40">Y</span><span class="ts46">o</span></p>
+      </td>
+      <td class="cell284">
+        <p class="ps18"><span class="ts62">φ</span><span class="ts35">&nbsp;= n</span><span class="ts62">π</span><span class="ts35">/2, 0 &lt; n &lt; 1</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell281">
+        <p class="ps18"><span class="ts35">CC (Cole-Cole)</span></p>
+      </td>
+      <td class="cell282">
+        <p class="ps41"><span class="ts40">Z</span><span class="ts46">CC</span><span class="ts40">&nbsp;= R / [1+(j</span><span class="ts47">ωτ</span><span class="ts40">)</span><span class="ts64">α</span><span class="ts40">]</span></p>
+      </td>
+      <td class="cell283">
+        <p class="ps41"><span class="ts40">Y</span><span class="ts46">CC</span><span class="ts40">&nbsp;= [1+(j</span><span class="ts47">ωτ</span><span class="ts40">)</span><span class="ts64">α</span><span class="ts40">] / R</span></p>
+      </td>
+      <td class="cell284">
+        <p class="ps41"><span class="ts40">tan </span><span class="ts47">φ</span><span class="ts40">&nbsp;= (</span><span class="ts47">ωτ</span><span class="ts40">)</span><span class="ts64">α</span><span class="ts40">sin(</span><span class="ts47">απ</span><span class="ts40">/2) / [1+(</span><span class="ts47">ωτ</span><span class="ts40">)</span><span class="ts64">α</span><span class="ts40">cos(</span><span class="ts47">απ</span><span class="ts40">/2)]</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell281">
+        <p class="ps18"><span class="ts35">CD (Cole-Davidson)</span></p>
+      </td>
+      <td class="cell282">
+        <p class="ps41"><span class="ts40">Z</span><span class="ts46">CD</span><span class="ts40">&nbsp;= R / (1+j</span><span class="ts47">ωτ</span><span class="ts40">)</span><span class="ts64">α</span></p>
+      </td>
+      <td class="cell283">
+        <p class="ps41"><span class="ts40">Y</span><span class="ts46">CD</span><span class="ts40">&nbsp;= (1+j</span><span class="ts47">ωτ</span><span class="ts40">)</span><span class="ts64">α </span><span class="ts40">/ R</span></p>
+      </td>
+      <td class="cell284">
+        <p class="ps18"><span class="ts35">tan (</span><span class="ts62">φ</span><span class="ts35">/</span><span class="ts62">α</span><span class="ts35">) = </span><span class="ts62">ωτ</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell281">
+        <p class="ps18"><span class="ts35">FD (Finite Layer Diffusion)</span></p>
+      </td>
+      <td class="cell282">
+        <p class="ps41"><span class="ts40">Z</span><span class="ts46">FD</span><span class="ts40">&nbsp;= 1/Y</span><span class="ts46">FD</span></p>
+      </td>
+      <td class="cell283">
+        <p class="ps41"><span class="ts40">Y</span><span class="ts46">FD</span><span class="ts40">&nbsp;= Y</span><span class="ts46">o</span><span class="ts40">&nbsp;sqrt(j</span><span class="ts47">ω</span><span class="ts40">) </span></p>
+        <p class="ps18"><span class="ts35">tanh[</span><span class="ts62">δ</span><span class="ts35">&nbsp;sqrt(j</span><span class="ts62">ω</span><span class="ts35">/D)]</span></p>
+      </td>
+      <td class="cell284">
+        <p class="ps41"><span class="ts40">tan (</span><span class="ts47">φ</span><span class="ts40">) = arg (Y</span><span class="ts46">FD</span><span class="ts40">)</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell281">
+        <p class="ps18"><span class="ts35">OFD (Open Finite Layer Diffusion)</span></p>
+      </td>
+      <td class="cell282">
+        <p class="ps41"><span class="ts40">Z</span><span class="ts46">OFD</span><span class="ts40">&nbsp;= 1/Y</span><span class="ts46">OFD</span></p>
+      </td>
+      <td class="cell283">
+        <p class="ps41"><span class="ts40">Y</span><span class="ts46">OFD</span><span class="ts40">&nbsp;= Y</span><span class="ts46">o</span><span class="ts40">&nbsp;sqrt(j</span><span class="ts47">ω</span><span class="ts40">) </span></p>
+        <p class="ps18"><span class="ts35">coth[</span><span class="ts62">δ</span><span class="ts35">&nbsp;sqrt(j</span><span class="ts62">ω</span><span class="ts35">/D)]</span></p>
+      </td>
+      <td class="cell284">
+        <p class="ps41"><span class="ts40">tan (</span><span class="ts47">φ</span><span class="ts40">) = arg (Y</span><span class="ts46">OFD</span><span class="ts40">)</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell281">
+        <p class="ps18"><span class="ts35">GI (Gerischer Impedance)</span></p>
+      </td>
+      <td class="cell282">
+        <p class="ps41"><span class="ts40">Z</span><span class="ts46">GI</span><span class="ts40">&nbsp;= 1/Y</span><span class="ts46">GI</span></p>
+      </td>
+      <td class="cell283">
+        <p class="ps41"><span class="ts40">Y</span><span class="ts46">GI</span><span class="ts40">&nbsp;= Y</span><span class="ts46">o</span><span class="ts40">&nbsp;sqrt(k + j</span><span class="ts47">ω</span><span class="ts40">)</span></p>
+      </td>
+      <td class="cell284">
+        <p class="ps41"><span class="ts40">tan (</span><span class="ts47">φ</span><span class="ts40">) = arg (Y</span><span class="ts46">GI</span><span class="ts40">)</span></p>
+      </td>
+    </tr>
+  </table>
+</div>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps22"><span class="ts35">For more information, please refer to the </span><a href="hid_sim_mechanism_imp.htm" class="hs0">impedance simulation/fitting main page</a><span class="ts35">.</span></p>
+
+</body>
+</html>

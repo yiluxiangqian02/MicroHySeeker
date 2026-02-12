@@ -1,0 +1,69 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>CV Fitting command (Sim menu)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=8" />
+<meta name="generator" content="HelpSmith 6.1.3 (Build 16.428)" />
+<style type="text/css" media="screen">
+html {
+  height: 100%;
+}
+body {
+  background-color: White;
+  margin: 0 0 0 0;
+}
+</style>
+<link type="text/css" href="styles.css" rel="stylesheet" />
+</head>
+<body>
+<div align="left">
+  <table class="tbl0">
+    <tr class="row0">
+      <td class="cell0">
+        <p class="ps0"><span class="ts0">CV Fitting command (Sim menu)</span></p>
+      </td>
+      <td class="cell1">
+        <p class="ps1"><a href="hid_sim_simulate.htm"><img width="33" height="36" border="0" src="Images/btn_prev_n.gif" /></a><a href="menu_sim.htm"><img width="22" height="36" border="0" src="Images/btn_home_n.gif" /></a><a href="menu_view.htm"><img width="36" height="36" border="0" src="Images/btn_next_n.gif" /></a></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell2" colspan="2">
+        <p>&nbsp;</p>
+      </td>
+    </tr>
+  </table>
+</div>
+<p class="ps2"><span class="ts35">Use this command to fit parameters to existing CV data, leveraging our built-in </span><a href="hid_sim_simulate.htm" class="hs0">CV simulator</a><span class="ts35">&nbsp;to evaluate the fit (select models only). </span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">Before you run the fitting program, make sure the instrument is correctly connected to your PC, e.g. by running the </span><a href="hid_setup_test.htm" class="hs0">Self Test</a><span class="ts35">&nbsp;command. The program will verify that your instrument model is supported. This check only needs to be performed once after the program is started. After the first fit, you do not need to have the instrument connected anymore.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">First open the CV data file you want to fit. This can be either experimental or simulated data. Using the CV Fitting command will then open the </span><a href="hidd_dialog_sim.htm" class="hs0">CV reaction mechanism dialog box</a><span class="ts35">&nbsp;discussed in a previous section. A judicious choice of mechanism is critical here--the numerical fitting algorithm could find an excellent fit to an incorrect mechanism, yielding unmeaningful and misleading results. The system must be specified as diffusive or a surface reaction, but kinetic parameters need not be entered. </span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">Click OK in the Digital Simulation dialog box to bring up the </span><a href="hidd_dialog_sim_cvfit_k.htm" class="hs0">CV Fitting Parameter dialog box</a><span class="ts35">.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span><img width="905" height="366" border="0" src="Images/Image(113).png" /></p>
+<p class="ps17"><span class="ts35">This dialog box allows you to specify parameters for the CV Fitting program.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">The previously selected reaction mechanism and its associated potentials and rate constants will be shown. You do not need to enter kinetic parameters. A well chosen initial value may reduce the time needed for fitting, although this is not required. You can also assign and fix any kinetic parameters whose correct values are known beforehand. Checking Fix for any variable will prevent its value from being changed during the fitting process, reducing the total number of unknown variables and thus the time needed for fitting.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">The initial values for the fitting potential range is determined automatically from the peak potentials, but the positive and negative limits can also be specified manually in the Fit_eh(v) and Fit_el(v) fields, respectively. </span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">The fitting procedure will generate a fitted curve over the entire potential range, but the goodness of fit will only be measured on the Fitting Potential Range subinterval. This is because toward more extreme potentials there tend to be significant contributions from residual or background current, which are insensitive to changes in the kinetic parameters and difficult to fit accurately. The potential subinterval near the peak currents tend to be more sensitive to the kinetic parameters.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">Since charging current can also make a significant contribution to CV data, the double layer capacitance is also available as a variable or constant.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">Our algorithm minimizes the absolute error, defined as</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps30"><span class="ts40">sqrt [ </span><span class="ts47">Σ</span><span class="ts46">i</span><span class="ts40">&nbsp;(F</span><span class="ts46">i</span><span class="ts40">&nbsp;- E</span><span class="ts46">i</span><span class="ts40">)^2 ] / N,</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps30"><span class="ts40">where the F</span><span class="ts46">i</span><span class="ts40">&nbsp;are fitted data points, E</span><span class="ts46">i</span><span class="ts40">&nbsp;are your input data points, and N is the total number of data points. Absolute instead of relative error is used to avoid overweighting points for which the current nearly vanishes.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">The Skip parameter allows you to to omit data points from the fitting procedure, which can greatly reduce the fitting time. The Error parameter is the desired error threshold, below which the fitting procedure will end.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">Click OK to start the fitting procedure.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">The fitting potential range will be bracketed graphically, with the fitted data plotted in green and your input data plotted in red. Fitting error and the time elapsed are also displayed in the top left. The fitting process will end when the specified Error is reached; alternatively, it can be terminated at any time by clicking the </span><a href="hid_control_stoprun.htm" class="hs0">Stop</a><span class="ts35">&nbsp;button or by pressing the Esc key. The resulting fitted kinetic parameters will be then be displayed.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+
+</body>
+</html>

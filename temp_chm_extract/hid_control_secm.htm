@@ -1,0 +1,99 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>SECM Probe command (Control menu)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=8" />
+<meta name="generator" content="HelpSmith 6.1.3 (Build 16.428)" />
+<style type="text/css" media="screen">
+html {
+  height: 100%;
+}
+body {
+  background-color: White;
+  margin: 0 0 0 0;
+}
+</style>
+<link type="text/css" href="styles.css" rel="stylesheet" />
+</head>
+<body>
+<div align="left">
+  <table class="tbl0">
+    <tr class="row0">
+      <td class="cell0">
+        <p class="ps0"><span class="ts0">SECM Probe command (Control menu)</span></p>
+      </td>
+      <td class="cell1">
+        <p class="ps1"><a href="hid_control_stripping.htm"><img width="33" height="36" border="0" src="Images/btn_prev_n.gif" /></a><a href="menu_control.htm"><img width="22" height="36" border="0" src="Images/btn_home_n.gif" /></a><a href="menu_graphics.htm"><img width="36" height="36" border="0" src="Images/btn_next_n.gif" /></a></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell2" colspan="2">
+        <p>&nbsp;</p>
+      </td>
+    </tr>
+  </table>
+</div>
+<p class="ps2"><span class="ts35">This command opens the </span><a href="hidd_dialog_probe.htm" class="hs0">SECM Probe Control dialog box</a><span class="ts35">.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps22"><span class="ts35">Use this command to control the SECM probe position. You can calibrate the probe movement distance or move the probe directly. Current and distances in absolute and relative coordinates will be displayed.</span></p>
+<p class="ps22"><span class="ts37">&nbsp;</span></p>
+<p class="ps22"><span class="ts35">The </span><a href="hid_control_secm.htm" class="hs0">SECM Probe</a><span class="ts35">&nbsp;command presents this dialog box.</span></p>
+<p class="ps25"><img width="1200" height="611" border="0" src="Images/Image(77).png" /></p>
+<p class="ps17"><span class="ts36">Stage Reset</span></p>
+<p class="ps17"><span class="ts35">Execute this command when the instrument is first used or if the positions of the stepper stage are lost. Before doing so, ensure that no tip is present in the tip holder; otherwise the motor move will cause the tip to be broken. </span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">Clicking on the Reset button will move the stage to its home position, which is stored in memory, and then move it to the center position. After clicking on the Reset button, please wait for the operation to be completed.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">The stage position will be remembered even after the motor controller is powered off.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Stepper Stage Moving Speed</span></p>
+<p class="ps17"><span class="ts35">When this value is below 32 um/sec, setting resolution will be 1 nm. As moving speed increases, setting resolution and accuracy will worsen, i.e., there is a tradeoff between speed and setting resolution. When the Max Speed box is checked, the motor will move at maximum rate with relatively low setting resolution. Please keep in mind that the stage may vibrate slightly when the moving speed is high. It is recommended to raise the tip at fast speeds to prevent the tip from touching the sample surface due to stage vibration.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Stepper Stage Position Set and Relocate</span></p>
+<p class="ps17"><span class="ts35">Up to four positions can be defined by the user for quickly changing the stage position. Click the corresponding Set button to memorize the current position as one of these points; click the Goto button to move the stepper stage to the preset point.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Stepper Stage Position</span></p>
+<p class="ps17"><span class="ts35">The stepper motor position is continuously updated while this dialog box is open. Click the Zero button to re-zero the relative position of the corresponding axis at any time. Click the Move button of the corresponding axis to move the stepper motor to the specified position in absolute or relative coordinates. If the requested move hits the zero or full range limit, a warning will be issued.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">You can also use the scroll bar to move the stepper motor. Every click on the left or right arrow on the scroll bar will move 1/100 of the full scale. If you click and hold down the left or right arrow, after finishing the last move, the system will move in the requested direction until you release the mouse button. This is useful for moving the stage while watching the position.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Scan Piezo</span></p>
+<p class="ps17"><span class="ts1">If an SECM with piezo not used for long time, the pieze will be depolarized. You need to be careful not to apply high voltage immediately, it will cause piezo to damage. You will need to slowly scan voltage from low to high and then back and forth certain times, before you can put it in use. There is a Scan Piezo command in Probe Control dialog box for this purpose.</span></p>
+<p class="ps17"><span class="ts1">Please check the resistance of the round connector of the piezo:</span></p>
+<p class="ps17"><span class="ts1">Pin 4 - Pin 1</span></p>
+<p class="ps17"><span class="ts1">Pin 4 - Pin 2</span></p>
+<p class="ps17"><span class="ts1">Pin 4 - Pin 3</span></p>
+<p class="ps17"><span class="ts1">If the resistance is infinitive, the piezo may still be fine. If the resistance is low, it may be damaged.</span></p>
+<p>&nbsp;</p>
+<p class="ps17"><span class="ts36">Piezo Stage Calibration</span></p>
+<p class="ps17"><span class="ts35">The Piezo block used in the Model CHI920D needs to calibrate its motor before the first measurement. Calibration is performed using the stepper motor because its travel distance is known.</span></p>
+<p class="ps38"><span class="ts37">&nbsp;</span></p>
+<p class="ps38"><span class="ts1">Before calibration, place four plastic washers on top of four stainless steel columns and underneath</span><span class="ts1">&nbsp;</span><span class="ts1">the rectangular stainless steel plate of the cell/sample holder. Use four nylon screws to mount the</span><span class="ts1">&nbsp;</span><span class="ts1">rectangular plate to four stainless steel columns. This is because during calibration, a voltage will be</span><span class="ts1">&nbsp;</span><span class="ts1">applied to the metal plate (through counter and reference electrode clips). The rectangular plate must</span><span class="ts1">&nbsp;</span><span class="ts1">be totally isolated from the positioner base, which is grounded. Four plastic washers and four nylon</span><span class="ts1">&nbsp;</span><span class="ts1">screws are provided when the instrument is shipped. After the initial calibration, please save them for</span><span class="ts1">&nbsp;</span><span class="ts1">future use in case calibration is needed again.</span></p>
+<p class="ps38"><span class="ts2">&nbsp;</span></p>
+<p class="ps38"><span class="ts1">Insert the stainless steel pin with 10K ohm resistor (also shipped with the instrument) into the probe</span><span class="ts1">&nbsp;</span><span class="ts1">holder. Then position the metal pin so that it is close to the base metal plate of the cell/sample holder.</span><span class="ts1">&nbsp;</span><span class="ts1">Please see the figure below for an illustration of the pin position. The small circle indicates one of the</span><span class="ts1">&nbsp;</span><span class="ts1">small holes around the center round opening of the base metal plate. For X and Y calibration, the</span><span class="ts1">&nbsp;</span><span class="ts1">sharp pin end should be moved below the metal plate surface. For X calibration, the pin will move to</span><span class="ts1">&nbsp;</span><span class="ts1">the right and use the wall of the hole to make electrical contact. For Y calibration, the pin will move to</span><span class="ts1">&nbsp;</span><span class="ts1">the front and use the wall of the hole to make electrical contact. For Z calibration, the pin should be</span><span class="ts1">&nbsp;</span><span class="ts1">placed slightly above the base metal plate. The pin will move down and use the base metal plate to</span><span class="ts1">&nbsp;</span><span class="ts1">make electrical contact.</span></p>
+<p class="ps39"><span class="ts2">&nbsp;</span></p>
+<p class="ps40"><img width="707" height="317" border="0" src="Images/Image(161).png" /></p>
+<p class="ps17"><span class="ts3">Relative position of metal pin and base metal plate for piezo calibration.</span></p>
+<p class="ps17"><span class="ts3">&nbsp;</span></p>
+<p class="ps17"><span class="ts3">Connect the working electrode clip (green) to the resistor attached to the metal pin. Connect the counter (red) and reference (white) clips to the metal base. This configuration will allow current to flow when the pin contacts the base metal plate.</span></p>
+<p class="ps17"><span class="ts3">&nbsp;</span></p>
+<p class="ps17"><span class="ts3">During calibration, the motor will move in the negative direction first. The positive directions for X, Y, and Z are right, front, and down, respectively. The piezo is fully extended. The stepper motor then moves in the positive direction until the pin touches the base metal plate, allowing a current to flow. This stepper motor position is saved as point 1. The piezo is then fully retracted. The stepper motor moves further in the positive direction until the tip touches the base metal plate again. This stepper motor position is saved as point 2. The distance between point 1 and point 2 is the full scale distance the piezo can travel.</span></p>
+<p class="ps17"><span class="ts3">&nbsp;</span></p>
+<p class="ps17"><span class="ts3">Typically there might be a few percent deviation in calibration. It is recommend to calibrate several times to verify that the results are reasonably repeatable. Any observed error is probably due to variations in the metal contact position caused by the roughness of the base metal plate and the metal pin.</span></p>
+<p class="ps17"><span class="ts3">&nbsp;</span></p>
+<p class="ps17"><span class="ts3">Please save the metal pin, plastic washers, and nylon screws for future calibration use. You may want to check if the piezo behavior changes over time (say months or years later). </span></p>
+<p class="ps17"><span class="ts3">&nbsp;</span></p>
+<p class="ps5"><span class="ts2">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">Please consult your User Manual for more information.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Piezo Stage Position</span></p>
+<p class="ps17"><span class="ts35">The probe position is continuously updated while this dialog box is open. Click the Zero button to re-zero the relative position of the corresponding axis at any time. Click the Move button of the corresponding axis to move the piezo to the specified position in absolute or relative coordinates. If the requested move hits the zero or full range limit, a warning will be issued. The tip will stop at zero or full range.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">You can also use the scroll bar to move the piezo. Every click on the left or right arrow on the scroll bar will move 1/100 of the full scale.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Notice</span></p>
+<p class="ps17"><span class="ts35">Please note that some of the information in this section may not apply to older instrument models. Contact info@chinstruments.com for legacy documentation.</span></p>
+
+</body>
+</html>

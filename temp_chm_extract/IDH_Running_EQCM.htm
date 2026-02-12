@@ -1,0 +1,58 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>Running the EQCM</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=8" />
+<meta name="generator" content="HelpSmith 6.1.3 (Build 16.428)" />
+<style type="text/css" media="screen">
+html {
+  height: 100%;
+}
+body {
+  margin: 4.25pt 4.25pt 4.25pt 4.25pt;
+}
+</style>
+<link type="text/css" href="styles.css" rel="stylesheet" />
+</head>
+<body>
+<div align="left">
+  <table class="tbl1">
+    <tr class="row0">
+      <td class="cell0">
+        <p class="ps0"><span class="ts0">Running the EQCM</span></p>
+      </td>
+      <td class="cell1">
+        <p class="ps1"><a href="menu_setup.htm"><img width="33" height="36" border="0" src="Images/Image(1).gif" /></a><a href="menu_setup.htm"><img width="22" height="36" border="0" src="Images/Image(2).gif" /></a><a href="IDH_900D.htm"><img width="36" height="36" border="0" src="Images/Image(3).gif" /></a></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell2" colspan="2">
+        <p>&nbsp;</p>
+      </td>
+    </tr>
+  </table>
+</div>
+<p class="ps5"><span class="ts2">&nbsp;</span></p>
+<p class="ps5"><span class="ts3">The model 400B series EQCM contains a potentiostat/galvanostat (440B), an external box with oscillator circuitry, and the EQCM cell (see Figure 2.2). To perform EQCM experiments, check the &quot;QCM On&quot; box in the CV, LSV, CA, i-t, or CP parameter dialog box. You also need to connect the oscillator box to the Cell Control port on the rear panel of the instrument. Two contact pins from the oscillator box should be connected to the crystal holder of the EQCM cell. The green one is for the working electrode and should be connected to the left pin of the crystal working electrode.</span></p>
+<p class="ps5"><span class="ts3">&nbsp;</span></p>
+<p class="ps5"><span class="ts3">The EQCM cell consists of three round Teflon pieces. The total height is 37 mm with a diameter of 35 mm. The top piece is the cell top for holding the reference and counter electrodes. There are also two 2 mm holes for manual purging. The center piece is the cell body for the solution. The bottom piece is for mounting purposes. Four screws are used to tighten the bottom and center pieces together. To avoid damage to the screw threading, do not overtighten the screws. The quartz crystal is located between the center and bottom pieces. A seal is formed by the two O-rings that are pressed together by the four screws mentioned above. The diameter of the quartz crystal is 13.7 mm. The gold electrode diameter is 5.11 mm. </span></p>
+<p class="ps5"><span class="ts3">&nbsp;</span></p>
+<p class="ps5"><span class="ts3">Since the model 400C series uses time-resolved mode, the frequency difference between the working crystal (7.990 MHz - 7.955 MHz) and the reference crystal oscillations (8.000 MHz) is measured.</span></p>
+<p class="ps5"><span class="ts3">&nbsp;</span></p>
+<p class="ps5"><span class="ts3">QCM experiments rely on the calculation of mass change (dm) at the quartz crystal using the measured frequency change (df) as given by the Sauerbrey equation: </span></p>
+<p class="ps5"><span class="ts3">&nbsp;</span></p>
+<p class="ps5"><span class="ts1">df = -2f</span><sub><span class="ts1">0</span></sub><sup><span class="ts1">2</span></sup><span class="ts1">&nbsp;dm / [A sqrt(</span><span class="ts3">μ</span><span class="ts1">p)]</span></p>
+<p class="ps6"><span class="ts3">&nbsp;</span></p>
+<p class="ps5"><span class="ts1">where f</span><sub><span class="ts1">0</span></sub><span class="ts1">&nbsp;is the resonant frequency of the fundamental mode of the crystal, A is the area of the gold disk coated onto the crystal </span><span class="ts3">(0.205 cm2 for the included crystal)</span><span class="ts1">, </span><span class="ts3">p</span><span class="ts1">&nbsp;is the density of the crystal (= 2.684 g/cm</span><sup><span class="ts1">3</span></sup><span class="ts1">), and </span><span class="ts3">μ</span><span class="ts1">&nbsp;is the shear modulus of quartz (= 2.947 x 10</span><sup><span class="ts1">11</span></sup><span class="ts1">&nbsp;g/cm</span><sup><span class="ts4">.</span></sup><span class="ts1">s</span><sup><span class="ts1">2</span></sup><span class="ts1">). For an 8 MHz </span><span class="ts3">crystal, a 0.1 Hz change in frequency corresponds a mass change of 0.14 ng. </span></p>
+<p class="ps5"><span class="ts3">&nbsp;</span></p>
+<p class="ps5"><span class="ts3">When the cell is just connected, you will see significant frequency drift. This is normal. It usually takes hours to reach the thermal equilibrium. Drift can also occur as the room temperature changes. It is recommended to leave the oscillator box connected and keep the instrument powered on at all times. This will reduce the equilibration time when you change the crystal. Other factors that can cause drift and noise include vibration, contact and line frequency interference. You may want to place the EQCM cell on a stable surface to avoid vibration and in a Faraday cage to reduce both electrical noise and frequency noise due to environmental interference. It may also help to cover the holes on the cell top to prevent air flow.</span></p>
+<p class="ps5"><span class="ts3">&nbsp;</span></p>
+<p class="ps5"><span class="ts3">Try to place the gold electrode disk at the center of the cell. The cell is designed to allow slight manual adjustment of the disk position. Central positioning of the electrode disk in the center is important, as it will reduce noise and facilitate circuit oscillation. If you see noise greater than usual or if the circuitry does not oscillate, please check the electrode disk position and remount the crystal.</span></p>
+<p class="ps5"><span class="ts3">&nbsp;</span></p>
+<p class="ps5"><span class="ts3">When you make contact with the two pins, please make sure that the socket is connected to the pin properly. Insert the socket all the way to the end, then pull it out a little bit (~1 mm) to avoid touching the socket to the bottom of the crystal holder. Please reduce the tension in the two wires that connect to the crystal holder to minimize possible movement. </span></p>
+<p class="ps5"><span class="ts3">&nbsp;</span></p>
+<p class="ps5"><span class="ts3">For EQCM measurements, the green pin of the oscillator box is for the working electrode connection; you will only need to connect the reference and counter electrodes. You can leave the green (working) and black (sensing) clips of the electrode leads unconnected. </span></p>
+
+</body>
+</html>

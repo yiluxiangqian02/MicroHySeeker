@@ -13,11 +13,13 @@ from ..utils.constants import (
     CMD_ENABLE,
     CMD_READ_ENABLE,
     CMD_READ_FAULT,
+    CMD_CLEAR_STALL,
     CMD_READ_RUN_STATUS,
     CMD_READ_SPEED,
     CMD_SPEED,
     CMD_POSITION_REL,
     CMD_POSITION_ABS,
+    CMD_STOP_EMERGENCY,
     CMD_READ_ENCODER_ACCUM,
     RUN_STATUS_STOPPED,
     RUN_STATUS_ACCEL,
@@ -189,6 +191,33 @@ class PumpManager:
     def read_fault(self, addr: int) -> int | None:
         frame = self.request(addr, CMD_READ_FAULT)
         return self._parse_fault(frame)
+
+    def clear_stall(self, addr: int) -> bool:
+        """发送 0x3D 解除堵转命令
+        
+        Args:
+            addr: 泵地址
+            
+        Returns:
+            bool: 是否成功解除
+        """
+        try:
+            frame = self.request(addr, CMD_CLEAR_STALL)
+            # 响应 payload[0] == 0x01 表示成功
+            if frame.payload and frame.payload[0] == 0x01:
+                if self._logger:
+                    self._logger.info(f"泵 {addr}: 堵转已解除")
+                # 更新状态
+                with self._states_lock:
+                    state = self._states.get(addr)
+                    if state:
+                        state.fault = 0
+                return True
+            return False
+        except TimeoutError:
+            if self._logger:
+                self._logger.error(f"泵 {addr}: 解除堵转超时")
+            return False
 
     def set_enable(self, addr: int, enable: bool) -> bool | None:
         payload = bytes([0x01 if enable else 0x00])
@@ -433,58 +462,61 @@ class PumpManager:
             return False
     
     def stop_pump(self, addr: int, fire_and_forget: bool = False) -> bool:
-        """便捷方法：停止泵
+        """便捷方法：停止泵（兼容速度模式和位置模式）
         
-        先停止转动（设速度为0），再禁用电机。
+        发送三层停止命令确保泵一定停下：
+        1. CMD_POSITION_REL (0xF4) speed=0, counts=0 → 停止位置模式运动
+        2. CMD_SPEED (0xF6) speed=0 → 停止速度模式运动
+        3. CMD_ENABLE (0xF3) disable → 禁用电机
         
         Args:
             addr: 泵地址 (1-12)
             fire_and_forget: 如果True，发送命令后不等待响应确认
-                            适用于响应不稳定的设备（如泵1）
             
         Returns:
-            bool: 是否成功（fire_and_forget模式下始终返回True）
-            
-        Example:
-            >>> manager.stop_pump(1)
-            True
+            bool: 是否成功
         """
         if fire_and_forget:
-            # 发送命令但不等待确认（用于快速关闭或响应不稳定的设备）
             try:
                 if self._logger:
-                    self._logger.debug(f"停止泵 {addr} (fire_and_forget)")
-                # 直接发送停止命令，不等待响应
-                payload = bytes([0x00, 0x00, 0x10])  # 速度=0
-                self.driver.write(build_frame(addr, CMD_SPEED, payload))
-                time.sleep(0.02)  # 短暂延迟
-                # 发送禁用命令
-                payload = bytes([0x00])
-                self.driver.write(build_frame(addr, CMD_ENABLE, payload))
+                    self._logger.debug(f"停止泵 {addr} (fire_and_forget, 三层停止)")
+                # 1. 位置模式停止: CMD_POSITION_REL speed=0 counts=0
+                pos_payload = bytes([0x00, 0x00, 0x10, 0x00, 0x00, 0x00, 0x00])
+                self.driver.write(build_frame(addr, CMD_POSITION_REL, pos_payload))
+                time.sleep(0.02)
+                # 2. 速度模式停止: CMD_SPEED speed=0
+                spd_payload = bytes([0x00, 0x00, 0x10])
+                self.driver.write(build_frame(addr, CMD_SPEED, spd_payload))
+                time.sleep(0.02)
+                # 3. 禁用电机
+                dis_payload = bytes([0x00])
+                self.driver.write(build_frame(addr, CMD_ENABLE, dis_payload))
                 return True
             except:
                 return True  # 即使失败也返回True，不阻塞
                 
         try:
             if self._logger:
-                self._logger.info(f"停止泵 {addr}")
+                self._logger.info(f"停止泵 {addr} (三层停止)")
             
-            # 1. 停止转动（速度设为0）
+            # 1. 位置模式停止 — 无论当前是否在位置模式，都发一次
+            try:
+                pos_payload = bytes([0x00, 0x00, 0x10, 0x00, 0x00, 0x00, 0x00])
+                self.driver.write(build_frame(addr, CMD_POSITION_REL, pos_payload))
+                time.sleep(0.03)
+            except Exception:
+                pass  # 位置停止失败不阻塞后续
+            
+            # 2. 速度模式停止
             if self._logger:
                 self._logger.debug(f"泵 {addr}: 设置速度为0...")
-            
             self.set_speed(addr, 0, "forward")
             
-            # 2. 禁用电机
+            # 3. 禁用电机
             if self._logger:
                 self._logger.debug(f"泵 {addr}: 禁用电机...")
-            
             disable_result = self.set_enable(addr, False)
             
-            if self._logger:
-                self._logger.debug(f"泵 {addr}: 禁用结果 = {disable_result}")
-            
-            # 返回True表示成功（enabled应该是False表示禁用成功）
             success = disable_result is not None and disable_result == False
             
             if self._logger:

@@ -1,0 +1,95 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>Multiplexer dialog box</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=8" />
+<meta name="generator" content="HelpSmith 6.1.3 (Build 16.428)" />
+<style type="text/css" media="screen">
+html {
+  height: 100%;
+}
+body {
+  background-color: White;
+  margin: 0 0 0 0;
+}
+</style>
+<link type="text/css" href="styles.css" rel="stylesheet" />
+</head>
+<body>
+<div align="left">
+  <table class="tbl0">
+    <tr class="row0">
+      <td class="cell0">
+        <p class="ps0"><span class="ts0">Multiplexer dialog box</span></p>
+      </td>
+      <td class="cell1">
+        <p class="ps1"><img width="33" height="36" border="0" src="Images/btn_prev_d.gif" /><a href="menu_help.htm"><img width="22" height="36" border="0" src="Images/btn_home_n.gif" /></a><img width="36" height="36" border="0" src="Images/btn_next_d.gif" /></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell2" colspan="2">
+        <p>&nbsp;</p>
+      </td>
+    </tr>
+  </table>
+</div>
+<p class="ps2"><span class="ts35">The </span><a href="hid_control_mplexer.htm" class="hs0">Multiplexer</a><span class="ts35">&nbsp;command presents this dialog box.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Channel Selection</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">This field is active only if the Group Param box is unchecked. Otherwise, group settings will be used as described below.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">Click any channel to enable it and uncheck to disable. When a channel is enabled, the run command will be executed for all channels in its group. Channels belonging to different groups can not be run simultaneously; only one group can be run at a time.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">When using this field, use the </span><a href="IDH_900D.htm" class="hs0">Parameters</a><span class="ts35">&nbsp;command under the Setup menu to specify experimental parameters; all electrode groups will be run under identical conditions.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">If a channel is turned off, the Scan or Step feature will also be turned off if applicable.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Group Selection</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">Check or uncheck a box to enable or disable all 8 channels belonging to a group. </span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Prompt Before Each Run</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">If Manual is selected, you will have to click on a message box before each run (except the 1st run). The instrument will wait until you respond. </span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">If External Trigger is selected, the instrument will wait for an external trigger signal before each run. The trigger signal is an active low signal and can be applied to Pin 13 of the Cell Control port on the rear panel. </span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Base Filename</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">Click Browse or type directly in this field to specify the filename prefix (up to 5 characters). Data will be saved after each run. The run number will be attached to the base filename, i.e., filenameN, where N is the channel number. For instance, if you set base filename as &quot;test&quot;, and you select channels 3, 8, 23, and 58, Run Multiplexer will run 4 experiments and save data as test3.bin, test8.bin, test23.bin, and test58.bin. If a base filename is not specified, a warning will be given. If you continue, the system will run the experiments without saving any data.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">Before execution, the program will check for existing data files with a same base filename, issuing an overwrite warning if found.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Immediate Channel Set</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">This allows you to select an arbitrary electrode group immediately. You can then exit the dialog box and run an experiment for that particular group.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Group Param</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">If this box is checked, the initial potential, sensitivity, channel on/off, and sweep/step on/off control will use the parameters entered for each group. Otherwise, global experimental parameters will be used.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Experimental Parameters</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">This button opens the </span><a href="hidd_dialog_par_mplxr10.htm" class="hs0">Experimental Parameters for Multiplexer dialog box</a><span class="ts35">. These settings will not be active unless the Group Param option is checked.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Read</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">Load multiplexer settings previously saved to file. The program displays the Open dialog box so you can select your file.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Save</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">Save multiplexer settings to file for later use. The program displays the Save As dialog box so you can name your file.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Run Multiplexer</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">Click this button to run experiments for the selected channels using the CHI685 Multiplexer. Experimental conditions should be set before this command is executed. </span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Notice</span></p>
+<p class="ps17"><span class="ts35">Please note that some of the information in this section may not apply to older instrument models. Contact info@chinstruments.com for legacy documentation.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps22"><span class="ts35">&nbsp;</span></p>
+
+</body>
+</html>

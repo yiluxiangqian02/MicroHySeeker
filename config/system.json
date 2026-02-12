@@ -142,13 +142,23 @@
       "default_rpm": 100,
       "color": "#00FF00",
       "tube_diameter_mm": 2.06
+    },
+    {
+      "channel_id": "4",
+      "solution_name": "KOH",
+      "stock_concentration": 1.0,
+      "pump_address": 6,
+      "direction": "FWD",
+      "default_rpm": 100,
+      "color": "#ff5500",
+      "tube_diameter_mm": 1.0
     }
   ],
   "flush_channels": [
     {
       "channel_id": "1",
       "pump_name": "冲洗泵1",
-      "pump_address": 6,
+      "pump_address": 5,
       "direction": "FWD",
       "rpm": 100,
       "cycle_duration_s": 30.0,
@@ -158,7 +168,7 @@
     {
       "channel_id": "2",
       "pump_name": "冲洗泵2",
-      "pump_address": 7,
+      "pump_address": 11,
       "direction": "FWD",
       "rpm": 100,
       "cycle_duration_s": 30.0,
@@ -168,7 +178,7 @@
     {
       "channel_id": "3",
       "pump_name": "冲洗泵3",
-      "pump_address": 9,
+      "pump_address": 12,
       "direction": "FWD",
       "rpm": 100,
       "cycle_duration_s": 30.0,
@@ -176,6 +186,26 @@
       "tube_diameter_mm": 1.0
     }
   ],
-  "calibration_data": {},
+  "calibration_data": {
+    "1": {
+      "test_volumes": [
+        1700.0,
+        1800.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "slope_k": 50.0,
+      "intercept_b": 700.0,
+      "r_squared": 1.0,
+      "ul_per_encoder_count": 0.0030517578125,
+      "calibration_method": "linear_regression"
+    }
+  },
   "data_dir": "./data"
 }

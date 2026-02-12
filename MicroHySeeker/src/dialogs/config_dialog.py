@@ -17,6 +17,7 @@ from PySide6.QtGui import QColor, QFont
 
 from src.models import SystemConfig, DilutionChannel, FlushChannel
 from src.services.rs485_wrapper import get_rs485_instance
+from src.services.i18n import tr, get_lang, set_lang
 
 
 # 全局字体设置
@@ -127,6 +128,21 @@ class ConfigDialog(QDialog):
         self.tab_widget.addTab(self.flush_tab, "冲洗通道")
         
         layout.addWidget(self.tab_widget)
+        
+        # 语言设置
+        lang_group = QGroupBox(tr("language"))
+        lang_group.setFont(FONT_TITLE)
+        lang_layout = QHBoxLayout(lang_group)
+        lang_layout.addWidget(QLabel(tr("language") + ":"))
+        self.lang_combo = QComboBox()
+        self.lang_combo.addItem("简体中文", "zh")
+        self.lang_combo.addItem("English", "en")
+        cur = get_lang()
+        self.lang_combo.setCurrentIndex(0 if cur == "zh" else 1)
+        self.lang_combo.setFixedWidth(160)
+        lang_layout.addWidget(self.lang_combo)
+        lang_layout.addStretch()
+        layout.addWidget(lang_group)
         
         # 按钮
         btn_layout = QHBoxLayout()
@@ -714,6 +730,13 @@ class ConfigDialog(QDialog):
         
         # 保存到文件
         self.config.save_to_file("./config/system.json")
+        
+        # 保存语言设置
+        new_lang = self.lang_combo.currentData()
+        old_lang = get_lang()
+        if new_lang != old_lang:
+            set_lang(new_lang)
+        
         self.config_saved.emit(self.config)
         QMessageBox.information(self, "成功", "配置已保存")
         self.accept()

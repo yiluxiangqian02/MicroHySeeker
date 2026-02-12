@@ -1,0 +1,408 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>Scanning Electrochemical Microscope Parameters dialog box</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=8" />
+<meta name="generator" content="HelpSmith 6.1.3 (Build 16.428)" />
+<style type="text/css" media="screen">
+html {
+  height: 100%;
+}
+body {
+  background-color: White;
+  margin: 0 0 0 0;
+}
+</style>
+<link type="text/css" href="styles.css" rel="stylesheet" />
+</head>
+<body>
+<div align="left">
+  <table class="tbl0">
+    <tr class="row0">
+      <td class="cell0">
+        <p class="ps0"><span class="ts0">Scanning Electrochemical Microscope Parameters dialog box</span></p>
+      </td>
+      <td class="cell1">
+        <p class="ps1"><img width="33" height="36" border="0" src="Images/btn_prev_d.gif" /><a href="menu_help.htm"><img width="22" height="36" border="0" src="Images/btn_home_n.gif" /></a><img width="36" height="36" border="0" src="Images/btn_next_d.gif" /></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell2" colspan="2">
+        <p>&nbsp;</p>
+      </td>
+    </tr>
+  </table>
+</div>
+<p class="ps2"><span class="ts35">In the general SECM experiment, the probe electrode is scanned across the XY plane, and a probe response is recorded and plotted as a function of X and Y to yield an SECM image.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">Typically the image will be generated from the probe electrode response, but the substrate electrode response can also be used in amperometry mode. The probe and substrate electrode potential and current sensitivity can be controlled independently; time and distance increments and the scan distance can also be specified.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">Several measurement modes are available. When performed in the X or Y direction, amperometry, potentiometry, and impedance modes maintain constant probe height. </span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Amperometry</span><span class="ts35">: measure probe current as a function of position </span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Potentiometry</span><span class="ts35">: measure probe potential as a function of position</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Constant current</span><span class="ts35">: measure probe height as a function of position</span></p>
+<p class="ps17"><span class="ts42">·&nbsp; </span><span class="ts35">Height (Z) will be adjusted automatically to maintain current constant.</span></p>
+<p class="ps17"><span class="ts42">·&nbsp; </span><span class="ts35">If the sample or substrate is an insulator, the resulting plot yields topographic information.</span></p>
+<p class="ps17"><span class="ts42">·&nbsp; </span><span class="ts35">Current value and tolerance must be specified.</span></p>
+<p class="ps17"><span class="ts43">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Impedance:</span><span class="ts35">&nbsp;measure probe impedance as a function of position </span></p>
+<p class="ps17"><span class="ts42">·&nbsp; </span><span class="ts35">AC frequency and amplitude must be specified.</span></p>
+<p class="ps17"><span class="ts42">·&nbsp; </span><span class="ts35">In a Z direction scan, the impedance will increase sharply when approaching the surface. thus allowing a close probe approach without a redox mediator in solution.</span></p>
+<p class="ps31"><span class="ts43">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">During an SECM experiment, the program will display a greyscale or color-coded 2-d plot of the XY plane in real time. Interactive 3-d plots (rotate, zoom, etc.) are available from the </span><a href="hid_graphics_option.htm" class="hs0">Graph Options</a><span class="ts35">&nbsp;menu once the experiment has completed.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<div align="left">
+  <table class="tbl2">
+    <tr class="row0">
+      <td class="cell22">
+        <p class="ps18"><span class="ts41">Parameter</span></p>
+      </td>
+      <td class="cell23">
+        <p class="ps18"><span class="ts41">Range</span></p>
+      </td>
+      <td class="cell157">
+        <p class="ps18"><span class="ts41">Description</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell22">
+        <p class="ps18"><span class="ts36">Probe E (V)</span></p>
+      </td>
+      <td class="cell23">
+        <p class="ps18"><span class="ts35">-10&nbsp;&nbsp; -&nbsp;&nbsp; +10</span></p>
+      </td>
+      <td class="cell157">
+        <p class="ps18"><span class="ts35">First probe potential</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell22">
+        <p class="ps18"><span class="ts36">Quiet Time (s)</span></p>
+      </td>
+      <td class="cell23">
+        <p class="ps18"><span class="ts35">1&nbsp;&nbsp; -&nbsp;&nbsp; 100000</span></p>
+      </td>
+      <td class="cell157">
+        <p class="ps18"><span class="ts35">Quiescent time before data sampling</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell22">
+        <p class="ps18"><span class="ts36">Sensitivity (A/V)</span></p>
+      </td>
+      <td class="cell23">
+        <p class="ps18"><span class="ts35">1e-12&nbsp;&nbsp; -&nbsp;&nbsp; 0.1</span></p>
+      </td>
+      <td class="cell157">
+        <p class="ps18"><span class="ts35">Probe sensitivity scale</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell22">
+        <p class="ps28">&nbsp;</p>
+      </td>
+      <td class="cell23">
+        <p>&nbsp;</p>
+      </td>
+      <td class="cell157">
+        <p class="ps28">&nbsp;</p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell22">
+        <p class="ps18"><span class="ts36">Substrate E (V)</span></p>
+      </td>
+      <td class="cell23">
+        <p class="ps18"><span class="ts35">-10&nbsp;&nbsp; -&nbsp;&nbsp; +10</span></p>
+      </td>
+      <td class="cell157">
+        <p class="ps18"><span class="ts35">Substrate potential</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell22">
+        <p class="ps18"><span class="ts36">Sensitivity (A/V)</span></p>
+      </td>
+      <td class="cell23">
+        <p class="ps18"><span class="ts35">1e-12&nbsp;&nbsp; -&nbsp;&nbsp; 0.1</span></p>
+      </td>
+      <td class="cell157">
+        <p class="ps18"><span class="ts35">Substrate sensitivity scale</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell22">
+        <p class="ps18"><span class="ts36">E On</span></p>
+      </td>
+      <td class="cell23">
+        <p class="ps18"><span class="ts35">Check or Uncheck</span></p>
+      </td>
+      <td class="cell157">
+        <p class="ps18"><span class="ts35">Substrate potential on/off</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell22">
+        <p class="ps18"><span class="ts36">i2 On</span></p>
+      </td>
+      <td class="cell23">
+        <p class="ps18"><span class="ts35">Check or Uncheck</span></p>
+      </td>
+      <td class="cell157">
+        <p class="ps18"><span class="ts35">Substrate electrode imaging on/off</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell22">
+        <p class="ps28">&nbsp;</p>
+      </td>
+      <td class="cell23">
+        <p>&nbsp;</p>
+      </td>
+      <td class="cell157">
+        <p class="ps28">&nbsp;</p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell22">
+        <p class="ps18"><span class="ts36">X Distance (um)</span></p>
+      </td>
+      <td class="cell23">
+        <p class="ps18"><span class="ts35">-50000&nbsp;&nbsp; -&nbsp;&nbsp; 50000</span></p>
+      </td>
+      <td class="cell157">
+        <p class="ps18"><span class="ts35">Probe travel distance in X direction</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell22">
+        <p class="ps18"><span class="ts36">Y Distance (um)</span></p>
+      </td>
+      <td class="cell23">
+        <p class="ps18"><span class="ts35">-50000&nbsp;&nbsp; -&nbsp;&nbsp; 50000</span></p>
+      </td>
+      <td class="cell157">
+        <p class="ps18"><span class="ts35">Probe travel distance in Y direction</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell22">
+        <p class="ps18"><span class="ts36">Incr. Dist. (um)</span></p>
+      </td>
+      <td class="cell23">
+        <p class="ps18"><span class="ts35">0.0001&nbsp;&nbsp; -&nbsp;&nbsp; 100</span></p>
+      </td>
+      <td class="cell157">
+        <p class="ps18"><span class="ts35">Probe distance increment during scan</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell22">
+        <p class="ps18"><span class="ts36">Incr Time (s)</span></p>
+      </td>
+      <td class="cell23">
+        <p class="ps18"><span class="ts35">0.002&nbsp;&nbsp; -&nbsp;&nbsp; 60</span></p>
+      </td>
+      <td class="cell157">
+        <p class="ps18"><span class="ts35">Probe time increment (sampling time)</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell22">
+        <p class="ps28">&nbsp;</p>
+      </td>
+      <td class="cell23">
+        <p>&nbsp;</p>
+      </td>
+      <td class="cell157">
+        <p class="ps28">&nbsp;</p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell22">
+        <p class="ps18"><span class="ts36">SECM Mode</span></p>
+      </td>
+      <td class="cell23">
+        <p class="ps18"><span class="ts35">Select</span></p>
+      </td>
+      <td class="cell157">
+        <p class="ps18"><span class="ts35">Amperometry (constant height), potentiometry, constant current, or impedance</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell22">
+        <p class="ps18"><span class="ts36">Const. Current (A)</span></p>
+      </td>
+      <td class="cell23">
+        <p class="ps18"><span class="ts35">5e-12&nbsp;&nbsp; -&nbsp;&nbsp; 1e-8</span></p>
+      </td>
+      <td class="cell157">
+        <p class="ps18"><span class="ts35">Constant current control value</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell22">
+        <p class="ps18"><span class="ts36">Current Tolerance</span></p>
+      </td>
+      <td class="cell23">
+        <p class="ps18"><span class="ts35">0.01%&nbsp;&nbsp; -&nbsp;&nbsp; 5%</span></p>
+      </td>
+      <td class="cell157">
+        <p class="ps18"><span class="ts35">Allowed current tolerance for constant current control</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell22">
+        <p class="ps18"><span class="ts36">Max Z Incr (um)</span></p>
+      </td>
+      <td class="cell23">
+        <p class="ps18"><span class="ts35">0.0001&nbsp;&nbsp; -&nbsp;&nbsp; 10</span></p>
+      </td>
+      <td class="cell157">
+        <p class="ps18"><span class="ts35">Maximum allowed Z step size for current adjustment</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell22">
+        <p class="ps28">&nbsp;</p>
+      </td>
+      <td class="cell23">
+        <p>&nbsp;</p>
+      </td>
+      <td class="cell157">
+        <p class="ps28">&nbsp;</p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell22">
+        <p class="ps18"><span class="ts36">Impedance Mode:</span></p>
+      </td>
+      <td class="cell23">
+        <p class="ps28">&nbsp;</p>
+      </td>
+      <td class="cell157">
+        <p class="ps28">&nbsp;</p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell22">
+        <p class="ps18"><span class="ts36">Frequency (Hz)</span></p>
+      </td>
+      <td class="cell23">
+        <p class="ps18"><span class="ts35">1&nbsp;&nbsp; -&nbsp;&nbsp; 1000000</span></p>
+      </td>
+      <td class="cell157">
+        <p class="ps18"><span class="ts35">AC frequency</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell22">
+        <p class="ps18"><span class="ts36">Amplitude (V)</span></p>
+      </td>
+      <td class="cell23">
+        <p class="ps18"><span class="ts35">0.0001&nbsp;&nbsp; -&nbsp;&nbsp; 0.7</span></p>
+      </td>
+      <td class="cell157">
+        <p class="ps18"><span class="ts35">AC amplitude</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell22">
+        <p class="ps18"><span class="ts36">Bias DC Current</span></p>
+      </td>
+      <td class="cell23">
+        <p class="ps18"><span class="ts35">Check or Uncheck</span></p>
+      </td>
+      <td class="cell157">
+        <p class="ps18"><span class="ts35">Bias DC current during measurement to increase AC gain</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell22">
+        <p class="ps18"><span class="ts36">AutoSens</span></p>
+      </td>
+      <td class="cell23">
+        <p class="ps18"><span class="ts35">Check or Uncheck</span></p>
+      </td>
+      <td class="cell157">
+        <p class="ps18"><span class="ts35">Enable automatic sensitivity scale (impedance only)</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell22">
+        <p class="ps28">&nbsp;</p>
+      </td>
+      <td class="cell23">
+        <p>&nbsp;</p>
+      </td>
+      <td class="cell157">
+        <p class="ps28">&nbsp;</p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell22">
+        <p class="ps18"><span class="ts36">Motor Selection</span></p>
+      </td>
+      <td class="cell23">
+        <p class="ps18"><span class="ts35">Select</span></p>
+      </td>
+      <td class="cell157">
+        <p class="ps18"><span class="ts35">Auto, stepper, or piezo</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell22">
+        <p class="ps18"><span class="ts36">X / Y Axis as Long</span></p>
+      </td>
+      <td class="cell23">
+        <p class="ps18"><span class="ts35">Select</span></p>
+      </td>
+      <td class="cell157">
+        <p class="ps18"><span class="ts35">Specify long move direction</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell22">
+        <p class="ps28">&nbsp;</p>
+      </td>
+      <td class="cell23">
+        <p>&nbsp;</p>
+      </td>
+      <td class="cell157">
+        <p class="ps28">&nbsp;</p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell22">
+        <p class="ps18"><span class="ts36">Return to Origin</span></p>
+      </td>
+      <td class="cell23">
+        <p class="ps18"><span class="ts35">Check or Uncheck</span></p>
+      </td>
+      <td class="cell157">
+        <p class="ps18"><span class="ts35">Move probe back to origin after imaging</span></p>
+      </td>
+    </tr>
+  </table>
+</div>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Notes</span></p>
+<p class="ps27"><span class="ts6"></span><span class="ts7">&nbsp;&nbsp;</span><span class="ts40">A maximum of 512 × 512 pixels per image is allowed. If the number of data point in a dimension exceeds 512, its increment distance will be automatically adjusted.</span></p>
+<p class="ps27"><span class="ts6"></span><span class="ts7">&nbsp;&nbsp;</span><span class="ts40">When E2 On is checked, the substrate potential will be turned on but no current will be measured. When i2 On is checked, the substrate potential will be turned on and current will be measured. </span></p>
+<p class="ps27"><span class="ts6"></span><span class="ts7">&nbsp;&nbsp;</span><span class="ts40">X/Y distance cannot be zero.</span></p>
+<p class="ps27"><span class="ts6"></span><span class="ts7">&nbsp;&nbsp;</span><span class="ts40">If both X and Y distances are within the X and Y piezo range, automatic motor selection will choose the piezo positioner. Otherwise, the stepper motors will be used.</span></p>
+<p class="ps27"><span class="ts6"></span><span class="ts7">&nbsp;&nbsp;</span><span class="ts40">If the piezo positioner is selected but the X or Y distance exceeds the piezo range, the stepper motors will be used instead.</span></p>
+<p class="ps27"><span class="ts6"></span><span class="ts7">&nbsp;&nbsp;</span><span class="ts40">To reduce interference from the (power) line frequency, the sampling period (via Incr Time) should be a multiple of the reciprocal of the line frequency. For instance, if the line frequency is 60 Hz, an Incr Time of 0.01667, 0.03333, 0.05, 0.06667, 0.08333, 0.1, etc. is recommended. If the line frequency is 50 Hz, an Incr Time divisible by 0.02 is recommended.. If the line frequency is 50 Hz, Incr Time of 0.02s and its multiples are recommended.</span></p>
+<p class="ps27"><span class="ts6"></span><span class="ts7">&nbsp;&nbsp;</span><span class="ts40">In Constant Current mode, negative (positive) height indicates that the tip has moved upward (downward). Before the measurement, the Z piezo will be set to its middle position, and the specified constant current level will be reached with a combination of stepper motor and piezo movements. Once the scan starts, only the Z piezo will be adjusted to keep the current constant. Since the Z piezo has a maximum range of about 80 microns and its start position is at the middle, its maximum adjustable range is ±40 microns. If a Z move exceeds ±40 microns, a warning will appear and the scan will be terminated.</span></p>
+<p class="ps27"><span class="ts6"></span><span class="ts7">&nbsp;&nbsp;</span><span class="ts40">At the end of a scan in Constant Current mode, the Z piezo will be moved back to its zero position.</span></p>
+<p class="ps17"><span class="ts43">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Notice</span></p>
+<p class="ps17"><span class="ts35">Please note that some of the information in this section may not apply to older instrument models. Contact info@chinstruments.com for legacy documentation.</span></p>
+<p class="ps22"><span class="ts35">&nbsp;</span></p>
+
+</body>
+</html>

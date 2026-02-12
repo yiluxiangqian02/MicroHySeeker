@@ -1,0 +1,838 @@
+<!DOCTYPE html PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+<head>
+<meta name="generator" content="HelpSmith 6.1.3 (Build 16.428)">
+</head>
+<body>
+<object type="text/site properties">
+	<param name="Window Styles" value="0x800225">
+</object>
+<ul>
+<li><object type="text/sitemap">
+	<param name="Name" value="Help">
+</object>
+<ul>
+<li><object type="text/sitemap">
+	<param name="Name" value="Help Index">
+	<param name="Local" value="main_index.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="General Information">
+	<param name="Local" value="IDH_General_600F.htm">
+</object>
+<ul>
+<li><object type="text/sitemap">
+	<param name="Name" value="Introducton">
+	<param name="Local" value="IDH_Introduction_600F.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Electrochemical Techniques">
+	<param name="Local" value="IDH_EC_Tech_600F.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="System Requirements and Software Features">
+	<param name="Local" value="IDH_Software.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Hardware Specifications">
+	<param name="Local" value="IDH_Hardware_600F.htm">
+</object>
+</ul>
+<li><object type="text/sitemap">
+	<param name="Name" value="Getting Started">
+	<param name="Local" value="IDH_Getting_Started_600E.htm">
+</object>
+<ul>
+<li><object type="text/sitemap">
+	<param name="Name" value="Installation">
+	<param name="Local" value="IDH_Install_600E.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="USB Driver Installation">
+	<param name="Local" value="IDH_USB.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Testing">
+	<param name="Local" value="IDH_Testing.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Some Useful Tips">
+	<param name="Local" value="IDH_Useful_Tips.htm">
+</object>
+</ul>
+<li><object type="text/sitemap">
+	<param name="Name" value="File Menu">
+	<param name="Local" value="menu_file.htm">
+</object>
+<ul>
+<li><object type="text/sitemap">
+	<param name="Name" value="New command">
+	<param name="Local" value="hid_file_new.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Open command">
+	<param name="Local" value="hid_file_open.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Close command">
+	<param name="Local" value="hid_file_close.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Save As command">
+	<param name="Local" value="hid_file_save_as.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Delete command">
+	<param name="Local" value="hid_file_delete.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Retrieve command">
+	<param name="Local" value="hid_file_retrieve.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Update Instrument Program command">
+	<param name="Local" value="hid_file_download.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="List Data File command">
+	<param name="Local" value="hid_file_list.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Convert to Text command">
+	<param name="Local" value="hid_file_convert.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Text File Format command">
+	<param name="Local" value="hid_file_textfileformat.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Import Text File command">
+	<param name="Local" value="hid_file_import.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Print command">
+	<param name="Local" value="hid_file_print.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Print Multiple Files command">
+	<param name="Local" value="hid_file_multiprint.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Print Preview command">
+	<param name="Local" value="hid_file_print_preview.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Print Setup command">
+	<param name="Local" value="hid_file_print_setup.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Send command">
+	<param name="Local" value="hid_file_send_mail.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="File 1, 2, 3, 4... command">
+	<param name="Local" value="hid_file_mru_file1.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Exit command">
+	<param name="Local" value="hid_app_exit.htm">
+</object>
+</ul>
+<li><object type="text/sitemap">
+	<param name="Name" value="Setup Menu">
+	<param name="Local" value="menu_setup.htm">
+</object>
+<ul>
+<li><object type="text/sitemap">
+	<param name="Name" value="Technique command">
+	<param name="Local" value="hid_setup_tech.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Parameters command">
+	<param name="Local" value="IDH_600F.htm">
+</object>
+<ul>
+<li><object type="text/sitemap">
+	<param name="Name" value="Cyclic Voltammetry Parameters dialog box">
+	<param name="Local" value="hidd_dialog_par_cv900d.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Linear Sweep Voltammetry Parameters dialog box">
+	<param name="Local" value="hidd_dialog_par_lsv6c.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Staircase Voltammetry Parameters dialog box">
+	<param name="Local" value="hidd_dialog_par_scv6c.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Tafel Plot Parameters dialog box">
+	<param name="Local" value="hidd_dialog_par_tafel6c.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Chronoamperometry Parameter Dialog Box">
+	<param name="Local" value="hidd_dialog_par_ca6f.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Chronocoulometry Parameters dialog box">
+	<param name="Local" value="hidd_dialog_par_cc6c.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Differential Pulse Voltammetry Parameters dialog box">
+	<param name="Local" value="hidd_dialog_par_dpv6c.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Normal Pulse Voltammetry Parameters dialog box">
+	<param name="Local" value="hidd_dialog_par_npv6c.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Differential Normal Pulse Voltammetry dialog box">
+	<param name="Local" value="hidd_dialog_par_dnpv6c.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Square Wave Voltammetry Parameters dialog box">
+	<param name="Local" value="hidd_dialog_par_swv6c.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="AC Voltammetry Parameters dialog box">
+	<param name="Local" value="hidd_dialog_par_acv6c.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="2nd Harmonic AC Voltammetry Parameters dialog box">
+	<param name="Local" value="hidd_dialog_par_shacv6c.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="FT AC Voltammetry Parameters dialog box">
+	<param name="Local" value="hidd_dialog_par_ftacv.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Amperometric i-t Curve dialog box">
+	<param name="Local" value="hidd_dialog_par_it6f.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Differential Pulse Amperometry Parameters dialog box">
+	<param name="Local" value="hidd_dialog_par_dpa9c.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Double Differential Pulse Amperometry dialog box">
+	<param name="Local" value="hidd_dialog_par_ddpa6c.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Triple Pulse Amperometry Parameters dialog box">
+	<param name="Local" value="hidd_dialog_par_tpa902b.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Integrated Pulsed Amperometric Detection Parameters dialog box">
+	<param name="Local" value="hidd_dialog_par_ipad6c.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Bulk Electrolysis with Coulometry Parameters dialog box">
+	<param name="Local" value="hidd_dialog_par_be6c.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Hydrodynamic Modulation Voltammetry Parameters dialog box">
+	<param name="Local" value="hidd_dialog_par_hmv6c.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Sweep Step Function Parameters dialog box">
+	<param name="Local" value="hidd_dialog_par_ssf.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Multi-Potential Steps Parameters dialog box">
+	<param name="Local" value="hidd_dialog_par_step6e.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Potentiostatic Intermittent Titration Technique Parameters dialog box">
+	<param name="Local" value="hidd_dialog_par_pitt.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="A.C. Impedance Parameters dialog box">
+	<param name="Local" value="hidd_dialog_par_imp6f.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Impedance - Time Parameters dialog box">
+	<param name="Local" value="hidd_dialog_par_impt6c.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Impedance - Potential Parameters dialog box">
+	<param name="Local" value="hidd_dialog_par_impe6c.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="AC Amperometry Parameters dialog box">
+	<param name="Local" value="hidd_dialog_par_actb.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Chronopotentiometry Parameters dialog box">
+	<param name="Local" value="hidd_dialog_par_cp9c.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Chronopotentiometry with Current Ramp Parameters dialog box">
+	<param name="Local" value="hidd_dialog_par_cpcr9c.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Multi-Current Steps Parameters dialog box">
+	<param name="Local" value="hidd_dialog_par_cpcs9c.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Galvanostatic Intermittent Titration Technique Parameters dialog box">
+	<param name="Local" value="hidd_dialog_par_gitt.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Potentiometric Stripping Analysis Parameters dialog box">
+	<param name="Local" value="hidd_dialog_par_psa6b.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Parameters for Electrochemical Noise Measurement dialog box">
+	<param name="Local" value="hidd_dialog_par_ecn6c.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Parameters for Open Circuit Potential vs Time dialog box">
+	<param name="Local" value="hidd_dialog_par_ocpt6d.htm">
+</object>
+</ul>
+<li><object type="text/sitemap">
+	<param name="Name" value="System command">
+	<param name="Local" value="hid_setup_system.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Hardware Test command">
+	<param name="Local" value="hid_setup_test.htm">
+</object>
+</ul>
+<li><object type="text/sitemap">
+	<param name="Name" value="Control Menu">
+	<param name="Local" value="menu_control.htm">
+</object>
+<ul>
+<li><object type="text/sitemap">
+	<param name="Name" value="Run Experiment command">
+	<param name="Local" value="hid_control_run.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Pause / Resume command">
+	<param name="Local" value="hid_control_pauseresume.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Stop Run command">
+	<param name="Local" value="hid_control_stoprun.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Reverse Scan command">
+	<param name="Local" value="hid_control_reversescan.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Zero Current command">
+	<param name="Local" value="hid_control_zero.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Zero Time command">
+	<param name="Local" value="hid_control_tzero.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Run Status command">
+	<param name="Local" value="hid_control_runstatus.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Repetitive Runs command">
+	<param name="Local" value="hid_control_repetitiveruns.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Multiplexer command">
+	<param name="Local" value="hid_control_mplexer.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Macro Command command">
+	<param name="Local" value="hid_control_macro.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Open Circuit Potential command">
+	<param name="Local" value="hid_control_opencircuitpotential.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="iR Compensation command">
+	<param name="Local" value="hid_control_ircompensation.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Filter Setting command">
+	<param name="Local" value="hid_control_filtersetting.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Cell command">
+	<param name="Local" value="hid_control_cell.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Step Functions command">
+	<param name="Local" value="hid_control_step.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Preconditioning command">
+	<param name="Local" value="hid_control_precondition.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Rotating Disk Electrode command">
+	<param name="Local" value="hid_control_rde.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Other command">
+	<param name="Local" value="hid_control_other.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Stripping Mode command">
+	<param name="Local" value="hid_control_stripping.htm">
+</object>
+</ul>
+<li><object type="text/sitemap">
+	<param name="Name" value="Graphics Menu">
+	<param name="Local" value="menu_graphics.htm">
+</object>
+<ul>
+<li><object type="text/sitemap">
+	<param name="Name" value="Present Data Plot command">
+	<param name="Local" value="hid_graphics_dataplot.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Overlay Plots command">
+	<param name="Local" value="hid_graphics_overlay.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Add Data to Overlay command">
+	<param name="Local" value="hid_graphics_adddatatooverlay.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Replot Overlay command">
+	<param name="Local" value="hid_graphics_replot_overlay.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Parallel Plots command">
+	<param name="Local" value="hid_graphics_paralleplots.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Add Data to Parallel command">
+	<param name="Local" value="hid_graphics_adddatatoparallel.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Replot Parallel command">
+	<param name="Local" value="hid_graphics_replot_parallel.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Zoom In command">
+	<param name="Local" value="hid_graphics_zoomin.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Manual Results command">
+	<param name="Local" value="hid_graphics_manualresults.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Peak Definition command">
+	<param name="Local" value="hid_graphics_peakdefinition.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="X-Y Plot command">
+	<param name="Local" value="hid_graphics_xyplot.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Peak Parameter Plot command">
+	<param name="Local" value="hid_graphics_ipv.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Semilog Plot command">
+	<param name="Local" value="hid_graphics_semilog.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Special Plot command">
+	<param name="Local" value="hid_graphics_specialplot.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Graph Options command">
+	<param name="Local" value="hid_graphics_option.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Color and Legend command">
+	<param name="Local" value="hid_graphics_color.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Font command">
+	<param name="Local" value="hid_graphics_font.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Copy to clipboard command">
+	<param name="Local" value="hid_graphics_copy.htm">
+</object>
+</ul>
+<li><object type="text/sitemap">
+	<param name="Name" value="DataProc Menu">
+	<param name="Local" value="menu_dataproc.htm">
+</object>
+<ul>
+<li><object type="text/sitemap">
+	<param name="Name" value="Smoothing command">
+	<param name="Local" value="hid_data_smooth.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Derivatives command">
+	<param name="Local" value="hid_data_derivative.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Integration command">
+	<param name="Local" value="hid_data_integration.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Semiinteg and Semideriv command">
+	<param name="Local" value="hid_data_convolution.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Interpolation command">
+	<param name="Local" value="hid_data_interpolation.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Baseline Fitting &amp; Subtraction command">
+	<param name="Local" value="hid_data_basecorr.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Linear Baseline Correction command">
+	<param name="Local" value="hid_data_baseline.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Data Point Removing command">
+	<param name="Local" value="hid_data_removing.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Data Point Modifying command">
+	<param name="Local" value="hid_data_modifying.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Background Subtraction command">
+	<param name="Local" value="hid_data_bkgndsub.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Signal Averaging command">
+	<param name="Local" value="hid_data_averaging.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Mathematical Operation command">
+	<param name="Local" value="hid_data_mathop.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Fourier Spectrum command">
+	<param name="Local" value="hid_data_ft.htm">
+</object>
+</ul>
+<li><object type="text/sitemap">
+	<param name="Name" value="Analysis Menu">
+	<param name="Local" value="menu_analysis.htm">
+</object>
+<ul>
+<li><object type="text/sitemap">
+	<param name="Name" value="Calibration Curve command">
+	<param name="Local" value="hid_analysis_workingcurve.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Standard Addition command">
+	<param name="Local" value="hid_analysis_standardaddition.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Data Report command">
+	<param name="Local" value="hid_analysis_analyticalreport.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Time Dependence command">
+	<param name="Local" value="hid_analysis_timedependence.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Special Analysis command">
+	<param name="Local" value="hid_analysis_special.htm">
+</object>
+</ul>
+<li><object type="text/sitemap">
+	<param name="Name" value="Sim Menu">
+	<param name="Local" value="menu_sim.htm">
+</object>
+<ul>
+<li><object type="text/sitemap">
+	<param name="Name" value="Mechanism command">
+	<param name="Local" value="hid_sim_mechanism.htm">
+</object>
+<ul>
+<li><object type="text/sitemap">
+	<param name="Name" value="Digital Simulation dialog box">
+	<param name="Local" value="hidd_dialog_sim.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Potentials and Rate Constants dialog box">
+	<param name="Local" value="hidd_dialog_sim_k.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Concentration and Diffusion Coefficients dialog box">
+	<param name="Local" value="hidd_dialog_sim_c0.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Surface Concentration dialog box">
+	<param name="Local" value="hidd_dialog_sim_c1.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Concentration at Equilibrium dialog box">
+	<param name="Local" value="hidd_dialog_sim_eq.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Simulation Variables dialog box">
+	<param name="Local" value="hidd_dialog_sim_variable.htm">
+</object>
+</ul>
+<li><object type="text/sitemap">
+	<param name="Name" value="AC Impedance Simulator and Fitting Program">
+	<param name="Local" value="hid_sim_mechanism_imp.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="CV Simulate command">
+	<param name="Local" value="hid_sim_simulate.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="CV Fitting command">
+	<param name="Local" value="hid_sim_fitting.htm">
+</object>
+</ul>
+<li><object type="text/sitemap">
+	<param name="Name" value="View Menu">
+	<param name="Local" value="menu_view.htm">
+</object>
+<ul>
+<li><object type="text/sitemap">
+	<param name="Name" value="Data Information command">
+	<param name="Local" value="hid_view_datainfo.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Data Listing command">
+	<param name="Local" value="hid_view_listdata.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Equations command">
+	<param name="Local" value="hid_view_equations.htm">
+</object>
+<ul>
+<li><object type="text/sitemap">
+	<param name="Name" value="General equations in Electrochemistry">
+	<param name="Local" value="hid_eq_general.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Symbols and Units">
+	<param name="Local" value="hid_eq_unit.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Linear Sweep Voltammetry (LSV) and Cyclic Voltammetry (CV) Equations">
+	<param name="Local" value="hid_eq_cv.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Staircase Voltammetry (SCV) Equations">
+	<param name="Local" value="hid_eq_scv.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Tafel Plot Equations">
+	<param name="Local" value="hid_eq_tafel.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Chronoamperometry (CA) Equations">
+	<param name="Local" value="hid_eq_ca.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Chronocoulometry (CC) Equations">
+	<param name="Local" value="hid_eq_cc.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Differential Pulse Voltammetry (DPV) Equations">
+	<param name="Local" value="hid_eq_dpv.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Normal Pulse Voltammetry (NPV) Equations">
+	<param name="Local" value="hid_eq_npv.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Square Wave Voltammetry (SWV) Equations">
+	<param name="Local" value="hid_eq_swv.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="AC Voltammetry (ACV) Equations">
+	<param name="Local" value="hid_eq_acv.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Second Harmonic A.C. Voltammetry (SHACV) Equations">
+	<param name="Local" value="hid_eq_shacv.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Amperometric Curve (i-t) Equations">
+	<param name="Local" value="hid_eq_tb.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Bulk Electrolysis with Coulometry (BE) Equations">
+	<param name="Local" value="hid_eq_be.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Hydrodynamic Modulation Voltammetry (HMV) Equations">
+	<param name="Local" value="hid_eq_hmv.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="AC Impedance (IMP) Equations">
+	<param name="Local" value="hid_eq_imp.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Chronopotentiometry (CP) Equations">
+	<param name="Local" value="hid_eq_et.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Potentiometric Stripping Analysis (PSA) Equations">
+	<param name="Local" value="hid_eq_psa.htm">
+</object>
+</ul>
+<li><object type="text/sitemap">
+	<param name="Name" value="Clock command">
+	<param name="Local" value="hid_view_clock.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Toolbar command">
+	<param name="Local" value="hid_view_toolbar.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Add or Remove Buttons command">
+	<param name="Local" value="hid_view_tbcustom.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Status Bar command">
+	<param name="Local" value="hid_view_status_bar.htm">
+</object>
+</ul>
+<li><object type="text/sitemap">
+	<param name="Name" value="Window Menu">
+	<param name="Local" value="menu_window.htm">
+</object>
+<ul>
+<li><object type="text/sitemap">
+	<param name="Name" value="New command">
+	<param name="Local" value="hid_window_new.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Cascade command">
+	<param name="Local" value="hid_window_cascade.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Tile command">
+	<param name="Local" value="hid_window_tile.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Arrange Icons command">
+	<param name="Local" value="hid_window_arrange.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="1, 2, ... command">
+	<param name="Local" value="hid_window_all.htm">
+</object>
+</ul>
+<li><object type="text/sitemap">
+	<param name="Name" value="Help Menu">
+	<param name="Local" value="menu_help.htm">
+</object>
+<ul>
+<li><object type="text/sitemap">
+	<param name="Name" value="Help Topics command">
+	<param name="Local" value="hid_help_index.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Old Help command">
+	<param name="Local" value="hid_help_old.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="About command">
+	<param name="Local" value="hid_app_about.htm">
+</object>
+</ul>
+<li><object type="text/sitemap">
+	<param name="Name" value="Appendix">
+	<param name="Local" value="IDH_Appendix_600F.htm">
+</object>
+<ul>
+<li><object type="text/sitemap">
+	<param name="Name" value="Cable and Connections">
+	<param name="Local" value="IDH_Cable_600E.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Firmware Update Instructions">
+	<param name="Local" value="IDH_Firmware_Update.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Trouble Shooting">
+	<param name="Local" value="IDH_Trouble_Shooting.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Maintenance and Service">
+	<param name="Local" value="IDH_Maintenance.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Limited Warranty">
+	<param name="Local" value="IDH_Warranty.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Safety">
+	<param name="Local" value="IDH_Safety.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Abbreviations of Electrochemical Techniques">
+	<param name="Local" value="IDH_Abbreviations.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Model 400C Series Time-Resolved Electrochemical Quartz">
+	<param name="Local" value="IDH_400C_Series.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Model 600F Series Electrochemical Analyzer / Workstation">
+	<param name="Local" value="IDH_600F_Series.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Model 700F Series Bipotentiostat">
+	<param name="Local" value="IDH_700F_Series.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Model 800D Series Electrochemical Detector">
+	<param name="Local" value="IDH_800D_Series.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Model CHI920F Scanning Electrochemical Microscope">
+	<param name="Local" value="IDH_920F.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Model 1000D Series Multi-Potentiostat">
+	<param name="Local" value="IDH_1000D_Series.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Model 1100D Series Power Potentiostat/Galvanostat">
+	<param name="Local" value="IDH_1100D_Series.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Model 1200C Series Handheld Potentiostat">
+	<param name="Local" value="IDH_1200C_Series.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Model 1400 Series 4 channel Potentiostat and Potentiometer">
+	<param name="Local" value="IDH_1400_Series.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Model 1550A Picoliter Solution Dispenser">
+	<param name="Local" value="IDH_1550A.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Model 200B Picoamp Booster and Faraday Cage">
+	<param name="Local" value="IDH_200B.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Model 680C Amp Booster">
+	<param name="Local" value="IDH_680C.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Model 684 Multiplexer">
+	<param name="Local" value="IDH_684.htm">
+</object>
+<li><object type="text/sitemap">
+	<param name="Name" value="Electrodes and Accessories">
+	<param name="Local" value="IDH_Accessories.htm">
+</object>
+</ul>
+</ul>
+</ul>
+</body>
+</html>

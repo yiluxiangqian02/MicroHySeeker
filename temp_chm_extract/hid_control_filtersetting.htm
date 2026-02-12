@@ -1,0 +1,81 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>Filter Setting command (Control menu)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=8" />
+<meta name="generator" content="HelpSmith 6.1.3 (Build 16.428)" />
+<style type="text/css" media="screen">
+html {
+  height: 100%;
+}
+body {
+  background-color: White;
+  margin: 0 0 0 0;
+}
+</style>
+<link type="text/css" href="styles.css" rel="stylesheet" />
+</head>
+<body>
+<div align="left">
+  <table class="tbl0">
+    <tr class="row0">
+      <td class="cell0">
+        <p class="ps0"><span class="ts0">Filter Setting command (Control menu)</span></p>
+      </td>
+      <td class="cell1">
+        <p class="ps1"><a href="hid_control_ircompensation.htm"><img width="33" height="36" border="0" src="Images/btn_prev_n.gif" /></a><a href="menu_control.htm"><img width="22" height="36" border="0" src="Images/btn_home_n.gif" /></a><a href="hid_control_cell.htm"><img width="36" height="36" border="0" src="Images/btn_next_n.gif" /></a></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell2" colspan="2">
+        <p>&nbsp;</p>
+      </td>
+    </tr>
+  </table>
+</div>
+<p class="ps2"><span class="ts35">This command opens a </span><a href="hidd_dialog_filter7b.htm" class="hs0">Filter Selection dialog box</a><span class="ts35">. Use this command to set potential and current filters.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">The potential filter is used to filter the potential waveforms. It is a second-order Bessel low-pass filter and can be used to filter out transient components. The potential filter can be used, for instance, to convert a staircase ramp to a linear sweep.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">A capacitor can be connected to the feedback resistor of the i/E converter to form a low-pass RC filter. This can remove the high-frequency noise at the first hand.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">The signal filter is applied before the gain stage. It is a second-order Bessel low-pass filter.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">These filters are useful for reducing the amount of noise during measurements.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">Click the Help button in the resulting dialog box for more information.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">This command has a toolbar button:</span></p>
+<p class="ps21"><img width="32" height="28" border="0" src="Images/filter.png" /></p>
+<p class="ps21">&nbsp;</p>
+<p class="ps22"><span class="ts35">The </span><a href="hid_control_filtersetting.htm" class="hs0">Filter Setting</a><span class="ts35">&nbsp;command presents this dialog box.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span><img width="948" height="415" border="0" src="Images/Image(70).png" /></p>
+<p class="ps17"><span class="ts35">The &quot;2nd&quot; columns apply to bipotentiostat dual-channel measurements.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">If you are unsure what settings to choose, please select &quot;Automatic&quot;.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Potential Filter</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">The grayed-out box displays the actual potential filter setting. Choose the potential filter cutoff frequency from the list. </span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">The potential filter is a 2nd order Bessel filter used to shape the waveforms. The appropriate setting for this filter should take the type and time scale of the experiment into account. For instance, the Automatic setting will filter out high frequency components to avoid aliasing in AC impedance measurements, whereas in linear sweep voltammetry it will convert the staircase ramp to a true linear potential sweep.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">i/E Conv Filter</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">The grayed-out box displays the actual current-to-voltage converter filter setting. Choose the i/E converter filter cutoff frequency from the list. </span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">The i/E converter filter is an RC filter in conjunction with the current-to-voltage (i/E) converter. The appropriate setting for this filter should take the type and time scale of the experiment into account.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">In certain cases, some cutoff frequencies cannot be selected. This is because for a given sensitivity scale, the feedback resistor of i/E converter is fixed, and when this is combined with the RC filter, it may be impossible to reach certain cutoff frequencies. For instance, a low (high) sensitivity scale could preclude the selection of a relatively low (high) cutoff frequency. You may be able to select the desired cutoff frequency by altering the sensitivity scale.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Signal Filter</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">The grayed-out box displays the actual signal filter setting. Choose the signal filter cutoff frequency from the list. The signal filter is a 2nd order Bessel filter. The appropriate setting for this filter should take the type and time scale of the experiment into account.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Notice</span></p>
+<p class="ps17"><span class="ts35">Please note that some of the information in this section may not apply to all instrument models.</span></p>
+<p class="ps22"><span class="ts35">&nbsp;</span></p>
+
+</body>
+</html>

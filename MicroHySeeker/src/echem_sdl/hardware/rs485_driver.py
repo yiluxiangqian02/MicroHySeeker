@@ -116,6 +116,7 @@ class MockSerial:
             CMD_ENABLE, CMD_SPEED, CMD_POSITION,
             CMD_READ_ENCODER, CMD_READ_SPEED, CMD_READ_RUN_STATUS,
             CMD_READ_ENABLE, CMD_READ_IO, CMD_READ_VERSION,
+            CMD_READ_FAULT, CMD_CLEAR_STALL,
             RX_HEADER
         )
         
@@ -149,6 +150,18 @@ class MockSerial:
         elif cmd == CMD_READ_VERSION:
             # 读取版本: FB addr 40 01 02 checksum (版本1.2)
             response = bytes([RX_HEADER, addr, cmd, 0x01, 0x02])
+        elif cmd == CMD_READ_FAULT:
+            # 读取故障状态: FB addr 3E <fault_code> checksum
+            # 0x00 = 无故障, 0x01 = 堵转
+            # Mock 可通过 self._mock_stall_flags 注入堵转
+            fault_byte = getattr(self, '_mock_stall_flags', {}).get(addr, 0x00)
+            response = bytes([RX_HEADER, addr, cmd, fault_byte])
+        elif cmd == CMD_CLEAR_STALL:
+            # 解除堵转确认: FB addr 3D 01 checksum (成功)
+            # 同时清除模拟堵转标志
+            if hasattr(self, '_mock_stall_flags'):
+                self._mock_stall_flags.pop(addr, None)
+            response = bytes([RX_HEADER, addr, cmd, 0x01])
         else:
             # 默认ACK（单字节响应）
             response = bytes([RX_HEADER, addr, cmd, 0x01])

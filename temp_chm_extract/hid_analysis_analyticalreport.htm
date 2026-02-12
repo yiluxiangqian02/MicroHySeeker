@@ -1,0 +1,91 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>Data Report command (Analysis menu)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=8" />
+<meta name="generator" content="HelpSmith 6.1.3 (Build 16.428)" />
+<style type="text/css" media="screen">
+html {
+  height: 100%;
+}
+body {
+  background-color: White;
+  margin: 0 0 0 0;
+}
+</style>
+<link type="text/css" href="styles.css" rel="stylesheet" />
+</head>
+<body>
+<div align="left">
+  <table class="tbl0">
+    <tr class="row0">
+      <td class="cell0">
+        <p class="ps0"><span class="ts0">Data Report command (Analysis menu)</span></p>
+      </td>
+      <td class="cell1">
+        <p class="ps1"><a href="hid_analysis_standardaddition.htm"><img width="33" height="36" border="0" src="Images/btn_prev_n.gif" /></a><a href="menu_analysis.htm"><img width="22" height="36" border="0" src="Images/btn_home_n.gif" /></a><a href="hid_analysis_timedependence.htm"><img width="36" height="36" border="0" src="Images/btn_next_n.gif" /></a></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell2" colspan="2">
+        <p>&nbsp;</p>
+      </td>
+    </tr>
+  </table>
+</div>
+<p class="ps2"><span class="ts35">This command opens the </span><a href="hidd_dialog_report.htm" class="hs0">Data File Report dialog box</a><span class="ts35">. </span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps22"><span class="ts35">Use this command to generate a report for stored data files. Options are available to specify peak potential windows, slope/intercept of calibration curves, destination file name, etc.</span></p>
+<p class="ps22"><span class="ts37">&nbsp;</span></p>
+<p class="ps22"><span class="ts35">The </span><a href="hid_analysis_analyticalreport.htm" class="hs0">Data File Report</a><span class="ts35">&nbsp;command presents this dialog box.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span><img width="854" height="523" border="0" src="Images/Image(104).png" /></p>
+<p class="ps17"><span class="ts35">The following options allow you to specify peak potential windows, slope/intercept of calibration curves, and select the data files to be reported:</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Compound</span></p>
+<p class="ps17"><span class="ts35">Enter the names of the species to be analyzed. Up to four compounds can be searched and reported.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Ep From and Ep To</span></p>
+<p class="ps17"><span class="ts35">Enter the peak potential range. Ep From and Ep To cannot be equal. When the program searches for peaks, the first peak in the specified range will be selected. Ranges should not overlap for different species.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Slope</span></p>
+<p class="ps17"><span class="ts35">Enter the slope of the calibration curve for each species to calculate the concentration of the compound. A value must be specified for each species. The program will warn the user if Conc. Data Type is selected and a slope is zero.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Intercept</span></p>
+<p class="ps17"><span class="ts35">Enter the intercept of the calibration curve for each species to calculate the concentration of the compound. A value must be specified for each species.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Peak Shape</span></p>
+<p class="ps17"><span class="ts35">Select the peak shape that is most appropriate for your data. The currently available choices are Gaussian, diffusive, and sigmoidal.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Data Type</span></p>
+<p class="ps17"><span class="ts35">Choose between original data, semi-derivative, and first derivative to report the concentration.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Number of Species</span></p>
+<p class="ps17"><span class="ts35">Enter the number of species for the data file report.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Concentration Unit</span></p>
+<p class="ps17"><span class="ts35">Enter the units/dimension of concentration (e.g., ppm or M).</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Report Filename</span></p>
+<p class="ps17"><span class="ts35">Enter the report filename if you want to save the report text file. If a file with the specified name already exists, an overwrite warning will be issued. If no filename is specified, the report will be shown but not saved.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Report Data Type</span></p>
+<p class="ps17"><span class="ts35">Either concentration or peak current can be reported.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Header</span></p>
+<p class="ps17"><span class="ts35">Enter the desired title (header) for the data. To display the header on the top of the plot, check the Header box using the </span><a href="hid_graphics_option.htm" class="hs0">Graph Option</a><span class="ts35">&nbsp;command.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Note</span></p>
+<p class="ps17"><span class="ts35">Enter any comments about the plot. The note will not be displayed on the plot, but will be saved in the data file. It allows you to put additional comments about the data and is well-suited for a brief description of the purpose and conditions of the experiment.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Read</span></p>
+<p class="ps17"><span class="ts35">Use this command to read data from file.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Save</span></p>
+<p class="ps17"><span class="ts35">Use this command to save data to file. XY titles, units, header, and note will be saved along with the data.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Report</span></p>
+<p class="ps22"><span class="ts35">Use this command to generate the data file report.</span></p>
+
+</body>
+</html>

@@ -361,6 +361,182 @@ class RS485Wrapper:
         except Exception as e:
             print(f"❌ RS485Wrapper: 停止所有泵失败 {e}")
             return False
+
+    # ========== 堵转检测与自动恢复 ==========
+
+    def read_pump_fault(self, address: int) -> int | None:
+        """读取泵故障状态（0x3E 命令）
+        
+        返回值:
+            0x00 = 无故障
+            0x01 = 堵转保护已触发
+            None = 通信失败
+        """
+        if not self.is_connected():
+            return None
+        try:
+            fault = self._pump_manager.read_fault(address)
+            if fault is not None and fault != 0:
+                print(f"⚠️ RS485Wrapper: 泵 {address} 故障码 0x{fault:02X}")
+            return fault
+        except TimeoutError:
+            print(f"❌ RS485Wrapper: 泵 {address} 读取故障状态超时")
+            return None
+        except Exception as e:
+            print(f"❌ RS485Wrapper: 泵 {address} 读取故障异常 {e}")
+            return None
+
+    def clear_pump_stall(self, address: int) -> bool:
+        """解除泵堵转保护（0x3D 命令）
+        
+        Returns:
+            bool: 是否成功解除
+        """
+        if not self.is_connected():
+            return False
+        try:
+            result = self._pump_manager.clear_stall(address)
+            if result:
+                print(f"✅ RS485Wrapper: 泵 {address} 堵转已解除")
+            else:
+                print(f"❌ RS485Wrapper: 泵 {address} 堵转解除失败")
+            return result
+        except Exception as e:
+            print(f"❌ RS485Wrapper: 泵 {address} 堵转解除异常 {e}")
+            return False
+
+    def check_and_clear_stall(self, address: int) -> bool:
+        """检测并尝试清除堵转
+        
+        Returns:
+            True  = 泵正常（无堵转或已成功清除）
+            False = 堵转无法清除
+        """
+        fault = self.read_pump_fault(address)
+        if fault is None:
+            # 通信失败，视为异常但不一定是堵转
+            return True
+        if fault == 0:
+            return True
+        # 有故障 → 尝试清除
+        print(f"⚠️ RS485Wrapper: 泵 {address} 检测到故障 0x{fault:02X}，尝试自动清除...")
+        return self.clear_pump_stall(address)
+
+    def start_pump_with_stall_guard(
+        self,
+        address: int,
+        direction: str,
+        rpm: int,
+        max_retries: int = 3,
+        stall_check_delay: float = 0.5,
+        on_stall_detected: callable = None,
+        on_stall_cleared: callable = None,
+        on_stall_alarm: callable = None,
+    ) -> bool:
+        """带堵转保护的泵启动
+        
+        流程:
+        1. 先检查/清除已有堵转
+        2. 启动泵
+        3. 延迟后检查是否堵转
+        4. 如堵转 → 停机 → 清除 → 重试（最多 max_retries 次）
+        5. 仍堵转 → 触发告警回调
+        
+        Args:
+            address: 泵地址
+            direction: 方向 "FWD"/"REV"
+            rpm: 转速
+            max_retries: 堵转重试次数
+            stall_check_delay: 启动后多久检查堵转 (秒)
+            on_stall_detected: 堵转检测回调 fn(address, attempt)
+            on_stall_cleared: 堵转清除成功回调 fn(address, attempt)
+            on_stall_alarm: 堵转无法恢复告警回调 fn(address)
+            
+        Returns:
+            bool: 泵是否正常运转
+        """
+        # Step 1: 预检 - 清除残留堵转
+        pre_check = self.check_and_clear_stall(address)
+        if not pre_check:
+            print(f"⚠️ RS485Wrapper: 泵 {address} 启动前堵转清除失败，仍尝试启动")
+
+        for attempt in range(max_retries + 1):
+            # Step 2: 启动泵
+            if attempt > 0:
+                print(f"🔄 RS485Wrapper: 泵 {address} 堵转恢复重试 {attempt}/{max_retries}")
+            
+            success = self.start_pump(address, direction, rpm)
+            if not success:
+                print(f"❌ RS485Wrapper: 泵 {address} 启动命令失败")
+                return False
+
+            # Step 3: 延迟后检查堵转
+            import time
+            time.sleep(stall_check_delay)
+            
+            fault = self.read_pump_fault(address)
+            if fault is None or fault == 0:
+                # 无堵转，运行正常
+                if attempt > 0 and on_stall_cleared:
+                    try:
+                        on_stall_cleared(address, attempt)
+                    except Exception:
+                        pass
+                return True
+
+            # Step 4: 检测到堵转
+            print(f"🚨 RS485Wrapper: 泵 {address} 堵转! (尝试 {attempt + 1}/{max_retries + 1})")
+            if on_stall_detected:
+                try:
+                    on_stall_detected(address, attempt)
+                except Exception:
+                    pass
+
+            # 停止泵
+            self.stop_pump(address)
+            time.sleep(0.1)
+            
+            # 清除堵转
+            cleared = self.clear_pump_stall(address)
+            if not cleared:
+                print(f"❌ RS485Wrapper: 泵 {address} 堵转清除失败")
+                # 再尝试一次清除
+                time.sleep(0.2)
+                self.clear_pump_stall(address)
+
+            if attempt < max_retries:
+                time.sleep(0.3)  # 恢复间隔
+        
+        # Step 5: 所有重试用尽 → 告警
+        print(f"🚨🚨 RS485Wrapper: 泵 {address} 堵转无法恢复!!! 已重试 {max_retries} 次")
+        if on_stall_alarm:
+            try:
+                on_stall_alarm(address)
+            except Exception:
+                pass
+        return False
+
+    def batch_check_stall(self, addresses: list = None) -> dict:
+        """批量检查多个泵的堵转状态
+        
+        Args:
+            addresses: 要检查的泵地址列表，默认检查1-12
+            
+        Returns:
+            dict: {address: fault_code} 只含有故障的泵
+        """
+        if addresses is None:
+            addresses = list(range(1, 13))
+        
+        faults = {}
+        for addr in addresses:
+            fault = self.read_pump_fault(addr)
+            if fault is not None and fault != 0:
+                faults[addr] = fault
+        
+        if faults:
+            print(f"⚠️ RS485Wrapper: 批量检查发现 {len(faults)} 个泵故障: {faults}")
+        return faults
         
     def get_pump_status(self, address: int) -> dict:
         """获取泵状态

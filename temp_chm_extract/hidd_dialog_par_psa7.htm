@@ -1,0 +1,136 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>Potentiometric Stripping Analysis Parameters dialog box</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=8" />
+<meta name="generator" content="HelpSmith 6.1.3 (Build 16.428)" />
+<style type="text/css" media="screen">
+html {
+  height: 100%;
+}
+body {
+  background-color: White;
+  margin: 0 0 0 0;
+}
+</style>
+<link type="text/css" href="styles.css" rel="stylesheet" />
+</head>
+<body>
+<div align="left">
+  <table class="tbl0">
+    <tr class="row0">
+      <td class="cell0">
+        <p class="ps0"><span class="ts0">Potentiometric Stripping Analysis Parameters dialog box</span></p>
+      </td>
+      <td class="cell1">
+        <p class="ps1"><img width="33" height="36" border="0" src="Images/btn_prev_d.gif" /><a href="menu_help.htm"><img width="22" height="36" border="0" src="Images/btn_home_n.gif" /></a><img width="36" height="36" border="0" src="Images/btn_next_d.gif" /></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell2" colspan="2">
+        <p>&nbsp;</p>
+      </td>
+    </tr>
+  </table>
+</div>
+<p class="ps2"><span class="ts35">In Potentiometric Stripping Analysis (PSA), a constant potential deposition step is first applied, after which the species accumulated at the electrode surface are stripped out by applying a constant current. Potential is recorded as a function of time. The following diagram shows the potential waveform during the deposition stage and the current waveform during the stripping stage.</span></p>
+<p class="ps25"><img width="576" height="288" border="0" src="Images/hidd_dialog_par_psa.gif" /></p>
+<div align="left">
+  <table class="tbl2">
+    <tr class="row0">
+      <td class="cell22">
+        <p class="ps18"><span class="ts41">Parameter</span></p>
+      </td>
+      <td class="cell14">
+        <p class="ps18"><span class="ts41">Range</span></p>
+      </td>
+      <td class="cell98">
+        <p class="ps18"><span class="ts41">Description</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell22">
+        <p class="ps18"><span class="ts36">Deposition E (V)</span></p>
+      </td>
+      <td class="cell14">
+        <p class="ps18"><span class="ts35">-10&nbsp;&nbsp; -&nbsp;&nbsp; +10</span></p>
+      </td>
+      <td class="cell98">
+        <p class="ps18"><span class="ts35">Deposition potential</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell22">
+        <p class="ps18"><span class="ts36">Deposit. Time (s)</span></p>
+      </td>
+      <td class="cell14">
+        <p class="ps18"><span class="ts35">0&nbsp;&nbsp; -&nbsp;&nbsp; 1000000</span></p>
+      </td>
+      <td class="cell98">
+        <p class="ps18"><span class="ts35">Deposition time</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell22">
+        <p class="ps18"><span class="ts36">Final E (V)</span></p>
+      </td>
+      <td class="cell14">
+        <p class="ps18"><span class="ts35">-10&nbsp;&nbsp; -&nbsp;&nbsp; +10</span></p>
+      </td>
+      <td class="cell98">
+        <p class="ps18"><span class="ts35">Final potential (see Notes)</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell22">
+        <p class="ps18"><span class="ts36">Stripping Curr. (A)</span></p>
+      </td>
+      <td class="cell14">
+        <p class="ps18"><span class="ts35">0&nbsp;&nbsp; -&nbsp;&nbsp; 2</span></p>
+      </td>
+      <td class="cell98">
+        <p class="ps18"><span class="ts35">Controlled stripping current</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell22">
+        <p class="ps18"><span class="ts36">Sample Interval (s)</span></p>
+      </td>
+      <td class="cell14">
+        <p class="ps18"><span class="ts35">0.0001&nbsp;&nbsp; -&nbsp;&nbsp; 50</span></p>
+      </td>
+      <td class="cell98">
+        <p class="ps18"><span class="ts35">Sampling interval</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell22">
+        <p class="ps18"><span class="ts36">Quiet Time (s)</span></p>
+      </td>
+      <td class="cell14">
+        <p class="ps18"><span class="ts35">0&nbsp;&nbsp; -&nbsp;&nbsp; 100000</span></p>
+      </td>
+      <td class="cell98">
+        <p class="ps18"><span class="ts35">Quiescent time before taking data</span></p>
+      </td>
+    </tr>
+  </table>
+</div>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">For relevant equations, please refer to the </span><a href="hid_eq_psa.htm" class="hs0">PSA Equations</a><span class="ts35">&nbsp;page.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Notes</span></p>
+<p class="ps27"><span class="ts6"></span><span class="ts7">&nbsp;&nbsp;</span><span class="ts40">If sample interval is less than 0.002 s, a total of 64K data points is allowed. The data density is equal to Run Time / 64000.</span></p>
+<p class="ps27"><span class="ts6"></span><span class="ts7">&nbsp;&nbsp;</span><span class="ts40">If the final potential is reached, the experiment will automatically stop.</span></p>
+<p class="ps27"><span class="ts6"></span><span class="ts7">&nbsp;&nbsp;</span><span class="ts40">If the controlled stripping current is set to zero, the counter electrode is actually not connected.</span></p>
+<p class="ps27"><span class="ts6"></span><span class="ts7">&nbsp;&nbsp;</span><span class="ts40">If the controlled stripping current is smaller than 1.0e-10A, no current will flow during experiment.</span></p>
+<p class="ps27"><span class="ts6"></span><span class="ts7">&nbsp;&nbsp;</span><span class="ts40">You do not have to worry about the current polarity; the system will automatically assign the current polarity according to the deposition potential and the final potential. Positive and negative current correspond to reduction and oxidation, respectively.</span></p>
+<p class="ps27"><span class="ts6"></span><span class="ts7">&nbsp;&nbsp;</span><span class="ts40">In general, the data storage interval should be chosen according to the length of the experiment. The longer the experiment, the longer the data storage interval should be.</span></p>
+<p class="ps17"><span class="ts38">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Notice</span></p>
+<p class="ps17"><span class="ts35">Please note that some of the information in this section may not apply to older instrument models. Contact info@chinstruments.com for legacy documentation.</span></p>
+<p class="ps22"><span class="ts35">&nbsp;</span></p>
+
+</body>
+</html>

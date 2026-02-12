@@ -1,0 +1,94 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>Cell Control dialog box</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=8" />
+<meta name="generator" content="HelpSmith 6.1.3 (Build 16.428)" />
+<style type="text/css" media="screen">
+html {
+  height: 100%;
+}
+body {
+  background-color: White;
+  margin: 0 0 0 0;
+}
+</style>
+<link type="text/css" href="styles.css" rel="stylesheet" />
+</head>
+<body>
+<div align="left">
+  <table class="tbl0">
+    <tr class="row0">
+      <td class="cell0">
+        <p class="ps0"><span class="ts0">Cell Control dialog box</span></p>
+      </td>
+      <td class="cell1">
+        <p class="ps1"><img width="33" height="36" border="0" src="Images/btn_prev_d.gif" /><a href="menu_help.htm"><img width="22" height="36" border="0" src="Images/btn_home_n.gif" /></a><img width="36" height="36" border="0" src="Images/btn_next_d.gif" /></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell2" colspan="2">
+        <p>&nbsp;</p>
+      </td>
+    </tr>
+  </table>
+</div>
+<p class="ps2"><span class="ts35">The </span><a href="hid_control_cell.htm" class="hs0">Cell</a><span class="ts35">&nbsp;command presents this dialog box.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">The following options allow you to set the cell control:</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Control Level of Stir Line</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">The stir line control signal can be either active high or active low. BAS uses an active high control signal, whereas PAR uses an active low signal. You can click the radio button to select the proper control level.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Immediate Stir</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">You can enter immediate stir time. The parameter range is between 1 - 32767. Press the Stir button will activate immediate stir.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Immediate Purge</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">You can enter immediate purge time. The parameter range is between 1 - 32767. Press the Purge button will activate immediate purge.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Immediate Cell On</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">You can enter the cell potential (range from -10 to +10) and the cell on time (range from 1 to 32767). Press the Cell On button will poise the electrode at the given potential for a given amount of time.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Mercury Drop Collection</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">This is a useful option for you to collect and then weigh mercury drops. Enter the number of drop you want to collect (range from 1 to 1000) and the time interval between drops (range from 0.5 to 10). Press Collect pushbutton will activate the collection process.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">4 Electrodes</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">When this option is checked, the sense electrode will be used (if the instrument has the fourth electrode). This will eliminate the iR drop due to contact resistance of the connectors. It is useful if the current is large.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Stir Between Runs</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">Check this item will allow stir between runs. This item can also be turned on or off from Run Status command under Control menu.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Purge Between Runs</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">Check this item will allow purge between runs. This item can also be turned on or off from Run Status command under Control menu.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">SMDE Drops Before Run</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">The default value of this parameter is 1. Normally the system will issue a combined dispense and knock signal before running experiment to allow a new drop to be formed when the static mercury drop electrode (SMDE) is used. You can change this default condition. The parameter range is 0 - 20. If the prerun drop is set at 0, the same drop used in the previous experiment will be used for the next experiment. More than one prerun drops might be useful if the SMDE occasionally traps little air bubble in the capillary and loses contact.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">This option can also be changed from Run Status command under Control menu.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Stabilizing Capacitor</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">There is a 0.1 mF stabilizing capacitor that might be connected between the counter and reference electrodes. This capacitor can stabilize the potentiostat but somewhat slow the system down. This is particularly useful when the double layer capacitance of working electrode is large, such as in bulk electrolysis, or in case high degree of iR compensation is required.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">The default for this stabilizing capacitor is automatic setting. You can disable the automatic setting and then enable or disable the stabilizing capacitor by clicking one of the radio buttons.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Cell On Between Runs</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">By default, the cell will be turned on during run and turned off after run. Check this will make the cell connected after run. Caution should be take when this item is checked. Connect or disconnect the cell in an improper sequence could damage the electrodes when the cell is on. It is recommended to connect the reference and counter electrodes first. When disconnect, disconnect the working electrode first.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Return to Initial E after Run</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps22"><span class="ts35">Check this will let the potential return to the Initial E after run. Otherwise, the potential will remain at the end value of the previous run. This will make sense only if Cell On Between Runs is checked.</span></p>
+
+</body>
+</html>

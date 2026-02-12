@@ -266,7 +266,7 @@ class ComboExpEditorDialog(QDialog):
                 return f"{vol_ml:.1f}mL"
             return "配液"
         
-        elif step.step_type == ProgramStepType.EChem:
+        elif step.step_type == ProgramStepType.ECHEM:
             if step.ec_settings:
                 tech = step.ec_settings.technique
                 if tech == ECTechnique.CV:
@@ -330,7 +330,7 @@ class ComboExpEditorDialog(QDialog):
             params.append(("持续时间(s)", step.transfer_duration or 10))
             params.append(("转速(RPM)", step.pump_rpm or 100))
             
-        elif step.step_type == ProgramStepType.EChem:
+        elif step.step_type == ProgramStepType.ECHEM:
             # 电化学根据技术类型显示不同参数
             if step.ec_settings:
                 ec = step.ec_settings

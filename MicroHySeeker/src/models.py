@@ -23,6 +23,7 @@ class ECTechnique(str, Enum):
     CV = "CV"
     LSV = "LSV"
     I_T = "i-t"
+    EIS = "EIS"    # 交流阻抗谱
     OCPT = "OCPT"  # 开路电位计时法
 
 
@@ -108,12 +109,21 @@ class ECSettings:
     ef: Optional[float] = None  # 最终电位 (V)
     scan_rate: Optional[float] = None  # 扫描速率 (V/s)
     sample_interval_ms: int = 100
-    sensitivity: str = "AUTO"
-    autosensitivity: bool = True
+    sensitivity: Optional[float] = None  # 灵敏度 (A/V), None表示自动
+    autosensitivity: bool = False
     quiet_time_s: float = 0.0
     run_time_s: Optional[float] = None
     seg_num: int = 1
     scan_dir: str = "FWD"
+    
+    # EIS 参数
+    freq_low: float = 1.0          # 最低频率 (Hz)
+    freq_high: float = 100000.0    # 最高频率 (Hz)
+    amplitude: float = 0.005       # AC 振幅 (V)
+    bias_mode: int = 0             # 偏置模式: 0=vs Eref, 1=vs Eoc
+    
+    # Dummy Cell 模式 (测试用，不连接真实电极)
+    use_dummy_cell: bool = True
     
     # OCPT 反向电流检测
     ocpt_enabled: bool = False
@@ -123,8 +133,8 @@ class ECSettings:
 
     def to_dict(self) -> Dict[str, Any]:
         d = asdict(self)
-        d['technique'] = self.technique.value
-        d['ocpt_action'] = self.ocpt_action.value
+        d['technique'] = self.technique.value if hasattr(self.technique, 'value') else str(self.technique)
+        d['ocpt_action'] = self.ocpt_action.value if hasattr(self.ocpt_action, 'value') else str(self.ocpt_action)
         return d
 
     @staticmethod
@@ -134,6 +144,11 @@ class ECSettings:
             data['technique'] = ECTechnique(data['technique'])
         if isinstance(data.get('ocpt_action'), str):
             data['ocpt_action'] = OCPTAction(data['ocpt_action'])
+        # 兼容旧字段名
+        if 'sample_interval' in data and 'sample_interval_ms' not in data:
+            data['sample_interval_ms'] = int(data.pop('sample_interval'))
+        elif 'sample_interval' in data:
+            data.pop('sample_interval')
         return ECSettings(**data)
 
 
@@ -151,6 +166,8 @@ class PrepSolStep:
     solvent_flags: Dict[str, bool] = field(default_factory=dict)
     # 新增：是否选中 {溶液名称: 是否选中}
     selected_solutions: Dict[str, bool] = field(default_factory=dict)
+    # 新增：注液顺序编号 {溶液名称: 顺序号}，相同编号表示同时注液
+    injection_order_numbers: Dict[str, int] = field(default_factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
         return asdict(self)
@@ -164,6 +181,8 @@ class PrepSolStep:
             data['solvent_flags'] = {}
         if 'selected_solutions' not in data:
             data['selected_solutions'] = {}
+        if 'injection_order_numbers' not in data:
+            data['injection_order_numbers'] = {}
         return PrepSolStep(**data)
     
     def get_summary(self) -> str:
@@ -223,7 +242,7 @@ class ProgStep:
 
     def to_dict(self) -> Dict[str, Any]:
         d = asdict(self)
-        d['step_type'] = self.step_type.value
+        d['step_type'] = self.step_type.value if hasattr(self.step_type, 'value') else str(self.step_type)
         if self.prep_sol_params:
             d['prep_sol_params'] = self.prep_sol_params.to_dict()
         if self.ec_settings:
@@ -312,7 +331,7 @@ class SystemConfig:
             'pumps': [p.to_dict() for p in self.pumps],
             'dilution_channels': [c.to_dict() for c in self.dilution_channels],
             'flush_channels': [c.to_dict() for c in self.flush_channels],
-            'calibration_data': self.calibration_data,
+            'calibration_data': {str(k): v for k, v in self.calibration_data.items()},
             'data_dir': self.data_dir,
         }
 
@@ -321,11 +340,20 @@ class SystemConfig:
 
     @staticmethod
     def from_dict(data: Dict[str, Any]) -> 'SystemConfig':
+        # calibration_data 的 key 在 JSON 中是字符串，需转回 int
+        raw_cal = data.get('calibration_data', {})
+        calibration_data = {}
+        for k, v in raw_cal.items():
+            try:
+                calibration_data[int(k)] = v
+            except (ValueError, TypeError):
+                calibration_data[k] = v
+        
         config = SystemConfig(
             rs485_port=data.get('rs485_port', 'COM1'),
             rs485_baudrate=data.get('rs485_baudrate', 9600),
             mock_mode=data.get('mock_mode', True),
-            calibration_data=data.get('calibration_data', {}),
+            calibration_data=calibration_data,
             data_dir=data.get('data_dir', './data'),
         )
         config.pumps = [PumpConfig.from_dict(p) for p in data.get('pumps', [])]

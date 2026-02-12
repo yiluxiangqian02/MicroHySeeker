@@ -1,0 +1,112 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>Time Dependence command (Analysis menu)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=8" />
+<meta name="generator" content="HelpSmith 6.1.3 (Build 16.428)" />
+<style type="text/css" media="screen">
+html {
+  height: 100%;
+}
+body {
+  background-color: White;
+  margin: 0 0 0 0;
+}
+</style>
+<link type="text/css" href="styles.css" rel="stylesheet" />
+</head>
+<body>
+<div align="left">
+  <table class="tbl0">
+    <tr class="row0">
+      <td class="cell0">
+        <p class="ps0"><span class="ts0">Time Dependence command (Analysis menu)</span></p>
+      </td>
+      <td class="cell1">
+        <p class="ps1"><a href="hid_analysis_analyticalreport.htm"><img width="33" height="36" border="0" src="Images/btn_prev_n.gif" /></a><a href="menu_analysis.htm"><img width="22" height="36" border="0" src="Images/btn_home_n.gif" /></a><a href="hid_analysis_special.htm"><img width="36" height="36" border="0" src="Images/btn_next_n.gif" /></a></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell2" colspan="2">
+        <p>&nbsp;</p>
+      </td>
+    </tr>
+  </table>
+</div>
+<p class="ps2"><span class="ts35">This command opens the </span><a href="hidd_dialog_timerep.htm" class="hs0">Time Dependence dialog box</a><span class="ts35">.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps22"><span class="ts35">Use this command to generate a report or plot for the time dependence of peak heights or concentrations from stored data files. The program will search for peak height or concentration in each data file, sorted in chronological order relative to the earliest experiment.</span></p>
+<p class="ps22"><span class="ts37">&nbsp;</span></p>
+<p class="ps22"><span class="ts35">The </span><a href="hid_analysis_timedependence.htm" class="hs0">Time Dependence</a><span class="ts35">&nbsp;command presents this dialog box.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span><img width="800" height="674" border="0" src="Images/Image(105).png" /></p>
+<p class="ps17"><span class="ts35">The following options allow you to specify peak potential windows, slope/intercept of calibration curves, and select the data files whose time dependence is to be reported or plotted:</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Ep From and Ep To</span></p>
+<p class="ps17"><span class="ts35">Enter the peak potential range. Ep From and Ep To cannot be equal. When the program searches for peaks, the first peak in the specified range will be selected. Ranges should not overlap for different species.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Slope</span></p>
+<p class="ps17"><span class="ts35">Enter the slope of the calibration curve for each species to calculate the concentration of the compound. A value must be specified for each species. The program will warn the user if Conc. Data Type is selected and a slope is zero.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Intercept</span></p>
+<p class="ps17"><span class="ts35">Enter the intercept of the calibration curve for each species to calculate the concentration of the compound. A value must be specified for each species.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Peak Shape</span></p>
+<p class="ps17"><span class="ts35">Select the peak shape that is most appropriate for your data. The currently available choices are Gaussian, diffusive, and sigmoidal.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Data Type</span></p>
+<p class="ps17"><span class="ts35">Choose between original data, semi-derivative, and first derivative to report the concentration.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Y Axis Title</span></p>
+<p class="ps17"><span class="ts35">Enter the desired Y axis title (e.g., Concentration or Peak Current) to be plotted.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Y Axis Unit</span></p>
+<p class="ps17"><span class="ts35">Enter the units/dimension of concentration (e.g., ppm or M).</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Report Name</span></p>
+<p class="ps17"><span class="ts35">Enter the report filename if you want to save the report text file. If a file with the specified name already exists, an overwrite warning will be issued. If no filename is specified, the report will be shown but not saved.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Report Data Type</span></p>
+<p class="ps17"><span class="ts35">Either concentration or peak current can be reported.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Header</span></p>
+<p class="ps17"><span class="ts35">Enter the desired title (header) for the data. To display the header on the top of the plot, check the Header box using the </span><a href="hid_graphics_option.htm" class="hs0">Graph Option</a><span class="ts35">&nbsp;command.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Note</span></p>
+<p class="ps17"><span class="ts35">Enter any comments about the plot. The note will not be displayed on the plot, but will be saved in the data file. It allows you to put additional comments about the data and is well-suited for a brief description of the purpose and conditions of the experiment.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Read</span></p>
+<p class="ps17"><span class="ts35">Use this command to read the dialog box parameters from file. XY titles, units, header, and note will be read.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Save</span></p>
+<p class="ps17"><span class="ts35">Use this command to save the dialog box parameters to file. XY titles, units, header, and note will be saved.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Report</span></p>
+<p class="ps17"><span class="ts35">Use this command to generate the time dependence report as text file.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Plot</span></p>
+<p class="ps22"><span class="ts35">Use this command to generate the time dependence graphical plot.</span></p>
+<p class="ps22"><span class="ts37">&nbsp;</span></p>
+<p class="ps22"><span class="ts36">Combine Multiple Time based Data Files into One Time Based File</span></p>
+<p class="ps22"><span class="ts3">This is for multiple time based data files (including CV, LSV, i-t, STEP, CP, ISTEP) to be combined into one data file based on the time. The multiple time based data files should have names as File1, File2, File3, File4, ... The file name has to be the same with suffix 1, 2, 3, 4, ... The files have to be the same technique and in a sequence. The time is calculated according to the Year, Month, Date, Hour, Minute, Second of the starting point.</span></p>
+<p class="ps22"><span class="ts3">&nbsp;</span></p>
+<p class="ps22"><span class="ts36">Folder and Base Filename</span></p>
+<p class="ps22"><span class="ts3">If the multiple time based data files have names as File1, File2, File3, File4, ... , please enter &quot;File&quot; as base filename.</span></p>
+<p class="ps22"><span class="ts3">&nbsp;</span></p>
+<p class="ps22"><span class="ts24">Number of Files</span></p>
+<p class="ps22"><span class="ts3">If the files to be combines has names of File1, File2, File3, File4, File 5, then total file number is 5.</span></p>
+<p class="ps22"><span class="ts3">&nbsp;</span></p>
+<p class="ps22"><span class="ts24">Folder Browse</span></p>
+<p class="ps22"><span class="ts3">One may browse the folder where the multiple data files were stored and click one of the file. The disk drive name, folder name and filename will appreat in Folder and Base Filename field. Please remove the suffix from the filename.</span></p>
+<p class="ps22"><span class="ts3">&nbsp;</span></p>
+<p class="ps22"><span class="ts24">Combine to One point per Files</span></p>
+<p class="ps22"><span class="ts3">If this check box is checked, each one data file will be averaged to one point and reported.</span></p>
+<p class="ps22"><span class="ts3">&nbsp;</span></p>
+<p class="ps22"><span class="ts24">Combine</span></p>
+<p class="ps22"><span class="ts35">Press this key to combine the data files. A text file with given filename will appear in the data file folder. Please press OK key to exit the dialog box. </span></p>
+<p class="ps22"><span class="ts37">&nbsp;</span></p>
+<p class="ps22"><span class="ts37">&nbsp;</span></p>
+<p class="ps22"><span class="ts37">&nbsp;</span></p>
+
+</body>
+</html>

@@ -1,0 +1,177 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>Digital Simulation dialog box</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=8" />
+<meta name="generator" content="HelpSmith 6.1.3 (Build 16.428)" />
+<style type="text/css" media="screen">
+html {
+  height: 100%;
+}
+body {
+  background-color: White;
+  margin: 0 0 0 0;
+}
+</style>
+<link type="text/css" href="styles.css" rel="stylesheet" />
+</head>
+<body>
+<div align="left">
+  <table class="tbl0">
+    <tr class="row0">
+      <td class="cell0">
+        <p class="ps0"><span class="ts0">Digital Simulation dialog box</span></p>
+      </td>
+      <td class="cell1">
+        <p class="ps1"><a href="hid_sim_mechanism.htm"><img width="33" height="36" border="0" src="Images/btn_prev_n.gif" /></a><a href="hid_sim_mechanism.htm"><img width="22" height="36" border="0" src="Images/btn_home_n.gif" /></a><a href="hidd_dialog_sim_k.htm"><img width="36" height="36" border="0" src="Images/btn_next_n.gif" /></a></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell2" colspan="2">
+        <p>&nbsp;</p>
+      </td>
+    </tr>
+  </table>
+</div>
+<p class="ps2"><span class="ts35">The </span><a href="hid_sim_mechanism.htm" class="hs0">Mechanism</a><span class="ts35">&nbsp;command presents this dialog box.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span><img width="595" height="604" border="0" src="Images/Image(107).png" /></p>
+<p class="ps17"><span class="ts35">Before running a simulation, use this dialog box to set the reaction mechanism, species concentrations, kinetic, experimental, and other parameters. All settings can be saved to and read from file. The equilibrium concentration can also be checked.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Mechanism Edit</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">This edit box allows you to edit the reaction mechanism. The Mechanism Select list contains several pre-defined mechanisms which when clicked automatically fill out the Mechanism Edit box. Type directly in the edit box to input a user-defined mechanism (select models only).</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">To write your own mechanism, use a single letter (A-Z) to represent each chemical species. The letter &quot;e&quot; is reserved for electron transfer. The program will treat uppercase and lowercase letters as identical and ignore any spaces. </span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">The program can simulate any reasonable combination of electron transfer, 1st order, and 2nd order chemical reactions, up to 11 reactions and 9 chemical species. Example usage:</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<div align="left">
+  <table class="tbl2">
+    <tr class="row0">
+      <td class="cell32">
+        <p class="ps18"><span class="ts35">A + e = B</span></p>
+      </td>
+      <td class="cell235">
+        <p class="ps18"><span class="ts35">(reduction)</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell32">
+        <p class="ps18"><span class="ts35">A - e = B</span></p>
+      </td>
+      <td class="cell235">
+        <p class="ps18"><span class="ts35">(oxidation)</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell32">
+        <p class="ps18"><span class="ts35">A = B</span></p>
+      </td>
+      <td class="cell235">
+        <p class="ps18"><span class="ts35">(isomerization)</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell32">
+        <p class="ps18"><span class="ts35">A = B + C</span></p>
+      </td>
+      <td class="cell235">
+        <p class="ps18"><span class="ts35">(dissociation)</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell32">
+        <p class="ps18"><span class="ts35">A + B = C</span></p>
+      </td>
+      <td class="cell235">
+        <p class="ps18"><span class="ts35">(combination)</span></p>
+      </td>
+    </tr>
+    <tr class="row0">
+      <td class="cell32">
+        <p class="ps18"><span class="ts35">A + B = C + D</span></p>
+      </td>
+      <td class="cell235">
+        <p class="ps18"><span class="ts35">(general reaction)</span></p>
+      </td>
+    </tr>
+  </table>
+</div>
+<p class="ps17"><span class="ts35">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></p>
+<p class="ps17"><span class="ts36">Mechanism Select</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">There are 10 pre-defined mechanisms covering the most commonly encountered reactions. The first item is &quot;User Input&quot;. Only Model 630 and Model 660 will accept the user defined mechanism.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">Some mechanisms not listed can still be obtained from the pre-defined mechanisms. For instance, EEC, ECC, and CEC mechanisms can be obtained from the ECEC mechanism by setting the appropriate kinetic parameters to null. If you define the heterogeneous electron transfer rate ko to zero, the corresponding electron transfer step will have no effect. If you define the forward and reverse rate constants of a chemical reaction to zero, the corresponding chemical reaction will have no effect.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">Clicking on a pre-defined reaction mechanism will automatically fill out the Mechanism Edit box. If &quot;User Input&quot; is selected, the Mechanism Edit box will be empty.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">System under study</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">A diffusive or adsorptive system can be simulated. For diffusive systems, planar diffusion is assumed. For adsorptive systems, it is assumed that the adsorption obeys the Langmuir isotherm, and both oxidized form and reduced form are strongly adsorbed.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Dimensionless current</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">When this box is checked, the program will calculate the dimensionless current, which is useful for comparison with other theoretical predictions. When this box is not checked, current will be calculated according to the concentration, electrode area,&nbsp; and time scale of the experiment.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Initial Concentration at the equilibrium</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">When this box is checked, the program will first calculate equilibrium concentrations and then use the computed values as the initial conditions for the simulation. The equilibrium state is calculated according to the kinetic parameters and input concentrations. When this box is unchecked, the program uses input concentrations as initial condition.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Display concentration profile during run</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">When this box is checked, the program will display the concentration profile along with the voltammogram during the simulation. This is very helpful to understand the reaction mechanism and is ideal for teaching purposes.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">For voltammograms, the current axis scale is determined by the sensitivity scale selected under the </span><a href="IDH_900D.htm" class="hs0">Parameters</a><span class="ts35">&nbsp;command. If the current axis scale is too high, the voltammogram will appear as a flat line. If the current axis scale is too low, the data points will be scattered everywhere. However, the post-run data display will always autoscale the voltammogram to maximize readability. The sensitivity scale can be adjusted for the next simulation run according to the post-run display.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">For concentration profiles, relative concentrations and relative distances are used. The total concentration of all involved species is set to unity by default, and all concentrations during simulation are scaled relative to this value. The unit distance is set to 6*sqrt(Dt) by default, where D is the diffusion coefficient and t the total time involved in the given experiment. To change the scales for concentration and distance from these default values, see the two sections below.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Conc. Range</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">Enter the scale factor for displaying the concentration profile. The range is 0.001 - 100000, and the default is 1.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Dist. Range</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">Enter the scale factor for displaying distances. The range is 0.001 - 10, and the default is 1.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Time Delay Loop</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">The execution time of the simulation depends on the problem you want to study and the type of computer used. When the execution time is too short, you may not be able to visualize changes in the concentration profile clearly. The Time Delay Loop variable allows you to slow the simulation down for such visualization purposes, by inserting a delay of this value between the computation of two points. The range of this parameter is from 0 to 1e6. The appropriate value will depend on the problem you want to study and the speed of your PC.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Read/Save</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">You can read from/save to *.sim files that contain all the parameters needed for simulation.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">On clicking the Read/Save button, the program displays an Open/Save As dialog box so you can select/name your file.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Exp. Param</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">Click this button to set experimental parameters. Alternatively, use the </span><a href="IDH_900D.htm" class="hs0">Parameter</a><span class="ts35">&nbsp;command under Setup menu.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts63">The system displays the </span><a href="hidd_dialog_par_cvsim.htm" class="hs3">Cyclic Voltammetry Simulator Parameters dialog box</a><span class="ts35">&nbsp;so you can select the parameters you want to use.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Kinetics</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">This button allows you to enter the electron transfer kinetic parameters, such as standard heterogeneous rate constant, the standard redox potential, the charge transfer coefficient. It also allows you to enter the forward and backward rate constant for chemical reactions.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">The system displays the </span><a href="hidd_dialog_sim_k.htm" class="hs0">Potentials and Rate Constants dialog box</a><span class="ts35">&nbsp;so you can enter the kinetic parameters.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Conc</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">This button allows you to enter the diffusion coefficient and concentration of all chemical species in the system. Clicking this button displays the </span><a href="hidd_dialog_sim_c0.htm" class="hs0">Concentration and Diffusion Coefficients dialog box</a><span class="ts35">&nbsp;for diffusive systems or the </span><a href="hidd_dialog_sim_c1.htm" class="hs0">Surface Concentration dialog box</a><span class="ts35">&nbsp;for adsorptive systems.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Equilibrium Command</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">This button allows you to view the concentration of each involved chemical species under the given kinetic conditions. Clicking this button displays the </span><a href="hidd_dialog_sim_eq.htm" class="hs0">Concentration at Equilibrium dialog box</a><span class="ts35">&nbsp;so you can view the equilibrium state.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Variables Command</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts35">This button allows you to specify values for other parameters, such as temperature and electrode area. Clicking this button displays the </span><a href="hidd_dialog_sim_variable.htm" class="hs0">Simulation Variables dialog box</a><span class="ts35">&nbsp;so you can enter values for the appropriate variables.</span></p>
+<p class="ps17"><span class="ts35">&nbsp;</span></p>
+<p class="ps17"><span class="ts36">Notice</span></p>
+<p class="ps17"><span class="ts35">Please note that some of the information in this section may not apply to older instrument models. Contact info@chinstruments.com for legacy documentation.</span></p>
+<p class="ps22"><span class="ts35">&nbsp;</span></p>
+
+</body>
+</html>
