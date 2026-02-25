@@ -307,12 +307,12 @@ class ComboExpEditorDialog(QDialog):
             params.append(("持续时间(s)", step.duration_s or 0))
             
         elif step.step_type == ProgramStepType.FLUSH:
-            params.append(("持续时间(s)", step.flush_cycle_duration_s or 30))
-            params.append(("循环次数", step.flush_cycles or 1))
+            vol_ml = (step.volume_ul / 1000.0) if step.volume_ul else 10.0
+            params.append(("体积(mL)", vol_ml))
         
         elif step.step_type == ProgramStepType.EVACUATE:
-            params.append(("持续时间(s)", step.transfer_duration or 30))
-            params.append(("循环次数", step.flush_cycles or 1))
+            vol_ml = (step.volume_ul / 1000.0) if step.volume_ul else 10.0
+            params.append(("体积(mL)", vol_ml))
             
         elif step.step_type == ProgramStepType.PREP_SOL:
             # 配液: 显示各溶液浓度
@@ -327,7 +327,8 @@ class ComboExpEditorDialog(QDialog):
             params.append(("配液", "总体积(mL)", vol_ml))
             
         elif step.step_type == ProgramStepType.TRANSFER:
-            params.append(("持续时间(s)", step.transfer_duration or 10))
+            vol_ml = (step.volume_ul / 1000.0) if step.volume_ul else 5.0
+            params.append(("体积(mL)", vol_ml))
             params.append(("转速(RPM)", step.pump_rpm or 100))
             
         elif step.step_type == ProgramStepType.ECHEM:

@@ -192,6 +192,9 @@ def expected_rx_length(cmd: int) -> int | None:
     # 4字节响应的命令
     if cmd == CMD_READ_ENCODER:
         return 8
+    # 6字节响应: 累加编码器值 int48 (header+addr+cmd+6+checksum=10)
+    if cmd == CMD_READ_ENCODER_ACCUM:
+        return 10
     # 多字节响应的命令（暂不支持）
     if cmd in (CMD_READ_ALL_SETTINGS, CMD_READ_ALL_STATUS):
         return None  # 需要特殊处理

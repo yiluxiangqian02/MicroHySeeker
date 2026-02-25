@@ -123,7 +123,7 @@ SCAN_ADDRESS_RANGE = range(MIN_DEVICE_ADDRESS, MAX_DEVICE_ADDRESS + 1)
 
 EXPECTED_RESPONSE_LENGTH = {
     CMD_READ_ENCODER: 8,          # 帧头(1)+地址(1)+命令(1)+进位值(4)+编码器值(2)+校验(1) = 10? 文档说8
-    CMD_READ_ENCODER_ACCUM: 9,    # 帧头(1)+地址(1)+命令(1)+编码器值(6)+校验(1) = 10? 文档说int48_t
+    CMD_READ_ENCODER_ACCUM: 10,   # 帧头(1)+地址(1)+命令(1)+编码器值(6)+校验(1) = 10  (int48_t)
     CMD_READ_SPEED: 6,            # 帧头(1)+地址(1)+命令(1)+速度(2)+校验(1) = 6
     CMD_READ_VERSION: 8,          # 版本信息
     CMD_READ_ALL_SETTINGS: 38,    # 所有设置参数

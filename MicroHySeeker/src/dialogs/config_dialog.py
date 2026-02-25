@@ -205,6 +205,14 @@ class ConfigDialog(QDialog):
         self.dil_current_color = "#00FF00"
         input_layout.addRow("颜色:", self.dil_color_btn)
         
+        self.dil_volume_input = QDoubleSpinBox()
+        self.dil_volume_input.setRange(0, 10000)
+        self.dil_volume_input.setDecimals(1)
+        self.dil_volume_input.setSingleStep(1.0)
+        self.dil_volume_input.setValue(50.0)
+        self.dil_volume_input.setSuffix(" mL")
+        input_layout.addRow("原液总量(mL):", self.dil_volume_input)
+        
         layout.addWidget(input_group)
         
         # 按钮
@@ -221,15 +229,16 @@ class ConfigDialog(QDialog):
         btn_layout.addStretch()
         layout.addLayout(btn_layout)
         
-        # 表格列：通道(序号), 溶液名称, 原浓度(mol/L), 泵地址, 方向, 转速(RPM), 管道内径(mm), 颜色
+        # 表格列：通道(序号), 溶液名称, 原浓度(mol/L), 泵地址, 方向, 转速(RPM), 管道内径(mm), 原液总量(mL), 颜色
         self.dilution_table = QTableWidget()
-        self.dilution_table.setColumnCount(8)
+        self.dilution_table.setColumnCount(9)
         self.dilution_table.setHorizontalHeaderLabels([
-            "通道", "溶液名称", "原浓度(mol/L)", "泵地址", "方向", "转速(RPM)", "管道内径(mm)", "颜色"
+            "通道", "溶液名称", "原浓度(mol/L)", "泵地址", "方向", "转速(RPM)", "管道内径(mm)", "原液总量(mL)", "颜色"
         ])
         self.dilution_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.dilution_table.setFont(FONT_NORMAL)
-        layout.addWidget(self.dilution_table)
+        self.dilution_table.setMinimumHeight(200)  # 预留约5行通道高度
+        layout.addWidget(self.dilution_table, 1)  # stretch=1 让表格占据剩余空间
         
         return widget
     
@@ -259,11 +268,10 @@ class ConfigDialog(QDialog):
         self.flush_rpm_input.setValue(100)
         input_layout.addRow("转速(RPM):", self.flush_rpm_input)
         
-        self.flush_duration_input = QDoubleSpinBox()
-        self.flush_duration_input.setRange(0, 1000)
-        self.flush_duration_input.setDecimals(2)
-        self.flush_duration_input.setValue(30.00)
-        input_layout.addRow("循环时长(秒):", self.flush_duration_input)
+        self.flush_volume_input = QLineEdit()
+        self.flush_volume_input.setPlaceholderText("输入数字或 inf")
+        self.flush_volume_input.setText("inf")
+        input_layout.addRow("原液总量(mL):", self.flush_volume_input)
         
         self.flush_tube_input = QDoubleSpinBox()
         self.flush_tube_input.setRange(0.1, 10.0)
@@ -288,15 +296,16 @@ class ConfigDialog(QDialog):
         btn_layout.addStretch()
         layout.addLayout(btn_layout)
         
-        # 表格列：通道, 泵地址, 方向, 工作类型, 转速(RPM), 循环时长(s), 管道内径(mm)
+        # 表格列：通道, 泵地址, 方向, 工作类型, 转速(RPM), 原液总量(mL), 管道内径(mm)
         self.flush_table = QTableWidget()
         self.flush_table.setColumnCount(7)
         self.flush_table.setHorizontalHeaderLabels([
-            "通道", "泵地址", "方向", "工作类型", "转速(RPM)", "循环时长(s)", "管道内径(mm)"
+            "通道", "泵地址", "方向", "工作类型", "转速(RPM)", "原液总量(mL)", "管道内径(mm)"
         ])
         self.flush_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.flush_table.setFont(FONT_NORMAL)
-        layout.addWidget(self.flush_table)
+        self.flush_table.setMinimumHeight(160)
+        layout.addWidget(self.flush_table, 1)
         
         return widget
     
@@ -381,11 +390,21 @@ class ConfigDialog(QDialog):
             tube_spin.valueChanged.connect(lambda val, r=row: self._on_dilution_param_changed(r, 'tube_diameter_mm', val))
             self.dilution_table.setCellWidget(row, 6, tube_spin)
             
+            # 原液总量 (可编辑)
+            vol_spin = QDoubleSpinBox()
+            vol_spin.setRange(0, 10000)
+            vol_spin.setDecimals(1)
+            vol_spin.setSingleStep(1.0)
+            vol_spin.setSuffix(" mL")
+            vol_spin.setValue(channel.total_volume_ml)
+            vol_spin.valueChanged.connect(lambda val, r=row: self._on_volume_changed(r, val))
+            self.dilution_table.setCellWidget(row, 7, vol_spin)
+            
             # 颜色按钮
             color_btn = QPushButton()
             color_btn.setStyleSheet(f"background-color: {channel.color}; border: none;")
             color_btn.setFixedSize(60, 25)
-            self.dilution_table.setCellWidget(row, 7, color_btn)
+            self.dilution_table.setCellWidget(row, 8, color_btn)
     
     def _on_dilution_param_changed(self, row: int, field: str, value):
         """配液通道参数变更"""
@@ -427,6 +446,22 @@ class ConfigDialog(QDialog):
                         return
             setattr(self.config.dilution_channels[row], field, value)
     
+    def _on_volume_changed(self, row: int, value: float):
+        """配液通道原液总量变更 - 同时更新剩余量"""
+        if 0 <= row < len(self.config.dilution_channels):
+            ch = self.config.dilution_channels[row]
+            old_total = ch.total_volume_ml
+            ch.total_volume_ml = value
+            # 如果原来没配置总量(0)或者是增大总量，同步更新剩余量
+            if old_total == 0 or ch.remaining_volume_ml <= 0:
+                ch.remaining_volume_ml = value
+            elif value > old_total:
+                # 增大总量：剩余量也增加同样的差值
+                ch.remaining_volume_ml += (value - old_total)
+            elif value < ch.remaining_volume_ml:
+                # 缩小总量：剩余量不能超过总量
+                ch.remaining_volume_ml = value
+    
     def _refresh_flush_table(self):
         """刷新冲洗通道表格 - 参数可编辑"""
         self.flush_table.setRowCount(len(self.config.flush_channels))
@@ -467,13 +502,15 @@ class ConfigDialog(QDialog):
             rpm_spin.valueChanged.connect(lambda val, r=row: self._on_flush_param_changed(r, 'rpm', val))
             self.flush_table.setCellWidget(row, 4, rpm_spin)
             
-            # 循环时长 (可编辑)
-            dur_spin = QDoubleSpinBox()
-            dur_spin.setRange(0, 1000)
-            dur_spin.setDecimals(2)
-            dur_spin.setValue(channel.cycle_duration_s)
-            dur_spin.valueChanged.connect(lambda val, r=row: self._on_flush_param_changed(r, 'cycle_duration_s', val))
-            self.flush_table.setCellWidget(row, 5, dur_spin)
+            # 原液总量 (可编辑, 支持 inf)
+            vol_edit = QLineEdit()
+            vol_val = getattr(channel, 'total_volume_ml', float('inf'))
+            vol_edit.setText("inf" if vol_val == float('inf') else f"{vol_val:.2f}")
+            vol_edit.setAlignment(Qt.AlignCenter)
+            vol_edit.editingFinished.connect(
+                lambda r=row, le=vol_edit: self._on_flush_volume_changed(r, le)
+            )
+            self.flush_table.setCellWidget(row, 5, vol_edit)
             
             # 管道内径 (可编辑)
             tube_spin = QDoubleSpinBox()
@@ -539,6 +576,27 @@ class ConfigDialog(QDialog):
                         return
             setattr(self.config.flush_channels[row], field, value)
     
+    def _on_flush_volume_changed(self, row: int, line_edit: QLineEdit):
+        """冲洗通道原液总量变更 — 支持 inf"""
+        if 0 <= row < len(self.config.flush_channels):
+            text = line_edit.text().strip().lower()
+            if text in ('inf', '∞', ''):
+                self.config.flush_channels[row].total_volume_ml = float('inf')
+                line_edit.setText("inf")
+            else:
+                try:
+                    val = float(text)
+                    if val < 0:
+                        QMessageBox.warning(self, "警告", "原液总量不能为负数")
+                        old = self.config.flush_channels[row].total_volume_ml
+                        line_edit.setText("inf" if old == float('inf') else f"{old:.2f}")
+                        return
+                    self.config.flush_channels[row].total_volume_ml = val
+                except ValueError:
+                    QMessageBox.warning(self, "警告", "请输入有效数字或 inf")
+                    old = self.config.flush_channels[row].total_volume_ml
+                    line_edit.setText("inf" if old == float('inf') else f"{old:.2f}")
+    
     def _get_used_pump_addresses(self) -> set:
         """获取所有已被配置的泵地址（配液+冲洗）"""
         used = set()
@@ -577,7 +635,9 @@ class ConfigDialog(QDialog):
             direction="FWD" if self.dil_dir_input.currentText() == "正向" else "REV",
             default_rpm=self.dil_rpm_input.value(),
             color=self.dil_current_color,
-            tube_diameter_mm=round(self.dil_tube_input.value(), 2)
+            tube_diameter_mm=round(self.dil_tube_input.value(), 2),
+            total_volume_ml=round(self.dil_volume_input.value(), 1),
+            remaining_volume_ml=round(self.dil_volume_input.value(), 1),
         )
         self.config.dilution_channels.append(new_channel)
         self._refresh_dilution_table()
@@ -608,6 +668,20 @@ class ConfigDialog(QDialog):
             QMessageBox.warning(self, "警告", f"工作类型 '{work_type}' 已被配置，每种类型只能配置一次")
             return
         
+        # 解析原液总量
+        vol_text = self.flush_volume_input.text().strip().lower()
+        if vol_text in ('inf', '', '∞'):
+            total_volume_ml = float('inf')
+        else:
+            try:
+                total_volume_ml = float(vol_text)
+                if total_volume_ml < 0:
+                    QMessageBox.warning(self, "警告", "原液总量不能为负数")
+                    return
+            except ValueError:
+                QMessageBox.warning(self, "警告", "请输入有效数字或 inf")
+                return
+        
         new_channel = FlushChannel(
             channel_id=str(len(self.config.flush_channels) + 1),
             pump_name=f"冲洗泵{len(self.config.flush_channels) + 1}",
@@ -615,7 +689,7 @@ class ConfigDialog(QDialog):
             direction="FWD" if self.flush_dir_input.currentText() == "正向" else "REV",
             work_type=work_type,
             rpm=self.flush_rpm_input.value(),
-            cycle_duration_s=round(self.flush_duration_input.value(), 2),
+            total_volume_ml=total_volume_ml,
             tube_diameter_mm=round(self.flush_tube_input.value(), 2)
         )
         self.config.flush_channels.append(new_channel)

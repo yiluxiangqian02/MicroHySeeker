@@ -10,7 +10,8 @@ from pathlib import Path
 
 # 导入后端模块
 try:
-    sys.path.insert(0, str(Path(__file__).parent.parent))
+    if not getattr(sys, 'frozen', False):
+        sys.path.insert(0, str(Path(__file__).parent.parent))
     from echem_sdl.lib_context import LibContext
     from echem_sdl.hardware.pump_manager import PumpManager, PumpState
     from echem_sdl.hardware.rs485_driver import RS485Driver
@@ -19,10 +20,28 @@ try:
     from models import DilutionChannel
     BACKEND_AVAILABLE = True
 except Exception as e:
-    print(f"❌ 后端模块导入失败: {e}")
+    print(f"[ERROR] 后端模块导入失败: {e}")
     import traceback
     traceback.print_exc()
     BACKEND_AVAILABLE = False
+    # 提供占位类型，避免类体中引用 PumpState 等报 NameError
+    class PumpState:
+        pass
+    class PumpManager:
+        pass
+    class RS485Driver:
+        pass
+    class Diluter:
+        pass
+    class DiluterConfig:
+        pass
+    class DilutionChannel:
+        pass
+    class LibContext:
+        pass
+    def get_logger():
+        import logging
+        return logging.getLogger("MicroHySeeker")
 
 
 class RS485Wrapper:
@@ -31,6 +50,10 @@ class RS485Wrapper:
     统一前端和后端的桥梁，通过LibContext获取PumpManager实例。
     支持Mock模式和真实硬件模式。
     """
+    
+    # 已知响应不稳定的泵地址（通信超时频繁），
+    # 这些泵的写入命令使用 fire_and_forget 模式，不等待响应确认
+    RESPONSE_UNSTABLE_PUMPS = [1, 11]
     
     def __init__(self):
         self._pump_manager: Optional[PumpManager] = None
@@ -47,6 +70,9 @@ class RS485Wrapper:
         # 冲洗功能
         self._flusher: Optional["Flusher"] = None  # Flusher实例
         
+        # 通信日志回调 (UI详细日志面板)
+        self._comm_log_callback: Optional[Callable] = None
+        
     def set_mock_mode(self, mock_mode: bool):
         """设置模拟模式
         
@@ -60,6 +86,26 @@ class RS485Wrapper:
         self._mock_mode = mock_mode
         print(f"🔧 RS485Wrapper: Mock模式 {'开启' if mock_mode else '关闭'}")
     
+    def set_comm_log_callback(self, callback: Optional[Callable]):
+        """设置通信日志回调 — UI 详细日志面板使用
+        
+        callback(direction: str, addr: int, cmd_name: str, hex_str: str)
+            direction: "TX" 或 "RX"
+            addr: 设备地址
+            cmd_name: 命令名称
+            hex_str: 完整帧的十六进制字符串
+        """
+        self._comm_log_callback = callback
+    
+    def _emit_comm_log(self, direction: str, addr: int, cmd_name: str, hex_str: str):
+        """内部: 发射通信日志 (忽略异常，不影响主流程)"""
+        cb = self._comm_log_callback
+        if cb:
+            try:
+                cb(direction, addr, cmd_name, hex_str)
+            except Exception:
+                pass
+
     @staticmethod
     def list_available_ports() -> List[str]:
         """列出可用串口（实际检测到的端口）"""
@@ -91,6 +137,17 @@ class RS485Wrapper:
             # 设置状态变化回调
             self._pump_manager.on_state(self._on_pump_state_changed)
             
+            # 传播通信日志回调到底层驱动
+            try:
+                adapter = self._pump_manager.driver          # RS485DriverAdapter
+                real_driver = getattr(adapter, 'driver', None)  # RS485Driver
+                if real_driver and hasattr(real_driver, 'set_comm_log_callback'):
+                    real_driver.set_comm_log_callback(
+                        lambda d, a, c, h: self._emit_comm_log(d, a, c, h)
+                    )
+            except Exception:
+                pass
+
             # 连接串口
             self._pump_manager.connect(port, baudrate, timeout=0.1)
             self._connected = True
@@ -180,8 +237,7 @@ class RS485Wrapper:
             return False
         
         # 已知响应不稳定的泵，始终使用fire_and_forget模式
-        RESPONSE_UNSTABLE_PUMPS = [1, 11]
-        use_fire_and_forget = address in RESPONSE_UNSTABLE_PUMPS
+        use_fire_and_forget = address in self.RESPONSE_UNSTABLE_PUMPS
         
         if use_fire_and_forget:
             print(f"⚠️ RS485Wrapper: 泵 {address} 响应不稳定，使用fire_and_forget模式")
@@ -225,8 +281,7 @@ class RS485Wrapper:
             return False
         
         # 已知响应不稳定的泵，始终使用fire_and_forget模式
-        RESPONSE_UNSTABLE_PUMPS = [1, 11]
-        use_fire_and_forget = address in RESPONSE_UNSTABLE_PUMPS
+        use_fire_and_forget = address in self.RESPONSE_UNSTABLE_PUMPS
         
         if use_fire_and_forget:
             print(f"⚠️ RS485Wrapper: 泵 {address} 响应不稳定，使用fire_and_forget模式")
@@ -256,6 +311,9 @@ class RS485Wrapper:
         """位置模式运行 - 相对位移
         
         使用SR_VFOC位置模式，通过编码器计数精确控制泵位移。
+        对于响应不稳定的泵（泵1、泵11），使用fire_and_forget模式。
+        其他泵等待响应确认。
+        调用方应在连续发送多泵指令时在每条之间插入 ≥150ms 间隔以避免总线竞争。
         
         Args:
             address: 泵地址 (1-12)
@@ -271,16 +329,15 @@ class RS485Wrapper:
             print(f"❌ RS485Wrapper: 未连接，无法执行位置运动 泵{address}")
             return False
         
-        # 已知响应不稳定的泵，始终使用fire_and_forget模式
-        RESPONSE_UNSTABLE_PUMPS = [1, 11]
-        use_fire_and_forget = address in RESPONSE_UNSTABLE_PUMPS
+        # 已知响应不稳定的泵，位置命令使用fire_and_forget模式
+        use_fire_and_forget = address in self.RESPONSE_UNSTABLE_PUMPS
         
         if use_fire_and_forget:
-            print(f"⚠️ RS485Wrapper: 泵 {address} 响应不稳定，使用fire_and_forget模式")
+            print(f"⚠️ RS485Wrapper: 泵 {address} 响应不稳定，位置命令使用fire_and_forget模式")
         
         try:
             # 使用 PumpManager 的位置模式方法
-            success = self._pump_manager.move_position_rel(
+            result = self._pump_manager.move_position_rel(
                 address, 
                 encoder_counts,
                 speed,
@@ -300,12 +357,15 @@ class RS485Wrapper:
                 "target_counts": encoder_counts
             }
             
-            if success or use_fire_and_forget:
-                revs = abs(encoder_counts) / 16384.0
+            revs = abs(encoder_counts) / 16384.0
+            
+            # fire_and_forget 模式: result=None 视为成功（命令已发送）
+            # 正常模式: result 非 None 视为成功
+            if use_fire_and_forget or result is not None:
                 print(f"✅ RS485Wrapper: 泵 {address} 位置运动已启动 {dir_str} {revs:.2f}圈 @{speed}RPM")
                 return True
             else:
-                print(f"❌ RS485Wrapper: 泵 {address} 位置运动启动失败")
+                print(f"❌ RS485Wrapper: 泵 {address} 位置命令发送失败（超时无响应）")
                 return False
             
         except Exception as e:
@@ -314,6 +374,123 @@ class RS485Wrapper:
             traceback.print_exc()
             return False
     
+    # ========== 泵运行状态查询 ==========
+
+    def read_run_status(self, address: int) -> int | None:
+        """读取泵运行状态
+        
+        通过RS485查询泵的实时运行状态。可用于检测fire_and_forget模式下
+        泵是否在运行中或已完成。
+        
+        Args:
+            address: 泵地址 (1-12)
+            
+        Returns:
+            int | None: 运行状态码
+                1 = 停止
+                2 = 加速中
+                3 = 减速中
+                4 = 全速运行
+                5 = 归零中
+                6 = 校准中
+                None = 通信失败
+        """
+        if not self.is_connected():
+            return None
+        try:
+            status = self._pump_manager.read_run_status(address)
+            status_text = {
+                1: "停止", 2: "加速中", 3: "减速中",
+                4: "全速运行", 5: "归零中", 6: "校准中"
+            }.get(status, f"未知({status})")
+            print(f"📊 RS485Wrapper: 泵 {address} 运行状态 = {status_text}")
+            return status
+        except Exception as e:
+            print(f"❌ RS485Wrapper: 泵 {address} 读取运行状态失败 {e}")
+            return None
+
+    def read_encoder_position(self, address: int) -> int | None:
+        """读取泵编码器位置（累加多圈值）
+        
+        获取当前编码器坐标，16384 = 1圈。
+        可用于在fire_and_forget模式下通过前后对比检测泵是否在运动。
+        
+        Args:
+            address: 泵地址 (1-12)
+            
+        Returns:
+            int | None: 编码器累加值，None = 通信失败
+        """
+        if not self.is_connected():
+            return None
+        try:
+            pos = self._pump_manager.read_encoder_accum(address)
+            if pos is not None:
+                revs = pos / 16384.0
+                print(f"📊 RS485Wrapper: 泵 {address} 编码器位置 = {pos} ({revs:.3f}圈)")
+            else:
+                print(f"⚠️ RS485Wrapper: 泵 {address} 编码器读取返回 None (超时或响应格式错误)")
+            return pos
+        except Exception as e:
+            print(f"❌ RS485Wrapper: 泵 {address} 读取编码器失败 {e}")
+            return None
+
+    def is_pump_running(self, address: int) -> bool:
+        """检测泵是否正在运行
+        
+        通过读取运行状态判断。适用于所有泵（包括响应不稳定的泵1/11），
+        因为读取状态是独立的RS485查询操作，不受fire_and_forget影响。
+        
+        Args:
+            address: 泵地址 (1-12)
+            
+        Returns:
+            bool: True = 运行中（加速/减速/全速）, False = 停止或无法读取
+        """
+        status = self.read_run_status(address)
+        if status is None:
+            return False
+        # 1=停止,  2/3/4=运行中的各种形态
+        return status in (2, 3, 4)
+
+    def wait_pump_position_done(self, address: int, timeout_s: float = 60.0,
+                                 poll_interval_s: float = 0.3,
+                                 decel_timeout_s: float = 10.0) -> bool:
+        """等待泵位置运动完成
+        
+        轮询运行状态直到泵停止或超时。适用于需要确认fire_and_forget泵
+        已完成运动的场景。
+        
+        Args:
+            address: 泵地址 (1-12)
+            timeout_s: 最大等待秒数
+            poll_interval_s: 轮询间隔
+            decel_timeout_s: 减速状态最大持续秒数，超时则强制停止
+            
+        Returns:
+            bool: True = 已完成, False = 超时
+        """
+        import time as _time
+        start = _time.time()
+        decel_start = None
+        while (_time.time() - start) < timeout_s:
+            status = self.read_run_status(address)
+            if status == 1:  # 停止
+                return True
+            if status == 3:  # 减速中
+                if decel_start is None:
+                    decel_start = _time.time()
+                elif _time.time() - decel_start > decel_timeout_s:
+                    print(f"⚠️ RS485Wrapper: 泵 {address} 持续减速 {decel_timeout_s:.0f}s，强制停止")
+                    self.stop_pump(address)
+                    _time.sleep(0.2)
+                    return True
+            else:
+                decel_start = None
+            _time.sleep(poll_interval_s)
+        print(f"⚠️ RS485Wrapper: 泵 {address} 等待位置完成超时 ({timeout_s}s)")
+        return False
+
     def stop_pump_fast(self, address: int) -> bool:
         """快速停止泵（不等待响应确认）
         
@@ -403,6 +580,30 @@ class RS485Wrapper:
             return result
         except Exception as e:
             print(f"❌ RS485Wrapper: 泵 {address} 堵转解除异常 {e}")
+            return False
+
+    def enable_motor(self, address: int, enable: bool = True) -> bool:
+        """使能/禁用电机
+
+        Args:
+            address: 泵地址 (1-12)
+            enable: True=使能, False=禁用
+        Returns:
+            bool: 操作是否成功
+        """
+        if not self.is_connected():
+            return False
+        try:
+            result = self._pump_manager.set_enable(address, enable)
+            state = "使能" if enable else "禁用"
+            if result is not None:
+                print(f"✅ RS485Wrapper: 泵 {address} {state}成功")
+                return True
+            else:
+                print(f"❌ RS485Wrapper: 泵 {address} {state}失败")
+                return False
+        except Exception as e:
+            print(f"❌ RS485Wrapper: 泵 {address} 使能操作异常 {e}")
             return False
 
     def check_and_clear_stall(self, address: int) -> bool:

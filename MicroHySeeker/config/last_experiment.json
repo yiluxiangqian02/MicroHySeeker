@@ -1,6 +1,13 @@
 {
+  "_protocol_version": "1.0",
+  "_created_at": "2026-02-14T16:17:20.118197",
+  "_modified_at": "2026-02-14T17:15:37.542734",
+  "_software_version": "1.0.0",
   "exp_id": "single_001",
   "exp_name": "单次实验",
+  "description": "",
+  "tags": [],
+  "operator": "",
   "steps": [
     {
       "step_id": "step_4",

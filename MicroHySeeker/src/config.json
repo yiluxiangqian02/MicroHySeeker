@@ -1,0 +1,431 @@
+{
+  "rs485_port": "COM7",
+  "rs485_baudrate": 38400,
+  "mock_mode": false,
+  "pumps": [
+    {
+      "address": 1,
+      "name": "Pump_1",
+      "direction": "FWD",
+      "default_rpm": 120,
+      "calibration": {
+        "ul_per_sec": 0.5
+      }
+    },
+    {
+      "address": 2,
+      "name": "Pump_2",
+      "direction": "FWD",
+      "default_rpm": 120,
+      "calibration": {
+        "ul_per_sec": 0.5
+      }
+    },
+    {
+      "address": 3,
+      "name": "Pump_3",
+      "direction": "FWD",
+      "default_rpm": 120,
+      "calibration": {
+        "ul_per_sec": 0.5
+      }
+    },
+    {
+      "address": 4,
+      "name": "Pump_4",
+      "direction": "FWD",
+      "default_rpm": 120,
+      "calibration": {
+        "ul_per_sec": 0.5
+      }
+    },
+    {
+      "address": 5,
+      "name": "Pump_5",
+      "direction": "FWD",
+      "default_rpm": 120,
+      "calibration": {
+        "ul_per_sec": 0.5
+      }
+    },
+    {
+      "address": 6,
+      "name": "Pump_6",
+      "direction": "FWD",
+      "default_rpm": 120,
+      "calibration": {
+        "ul_per_sec": 0.5
+      }
+    },
+    {
+      "address": 7,
+      "name": "Pump_7",
+      "direction": "FWD",
+      "default_rpm": 120,
+      "calibration": {
+        "ul_per_sec": 0.5
+      }
+    },
+    {
+      "address": 8,
+      "name": "Pump_8",
+      "direction": "FWD",
+      "default_rpm": 120,
+      "calibration": {
+        "ul_per_sec": 0.5
+      }
+    },
+    {
+      "address": 9,
+      "name": "Pump_9",
+      "direction": "FWD",
+      "default_rpm": 120,
+      "calibration": {
+        "ul_per_sec": 0.5
+      }
+    },
+    {
+      "address": 10,
+      "name": "Pump_10",
+      "direction": "FWD",
+      "default_rpm": 120,
+      "calibration": {
+        "ul_per_sec": 0.5
+      }
+    },
+    {
+      "address": 11,
+      "name": "Pump_11",
+      "direction": "FWD",
+      "default_rpm": 120,
+      "calibration": {
+        "ul_per_sec": 0.5
+      }
+    },
+    {
+      "address": 12,
+      "name": "Pump_12",
+      "direction": "FWD",
+      "default_rpm": 120,
+      "calibration": {
+        "ul_per_sec": 0.5
+      }
+    }
+  ],
+  "dilution_channels": [
+    {
+      "channel_id": "1",
+      "solution_name": "fe",
+      "stock_concentration": 1.0,
+      "pump_address": 1,
+      "direction": "FWD",
+      "default_rpm": 200,
+      "color": "#00FF00",
+      "tube_diameter_mm": 2.06,
+      "total_volume_ml": 500.0,
+      "remaining_volume_ml": 470.0
+    },
+    {
+      "channel_id": "2",
+      "solution_name": "cu",
+      "stock_concentration": 0.5,
+      "pump_address": 2,
+      "direction": "FWD",
+      "default_rpm": 200,
+      "color": "#00FF00",
+      "tube_diameter_mm": 2.06,
+      "total_volume_ml": 500.0,
+      "remaining_volume_ml": 480.0
+    },
+    {
+      "channel_id": "3",
+      "solution_name": "h2o",
+      "stock_concentration": 1.0,
+      "pump_address": 3,
+      "direction": "FWD",
+      "default_rpm": 200,
+      "color": "#00FF00",
+      "tube_diameter_mm": 2.06,
+      "total_volume_ml": 500.0,
+      "remaining_volume_ml": 500.0
+    },
+    {
+      "channel_id": "4",
+      "solution_name": "KOH",
+      "stock_concentration": 1.0,
+      "pump_address": 6,
+      "direction": "FWD",
+      "default_rpm": 200,
+      "color": "#ff5500",
+      "tube_diameter_mm": 2.06,
+      "total_volume_ml": 1000.0,
+      "remaining_volume_ml": 1000.0
+    }
+  ],
+  "flush_channels": [
+    {
+      "channel_id": "1",
+      "pump_name": "冲洗泵1",
+      "pump_address": 5,
+      "direction": "FWD",
+      "rpm": 100,
+      "cycle_duration_s": 30.0,
+      "work_type": "Inlet",
+      "tube_diameter_mm": 1.0,
+      "total_volume_ml": null
+    },
+    {
+      "channel_id": "2",
+      "pump_name": "冲洗泵2",
+      "pump_address": 11,
+      "direction": "FWD",
+      "rpm": 100,
+      "cycle_duration_s": 30.0,
+      "work_type": "Transfer",
+      "tube_diameter_mm": 1.0,
+      "total_volume_ml": null
+    },
+    {
+      "channel_id": "3",
+      "pump_name": "冲洗泵3",
+      "pump_address": 12,
+      "direction": "FWD",
+      "rpm": 100,
+      "cycle_duration_s": 30.0,
+      "work_type": "Outlet",
+      "tube_diameter_mm": 1.0,
+      "total_volume_ml": null
+    }
+  ],
+  "calibration_data": {
+    "1": {
+      "test_volumes": [
+        1700.0,
+        1880.0,
+        2080.0,
+        2230.0,
+        2430.0,
+        2600.0,
+        2790.0,
+        2950.0,
+        3140.0,
+        3350.0
+      ],
+      "slope_k": 90.51515151515152,
+      "intercept_b": -109.939393939394,
+      "r_squared": 0.9994963404586147,
+      "ul_per_encoder_count": 0.005524606415719697,
+      "calibration_method": "linear_regression"
+    },
+    "2": {
+      "test_volumes": [
+        1700.0,
+        1880.0,
+        2080.0,
+        2230.0,
+        2430.0,
+        2600.0,
+        2790.0,
+        2950.0,
+        3140.0,
+        3350.0
+      ],
+      "slope_k": 90.51515151515152,
+      "intercept_b": -109.939393939394,
+      "r_squared": 0.9994963404586147,
+      "ul_per_encoder_count": 0.005524606415719697,
+      "calibration_method": "linear_regression"
+    },
+    "3": {
+      "test_volumes": [
+        1700.0,
+        1880.0,
+        2080.0,
+        2230.0,
+        2430.0,
+        2600.0,
+        2790.0,
+        2950.0,
+        3140.0,
+        3350.0
+      ],
+      "slope_k": 90.51515151515152,
+      "intercept_b": -109.939393939394,
+      "r_squared": 0.9994963404586147,
+      "ul_per_encoder_count": 0.005524606415719697,
+      "calibration_method": "linear_regression"
+    },
+    "4": {
+      "test_volumes": [
+        1700.0,
+        1880.0,
+        2080.0,
+        2230.0,
+        2430.0,
+        2600.0,
+        2790.0,
+        2950.0,
+        3140.0,
+        3350.0
+      ],
+      "slope_k": 90.51515151515152,
+      "intercept_b": -109.939393939394,
+      "r_squared": 0.9994963404586147,
+      "ul_per_encoder_count": 0.005524606415719697,
+      "calibration_method": "linear_regression"
+    },
+    "7": {
+      "test_volumes": [
+        1700.0,
+        1880.0,
+        2080.0,
+        2230.0,
+        2430.0,
+        2600.0,
+        2790.0,
+        2950.0,
+        3140.0,
+        3350.0
+      ],
+      "slope_k": 90.51515151515152,
+      "intercept_b": -109.939393939394,
+      "r_squared": 0.9994963404586147,
+      "ul_per_encoder_count": 0.005524606415719697,
+      "calibration_method": "linear_regression"
+    },
+    "8": {
+      "test_volumes": [
+        1700.0,
+        1880.0,
+        2080.0,
+        2230.0,
+        2430.0,
+        2600.0,
+        2790.0,
+        2950.0,
+        3140.0,
+        3350.0
+      ],
+      "slope_k": 90.51515151515152,
+      "intercept_b": -109.939393939394,
+      "r_squared": 0.9994963404586147,
+      "ul_per_encoder_count": 0.005524606415719697,
+      "calibration_method": "linear_regression"
+    },
+    "9": {
+      "test_volumes": [
+        1700.0,
+        1880.0,
+        2080.0,
+        2230.0,
+        2430.0,
+        2600.0,
+        2790.0,
+        2950.0,
+        3140.0,
+        3350.0
+      ],
+      "slope_k": 90.51515151515152,
+      "intercept_b": -109.939393939394,
+      "r_squared": 0.9994963404586147,
+      "ul_per_encoder_count": 0.005524606415719697,
+      "calibration_method": "linear_regression"
+    },
+    "10": {
+      "test_volumes": [
+        1700.0,
+        1880.0,
+        2080.0,
+        2230.0,
+        2430.0,
+        2600.0,
+        2790.0,
+        2950.0,
+        3140.0,
+        3350.0
+      ],
+      "slope_k": 90.51515151515152,
+      "intercept_b": -109.939393939394,
+      "r_squared": 0.9994963404586147,
+      "ul_per_encoder_count": 0.005524606415719697,
+      "calibration_method": "linear_regression"
+    },
+    "5": {
+      "test_volumes": [
+        3425.0,
+        6850.0,
+        10275.0,
+        13700.0,
+        17125.0,
+        20550.0,
+        23975.0,
+        27401.0,
+        30826.0,
+        34251.0
+      ],
+      "slope_k": 1712.5636363636363,
+      "intercept_b": -0.4,
+      "r_squared": 0.9999999992109959,
+      "ul_per_encoder_count": 0.10452658913352272,
+      "calibration_method": "linear_regression"
+    },
+    "6": {
+      "test_volumes": [
+        3425.0,
+        6850.0,
+        10275.0,
+        13700.0,
+        17125.0,
+        20550.0,
+        23975.0,
+        27401.0,
+        30826.0,
+        34251.0
+      ],
+      "slope_k": 1712.5636363636363,
+      "intercept_b": -30826.545454545452,
+      "r_squared": 0.9999999992109959,
+      "ul_per_encoder_count": 0.10452658913352272,
+      "calibration_method": "linear_regression"
+    },
+    "11": {
+      "test_volumes": [
+        3425.0,
+        6850.0,
+        10275.0,
+        13700.0,
+        17125.0,
+        20550.0,
+        23975.0,
+        27401.0,
+        30826.0,
+        34251.0
+      ],
+      "slope_k": 1712.5636363636363,
+      "intercept_b": -30826.545454545452,
+      "r_squared": 0.9999999992109959,
+      "ul_per_encoder_count": 0.10452658913352272,
+      "calibration_method": "linear_regression"
+    },
+    "12": {
+      "test_volumes": [
+        3425.0,
+        6850.0,
+        10275.0,
+        13700.0,
+        17125.0,
+        20550.0,
+        23975.0,
+        27401.0,
+        30826.0,
+        34251.0
+      ],
+      "slope_k": 1712.5636363636363,
+      "intercept_b": -30826.545454545452,
+      "r_squared": 0.9999999992109959,
+      "ul_per_encoder_count": 0.10452658913352272,
+      "calibration_method": "linear_regression"
+    }
+  },
+  "data_dir": "./data"
+}

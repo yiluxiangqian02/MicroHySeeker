@@ -792,7 +792,6 @@ class PumpManager:
             >>> print(f"当前位置: {pos / 16384:.2f} 圈")
         """
         try:
-            frame_data = build_read_encoder_accum_frame(addr)
             frame = self.request(addr, CMD_READ_ENCODER_ACCUM)
             if frame and len(frame.payload) >= 6:
                 value = decode_encoder_accum(frame.payload)
@@ -800,10 +799,15 @@ class PumpManager:
                     revolutions = value / ENCODER_DIVISIONS_PER_REV
                     self._logger.debug(f"泵 {addr}: 编码器位置 = {value} ({revolutions:.3f}圈)")
                 return value
+            else:
+                pl = len(frame.payload) if frame else -1
+                print(f"⚠️ PumpManager: 泵 {addr} 编码器响应 payload 长度={pl} (需≥6)")
         except TimeoutError:
+            print(f"⚠️ PumpManager: 泵 {addr} 读取编码器超时(CMD 0x31)")
             if self._logger:
                 self._logger.debug(f"泵 {addr}: 读取编码器超时")
         except Exception as e:
+            print(f"❌ PumpManager: 泵 {addr} 读取编码器异常 - {e}")
             if self._logger:
                 self._logger.debug(f"泵 {addr}: 读取编码器异常 - {e}")
         

@@ -213,6 +213,40 @@ class ProgramEditorDialog(QDialog):
         
         right_layout.addWidget(self.params_stack)
         
+        # ── 实验元数据区 ──
+        meta_frame = QGroupBox("实验信息")
+        meta_frame.setFont(FONT_NORMAL)
+        meta_layout = QGridLayout(meta_frame)
+        
+        meta_layout.addWidget(QLabel("实验名称:"), 0, 0)
+        self.exp_name_edit = QLineEdit(self.experiment.exp_name)
+        self.exp_name_edit.setFont(FONT_NORMAL)
+        meta_layout.addWidget(self.exp_name_edit, 0, 1)
+        
+        meta_layout.addWidget(QLabel("描述:"), 0, 2)
+        self.exp_desc_edit = QLineEdit(self.experiment.description)
+        self.exp_desc_edit.setFont(FONT_NORMAL)
+        self.exp_desc_edit.setPlaceholderText("实验目的/条件等简述")
+        meta_layout.addWidget(self.exp_desc_edit, 0, 3)
+        
+        meta_layout.addWidget(QLabel("操作员:"), 1, 0)
+        self.exp_operator_edit = QLineEdit(self.experiment.operator)
+        self.exp_operator_edit.setFont(FONT_NORMAL)
+        meta_layout.addWidget(self.exp_operator_edit, 1, 1)
+        
+        meta_layout.addWidget(QLabel("标签:"), 1, 2)
+        self.exp_tags_edit = QLineEdit(", ".join(self.experiment.tags))
+        self.exp_tags_edit.setFont(FONT_NORMAL)
+        self.exp_tags_edit.setPlaceholderText("逗号分隔，如: CV, pH=7, 0.1M")
+        meta_layout.addWidget(self.exp_tags_edit, 1, 3)
+        
+        meta_layout.addWidget(QLabel("备注:"), 2, 0)
+        self.exp_notes_edit = QLineEdit(self.experiment.notes)
+        self.exp_notes_edit.setFont(FONT_NORMAL)
+        meta_layout.addWidget(self.exp_notes_edit, 2, 1, 1, 3)
+        
+        right_layout.addWidget(meta_frame)
+        
         # 保存按钮
         save_layout = QHBoxLayout()
         save_layout.addStretch()
@@ -237,7 +271,7 @@ class ProgramEditorDialog(QDialog):
     # === 创建各类型编辑面板 ===
     
     def _create_transfer_panel(self) -> QWidget:
-        """移液参数面板 - 泵地址和方向只读显示"""
+        """移液参数面板 - 体积位移控制"""
         panel = QGroupBox("移液参数")
         panel.setFont(FONT_TITLE)
         layout = QFormLayout(panel)
@@ -255,15 +289,16 @@ class ProgramEditorDialog(QDialog):
         layout.addRow("方向:", self.tf_dir_label)
         
         self.tf_rpm_spin = QSpinBox()
-        self.tf_rpm_spin.setRange(0, 1000)
+        self.tf_rpm_spin.setRange(1, 1000)
         self.tf_rpm_spin.setValue(100)
         layout.addRow("转速(RPM):", self.tf_rpm_spin)
         
-        self.tf_duration_spin = QDoubleSpinBox()
-        self.tf_duration_spin.setRange(0, 100000)
-        self.tf_duration_spin.setDecimals(2)
-        self.tf_duration_spin.setValue(10.00)
-        layout.addRow("持续时间(s):", self.tf_duration_spin)
+        self.tf_vol_spin = QDoubleSpinBox()
+        self.tf_vol_spin.setRange(0, 10000)
+        self.tf_vol_spin.setDecimals(2)
+        self.tf_vol_spin.setValue(5.00)
+        self.tf_vol_spin.setSuffix(" mL")
+        layout.addRow("体积(mL):", self.tf_vol_spin)
         
         return panel
     
@@ -450,7 +485,7 @@ class ProgramEditorDialog(QDialog):
             target_spin.setValue(0.0)
     
     def _create_flush_panel(self) -> QWidget:
-        """冲洗参数面板 - 泵地址和方向只读显示"""
+        """冲洗参数面板 - 体积位移控制"""
         panel = QGroupBox("冲洗参数")
         panel.setFont(FONT_TITLE)
         layout = QFormLayout(panel)
@@ -468,20 +503,16 @@ class ProgramEditorDialog(QDialog):
         layout.addRow("方向:", self.fl_dir_label)
         
         self.fl_rpm_spin = QSpinBox()
-        self.fl_rpm_spin.setRange(0, 1000)
+        self.fl_rpm_spin.setRange(1, 1000)
         self.fl_rpm_spin.setValue(100)
         layout.addRow("转速(RPM):", self.fl_rpm_spin)
         
-        self.fl_duration_spin = QDoubleSpinBox()
-        self.fl_duration_spin.setRange(0, 1000)
-        self.fl_duration_spin.setDecimals(2)
-        self.fl_duration_spin.setValue(30.00)
-        layout.addRow("单次时长(s):", self.fl_duration_spin)
-        
-        self.fl_cycles_spin = QSpinBox()
-        self.fl_cycles_spin.setRange(1, 100)
-        self.fl_cycles_spin.setValue(1)
-        layout.addRow("循环次数:", self.fl_cycles_spin)
+        self.fl_vol_spin = QDoubleSpinBox()
+        self.fl_vol_spin.setRange(0, 10000)
+        self.fl_vol_spin.setDecimals(2)
+        self.fl_vol_spin.setValue(10.00)
+        self.fl_vol_spin.setSuffix(" mL")
+        layout.addRow("体积(mL):", self.fl_vol_spin)
         
         return panel
     
@@ -743,7 +774,7 @@ class ProgramEditorDialog(QDialog):
         return panel
     
     def _create_evacuate_panel(self) -> QWidget:
-        """排空参数面板 - 泵地址和方向只读显示"""
+        """排空参数面板 - 体积位移控制"""
         panel = QGroupBox("排空参数")
         panel.setFont(FONT_TITLE)
         layout = QFormLayout(panel)
@@ -761,20 +792,16 @@ class ProgramEditorDialog(QDialog):
         layout.addRow("方向:", self.ev_dir_label)
         
         self.ev_rpm_spin = QSpinBox()
-        self.ev_rpm_spin.setRange(0, 1000)
+        self.ev_rpm_spin.setRange(1, 1000)
         self.ev_rpm_spin.setValue(100)
         layout.addRow("转速(RPM):", self.ev_rpm_spin)
         
-        self.ev_duration_spin = QDoubleSpinBox()
-        self.ev_duration_spin.setRange(0, 10000)
-        self.ev_duration_spin.setDecimals(2)
-        self.ev_duration_spin.setValue(30.00)
-        layout.addRow("单次时长(s):", self.ev_duration_spin)
-        
-        self.ev_cycles_spin = QSpinBox()
-        self.ev_cycles_spin.setRange(1, 100)
-        self.ev_cycles_spin.setValue(1)
-        layout.addRow("循环次数:", self.ev_cycles_spin)
+        self.ev_vol_spin = QDoubleSpinBox()
+        self.ev_vol_spin.setRange(0, 10000)
+        self.ev_vol_spin.setDecimals(2)
+        self.ev_vol_spin.setValue(10.00)
+        self.ev_vol_spin.setSuffix(" mL")
+        layout.addRow("体积(mL):", self.ev_vol_spin)
         
         return panel
     
@@ -795,9 +822,9 @@ class ProgramEditorDialog(QDialog):
     def _get_step_detail(self, step: ProgStep) -> str:
         """获取步骤的详细描述"""
         if step.step_type == ProgramStepType.TRANSFER:
-            duration = step.transfer_duration or 0
+            vol_ml = (step.volume_ul / 1000.0) if step.volume_ul else 0
             rpm = step.pump_rpm or 0
-            return f"{duration:.1f}s, {rpm}RPM"
+            return f"{vol_ml:.2f}mL, {rpm}RPM"
         
         elif step.step_type == ProgramStepType.PREP_SOL:
             if step.prep_sol_params:
@@ -805,9 +832,8 @@ class ProgramEditorDialog(QDialog):
             return ""
         
         elif step.step_type == ProgramStepType.FLUSH:
-            duration = step.flush_cycle_duration_s or 0
-            cycles = step.flush_cycles or 1
-            return f"{duration:.1f}s×{cycles}"
+            vol_ml = (step.volume_ul / 1000.0) if step.volume_ul else 0
+            return f"{vol_ml:.2f}mL"
         
         elif step.step_type == ProgramStepType.ECHEM:
             if step.ec_settings:
@@ -850,9 +876,8 @@ class ProgramEditorDialog(QDialog):
             return f"{duration:.1f}s"
         
         elif step.step_type == ProgramStepType.EVACUATE:
-            duration = step.transfer_duration or 0
-            cycles = step.flush_cycles or 1
-            return f"{duration:.1f}s×{cycles}"
+            vol_ml = (step.volume_ul / 1000.0) if step.volume_ul else 0
+            return f"{vol_ml:.2f}mL"
         
         return ""
     
@@ -919,7 +944,9 @@ class ProgramEditorDialog(QDialog):
         self._apply_pump_defaults_for_type(ProgramStepType.TRANSFER)
         # 加载可配置参数
         self.tf_rpm_spin.setValue(step.pump_rpm or 100)
-        self.tf_duration_spin.setValue(step.transfer_duration or 10.0)
+        # 体积: 优先从 volume_ul 加载，兼容旧版 transfer_duration
+        vol_ml = (step.volume_ul / 1000.0) if step.volume_ul else 5.0
+        self.tf_vol_spin.setValue(round(vol_ml, 2))
     
     def _load_prep_sol(self, step: ProgStep):
         """加载配液参数到UI"""
@@ -984,9 +1011,10 @@ class ProgramEditorDialog(QDialog):
         # 从配置加载Inlet泵信息（只读）
         self._apply_pump_defaults_for_type(ProgramStepType.FLUSH)
         # 加载可配置参数
-        self.fl_rpm_spin.setValue(step.flush_rpm or 100)
-        self.fl_duration_spin.setValue(round(step.flush_cycle_duration_s or 30, 2))
-        self.fl_cycles_spin.setValue(step.flush_cycles or 1)
+        self.fl_rpm_spin.setValue(step.flush_rpm or step.pump_rpm or 100)
+        # 体积: 优先从 volume_ul 加载
+        vol_ml = (step.volume_ul / 1000.0) if step.volume_ul else 10.0
+        self.fl_vol_spin.setValue(round(vol_ml, 2))
     
     def _load_echem(self, step: ProgStep):
         if step.ec_settings:
@@ -1065,8 +1093,9 @@ class ProgramEditorDialog(QDialog):
         self._apply_pump_defaults_for_type(ProgramStepType.EVACUATE)
         # 加载可配置参数
         self.ev_rpm_spin.setValue(step.pump_rpm or 100)
-        self.ev_duration_spin.setValue(step.transfer_duration or 30.0)
-        self.ev_cycles_spin.setValue(step.flush_cycles or 1)
+        # 体积: 优先从 volume_ul 加载
+        vol_ml = (step.volume_ul / 1000.0) if step.volume_ul else 10.0
+        self.ev_vol_spin.setValue(round(vol_ml, 2))
     
     def _save_current_step(self):
         """保存当前步骤"""
@@ -1082,8 +1111,7 @@ class ProgramEditorDialog(QDialog):
             step.pump_address = pump_info["address"]
             step.pump_direction = pump_info["direction"]
             step.pump_rpm = self.tf_rpm_spin.value()
-            step.transfer_duration = round(self.tf_duration_spin.value(), 2)
-            step.transfer_duration_unit = "s"
+            step.volume_ul = round(self.tf_vol_spin.value() * 1000, 2)  # mL → μL
             
         elif step.step_type == ProgramStepType.PREP_SOL:
             if not step.prep_sol_params:
@@ -1154,9 +1182,9 @@ class ProgramEditorDialog(QDialog):
             pump_info = self._get_pump_info_for_type("Inlet")
             step.pump_address = pump_info["address"]
             step.pump_direction = pump_info["direction"]
+            step.pump_rpm = self.fl_rpm_spin.value()
             step.flush_rpm = self.fl_rpm_spin.value()
-            step.flush_cycle_duration_s = round(self.fl_duration_spin.value(), 2)
-            step.flush_cycles = self.fl_cycles_spin.value()
+            step.volume_ul = round(self.fl_vol_spin.value() * 1000, 2)  # mL → μL
             
         elif step.step_type == ProgramStepType.ECHEM:
             if not step.ec_settings:
@@ -1236,9 +1264,7 @@ class ProgramEditorDialog(QDialog):
             step.pump_address = pump_info["address"]
             step.pump_direction = pump_info["direction"]
             step.pump_rpm = self.ev_rpm_spin.value()
-            step.transfer_duration = round(self.ev_duration_spin.value(), 2)
-            step.transfer_duration_unit = "s"
-            step.flush_cycles = self.ev_cycles_spin.value()
+            step.volume_ul = round(self.ev_vol_spin.value() * 1000, 2)  # mL → μL
     
     def _on_type_button_clicked(self, button: QPushButton):
         """操作类型按钮点击处理 - 仅切换参数面板"""
@@ -1375,21 +1401,19 @@ class ProgramEditorDialog(QDialog):
             new_step.pump_address = pump_info["address"]
             new_step.pump_direction = pump_info["direction"]
             new_step.pump_rpm = pump_info["rpm"]
-            new_step.transfer_duration = 10.0
+            new_step.volume_ul = 5000.0  # 默认 5 mL
         elif selected_type == ProgramStepType.FLUSH:
             pump_info = self._get_pump_info_for_type("Inlet")
             new_step.pump_address = pump_info["address"]
             new_step.pump_direction = pump_info["direction"]
             new_step.flush_rpm = pump_info["rpm"]
-            new_step.flush_cycle_duration_s = 30.0
-            new_step.flush_cycles = 1
+            new_step.volume_ul = 10000.0  # 默认 10 mL
         elif selected_type == ProgramStepType.EVACUATE:
             pump_info = self._get_pump_info_for_type("Outlet")
             new_step.pump_address = pump_info["address"]
             new_step.pump_direction = pump_info["direction"]
             new_step.pump_rpm = pump_info["rpm"]
-            new_step.transfer_duration = 30.0
-            new_step.flush_cycles = 1
+            new_step.volume_ul = 10000.0  # 默认 10 mL
         elif selected_type == ProgramStepType.ECHEM:
             new_step.ec_settings = ECSettings()
         elif selected_type == ProgramStepType.BLANK:
@@ -1462,14 +1486,8 @@ class ProgramEditorDialog(QDialog):
                 elif step.pump_address < 1 or step.pump_address > 12:
                     errors.append(f"步骤 {step_num} [{step_name}]: 泵地址 {step.pump_address} 超出有效范围 (1-12)")
                 
-                if step.step_type == ProgramStepType.TRANSFER:
-                    if not step.transfer_duration or step.transfer_duration <= 0:
-                        errors.append(f"步骤 {step_num} [移液]: 持续时间必须大于 0")
-                elif step.step_type == ProgramStepType.FLUSH:
-                    if not step.flush_cycle_duration_s or step.flush_cycle_duration_s <= 0:
-                        errors.append(f"步骤 {step_num} [冲洗]: 冲洗时长必须大于 0")
-                    if not step.flush_cycles or step.flush_cycles <= 0:
-                        errors.append(f"步骤 {step_num} [冲洗]: 循环次数必须大于 0")
+                if not step.volume_ul or step.volume_ul <= 0:
+                    errors.append(f"步骤 {step_num} [{step_name}]: 体积必须大于 0")
             
             # 配液步骤检查
             elif step.step_type == ProgramStepType.PREP_SOL:
@@ -1525,6 +1543,14 @@ class ProgramEditorDialog(QDialog):
                 f"发现 {len(errors)} 个问题，请修正后再保存：\n\n{error_text}"
             )
             return
+        
+        # 保存实验元数据
+        self.experiment.exp_name = self.exp_name_edit.text().strip() or "未命名实验"
+        self.experiment.description = self.exp_desc_edit.text().strip()
+        self.experiment.operator = self.exp_operator_edit.text().strip()
+        tags_text = self.exp_tags_edit.text().strip()
+        self.experiment.tags = [t.strip() for t in tags_text.split(",") if t.strip()] if tags_text else []
+        self.experiment.notes = self.exp_notes_edit.text().strip()
         
         self.program_saved.emit(self.experiment)
         QMessageBox.information(self, "成功", "程序已保存")

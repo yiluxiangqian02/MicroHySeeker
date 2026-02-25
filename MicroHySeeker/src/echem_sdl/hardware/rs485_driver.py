@@ -50,7 +50,12 @@ except Exception:  # pragma: no cover - optional dependency
 # ============================================================================
 
 class MockSerial:
-    """模拟串口，用于无硬件测试"""
+    """模拟串口，用于无硬件测试
+    
+    维护简易状态机：
+    - _running_pumps: 已启动的泵地址集合
+    - _encoder_positions: 各泵累加编码器值 (每次读取时自增模拟运动)
+    """
     
     def __init__(self):
         self._rx_buffer = bytearray()  # 累积接收缓冲区
@@ -58,6 +63,10 @@ class MockSerial:
         self.port = ""
         self.baudrate = 38400
         self.timeout = 0.5
+        # 状态模拟
+        self._running_pumps: set = set()          # 当前正在运行的泵
+        self._encoder_positions: dict = {}        # {addr: int48 position}
+        self._mock_stall_flags: dict = {}         # {addr: fault_code}
     
     def open(self) -> None:
         self._is_open = True
@@ -114,53 +123,69 @@ class MockSerial:
         # 根据命令生成不同的响应
         from ..utils.constants import (
             CMD_ENABLE, CMD_SPEED, CMD_POSITION,
-            CMD_READ_ENCODER, CMD_READ_SPEED, CMD_READ_RUN_STATUS,
+            CMD_READ_ENCODER, CMD_READ_ENCODER_ACCUM, CMD_READ_SPEED,
+            CMD_READ_RUN_STATUS,
             CMD_READ_ENABLE, CMD_READ_IO, CMD_READ_VERSION,
             CMD_READ_FAULT, CMD_CLEAR_STALL,
             RX_HEADER
         )
         
         if cmd == CMD_ENABLE:
-            # 使能确认: 返回设置的状态值
-            # 请求: FA addr F3 <enable_byte> checksum
-            # 响应: FB addr F3 <enable_byte> checksum
+            # 使能确认 — enable=0x00 → 停止泵
             enable_byte = payload[0] if payload else 0x01
+            if enable_byte == 0x00:
+                self._running_pumps.discard(addr)
             response = bytes([RX_HEADER, addr, cmd, enable_byte])
         elif cmd == CMD_SPEED:
-            # 速度设置确认
+            # 速度设置 — speed=0 → 停止泵, 否则标记运行
+            speed_val = int.from_bytes(payload[:2], 'big') if len(payload) >= 2 else 0
+            if speed_val == 0:
+                self._running_pumps.discard(addr)
+            else:
+                self._running_pumps.add(addr)
             response = bytes([RX_HEADER, addr, cmd, 0x01])
         elif cmd == CMD_POSITION:
-            # 位置设置确认
+            # 位置命令 → 检查speed字段; speed=0表示停止
+            # payload格式: speed(2) + accel(1) + counts(4)
+            speed_val = int.from_bytes(payload[:2], 'big') if len(payload) >= 2 else 0
+            if speed_val == 0:
+                self._running_pumps.discard(addr)
+            else:
+                self._running_pumps.add(addr)
             response = bytes([RX_HEADER, addr, cmd, 0x01])
         elif cmd == CMD_READ_RUN_STATUS:
-            # 读取运行状态: FB addr F1 01 checksum (运行中)
-            response = bytes([RX_HEADER, addr, cmd, 0x01])
+            # 运行状态: 运行中 → 0x04(全速), 停止 → 0x01
+            status = 0x04 if addr in self._running_pumps else 0x01
+            response = bytes([RX_HEADER, addr, cmd, status])
         elif cmd == CMD_READ_ENABLE:
-            # 读取使能状态: FB addr 3A 01 checksum (已使能)
             response = bytes([RX_HEADER, addr, cmd, 0x01])
         elif cmd == CMD_READ_IO:
-            # 读取IO状态: FB addr 34 00 checksum
             response = bytes([RX_HEADER, addr, cmd, 0x00])
         elif cmd == CMD_READ_ENCODER:
-            # 读取编码器: FB addr 30 00 00 40 00 checksum (16384分度)
             response = bytes([RX_HEADER, addr, cmd, 0x00, 0x00, 0x40, 0x00])
+        elif cmd == CMD_READ_ENCODER_ACCUM:
+            # 累加编码器 (int48 大端序, 6字节)
+            # 如果泵在运行, 每次读取自增 2000 counts (~0.12 圈) 模拟运动
+            pos = self._encoder_positions.get(addr, 0)
+            if addr in self._running_pumps:
+                pos += 2000
+                self._encoder_positions[addr] = pos
+            # 编码为 6 字节有符号大端序
+            if pos < 0:
+                pos_bytes = (pos + 0x1000000000000).to_bytes(6, 'big')
+            else:
+                pos_bytes = pos.to_bytes(6, 'big')
+            response = bytes([RX_HEADER, addr, cmd]) + pos_bytes
         elif cmd == CMD_READ_SPEED:
-            # 读取速度: FB addr 32 00 64 checksum (100 RPM)
-            response = bytes([RX_HEADER, addr, cmd, 0x00, 0x64])
+            rpm = 100 if addr in self._running_pumps else 0
+            response = bytes([RX_HEADER, addr, cmd, (rpm >> 8) & 0xFF, rpm & 0xFF])
         elif cmd == CMD_READ_VERSION:
-            # 读取版本: FB addr 40 01 02 checksum (版本1.2)
             response = bytes([RX_HEADER, addr, cmd, 0x01, 0x02])
         elif cmd == CMD_READ_FAULT:
-            # 读取故障状态: FB addr 3E <fault_code> checksum
-            # 0x00 = 无故障, 0x01 = 堵转
-            # Mock 可通过 self._mock_stall_flags 注入堵转
-            fault_byte = getattr(self, '_mock_stall_flags', {}).get(addr, 0x00)
+            fault_byte = self._mock_stall_flags.get(addr, 0x00)
             response = bytes([RX_HEADER, addr, cmd, fault_byte])
         elif cmd == CMD_CLEAR_STALL:
-            # 解除堵转确认: FB addr 3D 01 checksum (成功)
-            # 同时清除模拟堵转标志
-            if hasattr(self, '_mock_stall_flags'):
-                self._mock_stall_flags.pop(addr, None)
+            self._mock_stall_flags.pop(addr, None)
             response = bytes([RX_HEADER, addr, cmd, 0x01])
         else:
             # 默认ACK（单字节响应）
@@ -236,6 +261,7 @@ class RS485Driver:
         
         # 回调函数
         self._frame_callback: Optional[Callable[[int, int, bytes], None]] = None
+        self._comm_log_callback: Optional[Callable] = None  # 通信日志回调
         
         # 通信状态
         self._last_comm_time = datetime.now()
@@ -360,6 +386,24 @@ class RS485Driver:
         """
         self._frame_callback = callback
     
+    def set_comm_log_callback(self, callback: Optional[Callable]) -> None:
+        """设置通信日志回调 (TX/RX 帧级别)
+        
+        callback(direction, addr, cmd_name, hex_str)
+        """
+        self._comm_log_callback = callback
+    
+    def _emit_comm_log(self, direction: str, addr: int, cmd: int, raw: bytes):
+        """内部: 触发通信日志回调"""
+        cb = self._comm_log_callback
+        if cb:
+            try:
+                cmd_name = get_cmd_name(cmd)
+                hex_str = frame_to_hex(raw)
+                cb(direction, addr, cmd_name, hex_str)
+            except Exception:
+                pass
+
     def send_frame(
         self,
         addr: int,
@@ -397,6 +441,7 @@ class RS485Driver:
                 f"TX -> Addr={addr} Cmd={get_cmd_name(cmd)} "
                 f"Frame={frame_to_hex(frame)}"
             )
+            self._emit_comm_log("TX", addr, cmd, frame)
             return True
             
         except Exception as e:
@@ -574,6 +619,7 @@ class RS485Driver:
                 f"RX <- Addr={frame.addr} Cmd={get_cmd_name(frame.cmd)} "
                 f"Payload={frame.payload.hex()}"
             )
+            self._emit_comm_log("RX", frame.addr, frame.cmd, frame.raw)
             
             # 更新设备在线状态
             self._online_devices[frame.addr] = datetime.now()

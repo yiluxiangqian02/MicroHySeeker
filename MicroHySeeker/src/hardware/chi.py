@@ -10,7 +10,8 @@ from pathlib import Path
 
 # 导入后端 CHI 驱动
 try:
-    sys.path.insert(0, str(Path(__file__).parent.parent))
+    if not getattr(sys, 'frozen', False):
+        sys.path.insert(0, str(Path(__file__).parent.parent))
     from echem_sdl.hardware.chi import (
         CHIInstrument, ECParameters, ECTechnique, ECDataPoint,
         ECDataSet, CHIState, TECHNIQUE_NAMES, TECHNIQUE_FROM_STR

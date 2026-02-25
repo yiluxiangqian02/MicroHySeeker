@@ -62,16 +62,22 @@ class DilutionChannel:
     default_rpm: int = 120
     color: str = "#00FF00"
     tube_diameter_mm: float = 1.0  # 管道内径 (mm)，用于计算位移和体积
+    total_volume_ml: float = 0.0       # 原液总量 (mL)，用户配置; 0=不追踪
+    remaining_volume_ml: float = 0.0   # 剩余量 (mL)，运行时递减
 
     def to_dict(self) -> Dict[str, Any]:
         return asdict(self)
 
     @staticmethod
     def from_dict(data: Dict[str, Any]) -> 'DilutionChannel':
-        # 向后兼容: 旧配置可能没有tube_diameter_mm
+        # 向后兼容: 旧配置可能没有tube_diameter_mm / total_volume_ml / remaining_volume_ml
         data = data.copy()
         if 'tube_diameter_mm' not in data:
             data['tube_diameter_mm'] = 1.0
+        if 'total_volume_ml' not in data:
+            data['total_volume_ml'] = 0.0
+        if 'remaining_volume_ml' not in data:
+            data['remaining_volume_ml'] = 0.0
         return DilutionChannel(**data)
 
 
@@ -83,19 +89,27 @@ class FlushChannel:
     pump_address: int  # 1-12
     direction: str = "FWD"
     rpm: int = 100
-    cycle_duration_s: float = 30.0
+    cycle_duration_s: float = 30.0  # 保留用于向后兼容
     work_type: str = "Transfer"  # Inlet, Transfer, Outlet
     tube_diameter_mm: float = 1.0  # 管道内径 (mm)，用于计算位移和体积
+    total_volume_ml: float = float('inf')  # 原液总量 (mL), inf=不限量
 
     def to_dict(self) -> Dict[str, Any]:
-        return asdict(self)
+        d = asdict(self)
+        # JSON 不支持 inf, 用 null 表示
+        if d.get('total_volume_ml') is not None and d['total_volume_ml'] == float('inf'):
+            d['total_volume_ml'] = None
+        return d
 
     @staticmethod
     def from_dict(data: Dict[str, Any]) -> 'FlushChannel':
-        # 向后兼容: 旧配置可能没有tube_diameter_mm
+        # 向后兼容: 旧配置可能没有tube_diameter_mm / total_volume_ml
         data = data.copy()
         if 'tube_diameter_mm' not in data:
             data['tube_diameter_mm'] = 1.0
+        # total_volume_ml: None / 缺失 → inf
+        if 'total_volume_ml' not in data or data['total_volume_ml'] is None:
+            data['total_volume_ml'] = float('inf')
         return FlushChannel(**data)
 
 
@@ -263,16 +277,31 @@ class ProgStep:
 
 @dataclass
 class Experiment:
-    """实验程序"""
+    """实验程序 (v2.0 协议)"""
     exp_id: str
     exp_name: str
     steps: List[ProgStep] = field(default_factory=list)
     notes: str = ""
+    description: str = ""
+    tags: List[str] = field(default_factory=list)
+    operator: str = ""
+    _protocol_version: str = "2.0"
+    _created_at: str = ""
+    _modified_at: str = ""
 
     def to_dict(self) -> Dict[str, Any]:
+        from datetime import datetime
+        now_iso = datetime.now().isoformat()
         return {
+            '_protocol_version': self._protocol_version,
+            '_created_at': self._created_at or now_iso,
+            '_modified_at': now_iso,
+            '_software_version': '1.0.0',
             'exp_id': self.exp_id,
             'exp_name': self.exp_name,
+            'description': self.description,
+            'tags': self.tags,
+            'operator': self.operator,
             'steps': [s.to_dict() for s in self.steps],
             'notes': self.notes,
         }
@@ -286,6 +315,12 @@ class Experiment:
             exp_id=data.get('exp_id', ''),
             exp_name=data.get('exp_name', ''),
             notes=data.get('notes', ''),
+            description=data.get('description', ''),
+            tags=data.get('tags', []),
+            operator=data.get('operator', ''),
+            _protocol_version=data.get('_protocol_version', '1.0'),
+            _created_at=data.get('_created_at', ''),
+            _modified_at=data.get('_modified_at', ''),
         )
         exp.steps = [ProgStep.from_dict(s) for s in data.get('steps', [])]
         return exp

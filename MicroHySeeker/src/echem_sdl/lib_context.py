@@ -74,10 +74,26 @@ class RS485DriverAdapter:
         return self.driver.close()
     
     def write(self, data: bytes) -> int:
-        """写入数据到串口"""
+        """写入数据到串口 — 使用驱动锁保证线程安全 + RS485 半双工总线间隔"""
         # PumpManager会调用这个方法发送已构建的帧
         if hasattr(self.driver, '_serial') and self.driver._serial:
-            return self.driver._serial.write(data)
+            import time
+            from .utils.constants import DEFAULT_CMD_INTERVAL_MS
+            lock = getattr(self.driver, '_lock', None)
+            if lock is not None:
+                with lock:
+                    n = self.driver._serial.write(data)
+                    self.driver._last_comm_time = __import__('datetime').datetime.now()
+                    time.sleep(DEFAULT_CMD_INTERVAL_MS / 1000.0)
+                    # 通信日志 (TX)
+                    if len(data) >= 3:
+                        self.driver._emit_comm_log("TX", data[1], data[2], data)
+                    return n
+            else:
+                n = self.driver._serial.write(data)
+                if len(data) >= 3:
+                    self.driver._emit_comm_log("TX", data[1], data[2], data)
+                return n
         return 0
     
     def send_frame(self, addr: int, cmd: int, payload: bytes = b"") -> bool:

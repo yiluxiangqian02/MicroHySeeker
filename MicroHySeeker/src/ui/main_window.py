@@ -7,11 +7,12 @@
 - 日志和步骤进度不同操作类型显示不同颜色
 - 字体统一放大
 """
+import json
 from PySide6.QtWidgets import (
     QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QSplitter,
     QListWidget, QListWidgetItem, QTextEdit, QPushButton, QLabel, QToolBar, QStatusBar,
     QMenuBar, QMenu, QMessageBox, QFileDialog, QFrame, QSpinBox,
-    QGroupBox, QGridLayout, QScrollArea
+    QGroupBox, QGridLayout, QScrollArea, QInputDialog
 )
 from PySide6.QtCore import Qt, Slot, QSize, QRectF, QTimer, QPointF
 from PySide6.QtGui import QAction, QIcon, QFont, QColor, QPainter, QPen, QBrush, QLinearGradient, QPainterPath, QPolygonF
@@ -20,6 +21,9 @@ from pathlib import Path
 from src.models import SystemConfig, Experiment, ProgStep, ProgramStepType, ECSettings
 from src.engine.runner import ExperimentRunner
 from src.services.i18n import tr, get_lang, set_lang
+from src.services.app_logger import get_app_logger
+
+_logger = get_app_logger("UI")
 
 
 # 全局字体设置
@@ -84,6 +88,8 @@ class PumpDiagramWidget(QFrame):
         self.config = config
         self.pump_states = [0] * 12  # 0=空闲, 1=运行中(绿), 2=待运行(黄)
         self.setMinimumSize(600, 200)
+        self.setContextMenuPolicy(Qt.CustomContextMenu)
+        self.customContextMenuRequested.connect(self._show_context_menu)
         # 加载泵颜色参数
         from src.ui.layout_tuner import load_saved_layout_params
         self._color_params = load_saved_layout_params() or {}
@@ -118,6 +124,96 @@ class PumpDiagramWidget(QFrame):
                 wt = getattr(ch, 'work_type', 'Flush')
                 return wt
         return ""
+    
+    def _get_pump_volume_info(self, pump_id: int) -> str:
+        """获取泵的溶液体积信息（剩余量/总量ml），仅配液通道且配置了总量时显示"""
+        for ch in self.config.dilution_channels:
+            if ch.pump_address == pump_id and ch.total_volume_ml > 0:
+                return f"{ch.remaining_volume_ml:.1f}/{ch.total_volume_ml:.1f}ml"
+        return ""
+    
+    def _pump_id_at(self, pos) -> int:
+        """根据鼠标位置计算对应的泵编号 (1-12)，-1表示无"""
+        w, h = self.width(), self.height()
+        margin = 8
+        cols, rows = 6, 2
+        avail_w = w - margin * 2
+        avail_h = h - margin * 2
+        cell_w = avail_w // cols
+        cell_h = avail_h // rows
+        
+        x, y = pos.x() - margin, pos.y() - margin
+        if x < 0 or y < 0:
+            return -1
+        col = x // cell_w
+        row = y // cell_h
+        if col >= cols or row >= rows:
+            return -1
+        pump_id = row * cols + col + 1
+        return pump_id if 1 <= pump_id <= 12 else -1
+    
+    def _show_context_menu(self, pos):
+        """右键菜单 - 支持重置溶液剩余量"""
+        pump_id = self._pump_id_at(pos)
+        if pump_id < 1:
+            return
+        
+        # 查找该泵是否是配液通道且配置了总量
+        target_ch = None
+        for ch in self.config.dilution_channels:
+            if ch.pump_address == pump_id and ch.total_volume_ml > 0:
+                target_ch = ch
+                break
+        
+        if not target_ch:
+            return
+        
+        menu = QMenu(self)
+        
+        # 重置剩余量 = 加满
+        reset_action = menu.addAction(
+            f"🔄 重置剩余量 (加满至 {target_ch.total_volume_ml:.1f}mL)"
+        )
+        
+        # 自定义加液量
+        custom_action = menu.addAction("➕ 添加指定量...")
+        
+        menu.addSeparator()
+        info_action = menu.addAction(
+            f"📊 {target_ch.solution_name}: "
+            f"{target_ch.remaining_volume_ml:.1f}/{target_ch.total_volume_ml:.1f} mL"
+        )
+        info_action.setEnabled(False)
+        
+        action = menu.exec_(self.mapToGlobal(pos))
+        if action == reset_action:
+            target_ch.remaining_volume_ml = target_ch.total_volume_ml
+            self._save_config_and_refresh()
+        elif action == custom_action:
+            val, ok = QInputDialog.getDouble(
+                self, "添加溶液",
+                f"为 {target_ch.solution_name} 添加的体积 (mL):",
+                target_ch.total_volume_ml, 0.1, 10000.0, 1
+            )
+            if ok:
+                target_ch.remaining_volume_ml = min(
+                    target_ch.remaining_volume_ml + val,
+                    target_ch.total_volume_ml
+                )
+                self._save_config_and_refresh()
+    
+    def _save_config_and_refresh(self):
+        """保存配置并刷新显示"""
+        try:
+            import os
+            config_path = os.path.join(
+                os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                "config.json"
+            )
+            self.config.save_to_file(config_path)
+        except Exception:
+            pass
+        self.update()
     
     def paintEvent(self, event):
         painter = QPainter(self)
@@ -188,14 +284,26 @@ class PumpDiagramWidget(QFrame):
         base_sz = int(self._color_params.get("label_font_size", 10))
         lbl_color = str(self._color_params.get("label_color", "#374151"))
         
-        # 下方标签: 溶液名/工作类型 + 泵地址在同一行
-        if label:
-            label_text = f"{label} ({tr('pump_n', n=pump_id)})"
-        else:
-            label_text = tr("pump_n", n=pump_id)
+        # 下方标签: 分两行显示 (第1行: 溶液名, 第2行: 剩余量/总量)
+        vol_info = self._get_pump_volume_info(pump_id)
         painter.setPen(QColor(lbl_color))
-        painter.setFont(QFont("Microsoft YaHei", max(7, int(base_sz * fs))))
-        painter.drawText(x - 5, y + h + 2, w + 10, int(20 * fs), Qt.AlignCenter, label_text)
+        lbl_font_sz = max(7, int(base_sz * fs))
+        if label and vol_info:
+            # 两行: 名称 + 体积
+            painter.setFont(QFont("Microsoft YaHei", lbl_font_sz))
+            line_h = int(16 * fs)
+            painter.drawText(x - 5, y + h + 1, w + 10, line_h, Qt.AlignCenter, label)
+            vol_font_sz = max(6, int((base_sz - 1) * fs))
+            painter.setFont(QFont("Microsoft YaHei", vol_font_sz))
+            painter.setPen(QColor("#6B7280"))
+            painter.drawText(x - 5, y + h + 1 + line_h, w + 10, line_h, Qt.AlignCenter, vol_info)
+        else:
+            painter.setFont(QFont("Microsoft YaHei", lbl_font_sz))
+            if label:
+                label_text = f"{label} ({tr('pump_n', n=pump_id)})"
+            else:
+                label_text = tr("pump_n", n=pump_id)
+            painter.drawText(x - 5, y + h + 2, w + 10, int(20 * fs), Qt.AlignCenter, label_text)
 
 
 class ExperimentProcessWidget(QFrame):
@@ -210,8 +318,10 @@ class ExperimentProcessWidget(QFrame):
         self.inlet_active = False
         self.transfer_active = False
         self.outlet_active = False
-        self.tank1_level = 0.0  # 混合烧杯液位 (0-1)
-        self.tank2_level = 0.0  # 反应烧杯液位 (0-1)
+        self.tank1_level = 0.0  # 混合烧杯液位 (视觉, 含 critical 缩放)
+        self.tank2_level = 0.0  # 反应烧杯液位 (视觉, 含 critical 缩放)
+        self.tank1_pct = 0.0    # 混合烧杯实际百分比 (0-1, 用于文字显示)
+        self.tank2_pct = 0.0    # 反应烧杯实际百分比 (0-1, 用于文字显示)
         self.combo_progress = "0/0"
         self.setMinimumSize(600, 300)
         
@@ -235,6 +345,9 @@ class ExperimentProcessWidget(QFrame):
         self.anim_timer = QTimer(self)
         self.anim_timer.timeout.connect(self._update_animation)
         self.anim_timer.start(100)
+
+        # 初始化泵地址映射 (从 flush_channels 读取 Inlet/Transfer/Outlet)
+        self._update_pump_ids()
 
     def _load_saved_layout_params(self):
         """尝试从配置文件加载布局参数"""
@@ -404,9 +517,12 @@ class ExperimentProcessWidget(QFrame):
         self.outlet_active = outlet_active
         self.update()
     
-    def set_tank_levels(self, tank1: float, tank2: float):
+    def set_tank_levels(self, tank1: float, tank2: float,
+                        tank1_pct: float = None, tank2_pct: float = None):
         self.tank1_level = max(0, min(1, tank1))
         self.tank2_level = max(0, min(1, tank2))
+        self.tank1_pct = tank1_pct if tank1_pct is not None else tank1
+        self.tank2_pct = tank2_pct if tank2_pct is not None else tank2
         self.update()
     
     def set_ws_connection_status(self, status: str):
@@ -580,22 +696,8 @@ class ExperimentProcessWidget(QFrame):
         ws_auto_h = (t2y + t2h) - ws_y if ws_dh <= 0 else ws_dh
         
         # ── 绘制组件 ──
-        t1_crit = float(p.get("tank1_critical", 0.80))
-        t2_crit = float(p.get("tank2_critical", 0.80))
-        self._draw_beaker(painter, t1x, t1y, t1w, t1h,
-                          tr("mix_beaker"), self.tank1_level, QColor("#90CAF9"), QColor("#42A5F5"), t1_crit)
-        self._draw_beaker(painter, t2x, t2y, t2w, t2h,
-                          tr("react_beaker"), self.tank2_level, QColor("#CE93D8"), QColor("#AB47BC"), t2_crit)
-        self._draw_workstation(painter, ws_x, ws_y, ws_auto_w, ws_auto_h)
         
-        self._draw_pump_like_status(painter, ix, iy, iw, ih,
-                                    "Inlet", self.inlet_pump, self.inlet_active)
-        self._draw_pump_like_status(painter, tx, ty, tw_, th,
-                                    "Transfer", self.transfer_pump, self.transfer_active)
-        self._draw_pump_like_status(painter, ox, oy, ow, oh,
-                                    "Outlet", self.outlet_pump, self.outlet_active)
-        
-        # ── 电极线 (颜色可配置, 工作站↔反应烧杯) ──
+        # ── 电极线 (最先绘制, 保证在烧杯液面/文字的下方) ──
         wire_prefixes = ["wire1", "wire2", "wire3"]
         wire_defaults = ["#4CAF50", "#2196F3", "#F44336"]
         for prefix, def_color in zip(wire_prefixes, wire_defaults):
@@ -626,6 +728,24 @@ class ExperimentProcessWidget(QFrame):
             painter.drawPath(path)
             painter.setBrush(QBrush(color))
             painter.drawEllipse(QPointF(ex_, ey_), 2, 2)
+        
+        # ── 烧杯 (在电极线之上) ──
+        t1_crit = float(p.get("tank1_critical", 0.80))
+        t2_crit = float(p.get("tank2_critical", 0.80))
+        self._draw_beaker(painter, t1x, t1y, t1w, t1h,
+                          tr("mix_beaker"), self.tank1_level, QColor("#90CAF9"), QColor("#42A5F5"), t1_crit,
+                          display_pct=self.tank1_pct)
+        self._draw_beaker(painter, t2x, t2y, t2w, t2h,
+                          tr("react_beaker"), self.tank2_level, QColor("#CE93D8"), QColor("#AB47BC"), t2_crit,
+                          display_pct=self.tank2_pct)
+        self._draw_workstation(painter, ws_x, ws_y, ws_auto_w, ws_auto_h)
+        
+        self._draw_pump_like_status(painter, ix, iy, iw, ih,
+                                    "Inlet", self.inlet_pump, self.inlet_active)
+        self._draw_pump_like_status(painter, tx, ty, tw_, th,
+                                    "Transfer", self.transfer_pump, self.transfer_active)
+        self._draw_pump_like_status(painter, ox, oy, ow, oh,
+                                    "Outlet", self.outlet_pump, self.outlet_active)
         
         # 组合进程
         fs = self._fs
@@ -852,7 +972,7 @@ class ExperimentProcessWidget(QFrame):
     
     def _draw_beaker(self, painter: QPainter, x: int, y: int, w: int, h: int,
                      name: str, level: float, liquid_color: QColor, border_color: QColor,
-                     critical_level: float = 0.80):
+                     critical_level: float = 0.80, display_pct: float = None):
         """绘制烧杯造型 - U型容器(无上边，圆角底) + 液位 + 可调临界线"""
         r = 20  # 底部圆角半径 (加大)
 
@@ -917,11 +1037,12 @@ class ExperimentProcessWidget(QFrame):
         painter.setFont(QFont("Microsoft YaHei", max(7, int(base_sz * fs))))
         painter.drawText(x - 10, y + h + 5, w + 20, int(20 * fs), Qt.AlignCenter, name)
         
-        # 液位百分比
+        # 液位百分比 (使用原始分数, 不受 critical 缩放影响)
+        pct = display_pct if display_pct is not None else level
         if level > 0:
             painter.setPen(QColor("#455A64"))
             painter.setFont(QFont("Microsoft YaHei", max(7, int(9 * fs))))
-            painter.drawText(x, y + h // 2, w, int(14 * fs), Qt.AlignCenter, f"{level*100:.0f}%")
+            painter.drawText(x, y + h // 2, w, int(14 * fs), Qt.AlignCenter, f"{pct*100:.0f}%")
     
     def _draw_pipe(self, painter: QPainter, x1: int, y1: int, x2: int, y2: int, active: bool):
         """绘制管道连接线"""
@@ -968,6 +1089,8 @@ class MainWindow(QMainWindow):
         self.runner.experiment_finished.connect(self._on_experiment_finished)
         self.runner.echem_result.connect(self._on_echem_result)
         self.runner.pump_batch_update.connect(self._on_pump_batch_update)
+        self.runner.volume_updated.connect(self._on_volume_updated)
+        self.runner.liquid_level_update.connect(self._on_liquid_level_update)
         
         # 电化学实时截图定时器 (测量期间捕获CHI660F窗口)
         self._echem_capture_timer = QTimer(self)
@@ -1014,6 +1137,13 @@ class MainWindow(QMainWindow):
         save_action = QAction(tr("save_exp"), self)
         save_action.triggered.connect(self._on_save_exp)
         file_menu.addAction(save_action)
+        
+        file_menu.addSeparator()
+        
+        # 数据浏览器
+        data_browser_action = QAction("数据浏览器", self)
+        data_browser_action.triggered.connect(self._on_data_browser)
+        file_menu.addAction(data_browser_action)
         
         file_menu.addSeparator()
         
@@ -1145,22 +1275,65 @@ class MainWindow(QMainWindow):
         step_layout.addWidget(self.step_list)
         right_layout.addWidget(step_group)
         
-        # 运行日志 - 白色背景
+        # 运行日志 / 通信日志 - 白色背景，可切换
         log_group = QGroupBox(tr("run_log"))
         log_group.setFont(FONT_TITLE)
         log_layout = QVBoxLayout(log_group)
-        self.log_text = QTextEdit()
-        self.log_text.setReadOnly(True)
-        self.log_text.setFont(FONT_NORMAL)
-        self.log_text.setStyleSheet("""
+        
+        # 切换按钮行
+        log_btn_row = QHBoxLayout()
+        self._log_toggle_btn = QPushButton("📡 详细通信日志")
+        self._log_toggle_btn.setFont(FONT_SMALL)
+        self._log_toggle_btn.setCheckable(True)
+        self._log_toggle_btn.setStyleSheet(
+            "QPushButton { padding:3px 10px; } "
+            "QPushButton:checked { background:#1565C0; color:white; }"
+        )
+        self._log_toggle_btn.toggled.connect(self._on_toggle_comm_log)
+        log_btn_row.addStretch()
+        log_btn_row.addWidget(self._log_toggle_btn)
+        
+        self._comm_log_clear_btn = QPushButton("清空")
+        self._comm_log_clear_btn.setFont(FONT_SMALL)
+        self._comm_log_clear_btn.setVisible(False)
+        self._comm_log_clear_btn.clicked.connect(lambda: self.comm_log_text.clear())
+        log_btn_row.addWidget(self._comm_log_clear_btn)
+        log_layout.addLayout(log_btn_row)
+        
+        _log_textedit_style = """
             QTextEdit {
                 background-color: white;
                 color: black;
                 border: 1px solid #ccc;
             }
-        """)
+        """
+        
+        # 运行日志 (默认可见)
+        self.log_text = QTextEdit()
+        self.log_text.setReadOnly(True)
+        self.log_text.setFont(FONT_NORMAL)
+        self.log_text.setStyleSheet(_log_textedit_style)
         log_layout.addWidget(self.log_text)
+        
+        # 通信日志 (默认隐藏)
+        self.comm_log_text = QTextEdit()
+        self.comm_log_text.setReadOnly(True)
+        self.comm_log_text.setFont(QFont("Consolas", 9))
+        self.comm_log_text.setStyleSheet("""
+            QTextEdit {
+                background-color: #1E1E1E;
+                color: #D4D4D4;
+                border: 1px solid #444;
+                font-family: Consolas, 'Courier New', monospace;
+            }
+        """)
+        self.comm_log_text.setVisible(False)
+        log_layout.addWidget(self.comm_log_text)
+        
         right_layout.addWidget(log_group)
+        
+        # 启动通信日志钩子
+        self._setup_comm_log_hook()
         
         top_splitter.addWidget(right_widget)
         top_splitter.setSizes([850, 450])
@@ -1300,36 +1473,67 @@ class MainWindow(QMainWindow):
         dialog.exec()
     
     def _on_load_exp(self):
-        """载入实验"""
+        """载入实验 — 支持v1.0和v2.0格式JSON"""
         file_path, _ = QFileDialog.getOpenFileName(
-            self, tr("load_exp"), "./experiments", "JSON (*.json)"
+            self, tr("load_exp"), "./experiments", "实验文件 (*.json)"
         )
         if file_path:
             try:
                 with open(file_path, 'r', encoding='utf-8') as f:
-                    self.single_experiment = Experiment.from_json_str(f.read())
+                    content = f.read()
+                self.single_experiment = Experiment.from_json_str(content)
                 self._refresh_step_list()
-                self.log_message(f"已载入实验: {file_path}", "info")
+                
+                # 显示加载摘要
+                exp = self.single_experiment
+                version = getattr(exp, '_protocol_version', '1.0')
+                step_count = len(exp.steps)
+                desc = f"  描述: {exp.description}" if exp.description else ""
+                tags = f"  标签: {', '.join(exp.tags)}" if exp.tags else ""
+                self.log_message(
+                    f"已载入实验: {exp.exp_name} (v{version}, {step_count}步骤)"
+                    f"{desc}{tags} ← {Path(file_path).name}", "info"
+                )
+            except json.JSONDecodeError as e:
+                QMessageBox.critical(self, tr("error"), f"JSON 格式错误: {e}")
             except Exception as e:
-                QMessageBox.critical(self, tr("error"), f"Load failed: {e}")
+                QMessageBox.critical(self, tr("error"), f"载入失败: {e}")
     
     def _on_save_exp(self):
-        """保存实验"""
+        """保存实验 — JSON v2.0 格式"""
         if not self.single_experiment:
             QMessageBox.warning(self, tr("warning"), tr("no_exp_to_save"))
             return
         
+        # 默认文件名：实验名称
+        default_name = self.single_experiment.exp_name or "experiment"
+        import re
+        safe_name = re.sub(r'[<>:"/\\|?*]', '_', default_name)
+        
         file_path, _ = QFileDialog.getSaveFileName(
-            self, tr("save_exp"), "./experiments", "JSON (*.json)"
+            self, tr("save_exp"),
+            f"./experiments/{safe_name}.json",
+            "实验文件 (*.json)"
         )
         if file_path:
             try:
                 Path(file_path).parent.mkdir(parents=True, exist_ok=True)
+                json_str = self.single_experiment.to_json_str()
                 with open(file_path, 'w', encoding='utf-8') as f:
-                    f.write(self.single_experiment.to_json_str())
-                self.log_message(f"实验已保存: {file_path}", "info")
+                    f.write(json_str)
+                self.log_message(
+                    f"实验已保存: {Path(file_path).name} "
+                    f"({len(self.single_experiment.steps)}步骤, v2.0)", "success"
+                )
             except Exception as e:
-                QMessageBox.critical(self, tr("error"), f"Save failed: {e}")
+                QMessageBox.critical(self, tr("error"), f"保存失败: {e}")
+    
+    def _on_data_browser(self):
+        """打开数据浏览器"""
+        from src.dialogs.data_browser import DataBrowserDialog
+        data_dir = self.config.data_dir if self.config else "./data"
+        dialog = DataBrowserDialog(data_dir=data_dir, parent=self)
+        dialog.exec()
     
     def _on_config(self):
         """系统配置"""
@@ -1393,19 +1597,26 @@ class MainWindow(QMainWindow):
             QMessageBox.warning(self, tr("warning"), tr("no_steps_warning"))
             return
         
-        # --- 运前前预检查 ---
+        # --- 运行前预检查 ---
         errors = self.runner.pre_check_experiment(self.single_experiment)
         if errors:
-            error_text = "\n".join(f"• {e}" for e in errors)
-            QMessageBox.critical(
-                self, tr("precheck_fail"),
-                f"发现 {len(errors)} 个问题，无法启动实验：\n\n{error_text}\n\n"
-                f"请修正后重试。"
-            )
-            self.log_message(f"预检查失败: {len(errors)} 个错误", "error")
-            for err in errors:
-                self.log_message(f"  ✖ {err}", "error")
-            return
+            action = self._show_precheck_error_dialog(errors)
+            if action == "retry":
+                # 用户点了连接RS485后自动重试预检查
+                errors = self.runner.pre_check_experiment(self.single_experiment)
+                if errors:
+                    # 仍有错误
+                    self._show_precheck_error_dialog(errors, allow_retry=False)
+                    self.log_message(f"预检查失败: {len(errors)} 个错误", "error")
+                    for err in errors:
+                        self.log_message(f"  ✖ {err}", "error")
+                    return
+                self.log_message("RS485 已连接，预检查通过", "success")
+            else:
+                self.log_message(f"预检查失败: {len(errors)} 个错误", "error")
+                for err in errors:
+                    self.log_message(f"  ✖ {err}", "error")
+                return
         
         self._refresh_step_list()
         self.runner.run_experiment(self.single_experiment)
@@ -1425,16 +1636,21 @@ class MainWindow(QMainWindow):
         # --- 运行前预检查（用基础实验做检查） ---
         errors = self.runner.pre_check_experiment(self.single_experiment)
         if errors:
-            error_text = "\n".join(f"• {e}" for e in errors)
-            QMessageBox.critical(
-                self, "预检查失败",
-                f"发现 {len(errors)} 个问题，无法启动组合实验：\n\n{error_text}\n\n"
-                f"请修正后重试。"
-            )
-            self.log_message(f"组合实验预检查失败: {len(errors)} 个错误", "error")
-            for err in errors:
-                self.log_message(f"  ✖ {err}", "error")
-            return
+            action = self._show_precheck_error_dialog(errors)
+            if action == "retry":
+                errors = self.runner.pre_check_experiment(self.single_experiment)
+                if errors:
+                    self._show_precheck_error_dialog(errors, allow_retry=False)
+                    self.log_message(f"组合实验预检查失败: {len(errors)} 个错误", "error")
+                    for err in errors:
+                        self.log_message(f"  ✖ {err}", "error")
+                    return
+                self.log_message("RS485 已连接，预检查通过", "success")
+            else:
+                self.log_message(f"组合实验预检查失败: {len(errors)} 个错误", "error")
+                for err in errors:
+                    self.log_message(f"  ✖ {err}", "error")
+                return
         
         self.current_combo_index = 0
         self.total_combo_count = len(self.combo_params)
@@ -1490,22 +1706,14 @@ class MainWindow(QMainWindow):
         if step.step_type == ProgramStepType.TRANSFER:
             if param_name == "转速(RPM)":
                 step.pump_rpm = int(param_value)
-            elif param_name == "持续时间(s)":
-                step.transfer_duration = param_value
+            elif param_name == "体积(mL)":
+                step.volume_ul = param_value * 1000.0
         elif step.step_type == ProgramStepType.FLUSH:
-            if param_name == "转速(RPM)":
-                step.flush_rpm = int(param_value)
-            elif param_name == "单次时长(s)":
-                step.flush_cycle_duration_s = param_value
-            elif param_name == "循环次数":
-                step.flush_cycles = int(param_value)
+            if param_name == "体积(mL)":
+                step.volume_ul = param_value * 1000.0
         elif step.step_type == ProgramStepType.EVACUATE:
-            if param_name == "转速(RPM)":
-                step.pump_rpm = int(param_value)
-            elif param_name == "单次时长(s)":
-                step.transfer_duration = param_value
-            elif param_name == "循环次数":
-                step.flush_cycles = int(param_value)
+            if param_name == "体积(mL)":
+                step.volume_ul = param_value * 1000.0
         elif step.step_type == ProgramStepType.ECHEM:
             if step.ec_settings:
                 if param_name == "扫描速率":
@@ -1642,19 +1850,18 @@ class MainWindow(QMainWindow):
     def _get_step_detail(self, step) -> str:
         """获取步骤详细描述"""
         if step.step_type == ProgramStepType.TRANSFER:
-            d = step.transfer_duration or 0
+            vol_ml = (step.volume_ul / 1000.0) if step.volume_ul else 0
             rpm = step.pump_rpm or 0
             addr = step.pump_address or '?'
-            return f"泵{addr} {d:.1f}s {rpm}RPM"
+            return f"泵{addr} {vol_ml:.2f}mL {rpm}RPM"
         elif step.step_type == ProgramStepType.PREP_SOL:
             if step.prep_sol_params:
                 return step.prep_sol_params.get_summary()
             return ""
         elif step.step_type == ProgramStepType.FLUSH:
-            d = step.flush_cycle_duration_s or 0
-            c = step.flush_cycles or 1
+            vol_ml = (step.volume_ul / 1000.0) if step.volume_ul else 0
             addr = step.pump_address or '?'
-            return f"泵{addr} {d:.1f}s×{c}次"
+            return f"泵{addr} {vol_ml:.2f}mL"
         elif step.step_type == ProgramStepType.ECHEM:
             if step.ec_settings:
                 tech = step.ec_settings.technique
@@ -1690,16 +1897,24 @@ class MainWindow(QMainWindow):
             d = step.duration_s or 0
             return f"等待{d:.1f}s"
         elif step.step_type == ProgramStepType.EVACUATE:
-            d = step.transfer_duration or 0
-            c = step.flush_cycles or 1
+            vol_ml = (step.volume_ul / 1000.0) if step.volume_ul else 0
             addr = step.pump_address or '?'
-            return f"泵{addr} {d:.1f}s×{c}次"
+            return f"泵{addr} {vol_ml:.2f}mL"
         return ""
     
     def log_message(self, msg: str, msg_type: str = "info"):
-        """添加日志 - 不同类型不同颜色"""
+        """添加日志 - 不同类型不同颜色，同时写入文件日志"""
         from datetime import datetime
         timestamp = datetime.now().strftime("%H:%M:%S")
+        
+        # 写入文件日志
+        log_level_map = {
+            "info": "info", "success": "info", "warning": "warning",
+            "error": "error", "transfer": "info", "prep_sol": "info",
+            "flush": "info", "echem": "info", "blank": "debug",
+        }
+        file_level = log_level_map.get(msg_type, "info")
+        getattr(_logger, file_level, _logger.info)(msg)
         
         # 根据类型设置颜色
         color_map = {
@@ -1870,6 +2085,28 @@ class MainWindow(QMainWindow):
             if 1 <= addr <= 12:
                 self.pump_diagram.set_pump_state(addr, 1)
     
+    @Slot()
+    def _on_volume_updated(self):
+        """溶液体积变更 - 刷新泵状态图以更新剩余量显示"""
+        self.pump_diagram.update()
+    
+    @Slot(float, float)
+    def _on_liquid_level_update(self, tank1_frac: float, tank2_frac: float):
+        """烧杯液位更新 — fraction (0-1) 映射到虚线位置 (critical_level)
+        
+        视觉液位 = fraction × critical_level (液面到达虚线=满)
+        百分比文字 = fraction × 100% (原始比例, 不缩放)
+        """
+        p = self.process_widget.layout_params
+        t1_crit = p.get("tank1_critical", 0.80)
+        t2_crit = p.get("tank2_critical", 0.80)
+        self.process_widget.set_tank_levels(
+            tank1_frac * t1_crit,
+            tank2_frac * t2_crit,
+            tank1_pct=tank1_frac,
+            tank2_pct=tank2_frac,
+        )
+    
     @Slot(bool)
     def _on_experiment_finished(self, success: bool):
         """实验完成"""
@@ -1881,10 +2118,18 @@ class MainWindow(QMainWindow):
         msg_type = "success" if success else "error"
         self.log_message(f"实验{status}", msg_type)
         
+        # 显示数据保存路径
+        if self.runner.data_manager and self.runner.data_manager.run_dir:
+            run_dir = self.runner.data_manager.run_dir
+            self.log_message(f"实验数据已保存至: {run_dir}", "info")
+        
         # 重置所有泵状态和指示灯
         for i in range(12):
             self.pump_diagram.set_pump_state(i + 1, 0)
         self.process_widget.set_pump_states(False, False, False)
+        
+        # 重置烧杯液位
+        self.process_widget.set_tank_levels(0.0, 0.0)
         
         # 清除步骤列表高亮
         for i in range(self.step_list.count()):
@@ -1934,10 +2179,23 @@ class MainWindow(QMainWindow):
             self.status_chi.setStyleSheet("color: #757575;")
 
     def _on_echem_result(self, technique: str, data_points: list, headers: list):
-        """接收电化学测量结果，在实验过程区域显示图像"""
+        """接收电化学测量结果，在实验过程区域显示图像，并保存图表"""
         # 停止实时截图，切换为最终结果图
         self._stop_echem_capture()
         self.process_widget.set_echem_result(technique, data_points, headers)
+        
+        # 尝试保存电化学图表到实验数据目录
+        try:
+            dm = self.runner.data_manager
+            if dm and dm.run_dir:
+                # 从 process_widget 获取图表 pixmap
+                chart = getattr(self.process_widget, 'echem_chart', None)
+                if chart:
+                    pixmap = chart.grab()
+                    step_idx = self.runner.current_step_index
+                    dm.save_echem_chart(step_idx, technique, pixmap)
+        except Exception as e:
+            _logger.warning(f"保存电化学图表失败: {e}")
 
     def _save_last_experiment(self):
         """保存当前实验到文件，下次启动时自动加载"""
@@ -2001,3 +2259,143 @@ class MainWindow(QMainWindow):
         except Exception as e:
             self.status_rs485.setText("RS485: 状态未知")
             self.status_rs485.setStyleSheet("color: gray;")
+
+    # ================================================================
+    # 预检查结果对话框 (含"连接RS485"按钮)
+    # ================================================================
+
+    def _show_precheck_error_dialog(self, errors: list, allow_retry: bool = True) -> str:
+        """弹出预检查错误对话框 — 含"连接RS485"按钮
+
+        Returns:
+            "retry" — 用户点击了连接并连接成功, 调用方应重跑预检查
+            "close" — 用户关闭了对话框
+        """
+        from PySide6.QtWidgets import QDialog, QDialogButtonBox, QTextBrowser
+
+        has_rs485_error = any("RS485" in e for e in errors)
+
+        dlg = QDialog(self)
+        dlg.setWindowTitle("预检查失败")
+        dlg.setMinimumSize(480, 300)
+        lay = QVBoxLayout(dlg)
+
+        # 错误信息
+        error_html = "".join(f'<p style="color:#D32F2F;">• {e}</p>' for e in errors)
+        browser = QTextBrowser()
+        browser.setHtml(
+            f'<h3>发现 {len(errors)} 个问题，无法启动实验</h3>'
+            f'{error_html}'
+            f'<p style="color:#666;">请修正后重试。</p>'
+        )
+        browser.setOpenExternalLinks(False)
+        lay.addWidget(browser)
+
+        # 按钮
+        btn_box = QHBoxLayout()
+        btn_box.addStretch()
+
+        result = {"action": "close"}
+
+        if has_rs485_error and allow_retry:
+            connect_btn = QPushButton("🔌 连接 RS485")
+            connect_btn.setStyleSheet(
+                "background-color:#1976D2; color:white; "
+                "padding:8px 20px; font-size:13px; font-weight:bold;"
+            )
+
+            def _do_connect():
+                ok = self._quick_connect_rs485()
+                if ok:
+                    result["action"] = "retry"
+                    dlg.accept()
+                else:
+                    QMessageBox.critical(dlg, "连接失败",
+                                         "RS485 连接失败，请检查串口线缆和端口设置。")
+            connect_btn.clicked.connect(_do_connect)
+            btn_box.addWidget(connect_btn)
+
+        close_btn = QPushButton("关闭")
+        close_btn.setStyleSheet("padding:8px 20px; font-size:13px;")
+        close_btn.clicked.connect(dlg.reject)
+        btn_box.addWidget(close_btn)
+
+        lay.addLayout(btn_box)
+        dlg.exec()
+        return result["action"]
+
+    def _quick_connect_rs485(self) -> bool:
+        """使用当前配置一键连接RS485"""
+        try:
+            from src.services.rs485_wrapper import get_rs485_instance
+            rs485 = get_rs485_instance()
+            if rs485.is_connected():
+                return True
+
+            port = self.config.rs485_port
+            baud = self.config.rs485_baudrate
+            is_mock = self.config.mock_mode
+
+            rs485.set_mock_mode(is_mock)
+            ok = rs485.open_port(port, baud)
+            if ok:
+                self.log_message(f"RS485 已连接: {port}@{baud}", "success")
+                self.update_rs485_status()
+            return ok
+        except Exception as e:
+            self.log_message(f"RS485 连接失败: {e}", "error")
+            return False
+
+    # ================================================================
+    # 通信日志面板 (详细RS485 TX/RX hex)
+    # ================================================================
+
+    def _on_toggle_comm_log(self, checked: bool):
+        """切换 运行日志 ↔ 通信日志"""
+        self.log_text.setVisible(not checked)
+        self.comm_log_text.setVisible(checked)
+        self._comm_log_clear_btn.setVisible(checked)
+        self._log_toggle_btn.setText(
+            "📋 运行日志" if checked else "📡 详细通信日志"
+        )
+
+    def _setup_comm_log_hook(self):
+        """安装 RS485 通信日志钩子，将 TX/RX 数据转发到通信日志面板"""
+        try:
+            from src.services.rs485_wrapper import get_rs485_instance
+            rs485 = get_rs485_instance()
+            rs485.set_comm_log_callback(self._append_comm_log)
+        except Exception:
+            pass  # RS485 未就绪时忽略
+
+    def _append_comm_log(self, direction: str, addr: int, cmd_name: str, hex_str: str):
+        """追加一条通信日志 (线程安全, 通过 QTimer.singleShot)"""
+        from datetime import datetime
+        ts = datetime.now().strftime("%H:%M:%S.%f")[:-3]
+        if direction == "TX":
+            color = "#569CD6"   # 蓝色
+            arrow = "→"
+        else:
+            color = "#6A9955"   # 绿色
+            arrow = "←"
+
+        line = (f'<span style="color:#808080;">[{ts}]</span> '
+                f'<span style="color:{color};">{direction} {arrow}</span> '
+                f'<span style="color:#DCDCAA;">Addr={addr}</span> '
+                f'<span style="color:#CE9178;">{cmd_name}</span> '
+                f'<span style="color:#D4D4D4;">{hex_str}</span>')
+
+        QTimer.singleShot(0, lambda l=line: self._do_append_comm_log(l))
+
+    def _do_append_comm_log(self, html_line: str):
+        """在 UI 线程追加通信日志 (限制最大行数)"""
+        MAX_COMM_LOG_LINES = 5000
+        self.comm_log_text.append(html_line)
+        doc = self.comm_log_text.document()
+        if doc.blockCount() > MAX_COMM_LOG_LINES:
+            cursor = self.comm_log_text.textCursor()
+            cursor.movePosition(cursor.MoveOperation.Start)
+            cursor.movePosition(cursor.MoveOperation.Down, cursor.MoveMode.KeepAnchor,
+                                doc.blockCount() - MAX_COMM_LOG_LINES)
+            cursor.removeSelectedText()
+            cursor.deleteChar()  # 删除多余换行
