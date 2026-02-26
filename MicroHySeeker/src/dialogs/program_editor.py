@@ -2,8 +2,8 @@
 程序编辑器 - 单次实验步骤编辑
 - 配液操作：显示溶液配方（溶液名称、原浓度、泵端口），目标浓度，是否溶剂，注液顺序
 - 注液顺序在溶液配方表格中作为单独一列，可输入1,2,3...
-- 电化学技术类型选择和参数放一个框内，删掉OCPT下拉选项
-- OCPT反向电流检测单独列一个框，加持续时间
+- 电化学技术类型选择和参数放一个框内，ADT(加速耐久性测试)替代OCPT
+- ADT参数：循环轮数、阴极电流、阳极电位等
 - CV/LSV/i-t不同技术对应参数变化
 - 总体积单位改成mL
 - 所有小数保留两位
@@ -537,7 +537,7 @@ class ProgramEditorDialog(QDialog):
             (ECTechnique.LSV,  "LSV\n线性扫描"),
             (ECTechnique.I_T,  "i-t\n计时电流"),
             (ECTechnique.EIS,  "EIS\n交流阻抗"),
-            (ECTechnique.OCPT, "OCPT\n开路电位"),
+            (ECTechnique.ADT, "ADT\n加速耐久"),
         ]
         
         _ACTIVE_STYLE = (
@@ -570,7 +570,7 @@ class ProgramEditorDialog(QDialog):
         self.ec_tech_combo.addItem("LSV", ECTechnique.LSV)
         self.ec_tech_combo.addItem("I_T", ECTechnique.I_T)
         self.ec_tech_combo.addItem("EIS", ECTechnique.EIS)
-        self.ec_tech_combo.addItem("OCPT", ECTechnique.OCPT)
+        self.ec_tech_combo.addItem("ADT", ECTechnique.ADT)
         self.ec_tech_combo.hide()
         tech_outer.addWidget(self.ec_tech_combo)
         
@@ -686,24 +686,83 @@ class ProgramEditorDialog(QDialog):
         eis_lay.addWidget(self._eis_quiettime, 3, 1)
         self._ec_params_stack.addWidget(eis_page)  # index 3
         
-        # --- OCPT 参数页 (index 4) ---
-        ocpt_page = QWidget()
-        ocpt_lay = QGridLayout(ocpt_page); ocpt_lay.setSpacing(8)
-        ocpt_lay.addWidget(QLabel("运行时间(s):"), 0, 0)
-        self._ocpt_runtime = QDoubleSpinBox(); self._ocpt_runtime.setRange(0,100000); self._ocpt_runtime.setDecimals(2); self._ocpt_runtime.setValue(60.0)
-        ocpt_lay.addWidget(self._ocpt_runtime, 0, 1)
-        ocpt_lay.addWidget(QLabel("采样间隔(ms):"), 0, 2)
-        self._ocpt_interval = QDoubleSpinBox(); self._ocpt_interval.setRange(0.1,10000); self._ocpt_interval.setDecimals(2); self._ocpt_interval.setValue(1000.0)
-        ocpt_lay.addWidget(self._ocpt_interval, 0, 3)
-        ocpt_lay.addWidget(QLabel("上限电位 Eh(V):"), 1, 0)
-        self._ocpt_eh = QDoubleSpinBox(); self._ocpt_eh.setRange(-10,10); self._ocpt_eh.setDecimals(3); self._ocpt_eh.setValue(10.0)
-        ocpt_lay.addWidget(self._ocpt_eh, 1, 1)
-        ocpt_lay.addWidget(QLabel("下限电位 El(V):"), 1, 2)
-        self._ocpt_el = QDoubleSpinBox(); self._ocpt_el.setRange(-10,10); self._ocpt_el.setDecimals(3); self._ocpt_el.setValue(-10.0)
-        ocpt_lay.addWidget(self._ocpt_el, 1, 3)
-        self._ec_params_stack.addWidget(ocpt_page)  # index 4
+        # --- ADT 参数页 (index 4) --- 拆分为 总控 / CP阴极 / CA阳极 三个分区 ---
+        adt_page = QWidget()
+        adt_main = QVBoxLayout(adt_page); adt_main.setSpacing(4); adt_main.setContentsMargins(0, 0, 0, 0)
+        
+        # == 总体控制 ==
+        _adt_hdr = QHBoxLayout()
+        _adt_hdr.addWidget(QLabel("循环轮数:"))
+        self._adt_cycles = QSpinBox(); self._adt_cycles.setRange(1, 10000); self._adt_cycles.setValue(100)
+        _adt_hdr.addWidget(self._adt_cycles)
+        _adt_hdr.addStretch()
+        adt_main.addLayout(_adt_hdr)
+        
+        # == CP 阴极恒电流 (Cathodic / HER) ==
+        cp_box = QGroupBox("CP 阴极恒电流 (HER)")
+        cp_box.setStyleSheet("QGroupBox{font-weight:bold;border:1px solid #90CAF9;border-radius:4px;margin-top:6px;padding-top:14px;}")
+        cp_grid = QGridLayout(cp_box); cp_grid.setSpacing(6)
+        cp_grid.addWidget(QLabel("阴极电流(mA):"), 0, 0)
+        self._adt_cathodic_mA = QDoubleSpinBox(); self._adt_cathodic_mA.setRange(-10000, 0); self._adt_cathodic_mA.setDecimals(1); self._adt_cathodic_mA.setValue(-500.0)
+        cp_grid.addWidget(self._adt_cathodic_mA, 0, 1)
+        cp_grid.addWidget(QLabel("持续时间(s):"), 0, 2)
+        self._adt_cathodic_t = QDoubleSpinBox(); self._adt_cathodic_t.setRange(0.005, 100000); self._adt_cathodic_t.setDecimals(3); self._adt_cathodic_t.setValue(3.0)
+        cp_grid.addWidget(self._adt_cathodic_t, 0, 3)
+        cp_grid.addWidget(QLabel("电位上限(V):"), 1, 0)
+        self._adt_cp_eh = QDoubleSpinBox(); self._adt_cp_eh.setRange(-10, 10); self._adt_cp_eh.setDecimals(3); self._adt_cp_eh.setValue(2.0)
+        cp_grid.addWidget(self._adt_cp_eh, 1, 1)
+        cp_grid.addWidget(QLabel("电位下限(V):"), 1, 2)
+        self._adt_cp_el = QDoubleSpinBox(); self._adt_cp_el.setRange(-10, 10); self._adt_cp_el.setDecimals(3); self._adt_cp_el.setValue(-2.0)
+        cp_grid.addWidget(self._adt_cp_el, 1, 3)
+        cp_grid.addWidget(QLabel("采样间隔(s):"), 2, 0)
+        self._adt_cp_si = QDoubleSpinBox(); self._adt_cp_si.setRange(0.0025, 32); self._adt_cp_si.setDecimals(4); self._adt_cp_si.setValue(0.01)
+        cp_grid.addWidget(self._adt_cp_si, 2, 1)
+        adt_main.addWidget(cp_box)
+        
+        # == CA 阳极电位阶跃 (Anodic / RC) ==
+        ca_box = QGroupBox("CA 阳极电位阶跃 (RC)")
+        ca_box.setStyleSheet("QGroupBox{font-weight:bold;border:1px solid #FFCC80;border-radius:4px;margin-top:6px;padding-top:14px;}")
+        ca_grid = QGridLayout(ca_box); ca_grid.setSpacing(6)
+        ca_grid.addWidget(QLabel("恒电位(V):"), 0, 0)
+        self._adt_anodic_V = QDoubleSpinBox(); self._adt_anodic_V.setRange(-10, 10); self._adt_anodic_V.setDecimals(3); self._adt_anodic_V.setValue(1.2)
+        ca_grid.addWidget(self._adt_anodic_V, 0, 1)
+        ca_grid.addWidget(QLabel("脉冲宽度(s):"), 0, 2)
+        self._adt_anodic_t = QDoubleSpinBox(); self._adt_anodic_t.setRange(1e-4, 1000); self._adt_anodic_t.setDecimals(4); self._adt_anodic_t.setValue(2.0)
+        ca_grid.addWidget(self._adt_anodic_t, 0, 3)
+        ca_grid.addWidget(QLabel("灵敏度(A/V):"), 1, 0)
+        self._adt_sensitivity = QLineEdit("1e-3")
+        self._adt_sensitivity.setPlaceholderText("如 1e-3")
+        ca_grid.addWidget(self._adt_sensitivity, 1, 1)
+        ca_grid.addWidget(QLabel("静置时间(s):"), 1, 2)
+        self._adt_quiettime = QDoubleSpinBox(); self._adt_quiettime.setRange(0, 1000); self._adt_quiettime.setDecimals(2); self._adt_quiettime.setValue(0.0)
+        ca_grid.addWidget(self._adt_quiettime, 1, 3)
+        ca_grid.addWidget(QLabel("采样间隔(s):"), 2, 0)
+        self._adt_ca_si = QDoubleSpinBox(); self._adt_ca_si.setRange(2e-6, 10); self._adt_ca_si.setDecimals(6); self._adt_ca_si.setValue(0.01)
+        ca_grid.addWidget(self._adt_ca_si, 2, 1)
+        adt_main.addWidget(ca_box)
+        
+        self._ec_params_stack.addWidget(adt_page)  # index 4
         
         tech_outer.addWidget(self._ec_params_stack)
+        
+        # === iR 补偿 (所有技术通用，EIS 一般不需要) ===
+        ir_box = QGroupBox("iR 补偿 (正反馈法)")
+        ir_box.setStyleSheet("QGroupBox{font-weight:bold;border:1px solid #CE93D8;border-radius:4px;margin-top:4px;padding-top:12px;}")
+        ir_lay = QHBoxLayout(ir_box); ir_lay.setSpacing(8)
+        self._ir_enabled_check = QCheckBox("启用 iR 补偿")
+        self._ir_enabled_check.setChecked(False)
+        self._ir_enabled_check.setToolTip("需要先通过 EIS 测量溶液电阻 Rs，再填入下方数值")
+        ir_lay.addWidget(self._ir_enabled_check)
+        ir_lay.addWidget(QLabel("补偿电阻(Ω):"))
+        self._ir_resistance_spin = QDoubleSpinBox()
+        self._ir_resistance_spin.setRange(0, 1e9); self._ir_resistance_spin.setDecimals(2); self._ir_resistance_spin.setValue(0.0)
+        self._ir_resistance_spin.setEnabled(False)
+        self._ir_resistance_spin.setToolTip("通过 EIS 高频区截距获取 Rs 值")
+        ir_lay.addWidget(self._ir_resistance_spin)
+        ir_lay.addStretch()
+        # 联动: 启用时才可编辑电阻值
+        self._ir_enabled_check.toggled.connect(self._ir_resistance_spin.setEnabled)
+        tech_outer.addWidget(ir_box)
         
         # Dummy Cell 模式选项
         dummy_row = QHBoxLayout()
@@ -716,15 +775,7 @@ class ProgramEditorDialog(QDialog):
         
         main_layout.addWidget(tech_group)
         
-        # 隐藏的 OCPT 反向电流检测控件 (保留兼容性, 默认值)
-        self.ec_ocpt_enable = QCheckBox(); self.ec_ocpt_enable.hide()
-        self.ec_ocpt_threshold = QDoubleSpinBox(); self.ec_ocpt_threshold.setValue(-50.0); self.ec_ocpt_threshold.hide()
-        self.ec_ocpt_duration = QDoubleSpinBox(); self.ec_ocpt_duration.setValue(5.0); self.ec_ocpt_duration.hide()
-        self.ec_ocpt_action = QComboBox()
-        self.ec_ocpt_action.addItem("仅记录", OCPTAction.LOG)
-        self.ec_ocpt_action.addItem("暂停实验", OCPTAction.PAUSE)
-        self.ec_ocpt_action.addItem("终止实验", OCPTAction.ABORT)
-        self.ec_ocpt_action.hide()
+
         
         main_layout.addStretch()
         
@@ -742,11 +793,11 @@ class ProgramEditorDialog(QDialog):
             btn.setStyleSheet(self._ec_active_style if t == tech else self._ec_idle_style)
         
         # 切换 stacked widget
-        idx_map = {ECTechnique.CV: 0, ECTechnique.LSV: 1, ECTechnique.I_T: 2, ECTechnique.EIS: 3, ECTechnique.OCPT: 4}
+        idx_map = {ECTechnique.CV: 0, ECTechnique.LSV: 1, ECTechnique.I_T: 2, ECTechnique.EIS: 3, ECTechnique.ADT: 4}
         self._ec_params_stack.setCurrentIndex(idx_map.get(tech, 0))
         
         # 同步 hidden combo (用于 save/load)
-        combo_idx = {ECTechnique.CV: 0, ECTechnique.LSV: 1, ECTechnique.I_T: 2, ECTechnique.EIS: 3, ECTechnique.OCPT: 4}
+        combo_idx = {ECTechnique.CV: 0, ECTechnique.LSV: 1, ECTechnique.I_T: 2, ECTechnique.EIS: 3, ECTechnique.ADT: 4}
         self.ec_tech_combo.setCurrentIndex(combo_idx.get(tech, 0))
     
     def _on_ec_tech_changed(self, index: int):
@@ -859,8 +910,15 @@ class ProgramEditorDialog(QDialog):
                 elif tv in ("I-T", "IT"):
                     parts.append(f"E0={ec.e0 or 0:.2f}V")
                     parts.append(f"时间={ec.run_time_s or 60}s")
-                elif tv == "OCPT":
-                    parts.append(f"时间={ec.run_time_s or 60}s")
+                elif tv == "ADT":
+                    cyc = getattr(ec, 'adt_num_cycles', 100)
+                    cat_mA = getattr(ec, 'adt_cathodic_current_mA', -500)
+                    cat_t = getattr(ec, 'adt_cathodic_duration_s', 3)
+                    ano_v = getattr(ec, 'adt_anodic_potential_V', 1.2)
+                    ano_t = getattr(ec, 'adt_anodic_duration_s', 2)
+                    parts.append(f"{cyc}轮")
+                    parts.append(f"阴极={cat_mA}mA/{cat_t}s")
+                    parts.append(f"阳极={ano_v}V/{ano_t}s")
                 elif tv == "EIS":
                     parts.append(f"频率={ec.freq_low}-{ec.freq_high}Hz")
                     parts.append(f"幅值={ec.amplitude}V")
@@ -1022,7 +1080,7 @@ class ProgramEditorDialog(QDialog):
             # 技术类型映射
             tech_idx = {
                 ECTechnique.CV: 0, ECTechnique.LSV: 1,
-                ECTechnique.I_T: 2, ECTechnique.EIS: 3, ECTechnique.OCPT: 4,
+                ECTechnique.I_T: 2, ECTechnique.EIS: 3, ECTechnique.ADT: 4,
             }.get(ec.technique, 0)
             self.ec_tech_combo.setCurrentIndex(tech_idx)
             self._on_ec_tech_changed(tech_idx)
@@ -1069,19 +1127,31 @@ class ProgramEditorDialog(QDialog):
                     self._eis_sensitivity.setText(str(ec.sensitivity))
                 self._eis_quiettime.setValue(round(ec.quiet_time_s, 2))
                 
-            elif tech == ECTechnique.OCPT:
-                self._ocpt_runtime.setValue(round(ec.run_time_s or 60, 2))
-                self._ocpt_interval.setValue(ec.sample_interval_ms if ec.sample_interval_ms else 1000.0)
-                self._ocpt_eh.setValue(round(ec.eh or 10, 3))
-                self._ocpt_el.setValue(round(ec.el or -10, 3))
+            elif tech == ECTechnique.ADT:
+                self._adt_cycles.setValue(getattr(ec, 'adt_num_cycles', 100))
+                # CP 阴极参数
+                self._adt_cathodic_mA.setValue(getattr(ec, 'adt_cathodic_current_mA', -500.0))
+                self._adt_cathodic_t.setValue(getattr(ec, 'adt_cathodic_duration_s', 3.0))
+                self._adt_cp_eh.setValue(getattr(ec, 'adt_cp_e_high', 2.0))
+                self._adt_cp_el.setValue(getattr(ec, 'adt_cp_e_low', -2.0))
+                self._adt_cp_si.setValue(getattr(ec, 'adt_cp_sample_interval', 0.01))
+                # CA 阳极参数
+                self._adt_anodic_V.setValue(getattr(ec, 'adt_anodic_potential_V', 1.2))
+                self._adt_anodic_t.setValue(getattr(ec, 'adt_anodic_duration_s', 2.0))
+                if getattr(ec, 'adt_ca_sensitivity', None) is not None:
+                    self._adt_sensitivity.setText(str(ec.adt_ca_sensitivity))
+                elif getattr(ec, 'sensitivity', None) is not None:
+                    self._adt_sensitivity.setText(str(ec.sensitivity))
+                self._adt_quiettime.setValue(getattr(ec, 'adt_ca_quiet_time', 0.0))
+                self._adt_ca_si.setValue(getattr(ec, 'adt_ca_sample_interval', 0.01))
+            
+            # iR 补偿 (通用)
+            self._ir_enabled_check.setChecked(getattr(ec, 'ir_compensation_enabled', False))
+            self._ir_resistance_spin.setValue(getattr(ec, 'ir_compensation_ohm', 0.0))
             
             # Dummy Cell
             self.ec_dummy_cell.setChecked(getattr(ec, 'use_dummy_cell', True))
-            # OCPT检测 (隐藏兼容)
-            self.ec_ocpt_enable.setChecked(ec.ocpt_enabled)
-            self.ec_ocpt_threshold.setValue(round(ec.ocpt_threshold_uA, 2))
-            action_idx = {OCPTAction.LOG: 0, OCPTAction.PAUSE: 1, OCPTAction.ABORT: 2}.get(ec.ocpt_action, 0)
-            self.ec_ocpt_action.setCurrentIndex(action_idx)
+            # (旧 OCPT 检测字段已移除, ADT 参数直接在参数页设置)
     
     def _load_blank(self, step: ProgStep):
         self.bl_duration_spin.setValue(round(step.duration_s or 0, 2))
@@ -1241,16 +1311,31 @@ class ProgramEditorDialog(QDialog):
                 except ValueError:
                     ec.sensitivity = 1e-3
                     
-            elif tech == ECTechnique.OCPT:
-                ec.run_time_s = round(self._ocpt_runtime.value(), 2)
-                ec.sample_interval_ms = int(self._ocpt_interval.value())
-                ec.eh = round(self._ocpt_eh.value(), 3)
-                ec.el = round(self._ocpt_el.value(), 3)
+            elif tech == ECTechnique.ADT:
+                ec.adt_num_cycles = self._adt_cycles.value()
+                # CP 阴极参数
+                ec.adt_cathodic_current_mA = round(self._adt_cathodic_mA.value(), 1)
+                ec.adt_cathodic_duration_s = round(self._adt_cathodic_t.value(), 3)
+                ec.adt_cp_e_high = round(self._adt_cp_eh.value(), 3)
+                ec.adt_cp_e_low = round(self._adt_cp_el.value(), 3)
+                ec.adt_cp_sample_interval = round(self._adt_cp_si.value(), 4)
+                # CA 阳极参数
+                ec.adt_anodic_potential_V = round(self._adt_anodic_V.value(), 3)
+                ec.adt_anodic_duration_s = round(self._adt_anodic_t.value(), 4)
+                try:
+                    ec.adt_ca_sensitivity = float(self._adt_sensitivity.text())
+                    ec.sensitivity = ec.adt_ca_sensitivity  # 兼容旧字段
+                except ValueError:
+                    ec.adt_ca_sensitivity = 1e-3
+                    ec.sensitivity = 1e-3
+                ec.adt_ca_quiet_time = round(self._adt_quiettime.value(), 2)
+                ec.adt_ca_sample_interval = round(self._adt_ca_si.value(), 6)
             
-            # OCPT 检测 (兼容)
-            ec.ocpt_enabled = self.ec_ocpt_enable.isChecked()
-            ec.ocpt_threshold_uA = round(self.ec_ocpt_threshold.value(), 2)
-            ec.ocpt_action = self.ec_ocpt_action.currentData()
+            # iR 补偿 (通用)
+            ec.ir_compensation_enabled = self._ir_enabled_check.isChecked()
+            ec.ir_compensation_ohm = round(self._ir_resistance_spin.value(), 2)
+            
+            # (旧 OCPT 检测字段已移除)
             # Dummy Cell
             ec.use_dummy_cell = self.ec_dummy_cell.isChecked()
             

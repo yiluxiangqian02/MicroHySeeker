@@ -10,6 +10,11 @@ CHI 660F GUI 自动化控制器
     - i-t (安培-时间曲线)
     - EIS/IMP (交流阻抗谱)
     - OCPT (开路电位-时间)
+    - CP  (计时电位法 / Chronopotentiometry)
+    - CA  (计时电流法 / Chronoamperometry)
+
+附加功能:
+    - iR 补偿 (手动正反馈法): ircompon / ircompoff / mir
 
 架构:
     1. launch() → 启动或连接 chi660f.exe
@@ -103,6 +108,8 @@ class Technique(IntEnum):
     IT = 2      # 安培-时间曲线 (i-t)
     IMP = 3     # 交流阻抗 (EIS)
     OCPT = 4    # 开路电位-时间
+    CP = 5      # 计时电位法 (Chronopotentiometry)
+    CA = 6      # 计时电流法 (Chronoamperometry)
 
 
 # 技术 → 宏命令 tech 字符串
@@ -112,6 +119,8 @@ TECHNIQUE_NAMES: Dict[Technique, str] = {
     Technique.IT:   "i-t",
     Technique.IMP:  "imp",
     Technique.OCPT: "ocpt",
+    Technique.CP:   "cp",
+    Technique.CA:   "ca",
 }
 
 
@@ -220,6 +229,85 @@ class OCPTParams:
 
 
 @dataclass
+class CPParams:
+    """计时电位法 (Chronopotentiometry, CP) 参数
+    
+    恒电流模式下记录电位随时间变化。支持阴极/阳极交替循环。
+    用于 ADT (加速耐久性测试) 的阴极 HER 步骤。
+    
+    Attributes:
+        cathodic_current: 阴极电流 (A), 范围 0 ~ 0.25
+        anodic_current: 阳极电流 (A), 范围 0 ~ 0.25
+        e_high: 高电位限 (V), 范围 -10 ~ +10
+        e_low: 低电位限 (V), 范围 -10 ~ +10
+        high_e_hold_time: 高电位保持时间 (s), 范围 0 ~ 100000
+        low_e_hold_time: 低电位保持时间 (s), 范围 0 ~ 100000
+        cathodic_time: 阴极时间 (s), 范围 0.005 ~ 100000
+        anodic_time: 阳极时间 (s), 范围 0.005 ~ 100000
+        polarity: 首步极性, 'p'=阳极先, 'n'=阴极先
+        sample_interval: 采样间隔 (s), 范围 0.0025 ~ 32
+        segments: 段数, 范围 1 ~ 1000000
+        priority: 优先级, 'time' 或 'potential'
+    """
+    cathodic_current: float = 0.001    # ic (A)
+    anodic_current: float = 0.001      # ia (A)
+    e_high: float = 2.0                # eh (V)
+    e_low: float = -2.0                # el (V)
+    high_e_hold_time: float = 0.0      # heht (s)
+    low_e_hold_time: float = 0.0       # leht (s)
+    cathodic_time: float = 10.0        # tc (s)
+    anodic_time: float = 10.0          # ta (s)
+    polarity: str = 'n'                # pn: 'p' or 'n', ADT 通常阴极先
+    sample_interval: float = 0.1       # si (s)
+    segments: int = 2                  # cl: 段数 (1段=单方向)
+    priority: str = 'time'             # 'time' or 'potential'
+
+
+@dataclass
+class CAParams:
+    """计时电流法 (Chronoamperometry, CA) 参数
+    
+    恒电位阶跃模式下记录电流随时间变化。支持多步电位阶跃。
+    用于 ADT (加速耐久性测试) 的阳极 RC (反向电流) 步骤。
+    
+    Attributes:
+        e_init: 初始电位 (V), 范围 -10 ~ +10
+        e_high: 高电位限 (V), 范围 -10 ~ +10
+        e_low: 低电位限 (V), 范围 -10 ~ +10
+        polarity: 变化方向, 'p'=正向, 'n'=负向
+        steps: 阶跃数, 范围 1 ~ 320
+        pulse_width: 脉冲宽度 (s), 范围 1e-4 ~ 1000
+        sample_interval: 采样间隔 (s), 范围 2e-6 ~ 10
+        quiet_time: 静默时间 (s), 范围 0 ~ 100000
+        sensitivity: 灵敏度 (A/V), 0 表示自动
+    """
+    e_init: float = 0.0           # ei (V)
+    e_high: float = 1.5           # eh (V)
+    e_low: float = -0.5           # el (V)
+    polarity: str = 'p'           # pn: 'p' or 'n'
+    steps: int = 1                # cl: 阶跃数
+    pulse_width: float = 2.0      # pw (s)
+    sample_interval: float = 0.01 # si (s)
+    quiet_time: float = 2.0       # qt (s)
+    sensitivity: float = 0.0      # sens, 0 = autosens
+
+
+@dataclass
+class IRCompensation:
+    """iR 补偿配置
+    
+    CHI 660F 支持手动 iR 补偿 (正反馈法)。
+    通过宏命令 ircompon / ircompoff / mir 控制。
+    
+    Attributes:
+        enabled: 是否启用 iR 补偿
+        resistance: 手动补偿电阻值 (Ω), 范围 0 ~ 1e9
+    """
+    enabled: bool = False
+    resistance: float = 0.0  # mir (Ω)
+
+
+@dataclass
 class ExperimentConfig:
     """实验配置
     
@@ -241,6 +329,7 @@ class ExperimentConfig:
     timeout: float = 600.0
     auto_close_macro: bool = True
     startup_wait: float = 5.0
+    ir_compensation: Optional[IRCompensation] = None  # iR 补偿配置
 
 
 @dataclass
@@ -398,6 +487,13 @@ class MacroBuilder:
             lines.extend(MacroBuilder._imp_params(params))
         elif technique == Technique.OCPT:
             lines.extend(MacroBuilder._ocpt_params(params))
+        elif technique == Technique.CP:
+            lines.extend(MacroBuilder._cp_params(params))
+        elif technique == Technique.CA:
+            lines.extend(MacroBuilder._ca_params(params))
+        
+        # iR 补偿 (在 run 之前设置)
+        lines.extend(MacroBuilder._ir_comp_commands(config))
         
         # 执行实验
         lines.append("run")
@@ -488,6 +584,95 @@ class MacroBuilder:
             f"eh = {p.e_high}",
             f"el = {p.e_low}",
         ]
+    
+    @staticmethod
+    def _cp_params(p: CPParams) -> List[str]:
+        """计时电位法 (CP) 宏参数
+        
+        CHI 660F CP 命令参考:
+            ic: 阴极电流 (A), 0 ~ 0.25
+            ia: 阳极电流 (A), 0 ~ 0.25
+            eh: 高电位限 (V)
+            el: 低电位限 (V)
+            heht: 高电位保持时间 (s)
+            leht: 低电位保持时间 (s)
+            tc: 阴极时间 (s), 0.005 ~ 100000
+            ta: 阳极时间 (s), 0.005 ~ 100000
+            pn: 首步极性 ('p' 或 'n')
+            si: 采样间隔 (s), 0.0025 ~ 32
+            cl: 段数, 1 ~ 1000000
+            priot / prioe: 时间优先 / 电位优先
+        """
+        lines = [
+            f"ic = {p.cathodic_current}",
+            f"ia = {p.anodic_current}",
+            f"eh = {p.e_high}",
+            f"el = {p.e_low}",
+            f"tc = {p.cathodic_time}",
+            f"ta = {p.anodic_time}",
+            f"pn = {p.polarity}",
+            f"si = {p.sample_interval}",
+            f"cl = {p.segments}",
+        ]
+        # 高低电位保持时间 (非零才写)
+        if p.high_e_hold_time > 0:
+            lines.append(f"heht = {p.high_e_hold_time}")
+        if p.low_e_hold_time > 0:
+            lines.append(f"leht = {p.low_e_hold_time}")
+        # 优先级
+        if p.priority == 'potential':
+            lines.append("prioe")
+        else:
+            lines.append("priot")
+        return lines
+    
+    @staticmethod
+    def _ca_params(p: CAParams) -> List[str]:
+        """计时电流法 (CA) 宏参数
+        
+        CHI 660F CA 命令参考:
+            ei: 初始电位 (V), -10 ~ +10
+            eh: 高电位限 (V)
+            el: 低电位限 (V)
+            pn: 变化方向 ('p' 或 'n')
+            cl: 阶跃数, 1 ~ 320
+            pw: 脉冲宽度 (s), 1e-4 ~ 1000
+            si: 采样间隔 (s), 2e-6 ~ 10
+            qt: 静默时间 (s), 0 ~ 100000
+            sens: 灵敏度 (A/V)
+        """
+        lines = [
+            f"ei = {p.e_init}",
+            f"eh = {p.e_high}",
+            f"el = {p.e_low}",
+            f"pn = {p.polarity}",
+            f"cl = {p.steps}",
+            f"pw = {p.pulse_width}",
+            f"si = {p.sample_interval}",
+            f"qt = {p.quiet_time}",
+        ]
+        if p.sensitivity > 0:
+            lines.append(f"sens = {p.sensitivity}")
+        else:
+            lines.append("autosens")
+        return lines
+    
+    @staticmethod
+    def _ir_comp_commands(config: ExperimentConfig) -> List[str]:
+        """生成 iR 补偿宏命令
+        
+        CHI 660F 支持手动 iR 补偿 (正反馈法):
+            ircompon  — 开启手动 iR 补偿
+            ircompoff — 关闭 iR 补偿
+            mir = X   — 设置手动补偿电阻 (Ω)
+        """
+        ir = config.ir_compensation
+        if ir is None or not ir.enabled:
+            return []
+        lines = ["ircompon"]
+        if ir.resistance > 0:
+            lines.append(f"mir = {ir.resistance}")
+        return lines
 
 
 # ============================================================
@@ -637,6 +822,34 @@ class CHI660FController:
     def run_ocpt(self, params: OCPTParams, output_name: str = "") -> ExperimentResult:
         """执行开路电位-时间 (OCPT) 实验"""
         return self._run_experiment(Technique.OCPT, params, output_name)
+    
+    def run_cp(self, params: CPParams, output_name: str = "") -> ExperimentResult:
+        """执行计时电位法 (Chronopotentiometry, CP) 实验
+        
+        恒电流模式下记录电位随时间变化。
+        用于 ADT 的阴极 HER 步骤或电池充放电测试。
+        """
+        return self._run_experiment(Technique.CP, params, output_name)
+    
+    def run_ca(self, params: CAParams, output_name: str = "") -> ExperimentResult:
+        """执行计时电流法 (Chronoamperometry, CA) 实验
+        
+        恒电位阶跃模式下记录电流随时间变化。
+        用于 ADT 的阳极反向电流步骤或扩散系数测定。
+        """
+        return self._run_experiment(Technique.CA, params, output_name)
+    
+    def set_ir_compensation(self, enabled: bool, resistance: float = 0.0):
+        """设置实验的 iR 补偿参数
+        
+        Args:
+            enabled: 是否启用手动 iR 补偿
+            resistance: 补偿电阻 (Ω), 通过 EIS 预先测量
+        """
+        self._config.ir_compensation = IRCompensation(
+            enabled=enabled, resistance=resistance
+        )
+        logger.info(f"iR 补偿设置: enabled={enabled}, R={resistance}Ω")
     
     def run_custom_macro(self, macro_text: str) -> ExperimentResult:
         """执行自定义宏命令

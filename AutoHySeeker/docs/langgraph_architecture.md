@@ -1,7 +1,12 @@
 # AutoHySeeker — LangGraph 多 Agent 架构设计
 
-> 2026-02-25 | v1.0
-> 配套文档：`skills_architecture.md`（Tool/Skill 定义）、各 `dev_agent_*.md`（Agent 开发指南）
+> 2026-02-25 | v1.1（2026-02-26 重构：提取共享内容至独立文档）
+> 关联文档：[architecture_overview.md](architecture_overview.md) · [skills_architecture.md](skills_architecture.md) · [project_plan.md](project_plan.md)
+> Agent 开发指南：各 `dev_agent_*.md`
+>
+> **本文档职责**：State 定义、Graph 拓扑、条件边、Checkpointing（唯一源）
+> 项目结构/依赖/路线图 → [project_plan.md](project_plan.md)
+> 系统总览/四层架构 → [architecture_overview.md](architecture_overview.md)
 
 ---
 
@@ -18,52 +23,9 @@
 | 可观测性 | printf 调试 | **LangSmith 追踪每步** |
 | 流式输出 | 需自己实现 | **原生 stream_mode** |
 
-### 1.2 四层架构（升级版）
+### 1.2 架构与拓扑
 
-```
-Layer 4 — LangGraph      Graph 定义, State 管理, 条件路由, 检查点, 流式输出
-Layer 3 — Agents          System Prompt + 决策函数 (Graph 中的节点)
-Layer 2 — Skills          多 Tool + LLM 编排 → 完整科研子任务
-Layer 1 — Tools           原子操作（ToolRegistry 管理, Function Calling 可用）
-```
-
-**关键原则**：
-- LangGraph 管"编排"（谁先谁后、出错怎么办、要不要问人）
-- Agent 管"决策"（根据当前状态决定调哪个 Skill）
-- Skill 管"执行"（调多个 Tool + LLM → 产出结果）
-- Tool 管"操作"（一个函数做一件事）
-
-### 1.3 系统拓扑图
-
-```
-                          用户输入
-                            │
-                    ┌───────▼───────┐
-                    │  Orchestrator  │  LangGraph Supervisor
-                    │  (意图路由)     │  Node
-                    └───┬───┬───┬───┘
-                        │   │   │
-          ┌─────────────┤   │   ├─────────────┐
-          │             │   │   │             │
-    ┌─────▼─────┐ ┌─────▼─┐│┌──▼──────┐ ┌───▼───────────┐
-    │ DataAnalyst│ │Experi-│││Diagnos- │ │Knowledge      │
-    │ Subgraph   │ │ment   │││tics     │ │Manager        │
-    │ (域 A)     │ │Design │││Expert   │ │Subgraph       │
-    │            │ │Subgr. │││Subgraph │ │(域 E)         │
-    │ A1 A2 A3  │ │(域 B) │││(域 D)   │ │               │
-    │ A4         │ │B1-B4  │││D1 D2 D3 │ │ E1 E2 E3     │
-    └────────────┘ └───────┘│└─────────┘ └───────────────┘
-                            │
-                   ┌────────▼────────┐
-                   │  Experiment     │
-                   │  Supervisor     │  ★ 核心 Subgraph
-                   │  Subgraph       │
-                   │  (域 C + D联动)  │
-                   │                 │
-                   │  C1 C2 C3       │
-                   │  ↕ D1 D2 D3     │  ← C 出错时调用 D
-                   └─────────────────┘
-```
+> 四层架构图、系统拓扑图已移至 → [architecture_overview.md](architecture_overview.md) §一/§二
 
 ---
 
@@ -547,214 +509,14 @@ if state.next:  # 有待执行的节点
 
 ---
 
-## 六、项目结构（更新版）
+## 六、项目结构 / 依赖 / 路线图
 
-```
-AutoHySeeker/
-├── pyproject.toml
-├── README.md
-├── configs/
-│   ├── settings.toml            # AutoHySeeker 自身配置
-│   ├── llm_config.toml          # LLM API 配置
-│   ├── rag_config.toml          # RAG 相关配置
-│   └── microhyseeker.toml       # MicroHySeeker 路径映射
-├── src/
-│   ├── __init__.py
-│   │
-│   ├── graph/                   # ★ LangGraph 图定义
-│   │   ├── __init__.py
-│   │   ├── state.py             # 所有 State TypedDict
-│   │   ├── orchestrator.py      # 顶层 Orchestrator Graph
-│   │   ├── analyst_graph.py     # DataAnalyst Subgraph
-│   │   ├── designer_graph.py    # ExperimentDesigner Subgraph
-│   │   ├── supervisor_graph.py  # ★ ExperimentSupervisor Subgraph
-│   │   ├── diagnostics_graph.py # DiagnosticsExpert Subgraph
-│   │   └── knowledge_graph.py   # KnowledgeManager Subgraph
-│   │
-│   ├── agents/                  # Agent 逻辑（节点函数 + System Prompt）
-│   │   ├── __init__.py
-│   │   ├── prompts.py           # 所有 System Prompt 集中管理
-│   │   ├── router.py            # Orchestrator 路由逻辑
-│   │   ├── analyst_nodes.py     # DataAnalyst 图的节点函数
-│   │   ├── designer_nodes.py    # ExperimentDesigner 图的节点函数
-│   │   ├── supervisor_nodes.py  # ExperimentSupervisor 图的节点函数
-│   │   ├── diagnostics_nodes.py # DiagnosticsExpert 图的节点函数
-│   │   └── knowledge_nodes.py   # KnowledgeManager 图的节点函数
-│   │
-│   ├── skills/                  # Skill 层（不变）
-│   │   ├── __init__.py
-│   │   ├── base.py
-│   │   ├── data_analysis/       # A1-A4
-│   │   ├── experiment_design/   # B1-B4
-│   │   ├── experiment_execution/# C1-C3
-│   │   ├── diagnostics/         # D1-D3
-│   │   └── knowledge/           # E1-E3
-│   │
-│   ├── tools/                   # Tool 层（不变）
-│   │   ├── __init__.py
-│   │   ├── data_reader.py
-│   │   ├── echem_analysis.py
-│   │   ├── visualization.py
-│   │   ├── experiment_builder.py
-│   │   ├── experiment_control.py
-│   │   ├── log_analysis.py
-│   │   ├── rag_tools.py
-│   │   └── report_generator.py
-│   │
-│   ├── rag/                     # RAG 管线（不变）
-│   │   ├── __init__.py
-│   │   ├── embeddings.py
-│   │   ├── vector_store.py
-│   │   ├── chunker.py
-│   │   ├── pdf_parser.py
-│   │   └── collections.py
-│   │
-│   └── common/                  # 共享（不变）
-│       ├── __init__.py
-│       ├── config.py
-│       ├── llm_client.py
-│       ├── tool_registry.py
-│       ├── types.py
-│       └── logger.py
-│
-├── data/
-│   ├── vector_db/               # ChromaDB 持久化
-│   ├── checkpoints/             # ★ LangGraph Checkpoint DB
-│   ├── cache/                   # LLM 响应缓存
-│   └── templates/               # 报告模板
-│
-├── tests/
-│   ├── test_tools/
-│   ├── test_skills/
-│   ├── test_graphs/             # ★ Graph 集成测试
-│   └── test_agents/
-│
-└── scripts/
-    ├── cli.py                   # CLI 入口
-    ├── init_knowledge_base.py
-    └── batch_analyze.py
-```
+> 已移至 → [project_plan.md](project_plan.md)
+> 包含：项目目录结构、pyproject.toml、配置文件示例、四阶段详细路线图、Skill↔Tool↔库关系表
 
 ---
 
-## 七、依赖更新
-
-```toml
-# pyproject.toml 新增依赖
-[project]
-dependencies = [
-    # === 核心 ===
-    "pydantic>=2.0",
-    
-    # === LangGraph ===
-    "langgraph>=0.2",
-    "langchain-core>=0.3",
-    "langchain-openai>=0.3",       # ChatOpenAI + bind_tools
-    
-    # === 数据处理 ===
-    "pandas>=2.0",
-    "numpy>=1.24",
-    "scipy>=1.11",
-    
-    # === 可视化 ===
-    "matplotlib>=3.7",
-    
-    # === RAG ===
-    "chromadb>=0.4",
-    "sentence-transformers>=2.2",
-    "pymupdf>=1.23",
-    "langchain-text-splitters>=0.0.1",
-    
-    # === 报告 ===
-    "jinja2>=3.1",
-    "python-docx>=1.0",
-    
-    # === 参数优化 ===
-    "optuna>=3.0",
-    
-    # === 工具 ===
-    "tomli>=2.0",
-    "rich>=13.0",
-]
-```
-
----
-
-## 八、四阶段路线图（LangGraph 版）
-
-> 与 `skills_architecture.md` §八 对应，这里标注 LangGraph 相关的里程碑。
-
-### Phase 1 — CD 构建期（3-4 周）
-
-**LangGraph 目标**：DiagnosticsExpert Subgraph + ExperimentSupervisor Subgraph（后分析模式）
-
-```
-Week 1: 基础设施 + Tools
-  - 项目初始化（包含 langgraph 依赖）
-  - common/* 全部完成
-  - tools/data_reader.py + tools/log_analysis.py
-
-Week 2: 诊断图 + D1/D2
-  - graph/state.py — DiagnosticsState
-  - graph/diagnostics_graph.py — 5 节点线性图
-  - agents/diagnostics_nodes.py — 节点函数
-  - skills/diagnostics/diagnose_failure.py (D1)
-  - skills/diagnostics/system_health_check.py (D2)
-  - 端到端测试：diagnose <run_dir>
-
-Week 3: D3 + Supervisor 基础
-  - skills/diagnostics/interactive_troubleshooting.py (D3)
-  - graph/state.py — SupervisorState
-  - graph/supervisor_graph.py — 完整闭环图 (Phase 1 模拟执行)
-  - agents/supervisor_nodes.py
-  - skills/experiment_execution/execution_monitor.py (C1 后分析)
-
-Week 4: C2 + Orchestrator 雏形
-  - skills/experiment_execution/smart_scheduler.py (C2)
-  - graph/orchestrator.py — 基础路由（仅 Supervisor + Diagnostics）
-  - CLI 入口
-```
-
-### Phase 2 — 数据分析构建期（2-3 周）
-
-**LangGraph 目标**：DataAnalyst Subgraph
-
-```
-Week 5-6:
-  - graph/analyst_graph.py
-  - agents/analyst_nodes.py
-  - 全部 A1-A4 Skills
-  - Orchestrator 新增 analyst 路由
-```
-
-### Phase 3 — 实验设计期（2-3 周）
-
-**LangGraph 目标**：ExperimentDesigner Subgraph + KnowledgeManager Subgraph
-
-```
-Week 7-9:
-  - graph/designer_graph.py（含审查循环）
-  - graph/knowledge_graph.py
-  - 全部 B1/B3/E1-E3 Skills
-  - Orchestrator 完整路由
-  - 可选：简单 Chat UI
-```
-
-### Phase 4 — 系统完善与联调期
-
-**LangGraph 目标**：实时执行 + C3 自适应闭环
-
-```
-  - supervisor_graph 升级为实时版（IPC）
-  - C3 adaptive_loop 作为 Supervisor 的高级模式
-  - B2 参数优化集成到 C3 循环
-  - Human-in-the-loop 全面启用
-  - LangSmith 监控
-```
-
----
-
-## 九、Agent 开发文档索引
+## 七、Agent 开发文档索引（原§九）
 
 每个 Agent 有独立的开发指南文档，包含详细的节点实现、Prompt 设计、测试计划：
 
@@ -769,14 +531,14 @@ Week 7-9:
 
 ---
 
-## 十、注意事项
+## 八、注意事项
 
-### 10.1 LangGraph 版本策略
+### 8.1 LangGraph 版本策略
 - 使用 `langgraph>=0.2` 稳定 API
 - 避免使用实验性功能（如 `langgraph-supervisor` 预构建组件暂不使用，自己定义图更可控）
 - Checkpointer 初期用 `MemorySaver`（内存），Phase 2 切 `SqliteSaver`
 
-### 10.2 LLM 模型选择
+### 8.2 LLM 模型选择
 - **意图路由 (Orchestrator)**：gpt-4o-mini 即可（简单分类）
 - **数据分析解读 (DA)**：gpt-4o（需要领域知识）
 - **方案生成 (ED)**：gpt-4o（复杂推理）
@@ -786,13 +548,13 @@ Week 7-9:
 
 可随时切换到本地模型（Qwen2.5/DeepSeek）通过 `llm_config.toml` 配置。
 
-### 10.3 测试策略
+### 8.3 测试策略
 - **Tool 层**：纯单元测试（不需要 LLM）
 - **Skill 层**：集成测试（可 mock LLM）
 - **Graph 层**：端到端测试（用真实 LLM 或 LangSmith 录放）
 - **固定数据**：用 `data/2026-02-13/` 作为黄金测试数据集
 
-### 10.4 成本控制
+### 8.4 成本控制
 - 所有 LLM 调用经过 `llm_client.py` 统一管理
 - 内置 token 统计 + 成本估算
 - 支持 LLM 响应缓存（相同输入不重复调用）
@@ -800,4 +562,4 @@ Week 7-9:
 
 ---
 
-*此文档是 AutoHySeeker 基于 LangGraph 的整体架构蓝图。各 Agent 的详细开发指南见独立文档。*
+*本文档是 LangGraph Graph/State/条件边的唯一定义源。项目结构与路线图 → [project_plan.md](project_plan.md)，系统总览 → [architecture_overview.md](architecture_overview.md)。*

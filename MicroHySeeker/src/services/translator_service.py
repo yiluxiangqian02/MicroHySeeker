@@ -59,7 +59,7 @@ class TranslatorService:
             "Potential": "电位",
             "Current Limit": "电流限制",
             "Duration": "时间",
-            "OCPT": "OCPT",
+            "ADT": "ADT",
             "Delay": "延时",
             
             # 操作类型
@@ -126,7 +126,7 @@ class TranslatorService:
             "Potential": "Potential",
             "Current Limit": "Current Limit",
             "Duration": "Duration",
-            "OCPT": "OCPT",
+            "ADT": "ADT",
             "Delay": "Delay",
             
             # 操作类型

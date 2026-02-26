@@ -37,7 +37,7 @@ class SettingsService(QObject):
             "rs485_baudrate": 9600,
             "stop_on_error": False,
             "data_path": "./data",
-            "ocpt_enabled": False,
+            "adt_enabled": False,
             "channels": [],
             "flush_settings": []
         }

@@ -249,7 +249,12 @@ def estimate_step_duration(step_type: str, params: Dict[str, Any]) -> float:
         elif technique in ["i-t", "IT", "CA"]:
             return quiet_time + params.get("run_time_s", params.get("run_time", 60.0))
         
-        elif technique == "OCPT":
+        elif technique in ("OCPT", "ADT"):
+            if technique == "ADT":
+                cyc = params.get("adt_num_cycles", 100)
+                cat_t = params.get("adt_cathodic_duration_s", 3.0)
+                ano_t = params.get("adt_anodic_duration_s", 2.0)
+                return quiet_time + cyc * (cat_t + ano_t)
             return params.get("run_time_s", params.get("run_time", 60.0))
         
         return 60.0  # 默认

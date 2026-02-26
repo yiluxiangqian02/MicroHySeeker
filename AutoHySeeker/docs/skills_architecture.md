@@ -1,81 +1,23 @@
-# AutoHySeeker — Skills 架构详细设计文档
+# AutoHySeeker — Tool / Skill 层详细设计
 
-> 2026-02-23 | v3 2026-02-25 | 定位：与 MicroHySeeker 并行的 AI 科研Agent系统
-> 核心理念：**LangGraph 编排 + Skills 解耦 + Tools 原子化 + LLM 推理**
-> 选定需求域：② 实验设计 · ③ 实验执行与监控 · ④ 数据处理与分析 · ⑤ 故障诊断与运维 · ⑥ RAG 知识检索
+> 2026-02-23 | v4 2026-02-26（重构：聚焦 Tool + Skill 定义，移除重复内容）
+> 核心理念：**Tools 原子化 + Skills 解耦 + ToolRegistry 统一注册**
 >
+> **本文档职责**：Tool 函数定义、Skill 内部流程、ToolRegistry + Function Calling
 > **关联文档**：
-> - 多 Agent 编排总设计 → [`langgraph_architecture.md`](langgraph_architecture.md)
-> - Agent 开发文档 → [`dev_agent_data_analyst.md`](dev_agent_data_analyst.md) · [`dev_agent_experiment_designer.md`](dev_agent_experiment_designer.md) · [`dev_agent_experiment_supervisor.md`](dev_agent_experiment_supervisor.md) · [`dev_agent_diagnostics_expert.md`](dev_agent_diagnostics_expert.md) · [`dev_agent_knowledge_manager.md`](dev_agent_knowledge_manager.md) · [`dev_agent_orchestrator.md`](dev_agent_orchestrator.md)
+> - 系统总览 → [architecture_overview.md](architecture_overview.md)
+> - LangGraph 编排 → [langgraph_architecture.md](langgraph_architecture.md)
+> - Agent 开发 → 各 `dev_agent_*.md`
+> - 项目结构/路线图 → [project_plan.md](project_plan.md)
+> - 开源集成（OpenViking 替代 RAG） → [open_source_integration.md](open_source_integration.md)
 
 ---
 
-## 一、项目总览
+## 一、总览
 
-### 1.1 AutoHySeeker 与 MicroHySeeker 的关系
+> 系统架构、四层分层、与 MicroHySeeker 关系等内容 → [architecture_overview.md](architecture_overview.md)
 
-```
-MicroHySeeker/              ← 实验室设备控制桌面端（PySide6）
-  ├── src/                  ← 硬件驱动、实验引擎、UI
-  ├── data/                 ← 实验数据产出
-  └── config/               ← 系统配置
-
-AutoHySeeker/               ← AI Agent 系统（独立项目，uv管理）
-  ├── src/
-  │   ├── skills/           ← 各个解耦的 Skill 模块
-  │   ├── tools/            ← 原子化 Tool（供 Skill 内部和 LLM Function Calling 使用）
-  │   ├── agents/           ← Agent 定义（System Prompt + Skill 绑定）
-  │   ├── rag/              ← RAG 管线（文档处理、向量库、检索）
-  │   └── common/           ← 共享工具（配置、日志、类型定义）
-  ├── configs/
-  ├── data/                 ← Agent 自己的数据（知识库、缓存等）
-  ├── tests/
-  ├── pyproject.toml        ← uv 管理
-  └── README.md
-```
-
-### 1.2 交互方式
-
-```
-┌──────────────────┐        ┌──────────────────────────────────┐
-│  MicroHySeeker   │        │         AutoHySeeker             │
-│  (桌面端)         │        │                                  │
-│                  │  文件   │  ┌────────────────────┐          │
-│  data/ ──────────┼───────►│  │  Tools (读取数据)   │          │
-│  config/ ────────┼───────►│  │  - read_experiment  │          │
-│  run_log ────────┼───────►│  │  - read_csv         │          │
-│                  │        │  │  - read_log         │          │
-│                  │  API   │  └────────┬───────────┘          │
-│  Engine ◄────────┼────────│  │  Tools (控制实验)   │          │
-│  (start/stop/    │  调用  │  │  - start_experiment │          │
-│   load_program)  │        │  │  - stop_experiment  │          │
-│                  │        │  └────────┬───────────┘          │
-│                  │        │           │                      │
-│                  │        │  ┌────────▼───────────┐          │
-│                  │        │  │   Skills Layer      │          │
-│                  │        │  │   (LLM 编排调用)    │          │
-│                  │        │  └────────┬───────────┘          │
-│                  │        │           │                      │
-│                  │        │  ┌────────▼───────────┐          │
-│                  │        │  │  Agents / Chat UI   │          │
-│                  │        │  └────────────────────┘          │
-└──────────────────┘        └──────────────────────────────────┘
-```
-
-**交互模式**：
-- **数据读取**：AutoHySeeker 直接读 MicroHySeeker 的 `data/`、`config/`、`logs/` 目录（文件级耦合）
-- **实验控制**：通过 MicroHySeeker 暴露的 API（后续可加 HTTP/WebSocket/IPC）
-- **完全独立运行**：AutoHySeeker 即使没有 MicroHySeeker 也能分析已有数据
-
-### 1.3 三层架构
-
-```
-Layer 3 — Agents     用户对话 → 意图理解 → 选择 Skill → 组合调用 → 返回结果
-Layer 2 — Skills     一组 Tools 的有意义编排，完成一个完整的科研子任务
-Layer 1 — Tools      最小粒度的原子操作，无状态，一调一用
-```
-
-**区分**：
+三层区分：
 - **Tool**：`read_cv_csv(path) → DataFrame` — 纯数据操作，无推理
 - **Skill**：`analyze_cv_experiment(run_dir)` — 调用多个 Tool + LLM 推理 → 完整分析报告
 - **Agent**：持有 System Prompt + 多个 Skill + 对话历史 → 与用户交互
@@ -184,29 +126,23 @@ Layer 1 — Tools      最小粒度的原子操作，无状态，一调一用
 
 **实现依赖**：`re`, `pandas`, `datetime`
 
-### 2.7 RAG Tools（`tools/rag_tools.py`）
+### 2.7 RAG Tools（`tools/rag_tools.py` → Phase 3 由 OpenViking 替代）
 
-| Tool 函数 | 输入 | 输出 | 说明 |
-|-----------|------|------|------|
-| `ingest_pdf(pdf_path, collection?)` | PDF路径 | `{doc_id, chunks_count}` | PDF → 分块 → 入向量库 |
-| `ingest_text(text, metadata, collection?)` | 文本+元数据 | `{doc_id}` | 文本入库 |
-| `ingest_experiment_knowledge(run_dir)` | 运行目录 | `{doc_id}` | 实验结果→知识库 |
-| `semantic_search(query, collection?, top_k?)` | 查询 | `List[{chunk, score, metadata}]` | 语义搜索 |
-| `list_collections()` | — | `List[str]` | 列出所有知识库集合 |
-| `delete_document(doc_id)` | 文档ID | `bool` | 删除文档 |
-| `get_collection_stats(collection)` | 集合名 | `{count, sources}` | 集合统计 |
+> **★ Phase 3 变更**：以下 Tool 将被 `rag/openviking_client.py` 的 `VikingKnowledgeBase` 封装替代。
+> 详见 → [open_source_integration.md](open_source_integration.md) §1.5
 
-**实现依赖**：
-- PDF 解析：`pymupdf`(fitz) 或 `pdfplumber`
-- 分块：`langchain_text_splitters` 或自定义
-- Embedding：`sentence-transformers` (本地) 或 `OpenAI Embeddings`
-- 向量库：`chromadb`（本地轻量）或 `faiss`
-- **集合设计**：
-  - `literature` — 文献 PDF
-  - `experiment_archive` — 历史实验结果和经验
-  - `instrument_manual` — 仪器手册（CHI 660F 等）
-  - `error_solutions` — 错误解决方案
-  - `domain_knowledge` — 电化学领域知识
+| Tool 函数 | 输入 | 输出 | Phase 3 对应 |
+|-----------|------|------|-------------|
+| `ingest_pdf(pdf_path, collection?)` | PDF路径 | `{doc_id, chunks_count}` | `viking_kb.ingest_document(path)` |
+| `ingest_text(text, metadata, collection?)` | 文本+元数据 | `{doc_id}` | `viking_kb.client.add_resource(content=text)` |
+| `ingest_experiment_knowledge(run_dir)` | 运行目录 | `{doc_id}` | `viking_kb.ingest_experiment(run_dir)` |
+| `semantic_search(query, collection?, top_k?)` | 查询 | `List[{chunk, score, metadata}]` | `viking_kb.search(query, target_uri=...)` |
+| `list_collections()` | — | `List[str]` | `viking_kb.ls("viking://resources/")` |
+| `delete_document(doc_id)` | 文档ID | `bool` | 暂不需要 |
+| `get_collection_stats(collection)` | 集合名 | `{count, sources}` | `viking_kb.ls(...)` |
+
+**Phase 1-2 实现**：可先用硬编码 dict 代替（D1 的 `ERROR_KNOWLEDGE_BASE`）
+**Phase 3 实现**：引入 OpenViking，原 `chromadb` + `sentence-transformers` + `langchain-text-splitters` 不再需要
 
 ### 2.8 报告生成 Tools（`tools/report_generator.py`）
 

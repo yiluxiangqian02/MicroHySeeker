@@ -141,10 +141,10 @@ class ModelAdapter:
             UIECTechnique.CV: "CV",
             UIECTechnique.LSV: "LSV",
             UIECTechnique.I_T: "i-t",
-            UIECTechnique.OCPT: "OCPT",
+            UIECTechnique.ADT: "ADT",
         }
         
-        return ECConfig(
+        config = ECConfig(
             technique=technique_mapping.get(ui_ec.technique, "CV"),
             e_init=ui_ec.e0 or 0.0,
             e_high=ui_ec.eh or 0.8,
@@ -155,10 +155,16 @@ class ModelAdapter:
             quiet_time=ui_ec.quiet_time_s or 2.0,
             run_time=ui_ec.run_time_s or 60.0,
             sample_interval=ui_ec.sample_interval_ms / 1000.0 if ui_ec.sample_interval_ms else 0.001,
-            ocpt_enabled=ui_ec.ocpt_enabled,
-            ocpt_threshold_uA=ui_ec.ocpt_threshold_uA,
-            ocpt_action=ui_ec.ocpt_action.value if ui_ec.ocpt_action else "log",
         )
+        # ADT 参数传递
+        if ui_ec.technique == UIECTechnique.ADT:
+            config.adt_enabled = getattr(ui_ec, 'adt_enabled', True)
+            config.adt_num_cycles = getattr(ui_ec, 'adt_num_cycles', 100)
+            config.adt_cathodic_current_mA = getattr(ui_ec, 'adt_cathodic_current_mA', -500.0)
+            config.adt_cathodic_duration_s = getattr(ui_ec, 'adt_cathodic_duration_s', 3.0)
+            config.adt_anodic_potential_V = getattr(ui_ec, 'adt_anodic_potential_V', 1.2)
+            config.adt_anodic_duration_s = getattr(ui_ec, 'adt_anodic_duration_s', 2.0)
+        return config
     
     # ========================
     # Engine -> UI 转换
@@ -253,10 +259,11 @@ class ModelAdapter:
             "LSV": UIECTechnique.LSV,
             "i-t": UIECTechnique.I_T,
             "IT": UIECTechnique.I_T,
-            "OCPT": UIECTechnique.OCPT,
+            "ADT": UIECTechnique.ADT,
+            "OCPT": UIECTechnique.ADT,  # 旧配置兼容
         }
         
-        return UIECSettings(
+        settings = UIECSettings(
             technique=technique_mapping.get(config.technique, UIECTechnique.CV),
             e0=config.e_init,
             eh=config.e_high,
@@ -267,9 +274,16 @@ class ModelAdapter:
             quiet_time_s=config.quiet_time,
             run_time_s=config.run_time,
             sample_interval_ms=int(config.sample_interval * 1000),
-            ocpt_enabled=config.ocpt_enabled,
-            ocpt_threshold_uA=config.ocpt_threshold_uA,
         )
+        # ADT 参数回传
+        if config.technique in ("ADT", "OCPT"):
+            settings.adt_enabled = getattr(config, 'adt_enabled', False)
+            settings.adt_num_cycles = getattr(config, 'adt_num_cycles', 100)
+            settings.adt_cathodic_current_mA = getattr(config, 'adt_cathodic_current_mA', -500.0)
+            settings.adt_cathodic_duration_s = getattr(config, 'adt_cathodic_duration_s', 3.0)
+            settings.adt_anodic_potential_V = getattr(config, 'adt_anodic_potential_V', 1.2)
+            settings.adt_anodic_duration_s = getattr(config, 'adt_anodic_duration_s', 2.0)
+        return settings
 
 
 # 单例实例

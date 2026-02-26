@@ -79,6 +79,7 @@ TECHNIQUE_FROM_STR = {
     "i-t": ECTechnique.IT,
     "IT": ECTechnique.IT,
     "OCPT": ECTechnique.OCPT,
+    "ADT": ECTechnique.IT,  # ADT 使用 i-t (多轮循环由 bridge 处理)
 }
 
 

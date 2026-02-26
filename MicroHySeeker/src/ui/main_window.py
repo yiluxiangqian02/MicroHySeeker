@@ -572,11 +572,11 @@ class ExperimentProcessWidget(QFrame):
                 ax.set_xlabel('t / s', fontsize=15, fontweight='bold')
                 ax.set_ylabel('I / A', fontsize=15, fontweight='bold')
                 ax.set_title('Amperometric i-t Curve', fontsize=16, fontweight='bold')
-            elif tech_upper == "OCPT" and arr.shape[1] >= 2:
+            elif tech_upper == "ADT" and arr.shape[1] >= 2:
                 ax.plot(arr[:, 0], arr[:, 1], color='#1565C0', linewidth=lw)
                 ax.set_xlabel('t / s', fontsize=15, fontweight='bold')
                 ax.set_ylabel('E / V', fontsize=15, fontweight='bold')
-                ax.set_title('Open Circuit Potential (OCPT)', fontsize=16, fontweight='bold')
+                ax.set_title('Accelerated Durability Test (ADT)', fontsize=16, fontweight='bold')
             elif tech_upper == "EIS" and arr.shape[1] >= 2:
                 ax.plot(arr[:, 0], -arr[:, 1], color=line_color, linewidth=lw, marker='o', markersize=3)
                 ax.set_xlabel("Z' / Ω", fontsize=15, fontweight='bold')
@@ -1246,6 +1246,7 @@ class MainWindow(QMainWindow):
         pumps_layout = QVBoxLayout(pumps_group)
         self.pump_diagram = PumpDiagramWidget(self.config)
         pumps_layout.addWidget(self.pump_diagram)
+        self._next_step_pump_addrs: list = []  # 下一步泵地址列表 (用于保持黄色状态)
         left_layout.addWidget(pumps_group, 4)  # 权重 4
         
         # 实验过程
@@ -1881,8 +1882,15 @@ class MainWindow(QMainWindow):
                 elif tv_upper in ("I-T", "IT"):
                     parts.append(f"E0={ec.e0 or 0:.2f}V")
                     parts.append(f"{tr('run_time')}={ec.run_time_s or 60}s")
-                elif tv_upper == "OCPT":
-                    parts.append(f"{tr('run_time')}={ec.run_time_s or 60}s")
+                elif tv_upper == "ADT":
+                    cyc = getattr(ec, 'adt_num_cycles', 100)
+                    cat_mA = getattr(ec, 'adt_cathodic_current_mA', -500)
+                    cat_t = getattr(ec, 'adt_cathodic_duration_s', 3)
+                    ano_v = getattr(ec, 'adt_anodic_potential_V', 1.2)
+                    ano_t = getattr(ec, 'adt_anodic_duration_s', 2)
+                    parts.append(f"{cyc}轮")
+                    parts.append(f"阴极={cat_mA}mA/{cat_t}s")
+                    parts.append(f"阳极={ano_v}V/{ano_t}s")
                 elif tv_upper == "EIS":
                     parts.append(f"{tr('freq_range')}={ec.freq_low}-{ec.freq_high}Hz")
                     parts.append(f"{tr('amplitude')}={ec.amplitude}V")
@@ -1981,6 +1989,7 @@ class MainWindow(QMainWindow):
     
     def _set_next_step_pump_yellow(self, step):
         """将下一步涉及的泵设置为黄色(state=2)指示"""
+        addrs = []
         stype = step.step_type
         if stype == ProgramStepType.PREP_SOL:
             if step.prep_sol_params:
@@ -1988,13 +1997,16 @@ class MainWindow(QMainWindow):
                     if step.prep_sol_params.selected_solutions.get(sol_name, False):
                         for ch in self.config.dilution_channels:
                             if ch.solution_name == sol_name:
-                                # 仅当该泵不是当前运行状态(1)时才设为黄色
-                                if self.pump_diagram.pump_states[ch.pump_address - 1] != 1:
-                                    self.pump_diagram.set_pump_state(ch.pump_address, 2)
+                                addrs.append(ch.pump_address)
         elif stype in (ProgramStepType.TRANSFER, ProgramStepType.FLUSH, ProgramStepType.EVACUATE):
             addr = step.pump_address
-            if addr and self.pump_diagram.pump_states[addr - 1] != 1:
-                self.pump_diagram.set_pump_state(addr, 2)
+            if addr:
+                addrs.append(addr)
+        
+        self._next_step_pump_addrs = addrs
+        for a in addrs:
+            if 1 <= a <= 12 and self.pump_diagram.pump_states[a - 1] != 1:
+                self.pump_diagram.set_pump_state(a, 2)
     
     def _update_pump_indicators(self, step, running: bool):
         """根据当前步骤更新泵状态指示灯和过程区域"""
@@ -2074,6 +2086,12 @@ class MainWindow(QMainWindow):
         # 先将所有泵重置为灰色
         for i in range(12):
             self.pump_diagram.set_pump_state(i + 1, 0)
+        
+        # 下一步泵 → 黄色 (保持跨批次刷新的黄色状态)
+        all_batch = set(running_addrs) | set(waiting_addrs)
+        for addr in self._next_step_pump_addrs:
+            if 1 <= addr <= 12 and addr not in all_batch:
+                self.pump_diagram.set_pump_state(addr, 2)
         
         # 等待中的泵 → 黄色
         for addr in waiting_addrs:

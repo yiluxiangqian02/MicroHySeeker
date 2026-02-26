@@ -20,7 +20,7 @@ CHI 660F 电化学桥接层 —— ECSettings ↔ CHI660FController
 """
 
 import logging
-from typing import Optional, Tuple, Any
+from typing import Optional, Tuple, Any, Callable
 from dataclasses import dataclass
 
 from src.models import ECSettings, ECTechnique
@@ -34,6 +34,9 @@ from .chi660f_gui_controller import (
     ITParams,
     IMPParams,
     OCPTParams,
+    CPParams,
+    CAParams,
+    IRCompensation,
     Technique,
 )
 
@@ -97,12 +100,56 @@ def _ec_to_imp(ec: ECSettings) -> IMPParams:
 
 
 def _ec_to_ocpt(ec: ECSettings) -> OCPTParams:
-    """ECSettings → OCPTParams"""
+    """ECSettings → OCPTParams (保留兼容)"""
     return OCPTParams(
         sample_interval=(ec.sample_interval_ms or 1000) / 1000.0,  # ms → s
         run_time=ec.run_time_s or 60.0,
         e_high=ec.eh or 10.0,
         e_low=ec.el or -10.0,
+    )
+
+
+def _ec_to_adt_it(ec: ECSettings) -> ITParams:
+    """ADT 阳极步 (potentiostatic) → ITParams"""
+    return ITParams(
+        e_init=ec.adt_anodic_potential_V if hasattr(ec, 'adt_anodic_potential_V') else 1.2,
+        sample_interval=0.01,  # 10ms
+        run_time=ec.adt_anodic_duration_s if hasattr(ec, 'adt_anodic_duration_s') else 2.0,
+        quiet_time=0.0,
+        sensitivity=ec.sensitivity or 1e-3,
+    )
+
+
+def _ec_to_cp(ec: ECSettings) -> CPParams:
+    """ECSettings → CPParams (计时电位法)"""
+    cathodic_mA = getattr(ec, 'adt_cathodic_current_mA', -500.0)
+    cathodic_A = abs(cathodic_mA) / 1000.0  # mA → A, CP用绝对值
+    return CPParams(
+        cathodic_current=cathodic_A,
+        anodic_current=cathodic_A,  # 对称
+        e_high=getattr(ec, 'eh', 2.0) or 2.0,
+        e_low=getattr(ec, 'el', -2.0) or -2.0,
+        cathodic_time=getattr(ec, 'adt_cathodic_duration_s', 3.0),
+        anodic_time=getattr(ec, 'adt_cathodic_duration_s', 3.0),  # 对称
+        polarity='n',  # 阴极(负方向)先
+        sample_interval=0.01,
+        segments=1,  # 单段 (仅阴极)
+        priority='time',
+    )
+
+
+def _ec_to_ca(ec: ECSettings) -> CAParams:
+    """ECSettings → CAParams (计时电流法)"""
+    return CAParams(
+        e_init=getattr(ec, 'adt_anodic_potential_V', 1.2),
+        e_high=getattr(ec, 'eh', 1.5) or 1.5,
+        e_low=getattr(ec, 'el', -0.5) or -0.5,
+        polarity='p',
+        steps=1,
+        pulse_width=getattr(ec, 'adt_anodic_duration_s', 2.0),
+        sample_interval=0.01,
+        quiet_time=0.0,
+        sensitivity=getattr(ec, 'sensitivity', 0.0) or 0.0,
     )
 
 
@@ -112,7 +159,8 @@ _TECHNIQUE_MAP = {
     ECTechnique.LSV:  (Technique.LSV, _ec_to_lsv),
     ECTechnique.I_T:  (Technique.IT, _ec_to_it),
     ECTechnique.EIS:  (Technique.IMP, _ec_to_imp),
-    ECTechnique.OCPT: (Technique.OCPT, _ec_to_ocpt),
+    # ADT 不走单次 run ，而是多轮循环，在 CHIBridge.run_adt() 中处理
+    # 保留 OCPT 兼容 key (旧配置加载时 OCPT 已转换为 ADT)
 }
 
 
@@ -236,6 +284,8 @@ class CHIBridge:
             Technique.IT:   self._controller.run_it,
             Technique.IMP:  self._controller.run_imp,
             Technique.OCPT: self._controller.run_ocpt,
+            Technique.CP:   self._controller.run_cp,
+            Technique.CA:   self._controller.run_ca,
         }
 
         run_fn = run_methods.get(technique)
@@ -252,7 +302,20 @@ class CHIBridge:
         if hasattr(ec_settings, 'use_dummy_cell'):
             self._controller._config.use_dummy_cell = ec_settings.use_dummy_cell
         
+        # iR 补偿: CV / LSV / i-t 支持; EIS 不需要 (测阻抗本身)
+        ir_enabled = getattr(ec_settings, 'ir_compensation_enabled', False)
+        ir_ohm = getattr(ec_settings, 'ir_compensation_ohm', 0.0)
+        if ir_enabled and ir_ohm > 0 and technique in (Technique.CV, Technique.LSV, Technique.IT):
+            self._controller.set_ir_compensation(True, ir_ohm)
+            logger.info(f"CHIBridge: iR 补偿已启用, R={ir_ohm}Ω")
+        else:
+            self._controller.set_ir_compensation(False)
+        
         result = run_fn(params, output_name)
+        
+        # 实验完成后关闭 iR 补偿 (恢复默认)
+        if ir_enabled and ir_ohm > 0 and technique in (Technique.CV, Technique.LSV, Technique.IT):
+            self._controller.set_ir_compensation(False)
 
         if result.success:
             logger.info(
@@ -268,6 +331,127 @@ class CHIBridge:
         """停止当前实验"""
         if self._controller:
             self._controller.stop_experiment()
+
+    # ------ ADT 多轮循环 ------
+    def run_adt(self, ec_settings: ECSettings,
+                on_cycle: Optional[Callable] = None,
+                stop_flag: Optional[Callable] = None,
+                output_prefix: str = "adt") -> ExperimentResult:
+        """执行 ADT (加速耐久性测试) 多轮循环
+
+        每一轮 (参照 JACS 异质界面抗反向电流电极协议):
+          1) CP (galvanostatic) — 阴极恒电流 HER 步骤
+          2) CA (potentiostatic step) — 阳极电位阶跃 (模拟反向电流)
+
+        对比旧版: 旧版用 i-t (极端负电位近似恒流), 现在用真正的 CP galvanostatic。
+
+        Args:
+            ec_settings: 包含 ADT 参数的 ECSettings
+            on_cycle: 每轮回调 (cycle_index, total_cycles, cycle_data)
+            stop_flag: 返回 True 时中止
+            output_prefix: 输出文件前缀
+
+        Returns:
+            ExperimentResult 合并结果
+        """
+        if not self.is_connected:
+            return ExperimentResult(success=False, error_message="CHI 未连接")
+
+        num = getattr(ec_settings, 'adt_num_cycles', 100)
+        anodic_v = getattr(ec_settings, 'adt_anodic_potential_V', 1.2)
+        anodic_t = getattr(ec_settings, 'adt_anodic_duration_s', 2.0)
+        cathodic_mA = getattr(ec_settings, 'adt_cathodic_current_mA', -500.0)
+        cathodic_t = getattr(ec_settings, 'adt_cathodic_duration_s', 3.0)
+        cathodic_A = abs(cathodic_mA) / 1000.0  # mA → A
+        
+        # CP 扩展参数
+        cp_e_high = getattr(ec_settings, 'adt_cp_e_high', 2.0)
+        cp_e_low = getattr(ec_settings, 'adt_cp_e_low', -2.0)
+        cp_si = getattr(ec_settings, 'adt_cp_sample_interval', 0.01)
+        
+        # CA 扩展参数
+        ca_sens_raw = getattr(ec_settings, 'adt_ca_sensitivity', 0.001)
+        ca_qt = getattr(ec_settings, 'adt_ca_quiet_time', 0.0)
+        ca_si = getattr(ec_settings, 'adt_ca_sample_interval', 0.01)
+
+        # iR 补偿 (如有)
+        ir_enabled = getattr(ec_settings, 'ir_compensation_enabled', False)
+        ir_resistance = getattr(ec_settings, 'ir_compensation_ohm', 0.0)
+        if ir_enabled and ir_resistance > 0:
+            self._controller.set_ir_compensation(True, ir_resistance)
+        else:
+            self._controller.set_ir_compensation(False)
+
+        # dummy cell 模式同步
+        if hasattr(ec_settings, 'use_dummy_cell'):
+            self._controller._config.use_dummy_cell = ec_settings.use_dummy_cell
+
+        all_data = []
+        all_headers = ["time(s)", "potential(V)", "current(A)", "cycle"]
+        start_time = __import__('time').time()
+
+        for cycle in range(num):
+            if stop_flag and stop_flag():
+                return ExperimentResult(
+                    success=False, error_message="ADT 被用户中止",
+                    data_points=all_data, headers=all_headers,
+                    elapsed_time=__import__('time').time() - start_time)
+
+            # -- 阴极步 (cathodic / HER) — 使用真正的 CP (恒电流) --
+            cp_params = CPParams(
+                cathodic_current=cathodic_A,
+                anodic_current=cathodic_A,
+                e_high=cp_e_high,
+                e_low=cp_e_low,
+                cathodic_time=cathodic_t,
+                anodic_time=cathodic_t,
+                polarity='n',          # 阴极(负方向)先
+                sample_interval=cp_si,
+                segments=1,            # 单段 (仅阴极方向)
+                priority='time',
+            )
+            cathodic_result = self._controller.run_cp(
+                cp_params, f"{output_prefix}_c{cycle+1}_cathodic")
+
+            # -- 阳极步 (anodic / RC) — 使用 CA (恒电位阶跃) --
+            ca_params = CAParams(
+                e_init=anodic_v,
+                e_high=anodic_v + 0.5,
+                e_low=-0.5,
+                polarity='p',
+                steps=1,
+                pulse_width=anodic_t,
+                sample_interval=ca_si,
+                quiet_time=ca_qt,
+                sensitivity=ca_sens_raw if ca_sens_raw > 0 else 0.0,
+            )
+            anodic_result = self._controller.run_ca(
+                ca_params, f"{output_prefix}_c{cycle+1}_anodic")
+
+            # 收集数据
+            for pt in cathodic_result.data_points:
+                all_data.append(list(pt) + [cycle + 1])
+            for pt in anodic_result.data_points:
+                all_data.append(list(pt) + [cycle + 1])
+
+            if on_cycle:
+                on_cycle(cycle + 1, num, {
+                    "cathodic_success": cathodic_result.success,
+                    "anodic_success": anodic_result.success,
+                })
+
+        # 关闭 iR 补偿 (恢复默认)
+        if ir_enabled and ir_resistance > 0:
+            self._controller.set_ir_compensation(False)
+
+        elapsed = __import__('time').time() - start_time
+        return ExperimentResult(
+            success=True,
+            data_points=all_data,
+            headers=all_headers,
+            elapsed_time=elapsed,
+            data_file="",
+        )
 
 
 # ============================================================

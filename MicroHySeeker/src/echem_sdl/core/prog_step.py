@@ -24,7 +24,8 @@ class ECTechnique(str, Enum):
     CV = "CV"           # 循环伏安法
     LSV = "LSV"         # 线性扫描伏安法
     IT = "i-t"          # 安培-时间曲线
-    OCPT = "OCPT"       # 开路电位测量
+    OCPT = "OCPT"       # 开路电位测量 (旧, 向后兼容)
+    ADT = "ADT"         # 加速耐久性测试
     CA = "CA"           # 计时电流法
     CP = "CP"           # 计时电位法
     DPV = "DPV"         # 差分脉冲伏安法
@@ -191,10 +192,17 @@ class ECConfig:
     sample_interval: float = 0.001
     # 灵敏度 (-1 = 自动)
     sensitivity: float = -1.0
-    # OCPT 监控
+    # OCPT 监控 (旧字段, 向后兼容)
     ocpt_enabled: bool = False
     ocpt_threshold_uA: float = -50.0
     ocpt_action: str = "log"  # log/pause/abort
+    # ADT (加速耐久性测试) 参数
+    adt_enabled: bool = False
+    adt_num_cycles: int = 100
+    adt_cathodic_current_mA: float = -500.0
+    adt_cathodic_duration_s: float = 3.0
+    adt_anodic_potential_V: float = 1.2
+    adt_anodic_duration_s: float = 2.0
     
     def to_dict(self) -> Dict[str, Any]:
         return asdict(self)
@@ -332,7 +340,13 @@ class ProgStep:
                 return config.quiet_time + (e_range * config.segments / config.scan_rate)
             elif config.technique in ["i-t", "CA", "IT"]:
                 return config.quiet_time + config.run_time
-            elif config.technique == "OCPT":
+            elif config.technique in ("OCPT", "ADT"):
+                if config.technique == "ADT":
+                    # ADT: 循环轮数 * (阴极时间 + 阳极时间)
+                    cat_t = getattr(config, 'adt_cathodic_duration_s', 3.0)
+                    ano_t = getattr(config, 'adt_anodic_duration_s', 2.0)
+                    cyc = getattr(config, 'adt_num_cycles', 100)
+                    return config.quiet_time + cyc * (cat_t + ano_t)
                 return config.run_time
             return 60.0
         
@@ -585,17 +599,43 @@ class ProgStepFactory:
         )
     
     @staticmethod
+    def create_adt(
+        name: str = "ADT",
+        num_cycles: int = 100,
+        cathodic_current_mA: float = -500.0,
+        cathodic_duration_s: float = 3.0,
+        anodic_potential_V: float = 1.2,
+        anodic_duration_s: float = 2.0,
+        quiet_time: float = 2.0
+    ) -> ProgStep:
+        """创建 ADT (加速耐久性测试) 步骤"""
+        return ProgStep(
+            step_type=StepType.ECHEM,
+            name=name,
+            ec_config=ECConfig(
+                technique="ADT",
+                adt_enabled=True,
+                adt_num_cycles=num_cycles,
+                adt_cathodic_current_mA=cathodic_current_mA,
+                adt_cathodic_duration_s=cathodic_duration_s,
+                adt_anodic_potential_V=anodic_potential_V,
+                adt_anodic_duration_s=anodic_duration_s,
+                quiet_time=quiet_time
+            )
+        )
+
+    @staticmethod
     def create_ocpt(
         name: str = "OCPT",
         run_time: float = 60.0,
         sample_interval: float = 0.1
     ) -> ProgStep:
-        """创建 OCPT 步骤"""
+        """创建 OCPT 步骤 [已废弃, 请使用 create_adt]"""
         return ProgStep(
             step_type=StepType.ECHEM,
             name=name,
             ec_config=ECConfig(
-                technique="OCPT",
+                technique="ADT",
                 run_time=run_time,
                 sample_interval=sample_interval,
                 quiet_time=0.0

@@ -453,8 +453,11 @@ class EchemExecutor(StepExecutor):
             )
         elif technique in ["i-t", "IT"]:
             params_str = f"E0={ec.e0:.2f}V, 运行时间={ec.run_time_s}s"
-        elif technique == "OCPT":
-            params_str = f"运行时间={ec.run_time_s}s"
+        elif technique == "ADT":
+            cyc = getattr(ec, 'adt_num_cycles', 100)
+            cat_t = getattr(ec, 'adt_cathodic_duration_s', 3)
+            ano_t = getattr(ec, 'adt_anodic_duration_s', 2)
+            params_str = f"ADT {cyc}轮, 阴极={getattr(ec, 'adt_cathodic_current_mA', -500)}mA/{cat_t}s, 阳极={getattr(ec, 'adt_anodic_potential_V', 1.2)}V/{ano_t}s"
         else:
             params_str = f"采样间隔={ec.sample_interval_ms}ms"
         
@@ -535,9 +538,18 @@ class EchemExecutor(StepExecutor):
             else:
                 potential = (ec.eh or 0.8) - (t_in_cycle / cycle_time) * e_range
             current = 1e-6 * (potential - 0.3) + 1e-7
-        elif technique == "OCPT":
-            potential = 0.2 + 0.01 * elapsed
-            current = 0
+        elif technique == "ADT":
+            # ADT 模拟: 交替阴极(负电位)/阳极(正电位)循环
+            cat_t = getattr(ec, 'adt_cathodic_duration_s', 3.0)
+            ano_t = getattr(ec, 'adt_anodic_duration_s', 2.0)
+            cycle_t = cat_t + ano_t
+            phase_t = elapsed % cycle_t
+            if phase_t < cat_t:
+                potential = -1.5  # 阴极电位
+                current = getattr(ec, 'adt_cathodic_current_mA', -500) * 1e-3
+            else:
+                potential = getattr(ec, 'adt_anodic_potential_V', 1.2)
+                current = 5e-4  # 阳极漏电流
         else:
             potential = ec.e0 or 0
             current = 1e-6 * (1 - 2.718 ** (-elapsed / 5))

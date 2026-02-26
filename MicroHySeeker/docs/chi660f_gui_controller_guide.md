@@ -261,6 +261,18 @@ result = ctrl.run_custom_macro(macro_text)
 | `folder: path` | 设置输出目录 | `folder: D:\data` |
 | `fileoverride` | 覆盖同名文件 | |
 | `ibias = n` | EIS 偏置模式 (0-4) | `ibias = 1` |
+| `ic = x` | CP 阴极电流 (A) | `ic = 0.5` |
+| `ia = x` | CP 阳极电流 (A) | `ia = 0.5` |
+| `tc = x` | CP 阴极时间 (s) | `tc = 3` |
+| `ta = x` | CP 阳极时间 (s) | `ta = 3` |
+| `pw = x` | CA 脉冲宽度 (s) | `pw = 2` |
+| `heht = x` | CP 高电位保持时间 (s) | `heht = 0` |
+| `leht = x` | CP 低电位保持时间 (s) | `leht = 0` |
+| `priot` | CP 时间优先 | |
+| `prioe` | CP 电位优先 | |
+| `ircompon` | 开启手动 iR 补偿 | |
+| `ircompoff` | 关闭 iR 补偿 | |
+| `mir = x` | 手动补偿电阻 (Ω) | `mir = 10.5` |
 
 ---
 

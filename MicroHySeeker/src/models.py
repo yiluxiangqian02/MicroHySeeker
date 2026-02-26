@@ -24,11 +24,12 @@ class ECTechnique(str, Enum):
     LSV = "LSV"
     I_T = "i-t"
     EIS = "EIS"    # 交流阻抗谱
-    OCPT = "OCPT"  # 开路电位计时法
+    ADT = "ADT"    # 加速耐久性测试 (Accelerated Durability Test)
 
 
+# ---- 向后兼容：旧 OCPT 枚举（已废弃，保留以防旧配置文件反序列化）----
 class OCPTAction(str, Enum):
-    """OCPT 触发动作"""
+    """[已废弃] 旧 OCPT 触发动作"""
     LOG = "log"
     PAUSE = "pause"
     ABORT = "abort"
@@ -139,7 +140,27 @@ class ECSettings:
     # Dummy Cell 模式 (测试用，不连接真实电极)
     use_dummy_cell: bool = True
     
-    # OCPT 反向电流检测
+    # ADT (加速耐久性测试) 参数 — 替代旧 OCPT
+    adt_enabled: bool = False
+    adt_num_cycles: int = 100              # ADT 循环轮数
+    # -- CP 阴极恒电流参数 --
+    adt_cathodic_current_mA: float = -500.0  # 阴极电流 (mA), 模拟 HER
+    adt_cathodic_duration_s: float = 3.0     # 阴极持续时间 (s)
+    adt_cp_e_high: float = 2.0               # CP 电位上限 (V)
+    adt_cp_e_low: float = -2.0               # CP 电位下限 (V)
+    adt_cp_sample_interval: float = 0.01     # CP 采样间隔 (s)
+    # -- CA 阳极电位阶跃参数 --
+    adt_anodic_potential_V: float = 1.2      # 阳极电位 (V), 模拟 RC
+    adt_anodic_duration_s: float = 2.0       # 阳极持续时间 (s)
+    adt_ca_sensitivity: float = 0.001        # CA 灵敏度 (A/V)
+    adt_ca_quiet_time: float = 0.0           # CA 静置时间 (s)
+    adt_ca_sample_interval: float = 0.01     # CA 采样间隔 (s)
+
+    # iR 补偿 (手动正反馈法)
+    ir_compensation_enabled: bool = False  # 是否启用 iR 补偿
+    ir_compensation_ohm: float = 0.0  # 补偿电阻 (Ω), 0 = 不补偿, 通过 EIS 预先测量
+
+    # ---- 旧 OCPT 字段 (向后兼容，加载旧配置时不报错) ----
     ocpt_enabled: bool = False
     ocpt_threshold_uA: float = -50.0
     ocpt_action: OCPTAction = OCPTAction.LOG
@@ -148,21 +169,37 @@ class ECSettings:
     def to_dict(self) -> Dict[str, Any]:
         d = asdict(self)
         d['technique'] = self.technique.value if hasattr(self.technique, 'value') else str(self.technique)
-        d['ocpt_action'] = self.ocpt_action.value if hasattr(self.ocpt_action, 'value') else str(self.ocpt_action)
+        # 不再序列化旧 OCPT 字段
+        for k in ('ocpt_enabled', 'ocpt_threshold_uA', 'ocpt_action', 'ocpt_monitor_window_ms'):
+            d.pop(k, None)
         return d
 
     @staticmethod
     def from_dict(data: Dict[str, Any]) -> 'ECSettings':
         data = data.copy()
-        if isinstance(data.get('technique'), str):
-            data['technique'] = ECTechnique(data['technique'])
+        # 技术类型：兼容旧 OCPT → ADT
+        tech_str = data.get('technique', 'CV')
+        if isinstance(tech_str, str):
+            if tech_str == 'OCPT':
+                tech_str = 'ADT'
+            try:
+                data['technique'] = ECTechnique(tech_str)
+            except ValueError:
+                data['technique'] = ECTechnique.CV
+        # 旧 ocpt_action 兼容
         if isinstance(data.get('ocpt_action'), str):
-            data['ocpt_action'] = OCPTAction(data['ocpt_action'])
+            try:
+                data['ocpt_action'] = OCPTAction(data['ocpt_action'])
+            except ValueError:
+                data['ocpt_action'] = OCPTAction.LOG
         # 兼容旧字段名
         if 'sample_interval' in data and 'sample_interval_ms' not in data:
             data['sample_interval_ms'] = int(data.pop('sample_interval'))
         elif 'sample_interval' in data:
             data.pop('sample_interval')
+        # 过滤未知字段
+        valid_keys = set(ECSettings.__dataclass_fields__.keys())
+        data = {k: v for k, v in data.items() if k in valid_keys}
         return ECSettings(**data)
 
 

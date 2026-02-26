@@ -437,6 +437,9 @@ class ExperimentWorker(QObject):
         if not all_success:
             self._emergency_stop_all_pumps()
         
+        # 清理 CHI Bridge (实验级别生命周期 — 所有 echem 步骤共用后统一关闭)
+        self._cleanup_chi_bridge()
+        
         # 数据管理：结束运行
         if self.dm:
             self.dm.end_run(success=all_success)
@@ -1630,6 +1633,58 @@ class ExperimentWorker(QObject):
             label="冲洗",
         )
     
+    # ----------------------------------------------------------
+    # CHI 660F 生命周期管理 (实验级别，不再每步重启)
+    # ----------------------------------------------------------
+
+    def _ensure_chi_bridge(self, ec: ECSettings) -> bool:
+        """确保 CHI Bridge 已连接（实验级别复用）
+
+        Bridge 实例保存在 self._chi_bridge，整个实验期间只连接一次，
+        所有 echem 步骤共享同一连接。在 run() 的 finally 中统一断开。
+        """
+        from src.echem_sdl.hardware.chi_echem_bridge import CHIBridge, CHIBridgeConfig
+        import os
+
+        chi_exe = r"D:\CHI660F\chi660f.exe"
+        output_dir = r"D:\CHI660F\data"
+        if self.config:
+            chi_exe = getattr(self.config, 'chi_exe_path', chi_exe)
+            output_dir = getattr(self.config, 'chi_output_dir', output_dir)
+
+        os.makedirs(output_dir, exist_ok=True)
+
+        if not hasattr(self, '_chi_bridge') or self._chi_bridge is None:
+            bridge_config = CHIBridgeConfig(
+                chi_exe_path=chi_exe,
+                output_dir=output_dir,
+                use_dummy_cell=getattr(ec, 'use_dummy_cell', True),
+            )
+            self._chi_bridge = CHIBridge(bridge_config)
+
+        if not self._chi_bridge.is_connected:
+            self._emit_log("    正在连接 CHI 660F...")
+            if not self._chi_bridge.connect():
+                self._emit_log("    ❌ CHI 660F 连接失败", "ERROR")
+                return False
+            self._emit_log("    ✅ CHI 660F 已连接")
+
+        # 动态同步 dummy cell 模式
+        if hasattr(ec, 'use_dummy_cell'):
+            self._chi_bridge._config.use_dummy_cell = ec.use_dummy_cell
+
+        return True
+
+    def _cleanup_chi_bridge(self):
+        """断开 CHI Bridge 连接（实验结束时统一调用）"""
+        try:
+            if hasattr(self, '_chi_bridge') and self._chi_bridge:
+                self._chi_bridge.disconnect()
+                self._chi_bridge = None
+                self._emit_log("[CHI] CHI 660F 已关闭")
+        except Exception as cleanup_err:
+            self._emit_log(f"[CHI] 关闭 CHI 660F 时出错: {cleanup_err}", "WARNING")
+
     def _execute_echem(self, step: ProgStep, step_index: int = -1) -> bool:
         """执行电化学测量 (通过 CHI 660F GUI 控制器)
         
@@ -1637,7 +1692,10 @@ class ExperimentWorker(QObject):
         - CV: 循环伏安法
         - LSV: 线性扫描伏安法
         - i-t: 安培-时间曲线
-        - OCPT: 开路电位测量
+        - ADT: 加速耐久性测试
+
+        注意: CHI Bridge 生命周期由实验级别管理 (_ensure_chi_bridge / _cleanup_chi_bridge)，
+        不再每步创建/销毁，避免多步骤实验中反复启动 chi660f.exe。
         """
         if not step.ec_settings:
             self._emit_log("  电化学: 缺少参数配置")
@@ -1663,53 +1721,53 @@ class ExperimentWorker(QObject):
             )
         elif technique in ["i-t", "IT"]:
             params_str = f"E0={_fv(ec.e0)}V, 运行时间={ec.run_time_s}s"
-        elif technique == "OCPT":
-            params_str = f"运行时间={ec.run_time_s}s"
+        elif technique == "ADT":
+            cyc = getattr(ec, 'adt_num_cycles', 100)
+            cat_mA = getattr(ec, 'adt_cathodic_current_mA', -500)
+            cat_t = getattr(ec, 'adt_cathodic_duration_s', 3)
+            ano_v = getattr(ec, 'adt_anodic_potential_V', 1.2)
+            ano_t = getattr(ec, 'adt_anodic_duration_s', 2)
+            params_str = (
+                f"{cyc}轮, 阴极={cat_mA}mA/{cat_t}s, "
+                f"阳极={ano_v}V/{ano_t}s"
+            )
         else:
             params_str = f"采样间隔={ec.sample_interval_ms}ms"
         
+        # iR 补偿信息
+        ir_enabled = getattr(ec, 'ir_compensation_enabled', False)
+        ir_ohm = getattr(ec, 'ir_compensation_ohm', 0.0)
+        if ir_enabled and ir_ohm > 0:
+            params_str += f", iR补偿={ir_ohm}Ω"
+
         self._emit_log(f"  电化学: {technique.upper()}, {params_str}")
         
-        # OCPT 监控信息
-        if ec.ocpt_enabled:
+        # ADT 信息
+        if getattr(ec, 'adt_enabled', False) or technique == "ADT":
+            cyc = getattr(ec, 'adt_num_cycles', 100)
+            total_t = cyc * (getattr(ec, 'adt_cathodic_duration_s', 3) + getattr(ec, 'adt_anodic_duration_s', 2))
             self._emit_log(
-                f"    OCPT 监控已启用: 阈值={ec.ocpt_threshold_uA}μA, "
-                f"动作={ec.ocpt_action.value if hasattr(ec.ocpt_action, 'value') else ec.ocpt_action}"
+                f"    ADT 循环测试: {cyc}轮, 预计总时间 {total_t:.0f}s ({total_t/60:.1f}min)"
             )
         
         # 通过 CHIBridge 调用真实 CHI 660F 仪器
         try:
-            from src.echem_sdl.hardware.chi_echem_bridge import CHIBridge, CHIBridgeConfig
-            
-            # 从系统配置获取 CHI 路径（如有），否则使用默认
-            chi_exe = r"D:\CHI660F\chi660f.exe"
-            output_dir = r"D:\CHI660F\data"
-            if self.config:
-                chi_exe = getattr(self.config, 'chi_exe_path', chi_exe)
-                output_dir = getattr(self.config, 'chi_output_dir', output_dir)
-            
-            # 确保输出目录存在
-            import os
-            os.makedirs(output_dir, exist_ok=True)
-            
-            # 创建或复用 Bridge
-            if not hasattr(self, '_chi_bridge') or self._chi_bridge is None:
-                bridge_config = CHIBridgeConfig(
-                    chi_exe_path=chi_exe,
-                    output_dir=output_dir,
-                    use_dummy_cell=getattr(ec, 'use_dummy_cell', True),
-                )
-                self._chi_bridge = CHIBridge(bridge_config)
-            
-            if not self._chi_bridge.is_connected:
-                self._emit_log("    正在连接 CHI 660F...")
-                if not self._chi_bridge.connect():
-                    self._emit_log("    ❌ CHI 660F 连接失败", "ERROR")
-                    return False
-                self._emit_log("    ✅ CHI 660F 已连接")
+            if not self._ensure_chi_bridge(ec):
+                return False
             
             self._emit_log(f"    开始 {technique.upper()} 测量...")
-            result = self._chi_bridge.run(ec)
+            
+            # ---- ADT 多轮循环 ----
+            if technique == "ADT":
+                def _on_adt_cycle(cycle, total, info):
+                    self._emit_log(f"    ⚡ ADT 第 {cycle}/{total} 轮完成")
+                result = self._chi_bridge.run_adt(
+                    ec,
+                    on_cycle=_on_adt_cycle,
+                    stop_flag=lambda: self._stop_flag,
+                )
+            else:
+                result = self._chi_bridge.run(ec)
             
             if self._stop_flag:
                 self._chi_bridge.stop()
@@ -1732,6 +1790,8 @@ class ExperimentWorker(QObject):
                         "run_time_s": ec.run_time_s,
                         "sample_interval_ms": ec.sample_interval_ms,
                         "elapsed_time": f"{result.elapsed_time:.1f}s",
+                        "ir_compensation_enabled": ir_enabled,
+                        "ir_compensation_ohm": ir_ohm if ir_enabled else 0,
                     }
                     csv_path = self.dm.save_echem_csv(
                         step_index, technique,
@@ -1761,15 +1821,6 @@ class ExperimentWorker(QObject):
         except Exception as e:
             self._emit_log(f"    ❌ 电化学异常: {e}", "ERROR")
             return False
-        finally:
-            # 确保无论成功/失败/异常都清理 CHI Bridge，释放资源
-            try:
-                if hasattr(self, '_chi_bridge') and self._chi_bridge:
-                    self._chi_bridge.disconnect()
-                    self._chi_bridge = None
-                    self._emit_log("    CHI 660F 已关闭")
-            except Exception as cleanup_err:
-                self._emit_log(f"    ⚠ 关闭 CHI 660F 时出错: {cleanup_err}", "WARNING")
     
     def _execute_echem_mock(self, ec: ECSettings, technique: str,
                            step_index: int = -1) -> bool:
@@ -1789,6 +1840,11 @@ class ExperimentWorker(QObject):
         elif technique == "LSV":
             e_range = abs(_ef - _e0)
             run_time = e_range / _scan_rate
+        elif technique == "ADT":
+            cyc = getattr(ec, 'adt_num_cycles', 100)
+            cat_t = getattr(ec, 'adt_cathodic_duration_s', 3.0)
+            ano_t = getattr(ec, 'adt_anodic_duration_s', 2.0)
+            run_time = cyc * (cat_t + ano_t)
         else:
             run_time = ec.run_time_s or 60
         
@@ -1821,6 +1877,17 @@ class ExperimentWorker(QObject):
                 progress = elapsed / actual_run_time
                 potential = _e0 + progress * (_ef - _e0)
                 current = 1e-6 * (potential - 0.3) + 5e-8
+            elif technique == "ADT":
+                # ADT Mock: 模拟循环数据
+                cyc_t = getattr(ec, 'adt_cathodic_duration_s', 3.0) + getattr(ec, 'adt_anodic_duration_s', 2.0)
+                t_in_cyc = elapsed % cyc_t
+                cat_t = getattr(ec, 'adt_cathodic_duration_s', 3.0)
+                if t_in_cyc < cat_t:
+                    potential = -1.5  # cathodic
+                    current = getattr(ec, 'adt_cathodic_current_mA', -500) * 1e-3
+                else:
+                    potential = getattr(ec, 'adt_anodic_potential_V', 1.2)
+                    current = 5e-3  # anodic current
             elif technique == "OCPT":
                 potential = 0.2 + 0.01 * elapsed
                 current = 0
@@ -1949,7 +2016,8 @@ class ExperimentRunner(QObject):
         self.current_step_index = -1
         self._stop_flag = False
         self._pause_flag = False
-        self._ocpt_triggered = False
+        self._ocpt_triggered = False  # 旧字段, 保留兼容
+        self._adt_running = False
         self._thread: Optional[QThread] = None
         self._worker: Optional[ExperimentWorker] = None
         self._data_manager: Optional[ExperimentDataManager] = None

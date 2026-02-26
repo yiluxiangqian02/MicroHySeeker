@@ -61,7 +61,8 @@ class ExpProgram:
     program_id: str
     program_name: str
     steps: List[ProgStep] = field(default_factory=list)
-    ocpt_enabled: bool = False
+    ocpt_enabled: bool = False       # 旧字段，向后兼容
+    adt_enabled: bool = False         # ADT 开关
     notes: str = ""
     created_at: str = ""
     modified_at: str = ""
