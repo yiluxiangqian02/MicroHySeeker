@@ -1,0 +1,23 @@
+{
+  "step_index": 0,
+  "timestamp": "2026-02-27T00:49:22.505798",
+  "total_volume_ul": 100000.0,
+  "injection_order": [
+    "fe",
+    "H2O"
+  ],
+  "solutions": {
+    "fe": {
+      "volume_ul": 10000.0,
+      "target_concentration_M": 0.1,
+      "is_solvent": false,
+      "volume_fraction": 0.1
+    },
+    "H2O": {
+      "volume_ul": 90000.0,
+      "target_concentration_M": null,
+      "is_solvent": true,
+      "volume_fraction": 0.9
+    }
+  }
+}

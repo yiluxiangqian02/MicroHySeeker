@@ -1,0 +1,2 @@
+timestamp,pump_addr,operation,direction,rpm,volume_ul,duration_s,mode,encoder_counts
+2026-02-26T22:39:22.951740,1,prep_sol_inject,FWD,200,10000.0,35.51,position,1829983

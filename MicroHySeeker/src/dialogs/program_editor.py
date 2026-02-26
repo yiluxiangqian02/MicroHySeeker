@@ -542,18 +542,19 @@ class ProgramEditorDialog(QDialog):
         
         _ACTIVE_STYLE = (
             "QPushButton{background:#1976D2;color:white;font-weight:bold;"
-            "border:2px solid #0D47A1;border-radius:6px;padding:8px 4px;}"
+            "border:2px solid #0D47A1;border-radius:6px;padding:6px 4px;}"
         )
         _IDLE_STYLE = (
             "QPushButton{background:#F5F5F5;color:#333;border:1px solid #BDBDBD;"
-            "border-radius:6px;padding:8px 4px;}"
+            "border-radius:6px;padding:6px 4px;}"
             "QPushButton:hover{background:#E0E0E0;}"
         )
         
         for tech, label in TECH_LABELS:
             btn = QPushButton(label)
             btn.setFont(QFont("Microsoft YaHei", 9))
-            btn.setMinimumHeight(44)
+            btn.setMinimumHeight(56)
+            btn.setMinimumWidth(90)
             btn.setCursor(Qt.PointingHandCursor)
             btn.setStyleSheet(_IDLE_STYLE)
             btn.clicked.connect(lambda checked=False, t=tech: self._on_ec_tech_btn_clicked(t))
@@ -699,46 +700,87 @@ class ProgramEditorDialog(QDialog):
         adt_main.addLayout(_adt_hdr)
         
         # == CP 阴极恒电流 (Cathodic / HER) ==
-        cp_box = QGroupBox("CP 阴极恒电流 (HER)")
+        cp_box = QGroupBox("CP 计时电位法 (Chronopotentiometry)")
         cp_box.setStyleSheet("QGroupBox{font-weight:bold;border:1px solid #90CAF9;border-radius:4px;margin-top:6px;padding-top:14px;}")
         cp_grid = QGridLayout(cp_box); cp_grid.setSpacing(6)
-        cp_grid.addWidget(QLabel("阴极电流(mA):"), 0, 0)
+        cp_grid.addWidget(QLabel("阴极电流 ic(mA):"), 0, 0)
         self._adt_cathodic_mA = QDoubleSpinBox(); self._adt_cathodic_mA.setRange(-10000, 0); self._adt_cathodic_mA.setDecimals(1); self._adt_cathodic_mA.setValue(-500.0)
+        self._adt_cathodic_mA.setToolTip("阴极(负向)恒电流, 0 ~ -250000 mA")
         cp_grid.addWidget(self._adt_cathodic_mA, 0, 1)
-        cp_grid.addWidget(QLabel("持续时间(s):"), 0, 2)
-        self._adt_cathodic_t = QDoubleSpinBox(); self._adt_cathodic_t.setRange(0.005, 100000); self._adt_cathodic_t.setDecimals(3); self._adt_cathodic_t.setValue(3.0)
-        cp_grid.addWidget(self._adt_cathodic_t, 0, 3)
-        cp_grid.addWidget(QLabel("电位上限(V):"), 1, 0)
+        cp_grid.addWidget(QLabel("阳极电流 ia(mA):"), 0, 2)
+        self._adt_cp_anodic_mA = QDoubleSpinBox(); self._adt_cp_anodic_mA.setRange(0, 10000); self._adt_cp_anodic_mA.setDecimals(1); self._adt_cp_anodic_mA.setValue(500.0)
+        self._adt_cp_anodic_mA.setToolTip("阳极(正向)恒电流, 0 ~ 250000 mA")
+        cp_grid.addWidget(self._adt_cp_anodic_mA, 0, 3)
+        cp_grid.addWidget(QLabel("电位上限 Eh(V):"), 1, 0)
         self._adt_cp_eh = QDoubleSpinBox(); self._adt_cp_eh.setRange(-10, 10); self._adt_cp_eh.setDecimals(3); self._adt_cp_eh.setValue(2.0)
         cp_grid.addWidget(self._adt_cp_eh, 1, 1)
-        cp_grid.addWidget(QLabel("电位下限(V):"), 1, 2)
+        cp_grid.addWidget(QLabel("电位下限 El(V):"), 1, 2)
         self._adt_cp_el = QDoubleSpinBox(); self._adt_cp_el.setRange(-10, 10); self._adt_cp_el.setDecimals(3); self._adt_cp_el.setValue(-2.0)
         cp_grid.addWidget(self._adt_cp_el, 1, 3)
-        cp_grid.addWidget(QLabel("采样间隔(s):"), 2, 0)
+        cp_grid.addWidget(QLabel("阴极时间 tc(s):"), 2, 0)
+        self._adt_cathodic_t = QDoubleSpinBox(); self._adt_cathodic_t.setRange(0.005, 100000); self._adt_cathodic_t.setDecimals(3); self._adt_cathodic_t.setValue(3.0)
+        cp_grid.addWidget(self._adt_cathodic_t, 2, 1)
+        cp_grid.addWidget(QLabel("阳极时间 ta(s):"), 2, 2)
+        self._adt_cp_anodic_t = QDoubleSpinBox(); self._adt_cp_anodic_t.setRange(0.005, 100000); self._adt_cp_anodic_t.setDecimals(3); self._adt_cp_anodic_t.setValue(3.0)
+        cp_grid.addWidget(self._adt_cp_anodic_t, 2, 3)
+        cp_grid.addWidget(QLabel("高E保持时间(s):"), 3, 0)
+        self._adt_cp_heht = QDoubleSpinBox(); self._adt_cp_heht.setRange(0, 100000); self._adt_cp_heht.setDecimals(2); self._adt_cp_heht.setValue(0.0)
+        self._adt_cp_heht.setToolTip("到达高电位限后保持时间 (heht)")
+        cp_grid.addWidget(self._adt_cp_heht, 3, 1)
+        cp_grid.addWidget(QLabel("低E保持时间(s):"), 3, 2)
+        self._adt_cp_leht = QDoubleSpinBox(); self._adt_cp_leht.setRange(0, 100000); self._adt_cp_leht.setDecimals(2); self._adt_cp_leht.setValue(0.0)
+        self._adt_cp_leht.setToolTip("到达低电位限后保持时间 (leht)")
+        cp_grid.addWidget(self._adt_cp_leht, 3, 3)
+        cp_grid.addWidget(QLabel("采样间隔 si(s):"), 4, 0)
         self._adt_cp_si = QDoubleSpinBox(); self._adt_cp_si.setRange(0.0025, 32); self._adt_cp_si.setDecimals(4); self._adt_cp_si.setValue(0.01)
-        cp_grid.addWidget(self._adt_cp_si, 2, 1)
+        cp_grid.addWidget(self._adt_cp_si, 4, 1)
+        cp_grid.addWidget(QLabel("段数 cl:"), 4, 2)
+        self._adt_cp_segments = QSpinBox(); self._adt_cp_segments.setRange(1, 1000000); self._adt_cp_segments.setValue(2)
+        self._adt_cp_segments.setToolTip("段数: 1=单方向, 2=一来一回(一个完整循环)")
+        cp_grid.addWidget(self._adt_cp_segments, 4, 3)
+        cp_grid.addWidget(QLabel("首步极性:"), 5, 0)
+        self._adt_cp_polarity = QComboBox(); self._adt_cp_polarity.addItem("阴极先 (n)", 'n'); self._adt_cp_polarity.addItem("阳极先 (p)", 'p')
+        cp_grid.addWidget(self._adt_cp_polarity, 5, 1)
+        cp_grid.addWidget(QLabel("优先级:"), 5, 2)
+        self._adt_cp_priority = QComboBox(); self._adt_cp_priority.addItem("时间优先", 'time'); self._adt_cp_priority.addItem("电位优先", 'potential')
+        self._adt_cp_priority.setToolTip("时间优先=按设定时间切换; 电位优先=到达电位限即切换")
+        cp_grid.addWidget(self._adt_cp_priority, 5, 3)
         adt_main.addWidget(cp_box)
         
-        # == CA 阳极电位阶跃 (Anodic / RC) ==
-        ca_box = QGroupBox("CA 阳极电位阶跃 (RC)")
+        # == CA 计时电流法 (Chronoamperometry) ==
+        ca_box = QGroupBox("CA 计时电流法 (Chronoamperometry)")
         ca_box.setStyleSheet("QGroupBox{font-weight:bold;border:1px solid #FFCC80;border-radius:4px;margin-top:6px;padding-top:14px;}")
         ca_grid = QGridLayout(ca_box); ca_grid.setSpacing(6)
-        ca_grid.addWidget(QLabel("恒电位(V):"), 0, 0)
+        ca_grid.addWidget(QLabel("初始电位 ei(V):"), 0, 0)
         self._adt_anodic_V = QDoubleSpinBox(); self._adt_anodic_V.setRange(-10, 10); self._adt_anodic_V.setDecimals(3); self._adt_anodic_V.setValue(1.2)
         ca_grid.addWidget(self._adt_anodic_V, 0, 1)
-        ca_grid.addWidget(QLabel("脉冲宽度(s):"), 0, 2)
+        ca_grid.addWidget(QLabel("脉冲宽度 pw(s):"), 0, 2)
         self._adt_anodic_t = QDoubleSpinBox(); self._adt_anodic_t.setRange(1e-4, 1000); self._adt_anodic_t.setDecimals(4); self._adt_anodic_t.setValue(2.0)
         ca_grid.addWidget(self._adt_anodic_t, 0, 3)
-        ca_grid.addWidget(QLabel("灵敏度(A/V):"), 1, 0)
-        self._adt_sensitivity = QLineEdit("1e-3")
-        self._adt_sensitivity.setPlaceholderText("如 1e-3")
-        ca_grid.addWidget(self._adt_sensitivity, 1, 1)
-        ca_grid.addWidget(QLabel("静置时间(s):"), 1, 2)
-        self._adt_quiettime = QDoubleSpinBox(); self._adt_quiettime.setRange(0, 1000); self._adt_quiettime.setDecimals(2); self._adt_quiettime.setValue(0.0)
-        ca_grid.addWidget(self._adt_quiettime, 1, 3)
-        ca_grid.addWidget(QLabel("采样间隔(s):"), 2, 0)
+        ca_grid.addWidget(QLabel("高电位限 Eh(V):"), 1, 0)
+        self._adt_ca_eh = QDoubleSpinBox(); self._adt_ca_eh.setRange(-10, 10); self._adt_ca_eh.setDecimals(3); self._adt_ca_eh.setValue(1.5)
+        ca_grid.addWidget(self._adt_ca_eh, 1, 1)
+        ca_grid.addWidget(QLabel("低电位限 El(V):"), 1, 2)
+        self._adt_ca_el = QDoubleSpinBox(); self._adt_ca_el.setRange(-10, 10); self._adt_ca_el.setDecimals(3); self._adt_ca_el.setValue(-0.5)
+        ca_grid.addWidget(self._adt_ca_el, 1, 3)
+        ca_grid.addWidget(QLabel("变化方向:"), 2, 0)
+        self._adt_ca_polarity = QComboBox(); self._adt_ca_polarity.addItem("正向 (p)", 'p'); self._adt_ca_polarity.addItem("负向 (n)", 'n')
+        ca_grid.addWidget(self._adt_ca_polarity, 2, 1)
+        ca_grid.addWidget(QLabel("阶跃数 cl:"), 2, 2)
+        self._adt_ca_steps = QSpinBox(); self._adt_ca_steps.setRange(1, 320); self._adt_ca_steps.setValue(1)
+        self._adt_ca_steps.setToolTip("电位阶跃次数, 1~320")
+        ca_grid.addWidget(self._adt_ca_steps, 2, 3)
+        ca_grid.addWidget(QLabel("采样间隔 si(s):"), 3, 0)
         self._adt_ca_si = QDoubleSpinBox(); self._adt_ca_si.setRange(2e-6, 10); self._adt_ca_si.setDecimals(6); self._adt_ca_si.setValue(0.01)
-        ca_grid.addWidget(self._adt_ca_si, 2, 1)
+        ca_grid.addWidget(self._adt_ca_si, 3, 1)
+        ca_grid.addWidget(QLabel("静置时间 qt(s):"), 3, 2)
+        self._adt_quiettime = QDoubleSpinBox(); self._adt_quiettime.setRange(0, 100000); self._adt_quiettime.setDecimals(2); self._adt_quiettime.setValue(0.0)
+        ca_grid.addWidget(self._adt_quiettime, 3, 3)
+        ca_grid.addWidget(QLabel("灵敏度(A/V):"), 4, 0)
+        self._adt_sensitivity = QLineEdit("1e-3")
+        self._adt_sensitivity.setPlaceholderText("如 1e-3, 0=自动")
+        self._adt_sensitivity.setToolTip("灵敏度, 0 = 自动灵敏度")
+        ca_grid.addWidget(self._adt_sensitivity, 4, 1)
         adt_main.addWidget(ca_box)
         
         self._ec_params_stack.addWidget(adt_page)  # index 4
@@ -767,7 +809,7 @@ class ProgramEditorDialog(QDialog):
         # Dummy Cell 模式选项
         dummy_row = QHBoxLayout()
         self.ec_dummy_cell = QCheckBox("使用 Dummy Cell (内置模拟电极，用于测试)")
-        self.ec_dummy_cell.setChecked(True)
+        self.ec_dummy_cell.setChecked(False)
         self.ec_dummy_cell.setToolTip("勾选：使用 CHI 内置模拟电极进行测试\n取消勾选：连接真实电化学电极进行测量")
         dummy_row.addWidget(self.ec_dummy_cell)
         dummy_row.addStretch()
@@ -1129,21 +1171,41 @@ class ProgramEditorDialog(QDialog):
                 
             elif tech == ECTechnique.ADT:
                 self._adt_cycles.setValue(getattr(ec, 'adt_num_cycles', 100))
-                # CP 阴极参数
+                # CP 参数
                 self._adt_cathodic_mA.setValue(getattr(ec, 'adt_cathodic_current_mA', -500.0))
-                self._adt_cathodic_t.setValue(getattr(ec, 'adt_cathodic_duration_s', 3.0))
+                self._adt_cp_anodic_mA.setValue(getattr(ec, 'adt_cp_anodic_current_mA', 500.0))
                 self._adt_cp_eh.setValue(getattr(ec, 'adt_cp_e_high', 2.0))
                 self._adt_cp_el.setValue(getattr(ec, 'adt_cp_e_low', -2.0))
+                self._adt_cathodic_t.setValue(getattr(ec, 'adt_cathodic_duration_s', 3.0))
+                self._adt_cp_anodic_t.setValue(getattr(ec, 'adt_cp_anodic_time_s', 3.0))
+                self._adt_cp_heht.setValue(getattr(ec, 'adt_cp_high_e_hold_time', 0.0))
+                self._adt_cp_leht.setValue(getattr(ec, 'adt_cp_low_e_hold_time', 0.0))
                 self._adt_cp_si.setValue(getattr(ec, 'adt_cp_sample_interval', 0.01))
-                # CA 阳极参数
+                self._adt_cp_segments.setValue(getattr(ec, 'adt_cp_segments', 2))
+                # CP polarity combo
+                cp_pol = getattr(ec, 'adt_cp_polarity', 'n')
+                cp_pol_idx = 0 if cp_pol == 'n' else 1
+                self._adt_cp_polarity.setCurrentIndex(cp_pol_idx)
+                # CP priority combo
+                cp_pri = getattr(ec, 'adt_cp_priority', 'time')
+                cp_pri_idx = 0 if cp_pri == 'time' else 1
+                self._adt_cp_priority.setCurrentIndex(cp_pri_idx)
+                # CA 参数
                 self._adt_anodic_V.setValue(getattr(ec, 'adt_anodic_potential_V', 1.2))
                 self._adt_anodic_t.setValue(getattr(ec, 'adt_anodic_duration_s', 2.0))
+                self._adt_ca_eh.setValue(getattr(ec, 'adt_ca_e_high', 1.5))
+                self._adt_ca_el.setValue(getattr(ec, 'adt_ca_e_low', -0.5))
+                # CA polarity combo
+                ca_pol = getattr(ec, 'adt_ca_polarity', 'p')
+                ca_pol_idx = 0 if ca_pol == 'p' else 1
+                self._adt_ca_polarity.setCurrentIndex(ca_pol_idx)
+                self._adt_ca_steps.setValue(getattr(ec, 'adt_ca_steps', 1))
+                self._adt_ca_si.setValue(getattr(ec, 'adt_ca_sample_interval', 0.01))
+                self._adt_quiettime.setValue(getattr(ec, 'adt_ca_quiet_time', 0.0))
                 if getattr(ec, 'adt_ca_sensitivity', None) is not None:
                     self._adt_sensitivity.setText(str(ec.adt_ca_sensitivity))
                 elif getattr(ec, 'sensitivity', None) is not None:
                     self._adt_sensitivity.setText(str(ec.sensitivity))
-                self._adt_quiettime.setValue(getattr(ec, 'adt_ca_quiet_time', 0.0))
-                self._adt_ca_si.setValue(getattr(ec, 'adt_ca_sample_interval', 0.01))
             
             # iR 补偿 (通用)
             self._ir_enabled_check.setChecked(getattr(ec, 'ir_compensation_enabled', False))
@@ -1313,23 +1375,34 @@ class ProgramEditorDialog(QDialog):
                     
             elif tech == ECTechnique.ADT:
                 ec.adt_num_cycles = self._adt_cycles.value()
-                # CP 阴极参数
+                # CP 参数
                 ec.adt_cathodic_current_mA = round(self._adt_cathodic_mA.value(), 1)
-                ec.adt_cathodic_duration_s = round(self._adt_cathodic_t.value(), 3)
+                ec.adt_cp_anodic_current_mA = round(self._adt_cp_anodic_mA.value(), 1)
                 ec.adt_cp_e_high = round(self._adt_cp_eh.value(), 3)
                 ec.adt_cp_e_low = round(self._adt_cp_el.value(), 3)
+                ec.adt_cathodic_duration_s = round(self._adt_cathodic_t.value(), 3)
+                ec.adt_cp_anodic_time_s = round(self._adt_cp_anodic_t.value(), 3)
+                ec.adt_cp_high_e_hold_time = round(self._adt_cp_heht.value(), 2)
+                ec.adt_cp_low_e_hold_time = round(self._adt_cp_leht.value(), 2)
                 ec.adt_cp_sample_interval = round(self._adt_cp_si.value(), 4)
-                # CA 阳极参数
+                ec.adt_cp_segments = self._adt_cp_segments.value()
+                ec.adt_cp_polarity = self._adt_cp_polarity.currentData() or 'n'
+                ec.adt_cp_priority = self._adt_cp_priority.currentData() or 'time'
+                # CA 参数
                 ec.adt_anodic_potential_V = round(self._adt_anodic_V.value(), 3)
                 ec.adt_anodic_duration_s = round(self._adt_anodic_t.value(), 4)
+                ec.adt_ca_e_high = round(self._adt_ca_eh.value(), 3)
+                ec.adt_ca_e_low = round(self._adt_ca_el.value(), 3)
+                ec.adt_ca_polarity = self._adt_ca_polarity.currentData() or 'p'
+                ec.adt_ca_steps = self._adt_ca_steps.value()
+                ec.adt_ca_sample_interval = round(self._adt_ca_si.value(), 6)
+                ec.adt_ca_quiet_time = round(self._adt_quiettime.value(), 2)
                 try:
                     ec.adt_ca_sensitivity = float(self._adt_sensitivity.text())
                     ec.sensitivity = ec.adt_ca_sensitivity  # 兼容旧字段
                 except ValueError:
                     ec.adt_ca_sensitivity = 1e-3
                     ec.sensitivity = 1e-3
-                ec.adt_ca_quiet_time = round(self._adt_quiettime.value(), 2)
-                ec.adt_ca_sample_interval = round(self._adt_ca_si.value(), 6)
             
             # iR 补偿 (通用)
             ec.ir_compensation_enabled = self._ir_enabled_check.isChecked()

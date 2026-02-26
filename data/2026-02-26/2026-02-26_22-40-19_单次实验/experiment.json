@@ -1,0 +1,142 @@
+{
+  "_protocol_version": "2.0",
+  "_created_at": "2026-02-26T22:27:26.074318",
+  "_modified_at": "2026-02-26T22:40:19.106382",
+  "_software_version": "1.0.0",
+  "exp_id": "single_001",
+  "exp_name": "单次实验",
+  "description": "",
+  "tags": [],
+  "operator": "",
+  "steps": [
+    {
+      "step_id": "step_5",
+      "step_type": "prep_sol",
+      "pump_address": null,
+      "pump_direction": null,
+      "pump_rpm": null,
+      "volume_ul": null,
+      "duration_s": null,
+      "transfer_duration": null,
+      "transfer_duration_unit": "s",
+      "prep_sol_params": {
+        "target_concentration": 0.0,
+        "is_solvent": true,
+        "injection_order": [
+          "fe",
+          "H2O"
+        ],
+        "total_volume_ul": 100000.0,
+        "target_concentrations": {
+          "fe": 0.1,
+          "cu": 0.05,
+          "h2o": 0.01,
+          "KOH": 0.01,
+          "H2O": 0.0
+        },
+        "solvent_flags": {
+          "fe": false,
+          "cu": false,
+          "h2o": false,
+          "KOH": false,
+          "H2O": true
+        },
+        "selected_solutions": {
+          "fe": true,
+          "cu": false,
+          "h2o": false,
+          "KOH": false,
+          "H2O": true
+        },
+        "injection_order_numbers": {
+          "fe": 1,
+          "H2O": 5
+        }
+      },
+      "flush_channel_id": null,
+      "flush_rpm": null,
+      "flush_cycle_duration_s": null,
+      "flush_cycles": 1,
+      "ec_settings": null,
+      "notes": ""
+    },
+    {
+      "step_id": "step_2",
+      "step_type": "transfer",
+      "pump_address": 11,
+      "pump_direction": "FWD",
+      "pump_rpm": 100,
+      "volume_ul": 5000.0,
+      "duration_s": null,
+      "transfer_duration": null,
+      "transfer_duration_unit": "s",
+      "prep_sol_params": null,
+      "flush_channel_id": null,
+      "flush_rpm": null,
+      "flush_cycle_duration_s": null,
+      "flush_cycles": 1,
+      "ec_settings": null,
+      "notes": ""
+    },
+    {
+      "step_id": "step_3",
+      "step_type": "flush",
+      "pump_address": 5,
+      "pump_direction": "FWD",
+      "pump_rpm": 100,
+      "volume_ul": 10000.0,
+      "duration_s": null,
+      "transfer_duration": null,
+      "transfer_duration_unit": "s",
+      "prep_sol_params": null,
+      "flush_channel_id": null,
+      "flush_rpm": 100,
+      "flush_cycle_duration_s": null,
+      "flush_cycles": 1,
+      "ec_settings": null,
+      "notes": ""
+    },
+    {
+      "step_id": "step_4",
+      "step_type": "echem",
+      "pump_address": null,
+      "pump_direction": null,
+      "pump_rpm": null,
+      "volume_ul": null,
+      "duration_s": null,
+      "transfer_duration": null,
+      "transfer_duration_unit": "s",
+      "prep_sol_params": null,
+      "flush_channel_id": null,
+      "flush_rpm": null,
+      "flush_cycle_duration_s": null,
+      "flush_cycles": 1,
+      "ec_settings": {
+        "technique": "CV",
+        "e0": 0.0,
+        "eh": 0.8,
+        "el": -0.2,
+        "ef": 0.0,
+        "scan_rate": 0.05,
+        "sample_interval_ms": 1,
+        "sensitivity": 0.1,
+        "autosensitivity": false,
+        "quiet_time_s": 2.0,
+        "run_time_s": null,
+        "seg_num": 2,
+        "scan_dir": "FWD",
+        "freq_low": 1.0,
+        "freq_high": 100000.0,
+        "amplitude": 0.005,
+        "bias_mode": 0,
+        "use_dummy_cell": false,
+        "ocpt_enabled": false,
+        "ocpt_threshold_uA": 0.0,
+        "ocpt_action": "log",
+        "ocpt_monitor_window_ms": 100
+      },
+      "notes": ""
+    }
+  ],
+  "notes": ""
+}

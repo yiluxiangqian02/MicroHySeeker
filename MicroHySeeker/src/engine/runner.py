@@ -281,6 +281,8 @@ class ExperimentWorker(QObject):
         
         return errors
     
+
+
     def _check_pump_connection(self, pump_addr: int, context: str) -> bool:
         """泵操作前检查连接状态
         
@@ -530,7 +532,7 @@ class ExperimentWorker(QObject):
     # 编码器采样间隔(秒) — 越长越准确但延迟也越高
     _ENCODER_CHECK_INTERVAL = 0.4
 
-    def _verify_pump_running(self, pump_addr: int, settle_s: float = 0.35) -> bool:
+    def _verify_pump_running(self, pump_addr: int, settle_s: float = 0.5) -> bool:
         """验证泵是否 **物理** 在运行 — 双重校验
 
         第 1 层: 控制器状态寄存器 (read_run_status, status∈{2,3,4})
@@ -539,6 +541,9 @@ class ExperimentWorker(QObject):
         仅当两层均通过时返回 True。
         编码器读取失败时会重试最多 3 次；若始终失败则判定为未确认运行
         (不再盲目降级信任控制器状态，因为控制器可在泵堵转/未连接时仍报"运行")。
+        
+        Note:
+            settle_s 从 0.35s 增至 0.5s，给从空闲状态唤醒的泵更多启动时间。
         """
         time.sleep(settle_s)
 
@@ -665,10 +670,13 @@ class ExperimentWorker(QObject):
         return False
 
     def _start_pump_verified(self, pump_addr: int, direction: str, rpm: int,
-                             label: str = "", max_retries: int = 2) -> bool:
+                             label: str = "", max_retries: int = 3) -> bool:
         """启动泵并验证实际物理运转 — 失败时自动重试 + 故障清除 + 重使能
 
         验证依赖 _verify_pump_running (控制器状态 + 编码器Δ)
+        
+        Note:
+            max_retries 从 2 增至 3，给空闲唤醒后的泵更多重试机会。
         Returns:
             True = 泵已确认物理运转, False = 多次重试仍无法启动
         """
@@ -727,9 +735,11 @@ class ExperimentWorker(QObject):
 
     def _send_position_verified(self, pump_addr: int, encoder_counts: int,
                                 rpm: int, label: str = "",
-                                max_retries: int = 2) -> bool:
+                                max_retries: int = 3) -> bool:
         """发送位置命令并验证泵物理运动 — 失败时自动重试 + 故障清除 + 重使能
 
+        Note:
+            max_retries 从 2 增至 3，给空闲唤醒后的泵更多重试机会。
         Returns:
             True = 泵已确认物理运动, False = 多次重试仍无法启动
         """
@@ -756,6 +766,11 @@ class ExperimentWorker(QObject):
                     time.sleep(0.15)
                     self.rs485.enable_motor(pump_addr, True)
                     time.sleep(0.3)
+            else:
+                # ★ 首次尝试也先使能 (位置模式必须先使能电机)
+                # pump_manager.move_position_rel 内部也会使能，此处为额外保障
+                self.rs485.enable_motor(pump_addr, True)
+                time.sleep(0.1)
 
             result = self.rs485.run_position_rel(
                 pump_addr, encoder_counts, rpm, acceleration=2

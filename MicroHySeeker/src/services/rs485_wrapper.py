@@ -98,7 +98,14 @@ class RS485Wrapper:
         self._comm_log_callback = callback
     
     def _emit_comm_log(self, direction: str, addr: int, cmd_name: str, hex_str: str):
-        """内部: 发射通信日志 (忽略异常，不影响主流程)"""
+        """内部: 发射通信日志 (UI回调 + 文件持久化，忽略异常不影响主流程)"""
+        # 1. 写入通信日志文件（持久化）
+        try:
+            from src.services.app_logger import log_comm
+            log_comm(direction, addr, cmd_name, hex_str)
+        except Exception:
+            pass
+        # 2. 发送到 UI 回调
         cb = self._comm_log_callback
         if cb:
             try:

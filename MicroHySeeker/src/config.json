@@ -1,5 +1,5 @@
 {
-  "rs485_port": "COM7",
+  "rs485_port": "COM3",
   "rs485_baudrate": 38400,
   "mock_mode": false,
   "pumps": [
@@ -123,7 +123,7 @@
       "color": "#00FF00",
       "tube_diameter_mm": 2.06,
       "total_volume_ml": 500.0,
-      "remaining_volume_ml": 470.0
+      "remaining_volume_ml": 480.0
     },
     {
       "channel_id": "2",

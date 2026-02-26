@@ -394,12 +394,19 @@ class RS485Driver:
         self._comm_log_callback = callback
     
     def _emit_comm_log(self, direction: str, addr: int, cmd: int, raw: bytes):
-        """内部: 触发通信日志回调"""
+        """内部: 触发通信日志回调 + 文件持久化"""
+        cmd_name = get_cmd_name(cmd)
+        hex_str = frame_to_hex(raw)
+        # 1. 写入通信日志文件（持久化）
+        try:
+            from src.services.app_logger import log_comm
+            log_comm(direction, addr, cmd_name, hex_str)
+        except Exception:
+            pass
+        # 2. 发送到 UI 回调
         cb = self._comm_log_callback
         if cb:
             try:
-                cmd_name = get_cmd_name(cmd)
-                hex_str = frame_to_hex(raw)
                 cb(direction, addr, cmd_name, hex_str)
             except Exception:
                 pass

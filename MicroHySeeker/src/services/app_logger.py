@@ -4,6 +4,7 @@
 基于 Python logging 模块，提供：
 - 按日期文件夹组织 (logs/YYYY-MM-DD/)
 - 每次启动生成独立日志文件 (app_HH-MM-SS.log)
+- 独立的通信日志文件 (comm_HH-MM-SS.log) 记录 RS485 TX/RX 帧数据
 - 控制台输出
 - 统一的 logger 获取接口
 - 日志永久保留，无任何大小限制
@@ -20,10 +21,15 @@ from typing import Optional
 _LOG_FMT = "[%(asctime)s.%(msecs)03d] [%(levelname)-7s] [%(name)s] %(message)s"
 _DATE_FMT = "%Y-%m-%d %H:%M:%S"
 
+# 通信日志格式 (更紧凑，突出 TX/RX 数据)
+_COMM_LOG_FMT = "[%(asctime)s.%(msecs)03d] %(message)s"
+
 # 全局单例
 _root_logger: Optional[logging.Logger] = None
+_comm_logger: Optional[logging.Logger] = None
 _log_dir: Path = Path("./logs")
 _log_file: Optional[Path] = None
+_comm_log_file: Optional[Path] = None
 _initialized: bool = False
 
 
@@ -34,13 +40,15 @@ def init_app_logging(log_dir: str = "./logs",
     
     日志永久保留，无任何文件大小限制。
     每天一个文件夹，每次启动生成独立日志文件。
+    同时创建独立的通信日志文件，记录 RS485 TX/RX 帧数据。
     
     目录结构::
     
         logs/
         ├── 2026-02-13/
-        │   ├── app_14-30-25.log      # 第一次启动
-        │   └── app_16-45-10.log      # 第二次启动
+        │   ├── app_14-30-25.log      # 运行日志
+        │   ├── comm_14-30-25.log     # 通信日志 (RS485 TX/RX)
+        │   └── app_16-45-10.log
         └── 2026-02-14/
             └── app_09-00-01.log
     
@@ -49,7 +57,7 @@ def init_app_logging(log_dir: str = "./logs",
         console_level: 控制台日志级别
         file_level: 文件日志级别
     """
-    global _root_logger, _log_dir, _log_file, _initialized
+    global _root_logger, _comm_logger, _log_dir, _log_file, _comm_log_file, _initialized
     if _initialized:
         return
 
@@ -63,8 +71,9 @@ def init_app_logging(log_dir: str = "./logs",
     # 每次启动使用时间戳命名，确保唯一
     time_str = now.strftime("%H-%M-%S")
     _log_file = date_dir / f"app_{time_str}.log"
+    _comm_log_file = date_dir / f"comm_{time_str}.log"
 
-    # 根 logger
+    # ── 根 logger (运行日志) ──
     _root_logger = logging.getLogger("MicroHySeeker")
     _root_logger.setLevel(logging.DEBUG)
     _root_logger.handlers.clear()
@@ -85,14 +94,57 @@ def init_app_logging(log_dir: str = "./logs",
     file_handler.setFormatter(logging.Formatter(_LOG_FMT, _DATE_FMT))
     _root_logger.addHandler(file_handler)
 
+    # ── 通信日志 logger (独立文件，不传播到根logger) ──
+    _comm_logger = logging.getLogger("MicroHySeeker.COMM")
+    _comm_logger.setLevel(logging.DEBUG)
+    _comm_logger.propagate = False  # 不传播到父logger，避免重复输出
+    _comm_logger.handlers.clear()
+
+    comm_file_handler = logging.FileHandler(
+        str(_comm_log_file),
+        mode="a",
+        encoding="utf-8",
+    )
+    comm_file_handler.setLevel(logging.DEBUG)
+    comm_file_handler.setFormatter(logging.Formatter(_COMM_LOG_FMT, _DATE_FMT))
+    _comm_logger.addHandler(comm_file_handler)
+
     _initialized = True
 
     _root_logger.info(f"日志系统已初始化 → {_log_file}（永久保留，无大小限制）")
+    _root_logger.info(f"通信日志已初始化 → {_comm_log_file}")
 
 
 def get_current_log_file() -> Optional[Path]:
     """获取当前会话的日志文件路径"""
     return _log_file
+
+
+def get_current_comm_log_file() -> Optional[Path]:
+    """获取当前会话的通信日志文件路径"""
+    return _comm_log_file
+
+
+def log_comm(direction: str, addr: int, cmd_name: str, hex_str: str) -> None:
+    """记录一条 RS485 通信日志到文件
+    
+    线程安全，异常不传播（不影响主流程）。
+    
+    Args:
+        direction: "TX" 或 "RX"
+        addr: 设备地址 (1-255)
+        cmd_name: 命令名称 (如 "SPEED", "ENABLE")
+        hex_str: 完整帧的十六进制字符串
+    """
+    if _comm_logger is None:
+        return
+    try:
+        arrow = "→" if direction == "TX" else "←"
+        _comm_logger.debug(
+            f"{direction} {arrow} Addr={addr:>2d} {cmd_name:<20s} {hex_str}"
+        )
+    except Exception:
+        pass  # 通信日志写入失败不影响主流程
 
 
 def get_app_logger(name: str = "") -> logging.Logger:
@@ -123,4 +175,8 @@ def shutdown_logging():
         for handler in _root_logger.handlers[:]:
             handler.close()
             _root_logger.removeHandler(handler)
+    if _comm_logger:
+        for handler in _comm_logger.handlers[:]:
+            handler.close()
+            _comm_logger.removeHandler(handler)
     _initialized = False

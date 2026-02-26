@@ -138,23 +138,34 @@ class ECSettings:
     bias_mode: int = 0             # 偏置模式: 0=vs Eref, 1=vs Eoc
     
     # Dummy Cell 模式 (测试用，不连接真实电极)
-    use_dummy_cell: bool = True
+    use_dummy_cell: bool = False
     
     # ADT (加速耐久性测试) 参数 — 替代旧 OCPT
     adt_enabled: bool = False
     adt_num_cycles: int = 100              # ADT 循环轮数
-    # -- CP 阴极恒电流参数 --
-    adt_cathodic_current_mA: float = -500.0  # 阴极电流 (mA), 模拟 HER
-    adt_cathodic_duration_s: float = 3.0     # 阴极持续时间 (s)
-    adt_cp_e_high: float = 2.0               # CP 电位上限 (V)
-    adt_cp_e_low: float = -2.0               # CP 电位下限 (V)
-    adt_cp_sample_interval: float = 0.01     # CP 采样间隔 (s)
-    # -- CA 阳极电位阶跃参数 --
-    adt_anodic_potential_V: float = 1.2      # 阳极电位 (V), 模拟 RC
-    adt_anodic_duration_s: float = 2.0       # 阳极持续时间 (s)
-    adt_ca_sensitivity: float = 0.001        # CA 灵敏度 (A/V)
-    adt_ca_quiet_time: float = 0.0           # CA 静置时间 (s)
-    adt_ca_sample_interval: float = 0.01     # CA 采样间隔 (s)
+    # -- CP (计时电位法) 完整参数 --
+    adt_cathodic_current_mA: float = -500.0  # 阴极电流 ic (mA), 0~250A → 用 mA 表示
+    adt_cp_anodic_current_mA: float = 500.0  # 阳极电流 ia (mA)
+    adt_cp_e_high: float = 2.0               # CP 电位上限 eh (V)
+    adt_cp_e_low: float = -2.0               # CP 电位下限 el (V)
+    adt_cp_high_e_hold_time: float = 0.0     # 高电位保持时间 heht (s)
+    adt_cp_low_e_hold_time: float = 0.0      # 低电位保持时间 leht (s)
+    adt_cathodic_duration_s: float = 3.0     # 阴极时间 tc (s)
+    adt_cp_anodic_time_s: float = 3.0        # 阳极时间 ta (s)
+    adt_cp_polarity: str = 'n'               # 首步极性 pn: 'p'=阳极先, 'n'=阴极先
+    adt_cp_sample_interval: float = 0.01     # CP 采样间隔 si (s)
+    adt_cp_segments: int = 2                 # CP 段数 cl
+    adt_cp_priority: str = 'time'            # 优先级: 'time'=时间优先, 'potential'=电位优先
+    # -- CA (计时电流法) 完整参数 --
+    adt_anodic_potential_V: float = 1.2      # 初始电位 ei (V)
+    adt_ca_e_high: float = 1.5               # 高电位限 eh (V)
+    adt_ca_e_low: float = -0.5               # 低电位限 el (V)
+    adt_ca_polarity: str = 'p'               # 变化方向 pn: 'p'=正向, 'n'=负向
+    adt_ca_steps: int = 1                    # 阶跃数 cl (1~320)
+    adt_anodic_duration_s: float = 2.0       # 脉冲宽度 pw (s)
+    adt_ca_sample_interval: float = 0.01     # CA 采样间隔 si (s)
+    adt_ca_quiet_time: float = 0.0           # CA 静置时间 qt (s)
+    adt_ca_sensitivity: float = 0.001        # CA 灵敏度 sens (A/V)
 
     # iR 补偿 (手动正反馈法)
     ir_compensation_enabled: bool = False  # 是否启用 iR 补偿

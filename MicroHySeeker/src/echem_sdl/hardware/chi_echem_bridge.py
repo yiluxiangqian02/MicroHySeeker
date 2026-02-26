@@ -121,35 +121,39 @@ def _ec_to_adt_it(ec: ECSettings) -> ITParams:
 
 
 def _ec_to_cp(ec: ECSettings) -> CPParams:
-    """ECSettings → CPParams (计时电位法)"""
+    """ECSettings → CPParams (计时电位法) — 全部参数映射"""
     cathodic_mA = getattr(ec, 'adt_cathodic_current_mA', -500.0)
-    cathodic_A = abs(cathodic_mA) / 1000.0  # mA → A, CP用绝对值
+    cathodic_A = abs(cathodic_mA) / 1000.0  # mA → A, CP 用绝对值
+    anodic_mA = getattr(ec, 'adt_cp_anodic_current_mA', 500.0)
+    anodic_A = abs(anodic_mA) / 1000.0
     return CPParams(
         cathodic_current=cathodic_A,
-        anodic_current=cathodic_A,  # 对称
-        e_high=getattr(ec, 'eh', 2.0) or 2.0,
-        e_low=getattr(ec, 'el', -2.0) or -2.0,
+        anodic_current=anodic_A,
+        e_high=getattr(ec, 'adt_cp_e_high', 2.0) or 2.0,
+        e_low=getattr(ec, 'adt_cp_e_low', -2.0) or -2.0,
+        high_e_hold_time=getattr(ec, 'adt_cp_high_e_hold_time', 0.0),
+        low_e_hold_time=getattr(ec, 'adt_cp_low_e_hold_time', 0.0),
         cathodic_time=getattr(ec, 'adt_cathodic_duration_s', 3.0),
-        anodic_time=getattr(ec, 'adt_cathodic_duration_s', 3.0),  # 对称
-        polarity='n',  # 阴极(负方向)先
-        sample_interval=0.01,
-        segments=1,  # 单段 (仅阴极)
-        priority='time',
+        anodic_time=getattr(ec, 'adt_cp_anodic_time_s', 3.0),
+        polarity=getattr(ec, 'adt_cp_polarity', 'n'),
+        sample_interval=getattr(ec, 'adt_cp_sample_interval', 0.01),
+        segments=getattr(ec, 'adt_cp_segments', 2),
+        priority=getattr(ec, 'adt_cp_priority', 'time'),
     )
 
 
 def _ec_to_ca(ec: ECSettings) -> CAParams:
-    """ECSettings → CAParams (计时电流法)"""
+    """ECSettings → CAParams (计时电流法) — 全部参数映射"""
     return CAParams(
         e_init=getattr(ec, 'adt_anodic_potential_V', 1.2),
-        e_high=getattr(ec, 'eh', 1.5) or 1.5,
-        e_low=getattr(ec, 'el', -0.5) or -0.5,
-        polarity='p',
-        steps=1,
+        e_high=getattr(ec, 'adt_ca_e_high', 1.5) or 1.5,
+        e_low=getattr(ec, 'adt_ca_e_low', -0.5) or -0.5,
+        polarity=getattr(ec, 'adt_ca_polarity', 'p'),
+        steps=getattr(ec, 'adt_ca_steps', 1),
         pulse_width=getattr(ec, 'adt_anodic_duration_s', 2.0),
-        sample_interval=0.01,
-        quiet_time=0.0,
-        sensitivity=getattr(ec, 'sensitivity', 0.0) or 0.0,
+        sample_interval=getattr(ec, 'adt_ca_sample_interval', 0.01),
+        quiet_time=getattr(ec, 'adt_ca_quiet_time', 0.0),
+        sensitivity=getattr(ec, 'adt_ca_sensitivity', 0.0) or 0.0,
     )
 
 

@@ -397,7 +397,7 @@ class PumpManager:
                 # 发送使能命令
                 payload = bytes([0x01])
                 self.driver.send_frame(addr, CMD_ENABLE, payload)
-                time.sleep(0.02)
+                time.sleep(0.08)  # 80ms: 给驱动器足够时间完成使能
                 
                 # 发送速度命令
                 if rpm == 0:
@@ -483,11 +483,11 @@ class PumpManager:
                 # 1. 位置模式停止: CMD_POSITION_REL speed=0 counts=0
                 pos_payload = bytes([0x00, 0x00, 0x10, 0x00, 0x00, 0x00, 0x00])
                 self.driver.write(build_frame(addr, CMD_POSITION_REL, pos_payload))
-                time.sleep(0.02)
+                time.sleep(0.06)  # 60ms: 每条命令之间留足间隔
                 # 2. 速度模式停止: CMD_SPEED speed=0
                 spd_payload = bytes([0x00, 0x00, 0x10])
                 self.driver.write(build_frame(addr, CMD_SPEED, spd_payload))
-                time.sleep(0.02)
+                time.sleep(0.06)
                 # 3. 禁用电机
                 dis_payload = bytes([0x00])
                 self.driver.write(build_frame(addr, CMD_ENABLE, dis_payload))
@@ -683,6 +683,11 @@ class PumpManager:
         
         if fire_and_forget:
             try:
+                # ★ 关键修复: 先发送使能命令 (与 start_pump 一致)
+                # 位置模式必须先使能电机，否则控制器虽接受指令但电机不动
+                self.driver.send_frame(addr, CMD_ENABLE, bytes([0x01]))
+                time.sleep(0.08)  # 80ms: 给驱动器足够时间完成使能
+                # 发送位置命令
                 self.driver.write(frame_data)
                 return None
             except Exception as e:
@@ -691,6 +696,14 @@ class PumpManager:
                 return None
         
         try:
+            # ★ 正常模式也先使能 (确保电机处于可运动状态)
+            try:
+                self.set_enable(addr, True)
+                time.sleep(0.05)
+            except TimeoutError:
+                if self._logger:
+                    self._logger.debug(f"泵 {addr}: 使能超时，仍尝试发送位置命令")
+            
             frame = self.request(addr, CMD_POSITION_REL, frame_data[3:-1])  # payload部分
             if frame and frame.payload:
                 status = decode_position_response(frame.payload)
@@ -745,6 +758,9 @@ class PumpManager:
         
         if fire_and_forget:
             try:
+                # ★ 关键修复: 先发送使能命令 (与 start_pump / move_position_rel 一致)
+                self.driver.send_frame(addr, CMD_ENABLE, bytes([0x01]))
+                time.sleep(0.08)  # 80ms: 给驱动器足够时间完成使能
                 self.driver.write(frame_data)
                 return None
             except Exception as e:
@@ -753,6 +769,14 @@ class PumpManager:
                 return None
         
         try:
+            # ★ 正常模式也先使能
+            try:
+                self.set_enable(addr, True)
+                time.sleep(0.05)
+            except TimeoutError:
+                if self._logger:
+                    self._logger.debug(f"泵 {addr}: 使能超时，仍尝试发送位置命令")
+            
             frame = self.request(addr, CMD_POSITION_ABS, frame_data[3:-1])
             if frame and frame.payload:
                 status = decode_position_response(frame.payload)
