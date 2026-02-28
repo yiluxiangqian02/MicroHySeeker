@@ -706,6 +706,11 @@ class ExperimentWorker(QObject):
                     time.sleep(0.15)
                     self.rs485.enable_motor(pump_addr, True)
                     time.sleep(0.3)
+            else:
+                # ★ 首次尝试也清除故障锁存 (防止驱动芯片残留故障导致电机不动)
+                # pump_manager.start_pump 内部也会做，此处为额外保障
+                self.rs485.clear_pump_stall(pump_addr)
+                time.sleep(0.05)
 
             result = self.rs485.start_pump(pump_addr, direction, rpm)
             if not result:
@@ -767,8 +772,11 @@ class ExperimentWorker(QObject):
                     self.rs485.enable_motor(pump_addr, True)
                     time.sleep(0.3)
             else:
-                # ★ 首次尝试也先使能 (位置模式必须先使能电机)
-                # pump_manager.move_position_rel 内部也会使能，此处为额外保障
+                # ★ 首次尝试: 清除故障锁存 + 使能电机
+                # 驱动芯片可能因上次运行残留故障锁存，导致 MCU 回复"OK"但电机不动
+                # pump_manager.move_position_rel 内部也会做，此处为额外保障
+                self.rs485.clear_pump_stall(pump_addr)
+                time.sleep(0.1)
                 self.rs485.enable_motor(pump_addr, True)
                 time.sleep(0.1)
 

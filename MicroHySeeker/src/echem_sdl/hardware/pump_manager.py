@@ -394,6 +394,9 @@ class PumpManager:
                 if self._logger:
                     self._logger.info(f"启动泵 {addr}: {direction} {rpm}RPM (fire_and_forget)")
                 
+                # ★ 清除可能残留的故障锁存 (防止驱动芯片忽略命令)
+                self.driver.send_frame(addr, CMD_CLEAR_STALL, b'')
+                time.sleep(0.05)
                 # 发送使能命令
                 payload = bytes([0x01])
                 self.driver.send_frame(addr, CMD_ENABLE, payload)
@@ -683,11 +686,13 @@ class PumpManager:
         
         if fire_and_forget:
             try:
-                # ★ 关键修复: 先发送使能命令 (与 start_pump 一致)
-                # 位置模式必须先使能电机，否则控制器虽接受指令但电机不动
+                # ★ 1. 清除可能残留的故障锁存 (驱动芯片故障锁存会导致命令被忽略)
+                self.driver.send_frame(addr, CMD_CLEAR_STALL, b'')
+                time.sleep(0.05)
+                # ★ 2. 使能电机 (位置模式必须先使能，否则控制器接受指令但电机不动)
                 self.driver.send_frame(addr, CMD_ENABLE, bytes([0x01]))
                 time.sleep(0.08)  # 80ms: 给驱动器足够时间完成使能
-                # 发送位置命令
+                # ★ 3. 发送位置命令
                 self.driver.write(frame_data)
                 return None
             except Exception as e:
@@ -696,13 +701,15 @@ class PumpManager:
                 return None
         
         try:
-            # ★ 正常模式也先使能 (确保电机处于可运动状态)
+            # ★ 正常模式: 清除故障 → 使能 → 发送位置命令
             try:
+                self.clear_stall(addr)
+                time.sleep(0.03)
                 self.set_enable(addr, True)
                 time.sleep(0.05)
             except TimeoutError:
                 if self._logger:
-                    self._logger.debug(f"泵 {addr}: 使能超时，仍尝试发送位置命令")
+                    self._logger.debug(f"泵 {addr}: 使能/清障超时，仍尝试发送位置命令")
             
             frame = self.request(addr, CMD_POSITION_REL, frame_data[3:-1])  # payload部分
             if frame and frame.payload:
@@ -758,9 +765,11 @@ class PumpManager:
         
         if fire_and_forget:
             try:
-                # ★ 关键修复: 先发送使能命令 (与 start_pump / move_position_rel 一致)
+                # ★ 清除故障锁存 → 使能 → 发送绝对位置命令
+                self.driver.send_frame(addr, CMD_CLEAR_STALL, b'')
+                time.sleep(0.05)
                 self.driver.send_frame(addr, CMD_ENABLE, bytes([0x01]))
-                time.sleep(0.08)  # 80ms: 给驱动器足够时间完成使能
+                time.sleep(0.08)
                 self.driver.write(frame_data)
                 return None
             except Exception as e:
@@ -769,13 +778,15 @@ class PumpManager:
                 return None
         
         try:
-            # ★ 正常模式也先使能
+            # ★ 正常模式: 清除故障 → 使能 → 发送位置命令
             try:
+                self.clear_stall(addr)
+                time.sleep(0.03)
                 self.set_enable(addr, True)
                 time.sleep(0.05)
             except TimeoutError:
                 if self._logger:
-                    self._logger.debug(f"泵 {addr}: 使能超时，仍尝试发送位置命令")
+                    self._logger.debug(f"泵 {addr}: 使能/清障超时，仍尝试发送位置命令")
             
             frame = self.request(addr, CMD_POSITION_ABS, frame_data[3:-1])
             if frame and frame.payload:
