@@ -17,13 +17,13 @@ CV_COLUMN_ALIASES = {
 }
 
 
-def _read_csv_with_fallback(path: Path) -> pd.DataFrame:
+def _read_csv_with_fallback(path: Path, **read_kwargs: Any) -> pd.DataFrame:
     for encoding in ("utf-8-sig", "utf-8", "gbk"):
         try:
-            return pd.read_csv(path, encoding=encoding)
+            return pd.read_csv(path, encoding=encoding, **read_kwargs)
         except UnicodeDecodeError:
             continue
-    return pd.read_csv(path)
+    return pd.read_csv(path, **read_kwargs)
 
 
 def _resolve_run_dir(run_dir: str) -> Path:
@@ -39,6 +39,7 @@ def _resolve_run_dir(run_dir: str) -> Path:
 
 
 def _normalize_cv_columns(df: pd.DataFrame) -> pd.DataFrame:
+    df = df.rename(columns=lambda col: col.strip() if isinstance(col, str) else col)
     rename_map: dict[str, str] = {}
     for target, aliases in CV_COLUMN_ALIASES.items():
         for alias in aliases:
@@ -61,7 +62,7 @@ def read_cv_csv(path: str) -> pd.DataFrame:
     if not csv_path.exists():
         raise FileNotFoundError(f"CV file not found: {csv_path}")
 
-    df = _normalize_cv_columns(_read_csv_with_fallback(csv_path))
+    df = _normalize_cv_columns(_read_csv_with_fallback(csv_path, comment="#"))
     missing = CV_REQUIRED_COLUMNS - set(df.columns)
     if missing:
         raise ValueError(f"CV csv missing required columns: {sorted(missing)}")
