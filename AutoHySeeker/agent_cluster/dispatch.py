@@ -35,7 +35,7 @@ PROTECTED_PATHS = [
 AGENT_CMDS = {
     "codex": "codex",
     "claude-code": "claude",
-    "copilot": None,  # copilot 通过 VS Code / CLI 手动启动
+    "copilot": "copilot",
 }
 
 
@@ -96,12 +96,20 @@ def cmd_create(args):
     # 生成 Agent 专属 prompt 文件
     _write_prompt(task)
 
+    # 自动启动 Agent 进程
+    pid = _launch_agent(task)
+    if pid:
+        task["pid"] = pid
+        save_tasks(data)
+        print(f"   PID     : {pid}")
+
     print(f"\n[OK] Task {task_id} created")
     print(f"   Agent   : {args.agent}")
     print(f"   Branch  : {branch}")
     print(f"   Worktree: {worktree_path}")
     print(f"   Prompt  : {CLUSTER_DIR / 'prompts' / f'{task_id}_prompt.md'}")
-    print(f"\n-> Next: Open the prompt file and paste it to {args.agent}")
+    if not pid:
+        print(f"\n-> Next: Open the prompt file and paste it to {args.agent}")
 
 
 def cmd_status(args):
@@ -165,6 +173,48 @@ def cmd_steer(args):
         f.write(content)
     print(f"[OK] Steer written to: {steer_file}")
     print(f"   -> Paste this message to {args.task_id}'s Agent session")
+
+
+def _launch_agent(task: dict) -> int | None:
+    """后台启动对应的 coding agent，返回 PID 或 None"""
+    agent = task["agent"]
+    task_id = task["id"]
+    prompt_file = CLUSTER_DIR / "prompts" / f"{task_id}_prompt.md"
+    worktree = task.get("worktree", str(REPO_ROOT))
+
+    if not prompt_file.exists():
+        print(f"[dispatch] WARNING: prompt file not found: {prompt_file}")
+        return None
+
+    prompt_content = prompt_file.read_text(encoding="utf-8")
+
+    try:
+        if agent == "copilot":
+            cmd = ["copilot", "--model", "claude-sonnet-4.6", "--allow-all", "-p", prompt_content]
+        elif agent == "codex":
+            cmd = ["codex", "--full-auto", "exec", prompt_content]
+        elif agent == "claude-code":
+            cmd = ["claude", "-p", prompt_content, "--allowedTools", "edit,bash,read,write"]
+        else:
+            print(f"[dispatch] Unknown agent: {agent}")
+            return None
+
+        proc = subprocess.Popen(
+            cmd,
+            cwd=str(worktree),
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            creationflags=subprocess.CREATE_NEW_PROCESS_GROUP if sys.platform == "win32" else 0,
+        )
+        print(f"[dispatch] Agent '{agent}' launched with PID {proc.pid}")
+        return proc.pid
+    except FileNotFoundError:
+        print(f"[dispatch] WARNING: '{agent}' command not found. Start the agent manually.")
+        print(f"   Prompt: {prompt_file}")
+        return None
+    except Exception as e:
+        print(f"[dispatch] WARNING: failed to launch agent: {e}")
+        return None
 
 
 def _write_prompt(task):
