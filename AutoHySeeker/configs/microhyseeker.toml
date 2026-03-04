@@ -1,0 +1,7 @@
+[paths]
+data_dir = 'D:/AI4S/MicroHySeeker/MicroHySeeker/data'
+config_dir = 'D:/AI4S/MicroHySeeker/MicroHySeeker/config'
+logs_dir = 'D:/AI4S/MicroHySeeker/MicroHySeeker/logs'
+
+[engine]
+mode = 'file'
