@@ -1,259 +1,268 @@
-"""C1 — ContextualizeExperimentSkill: retrieve context from OpenViking knowledge base.
+"""C1 — ContextualizeExperimentSkill: analyse current run against history.
 
-Queries the OpenViking knowledge base for relevant:
-* **Literature** — academic papers, instrument manuals, domain knowledge
-* **Experiment records** — archived past experiments with similar goals/techniques
+Reads the current run's ``run_summary.json``, compares numeric metrics against
+historical runs, detects anomalies (z-score > *threshold_sigma*) and trends
+(increasing / declining / stable), and optionally retrieves related literature
+and knowledge chunks from the OpenViking knowledge base.
 
-Then optionally uses the LLM (claude-opus-4.6) to synthesise a concise context
-summary from the retrieved chunks.
-
-Falls back gracefully in two stages:
-1. If the LLM is unavailable — returns raw retrieved chunks without synthesis.
-2. If OpenViking is unavailable — returns an empty-context result with a clear message.
+Result ``data`` contains:
+* ``run_dir``           — echo of input path
+* ``comparison``        — per-metric comparison dict
+* ``trend``             — per-metric trend label
+* ``anomalies``         — list of anomalous metric names
+* ``literature``        — :class:`LiteratureRef` list from KB
+* ``knowledge_chunks``  — raw chunks from KB
+* ``n_history``         — number of historical data-points used
+* ``summary``           — human-readable summary string
 """
 
 from __future__ import annotations
 
 import json
+import logging
+import math
+from pathlib import Path
 from typing import Any
 
 from src.skills.base import BaseSkill, SkillResult
 
-# LLM model for Phase 4 C-series skills
-_OPUS_MODEL = "anthropic/claude-opus-4-6"
+logger = logging.getLogger(__name__)
 
 
-def _build_synthesis_prompt(
-    query: str,
-    goal: str,
-    literature: list[dict[str, Any]],
-    experiments: list[dict[str, Any]],
-) -> list[dict[str, str]]:
-    """Build LLM messages to synthesise context from retrieved chunks."""
-    lit_text = "\n\n".join(
-        "[文献 {n} | score={s}]\n{c}".format(
-            n=i + 1,
-            s=f"{r['score']:.3f}" if isinstance(r.get("score"), (int, float)) else "?",
-            c=r.get("content", ""),
-        )
-        for i, r in enumerate(literature)
-    ) or "(无相关文献)"
+# ── helpers ───────────────────────────────────────────────────────────────────
 
-    exp_text = "\n\n".join(
-        f"[实验记录 {i + 1} | {r.get('uri', '?')}]\n{r.get('content', '')}"
-        for i, r in enumerate(experiments)
-    ) or "(无历史实验记录)"
-
-    system = (
-        "You are an expert electrochemist and scientific context synthesiser for "
-        "the AutoHySeeker autonomous experimentation platform. "
-        "Given retrieved literature and past experiment records, produce a concise "
-        "scientific context summary that will help design or interpret the current "
-        "experiment. "
-        "Respond in JSON."
-    )
-
-    user = f"""Synthesise scientific context for the following experiment task.
-
-**Query:** {query}
-**Experiment Goal:** {goal or "Not specified"}
-
-**Retrieved Literature:**
-{lit_text}
-
-**Relevant Past Experiments:**
-{exp_text}
-
-Return a JSON object:
-{{
-  "context_summary": "<2-4 sentence synthesis of the most relevant information>",
-  "key_references": ["<brief citation 1>", "<brief citation 2>"],
-  "relevant_parameters": {{"<param>": "<value/range from literature>"}},
-  "experimental_precedents": ["<relevant past result 1>"],
-  "confidence": "high|medium|low"
-}}"""
-
-    return [
-        {"role": "system", "content": system},
-        {"role": "user", "content": user},
-    ]
+def _load_run_metadata(run_dir: str) -> dict[str, Any] | None:
+    """Load ``run_summary.json`` from *run_dir*, returning ``None`` on failure."""
+    p = Path(run_dir) / "run_summary.json"
+    if not p.exists():
+        return None
+    try:
+        return json.loads(p.read_text(encoding="utf-8"))
+    except Exception:
+        return None
 
 
-def _raw_context_summary(
-    query: str,
-    literature: list[dict[str, Any]],
-    experiments: list[dict[str, Any]],
-) -> dict[str, Any]:
-    """Fallback context dict when LLM synthesis is unavailable."""
-    refs = [
-        r.get("uri") or r.get("metadata", {}).get("source", f"lit_{i + 1}")
-        for i, r in enumerate(literature)
-    ]
-    exp_refs = [
-        r.get("uri") or r.get("metadata", {}).get("run_id", f"exp_{i + 1}")
-        for i, r in enumerate(experiments)
-    ]
+def _extract_numeric_metrics(
+    meta: dict[str, Any],
+    metric_keys: list[str] | None = None,
+) -> dict[str, float]:
+    """Return numeric (int/float) fields from *meta*, optionally filtered."""
+    nums: dict[str, float] = {}
+    for k, v in meta.items():
+        if isinstance(v, (int, float)) and not isinstance(v, bool):
+            if metric_keys is None or k in metric_keys:
+                nums[k] = float(v)
+    return nums
 
-    parts = []
-    if literature:
-        parts.append(f"Retrieved {len(literature)} literature chunk(s) relevant to: {query!r}.")
-    if experiments:
-        parts.append(f"Found {len(experiments)} similar past experiment(s).")
+
+def _compare_metrics(
+    current: dict[str, float],
+    history: list[dict[str, float]],
+    threshold_sigma: float,
+) -> tuple[dict[str, Any], dict[str, str], list[str]]:
+    """Compare *current* values to *history*.
+
+    Returns ``(comparison, trend, anomalies)`` where comparison maps metric name
+    to ``{current, historical_mean, historical_std, delta, z_score}`` etc.
+    """
+    comparison: dict[str, Any] = {}
+    trend: dict[str, str] = {}
+    anomalies: list[str] = []
+
+    for metric, cur_val in current.items():
+        hist_vals = [h[metric] for h in history if metric in h and isinstance(h[metric], (int, float))]
+        if not hist_vals:
+            comparison[metric] = {"current": cur_val}
+            continue
+
+        mean = sum(hist_vals) / len(hist_vals)
+        variance = sum((v - mean) ** 2 for v in hist_vals) / len(hist_vals)
+        std = math.sqrt(variance) if variance > 0 else 0.0
+        delta = cur_val - mean
+        z_score = abs(delta / std) if std > 0 else 0.0
+
+        comparison[metric] = {
+            "current": cur_val,
+            "historical_mean": mean,
+            "historical_std": std,
+            "delta": delta,
+            "z_score": z_score,
+        }
+
+        # Anomaly detection
+        if z_score > threshold_sigma:
+            anomalies.append(metric)
+
+        # Trend detection (simple: compare last half vs first half)
+        if len(hist_vals) >= 2:
+            mid = len(hist_vals) // 2
+            first_half_mean = sum(hist_vals[:mid]) / mid if mid else mean
+            second_half_mean = sum(hist_vals[mid:]) / (len(hist_vals) - mid)
+            if second_half_mean > first_half_mean * 1.05:
+                trend[metric] = "increasing"
+            elif second_half_mean < first_half_mean * 0.95:
+                trend[metric] = "declining"
+            else:
+                trend[metric] = "stable"
+        else:
+            trend[metric] = "stable"
+
+    return comparison, trend, anomalies
+
+
+def _build_kb_query(
+    metadata: dict[str, Any],
+    current_metrics: dict[str, float],
+    anomalies: list[str],
+) -> str:
+    """Build a KB search query from run metadata, metrics and anomalies."""
+    parts: list[str] = []
+    for key in ("exp_name", "experiment_name", "catalyst", "electrolyte"):
+        val = metadata.get(key)
+        if val:
+            parts.append(str(val))
+    for m in anomalies:
+        parts.append(m)
     if not parts:
-        parts.append(f"No knowledge-base results found for: {query!r}.")
-
-    return {
-        "context_summary": " ".join(parts),
-        "key_references": refs,
-        "relevant_parameters": {},
-        "experimental_precedents": exp_refs,
-        "confidence": "low",
-        "source": "raw_chunks",
-    }
+        parts.extend(str(k) for k in list(current_metrics)[:3])
+    return " ".join(parts)
 
 
 class ContextualizeExperimentSkill(BaseSkill):
-    """C1 — Retrieve relevant literature and experiment records from OpenViking.
+    """C1 — Compare current run metrics to history and retrieve KB context.
 
     Workflow:
 
-    1. Query ``VikingKnowledgeBase.search_literature(query)``
-    2. Query ``VikingKnowledgeBase.search_experiments(query)``
-    3. Use LLM (claude-opus-4.6) to synthesise a context summary.
-    4. Return :class:`~src.skills.base.SkillResult` with retrieved chunks
-       and synthesised context.
-
-    Degradation:
-    * No LLM → returns raw chunks without synthesis (``source="raw_chunks"``).
-    * No OpenViking → returns empty context with informative message.
+    1. Load ``run_summary.json`` from *run_dir*.
+    2. Extract numeric metrics and compare to *previous_results* or historical
+       runs found in *history_dir*.
+    3. Detect anomalies (z-score > *threshold_sigma*) and trends.
+    4. Optionally retrieve literature & knowledge chunks from OpenViking KB.
+    5. Return :class:`~src.skills.base.SkillResult` with full context.
     """
 
     name = "contextualize_experiment"
-    description = "从 OpenViking 知识库检索相关文献与实验记录，使用 LLM 合成上下文摘要"
+    description = "分析当前实验运行，与历史数据对比，检测异常与趋势，检索相关文献"
     required_tools: list[str] = []
-
-    #: LLM model for context synthesis
-    model: str = _OPUS_MODEL
 
     async def execute(
         self,
-        query: str = "",
-        goal: str = "",
-        techniques: list[str] | None = None,
-        top_k: int = 5,
+        run_dir: str = "",
+        history_dir: str = "",
+        previous_results: list[dict[str, Any]] | None = None,
+        metrics: list[str] | None = None,
+        threshold_sigma: float = 2.0,
+        max_history: int = 20,
+        kb_path: str = "",
+        kb_query: str = "",
+        kb_limit: int = 5,
+        kb_score_threshold: float = 0.3,
         **kwargs: Any,
     ) -> SkillResult:
-        """Retrieve context from the OpenViking knowledge base.
+        """Contextualise the current experiment run.
 
         Args:
-            query: Natural-language search query describing the experiment topic
-                (e.g. ``"HER activity NiFe catalyst acidic electrolyte"``).
-            goal: Free-text experiment goal used to supplement the query and
-                LLM synthesis prompt (e.g. ``"screen OER catalysts"``).
-            techniques: Optional list of electrochemical techniques to append
-                to the query (e.g. ``["CV", "EIS"]``).
-            top_k: Maximum number of chunks to retrieve per source (literature /
-                experiments).  Defaults to 5.
-            **kwargs: Ignored.
-
-        Returns:
-            :class:`~src.skills.base.SkillResult` where ``data`` is a dict with:
-
-            * ``literature`` — list of retrieved literature chunks.
-            * ``experiments`` — list of retrieved experiment records.
-            * ``context_summary`` — synthesised summary string.
-            * ``key_references`` — brief citation list.
-            * ``relevant_parameters`` — parameter hints from literature.
-            * ``experimental_precedents`` — relevant past experiment URIs.
-            * ``confidence`` — ``"high"|"medium"|"low"``.
-            * ``source`` — ``"llm"|"raw_chunks"|"unavailable"``.
+            run_dir: Path to the current run directory (must contain
+                ``run_summary.json``).
+            history_dir: Parent directory holding previous run subdirectories.
+            previous_results: Pre-computed metric dicts from prior runs. If
+                provided, *history_dir* is not scanned.
+            metrics: Specific metric keys to analyse.  ``None`` = all numeric.
+            threshold_sigma: Z-score threshold for anomaly flagging.
+            max_history: Max historical runs to load from *history_dir*.
+            kb_path: Path to the OpenViking knowledge base directory.
+            kb_query: Override KB search query (auto-generated if empty).
+            kb_limit: Max KB results to retrieve.
+            kb_score_threshold: Minimum similarity score for KB results.
         """
-        if not query and not goal:
+        # ── Validate inputs ───────────────────────────────────────────────────
+        if not run_dir:
             return SkillResult(
-                success=False,
-                data={},
-                message="At least one of 'query' or 'goal' is required",
-                artifacts=[],
+                success=False, data={},
+                message="run_dir is required", artifacts=[],
             )
 
-        # Build effective query
-        effective_query = query or goal
-        if techniques:
-            effective_query = f"{effective_query} {' '.join(techniques)}"
-
-        # ── Step 1: retrieve from OpenViking ─────────────────────────────────
-        try:
-            from src.rag import get_viking_kb  # noqa: PLC0415
-            kb = get_viking_kb()
-        except Exception as import_exc:
+        run_path = Path(run_dir)
+        if not run_path.exists():
             return SkillResult(
-                success=False,
-                data={"source": "unavailable"},
-                message=f"OpenViking client unavailable: {import_exc}",
-                artifacts=[],
+                success=False, data={},
+                message=f"run_dir does not exist: {run_dir}", artifacts=[],
             )
 
-        literature = kb.search_literature(effective_query, top_k=top_k)
-        experiments = kb.search_experiments(effective_query, top_k=top_k)
+        # ── Load current run metadata ─────────────────────────────────────────
+        metadata = _load_run_metadata(run_dir) or {}
+        current_metrics = _extract_numeric_metrics(metadata, metrics)
 
-        n_lit = len(literature)
-        n_exp = len(experiments)
+        # ── Gather history ────────────────────────────────────────────────────
+        history: list[dict[str, float]] = []
+        if previous_results:
+            for pr in previous_results[:max_history]:
+                history.append(
+                    {k: float(v) for k, v in pr.items()
+                     if isinstance(v, (int, float)) and not isinstance(v, bool)}
+                )
+        elif history_dir:
+            hdir = Path(history_dir)
+            if hdir.is_dir():
+                subdirs = sorted(hdir.iterdir())[:max_history]
+                for sd in subdirs:
+                    if sd.is_dir() and str(sd) != run_dir:
+                        hm = _load_run_metadata(str(sd))
+                        if hm:
+                            history.append(_extract_numeric_metrics(hm, metrics))
 
-        if not kb.is_available:
-            return SkillResult(
-                success=True,
-                data={
-                    "literature": [],
-                    "experiments": [],
-                    "context_summary": (
-                        "OpenViking knowledge base is not initialised. "
-                        "No context could be retrieved. "
-                        "Ingest documents using VikingKnowledgeBase.ingest_document() first."
-                    ),
-                    "key_references": [],
-                    "relevant_parameters": {},
-                    "experimental_precedents": [],
-                    "confidence": "low",
-                    "source": "unavailable",
-                },
-                message="OpenViking unavailable — empty context returned",
-                artifacts=[],
-            )
+        # ── Compare & detect ──────────────────────────────────────────────────
+        comparison, trend, anomalies = _compare_metrics(
+            current_metrics, history, threshold_sigma,
+        )
 
-        # ── Step 2: LLM synthesis ─────────────────────────────────────────────
-        try:
-            from src.common.llm_client import chat_completion  # noqa: PLC0415
+        # ── KB retrieval ──────────────────────────────────────────────────────
+        literature: list[Any] = []
+        knowledge_chunks: list[Any] = []
+        if kb_path:
+            effective_query = kb_query or _build_kb_query(metadata, current_metrics, anomalies)
+            try:
+                from src.tools.knowledge_retriever import (  # noqa: PLC0415
+                    retrieve_knowledge,
+                    retrieve_literature,
+                )
+                knowledge_chunks = retrieve_knowledge(
+                    effective_query, kb_path, limit=kb_limit,
+                    score_threshold=kb_score_threshold,
+                )
+                literature = retrieve_literature(
+                    effective_query, kb_path, limit=kb_limit,
+                    score_threshold=kb_score_threshold,
+                )
+            except Exception as exc:
+                logger.warning("KB retrieval failed: %s", exc)
 
-            messages = _build_synthesis_prompt(effective_query, goal, literature, experiments)
-            raw = await chat_completion(messages=messages, model=self.model, temperature=0.2)
+        # ── Build summary ─────────────────────────────────────────────────────
+        parts: list[str] = []
+        parts.append(f"Analysed run at {run_dir}.")
+        if current_metrics:
+            parts.append(f"{len(current_metrics)} metric(s) extracted.")
+        if history:
+            parts.append(f"Compared against {len(history)} historical run(s).")
+        if anomalies:
+            parts.append(f"Anomalies: {', '.join(anomalies)}.")
+        summary = " ".join(parts)
 
-            # Strip markdown fences if present
-            text = raw.strip()
-            if "```json" in text:
-                text = text.split("```json")[1].split("```")[0].strip()
-            elif "```" in text:
-                text = text.split("```")[1].split("```")[0].strip()
-
-            context_data: dict[str, Any] = json.loads(text)
-            context_data["source"] = "llm"
-            context_data["model"] = self.model
-
-        except Exception as llm_exc:
-            # Fallback: return raw chunks without LLM synthesis
-            context_data = _raw_context_summary(effective_query, literature, experiments)
-            context_data["llm_error"] = type(llm_exc).__name__
-
-        # Merge retrieved chunks into final result
-        context_data["literature"] = literature
-        context_data["experiments"] = experiments
+        result_data: dict[str, Any] = {
+            "run_dir": run_dir,
+            "comparison": comparison,
+            "trend": trend,
+            "anomalies": anomalies,
+            "literature": literature,
+            "knowledge_chunks": knowledge_chunks,
+            "n_history": len(history),
+            "summary": summary,
+        }
 
         return SkillResult(
             success=True,
-            data=context_data,
-            message=(
-                f"Retrieved {n_lit} literature chunk(s) and {n_exp} experiment record(s) "
-                f"[source={context_data.get('source', '?')}]"
-            ),
+            data=result_data,
+            message=summary,
             artifacts=[],
         )
 
@@ -263,29 +272,54 @@ class ContextualizeExperimentSkill(BaseSkill):
             "title": self.name,
             "description": self.description,
             "properties": {
-                "query": {
+                "run_dir": {
                     "type": "string",
-                    "description": (
-                        "Natural-language search query for the knowledge base, "
-                        "e.g. 'HER NiFe catalyst acidic electrolyte Tafel slope'"
-                    ),
+                    "description": "Path to the current experiment run directory",
                 },
-                "goal": {
+                "history_dir": {
                     "type": "string",
-                    "description": "Free-text experiment goal used to supplement the query",
+                    "description": "Parent directory with historical run sub-directories",
                 },
-                "techniques": {
+                "previous_results": {
+                    "type": "array",
+                    "items": {"type": "object"},
+                    "description": "Pre-computed metric dicts from previous runs",
+                },
+                "metrics": {
                     "type": "array",
                     "items": {"type": "string"},
-                    "description": "Electrochemical techniques to include in the search query",
+                    "description": "Specific metric keys to analyse (default: all numeric)",
                 },
-                "top_k": {
+                "threshold_sigma": {
+                    "type": "number",
+                    "description": "Z-score threshold for anomaly detection (default 2.0)",
+                    "default": 2.0,
+                },
+                "max_history": {
                     "type": "integer",
-                    "description": "Maximum number of chunks per source (default 5)",
+                    "description": "Max historical runs to load (default 20)",
+                    "default": 20,
+                },
+                "kb_path": {
+                    "type": "string",
+                    "description": "Path to the OpenViking knowledge base directory",
+                },
+                "kb_query": {
+                    "type": "string",
+                    "description": "Override KB search query (auto-generated if empty)",
+                },
+                "kb_limit": {
+                    "type": "integer",
+                    "description": "Max KB results to retrieve (default 5)",
                     "default": 5,
                 },
+                "kb_score_threshold": {
+                    "type": "number",
+                    "description": "Min similarity score for KB results (default 0.3)",
+                    "default": 0.3,
+                },
             },
-            "required": [],
+            "required": ["run_dir"],
         }
 
 
