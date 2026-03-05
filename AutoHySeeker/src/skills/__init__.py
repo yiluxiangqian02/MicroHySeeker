@@ -22,6 +22,10 @@ from src.skills.contextualize_experiment import (
     ContextualizeExperimentSkill,
     contextualize_experiment_skill,
 )
+from src.skills.suggest_next_experiment import (
+    SuggestNextExperimentSkill,
+    suggest_next_experiment_skill,
+)
 
 __all__ = [
     # Legacy function-based skills
@@ -45,5 +49,8 @@ __all__ = [
     # C1 — OpenViking-backed experiment contextualization
     "ContextualizeExperimentSkill",
     "contextualize_experiment_skill",
+    # C2 — rule-based next-experiment suggestion
+    "SuggestNextExperimentSkill",
+    "suggest_next_experiment_skill",
 ]
 

@@ -14,6 +14,7 @@ files_to_stage = [
     'src/api/routes/context.py',
     'src/api/main.py',
     'tests/test_phase4.py',
+    'PROGRESS.md',
     '../agent_cluster/AGENT_COORD.md'
 ]
 
@@ -31,13 +32,15 @@ if result.stderr:
     print('STDERR:', result.stderr)
 
 print('\n=== GIT COMMIT ===')
-commit_msg = '''feat(phase4): implement C1/C2 skills, extend supervisor graph, add /context API
+commit_msg = '''feat(phase4-c2): implement C2 SuggestNextExperiment, extend supervisor graph, add /context API
 
-- C1: ContextualizeExperimentSkill (src/skills/contextualize_experiment.py)
-- C2: SuggestNextExperimentSkill (src/skills/suggest_next_experiment.py)
-- Supervisor graph: add contextualize/suggest nodes, fix deprecated set_conditional_entry_point
+- C2: SuggestNextExperimentSkill (LLM-free rule-based next-experiment recommendation)
+- skills/__init__.py: export SuggestNextExperimentSkill + singleton
+- Supervisor graph: contextualize/suggest nodes, C1->C2 state["context"]["context_data"] flow
 - API: POST /context/invoke, /context/contextualize, /context/suggest-next
-- Tests: tests/test_phase4.py (42 test cases)
+- Tests: tests/test_phase4.py (C1/C2/supervisor graph/context API, 30+ cases)
+- PROGRESS.md: Phase 4 C2 status updated
+- AGENT_COORD.md: TASK_010 marked done
 
 Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>'''
 

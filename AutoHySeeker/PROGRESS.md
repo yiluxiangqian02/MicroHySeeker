@@ -25,6 +25,9 @@
 | API 路由完善：/diagnostics | ✅ 完成 | `src/api/routes/diagnostics.py` | POST /invoke + /analyze-failure + /check-health |
 | OpenViking KB 客户端 | ✅ 完成 | `src/rag.py` | VikingKnowledgeBase 封装；search_literature / search_experiments；无 SDK 时优雅降级 |
 | C1 ContextualizeExperimentSkill | ✅ 完成 | `src/skills/contextualize_experiment.py` | 从 OpenViking 检索文献+实验记录，LLM 合成上下文；双层降级（无 LLM / 无 KB） |
+| C2 SuggestNextExperimentSkill | ✅ 完成 | `src/skills/suggest_next_experiment.py` | LLM-free 规则推荐：异常→诊断、趋势下降→稳定性、优化目标→参数扫描 |
+| SupervisorGraph C2 节点 | ✅ 完成 | `src/graph/supervisor_graph.py` | 新增 suggest 节点 + route_task 路由；C1→C2 上下文通过 state["context"]["context_data"] 传递 |
+| API 路由完善：/context | ✅ 完成 | `src/api/routes/context.py` | POST /invoke + /contextualize + /suggest-next |
 
 ---
 
@@ -229,6 +232,7 @@ tests/test_tools_phase2.py   — ✅ 新增（Tool 层：data_reader / echem_ana
 tests/test_skills_phase2.py  — ✅ 新增（Skill A1 / B1 + skills __init__ 导出验证）
 tests/test_phase3.py         — ✅ 新增（DiagnosticsGraph + diagnostics API routes，共 20 个测试）
 tests/test_phase4_c1.py      — ✅ 新增（VikingKnowledgeBase + ContextualizeExperimentSkill，共 20 个测试）
+tests/test_phase4.py         — ✅ 新增（C1/C2 Skills + SupervisorGraph + /context API routes，共 30+ 个测试）
 ```
 
 运行方式：
@@ -246,6 +250,10 @@ uv run pytest tests/
 | OpenViking KB 客户端：`src/rag.py` | ✅ 完成 |
 | C1 ContextualizeExperimentSkill | ✅ 完成 |
 | 测试：`test_phase4_c1.py` | ✅ 新增 |
+| C2 SuggestNextExperimentSkill | ✅ 完成 |
+| SupervisorGraph（含 suggest 节点） | ✅ 完成 |
+| API 路由：`/context` | ✅ 完成 |
+| 测试：`test_phase4.py` | ✅ 新增 |
 
 ---
 
@@ -304,3 +312,46 @@ exps = kb.search_experiments("CV Fe 0.3M", top_k=3)
 - **降级策略（双层）：**
   - OpenViking 不可用 → 返回 `source="unavailable"` 的空上下文（`success=True`）
   - LLM 不可用 → 返回 `source="raw_chunks"` 的原始 chunks（`success=True`）
+
+---
+
+### C2 — `SuggestNextExperimentSkill` (`src/skills/suggest_next_experiment.py`)
+
+- **输入：** `context_data?: dict`, `goal?: str`, `name?: str`, `description?: str`, `tags?: list[str]`
+- **输出：** `SkillResult.data` 含：
+  - `intent` — 选择的意图键（`"diagnostic_run"` / `"stability_run"` / `"optimisation_run"` / `"generic"`）
+  - `rationale` — 可读的推荐理由
+  - `plan` — 序列化的 `ExperimentPlan` dict（含 `_validation` 报告）
+  - `valid` — 方案是否通过验证
+- **规则决策逻辑（LLM-free）：**
+  1. `context_data["anomalies"]` 非空 → `diagnostic_run`
+  2. `context_data["trend"]` 中存在 `"declining"` 指标 → `stability_run`
+  3. goal 包含 `"optim" / "scan" / "sweep" / "grid"` → `optimisation_run`
+  4. goal 包含 `"stable" / "durabil" / "chronic"` → `stability_run`
+  5. goal 包含 `"diagnos" / "debug" / "check"` → `diagnostic_run`
+  6. 以上均不满足 → `generic`
+- **特点：** 纯规则引擎，每个意图对应预定义步骤模板，自动调用 `validate_plan`
+
+### SupervisorGraph C2 节点 (`src/graph/supervisor_graph.py`)
+
+- **新增节点：** `suggest` → 调用 `SuggestNextExperimentSkill`
+- **路由扩展：** `route_task` 新增 `"contextualize"` / `"suggest"` 分支
+- **C1→C2 数据流：** `contextualize_node` 将结果写入 `state["context"]["context_data"]`，`suggest_node` 优先读取 task payload `context_data`，其次读 `state["context"]["context_data"]`
+- **图拓扑：**
+  ```
+  START ──(route_task)──► monitor       ──► END
+                       ├──► schedule      ──► END
+                       ├──► diagnose      ──► END
+                       ├──► contextualize ──► END
+                       └──► suggest       ──► END
+  ```
+
+### Context API Routes (`src/api/routes/context.py`)
+
+**新增端点：**
+
+| 方法 | 路径 | 功能 |
+|------|------|------|
+| POST | `/context/invoke` | 通用入口，JSON body 含 `action` / C1 参数 / C2 参数 |
+| POST | `/context/contextualize` | C1 快捷方式，query params `run_dir` + `history_dir` |
+| POST | `/context/suggest-next` | C2 快捷方式，query params `goal` + `name` |
