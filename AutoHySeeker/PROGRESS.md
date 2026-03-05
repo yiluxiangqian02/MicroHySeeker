@@ -1,4 +1,4 @@
-# AutoHySeeker — Phase 3 开发进度
+# AutoHySeeker — Phase 4 开发进度
 
 > 最后更新：2026-03-05
 
@@ -23,6 +23,11 @@
 | B1 GenerateExperimentPlanSkill | ✅ 完成 | `src/skills/generate_experiment_plan.py` | 无 LLM，内置 HER/OER/稳定性/CV 模板 + 参数网格搜索 |
 | LangGraph Subgraph：diagnostics_graph | ✅ 完成 | `src/graph/diagnostics_graph.py` | START + add_conditional_edges；D1/D2 节点；fallback；缓存 get_diagnostics_graph() |
 | API 路由完善：/diagnostics | ✅ 完成 | `src/api/routes/diagnostics.py` | POST /invoke + /analyze-failure + /check-health |
+| C1 ContextualizeExperimentSkill | ✅ 完成 | `src/skills/contextualize_experiment.py` | LLM-free，statistics 标准库做均值/σ/趋势；异常检测；OpenViking 知识库文献检索 |
+| Tool: knowledge_retriever | ✅ 完成 | `src/tools/knowledge_retriever.py` | OpenViking find() 封装；retrieve_knowledge / retrieve_literature；优雅降级 |
+| C2 SuggestNextExperimentSkill | ✅ 完成 | `src/skills/suggest_next_experiment.py` | 规则驱动推荐；依赖 C1 context_data 或 goal 字符串 |
+| LangGraph Subgraph：supervisor_graph | ✅ 完成 | `src/graph/supervisor_graph.py` | 5路路由：monitor/schedule/diagnose/contextualize/suggest；fallback；缓存 get_supervisor_graph() |
+| API 路由：/context | ✅ 完成 | `src/api/routes/context.py` | POST /invoke + /contextualize + /suggest-next |
 
 ---
 
@@ -137,6 +142,19 @@ mhs = get_microhyseeker_config() # → MicroHySeekerConfig(paths, engine)
 
 ---
 
+## Phase 4 任务状态
+
+| 模块 | 状态 |
+|------|------|
+| C1 Skill：`contextualize_experiment.py` | ✅ 完成（含 OpenViking KB 集成） |
+| Tool：`knowledge_retriever.py` | ✅ 新增 |
+| C2 Skill：`suggest_next_experiment.py` | ✅ 完成 |
+| LangGraph Subgraph：`supervisor_graph.py` | ✅ 完成 |
+| API 路由：`/context` | ✅ 完成 |
+| 测试：`test_phase4.py` | ✅ 新增 |
+
+---
+
 ## Phase 2 任务状态
 
 | 模块 | 状态 |
@@ -226,10 +244,107 @@ tests/test_import_smoke.py   — ✅ 通过（核心导入测试）
 tests/test_tools_phase2.py   — ✅ 新增（Tool 层：data_reader / echem_analysis / experiment_builder）
 tests/test_skills_phase2.py  — ✅ 新增（Skill A1 / B1 + skills __init__ 导出验证）
 tests/test_phase3.py         — ✅ 新增（DiagnosticsGraph + diagnostics API routes，共 20 个测试）
+tests/test_phase4.py         — ✅ 新增（C1/C2 Skills + knowledge_retriever + KB集成 + SupervisorGraph + /context API routes，共 45+ 个测试）
 ```
 
 运行方式：
 ```bash
 cd AutoHySeeker
 uv run pytest tests/
+```
+
+---
+
+## Phase 4 新增详细说明
+
+### C1 — `ContextualizeExperimentSkill` (`src/skills/contextualize_experiment.py`)
+
+- **输入：** `run_dir: str`, `history_dir?`, `previous_results?`, `metrics?`, `threshold_sigma=2.0`, `max_history=20`, `kb_path?`, `kb_query?`, `kb_limit=5`, `kb_score_threshold=0.3`
+- **输出：** `SkillResult.data` = 结构化上下文 dict
+- **内部流程：**
+  1. `read_run_metadata()` 读取 JSON 元数据
+  2. `load_run_echem_files()` 提取电化学统计均值
+  3. 扫描 `history_dir` 或使用 `previous_results` 构建历史数据
+  4. 逐指标计算 delta / trend (前后半段均值对比) / σ-anomaly
+  5. 若提供 `kb_path`，调用 `retrieve_literature()` 和 `retrieve_knowledge()` 从 OpenViking 知识库检索相关文献与实验记录
+  6. 自动构建 KB 查询（基于实验名、异常指标、指标名称），也可通过 `kb_query` 手动指定
+- **输出结构：**
+  ```json
+  {
+    "run_dir": "...",
+    "comparison": {"metric": {"current": 0.05, "historical_mean": 0.04, "delta": 0.01}},
+    "trend":      {"metric": "improving"},
+    "anomalies":  ["metric"],
+    "literature": [{"title": "...", "authors": [...], "doi": "..."}],
+    "knowledge_chunks": [{"chunk_id": "...", "content": "...", "score": 0.8}],
+    "n_history":  10,
+    "summary":    "Contextualised 3 metric(s) against 10 historical run(s). Found 2 relevant literature reference(s)."
+  }
+  ```
+- **特点：** 纯 LLM-free，使用 `statistics` 标准库；支持直接传入 `previous_results` 绕过磁盘扫描；OpenViking 知识库检索（可选，不可用时优雅降级）
+
+### `knowledge_retriever` 工具 (`src/tools/knowledge_retriever.py`)
+
+- **功能：** 封装 OpenViking `find()` API，提供文献检索和知识片段检索
+- **暴露接口：**
+  - `retrieve_knowledge(query, kb_path, limit, score_threshold)` → `list[KnowledgeChunk]`
+  - `retrieve_literature(query, kb_path, limit, score_threshold)` → `list[LiteratureRef]`
+- **特点：**
+  - OpenViking 未安装时优雅降级，返回空列表
+  - 自动解析文献元数据（标题、作者、年份、DOI）
+  - 惰性导入守卫，避免不必要的导入开销
+
+### C2 — `SuggestNextExperimentSkill` (`src/skills/suggest_next_experiment.py`)
+
+- **输入：** `context_data?`, `goal?`, `name?`, `description?`, `tags?`
+- **输出：** `SkillResult.data` = `{intent, rationale, plan, valid}`
+- **决策逻辑（优先级从高到低）：**
+  1. 存在 anomalies → `diagnostic_run`（诊断性实验）
+  2. 存在 declining 趋势 → `stability_run`（稳定性实验）
+  3. goal 含 "optim/scan/sweep/grid" → `optimisation_run`
+  4. goal 含 "stable/durabil/chronic" → `stability_run`
+  5. goal 含 "diagnos/debug/check" → `diagnostic_run`
+  6. 默认 → `generic`
+- **特点：** 无 LLM；调用 `build_experiment_plan()` + `validate_plan()` 自动生成验证过的方案
+
+### ExperimentSupervisor Subgraph (`src/graph/supervisor_graph.py`)
+
+- **图拓扑：**
+  ```
+  START ──(route_task)──► monitor       ──► END
+                       ├──► schedule      ──► END
+                       ├──► diagnose      ──► END
+                       ├──► contextualize ──► END
+                       └──► suggest       ──► END
+  ```
+- **C1→C2 数据流：** `contextualize_node` 将 C1 输出写入 `state["context"]["context_data"]`，`suggest_node` 优先读取 `task["context_data"]`，其次读取 `state["context"]["context_data"]`
+- **实现特点：** `_FallbackSupervisorGraph` 支持无 LangGraph 环境；`get_supervisor_graph()` 单例缓存
+
+### Context API Routes (`src/api/routes/context.py`)
+
+**新增端点：**
+
+| 方法 | 路径 | 功能 |
+|------|------|------|
+| POST | `/context/invoke` | 通用入口，JSON body 含 `action` ("contextualize"/"suggest") |
+| POST | `/context/contextualize` | C1 快捷方式，query params `run_dir` + `history_dir` |
+| POST | `/context/suggest-next` | C2 快捷方式，query params `goal` + `name` |
+
+**返回格式（`/context/invoke`）：**
+```json
+{
+  "ok": true,
+  "action": "suggest",
+  "result": {
+    "success": true,
+    "data": {
+      "intent": "optimisation_run",
+      "rationale": "Goal requests optimisation; advancing to parameter sweep.",
+      "plan": {...},
+      "valid": true
+    },
+    "message": "Suggested 'optimisation_run' plan with 5 step(s)."
+  },
+  "error": null
+}
 ```

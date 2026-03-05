@@ -15,6 +15,8 @@ Status values: `pending` | `running` | `done` | `failed` | `review`
 | TASK_001 | Codex (GPT-5) | feat/autohyseeker-core-scaffold | done | 2026-03-03 |
 | TASK_002 | Copilot (claude-sonnet-4.6) | feat/phase2-tools-skills | done | 2026-03-05 |
 | TASK_003 | Copilot (claude-sonnet-4.6) | feat/phase3-langgraph-api | done | 2026-03-05 |
+| TASK_006 | Copilot (claude-sonnet-4.6) | feat/phase4-context-supervisor | done | 2026-03-05 |
+| TASK_007 | Copilot (claude-sonnet-4.6) | feat/phase4-context-supervisor | done | 2026-03-05 |
 
 ## Safety Rules
 
@@ -40,5 +42,8 @@ AutoHySeeker/OpenViking/
 | langgraph `set_conditional_entry_point` 已废弃，改用 `add_conditional_edges(START, route_fn, path_map)` —— 参见 `src/graph/diagnostics_graph.py` | 编写 LangGraph StateGraph |
 | 图模块中应加 `_FallbackGraph` 以支持无 langgraph 环境；`get_*_graph()` 缓存单例避免重复编译 | 新建 LangGraph subgraph |
 | FastAPI POST 端点中 `dict[str, Any] \| None` 类型参数会导致解析歧义，快捷路由 query param 应只用简单标量类型 | 设计 FastAPI 路由参数 |
-| TASK_004 与 TASK_002 任务目标相同（Phase 2 Tool/Skill 实现），代码已在 `feat/phase2-tools-skills` 分支存在；重复派发时直接验证文件完整性并更新 AGENT_COORD 即可 | 防止重复派发造成重复劳动 |
+| C1/C2 Skills 平铺在 `src/skills/` 下（`contextualize_experiment.py`, `suggest_next_experiment.py`），LLM-free，使用 `statistics` 标准库做均值/σ/趋势分析 | 无 LLM 依赖的对比分析场景 |
+| `supervisor_graph.py` 应独立于 `orchestrator.py`（二者都存在）：`orchestrator.py` 是多 Agent 路由，`supervisor_graph.py` 是特定任务类型路由（monitor/schedule/diagnose/contextualize/suggest） | 新增任务类型节点时修改 `supervisor_graph.py` |
+| C1→C2 数据流可通过 `state["context"]["context_data"]` 传递（`contextualize_node` 写入，`suggest_node` 读取），也可在 API 请求 `context_data` 字段直接传递 | 设计 C1/C2 串联流程 |
+| PROGRESS.md 需在每个 Phase 完成后更新总体状态表 + 任务状态表 + 详细说明三个部分，确保文档与代码同步 | 多 Phase 项目文档管理 |
 

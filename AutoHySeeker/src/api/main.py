@@ -6,6 +6,7 @@ from fastapi import FastAPI
 import uvicorn
 
 from src.api.routes.agents import router as agents_router
+from src.api.routes.context import router as context_router
 from src.api.routes.data import router as data_router
 from src.api.routes.diagnostics import router as diagnostics_router
 from src.api.routes.tasks import router as tasks_router
@@ -20,6 +21,7 @@ app.include_router(tasks_router)
 app.include_router(agents_router)
 app.include_router(data_router)
 app.include_router(diagnostics_router)
+app.include_router(context_router)
 
 
 @app.get("/health")
