@@ -1,22 +1,23 @@
 {
   "version": "1.0",
-  "tasks": [
+  "tasks": [],
+  "completed": [
     {
       "id": "TASK_001",
       "agent": "copilot",
       "branch": "feat/autohyseeker-core-scaffold",
       "worktree": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\agent_cluster\\worktrees\\feat_autohyseeker-core-scaffold",
       "description": "搭建 AutoHySeeker src/ 完整骨架：LangGraph + Agents + Tools + FastAPI 后端",
-      "status": "running",
+      "status": "done",
       "created_at": "2026-03-03T08:15:00Z",
       "started_at": "2026-03-03T08:15:00Z",
       "retries": 0,
-      "notes": ""
+      "notes": "",
+      "finished_at": "2026-03-04T15:16:28.674064+00:00"
     }
   ],
-  "completed": [],
   "meta": {
-    "last_updated": "2026-03-03T08:15:00Z",
+    "last_updated": "2026-03-04T15:16:38.630863+00:00",
     "updated_by": "Pi"
   }
 }
