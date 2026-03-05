@@ -1,4 +1,4 @@
-# AutoHySeeker — Phase 3 开发进度
+# AutoHySeeker — Phase 4 开发进度
 
 > 最后更新：2026-03-05
 
@@ -23,6 +23,8 @@
 | B1 GenerateExperimentPlanSkill | ✅ 完成 | `src/skills/generate_experiment_plan.py` | 无 LLM，内置 HER/OER/稳定性/CV 模板 + 参数网格搜索 |
 | LangGraph Subgraph：diagnostics_graph | ✅ 完成 | `src/graph/diagnostics_graph.py` | START + add_conditional_edges；D1/D2 节点；fallback；缓存 get_diagnostics_graph() |
 | API 路由完善：/diagnostics | ✅ 完成 | `src/api/routes/diagnostics.py` | POST /invoke + /analyze-failure + /check-health |
+| OpenViking KB 客户端 | ✅ 完成 | `src/rag.py` | VikingKnowledgeBase 封装；search_literature / search_experiments；无 SDK 时优雅降级 |
+| C1 ContextualizeExperimentSkill | ✅ 完成 | `src/skills/contextualize_experiment.py` | 从 OpenViking 检索文献+实验记录，LLM 合成上下文；双层降级（无 LLM / 无 KB） |
 
 ---
 
@@ -226,6 +228,7 @@ tests/test_import_smoke.py   — ✅ 通过（核心导入测试）
 tests/test_tools_phase2.py   — ✅ 新增（Tool 层：data_reader / echem_analysis / experiment_builder）
 tests/test_skills_phase2.py  — ✅ 新增（Skill A1 / B1 + skills __init__ 导出验证）
 tests/test_phase3.py         — ✅ 新增（DiagnosticsGraph + diagnostics API routes，共 20 个测试）
+tests/test_phase4_c1.py      — ✅ 新增（VikingKnowledgeBase + ContextualizeExperimentSkill，共 20 个测试）
 ```
 
 运行方式：
@@ -233,3 +236,71 @@ tests/test_phase3.py         — ✅ 新增（DiagnosticsGraph + diagnostics API
 cd AutoHySeeker
 uv run pytest tests/
 ```
+
+---
+
+## Phase 4 任务状态
+
+| 模块 | 状态 |
+|------|------|
+| OpenViking KB 客户端：`src/rag.py` | ✅ 完成 |
+| C1 ContextualizeExperimentSkill | ✅ 完成 |
+| 测试：`test_phase4_c1.py` | ✅ 新增 |
+
+---
+
+## Phase 4 新增详细说明
+
+### OpenViking KB 客户端 (`src/rag.py`)
+
+**功能：** 封装字节跳动火山引擎开源 [OpenViking](https://github.com/volcengine/openviking) SDK，提供统一的知识库检索接口，替代原规划的 ChromaDB / 手写 RAG 管线。
+
+**暴露接口：**
+
+```python
+from src.rag import VikingKnowledgeBase, get_viking_kb
+
+kb = get_viking_kb()                                  # 缓存单例
+refs = kb.search_literature("HER Tafel slope", top_k=5)
+exps = kb.search_experiments("CV Fe 0.3M", top_k=3)
+```
+
+**viking:// 虚拟文件系统布局：**
+
+| 路径 | 内容 |
+|------|------|
+| `viking://resources/literature/` | 学术文献（PDF / 文本） |
+| `viking://resources/experiments/` | 归档实验记录 |
+| `viking://resources/manuals/` | 仪器手册 |
+| `viking://resources/error_solutions/` | 错误解决方案知识库 |
+| `viking://resources/domain_knowledge/` | 电化学领域理论 |
+
+**降级机制：**
+- `openviking` 未安装 → `is_available = False`，所有 `search_*` 方法返回 `[]`，不抛出异常
+- 初始化失败（工作区不存在等）→ 同上
+
+**注意：** 架构文档规划了 `src/rag/` 包目录，但因环境限制以 `src/rag.py` 单文件代替，功能等价。
+
+---
+
+### C1 — `ContextualizeExperimentSkill` (`src/skills/contextualize_experiment.py`)
+
+- **输入：** `query: str`, `goal?: str`, `techniques?: list[str]`, `top_k: int = 5`
+- **输出：** `SkillResult.data` = 上下文 dict，含：
+  - `literature` — 检索到的文献 chunk 列表
+  - `experiments` — 检索到的历史实验记录列表
+  - `context_summary` — LLM 合成的上下文摘要（2-4句）
+  - `key_references` — 关键引用列表
+  - `relevant_parameters` — 文献中的典型参数（如扫速范围）
+  - `experimental_precedents` — 相关历史实验 URI
+  - `confidence` — `"high"|"medium"|"low"`
+  - `source` — `"llm"|"raw_chunks"|"unavailable"`
+- **内部流程：**
+  1. 构建有效查询（`query + goal + techniques`）
+  2. `kb.search_literature(effective_query, top_k)` — 检索文献
+  3. `kb.search_experiments(effective_query, top_k)` — 检索历史实验
+  4. `chat_completion(synthesis_prompt, model="claude-opus-4.6")` — LLM 合成
+  5. 解析 JSON 响应，合并 chunks
+- **降级策略（双层）：**
+  - OpenViking 不可用 → 返回 `source="unavailable"` 的空上下文（`success=True`）
+  - LLM 不可用 → 返回 `source="raw_chunks"` 的原始 chunks（`success=True`）
