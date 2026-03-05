@@ -1,10 +1,10 @@
-"""Experiment-execution skills — A1/A2.
+"""Experiment execution skills package — A1/A2.
 
 A1 — :class:`ExecutionMonitorSkill`
     Post-execution quality assessment and reporting.
 
 A2 — :class:`SmartSchedulerSkill`
-    Dependency-aware multi-experiment scheduling with priority optimisation.
+    Multi-experiment scheduling with dependency resolution.
 """
 
 from src.skills.experiment_execution.execution_monitor import ExecutionMonitorSkill

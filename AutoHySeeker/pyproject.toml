@@ -30,6 +30,9 @@ kb = ["openviking>=0.1"]
 [dependency-groups]
 dev = ["pytest>=8.0"]
 
+[project.optional-dependencies]
+rag = ["openviking>=0.1"]
+
 [tool.pytest.ini_options]
 pythonpath = ["."]
 norecursedirs = ["pytest-cache-files-*", ".venv", "data", "logs"]

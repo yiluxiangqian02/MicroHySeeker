@@ -58,10 +58,10 @@ __all__ = [
     # C2 — rule-based next-experiment suggestion
     "SuggestNextExperimentSkill",
     "suggest_next_experiment_skill",
-    # A1 — post-execution quality monitor
+    # A1 — execution monitor (post-run quality assessment)
     "ExecutionMonitorSkill",
     "execution_monitor_skill",
-    # A2 — smart experiment scheduler
+    # A2 — smart scheduler (multi-experiment dependency-aware scheduling)
     "SmartSchedulerSkill",
     "smart_scheduler_skill",
 ]
