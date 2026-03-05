@@ -17,6 +17,7 @@ Status values: `pending` | `running` | `done` | `failed` | `review`
 | TASK_003 | Copilot (claude-sonnet-4.6) | feat/phase3-langgraph-api | done | 2026-03-05 |
 | TASK_006 | Copilot (claude-sonnet-4.6) | feat/phase4-context-supervisor | done | 2026-03-05 |
 | TASK_007 | Copilot (claude-sonnet-4.6) | feat/phase4-context-supervisor | done | 2026-03-05 |
+| TASK_010 | Copilot (claude-sonnet-4.6) | feat/phase4-c2 | done | 2026-03-05 |
 
 ## Safety Rules
 
@@ -46,4 +47,6 @@ AutoHySeeker/OpenViking/
 | `supervisor_graph.py` 应独立于 `orchestrator.py`（二者都存在）：`orchestrator.py` 是多 Agent 路由，`supervisor_graph.py` 是特定任务类型路由（monitor/schedule/diagnose/contextualize/suggest） | 新增任务类型节点时修改 `supervisor_graph.py` |
 | C1→C2 数据流可通过 `state["context"]["context_data"]` 传递（`contextualize_node` 写入，`suggest_node` 读取），也可在 API 请求 `context_data` 字段直接传递 | 设计 C1/C2 串联流程 |
 | PROGRESS.md 需在每个 Phase 完成后更新总体状态表 + 任务状态表 + 详细说明三个部分，确保文档与代码同步 | 多 Phase 项目文档管理 |
+| C2 SuggestNextExperimentSkill 完全 LLM-free，规则优先级：anomalies > declining trend > goal keywords > generic；context_data 为 None 时只看 goal | 实现无 LLM 的推荐系统 |
+| `src/skills/__init__.py` 导出每个新 Skill 时需同时导出 Class 和 singleton 实例，并在 `__all__` 中注册两者 | 维护 skills 包导出规范 |
 

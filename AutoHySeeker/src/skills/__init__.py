@@ -46,10 +46,10 @@ __all__ = [
     # B1 — generate experiment plan
     "GenerateExperimentPlanSkill",
     "generate_experiment_plan_skill",
-    # C1 — experiment contextualization (metrics + KB)
+    # C1 — OpenViking-backed experiment contextualization
     "ContextualizeExperimentSkill",
     "contextualize_experiment_skill",
-    # C2 — suggest next experiment
+    # C2 — rule-based next-experiment suggestion
     "SuggestNextExperimentSkill",
     "suggest_next_experiment_skill",
 ]

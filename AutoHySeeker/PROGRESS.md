@@ -24,10 +24,10 @@
 | LangGraph Subgraph：diagnostics_graph | ✅ 完成 | `src/graph/diagnostics_graph.py` | START + add_conditional_edges；D1/D2 节点；fallback；缓存 get_diagnostics_graph() |
 | API 路由完善：/diagnostics | ✅ 完成 | `src/api/routes/diagnostics.py` | POST /invoke + /analyze-failure + /check-health |
 | OpenViking KB 客户端 | ✅ 完成 | `src/rag.py` | VikingKnowledgeBase 封装；search_literature / search_experiments；无 SDK 时优雅降级 |
-| C1 ContextualizeExperimentSkill | ✅ 完成 | `src/skills/contextualize_experiment.py` | 分析当前运行 vs 历史指标；异常/趋势检测；OpenViking KB 文献检索 |
-| C2 SuggestNextExperimentSkill | ✅ 完成 | `src/skills/suggest_next_experiment.py` | 基于 C1 上下文推荐下一步实验方案；规则引擎（anomaly→diagnostic / decline→stability / goal→optimisation） |
-| Supervisor Graph 扩展（C1/C2） | ✅ 完成 | `src/graph/supervisor_graph.py` | 新增 contextualize / suggest 节点，5路条件路由 |
-| Context API 路由 | ✅ 完成 | `src/api/routes/context.py` | POST /context/invoke + /contextualize + /suggest-next |
+| C1 ContextualizeExperimentSkill | ✅ 完成 | `src/skills/contextualize_experiment.py` | 从 OpenViking 检索文献+实验记录，LLM 合成上下文；双层降级（无 LLM / 无 KB） |
+| C2 SuggestNextExperimentSkill | ✅ 完成 | `src/skills/suggest_next_experiment.py` | LLM-free 规则推荐：异常→诊断、趋势下降→稳定性、优化目标→参数扫描 |
+| SupervisorGraph C2 节点 | ✅ 完成 | `src/graph/supervisor_graph.py` | 新增 suggest 节点 + route_task 路由；C1→C2 上下文通过 state["context"]["context_data"] 传递 |
+| API 路由完善：/context | ✅ 完成 | `src/api/routes/context.py` | POST /invoke + /contextualize + /suggest-next |
 
 ---
 
@@ -232,7 +232,7 @@ tests/test_tools_phase2.py   — ✅ 新增（Tool 层：data_reader / echem_ana
 tests/test_skills_phase2.py  — ✅ 新增（Skill A1 / B1 + skills __init__ 导出验证）
 tests/test_phase3.py         — ✅ 新增（DiagnosticsGraph + diagnostics API routes，共 20 个测试）
 tests/test_phase4_c1.py      — ✅ 新增（VikingKnowledgeBase + ContextualizeExperimentSkill，共 20 个测试）
-tests/test_phase4.py         — ✅ 新增（C1/C2/SupervisorGraph/ContextAPI 集成测试，共 30+ 个测试）
+tests/test_phase4.py         — ✅ 新增（C1/C2 Skills + SupervisorGraph + /context API routes，共 30+ 个测试）
 ```
 
 运行方式：
@@ -248,12 +248,11 @@ uv run pytest tests/
 | 模块 | 状态 |
 |------|------|
 | OpenViking KB 客户端：`src/rag.py` | ✅ 完成 |
-| Tool: `src/tools/knowledge_retriever.py` | ✅ 完成 |
 | C1 ContextualizeExperimentSkill | ✅ 完成 |
-| C2 SuggestNextExperimentSkill | ✅ 完成 |
-| Supervisor Graph 扩展（C1/C2 节点） | ✅ 完成 |
-| Context API 路由：`/context` | ✅ 完成 |
 | 测试：`test_phase4_c1.py` | ✅ 新增 |
+| C2 SuggestNextExperimentSkill | ✅ 完成 |
+| SupervisorGraph（含 suggest 节点） | ✅ 完成 |
+| API 路由：`/context` | ✅ 完成 |
 | 测试：`test_phase4.py` | ✅ 新增 |
 
 ---
@@ -294,50 +293,50 @@ exps = kb.search_experiments("CV Fe 0.3M", top_k=3)
 
 ### C1 — `ContextualizeExperimentSkill` (`src/skills/contextualize_experiment.py`)
 
-- **输入：** `run_dir: str`（必需）, `history_dir?`, `previous_results?`, `metrics?`, `threshold_sigma=2.0`, `max_history=20`, `kb_path?`, `kb_query?`, `kb_limit=5`, `kb_score_threshold=0.3`
+- **输入：** `query: str`, `goal?: str`, `techniques?: list[str]`, `top_k: int = 5`
 - **输出：** `SkillResult.data` = 上下文 dict，含：
-  - `run_dir` — 输入路径回显
-  - `comparison` — 每指标对比 dict（current / historical_mean / historical_std / delta / z_score）
-  - `trend` — 每指标趋势标签（`increasing` / `declining` / `stable`）
-  - `anomalies` — 异常指标名称列表（z-score > threshold_sigma）
-  - `literature` — 从 OpenViking KB 检索的文献引用列表
-  - `knowledge_chunks` — 从 OpenViking KB 检索的原始 chunk 列表
-  - `n_history` — 使用的历史数据点数量
-  - `summary` — 人类可读的摘要字符串
+  - `literature` — 检索到的文献 chunk 列表
+  - `experiments` — 检索到的历史实验记录列表
+  - `context_summary` — LLM 合成的上下文摘要（2-4句）
+  - `key_references` — 关键引用列表
+  - `relevant_parameters` — 文献中的典型参数（如扫速范围）
+  - `experimental_precedents` — 相关历史实验 URI
+  - `confidence` — `"high"|"medium"|"low"`
+  - `source` — `"llm"|"raw_chunks"|"unavailable"`
 - **内部流程：**
-  1. 加载 `run_summary.json` → 提取数值型指标
-  2. 从 `previous_results` 或 `history_dir` 收集历史数据
-  3. `_compare_metrics()` → 对比 + z-score 异常检测 + 趋势检测
-  4. 可选：`knowledge_retriever.retrieve_knowledge()` / `retrieve_literature()` 检索 KB
-  5. 构建摘要，返回 SkillResult
-- **降级策略：**
-  - 无历史数据 → 仅返回当前指标，`comparison` 中无统计对比
-  - KB 不可用 → `literature` / `knowledge_chunks` 为空列表
+  1. 构建有效查询（`query + goal + techniques`）
+  2. `kb.search_literature(effective_query, top_k)` — 检索文献
+  3. `kb.search_experiments(effective_query, top_k)` — 检索历史实验
+  4. `chat_completion(synthesis_prompt, model="claude-opus-4.6")` — LLM 合成
+  5. 解析 JSON 响应，合并 chunks
+- **降级策略（双层）：**
+  - OpenViking 不可用 → 返回 `source="unavailable"` 的空上下文（`success=True`）
+  - LLM 不可用 → 返回 `source="raw_chunks"` 的原始 chunks（`success=True`）
 
 ---
 
 ### C2 — `SuggestNextExperimentSkill` (`src/skills/suggest_next_experiment.py`)
 
-- **输入：** `context_data?: dict`（C1 输出）, `goal?: str`, `name?: str`, `description?: str`, `tags?: list[str]`
-- **输出：** `SkillResult.data` = 建议 dict，含：
-  - `intent` — 选定意图（`diagnostic_run` / `stability_run` / `optimisation_run` / `generic`）
-  - `rationale` — 人类可读的推理说明
-  - `plan` — 序列化的 ExperimentPlan dict（含步骤列表 + 验证报告）
+- **输入：** `context_data?: dict`, `goal?: str`, `name?: str`, `description?: str`, `tags?: list[str]`
+- **输出：** `SkillResult.data` 含：
+  - `intent` — 选择的意图键（`"diagnostic_run"` / `"stability_run"` / `"optimisation_run"` / `"generic"`）
+  - `rationale` — 可读的推荐理由
+  - `plan` — 序列化的 `ExperimentPlan` dict（含 `_validation` 报告）
   - `valid` — 方案是否通过验证
-- **决策逻辑（规则引擎，无 LLM）：**
-  - `anomalies` 非空 → `diagnostic_run`（诊断 CV + EIS）
-  - `trend` 中有 `declining` 指标 → `stability_run`（稳定性 CA 测试）
-  - `goal` 含 optimisation 关键词 → `optimisation_run`（扫速优化 + LSV）
-  - `goal` 含 stability 关键词 → `stability_run`
-  - `goal` 含 diagnostic 关键词 → `diagnostic_run`
-  - 默认 → `generic`（通用 CV + LSV + EIS 流程）
-- **特点：** 使用 `experiment_builder.build_experiment_plan()` 构建方案并经过 `validate_plan()` 验证
+- **规则决策逻辑（LLM-free）：**
+  1. `context_data["anomalies"]` 非空 → `diagnostic_run`
+  2. `context_data["trend"]` 中存在 `"declining"` 指标 → `stability_run`
+  3. goal 包含 `"optim" / "scan" / "sweep" / "grid"` → `optimisation_run`
+  4. goal 包含 `"stable" / "durabil" / "chronic"` → `stability_run`
+  5. goal 包含 `"diagnos" / "debug" / "check"` → `diagnostic_run`
+  6. 以上均不满足 → `generic`
+- **特点：** 纯规则引擎，每个意图对应预定义步骤模板，自动调用 `validate_plan`
 
----
+### SupervisorGraph C2 节点 (`src/graph/supervisor_graph.py`)
 
-### Supervisor Graph 扩展 (`src/graph/supervisor_graph.py`)
-
-- **新增节点：** `contextualize`（C1）、`suggest`（C2）
+- **新增节点：** `suggest` → 调用 `SuggestNextExperimentSkill`
+- **路由扩展：** `route_task` 新增 `"contextualize"` / `"suggest"` 分支
+- **C1→C2 数据流：** `contextualize_node` 将结果写入 `state["context"]["context_data"]`，`suggest_node` 优先读取 task payload `context_data`，其次读 `state["context"]["context_data"]`
 - **图拓扑：**
   ```
   START ──(route_task)──► monitor       ──► END
@@ -346,13 +345,13 @@ exps = kb.search_experiments("CV Fe 0.3M", top_k=3)
                        ├──► contextualize ──► END
                        └──► suggest       ──► END
   ```
-- **路由逻辑：** `state['task']['type']` 匹配五种节点之一
-- **C1→C2 数据传递：** `contextualize_node` 将 `result.data` 写入 `state.context.context_data`，`suggest_node` 可从中读取
 
-### Context API 路由 (`src/api/routes/context.py`)
+### Context API Routes (`src/api/routes/context.py`)
+
+**新增端点：**
 
 | 方法 | 路径 | 功能 |
 |------|------|------|
-| POST | `/context/invoke` | 通用入口，JSON body 含 action（contextualize/suggest）+ 全部参数 |
-| POST | `/context/contextualize` | C1 快捷方式，query params `run_dir` / `history_dir` 等 |
-| POST | `/context/suggest-next` | C2 快捷方式，query params `goal` / `name` |
+| POST | `/context/invoke` | 通用入口，JSON body 含 `action` / C1 参数 / C2 参数 |
+| POST | `/context/contextualize` | C1 快捷方式，query params `run_dir` + `history_dir` |
+| POST | `/context/suggest-next` | C2 快捷方式，query params `goal` + `name` |
