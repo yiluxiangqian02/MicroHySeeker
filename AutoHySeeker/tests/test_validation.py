@@ -47,6 +47,23 @@ class TestConfigs:
         cfg = get_microhyseeker_config()
         assert cfg is not None
 
+    def test_microhyseeker_paths_resolved(self) -> None:
+        """VAL-CFG-03c: paths are resolved (no ${...} literals remain)"""
+        from src.configs import get_microhyseeker_config
+        cfg = get_microhyseeker_config()
+        for attr in ("data_dir", "config_dir", "logs_dir"):
+            val = getattr(cfg.paths, attr)
+            assert "${" not in val, f"{attr} contains unresolved placeholder: {val}"
+            assert val != "", f"{attr} is empty"
+
+    def test_expand_path_uses_default(self) -> None:
+        """VAL-CFG-04: _expand_path resolves ${VAR:-default} when env var unset"""
+        from pathlib import Path
+        from src.configs import _expand_path
+        result = _expand_path("${_UNLIKELY_VAR_XYZ:-./fallback}", Path("/base"))
+        assert "_UNLIKELY_VAR_XYZ" not in result
+        assert "fallback" in result
+
 
 # ── VAL-CMN: 公共模块 ─────────────────────────────────────────────────────────
 

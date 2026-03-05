@@ -23,6 +23,8 @@ Usage::
 
 from __future__ import annotations
 
+import os
+import re
 import tomllib
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -30,6 +32,22 @@ from typing import Optional
 
 # configs/ lives two levels above src/configs.py: src/ → AutoHySeeker/
 _CONFIGS_DIR = Path(__file__).resolve().parent.parent / "configs"
+
+
+def _expand_path(value: str, base_dir: Path) -> str:
+    """Expand ``${VAR:-default}`` / ``${VAR}`` env syntax then resolve relative paths."""
+    def _sub(m: re.Match) -> str:
+        expr = m.group(1)
+        if ":-" in expr:
+            var, default = expr.split(":-", 1)
+            return os.environ.get(var, default)
+        return os.environ.get(expr, m.group(0))
+
+    value = re.sub(r"\$\{([^}]+)\}", _sub, value)
+    p = Path(value)
+    if not p.is_absolute():
+        p = (base_dir / p).resolve()
+    return str(p)
 
 
 def _load_toml(filename: str) -> dict:
@@ -130,8 +148,14 @@ class MicroHySeekerConfig:
     @classmethod
     def load(cls) -> "MicroHySeekerConfig":
         data = _load_toml("microhyseeker.toml")
+        base = _CONFIGS_DIR.parent  # AutoHySeeker/
+        raw_paths = data.get("paths", {})
+        resolved_paths = {
+            k: _expand_path(v, base) if isinstance(v, str) else v
+            for k, v in raw_paths.items()
+        }
         return cls(
-            paths=PathsConfig(**data.get("paths", {})),
+            paths=PathsConfig(**resolved_paths),
             engine=EngineConfig(**data.get("engine", {})),
         )
 

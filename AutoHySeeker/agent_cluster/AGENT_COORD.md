@@ -5,6 +5,7 @@
 | Task ID | Agent | Branch | Status | Description | Started At | Notes |
 |---|---|---|---|---|---|---|
 | TASK_013 | Copilot (claude-sonnet-4.6) | feat/fix-a3-a6-tests | done | Fix A3-A6: Write critical tests - test_orchestrator.py, test_agents.py, test_pipeline_e2e.py, test_api_routes.py. Mock LLM calls. Update VALIDATION.md | 2026-03-05 | - |
+| TASK_014 | Copilot (claude-sonnet-4.6) | feat/fix-b1-paths | done | Fix B1: Replace hardcoded paths in configs/microhyseeker.toml with relative paths + ${VAR:-default} env var syntax. Updated src/configs.py with _expand_path(). | 2026-03-05 | - |
 
 Status values: `pending` | `running` | `done` | `failed` | `review`
 
@@ -20,6 +21,7 @@ Status values: `pending` | `running` | `done` | `failed` | `review`
 | TASK_010 | Copilot (claude-sonnet-4.6) | feat/phase4-c2 | done | 2026-03-05 |
 | TASK_011 | Copilot (claude-sonnet-4.6) | feat/validation-plan | done | 2026-03-05 |
 | TASK_013 | Copilot (claude-sonnet-4.6) | feat/fix-a3-a6-tests | done | 2026-03-05 |
+| TASK_014 | Copilot (claude-sonnet-4.6) | feat/fix-b1-paths | done | 2026-03-05 |
 
 ## Safety Rules
 
@@ -56,5 +58,5 @@ AutoHySeeker/OpenViking/
 | TASK_011 校验文档：`VALIDATION.md` 记录全量功能清单（61项）、26+个新验证测试（`tests/test_validation.py`）、依赖完整性检查表；可用 `uv run pytest tests/test_validation.py -v` 直接运行 | 系统校验/健康检查场景 |
 | TASK_013 测试最佳实践：mock LLM 时用 `patch("src.agents.base.chat_completion", new=AsyncMock(...))` + `patch("src.common.llm_client.OPENAI_API_KEY", "test-key")`；避免 patch 字典 `AGENT_MAP`（会破坏 `__getitem__`） | 编写 Agent/Orchestrator 测试 |
 | TASK_013 FastAPI TestClient 测试：在 `@pytest.fixture` 中创建 `TestClient(app)`；route 级 mock 用 `patch("src.api.routes.agents.get_supervisor_graph", return_value=mock_graph)`（不 patch src.graph.orchestrator 全局函数） | 编写 FastAPI 路由集成测试 |
-| TASK_013 `src/agents/__init__.py` 未导出 `BaseAgent`，测试时需 `from src.agents.base import BaseAgent` 直接导入 | 测试 Agent 基类时注意导入路径 |
+| `configs/microhyseeker.toml` 中的路径值支持 `${VAR:-default}` 语法；`src/configs.py` 的 `_expand_path()` 在 `MicroHySeekerConfig.load()` 中展开 env var 并将相对路径解析到 `_CONFIGS_DIR.parent`（AutoHySeeker/） | 任何需要跨机器可移植路径的 TOML 配置场景 |
 

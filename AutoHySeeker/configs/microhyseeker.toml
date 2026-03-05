@@ -1,7 +1,8 @@
 [paths]
-data_dir = 'D:/AI4S/MicroHySeeker/MicroHySeeker/data'
-config_dir = 'D:/AI4S/MicroHySeeker/MicroHySeeker/config'
-logs_dir = 'D:/AI4S/MicroHySeeker/MicroHySeeker/logs'
+# Relative to AutoHySeeker/; override via env vars MICROHYSEEKER_DATA_DIR, etc.
+data_dir = '${MICROHYSEEKER_DATA_DIR:-../data}'
+config_dir = '${MICROHYSEEKER_CONFIG_DIR:-../config}'
+logs_dir = '${MICROHYSEEKER_LOGS_DIR:-../logs}'
 
 [engine]
 mode = 'file'
