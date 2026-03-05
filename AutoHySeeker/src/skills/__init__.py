@@ -10,6 +10,14 @@ from src.skills.diagnostics import (
     interactive_troubleshooting_skill,
     system_health_check_skill,
 )
+from src.skills.single_experiment_analysis import (
+    SingleExperimentAnalysisSkill,
+    single_experiment_analysis_skill,
+)
+from src.skills.generate_experiment_plan import (
+    GenerateExperimentPlanSkill,
+    generate_experiment_plan_skill,
+)
 
 __all__ = [
     # Legacy function-based skills
@@ -24,5 +32,11 @@ __all__ = [
     # D3 — interactive troubleshooting
     "InteractiveTroubleshootingSkill",
     "interactive_troubleshooting_skill",
+    # A1 — single experiment analysis
+    "SingleExperimentAnalysisSkill",
+    "single_experiment_analysis_skill",
+    # B1 — generate experiment plan
+    "GenerateExperimentPlanSkill",
+    "generate_experiment_plan_skill",
 ]
 

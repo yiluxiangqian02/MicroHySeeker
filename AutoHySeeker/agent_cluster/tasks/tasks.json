@@ -1,6 +1,20 @@
 {
   "version": "1.0",
-  "tasks": [],
+  "tasks": [
+    {
+      "id": "TASK_002",
+      "agent": "copilot",
+      "branch": "feat/phase2-tools-skills",
+      "worktree": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\agent_cluster\\worktrees\\feat_phase2-tools-skills",
+      "description": "Phase 2: 实现 Tool 层(data_reader/echem_analysis/experiment_builder) + Skill A1/B1，更新 PROGRESS.md，编写测试",
+      "status": "running",
+      "created_at": "2026-03-05T14:05:42.237865+00:00",
+      "started_at": "2026-03-05T14:06:00.399904+00:00",
+      "retries": 0,
+      "notes": "",
+      "pid": 284508
+    }
+  ],
   "completed": [
     {
       "id": "TASK_001",
@@ -17,7 +31,7 @@
     }
   ],
   "meta": {
-    "last_updated": "2026-03-04T15:16:38.630863+00:00",
+    "last_updated": "2026-03-05T14:06:00.411896+00:00",
     "updated_by": "Pi"
   }
 }

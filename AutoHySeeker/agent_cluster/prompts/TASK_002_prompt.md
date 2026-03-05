@@ -1,9 +1,9 @@
-# Task TASK_002 — 搭建 AutoHySeeker src/ 完整骨架：LangGraph + Agents + Tools + FastAPI 后端
+# Task TASK_002 — Phase 2: 实现 Tool 层(data_reader/echem_analysis/experiment_builder) + Skill A1/B1，更新 PROGRESS.md，编写测试
 
 > **分配 Agent**: copilot
-> **工作分支**: `feat/autohyseeker-core-scaffold`
-> **Worktree**: `D:\AI4S\MicroHySeeker\MicroHySeeker\AutoHySeeker\agent_cluster\worktrees\feat_autohyseeker-core-scaffold`
-> **创建时间**: 2026-03-03T08:16:08.158232+00:00
+> **工作分支**: `feat/phase2-tools-skills`
+> **Worktree**: `D:\AI4S\MicroHySeeker\MicroHySeeker\AutoHySeeker\agent_cluster\worktrees\feat_phase2-tools-skills`
+> **创建时间**: 2026-03-05T14:05:42.237865+00:00
 
 ## Agent 规则
 
@@ -21,7 +21,7 @@
 - `AutoHySeeker/OpenViking/` — 知识库
 - `.git/` — git 历史
 
-操作原则：优先在 `feat/autohyseeker-core-scaffold` 分支上操作，不直接修改 main/autohyseeker。
+操作原则：优先在 `feat/phase2-tools-skills` 分支上操作，不直接修改 main/autohyseeker。
 
 ## 协作文件
 
@@ -31,13 +31,13 @@
 
 ## 任务描述
 
-搭建 AutoHySeeker src/ 完整骨架：LangGraph + Agents + Tools + FastAPI 后端
+Phase 2: 实现 Tool 层(data_reader/echem_analysis/experiment_builder) + Skill A1/B1，更新 PROGRESS.md，编写测试
 
 
 
 ## 完成标准
 
-- [ ] 代码已在 `feat/autohyseeker-core-scaffold` 分支提交
+- [ ] 代码已在 `feat/phase2-tools-skills` 分支提交
 - [ ] 相关测试通过（如有）
 - [ ] 已更新 AGENT_COORD.md
 - [ ] 如有 UI 变化，附截图描述

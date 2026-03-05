@@ -1,4 +1,4 @@
-# AutoHySeeker — Phase 1 开发进度
+# AutoHySeeker — Phase 2 开发进度
 
 > 最后更新：2026-03-05
 
@@ -15,7 +15,12 @@
 | D2 SystemHealthCheckSkill | ✅ 完成 | `src/skills/diagnostics/system_health_check.py` | 4 维度健康检查 |
 | D3 InteractiveTroubleshootingSkill | ✅ 完成 | `src/skills/diagnostics/interactive_troubleshooting.py` | 4 类故障决策树 |
 | diagnostics __init__ | ✅ 完成 | `src/skills/diagnostics/__init__.py` | 导出 D1/D2/D3 类 + 单例实例 |
-| skills __init__ | ✅ 完成 | `src/skills/__init__.py` | 整合 diagnostics 到顶层 skills 包 |
+| skills __init__ | ✅ 完成 | `src/skills/__init__.py` | 整合 diagnostics + A1/B1 到顶层 skills 包 |
+| Tool: data_reader | ✅ 完成 | `src/tools/data_reader.py` | load_echem_file / load_run_echem_files / read_run_metadata / list_run_files |
+| Tool: echem_analysis | ✅ 完成 | `src/tools/echem_analysis.py` | analyze_cv / analyze_lsv / analyze_eis / analyze_echem_files（自动注册到 registry） |
+| Tool: experiment_builder | ✅ 完成 | `src/tools/experiment_builder.py` | build_step / build_experiment_plan / generate_param_grid / build_plans_from_grid / validate_plan / plan_to_dict |
+| A1 SingleExperimentAnalysisSkill | ✅ 完成 | `src/skills/single_experiment_analysis.py` | 纯数据驱动，不调用 LLM，自动检测 CV/LSV/EIS 技术 |
+| B1 GenerateExperimentPlanSkill | ✅ 完成 | `src/skills/generate_experiment_plan.py` | 无 LLM，内置 HER/OER/稳定性/CV 模板 + 参数网格搜索 |
 
 ---
 
@@ -120,17 +125,40 @@ mhs = get_microhyseeker_config() # → MicroHySeekerConfig(paths, engine)
 
 ---
 
-## Phase 2 预计任务
+## Phase 2 任务状态
 
 | 模块 | 状态 |
 |------|------|
-| Tool 层：`tools/data_reader.py` | 🔲 待开发 |
-| Tool 层：`tools/echem_analysis.py` | 🔲 待开发 |
-| Tool 层：`tools/experiment_builder.py` | 🔲 待开发 |
-| Skill A1：`single_experiment_analysis` | 🔲 待开发 |
-| Skill B1：`generate_experiment_plan` | 🔲 待开发 |
+| Tool 层：`tools/data_reader.py` | ✅ 完成 |
+| Tool 层：`tools/echem_analysis.py` | ✅ 完成 |
+| Tool 层：`tools/experiment_builder.py` | ✅ 完成 |
+| Skill A1：`single_experiment_analysis` | ✅ 完成 |
+| Skill B1：`generate_experiment_plan` | ✅ 完成 |
 | LangGraph Subgraph：`diagnostics_graph.py` | 🔲 待开发 |
 | API 路由完善 | 🔲 待开发 |
+
+---
+
+## Phase 2 新增详细说明
+
+### A1 — `SingleExperimentAnalysisSkill` (`src/skills/single_experiment_analysis.py`)
+
+- **输入：** `run_dir: str`
+- **输出：** `SkillResult.data` = 每文件分析结果列表（含 technique / 分析数据 / 文件元数据）
+- **内部流程：**
+  1. `read_run_metadata()` 读取 JSON 元数据（best-effort）
+  2. `load_run_echem_files()` 加载所有 CSV
+  3. 按技术类型调用 `analyze_cv/lsv/eis` 或通用统计
+  4. 返回含 artifacts 路径列表的 SkillResult
+- **特点：** 纯数据驱动，不调用 LLM
+
+### B1 — `GenerateExperimentPlanSkill` (`src/skills/generate_experiment_plan.py`)
+
+- **输入：** `goal: str`, `name?`, `step_specs?`, `param_ranges?`, `target_step_index?`, `tags?`
+- **输出：** `SkillResult.data` = 验证后的 plan dict 列表
+- **内置模板：** `her` / `oer` / `stability` / `cv_characterise` / `generic`
+- **参数网格：** 提供 `param_ranges` 时生成多份 plan（一个组合一份）
+- **特点：** 无 LLM，每份 plan 自动经过 `validate_plan` 验证，含 `_validation` 报告
 
 ---
 
@@ -138,10 +166,14 @@ mhs = get_microhyseeker_config() # → MicroHySeekerConfig(paths, engine)
 
 ```
 tests/test_import_smoke.py   — ✅ 通过（核心导入测试）
+tests/test_tools_phase2.py   — ✅ 新增（Tool 层：data_reader / echem_analysis / experiment_builder）
+tests/test_skills_phase2.py  — ✅ 新增（Skill A1 / B1 + skills __init__ 导出验证）
 ```
 
 运行方式：
 ```bash
 cd AutoHySeeker
+uv run pytest tests/
+```
 uv run pytest tests/
 ```
