@@ -121,6 +121,19 @@
       "retries": 0,
       "notes": "",
       "pid": 18784
+    },
+    {
+      "id": "TASK_014",
+      "agent": "copilot",
+      "branch": "feat/fix-b1-paths",
+      "worktree": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\agent_cluster\\worktrees\\feat_fix-b1-paths",
+      "description": "Fix B1: Replace hardcoded paths in configs/microhyseeker.toml with relative paths or env variables",
+      "status": "running",
+      "created_at": "2026-03-05T19:56:45.577203+00:00",
+      "started_at": "2026-03-05T19:56:47.066980+00:00",
+      "retries": 0,
+      "notes": "",
+      "pid": 138092
     }
   ],
   "completed": [
@@ -182,7 +195,7 @@
     }
   ],
   "meta": {
-    "last_updated": "2026-03-05T19:36:21.196461+00:00",
+    "last_updated": "2026-03-05T19:56:47.076981+00:00",
     "updated_by": "Pi"
   }
 }
