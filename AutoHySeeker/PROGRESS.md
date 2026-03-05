@@ -1,4 +1,4 @@
-# AutoHySeeker — Phase 2 开发进度
+# AutoHySeeker — Phase 3 开发进度
 
 > 最后更新：2026-03-05
 
@@ -21,6 +21,8 @@
 | Tool: experiment_builder | ✅ 完成 | `src/tools/experiment_builder.py` | build_step / build_experiment_plan / generate_param_grid / build_plans_from_grid / validate_plan / plan_to_dict |
 | A1 SingleExperimentAnalysisSkill | ✅ 完成 | `src/skills/single_experiment_analysis.py` | 纯数据驱动，不调用 LLM，自动检测 CV/LSV/EIS 技术 |
 | B1 GenerateExperimentPlanSkill | ✅ 完成 | `src/skills/generate_experiment_plan.py` | 无 LLM，内置 HER/OER/稳定性/CV 模板 + 参数网格搜索 |
+| LangGraph Subgraph：diagnostics_graph | ✅ 完成 | `src/graph/diagnostics_graph.py` | START + add_conditional_edges；D1/D2 节点；fallback；缓存 get_diagnostics_graph() |
+| API 路由完善：/diagnostics | ✅ 完成 | `src/api/routes/diagnostics.py` | POST /invoke + /analyze-failure + /check-health |
 
 ---
 
@@ -125,6 +127,16 @@ mhs = get_microhyseeker_config() # → MicroHySeekerConfig(paths, engine)
 
 ---
 
+## Phase 3 任务状态
+
+| 模块 | 状态 |
+|------|------|
+| LangGraph Subgraph：`diagnostics_graph.py` | ✅ 完成 |
+| API 路由：`/diagnostics` | ✅ 完成 |
+| 测试：`test_phase3.py` | ✅ 新增 |
+
+---
+
 ## Phase 2 任务状态
 
 | 模块 | 状态 |
@@ -134,8 +146,6 @@ mhs = get_microhyseeker_config() # → MicroHySeekerConfig(paths, engine)
 | Tool 层：`tools/experiment_builder.py` | ✅ 完成 |
 | Skill A1：`single_experiment_analysis` | ✅ 完成 |
 | Skill B1：`generate_experiment_plan` | ✅ 完成 |
-| LangGraph Subgraph：`diagnostics_graph.py` | 🔲 待开发 |
-| API 路由完善 | 🔲 待开发 |
 
 ---
 
@@ -162,18 +172,64 @@ mhs = get_microhyseeker_config() # → MicroHySeekerConfig(paths, engine)
 
 ---
 
+## Phase 3 新增详细说明
+
+### LangGraph DiagnosticsExpert Subgraph (`src/graph/diagnostics_graph.py`)
+
+- **状态类型：** `DiagnosticsState(AutoHySeekerState, total=False)` — 继承所有父字段，新增 `diagnostics_results: list[dict]`
+- **图拓扑：**
+  ```
+  START ──(route_diagnostics)──► analyze_failure ──► generate_diagnosis_report ──► END
+                             └──► check_health   ──┘
+  ```
+- **路由逻辑：** `state['task']['action'] == "analyze_failure"` → D1；否则 → D2（默认 check_health）
+- **节点：**
+  - `analyze_failure` — 调用 `DiagnoseFailureSkill.execute(run_dir=...)`
+  - `check_health` — 调用 `SystemHealthCheckSkill.execute(data_dir=..., recent_n=...)`
+  - `generate_diagnosis_report` — 聚合 findings，统计 severity，返回 `result` dict
+- **实现特点：**
+  - 使用现代 `add_conditional_edges(START, ...)` API（替代废弃的 `set_conditional_entry_point`）
+  - 含 `_FallbackDiagnosticsGraph` — 无 LangGraph 依赖时退化为串行调用
+  - `get_diagnostics_graph()` 缓存单例，避免重复编译
+
+### Diagnostics API Routes (`src/api/routes/diagnostics.py`)
+
+**新增端点：**
+
+| 方法 | 路径 | 功能 |
+|------|------|------|
+| POST | `/diagnostics/invoke` | 通用入口，JSON body 含 `action` / `run_dir` / `data_dir` / `recent_n` |
+| POST | `/diagnostics/analyze-failure` | D1 快捷方式，query param `run_dir` |
+| POST | `/diagnostics/check-health` | D2 快捷方式，query params `data_dir` + `recent_n` |
+
+**返回格式（`/invoke`）：**
+```json
+{
+  "ok": true,
+  "action": "check_health",
+  "result": {
+    "action": "check_health",
+    "total_findings": 4,
+    "severity_counts": {"ok": 2, "warning": 1, "error": 1},
+    "findings": [...]
+  },
+  "error": null
+}
+```
+
+---
+
 ## 测试状态
 
 ```
 tests/test_import_smoke.py   — ✅ 通过（核心导入测试）
 tests/test_tools_phase2.py   — ✅ 新增（Tool 层：data_reader / echem_analysis / experiment_builder）
 tests/test_skills_phase2.py  — ✅ 新增（Skill A1 / B1 + skills __init__ 导出验证）
+tests/test_phase3.py         — ✅ 新增（DiagnosticsGraph + diagnostics API routes，共 20 个测试）
 ```
 
 运行方式：
 ```bash
 cd AutoHySeeker
-uv run pytest tests/
-```
 uv run pytest tests/
 ```

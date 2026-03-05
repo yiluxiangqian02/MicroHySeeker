@@ -2,9 +2,8 @@
 
 from __future__ import annotations
 
+import asyncio
 from typing import Any
-
-from langgraph.graph import END, StateGraph
 
 from src.graph.state import AutoHySeekerState
 from src.agents.diagnostics_nodes import (
@@ -13,6 +12,13 @@ from src.agents.diagnostics_nodes import (
     generate_diagnosis_report,
     route_diagnostics,
 )
+
+try:
+    from langgraph.graph import END, START, StateGraph
+except ImportError:  # pragma: no cover - dependency availability dependent
+    END = "END"  # type: ignore[assignment]
+    START = "START"  # type: ignore[assignment]
+    StateGraph = None  # type: ignore[assignment]
 
 
 class DiagnosticsState(AutoHySeekerState, total=False):
@@ -28,20 +34,40 @@ class DiagnosticsState(AutoHySeekerState, total=False):
     diagnostics_results: list[dict[str, Any]]
 
 
+class _FallbackDiagnosticsGraph:
+    """Fallback graph for environments without LangGraph."""
+
+    async def ainvoke(self, state: dict[str, Any]) -> dict[str, Any]:
+        merged: dict[str, Any] = dict(state)
+        node = route_diagnostics(merged)
+        if node == "analyze_failure":
+            merged.update(await analyze_failure(merged))
+        else:
+            merged.update(await check_health(merged))
+        merged.update(await generate_diagnosis_report(merged))
+        return merged
+
+    def invoke(self, state: dict[str, Any]) -> dict[str, Any]:
+        return asyncio.run(self.ainvoke(state))
+
+
 def build_diagnostics_graph() -> Any:
     """Build and compile the DiagnosticsExpert subgraph.
 
     Graph topology::
 
-        [entry] ──(route_diagnostics)──► analyze_failure ──► generate_diagnosis_report ──► END
-                                     └──► check_health   ──┘
+        START ──(route_diagnostics)──► analyze_failure ──► generate_diagnosis_report ──► END
+                                   └──► check_health   ──┘
 
-    The conditional entry point inspects ``state['task']['action']`` to choose
+    The conditional entry inspects ``state['task']['action']`` to choose
     between ``analyze_failure`` (D1) and ``check_health`` (D2).
 
     Returns:
-        A compiled :class:`~langgraph.graph.StateGraph`.
+        A compiled :class:`~langgraph.graph.StateGraph` or a fallback graph.
     """
+    if StateGraph is None:
+        return _FallbackDiagnosticsGraph()
+
     graph: StateGraph = StateGraph(DiagnosticsState)
 
     # ── nodes ──────────────────────────────────────────────────────────────
@@ -49,8 +75,9 @@ def build_diagnostics_graph() -> Any:
     graph.add_node("check_health", check_health)
     graph.add_node("generate_diagnosis_report", generate_diagnosis_report)
 
-    # ── conditional entry: route based on task action ──────────────────────
-    graph.set_conditional_entry_point(
+    # ── conditional entry from START: route based on task action ───────────
+    graph.add_conditional_edges(
+        START,
         route_diagnostics,
         {
             "analyze_failure": "analyze_failure",
@@ -64,3 +91,14 @@ def build_diagnostics_graph() -> Any:
     graph.add_edge("generate_diagnosis_report", END)
 
     return graph.compile()
+
+
+_DIAGNOSTICS_GRAPH: Any | None = None
+
+
+def get_diagnostics_graph() -> Any:
+    """Return a cached compiled diagnostics subgraph."""
+    global _DIAGNOSTICS_GRAPH
+    if _DIAGNOSTICS_GRAPH is None:
+        _DIAGNOSTICS_GRAPH = build_diagnostics_graph()
+    return _DIAGNOSTICS_GRAPH

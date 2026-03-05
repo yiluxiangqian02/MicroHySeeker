@@ -1,9 +1,9 @@
-# Task TASK_003 — Phase 3: 实现 LangGraph diagnostics_graph + API 路由完善，更新 PROGRESS.md，编写测试
+# Task TASK_004 — Phase 2: Tool层(data_reader/echem_analysis/experiment_builder) + Skill A1/B1，更新PROGRESS.md，编写测试
 
 > **分配 Agent**: copilot
-> **工作分支**: `feat/phase3-langgraph-api`
-> **Worktree**: `D:\AI4S\MicroHySeeker\MicroHySeeker\AutoHySeeker\agent_cluster\worktrees\feat_phase3-langgraph-api`
-> **创建时间**: 2026-03-05T15:06:47.403627+00:00
+> **工作分支**: `feat/phase2-tools-skills`
+> **Worktree**: `D:\AI4S\MicroHySeeker\MicroHySeeker\AutoHySeeker\agent_cluster\worktrees\feat_phase2-tools-skills`
+> **创建时间**: 2026-03-05T15:07:47.216199+00:00
 
 ## Agent 规则
 
@@ -21,7 +21,7 @@
 - `AutoHySeeker/OpenViking/` — 知识库
 - `.git/` — git 历史
 
-操作原则：优先在 `feat/phase3-langgraph-api` 分支上操作，不直接修改 main/autohyseeker。
+操作原则：优先在 `feat/phase2-tools-skills` 分支上操作，不直接修改 main/autohyseeker。
 
 ## 协作文件
 
@@ -31,16 +31,16 @@
 
 ## 任务描述
 
-Phase 3: 实现 LangGraph diagnostics_graph + API 路由完善，更新 PROGRESS.md，编写测试
+Phase 2: Tool层(data_reader/echem_analysis/experiment_builder) + Skill A1/B1，更新PROGRESS.md，编写测试
 
 
 
 ## 完成标准
 
-- [ ] 代码已在 `feat/phase3-langgraph-api` 分支提交
+- [ ] 代码已在 `feat/phase2-tools-skills` 分支提交
 - [ ] 相关测试通过（如有）
 - [ ] 已更新 AGENT_COORD.md
 - [ ] 如有 UI 变化，附截图描述
 
 ---
-*此文件由 dispatch.py 自动生成 | 如需指令更新，查看同目录 TASK_003_steer.md*
+*此文件由 dispatch.py 自动生成 | 如需指令更新，查看同目录 TASK_004_steer.md*

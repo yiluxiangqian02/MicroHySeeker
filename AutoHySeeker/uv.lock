@@ -81,7 +81,7 @@ requires-dist = [
     { name = "langgraph", specifier = ">=0.2" },
     { name = "numpy", specifier = ">=1.26" },
     { name = "openai", specifier = ">=1.0" },
-    { name = "optuna", specifier = ">=3.6" },
+    { name = "optuna", specifier = ">=3.5" },
     { name = "pandas", specifier = ">=2.0" },
     { name = "pydantic", specifier = ">=2.0" },
     { name = "python-dotenv", specifier = ">=1.0" },

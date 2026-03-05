@@ -7,6 +7,7 @@ import uvicorn
 
 from src.api.routes.agents import router as agents_router
 from src.api.routes.data import router as data_router
+from src.api.routes.diagnostics import router as diagnostics_router
 from src.api.routes.tasks import router as tasks_router
 from src.common.config import API_HOST, API_PORT
 from src.common.logger import configure_logging, get_logger
@@ -18,6 +19,7 @@ app = FastAPI(title="AutoHySeeker API", version="0.1.0")
 app.include_router(tasks_router)
 app.include_router(agents_router)
 app.include_router(data_router)
+app.include_router(diagnostics_router)
 
 
 @app.get("/health")
