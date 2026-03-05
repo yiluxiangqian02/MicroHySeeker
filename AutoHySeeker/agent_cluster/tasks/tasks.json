@@ -2,19 +2,6 @@
   "version": "1.0",
   "tasks": [
     {
-      "id": "TASK_003",
-      "agent": "copilot",
-      "branch": "feat/phase3-langgraph-api",
-      "worktree": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\agent_cluster\\worktrees\\feat_phase3-langgraph-api",
-      "description": "Phase 3: 实现 LangGraph diagnostics_graph + API 路由完善，更新 PROGRESS.md，编写测试",
-      "status": "running",
-      "created_at": "2026-03-05T15:06:47.403627+00:00",
-      "started_at": "2026-03-05T15:07:03.136328+00:00",
-      "retries": 0,
-      "notes": "",
-      "pid": 303688
-    },
-    {
       "id": "TASK_005",
       "agent": "codex",
       "branch": "feat/phase2-tests",
@@ -94,6 +81,33 @@
       "notes": "",
       "pid": 437024,
       "fail_reason": "copilot 进程退出无提交"
+    },
+    {
+      "id": "TASK_011",
+      "agent": "copilot",
+      "branch": "feat/validation-plan",
+      "worktree": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\agent_cluster\\worktrees\\feat_validation-plan",
+      "description": "创建系统校验文档：1. 列出所有已实现功能清单 2. 为每个功能编写验证测试 3. 检查依赖完整性 4. 生成 VALIDATION.md 文档记录校验计划和结果",
+      "status": "failed",
+      "created_at": "2026-03-05T18:16:33.273359+00:00",
+      "started_at": "2026-03-05T18:16:35.727785+00:00",
+      "retries": 1,
+      "notes": "",
+      "pid": 375884,
+      "fail_reason": "API connection error"
+    },
+    {
+      "id": "TASK_012",
+      "agent": "copilot",
+      "branch": "feat/fix-a1-a2",
+      "worktree": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\agent_cluster\\worktrees\\feat_fix-a1-a2",
+      "description": "Fix A1+A2: 1. Fill experiment_execution/__init__.py exports 2. Add openviking to pyproject.toml optional-dependencies",
+      "status": "running",
+      "created_at": "2026-03-05T19:26:30.107247+00:00",
+      "started_at": "2026-03-05T19:26:31.751747+00:00",
+      "retries": 0,
+      "notes": "",
+      "pid": 178648
     }
   ],
   "completed": [
@@ -138,10 +152,24 @@
       "notes": "",
       "pid": 191864,
       "finished_at": "2026-03-05T15:27:08.110351+00:00"
+    },
+    {
+      "id": "TASK_003",
+      "agent": "copilot",
+      "branch": "feat/phase3-langgraph-api",
+      "worktree": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\agent_cluster\\worktrees\\feat_phase3-langgraph-api",
+      "description": "Phase 3: 实现 LangGraph diagnostics_graph + API 路由完善，更新 PROGRESS.md，编写测试",
+      "status": "done",
+      "created_at": "2026-03-05T15:06:47.403627+00:00",
+      "started_at": "2026-03-05T15:07:03.136328+00:00",
+      "retries": 0,
+      "notes": "",
+      "pid": 303688,
+      "finished_at": "2026-03-05T17:33:56.476885+00:00"
     }
   ],
   "meta": {
-    "last_updated": "2026-03-05T17:15:45.050433+00:00",
+    "last_updated": "2026-03-05T19:26:31.762755+00:00",
     "updated_by": "Pi"
   }
 }

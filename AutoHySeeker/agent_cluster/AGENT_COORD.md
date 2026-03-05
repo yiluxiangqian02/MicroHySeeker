@@ -4,7 +4,7 @@
 
 | Task ID | Agent | Branch | Status | Description | Started At | Notes |
 |---|---|---|---|---|---|---|
-| _(none)_ | - | - | - | - | - | - |
+| TASK_012 | Copilot (claude-sonnet-4.6) | feat/fix-a1-a2 | done | Fix A1+A2: Fill experiment_execution/__init__.py exports + add openviking to pyproject.toml | 2026-03-05 | - |
 
 Status values: `pending` | `running` | `done` | `failed` | `review`
 
@@ -19,6 +19,7 @@ Status values: `pending` | `running` | `done` | `failed` | `review`
 | TASK_007 | Copilot (claude-sonnet-4.6) | feat/phase4-context-supervisor | done | 2026-03-05 |
 | TASK_010 | Copilot (claude-sonnet-4.6) | feat/phase4-c2 | done | 2026-03-05 |
 | TASK_011 | Copilot (claude-sonnet-4.6) | feat/validation-plan | done | 2026-03-05 |
+| TASK_012 | Copilot (claude-sonnet-4.6) | feat/fix-a1-a2 | done | 2026-03-05 |
 
 ## Safety Rules
 
@@ -50,5 +51,7 @@ AutoHySeeker/OpenViking/
 | PROGRESS.md 需在每个 Phase 完成后更新总体状态表 + 任务状态表 + 详细说明三个部分，确保文档与代码同步 | 多 Phase 项目文档管理 |
 | C2 SuggestNextExperimentSkill 完全 LLM-free，规则优先级：anomalies > declining trend > goal keywords > generic；context_data 为 None 时只看 goal | 实现无 LLM 的推荐系统 |
 | `src/skills/__init__.py` 导出每个新 Skill 时需同时导出 Class 和 singleton 实例，并在 `__all__` 中注册两者 | 维护 skills 包导出规范 |
+| `experiment_execution/__init__.py` 应导出 `ExecutionMonitorSkill`/`SmartSchedulerSkill` 及其 singleton（`execution_monitor_skill`/`smart_scheduler_skill`），模式与 `diagnostics/__init__.py` 一致 | 新增 A1/A2 Skill 包导出 |
+| `openviking` 是可选依赖，应放在 `pyproject.toml` 的 `[project.optional-dependencies]` 下，extra 名为 `rag`，安装命令 `pip install autohyseeker[rag]` | 管理可选 RAG 依赖 |
 | TASK_011 校验文档：`VALIDATION.md` 记录全量功能清单（61项）、26+个新验证测试（`tests/test_validation.py`）、依赖完整性检查表；可用 `uv run pytest tests/test_validation.py -v` 直接运行 | 系统校验/健康检查场景 |
 

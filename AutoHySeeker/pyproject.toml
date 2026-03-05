@@ -24,6 +24,9 @@ dependencies = [
 [project.scripts]
 autohyseeker-api = "src.api.main:main"
 
+[project.optional-dependencies]
+kb = ["openviking>=0.1"]
+
 [dependency-groups]
 dev = ["pytest>=8.0"]
 

@@ -26,6 +26,12 @@ from src.skills.suggest_next_experiment import (
     SuggestNextExperimentSkill,
     suggest_next_experiment_skill,
 )
+from src.skills.experiment_execution import (
+    ExecutionMonitorSkill,
+    SmartSchedulerSkill,
+    execution_monitor_skill,
+    smart_scheduler_skill,
+)
 
 __all__ = [
     # Legacy function-based skills
@@ -52,5 +58,11 @@ __all__ = [
     # C2 — rule-based next-experiment suggestion
     "SuggestNextExperimentSkill",
     "suggest_next_experiment_skill",
+    # A1 — post-execution quality monitor
+    "ExecutionMonitorSkill",
+    "execution_monitor_skill",
+    # A2 — smart experiment scheduler
+    "SmartSchedulerSkill",
+    "smart_scheduler_skill",
 ]
 
