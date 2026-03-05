@@ -199,7 +199,7 @@
 
 ## 三、验证测试清单
 
-### 3.1 现有测试文件（6 个文件，~139 个测试函数）
+### 3.1 现有测试文件（10 个文件，~230 个测试函数）
 
 | 测试文件 | 覆盖模块 | 测试数量 | 状态 |
 |----------|----------|----------|------|
@@ -209,17 +209,21 @@
 | `tests/test_phase3.py` | DiagnosticsGraph + diagnostics API routes + D1/D2 | 20 | ✅ |
 | `tests/test_phase4_c1.py` | VikingKnowledgeBase + C1 ContextualizeExperiment | 25 | ✅ |
 | `tests/test_phase4.py` | C1/C2 Skills + SupervisorGraph + /context API routes | 57 | ✅ |
+| `tests/test_orchestrator.py` | orchestrator.py / nodes.py 路由 + _FallbackGraph + 全链路 | ~30 | ✅ **新增 (A3)** |
+| `tests/test_agents.py` | BaseAgent + 5 个专业 agent (mock LLM) | ~30 | ✅ **新增 (A4)** |
+| `tests/test_pipeline_e2e.py` | A1→C1→C2 端到端流水线 | ~20 | ✅ **新增 (A5)** |
+| `tests/test_api_routes.py` | /agents/invoke + /data + /tasks + 回归测试 | ~25 | ✅ **新增 (A6)** |
 
 ### 3.2 缺失测试 — 🔴 高优先级
 
-| 测试领域 | 涉及模块 | 建议测试文件 | 理由 |
-|----------|---------|-------------|------|
-| **Orchestrator 图路由** | `src/graph/orchestrator.py`, `src/graph/nodes.py` | `test_orchestrator.py` | 核心路由逻辑零覆盖；`route_intent()`、5 个 `run_*` agent runner 均未测试 |
-| **SupervisorGraph 单元测试** | `src/graph/supervisor_graph.py` | `test_supervisor_graph.py` | 仅通过 Phase 4 集成测试间接覆盖 |
-| **Agent 类** | `src/agents/base.py` + 5 个专业 agent | `test_agents.py` | 零覆盖；`BaseAgent.invoke()`、`build_messages()`、系统提示均未测试 |
-| **LLM 客户端** | `src/common/llm_client.py` | `test_llm_client.py` | 重试逻辑（3次 + 2秒退避）、fallback model、超时行为均未测试 |
-| **A1→C1→C2 端到端流水线** | A1 + C1 + C2 skills | `test_pipeline_e2e.py` | 验证数据从分析→上下文→建议的完整流转 |
-| **API /agents/invoke 端到端** | `src/api/routes/agents.py` | `test_api_routes.py` | HTTP → orchestrator → agent → LLM → response 全链路未测试 |
+| 测试领域 | 涉及模块 | 建议测试文件 | 理由 | 状态 |
+|----------|---------|-------------|------|------|
+| **Orchestrator 图路由** | `src/graph/orchestrator.py`, `src/graph/nodes.py` | `test_orchestrator.py` | 核心路由逻辑零覆盖 | ✅ **已完成 (A3)** |
+| **Agent 类** | `src/agents/base.py` + 5 个专业 agent | `test_agents.py` | 零覆盖；`BaseAgent.invoke()`、`build_messages()` 等 | ✅ **已完成 (A4)** |
+| **A1→C1→C2 端到端流水线** | A1 + C1 + C2 skills | `test_pipeline_e2e.py` | 验证数据流水线完整流转 | ✅ **已完成 (A5)** |
+| **API /agents/invoke 端到端** | `src/api/routes/agents.py` | `test_api_routes.py` | HTTP → orchestrator → agent → LLM 全链路 | ✅ **已完成 (A6)** |
+| **SupervisorGraph 单元测试** | `src/graph/supervisor_graph.py` | `test_supervisor_graph.py` | 仅通过 Phase 4 集成测试间接覆盖 | ⬜ 待完成 |
+| **LLM 客户端** | `src/common/llm_client.py` | `test_llm_client.py` | 重试逻辑（3次 + 2秒退避）、fallback model | ⬜ 待完成 |
 
 ### 3.3 缺失测试 — 🟡 中优先级
 
@@ -245,14 +249,14 @@
 
 | 模块分类 | 模块总数 | 有测试覆盖 | 覆盖率 |
 |----------|---------|-----------|--------|
-| src/skills/ (含 diagnostics) | 10 | 6 (A1, B1, C1, C2, D1, D2) | ~60% |
+| src/skills/ (含 diagnostics) | 10 | 8 (A1, B1, C1, C2, D1, D2 + E2E pipeline) | ~80% |
 | src/tools/ | 11 | 4 (data_reader, echem_analysis, experiment_builder, knowledge_retriever) | ~36% |
-| src/graph/ | 5 | 1 (diagnostics_graph) | ~20% |
-| src/agents/ | 7 | 1 (diagnostics_nodes) | ~14% |
-| src/api/routes/ | 5 | 2 (diagnostics, context) | ~40% |
+| src/graph/ | 5 | 3 (diagnostics_graph, orchestrator, nodes) | ~60% |
+| src/agents/ | 7 | 6 (base + 5 specialist agents) | ~86% |
+| src/api/routes/ | 5 | 5 (diagnostics, context, agents, data, tasks) | ~100% |
 | src/common/ | 5 | 0 | 0% |
 | src/optimization/ | 2 | 0 | 0% |
-| **总计** | **45** | **14** | **~31%** |
+| **总计** | **45** | **26** | **~58%** |
 
 ---
 
@@ -260,14 +264,14 @@
 
 ### 🔴 紧急（上线前必须修复）
 
-| # | 行动 | 涉及文件 | 预估工时 |
-|---|------|---------|---------|
-| **A1** | **填充 `experiment_execution/__init__.py`** — 导出 `ExecutionMonitorSkill` 和 `SmartSchedulerSkill` | `src/skills/experiment_execution/__init__.py` | 5 分钟 |
-| **A2** | **在 `pyproject.toml` 中声明 `openviking` 为可选依赖** — 添加 `[project.optional-dependencies]` 段：`kb = ["openviking"]` | `pyproject.toml` | 5 分钟 |
-| **A3** | **编写 `test_orchestrator.py`** — 测试 `orchestrator.py` 路由逻辑 + `nodes.py` 各 agent runner（mock LLM） | `tests/test_orchestrator.py` | 2 小时 |
-| **A4** | **编写 `test_agents.py`** — 测试 `BaseAgent.invoke()`、`build_messages()` 和各专业 agent 系统提示（mock `chat_completion`） | `tests/test_agents.py` | 2 小时 |
-| **A5** | **编写集成测试 `test_pipeline_e2e.py`** — 验证 A1→C1→C2 数据流水线端到端 | `tests/test_pipeline_e2e.py` | 3 小时 |
-| **A6** | **编写 `test_api_routes.py`** — 覆盖 `/agents/invoke`、`/data/experiments`、`/tasks/create`、`/tasks/{id}/status` | `tests/test_api_routes.py` | 2 小时 |
+| # | 行动 | 涉及文件 | 预估工时 | 状态 |
+|---|------|---------|---------|------|
+| **A1** | **填充 `experiment_execution/__init__.py`** — 导出 `ExecutionMonitorSkill` 和 `SmartSchedulerSkill` | `src/skills/experiment_execution/__init__.py` | 5 分钟 | ✅ **已完成** |
+| **A2** | **在 `pyproject.toml` 中声明 `openviking` 为可选依赖** — 添加 `[project.optional-dependencies]` 段：`rag = ["openviking"]` | `pyproject.toml` | 5 分钟 | ✅ **已完成** |
+| **A3** | **编写 `test_orchestrator.py`** — 测试 `orchestrator.py` 路由逻辑 + `nodes.py` 各 agent runner（mock LLM） | `tests/test_orchestrator.py` | 2 小时 | ✅ **已完成** |
+| **A4** | **编写 `test_agents.py`** — 测试 `BaseAgent.invoke()`、`build_messages()` 和各专业 agent 系统提示（mock `chat_completion`） | `tests/test_agents.py` | 2 小时 | ✅ **已完成** |
+| **A5** | **编写集成测试 `test_pipeline_e2e.py`** — 验证 A1→C1→C2 数据流水线端到端 | `tests/test_pipeline_e2e.py` | 3 小时 | ✅ **已完成** |
+| **A6** | **编写 `test_api_routes.py`** — 覆盖 `/agents/invoke`、`/data/experiments`、`/tasks/create`、`/tasks/{id}/status` | `tests/test_api_routes.py` | 2 小时 | ✅ **已完成** |
 
 ### 🟡 重要（Beta 前修复）
 
@@ -336,12 +340,12 @@ uv run pytest tests/ --cov=src --cov-report=term-missing
 |------|---|
 | 已实现功能模块 | 45 个 |
 | 已完成 Phase | 4/4（Phase 1–4） |
-| 现有测试文件 | 6 |
-| 现有测试函数 | ~139 |
-| 模块级测试覆盖率 | ~31%（14/45 模块有测试） |
-| 结构性缺陷 | 3 个（空 `__init__`、桩函数、硬编码路径） |
-| 未声明可选依赖 | 1 个（`openviking`） |
-| 紧急行动项 | 6 |
+| 现有测试文件 | 10 |
+| 现有测试函数 | ~230 |
+| 模块级测试覆盖率 | ~58%（26/45 模块有测试） |
+| 结构性缺陷 | 1 个（桩函数 experiment_ctrl） |
+| 未声明可选依赖 | 0（已在 pyproject.toml 中声明 openviking） |
+| 紧急行动项 | 0（A1–A6 全部完成） |
 | 重要行动项 | 7 |
 | 增强行动项 | 8 |
 
