@@ -994,25 +994,26 @@ class CHI660FController:
         _post_command(self._main_hwnd, CMD_MACRO_COMMAND)
         
         # 等待对话框出现
-        for _ in range(30):  # 最多等15秒
+        for attempt in range(60):  # 最多等30秒
             time.sleep(0.5)
             
             # 检查是否出现了 Connecting 对话框
             conn = self._find_window_by_title("Connecting")
             if conn:
-                logger.warning("出现 Connecting to instrument 对话框")
-                # 等它自动关或超时
-                for _ in range(20):
+                if attempt == 0:
+                    logger.info("出现 Connecting to instrument 对话框，等待连接完成...")
+                # ★ 不要取消连接！让 CHI 660F 自行完成 USB 通信
+                # 仅等待对话框自动消失（最多 60 秒）
+                for wait_i in range(60):
                     time.sleep(1)
                     if not _is_visible(conn):
+                        logger.info(f"Connecting 对话框已关闭 (等待了 {wait_i+1}s)")
                         break
-                    # 检查是否有取消按钮
-                    cancel = _find_child_by_id(conn, 2)
-                    if cancel:
-                        logger.info("点击 Cancel 关闭 Connecting 对话框")
-                        _click_button(cancel)
-                        time.sleep(1)
-                        break
+                else:
+                    # 60 秒超时仍未连接 — 记录错误但不取消
+                    logger.error("Connecting 超时 (60s)，仪器可能未开机或 USB 未连接")
+                # Connecting 关闭后继续正常流程查找 Macro 对话框
+                continue
             
             # 检查 Macro Command 对话框
             macro_hwnd = self._find_window_by_title("Macro Command")
@@ -1021,7 +1022,7 @@ class CHI660FController:
                 _set_foreground(macro_hwnd)
                 return macro_hwnd
             
-            # 检查错误对话框
+            # 检查错误对话框 (如 Link failed)
             self._dismiss_error_dialogs()
         
         logger.error("Macro Command 对话框打开超时")
@@ -1058,8 +1059,10 @@ class CHI660FController:
         while time.time() - start < timeout:
             time.sleep(1.0)
             
-            # 检查错误对话框
-            self._dismiss_error_dialogs()
+            # 检查错误对话框 (包括 Link failed 检测)
+            if self._dismiss_error_dialogs(capture_link_failed=True):
+                logger.error("实验执行时检测到 Link failed - 仪器未连接")
+                return False
             
             # 方式1: 检查输出文件
             if expected_file:
@@ -1164,17 +1167,32 @@ class CHI660FController:
                 return hwnd
         return None
     
-    def _dismiss_error_dialogs(self):
-        """关闭可能出现的错误对话框"""
+    def _dismiss_error_dialogs(self, capture_link_failed: bool = False) -> bool:
+        """关闭可能出现的错误对话框
+        
+        Args:
+            capture_link_failed: 如果为 True，检测到 Link failed 时返回 True
+            
+        Returns:
+            bool: 是否检测到 Link failed 错误
+        """
+        link_failed = False
         for hwnd in _enum_toplevel():
             title = _get_window_text(hwnd)
             cls = _get_class_name(hwnd)
             
             # CH Instruments 错误对话框 (如 CEcDoc::OnGraphicsTestvtk)
             if cls == '#32770' and 'CH Instruments' in title:
+                # 读取对话框内的静态文本，检测 Link failed
+                dialog_text = self._read_dialog_static_text(hwnd)
+                if 'Link failed' in dialog_text or 'Link failed' in title:
+                    logger.error(f"检测到 Link failed 错误: {dialog_text[:200]}")
+                    link_failed = True
+                else:
+                    logger.debug(f"关闭错误对话框: {title}")
+                
                 ok_btn = _find_child_by_id(hwnd, 2)  # 确定按钮
                 if ok_btn:
-                    logger.debug(f"关闭错误对话框: {title}")
                     _click_button(ok_btn)
                     time.sleep(0.3)
             
@@ -1187,6 +1205,19 @@ class CHI660FController:
                     logger.debug(f"关闭运行时错误: {title}")
                     _click_button(ok_btn)
                     time.sleep(0.3)
+        
+        return link_failed
+    
+    def _read_dialog_static_text(self, hwnd: int) -> str:
+        """读取对话框中静态文本控件的内容"""
+        texts = []
+        for child in _enum_children(hwnd):
+            cls = _get_class_name(child)
+            if cls in ('Static', 'STATIC', '#32770'):
+                text = _get_window_text(child)
+                if text and len(text) > 1:
+                    texts.append(text)
+        return ' '.join(texts)
     
     def _extract_output_file(self, macro_text: str) -> Optional[str]:
         """从宏命令文本中提取预期输出文件路径"""

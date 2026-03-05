@@ -574,14 +574,14 @@ class RS485Wrapper:
         """解除泵堵转保护（0x3D 命令）
         
         Returns:
-            bool: 是否成功解除
+            bool: 泵是否正常（无堵转或已成功解除）
         """
         if not self.is_connected():
             return False
         try:
             result = self._pump_manager.clear_stall(address)
             if result:
-                print(f"✅ RS485Wrapper: 泵 {address} 堵转已解除")
+                print(f"✅ RS485Wrapper: 泵 {address} 堵转检查通过 (状态正常)")
             else:
                 print(f"❌ RS485Wrapper: 泵 {address} 堵转解除失败")
             return result

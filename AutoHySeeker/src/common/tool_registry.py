@@ -39,6 +39,28 @@ class ToolRegistry:
             func=func,
         )
 
+    def tool(
+        self,
+        name: Optional[str] = None,
+        description: str = "",
+        parameters_schema: Optional[dict] = None,
+    ) -> Callable:
+        """Decorator to register a function as a tool.
+
+        Usage::
+
+            @registry.tool(description="Read a CV CSV file")
+            def read_cv(path: str) -> dict: ...
+        """
+
+        def decorator(func: Callable) -> Callable:
+            tool_name = name or func.__name__
+            tool_desc = description or (func.__doc__ or "").strip().splitlines()[0]
+            self.register(tool_name, func, tool_desc, parameters_schema)
+            return func
+
+        return decorator
+
     def get(self, name: str) -> ToolDef:
         """Get a tool definition by name."""
         if name not in self._tools:
@@ -76,3 +98,82 @@ class ToolRegistry:
 
 # Global registry instance
 registry = ToolRegistry()
+
+
+def _register_log_analysis_tools() -> None:
+    """Register log-analysis tools into the global registry."""
+    try:
+        from src.tools.log_analysis import (
+            classify_errors,
+            detect_pump_anomalies,
+            extract_step_timeline,
+            parse_run_log,
+            summarize_run,
+        )
+
+        registry.register(
+            "parse_run_log",
+            parse_run_log,
+            "Parse run_log.log into structured LogEntry objects",
+            {
+                "type": "object",
+                "properties": {
+                    "log_path": {"type": "string", "description": "Path to the log file"}
+                },
+                "required": ["log_path"],
+            },
+        )
+        registry.register(
+            "classify_errors",
+            classify_errors,
+            "Group ERROR-level log entries by source component",
+            {
+                "type": "object",
+                "properties": {
+                    "entries": {"type": "array", "description": "List of LogEntry objects"}
+                },
+                "required": ["entries"],
+            },
+        )
+        registry.register(
+            "detect_pump_anomalies",
+            detect_pump_anomalies,
+            "Detect pump-related anomalies (timeout, failure, abnormal stop) from log entries",
+            {
+                "type": "object",
+                "properties": {
+                    "entries": {"type": "array", "description": "List of LogEntry objects"}
+                },
+                "required": ["entries"],
+            },
+        )
+        registry.register(
+            "summarize_run",
+            summarize_run,
+            "Build a RunSummary from run_log.log + run_summary.json in a run directory",
+            {
+                "type": "object",
+                "properties": {
+                    "run_dir": {"type": "string", "description": "Path to the experiment run directory"}
+                },
+                "required": ["run_dir"],
+            },
+        )
+        registry.register(
+            "extract_step_timeline",
+            extract_step_timeline,
+            "Extract step start/end events and compute per-step durations from log entries",
+            {
+                "type": "object",
+                "properties": {
+                    "entries": {"type": "array", "description": "List of LogEntry objects"}
+                },
+                "required": ["entries"],
+            },
+        )
+    except ImportError:
+        pass  # tools not yet available; registry remains empty for these tools
+
+
+# Auto-register log analysis tools when the module is imported
+_register_log_analysis_tools()

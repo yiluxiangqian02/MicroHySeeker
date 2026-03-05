@@ -195,24 +195,44 @@ class PumpManager:
     def clear_stall(self, addr: int) -> bool:
         """发送 0x3D 解除堵转命令
         
+        MKS SERVO42D 协议:
+        - 发送: [地址, 0x3D, 校验]
+        - 响应 payload[0]:
+          0x01 = 堵转已解除 (之前有堵转，现已清除)
+          0x00 = 无堵转可清除 (泵正常，不需要解除)
+        - 两种响应都表示泵当前处于正常状态
+        
         Args:
             addr: 泵地址
             
         Returns:
-            bool: 是否成功解除
+            bool: 泵是否处于正常状态（无堵转）
         """
         try:
             frame = self.request(addr, CMD_CLEAR_STALL)
-            # 响应 payload[0] == 0x01 表示成功
-            if frame.payload and frame.payload[0] == 0x01:
-                if self._logger:
-                    self._logger.info(f"泵 {addr}: 堵转已解除")
-                # 更新状态
-                with self._states_lock:
-                    state = self._states.get(addr)
-                    if state:
-                        state.fault = 0
-                return True
+            if frame.payload and len(frame.payload) > 0:
+                status = frame.payload[0]
+                if status == 0x01:
+                    if self._logger:
+                        self._logger.info(f"泵 {addr}: 堵转已解除 (0x01)")
+                    # 更新状态
+                    with self._states_lock:
+                        state = self._states.get(addr)
+                        if state:
+                            state.fault = 0
+                    return True
+                elif status == 0x00:
+                    if self._logger:
+                        self._logger.debug(f"泵 {addr}: 无堵转 (0x00) — 泵状态正常")
+                    with self._states_lock:
+                        state = self._states.get(addr)
+                        if state:
+                            state.fault = 0
+                    return True
+                else:
+                    if self._logger:
+                        self._logger.warning(f"泵 {addr}: 堵转解除异常响应 0x{status:02X}")
+                    return False
             return False
         except TimeoutError:
             if self._logger:

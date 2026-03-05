@@ -1,0 +1,30 @@
+Service: Scheduled Task (registered)
+File logs: \tmp\openclaw\openclaw-2026-03-04.log
+Command: D:\nodejs\node.exe C:\Users\25922\AppData\Roaming\npm\node_modules\openclaw\dist\index.js gateway --port 18789
+Service env: OPENCLAW_GATEWAY_PORT=18789
+
+Config (cli): ~\.openclaw\openclaw.json
+Config (service): ~\.openclaw\openclaw.json
+
+Gateway: bind=loopback (127.0.0.1), port=18789 (service args)
+Probe target: ws://127.0.0.1:18789
+Dashboard: http://127.0.0.1:18789/
+Probe note: Loopback-only gateway; only local clients can connect.
+
+Runtime: unknown
+node.exe : RPC probe: failed
+???? C:\Users\25922\AppData\Roaming\npm\openclaw.ps1:24 ??: 5
++     & "node$exe"  "$basedir/node_modules/openclaw/openclaw.mjs" $args
++     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (RPC probe: failed:String) [], Rem 
+   oteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+RPC target: ws://127.0.0.1:18789
+  gateway closed (1006 abnormal closure (no close frame)): no close reason
+  Gateway target: ws://127.0.0.1:18789
+  Source: cli --url
+  Config: C:\Users\25922\.openclaw\openclaw.json
+
+Troubles: run openclaw status
+Troubleshooting: https://docs.openclaw.ai/troubleshooting
