@@ -2,11 +2,20 @@
 
 from __future__ import annotations
 
+import logging
 from datetime import datetime, timezone
 from typing import Any
 
+_logger = logging.getLogger("autohyseeker.experiment_ctrl")
+
+_STUB_MSG = (
+    "[STUB] Hardware execution is not implemented. "
+    "Replace experiment_ctrl.py with a real hardware driver before running on equipment."
+)
+
 
 def start_experiment(payload: dict[str, Any] | None = None) -> dict[str, Any]:
+    _logger.warning("start_experiment: Hardware interface not implemented")
     return {
         "status": "stub",
         "action": "start_experiment",
@@ -17,6 +26,7 @@ def start_experiment(payload: dict[str, Any] | None = None) -> dict[str, Any]:
 
 
 def stop_experiment(payload: dict[str, Any] | None = None) -> dict[str, Any]:
+    _logger.warning("stop_experiment: Hardware interface not implemented")
     return {
         "status": "stub",
         "action": "stop_experiment",
