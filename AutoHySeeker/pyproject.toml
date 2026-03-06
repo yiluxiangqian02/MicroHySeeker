@@ -27,7 +27,6 @@ dependencies = [
 autohyseeker-api = "src.api.main:main"
 
 [project.optional-dependencies]
-kb = ["openviking>=0.1"]
 rag = ["openviking>=0.1"]
 
 [dependency-groups]

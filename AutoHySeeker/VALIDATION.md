@@ -293,12 +293,12 @@
 
 | # | 行动 | 涉及文件 | 预估工时 |
 |---|------|---------|---------|
-| **C1** | **编写 `test_tools_extended.py`** — 覆盖 echem_reader、file_watcher、log_analysis、registry、report_generator、visualization | `tests/test_tools_extended.py` | 3 小时 |
-| **C2** | **编写 `test_config.py`** — 测试 TOML 加载边界情况、缺失文件、env 覆盖 | `tests/test_config.py` | 1 小时 |
-| **C3** | **添加项目级 `.gitignore`** — 排除 `__pycache__/`、`.venv/`、`logs/`、`.env` | `AutoHySeeker/.gitignore` | 5 分钟 |
-| **C4** | **验证 `scipy` 依赖** — 检查 `echem_analysis.py` 是否使用 scipy 峰值检测；若有则加入 `pyproject.toml` | `pyproject.toml` | 15 分钟 |
+| **C1** | **编写 `test_tools_extended.py`** — 覆盖 echem_reader、file_watcher、log_analysis、registry、report_generator、visualization | `tests/test_tools_extended.py` | 3 小时 | ✅ **已完成** |
+| **C2** | **编写 `test_config.py`** — 测试 TOML 加载边界情况、缺失文件、env 覆盖 | `tests/test_config.py` | 1 小时 | ✅ **已完成** |
+| **C3** | **添加项目级 `.gitignore`** — 排除 `__pycache__/`、`.venv/`、`logs/`、`.env` | `AutoHySeeker/.gitignore` | 5 分钟 | ✅ **已完成** |
+| **C4** | **验证 `scipy` 依赖** — 检查 `echem_analysis.py` 是否使用 scipy 峰值检测；若有则加入 `pyproject.toml` | `pyproject.toml` | 15 分钟 | ✅ **已完成（scipy 不需要；已补充 jinja2/matplotlib）** |
 | **C5** | **添加 CI 工作流** — GitHub Actions 运行 `uv run pytest tests/` | `.github/workflows/ci.yml` | 1 小时 |
-| **C6** | **添加测试数据夹具** — 在 `tests/fixtures/` 放置样本 CV/LSV/EIS CSV 和 mock run 目录 | `tests/fixtures/` | 1 小时 |
+| **C6** | **添加测试数据夹具** — 在 `tests/fixtures/` 放置样本 CV/LSV/EIS CSV 和 mock run 目录 | `tests/fixtures/` | 1 小时 | ✅ **已完成（数据内嵌于 tests/conftest.py）** |
 | **C7** | **添加 `pytest-asyncio`** — 替换 `asyncio.get_event_loop().run_until_complete()` | `pyproject.toml` + tests | 1 小时 |
 | **C8** | **添加 `pytest-cov`** — CI 中强制 80%+ 行覆盖率 | `pyproject.toml` + CI config | 30 分钟 |
 

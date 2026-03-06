@@ -1,46 +1,71 @@
-# Python
+# AutoHySeeker project .gitignore
+
+# Python cache
 __pycache__/
 *.py[cod]
-*.pyo
-*.egg-info/
-*.egg
-dist/
-build/
-*.whl
+*$py.class
+*.so
 
 # Virtual environments
 .venv/
 venv/
+env/
 ENV/
 
-# IDE
-.vscode/
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+*.egg
+MANIFEST
+
+# Testing
+.pytest_cache/
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+*.cover
+.hypothesis/
+.tox/
+.nox/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Logs (runtime output only; fixture logs in tests/fixtures/ are committed)
+logs/
+*.log
+
+# Type checking
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pyre/
+.pytype/
+
+# IDE / editors
 .idea/
+.vscode/
 *.swp
 *.swo
 *~
 
-# OS
+# Jupyter
+.ipynb_checkpoints/
+
+# Ruff
+.ruff_cache/
+
+# uv
+# uv.lock is intentionally committed for reproducibility
+
+# macOS
 .DS_Store
+
+# Windows
 Thumbs.db
-desktop.ini
-
-# Logs
-logs/
-*.log
-
-# Env
-.env
-
-# pytest
-.pytest_cache/
-pytest-cache-files-*/
-
-# mypy
-.mypy_cache/
-
-# Data (large experiment output)
-data/
-
-# UV lock (optional: remove this line if lock file should be tracked)
-# uv.lock
+ehthumbs.db
+Desktop.ini

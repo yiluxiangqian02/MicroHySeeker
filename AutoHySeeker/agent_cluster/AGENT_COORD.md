@@ -7,6 +7,7 @@
 | TASK_013 | Copilot (claude-sonnet-4.6) | feat/fix-a3-a6-tests | done | Fix A3-A6: Write critical tests - test_orchestrator.py, test_agents.py, test_pipeline_e2e.py, test_api_routes.py. Mock LLM calls. Update VALIDATION.md | 2026-03-05 | - |
 | TASK_014 | Copilot (claude-sonnet-4.6) | feat/fix-b1-paths | done | Fix B1: Replace hardcoded paths in configs/microhyseeker.toml with relative paths + ${VAR:-default} env var syntax. Updated src/configs.py with _expand_path(). | 2026-03-05 | - |
 | TASK_017 | Copilot (claude-sonnet-4.6) | feat/fix-b3-b7 | done | Fix B3-B7: Write tests for optimization, experiment_execution, D3 diagnostics, llm_client. Document dual config system. | 2026-03-06 | - |
+| TASK_019 | Copilot (claude-sonnet-4.6) | feat/fix-c1-c4 | done | Fix C1-C4: test_tools_extended.py (echem_reader/log_analysis/registry/report_generator/visualization), test_config.py, AutoHySeeker/.gitignore, tests/conftest.py fixtures, jinja2+matplotlib added to pyproject.toml, scipy verified not needed. | 2026-03-06 | - |
 
 Status values: `pending` | `running` | `done` | `failed` | `review`
 
@@ -24,6 +25,7 @@ Status values: `pending` | `running` | `done` | `failed` | `review`
 | TASK_013 | Copilot (claude-sonnet-4.6) | feat/fix-a3-a6-tests | done | 2026-03-05 |
 | TASK_014 | Copilot (claude-sonnet-4.6) | feat/fix-b1-paths | done | 2026-03-05 |
 | TASK_017 | Copilot (claude-sonnet-4.6) | feat/fix-b3-b7 | done | 2026-03-06 |
+| TASK_019 | Copilot (claude-sonnet-4.6) | feat/fix-c1-c4 | done | 2026-03-06 |
 
 ## Safety Rules
 
@@ -64,4 +66,8 @@ AutoHySeeker/OpenViking/
 | TASK_017 双配置系统：`src/common/config.py`（环境变量/`.env`，用于 LLM 客户端和 API 服务器）与 `src/configs.py`（TOML 文件，用于结构化应用配置），二者并存。文档见 `docs/dual_config_system.md` | 需要理解两套配置来源时 |
 | TASK_017 测试 `asyncio.sleep` 时需 patch 模块内的引用：`patch("src.common.llm_client.asyncio.sleep", new=AsyncMock())`，而非全局 `patch("asyncio.sleep")`，否则不能阻止实际 sleep | 测试包含 `asyncio.sleep` 重试逻辑的异步函数 |
 | TASK_017 BayesianOptimizer 测试：用 `seed=42` 保证可重复性；`ParameterSpace` 可直接从 `Mapping` 构造（`{"x": [0.0, 1.0]}`），不必手动 `add_float`；`MultiObjectiveBayesianOptimizer` 要求至少 2 个方向 | 编写 Optuna 优化器单元测试 |
+| TASK_019 `echem_analysis.py` 仅使用 `numpy`/`pandas`，**不依赖 `scipy`**；文档计划中提到 `scipy` 是潜在依赖但实现中未采用 | 验证依赖时查阅实际 import，而非计划文档 |
+| TASK_019 `jinja2` 和 `matplotlib` 被 `report_generator.py` / `visualization.py` 直接 import，但之前遗漏于 `pyproject.toml`；应同步添加 `"jinja2>=3.1"` 和 `"matplotlib>=3.8"` | 新增工具模块时检查其 import 是否都在 pyproject.toml 中 |
+| TASK_019 pytest conftest.py 中嵌入 CSV 字符串常量（`_CV_CSV_CONTENT` 等）来生成 tmp_path fixture 文件，比静态 `tests/fixtures/` 目录更便携，不依赖目录创建权限 | 无 shell 访问 / CI 下的测试夹具设计 |
+| TASK_019 `pyproject.toml` 中重复的 `[project.optional-dependencies]` 段（后者覆盖前者）是隐性 bug；应合并为单一段，用不同 extra key 区分 | 维护 pyproject.toml 依赖分组时 |
 

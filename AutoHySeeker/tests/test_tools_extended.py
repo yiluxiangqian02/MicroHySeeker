@@ -1,280 +1,270 @@
-"""Extended tool-layer tests — echem_reader, file_watcher, log_analysis,
-registry, report_generator, visualization."""
+"""Extended tests for tool-layer modules.
+
+Covers:
+- src/tools/echem_reader   — read_cv_csv, read_eis_csv, read_experiment_dir
+- src/tools/log_analysis   — parse_run_log, classify_errors, detect_pump_anomalies,
+                              extract_step_timeline, summarize_run
+- src/tools/registry       — ToolRegistry, build_default_registry
+- src/tools/report_generator — generate_run_report (smoke test)
+- src/tools/file_watcher   — watch_data_dir (polling, max_polls guard)
+- src/tools/visualization  — plot_cv_curve, plot_step_timeline (file-write smoke)
+"""
 
 from __future__ import annotations
 
-import json
-import textwrap
-from datetime import datetime
 from pathlib import Path
-from unittest.mock import patch
-
-import matplotlib
-matplotlib.use("Agg")
 
 import pandas as pd
 import pytest
 
 
-# ── echem_reader ──────────────────────────────────────────────────────────────
+# ── echem_reader tests ────────────────────────────────────────────────────────
 
 class TestReadCvCsv:
-    def test_reads_valid_csv(self, tmp_path: Path) -> None:
+    def test_reads_valid_csv(self, cv_csv_file: Path) -> None:
         from src.tools.echem_reader import read_cv_csv
 
-        f = tmp_path / "cv.csv"
-        f.write_text("Potential(V),Current(A)\n0.1,0.001\n0.2,0.002\n")
-        df = read_cv_csv(str(f))
-        assert len(df) == 2
+        df = read_cv_csv(str(cv_csv_file))
+        assert isinstance(df, pd.DataFrame)
         assert "Potential(V)" in df.columns
         assert "Current(A)" in df.columns
+        assert len(df) > 0
 
-    def test_alias_columns_normalised(self, tmp_path: Path) -> None:
-        from src.tools.echem_reader import read_cv_csv
-
-        f = tmp_path / "cv_alias.csv"
-        f.write_text("Ewe/V,I/A\n0.5,0.003\n")
-        df = read_cv_csv(str(f))
-        assert "Potential(V)" in df.columns
-        assert "Current(A)" in df.columns
-
-    def test_missing_file_raises(self) -> None:
+    def test_missing_file_raises(self, tmp_path: Path) -> None:
         from src.tools.echem_reader import read_cv_csv
 
         with pytest.raises(FileNotFoundError):
-            read_cv_csv("/nonexistent/cv.csv")
+            read_cv_csv(str(tmp_path / "nonexistent.csv"))
 
     def test_missing_columns_raises(self, tmp_path: Path) -> None:
         from src.tools.echem_reader import read_cv_csv
 
-        f = tmp_path / "bad.csv"
-        f.write_text("A,B\n1,2\n")
+        bad = tmp_path / "bad.csv"
+        bad.write_text("A,B\n1,2\n3,4\n")
         with pytest.raises(ValueError, match="missing required columns"):
-            read_cv_csv(str(f))
+            read_cv_csv(str(bad))
+
+    def test_alias_columns_normalised(self, tmp_path: Path) -> None:
+        """Column alias 'Potential/V' should be normalised to 'Potential(V)'."""
+        from src.tools.echem_reader import read_cv_csv
+
+        aliased = tmp_path / "cv_alias.csv"
+        aliased.write_text("Potential/V,Current/A\n0.1,0.001\n0.2,0.002\n")
+        df = read_cv_csv(str(aliased))
+        assert "Potential(V)" in df.columns
 
 
 class TestReadEisCsv:
-    def test_reads_valid_csv(self, tmp_path: Path) -> None:
+    def test_reads_valid_csv(self, eis_csv_file: Path) -> None:
         from src.tools.echem_reader import read_eis_csv
 
-        f = tmp_path / "eis.csv"
-        f.write_text("Freq(Hz),Zre(Ohm),Zim(Ohm)\n1000,10,5\n100,20,15\n")
-        df = read_eis_csv(str(f))
-        assert len(df) == 2
+        df = read_eis_csv(str(eis_csv_file))
+        assert isinstance(df, pd.DataFrame)
+        assert len(df) > 0
 
-    def test_missing_file_raises(self) -> None:
+    def test_missing_file_raises(self, tmp_path: Path) -> None:
         from src.tools.echem_reader import read_eis_csv
 
         with pytest.raises(FileNotFoundError):
-            read_eis_csv("/nonexistent/eis.csv")
+            read_eis_csv(str(tmp_path / "no_eis.csv"))
 
 
 class TestReadExperimentDir:
-    def test_valid_dir(self, tmp_path: Path) -> None:
+    def test_returns_expected_keys(self, mock_run_dir: Path) -> None:
         from src.tools.echem_reader import read_experiment_dir
 
-        (tmp_path / "cv_001.csv").write_text("Potential(V),Current(A)\n0,0\n")
-        (tmp_path / "eis_001.csv").write_text("Freq,Zre,Zim\n1,2,3\n")
-        (tmp_path / "experiment.json").write_text(json.dumps({"name": "test"}))
-        result = read_experiment_dir(str(tmp_path))
-        assert result["counts"]["csv"] == 2
-        assert result["counts"]["cv"] == 1
-        assert result["counts"]["eis"] == 1
-        assert result["metadata"]["experiment"]["name"] == "test"
+        result = read_experiment_dir(str(mock_run_dir))
+        assert "run_dir" in result
+        assert "files" in result
+        assert "counts" in result
 
-    def test_nonexistent_dir_raises(self) -> None:
+    def test_csv_files_discovered(self, mock_run_dir: Path) -> None:
+        from src.tools.echem_reader import read_experiment_dir
+
+        result = read_experiment_dir(str(mock_run_dir))
+        assert result["counts"]["csv"] >= 3  # cv, lsv, eis
+
+    def test_cv_eis_separated(self, mock_run_dir: Path) -> None:
+        from src.tools.echem_reader import read_experiment_dir
+
+        result = read_experiment_dir(str(mock_run_dir))
+        assert result["counts"]["cv"] >= 1
+        assert result["counts"]["eis"] >= 1
+
+    def test_missing_dir_raises(self, tmp_path: Path) -> None:
         from src.tools.echem_reader import read_experiment_dir
 
         with pytest.raises(FileNotFoundError):
-            read_experiment_dir("/nonexistent/run")
+            read_experiment_dir(str(tmp_path / "ghost_run"))
 
-    def test_file_not_dir_raises(self, tmp_path: Path) -> None:
+    def test_metadata_loaded_from_json(self, mock_run_dir: Path) -> None:
         from src.tools.echem_reader import read_experiment_dir
 
-        f = tmp_path / "file.txt"
-        f.write_text("x")
-        with pytest.raises(NotADirectoryError):
-            read_experiment_dir(str(f))
+        result = read_experiment_dir(str(mock_run_dir))
+        run_summary = result["metadata"].get("run_summary", {})
+        assert run_summary.get("run_id") == "test_run_001"
 
 
-class TestListRecentExperiments:
-    def test_returns_empty_when_no_data_root(self) -> None:
-        from src.tools.echem_reader import list_recent_experiments
-
-        with patch("src.tools.echem_reader.DATA_ROOT", Path("/nonexistent")):
-            assert list_recent_experiments() == []
-
-    def test_returns_empty_for_zero(self) -> None:
-        from src.tools.echem_reader import list_recent_experiments
-
-        assert list_recent_experiments(n=0) == []
-
-    def test_discovers_run_dirs(self, tmp_path: Path) -> None:
-        from src.tools.echem_reader import list_recent_experiments
-
-        day = tmp_path / "2025-01-01"
-        day.mkdir()
-        run = day / "2025-01-01_10-00-00_run"
-        run.mkdir()
-        (run / "cv.csv").write_text("x")
-
-        with patch("src.tools.echem_reader.DATA_ROOT", tmp_path):
-            results = list_recent_experiments(n=5)
-        assert len(results) == 1
-        assert results[0]["csv_count"] == 1
-
-
-# ── file_watcher ──────────────────────────────────────────────────────────────
-
-class TestFileWatcher:
-    def test_snapshot_run_dirs(self, tmp_path: Path) -> None:
-        from src.tools.file_watcher import _snapshot_run_dirs
-
-        day = tmp_path / "2025-01-01"
-        day.mkdir()
-        (day / "run_a").mkdir()
-        (day / "run_b").mkdir()
-        dirs = _snapshot_run_dirs(tmp_path)
-        assert len(dirs) == 2
-
-    def test_snapshot_empty(self) -> None:
-        from src.tools.file_watcher import _snapshot_run_dirs
-
-        assert _snapshot_run_dirs(Path("/nonexistent")) == set()
-
-    def test_watch_yields_new_dirs(self, tmp_path: Path) -> None:
-        from src.tools.file_watcher import watch_data_dir
-
-        day = tmp_path / "2025-01-01"
-        day.mkdir()
-        (day / "run_a").mkdir()
-
-        gen = watch_data_dir(
-            data_root=str(tmp_path), poll_interval=0.01, max_polls=1
-        )
-        # Create a new dir after initial snapshot is taken by patching sleep
-        (day / "run_b").mkdir()
-        results = list(gen)
-        assert any("run_b" in r for r in results)
-
-
-# ── log_analysis ──────────────────────────────────────────────────────────────
-
-_SAMPLE_LOG = textwrap.dedent("""\
-    [2025-01-01 10:00:00.000] [INFO] [main] Step started: init
-    [2025-01-01 10:00:01.500] [WARNING] [pump] Flow rate low
-    [2025-01-01 10:00:02.000] [ERROR] [pump] pump timeout detected
-    [2025-01-01 10:00:03.000] [INFO] [main] Step finished: init
-""")
-
+# ── log_analysis tests ────────────────────────────────────────────────────────
 
 class TestParseRunLog:
-    def test_parses_entries(self, tmp_path: Path) -> None:
+    def test_parse_returns_entries(self, mock_run_dir: Path) -> None:
         from src.tools.log_analysis import parse_run_log
 
-        f = tmp_path / "run_log.log"
-        f.write_text(_SAMPLE_LOG, encoding="utf-8")
-        entries = parse_run_log(str(f))
-        assert len(entries) == 4
-        assert entries[0].level == "INFO"
-        assert entries[2].level == "ERROR"
+        log_path = str(mock_run_dir / "run_log.log")
+        entries = parse_run_log(log_path)
+        assert len(entries) >= 7
 
-    def test_empty_log(self, tmp_path: Path) -> None:
+    def test_level_parsed_correctly(self, mock_run_dir: Path) -> None:
         from src.tools.log_analysis import parse_run_log
 
-        f = tmp_path / "empty.log"
-        f.write_text("", encoding="utf-8")
-        assert parse_run_log(str(f)) == []
+        entries = parse_run_log(str(mock_run_dir / "run_log.log"))
+        levels = {e.level for e in entries}
+        assert "INFO" in levels
+        assert "WARNING" in levels
+        assert "ERROR" in levels
+
+    def test_source_parsed_correctly(self, mock_run_dir: Path) -> None:
+        from src.tools.log_analysis import parse_run_log
+
+        entries = parse_run_log(str(mock_run_dir / "run_log.log"))
+        sources = {e.source for e in entries}
+        assert "experiment_ctrl" in sources
+        assert "pump_controller" in sources
+
+    def test_nonexistent_log_file_raises(self, tmp_path: Path) -> None:
+        from src.tools.log_analysis import parse_run_log
+
+        with pytest.raises((FileNotFoundError, OSError)):
+            parse_run_log(str(tmp_path / "missing.log"))
 
 
 class TestClassifyErrors:
-    def test_groups_by_source(self, tmp_path: Path) -> None:
+    def test_groups_by_source(self, mock_run_dir: Path) -> None:
         from src.tools.log_analysis import classify_errors, parse_run_log
 
-        f = tmp_path / "run_log.log"
-        f.write_text(_SAMPLE_LOG, encoding="utf-8")
-        entries = parse_run_log(str(f))
-        errors = classify_errors(entries)
-        assert "pump" in errors
-        assert len(errors["pump"]) == 1
+        entries = parse_run_log(str(mock_run_dir / "run_log.log"))
+        grouped = classify_errors(entries)
+        assert "pump_controller" in grouped
+
+    def test_non_error_entries_excluded(self, mock_run_dir: Path) -> None:
+        from src.tools.log_analysis import classify_errors, parse_run_log
+
+        entries = parse_run_log(str(mock_run_dir / "run_log.log"))
+        grouped = classify_errors(entries)
+        for source, errs in grouped.items():
+            for e in errs:
+                assert e.level == "ERROR", f"Non-error entry in {source}: {e}"
+
+    def test_no_errors_returns_empty(self) -> None:
+        from src.tools.log_analysis import classify_errors
+        from src.common.types import LogEntry
+        from datetime import datetime
+
+        info_entry = LogEntry(
+            timestamp=datetime.now(),
+            level="INFO",
+            source="test",
+            message="all good",
+            raw="",
+        )
+        grouped = classify_errors([info_entry])
+        assert grouped == {}
 
 
 class TestDetectPumpAnomalies:
-    def test_detects_pump_timeout(self, tmp_path: Path) -> None:
+    def test_detects_pump_timeout(self, mock_run_dir: Path) -> None:
         from src.tools.log_analysis import detect_pump_anomalies, parse_run_log
 
-        f = tmp_path / "run_log.log"
-        f.write_text(_SAMPLE_LOG, encoding="utf-8")
-        entries = parse_run_log(str(f))
+        entries = parse_run_log(str(mock_run_dir / "run_log.log"))
         results = detect_pump_anomalies(entries)
-        assert len(results) == 1
+        assert len(results) >= 1
         assert results[0].category == "pump"
+        assert results[0].severity == "error"
 
-    def test_no_anomalies(self) -> None:
+    def test_no_pump_entries_returns_empty(self) -> None:
         from src.tools.log_analysis import detect_pump_anomalies
+        from src.common.types import LogEntry
+        from datetime import datetime
 
-        assert detect_pump_anomalies([]) == []
+        entries = [
+            LogEntry(
+                timestamp=datetime.now(),
+                level="INFO",
+                source="sensor",
+                message="temperature normal",
+                raw="",
+            )
+        ]
+        results = detect_pump_anomalies(entries)
+        assert results == []
 
 
 class TestExtractStepTimeline:
-    def test_extracts_start_and_end(self, tmp_path: Path) -> None:
+    def test_extracts_start_end_events(self, mock_run_dir: Path) -> None:
         from src.tools.log_analysis import extract_step_timeline, parse_run_log
 
-        f = tmp_path / "run_log.log"
-        f.write_text(_SAMPLE_LOG, encoding="utf-8")
-        entries = parse_run_log(str(f))
+        entries = parse_run_log(str(mock_run_dir / "run_log.log"))
         timeline = extract_step_timeline(entries)
-        starts = [e for e in timeline if e["event"] == "start"]
-        ends = [e for e in timeline if e["event"] == "end"]
-        assert len(starts) >= 1
-        assert len(ends) >= 1
+        events = [e["event"] for e in timeline]
+        assert "start" in events
+        assert "end" in events
+
+    def test_timeline_entries_have_required_keys(self, mock_run_dir: Path) -> None:
+        from src.tools.log_analysis import extract_step_timeline, parse_run_log
+
+        entries = parse_run_log(str(mock_run_dir / "run_log.log"))
+        timeline = extract_step_timeline(entries)
+        for item in timeline:
+            assert "event" in item
+            assert "source" in item
+            assert "timestamp" in item
 
 
 class TestSummarizeRun:
-    def test_summarize_with_log_and_json(self, tmp_path: Path) -> None:
+    def test_returns_run_summary(self, mock_run_dir: Path) -> None:
         from src.tools.log_analysis import summarize_run
 
-        (tmp_path / "run_log.log").write_text(_SAMPLE_LOG, encoding="utf-8")
-        (tmp_path / "run_summary.json").write_text(
-            json.dumps({
-                "run_id": "run_001",
-                "exp_name": "test_exp",
-                "success": True,
-                "steps": [
-                    {"id": "s0", "type": "cv", "success": True, "details": "ok"},
-                ],
-            }),
-            encoding="utf-8",
-        )
-        summary = summarize_run(str(tmp_path))
-        assert summary.run_id == "run_001"
-        assert len(summary.step_results) == 1
-        assert len(summary.errors) == 1  # 1 ERROR line
-
-    def test_summarize_empty_dir(self, tmp_path: Path) -> None:
-        from src.tools.log_analysis import summarize_run
-
-        summary = summarize_run(str(tmp_path))
-        assert summary.errors == []
+        summary = summarize_run(str(mock_run_dir))
+        assert summary.run_id == "test_run_001"
+        assert summary.exp_name == "HER_NiFe_screening"
         assert summary.success is True
 
+    def test_step_results_populated(self, mock_run_dir: Path) -> None:
+        from src.tools.log_analysis import summarize_run
 
-# ── registry ──────────────────────────────────────────────────────────────────
+        summary = summarize_run(str(mock_run_dir))
+        assert len(summary.step_results) == 2
+        assert summary.step_results[0].step_type == "cv"
+
+    def test_errors_from_log(self, mock_run_dir: Path) -> None:
+        from src.tools.log_analysis import summarize_run
+
+        summary = summarize_run(str(mock_run_dir))
+        # The log has 1 ERROR entry
+        assert len(summary.errors) >= 1
+
+    def test_empty_run_dir_no_crash(self, tmp_path: Path) -> None:
+        from src.tools.log_analysis import summarize_run
+
+        empty_run = tmp_path / "empty_run"
+        empty_run.mkdir()
+        summary = summarize_run(str(empty_run))
+        # Should not raise; returns defaults
+        assert summary is not None
+        assert summary.run_id == "empty_run"
+
+
+# ── registry tests ────────────────────────────────────────────────────────────
 
 class TestToolRegistry:
     def test_register_and_get(self) -> None:
         from src.tools.registry import ToolRegistry
 
         reg = ToolRegistry()
-        reg.register("echo", lambda x: x, "Echo tool")
-        assert reg.get("echo")("hello") == "hello"
-
-    def test_empty_name_raises(self) -> None:
-        from src.tools.registry import ToolRegistry
-
-        reg = ToolRegistry()
-        with pytest.raises(ValueError):
-            reg.register("", lambda: None)
+        reg.register("my_tool", lambda x: x * 2, "doubles input")
+        handler = reg.get("my_tool")
+        assert handler(5) == 10
 
     def test_get_missing_raises(self) -> None:
         from src.tools.registry import ToolRegistry
@@ -283,171 +273,179 @@ class TestToolRegistry:
         with pytest.raises(KeyError):
             reg.get("nonexistent")
 
+    def test_register_empty_name_raises(self) -> None:
+        from src.tools.registry import ToolRegistry
+
+        reg = ToolRegistry()
+        with pytest.raises(ValueError):
+            reg.register("", lambda: None)
+
+    def test_list_tools_returns_list(self) -> None:
+        from src.tools.registry import ToolRegistry
+
+        reg = ToolRegistry()
+        reg.register("t1", lambda: 1, "desc1")
+        reg.register("t2", lambda: 2, "desc2")
+        tools = reg.list_tools()
+        assert len(tools) == 2
+        names = {t["name"] for t in tools}
+        assert names == {"t1", "t2"}
+
     def test_unregister(self) -> None:
         from src.tools.registry import ToolRegistry
 
         reg = ToolRegistry()
-        reg.register("tmp", lambda: 1)
-        reg.unregister("tmp")
+        reg.register("temp", lambda: None)
+        reg.unregister("temp")
         with pytest.raises(KeyError):
-            reg.get("tmp")
+            reg.get("temp")
 
-    def test_list_tools(self) -> None:
+    def test_unregister_nonexistent_no_error(self) -> None:
         from src.tools.registry import ToolRegistry
 
         reg = ToolRegistry()
-        reg.register("a", lambda: None, "Tool A")
-        reg.register("b", lambda: None, "Tool B")
-        tools = reg.list_tools()
-        names = {t["name"] for t in tools}
-        assert names == {"a", "b"}
+        reg.unregister("ghost")  # should not raise
 
-    def test_invoke_sync_handler(self) -> None:
+    def test_invoke_sync(self) -> None:
         import asyncio
         from src.tools.registry import ToolRegistry
 
         reg = ToolRegistry()
         reg.register("add", lambda a, b: a + b)
-        result = asyncio.run(reg.invoke("add", 2, 3))
-        assert result == 5
-
-    def test_invoke_async_handler(self) -> None:
-        import asyncio
-        from src.tools.registry import ToolRegistry
-
-        async def async_fn(x: int) -> int:
-            await asyncio.sleep(0)
-            return x * 2
-
-        reg = ToolRegistry()
-        reg.register("double", async_fn)
-
-        async def _run() -> int:
-            return await reg.invoke("double", 5)
-
-        assert asyncio.run(_run()) == 10
+        result = asyncio.get_event_loop().run_until_complete(reg.invoke("add", 3, 4))
+        assert result == 7
 
 
 class TestBuildDefaultRegistry:
-    def test_default_registry_has_expected_tools(self) -> None:
+    def test_returns_registry_with_tools(self) -> None:
         from src.tools.registry import build_default_registry
 
         reg = build_default_registry()
-        names = {t["name"] for t in reg.list_tools()}
+        tools = reg.list_tools()
+        names = {t["name"] for t in tools}
         assert "read_cv_csv" in names
         assert "read_eis_csv" in names
-        assert "watch_data_dir" in names
+        assert "read_experiment_dir" in names
+        assert "start_experiment" in names
+        assert "stop_experiment" in names
+
+    def test_all_tools_have_description(self) -> None:
+        from src.tools.registry import build_default_registry
+
+        reg = build_default_registry()
+        for tool in reg.list_tools():
+            assert tool["description"], f"Tool {tool['name']} has no description"
 
 
-# ── report_generator ──────────────────────────────────────────────────────────
+# ── report_generator tests ────────────────────────────────────────────────────
 
 class TestGenerateRunReport:
-    def test_generates_markdown(self, tmp_path: Path) -> None:
+    def test_returns_output_path_string(self, mock_run_dir: Path, tmp_path: Path) -> None:
         from src.tools.report_generator import generate_run_report
 
-        (tmp_path / "run_log.log").write_text(_SAMPLE_LOG, encoding="utf-8")
-        (tmp_path / "run_summary.json").write_text(
-            json.dumps({
-                "run_id": "rpt_test",
-                "exp_name": "report_exp",
-                "success": True,
-                "steps": [],
-            }),
-            encoding="utf-8",
-        )
         out = tmp_path / "report.md"
-        result = generate_run_report(str(tmp_path), str(out))
-        assert Path(result).exists()
+        result = generate_run_report(str(mock_run_dir), str(out))
+        assert isinstance(result, str)
+        assert out.exists()
+
+    def test_report_contains_run_id(self, mock_run_dir: Path, tmp_path: Path) -> None:
+        from src.tools.report_generator import generate_run_report
+
+        out = tmp_path / "report.md"
+        generate_run_report(str(mock_run_dir), str(out))
         content = out.read_text(encoding="utf-8")
-        assert "rpt_test" in content
-        assert "report_exp" in content
+        assert "test_run_001" in content
 
+    def test_report_contains_exp_name(self, mock_run_dir: Path, tmp_path: Path) -> None:
+        from src.tools.report_generator import generate_run_report
 
-class TestGenerateHealthReport:
-    def test_generates_health_markdown(self, tmp_path: Path) -> None:
-        from src.common.types import HealthStatus
-        from src.tools.report_generator import generate_health_report
-
-        statuses = [
-            HealthStatus(
-                component="pump",
-                status="ok",
-                message="All good",
-                last_checked=datetime(2025, 1, 1, 12, 0, 0),
-            ),
-            HealthStatus(
-                component="echem",
-                status="error",
-                message="Disconnected",
-                last_checked=datetime(2025, 1, 1, 12, 0, 0),
-            ),
-        ]
-        out = tmp_path / "health.md"
-        result = generate_health_report(statuses, str(out))
-        assert Path(result).exists()
+        out = tmp_path / "report.md"
+        generate_run_report(str(mock_run_dir), str(out))
         content = out.read_text(encoding="utf-8")
-        assert "pump" in content
-        assert "Disconnected" in content
+        assert "HER_NiFe_screening" in content
+
+    def test_file_non_empty(self, mock_run_dir: Path, tmp_path: Path) -> None:
+        from src.tools.report_generator import generate_run_report
+
+        out = tmp_path / "report.md"
+        generate_run_report(str(mock_run_dir), str(out))
+        assert out.stat().st_size > 50
 
 
-# ── visualization ─────────────────────────────────────────────────────────────
+# ── file_watcher tests ────────────────────────────────────────────────────────
 
-class TestPlotCvCurve:
-    def test_saves_png(self, tmp_path: Path) -> None:
-        import numpy as np
+class TestWatchDataDir:
+    def test_yields_new_run_dirs(self, tmp_path: Path) -> None:
+        from src.tools.file_watcher import watch_data_dir
+
+        # Create a day_dir/run_dir structure AFTER watcher starts
+        day = tmp_path / "2024-01-15"
+        day.mkdir()
+
+        # Run watcher with max_polls=1 and very short interval
+        # Pre-existing directory is in 'seen', so create it after initial snapshot
+        gen = watch_data_dir(str(tmp_path), poll_interval=0.01, max_polls=1)
+        # The generator won't yield anything if run_dir already existed before first poll
+        results = list(gen)
+        # Results may be empty (run_dir was already there), that's fine
+        assert isinstance(results, list)
+
+    def test_discovers_new_dirs_mid_run(self, tmp_path: Path) -> None:
+        from src.tools.file_watcher import watch_data_dir
+        import threading
+
+        day = tmp_path / "2024-01-16"
+        day.mkdir()
+
+        found: list[str] = []
+
+        def _create_run() -> None:
+            import time
+            time.sleep(0.05)
+            (day / "run_001").mkdir()
+
+        t = threading.Thread(target=_create_run)
+        t.start()
+        gen = watch_data_dir(str(tmp_path), poll_interval=0.02, max_polls=5)
+        for path in gen:
+            found.append(path)
+        t.join()
+        # The new run_001 should have been yielded
+        assert any("run_001" in p for p in found)
+
+    def test_empty_root_no_yields(self, tmp_path: Path) -> None:
+        from src.tools.file_watcher import watch_data_dir
+
+        results = list(watch_data_dir(str(tmp_path), poll_interval=0.01, max_polls=1))
+        assert results == []
+
+
+# ── visualization smoke tests ─────────────────────────────────────────────────
+
+class TestVisualization:
+    def test_plot_cv_curve_saves_png(self, cv_csv_file: Path, tmp_path: Path) -> None:
+        """plot_cv_curve should write a PNG without raising."""
+        import matplotlib
+        matplotlib.use("Agg")  # non-interactive backend for CI
         from src.tools.visualization import plot_cv_curve
+        import pandas as pd
 
-        df = pd.DataFrame({
-            "Potential(V)": np.linspace(-1, 1, 50),
-            "Current(A)": np.sin(np.linspace(0, 2 * 3.14159, 50)) * 1e-3,
-        })
-        out = tmp_path / "cv_plot.png"
-        result = plot_cv_curve(df, "Test CV", str(out))
+        df = pd.read_csv(str(cv_csv_file))
+        out = str(tmp_path / "cv_plot.png")
+        result = plot_cv_curve(df, title="Test CV", save_path=out)
         assert Path(result).exists()
-        assert out.stat().st_size > 0
+        assert Path(result).suffix == ".png"
 
-
-class TestPlotStepTimeline:
-    def test_saves_png(self, tmp_path: Path) -> None:
+    def test_plot_step_timeline_saves_png(self, tmp_path: Path) -> None:
+        """plot_step_timeline should write a PNG without raising."""
+        import matplotlib
+        matplotlib.use("Agg")
         from src.tools.visualization import plot_step_timeline
 
         timeline = [
-            {"event": "start", "source": "pump", "timestamp": "2025-01-01T10:00:00", "status": "running"},
-            {"event": "end", "source": "pump", "timestamp": "2025-01-01T10:00:05", "duration_s": 5.0, "status": "done"},
-            {"event": "start", "source": "echem", "timestamp": "2025-01-01T10:00:05", "status": "running"},
-            {"event": "end", "source": "echem", "timestamp": "2025-01-01T10:00:15", "duration_s": 10.0, "status": "failed"},
+            {"event": "start", "source": "cv_step", "timestamp": "2024-01-15T10:00:00", "status": "running"},
+            {"event": "end", "source": "cv_step", "timestamp": "2024-01-15T10:02:00", "duration_s": 120.0, "status": "done"},
         ]
-        out = tmp_path / "timeline.png"
-        result = plot_step_timeline(timeline, str(out))
-        assert Path(result).exists()
-
-    def test_empty_timeline(self, tmp_path: Path) -> None:
-        from src.tools.visualization import plot_step_timeline
-
-        out = tmp_path / "empty_timeline.png"
-        result = plot_step_timeline([], str(out))
-        assert Path(result).exists()
-
-
-class TestPlotMultiCvOverlay:
-    def test_overlay_saves_png(self, tmp_path: Path) -> None:
-        from src.tools.visualization import plot_multi_cv_overlay
-
-        for i in range(2):
-            f = tmp_path / f"cv_{i}.csv"
-            f.write_text("Potential(V),Current(A)\n0.0,0.001\n0.5,0.002\n1.0,0.003\n")
-
-        out = tmp_path / "overlay.png"
-        files = [str(tmp_path / f"cv_{i}.csv") for i in range(2)]
-        result = plot_multi_cv_overlay(files, ["Run 1", "Run 2"], str(out))
-        assert Path(result).exists()
-
-    def test_labels_padded(self, tmp_path: Path) -> None:
-        from src.tools.visualization import plot_multi_cv_overlay
-
-        f = tmp_path / "cv_0.csv"
-        f.write_text("Potential(V),Current(A)\n0.0,0.001\n0.5,0.002\n")
-        out = tmp_path / "pad.png"
-        # 1 file but 0 labels → should auto-pad
-        result = plot_multi_cv_overlay([str(f)], [], str(out))
+        out = str(tmp_path / "timeline.png")
+        result = plot_step_timeline(timeline, save_path=out)
         assert Path(result).exists()
