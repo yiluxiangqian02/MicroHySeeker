@@ -172,6 +172,31 @@
       "retries": 0,
       "notes": "",
       "pid": 318460
+    },
+    {
+      "id": "TASK_018",
+      "agent": "codex",
+      "branch": "feat/ui-phase1",
+      "worktree": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\agent_cluster\\worktrees\\feat_ui-phase1",
+      "description": "Implement Web UI Phase 1: Setup React+TypeScript project, implement Overview page and API client layer based on UI_PLAN.md",
+      "status": "running",
+      "created_at": "2026-03-06T03:09:52.362939+00:00",
+      "started_at": "2026-03-06T03:09:53.873339+00:00",
+      "retries": 0,
+      "notes": ""
+    },
+    {
+      "id": "TASK_019",
+      "agent": "copilot",
+      "branch": "feat/fix-c1-c4",
+      "worktree": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\agent_cluster\\worktrees\\feat_fix-c1-c4",
+      "description": "Fix C1-C4: Add extended tests for tools/config, add .gitignore, verify scipy dependency, add test fixtures",
+      "status": "running",
+      "created_at": "2026-03-06T03:10:13.150684+00:00",
+      "started_at": "2026-03-06T03:10:14.541421+00:00",
+      "retries": 0,
+      "notes": "",
+      "pid": 246448
     }
   ],
   "completed": [
@@ -233,7 +258,7 @@
     }
   ],
   "meta": {
-    "last_updated": "2026-03-06T01:52:57.172517+00:00",
+    "last_updated": "2026-03-06T03:10:14.555536+00:00",
     "updated_by": "Pi"
   }
 }

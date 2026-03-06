@@ -1,0 +1,46 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+*.egg
+dist/
+build/
+*.whl
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+logs/
+*.log
+
+# Env
+.env
+
+# pytest
+.pytest_cache/
+pytest-cache-files-*/
+
+# mypy
+.mypy_cache/
+
+# Data (large experiment output)
+data/
+
+# UV lock (optional: remove this line if lock file should be tracked)
+# uv.lock
