@@ -6,6 +6,7 @@
 |---|---|---|---|---|---|---|
 | TASK_013 | Copilot (claude-sonnet-4.6) | feat/fix-a3-a6-tests | done | Fix A3-A6: Write critical tests - test_orchestrator.py, test_agents.py, test_pipeline_e2e.py, test_api_routes.py. Mock LLM calls. Update VALIDATION.md | 2026-03-05 | - |
 | TASK_014 | Copilot (claude-sonnet-4.6) | feat/fix-b1-paths | done | Fix B1: Replace hardcoded paths in configs/microhyseeker.toml with relative paths + ${VAR:-default} env var syntax. Updated src/configs.py with _expand_path(). | 2026-03-05 | - |
+| TASK_017 | Copilot (claude-sonnet-4.6) | feat/fix-b3-b7 | done | Fix B3-B7: Write tests for optimization, experiment_execution, D3 diagnostics, llm_client. Document dual config system. | 2026-03-06 | - |
 
 Status values: `pending` | `running` | `done` | `failed` | `review`
 
@@ -22,6 +23,7 @@ Status values: `pending` | `running` | `done` | `failed` | `review`
 | TASK_011 | Copilot (claude-sonnet-4.6) | feat/validation-plan | done | 2026-03-05 |
 | TASK_013 | Copilot (claude-sonnet-4.6) | feat/fix-a3-a6-tests | done | 2026-03-05 |
 | TASK_014 | Copilot (claude-sonnet-4.6) | feat/fix-b1-paths | done | 2026-03-05 |
+| TASK_017 | Copilot (claude-sonnet-4.6) | feat/fix-b3-b7 | done | 2026-03-06 |
 
 ## Safety Rules
 
@@ -59,4 +61,7 @@ AutoHySeeker/OpenViking/
 | TASK_013 测试最佳实践：mock LLM 时用 `patch("src.agents.base.chat_completion", new=AsyncMock(...))` + `patch("src.common.llm_client.OPENAI_API_KEY", "test-key")`；避免 patch 字典 `AGENT_MAP`（会破坏 `__getitem__`） | 编写 Agent/Orchestrator 测试 |
 | TASK_013 FastAPI TestClient 测试：在 `@pytest.fixture` 中创建 `TestClient(app)`；route 级 mock 用 `patch("src.api.routes.agents.get_supervisor_graph", return_value=mock_graph)`（不 patch src.graph.orchestrator 全局函数） | 编写 FastAPI 路由集成测试 |
 | `configs/microhyseeker.toml` 中的路径值支持 `${VAR:-default}` 语法；`src/configs.py` 的 `_expand_path()` 在 `MicroHySeekerConfig.load()` 中展开 env var 并将相对路径解析到 `_CONFIGS_DIR.parent`（AutoHySeeker/） | 任何需要跨机器可移植路径的 TOML 配置场景 |
+| TASK_017 双配置系统：`src/common/config.py`（环境变量/`.env`，用于 LLM 客户端和 API 服务器）与 `src/configs.py`（TOML 文件，用于结构化应用配置），二者并存。文档见 `docs/dual_config_system.md` | 需要理解两套配置来源时 |
+| TASK_017 测试 `asyncio.sleep` 时需 patch 模块内的引用：`patch("src.common.llm_client.asyncio.sleep", new=AsyncMock())`，而非全局 `patch("asyncio.sleep")`，否则不能阻止实际 sleep | 测试包含 `asyncio.sleep` 重试逻辑的异步函数 |
+| TASK_017 BayesianOptimizer 测试：用 `seed=42` 保证可重复性；`ParameterSpace` 可直接从 `Mapping` 构造（`{"x": [0.0, 1.0]}`），不必手动 `add_float`；`MultiObjectiveBayesianOptimizer` 要求至少 2 个方向 | 编写 Optuna 优化器单元测试 |
 
