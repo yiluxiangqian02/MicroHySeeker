@@ -331,3 +331,126 @@ class TestPhase3Imports:
 
         assert callable(build_diagnostics_graph)
         assert callable(get_diagnostics_graph)
+
+
+# ── D3 InteractiveTroubleshootingSkill tests ──────────────────────────────────
+
+class TestInteractiveTroubleshootingSkill:
+    """Cover D3 decision-tree troubleshooting for all 4 fault categories."""
+
+    def test_import_singleton(self) -> None:
+        from src.skills.diagnostics import (
+            InteractiveTroubleshootingSkill,
+            interactive_troubleshooting_skill,
+        )
+        assert isinstance(interactive_troubleshooting_skill, InteractiveTroubleshootingSkill)
+
+    def test_exported_from_skills_package(self) -> None:
+        from src.skills import InteractiveTroubleshootingSkill, interactive_troubleshooting_skill
+        assert InteractiveTroubleshootingSkill is not None
+        assert interactive_troubleshooting_skill is not None
+
+    # ── error paths ───────────────────────────────────────────────────────────
+
+    def test_empty_symptom_returns_failure(self) -> None:
+        from src.skills.diagnostics import InteractiveTroubleshootingSkill
+        skill = InteractiveTroubleshootingSkill()
+        result = run_async(skill.execute(symptom=""))
+        assert result.success is False
+        assert "available" in result.message.lower()
+
+    def test_unknown_symptom_returns_failure(self) -> None:
+        from src.skills.diagnostics import InteractiveTroubleshootingSkill
+        skill = InteractiveTroubleshootingSkill()
+        result = run_async(skill.execute(symptom="nonexistent_issue"))
+        assert result.success is False
+        assert "nonexistent_issue" in result.message
+
+    def test_no_symptom_kwarg_returns_failure(self) -> None:
+        from src.skills.diagnostics import InteractiveTroubleshootingSkill
+        skill = InteractiveTroubleshootingSkill()
+        result = run_async(skill.execute())
+        assert result.success is False
+
+    # ── 4 fault tree categories ───────────────────────────────────────────────
+
+    def test_pump_not_running(self) -> None:
+        from src.skills.diagnostics import InteractiveTroubleshootingSkill
+        skill = InteractiveTroubleshootingSkill()
+        result = run_async(skill.execute(symptom="pump_not_running"))
+        assert result.success is True
+        assert result.data["symptom"] == "pump_not_running"
+        assert len(result.data["steps"]) >= 3
+        assert len(result.data["possible_causes"]) >= 3
+
+    def test_echem_no_signal(self) -> None:
+        from src.skills.diagnostics import InteractiveTroubleshootingSkill
+        skill = InteractiveTroubleshootingSkill()
+        result = run_async(skill.execute(symptom="echem_no_signal"))
+        assert result.success is True
+        assert result.data["symptom"] == "echem_no_signal"
+        assert "title" in result.data
+
+    def test_communication_timeout(self) -> None:
+        from src.skills.diagnostics import InteractiveTroubleshootingSkill
+        skill = InteractiveTroubleshootingSkill()
+        result = run_async(skill.execute(symptom="communication_timeout"))
+        assert result.success is True
+        assert len(result.data["steps"]) >= 3
+        assert result.data["symptom"] == "communication_timeout"
+
+    def test_data_anomaly(self) -> None:
+        from src.skills.diagnostics import InteractiveTroubleshootingSkill
+        skill = InteractiveTroubleshootingSkill()
+        result = run_async(skill.execute(symptom="data_anomaly"))
+        assert result.success is True
+        assert result.data["symptom"] == "data_anomaly"
+        assert len(result.data["possible_causes"]) >= 3
+
+    # ── response structure ────────────────────────────────────────────────────
+
+    def test_result_contains_diagnostic_dict(self) -> None:
+        from src.skills.diagnostics import InteractiveTroubleshootingSkill
+        skill = InteractiveTroubleshootingSkill()
+        result = run_async(skill.execute(symptom="pump_not_running"))
+        assert "diagnostic" in result.data
+        diag = result.data["diagnostic"]
+        assert diag["severity"] == "warning"
+        assert diag["category"] == "troubleshooting"
+        assert "suggestion" in diag
+        assert "evidence" in diag
+
+    def test_all_known_symptoms_succeed(self) -> None:
+        from src.skills.diagnostics import InteractiveTroubleshootingSkill
+        skill = InteractiveTroubleshootingSkill()
+        for symptom in ("pump_not_running", "echem_no_signal",
+                        "communication_timeout", "data_anomaly"):
+            result = run_async(skill.execute(symptom=symptom))
+            assert result.success is True, f"Failed for symptom={symptom}"
+            assert result.data["symptom"] == symptom
+
+    def test_message_references_title(self) -> None:
+        from src.skills.diagnostics import InteractiveTroubleshootingSkill
+        skill = InteractiveTroubleshootingSkill()
+        result = run_async(skill.execute(symptom="pump_not_running"))
+        assert result.message  # non-empty
+        assert "guide" in result.message.lower() or "troubleshooting" in result.message.lower() \
+            or "泵" in result.message  # title appears in message
+
+    def test_get_schema_contains_symptom_enum(self) -> None:
+        from src.skills.diagnostics import InteractiveTroubleshootingSkill
+        skill = InteractiveTroubleshootingSkill()
+        schema = skill.get_schema()
+        assert isinstance(schema, dict)
+        assert "symptom" in schema["properties"]
+        enum_values = schema["properties"]["symptom"]["enum"]
+        assert set(enum_values) == {
+            "pump_not_running", "echem_no_signal",
+            "communication_timeout", "data_anomaly",
+        }
+
+    def test_artifacts_empty_for_troubleshooting(self) -> None:
+        from src.skills.diagnostics import InteractiveTroubleshootingSkill
+        skill = InteractiveTroubleshootingSkill()
+        result = run_async(skill.execute(symptom="echem_no_signal"))
+        assert result.artifacts == []

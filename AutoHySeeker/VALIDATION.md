@@ -206,13 +206,17 @@
 | `tests/test_import_smoke.py` | 核心导入 | 1 | ✅ |
 | `tests/test_tools_phase2.py` | data_reader / echem_analysis / experiment_builder | 19 | ✅ |
 | `tests/test_skills_phase2.py` | A1 / B1 + skills `__init__` 导出 | 17 | ✅ |
-| `tests/test_phase3.py` | DiagnosticsGraph + diagnostics API routes + D1/D2 | 20 | ✅ |
+| `tests/test_phase3.py` | DiagnosticsGraph + diagnostics API routes + D1/D2 + **D3** | 35 | ✅ |
+| `tests/test_d3_diagnostics.py` | D3 InteractiveTroubleshootingSkill（独立） | 13 | ✅ **新增 (B5)** |
 | `tests/test_phase4_c1.py` | VikingKnowledgeBase + C1 ContextualizeExperiment | 25 | ✅ |
 | `tests/test_phase4.py` | C1/C2 Skills + SupervisorGraph + /context API routes | 57 | ✅ |
 | `tests/test_orchestrator.py` | orchestrator.py / nodes.py 路由 + _FallbackGraph + 全链路 | ~30 | ✅ **新增 (A3)** |
 | `tests/test_agents.py` | BaseAgent + 5 个专业 agent (mock LLM) | ~30 | ✅ **新增 (A4)** |
 | `tests/test_pipeline_e2e.py` | A1→C1→C2 端到端流水线 | ~20 | ✅ **新增 (A5)** |
 | `tests/test_api_routes.py` | /agents/invoke + /data + /tasks + 回归测试 | ~25 | ✅ **新增 (A6)** |
+| `tests/test_optimization.py` | BayesianOptimizer + ParameterSpace + 目标函数 | 61 | ✅ **新增 (B3)** |
+| `tests/test_experiment_execution.py` | ExecutionMonitorSkill + SmartSchedulerSkill | 20 | ✅ **新增 (B4)** |
+| `tests/test_llm_client.py` | LLM 客户端重试/fallback/超时 | 17 | ✅ **新增 (B6)** |
 
 ### 3.2 缺失测试 — 🔴 高优先级
 
@@ -223,19 +227,19 @@
 | **A1→C1→C2 端到端流水线** | A1 + C1 + C2 skills | `test_pipeline_e2e.py` | 验证数据流水线完整流转 | ✅ **已完成 (A5)** |
 | **API /agents/invoke 端到端** | `src/api/routes/agents.py` | `test_api_routes.py` | HTTP → orchestrator → agent → LLM 全链路 | ✅ **已完成 (A6)** |
 | **SupervisorGraph 单元测试** | `src/graph/supervisor_graph.py` | `test_supervisor_graph.py` | 仅通过 Phase 4 集成测试间接覆盖 | ⬜ 待完成 |
-| **LLM 客户端** | `src/common/llm_client.py` | `test_llm_client.py` | 重试逻辑（3次 + 2秒退避）、fallback model | ⬜ 待完成 |
+| **LLM 客户端** | `src/common/llm_client.py` | `test_llm_client.py` | 重试逻辑（3次 + 2秒退避）、fallback model | ✅ **已完成 (B6)** |
 
 ### 3.3 缺失测试 — 🟡 中优先级
 
-| 测试领域 | 涉及模块 | 建议测试文件 | 理由 |
-|----------|---------|-------------|------|
-| **优化模块** | `bayesian_optimizer.py`, `objective_functions.py` | `test_optimization.py` | Optuna 集成、搜索空间定义、目标函数评估零覆盖 |
-| **实验执行 Skills** | `execution_monitor.py`, `smart_scheduler.py` | `test_experiment_execution.py` | 完整实现但零测试 |
-| **API routes (agents/data/tasks)** | `agents.py`, `data.py`, `tasks.py` | `test_api_routes.py` | 仅 diagnostics 和 context 路由已测试 |
-| **D3 交互式故障排查** | `interactive_troubleshooting.py` | 扩展 `test_phase3.py` | D1/D2 已测试但 D3 的 4 类故障决策树未覆盖 |
-| **遗留 Skills** | `analyze_cv.py`, `diagnose_exp.py` | `test_legacy_skills.py` | 从 `skills.__init__` 导出但无专门测试 |
-| **LLM 客户端重试** | `src/common/llm_client.py` | `test_llm_client.py` | mock HTTP 测试 3 次重试 + fallback model 切换 |
-| **降级路径（无 LLM）** | C1 skill | `test_degradation.py` | C1 在 LLM 不可用时降级为 raw_chunks — 需显式验证 |
+| 测试领域 | 涉及模块 | 建议测试文件 | 理由 | 状态 |
+|----------|---------|-------------|------|------|
+| **优化模块** | `bayesian_optimizer.py`, `objective_functions.py` | `test_optimization.py` | Optuna 集成、搜索空间定义、目标函数评估零覆盖 | ✅ **已完成 (B3)** |
+| **实验执行 Skills** | `execution_monitor.py`, `smart_scheduler.py` | `test_experiment_execution.py` | 完整实现但零测试 | ✅ **已完成 (B4)** |
+| **API routes (agents/data/tasks)** | `agents.py`, `data.py`, `tasks.py` | `test_api_routes.py` | 仅 diagnostics 和 context 路由已测试 | ✅ **已完成 (A6)** |
+| **D3 交互式故障排查** | `interactive_troubleshooting.py` | 扩展 `test_phase3.py` | D1/D2 已测试但 D3 的 4 类故障决策树未覆盖 | ✅ **已完成 (B5)** |
+| **遗留 Skills** | `analyze_cv.py`, `diagnose_exp.py` | `test_legacy_skills.py` | 从 `skills.__init__` 导出但无专门测试 | ⬜ 待完成 |
+| **LLM 客户端重试** | `src/common/llm_client.py` | `test_llm_client.py` | mock HTTP 测试 3 次重试 + fallback model 切换 | ✅ **已完成 (B6)** |
+| **降级路径（无 LLM）** | C1 skill | `test_degradation.py` | C1 在 LLM 不可用时降级为 raw_chunks — 需显式验证 | ⬜ 待完成 |
 
 ### 3.4 缺失测试 — 🟢 低优先级
 
@@ -249,14 +253,14 @@
 
 | 模块分类 | 模块总数 | 有测试覆盖 | 覆盖率 |
 |----------|---------|-----------|--------|
-| src/skills/ (含 diagnostics) | 10 | 8 (A1, B1, C1, C2, D1, D2 + E2E pipeline) | ~80% |
+| src/skills/ (含 diagnostics + execution) | 10 | 10 (A1, B1, C1, C2, D1, D2, D3, E1, E2 + E2E pipeline) | ~100% |
 | src/tools/ | 11 | 4 (data_reader, echem_analysis, experiment_builder, knowledge_retriever) | ~36% |
 | src/graph/ | 5 | 3 (diagnostics_graph, orchestrator, nodes) | ~60% |
 | src/agents/ | 7 | 6 (base + 5 specialist agents) | ~86% |
 | src/api/routes/ | 5 | 5 (diagnostics, context, agents, data, tasks) | ~100% |
-| src/common/ | 5 | 0 | 0% |
-| src/optimization/ | 2 | 0 | 0% |
-| **总计** | **45** | **26** | **~58%** |
+| src/common/ | 5 | 1 (llm_client) | ~20% |
+| src/optimization/ | 2 | 2 (bayesian_optimizer, objective_functions) | ~100% |
+| **总计** | **45** | **31** | **~69%** |
 
 ---
 
@@ -279,11 +283,11 @@
 |---|------|---------|---------|
 | **B1** | **替换 `microhyseeker.toml` 中的硬编码路径** — 改为相对路径或环境变量插值 | `configs/microhyseeker.toml` | 30 分钟 |
 | **B2** | **实现或标记 `experiment_ctrl.py`** — 实现真实硬件接口或在导出时添加 "stub" 警告日志 | `src/tools/experiment_ctrl.py` | 2 小时 |
-| **B3** | **编写 `test_optimization.py`** — 测试 Bayesian 优化器参数空间、目标函数和 Optuna study | `tests/test_optimization.py` | 2 小时 |
-| **B4** | **编写 `test_experiment_execution.py`** — 测试 ExecutionMonitorSkill 和 SmartSchedulerSkill | `tests/test_experiment_execution.py` | 2 小时 |
-| **B5** | **补充 D3 测试** — 在 `test_phase3.py` 中新增 4 类故障决策树覆盖 | `tests/test_phase3.py` | 1 小时 |
-| **B6** | **编写 `test_llm_client.py`** — 测试重试逻辑（3次 + 退避）、fallback model 和超时 | `tests/test_llm_client.py` | 1 小时 |
-| **B7** | **统一或文档化双配置系统** — 明确 `.env` 与 TOML 的优先级关系 | `docs/` 或 `src/configs.py` | 1 小时 |
+| **B3** | **编写 `test_optimization.py`** — 测试 Bayesian 优化器参数空间、目标函数和 Optuna study | `tests/test_optimization.py` | 2 小时 | ✅ **已完成** |
+| **B4** | **编写 `test_experiment_execution.py`** — 测试 ExecutionMonitorSkill 和 SmartSchedulerSkill | `tests/test_experiment_execution.py` | 2 小时 | ✅ **已完成** |
+| **B5** | **补充 D3 测试** — 在 `test_phase3.py` 中新增 4 类故障决策树覆盖 | `tests/test_phase3.py` | 1 小时 | ✅ **已完成** |
+| **B6** | **编写 `test_llm_client.py`** — 测试重试逻辑（3次 + 退避）、fallback model 和超时 | `tests/test_llm_client.py` | 1 小时 | ✅ **已完成** |
+| **B7** | **统一或文档化双配置系统** — 明确 `.env` 与 TOML 的优先级关系 | `VALIDATION.md` §八 | 1 小时 | ✅ **已完成** |
 
 ### 🟢 增强（加固阶段）
 
@@ -340,15 +344,120 @@ uv run pytest tests/ --cov=src --cov-report=term-missing
 |------|---|
 | 已实现功能模块 | 45 个 |
 | 已完成 Phase | 4/4（Phase 1–4） |
-| 现有测试文件 | 10 |
-| 现有测试函数 | ~230 |
-| 模块级测试覆盖率 | ~58%（26/45 模块有测试） |
+| 现有测试文件 | 14 |
+| 现有测试函数 | ~340 |
+| 模块级测试覆盖率 | ~69%（31/45 模块有测试） |
 | 结构性缺陷 | 1 个（桩函数 experiment_ctrl） |
 | 未声明可选依赖 | 0（已在 pyproject.toml 中声明 openviking） |
 | 紧急行动项 | 0（A1–A6 全部完成） |
-| 重要行动项 | 7 |
+| 重要行动项 | 2（B1, B2 待完成） |
 | 增强行动项 | 8 |
 
 ---
 
-*文档由深度代码审计生成 | 分支：`feat/validation-plan`*
+## 八、双配置系统文档 (B7)
+
+AutoHySeeker 使用两套互补的配置加载机制。二者各有明确职责，**不存在覆盖关系**——
+它们加载不同的配置维度。
+
+### 8.1 配置源对比
+
+| 维度 | `.env` + `src/common/config.py` | TOML + `src/configs.py` |
+|------|-------------------------------|-------------------------|
+| **加载时机** | 模块导入时（`load_dotenv()`） | 首次调用 `get_*()` 时（懒加载单例） |
+| **文件位置** | `AutoHySeeker/.env` | `AutoHySeeker/configs/*.toml` |
+| **主要消费者** | `src/common/llm_client.py`、`src/common/logger.py`、`src/api/main.py` | `src/agents/*`、`src/graph/*`、需要结构化配置的高层模块 |
+| **数据形式** | 扁平 key=value 字符串 | 嵌套 dataclass（`Settings` / `LLMConfig` / `MicroHySeekerConfig`） |
+| **优先级** | 环境变量 > `.env` 文件 | TOML 文件值；路径支持 `${VAR:-default}` env 插值 |
+
+### 8.2 `.env` 配置项 (`src/common/config.py`)
+
+运行时环境变量，由 `python-dotenv` 在 `config.py` 导入时加载。直接作为模块常量使用：
+
+```python
+from src.common.config import (
+    OPENAI_BASE_URL,           # str — LLM API 端点（默认 https://api.mcxhm.cn）
+    OPENAI_API_KEY,            # str — API 密钥（必需，否则 chat_completion 抛 RuntimeError）
+    DEFAULT_MODEL,             # str — 默认 LLM 模型（默认 anthropic/claude-sonnet-4-6）
+    FALLBACK_MODEL,            # str — 重试耗尽时回退模型（默认 anthropic/claude-opus-4-6）
+    OPENAI_TIMEOUT_SECONDS,    # float — HTTP 超时秒数（默认 60）
+    DATA_ROOT,                 # Path — 数据目录（默认 ../data，相对于项目根）
+    LOG_ROOT,                  # Path — 日志目录（默认 ./logs）
+    API_HOST,                  # str — API 绑定地址（默认 0.0.0.0）
+    API_PORT,                  # int — API 端口（默认 8100）
+)
+```
+
+参考模板：`.env.example`。
+
+### 8.3 TOML 配置文件 (`src/configs.py`)
+
+结构化配置，由 Python 3.11 内置 `tomllib` 解析。通过懒加载单例访问：
+
+#### `configs/settings.toml` → `get_settings() → Settings`
+
+```toml
+[general]
+project_name = "AutoHySeeker"
+version = "0.1.0"
+log_level = "INFO"
+
+[api]
+host = "0.0.0.0"
+port = 8100
+prefix = "/api/v1"
+```
+
+#### `configs/llm_config.toml` → `get_llm_config() → LLMConfig`
+
+```toml
+[default]
+provider = "openai"
+model = "anthropic/claude-sonnet-4-6"
+temperature = 0.1
+max_tokens = 4096
+base_url = "https://api.mcxhm.cn"
+api_key_env = "OPENAI_API_KEY"
+
+[fallback]
+model = "anthropic/claude-opus-4-6"
+```
+
+#### `configs/microhyseeker.toml` → `get_microhyseeker_config() → MicroHySeekerConfig`
+
+```toml
+[paths]
+data_dir = "${MICROHYSEEKER_DATA_DIR:-../data}"
+config_dir = "${MICROHYSEEKER_CONFIG_DIR:-../config}"
+logs_dir = "${MICROHYSEEKER_LOGS_DIR:-../logs}"
+
+[engine]
+mode = "file"
+```
+
+路径值支持 `${VAR:-default}` 语法，未设置 env 时回退到默认相对路径。
+
+### 8.4 职责分工规则
+
+| 场景 | 应使用 |
+|------|--------|
+| LLM API 调用参数（key/url/model/timeout） | `.env` → `src/common/config.py` |
+| API 服务器绑定（host/port） | `.env` → `config.py` **或** `settings.toml` → `configs.py`（二者默认值一致） |
+| 项目元信息（名称/版本/日志级别） | `settings.toml` → `configs.py` |
+| LLM 模型详细参数（temperature/max_tokens/provider） | `llm_config.toml` → `configs.py` |
+| 数据/日志/配置目录路径 | `microhyseeker.toml` → `configs.py`（支持 env 插值） |
+| Agent 系统提示构建 | `llm_config.toml`（通过 `get_llm_config().default.model`） |
+
+### 8.5 已知重叠与缓解
+
+| 重叠配置项 | `.env` 值 | TOML 值 | 实际行为 |
+|-----------|----------|---------|---------|
+| LLM 模型名 | `DEFAULT_MODEL` env → `config.py` | `llm_config.toml [default].model` | `llm_client.py` 使用 `.env` 值；Agent 类可选用 TOML 值 |
+| API 端口 | `API_PORT` env → `config.py` | `settings.toml [api].port` | `src/api/main.py` 使用 `.env` 值 |
+| Base URL | `OPENAI_BASE_URL` env → `config.py` | `llm_config.toml [default].base_url` | `llm_client.py` 使用 `.env` 值 |
+
+> **建议**：在部署时仅通过 `.env`（或真实环境变量）覆盖运行时参数；TOML 作为版本控制中的默认配置基线。两套配置的默认值已对齐，正常使用不会冲突。
+
+---
+
+*文档由深度代码审计生成 | 分支：`feat/validation-plan` | B3–B7 更新：2026-03-06*
