@@ -20,11 +20,11 @@ const CHART_MAX_POINTS = 60;
 const LOG_MAX_ENTRIES = 200;
 
 const AGENT_META: Record<AgentId, { name: string }> = {
-  C1: { name: "Contextualize Experiment" },
-  C2: { name: "Suggest Next Experiment" },
-  D1: { name: "Diagnose Failure" },
-  D2: { name: "System Health Check" },
-  D3: { name: "Interactive Troubleshooting" },
+  C1: { name: "Data Analyst" },
+  C2: { name: "Experiment Supervisor" },
+  C3: { name: "Knowledge Manager" },
+  D2: { name: "Diagnostics Expert" },
+  D3: { name: "Experiment Designer" },
 };
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -49,7 +49,7 @@ function deriveAgentStates(isHealthy: boolean, isRunning: boolean): AgentState[]
   const statusMap: Record<AgentId, AgentStatus> = {
     C1: isRunning ? "working" : "idle",
     C2: "idle",
-    D1: "idle",
+    C3: "idle",
     D2: isHealthy ? "working" : "error",
     D3: "idle",
   };

@@ -6,8 +6,10 @@
 - 右上角组合实验进程指示
 - 日志和步骤进度不同操作类型显示不同颜色
 - 字体统一放大
+- 内嵌 FastAPI HTTP 控制服务（端口 8100，供 AutoHySeeker 远程控制）
 """
 import json
+import threading
 from PySide6.QtWidgets import (
     QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QSplitter,
     QListWidget, QListWidgetItem, QTextEdit, QPushButton, QLabel, QToolBar, QStatusBar,
@@ -1091,7 +1093,12 @@ class MainWindow(QMainWindow):
         self.runner.pump_batch_update.connect(self._on_pump_batch_update)
         self.runner.volume_updated.connect(self._on_volume_updated)
         self.runner.liquid_level_update.connect(self._on_liquid_level_update)
-        
+
+        # ── HTTP API 服务（供 AutoHySeeker 远程控制，端口 8100） ──────────
+        self._api_bridge = None
+        self._api_thread = None
+        self._start_api_server(port=8100)
+
         # 电化学实时截图定时器 (测量期间捕获CHI660F窗口)
         self._echem_capture_timer = QTimer(self)
         self._echem_capture_timer.timeout.connect(self._capture_chi_window)
@@ -2243,6 +2250,25 @@ class MainWindow(QMainWindow):
             except Exception as e:
                 print(f"⚠️ 加载上次实验失败: {e}")
     
+    def _start_api_server(self, port: int = 8100) -> None:
+        """在 Qt 主线程中初始化 APIBridge，然后在 daemon 线程中启动 uvicorn。"""
+        try:
+            from src.api.bridge import APIBridge
+            from src.api.server import start_api_server
+
+            self._api_bridge = APIBridge(self.runner, self.config)
+            self._api_thread = threading.Thread(
+                target=start_api_server,
+                args=(self._api_bridge,),
+                kwargs={"port": port},
+                daemon=True,
+                name="MicroHySeeker-API",
+            )
+            self._api_thread.start()
+            _logger.info("API server thread started on port %d", port)
+        except Exception as exc:
+            _logger.warning("Failed to start API server: %s", exc)
+
     def closeEvent(self, event):
         """关闭窗口时自动断开RS485连接并保存实验"""
         # 停止轮询定时器

@@ -3,6 +3,7 @@ import { NavLink } from "react-router-dom";
 const NAV_ITEMS = [
   { to: "/", label: "Overview" },
   { to: "/dashboard", label: "Live Dashboard" },
+  { to: "/agents", label: "Agent Console" },
   { to: "/settings", label: "Settings" }
 ];
 
@@ -10,7 +11,6 @@ const UPCOMING_ITEMS = [
   "Experiments",
   "Context & Planning",
   "Diagnostics",
-  "Agent Console",
   "Tasks"
 ];
 

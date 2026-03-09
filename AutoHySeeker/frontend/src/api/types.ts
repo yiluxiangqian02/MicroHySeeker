@@ -100,6 +100,43 @@ export interface ContextResponse {
   error?: string | null;
 }
 
+export interface AgentUsageStats {
+  inputTokens: number;
+  outputTokens: number;
+  estimatedCostUsd: number;
+}
+
+export interface AgentModelConfig {
+  enabled: boolean;
+  primaryModel: string;
+  fallbackModel: string;
+  apiKey: string;
+}
+
+export interface AgentConfigSaveRequest {
+  agentId: AgentId;
+  config: AgentModelConfig;
+}
+
+export interface AgentConfigSaveResponse {
+  ok: boolean;
+  message?: string;
+}
+
+export interface AgentTestRequest {
+  agentId: AgentId;
+  task?: Record<string, unknown>;
+}
+
+export interface AgentTestResponse {
+  ok: boolean;
+  agentId?: string;
+  result?: Record<string, unknown> | null;
+  error?: string | null;
+  durationMs?: number;
+}
+
+
 export interface AgentInvokeRequest {
   task?: Record<string, unknown>;
   context?: Record<string, unknown>;
@@ -115,7 +152,7 @@ export interface AgentInvokeResponse {
 
 // ── Dashboard / realtime monitoring types ─────────────────────────────────────
 
-export type AgentId = "C1" | "C2" | "D1" | "D2" | "D3";
+export type AgentId = "C1" | "C2" | "C3" | "D2" | "D3";
 export type AgentStatus = "idle" | "working" | "error";
 
 export interface AgentState {

@@ -27,6 +27,11 @@ Scope: Review current backend API routes in `src/api/routes/`, design web UI pag
 | context | POST | `/context/invoke` | invoke context graph C1/C2 | `ContextRequest` body | `{ok, action, result, error}` |
 | context | POST | `/context/contextualize` | shortcut for C1 | query `run_dir`, `history_dir`, `threshold_sigma`, `max_history` | same as invoke |
 | context | POST | `/context/suggest-next` | shortcut for C2 | query `goal`, `name` | same as invoke |
+| settings | GET | `/settings/models/config` | get current LLM model configuration | none | `{version, active_preset, api, presets, custom}` |
+| settings | POST | `/settings/models/config` | update LLM model configuration | `{active_preset, custom?}` | `{success: true}` |
+| settings | GET | `/settings/models/metadata` | get model metadata (pricing, capabilities) | none | `{models: {[model_id]: ModelMetadata}}` |
+| settings | GET | `/settings/models/usage` | get monthly usage statistics | none | `{month, total_cost, budget, agents: [{agent, calls, cost}]}` |
+| settings | POST | `/settings/models/test-connection` | test API key validity | `{api_key}` | `{success: boolean, error?: string}` |
 
 ### 2.2 Important Contract Details for UI
 
@@ -71,7 +76,7 @@ Scope: Review current backend API routes in `src/api/routes/`, design web UI pag
 | `/diagnostics` | Failure Analysis + Health Check | `/diagnostics/invoke`, shortcuts |
 | `/agents` | Multi-agent Invoke Console | `/agents/invoke` |
 | `/tasks` | Task Queue Monitor | `/tasks/create`, `/tasks/{id}/status` |
-| `/settings` | API and defaults configuration | no required backend calls |
+| `/settings` | API and defaults configuration + LLM model management | `/settings/models/config`, `/settings/models/metadata`, `/settings/models/usage`, `/settings/models/test-connection` |
 
 ## 4. Page Specifications
 
@@ -187,7 +192,13 @@ Note: because tasks are in-memory and currently static (`queued`), the UI should
 
 ### 4.7 Settings Page (`/settings`)
 
-Purpose: Client-side configuration and defaults.
+Purpose: Client-side configuration, defaults, and LLM model management.
+
+Tabs:
+1. `General` - API and defaults
+2. `Models` - LLM model configuration
+
+#### 4.7.1 General Tab
 
 Fields:
 1. API base URL (default `http://localhost:8100`)
@@ -197,6 +208,90 @@ Fields:
 5. request timeout
 
 Persistence: `localStorage`.
+
+#### 4.7.2 Models Tab
+
+Purpose: Configure LLM models for each Agent, switch presets, monitor usage and costs.
+
+Required modules:
+
+1. **PresetSelector**
+   - Radio buttons: `极致省钱` / `性价比平衡` / `质量优先` / `自定义`
+   - Display monthly cost estimate for each preset
+   - One-click switch with confirmation dialog
+
+2. **AgentModelConfigCards** (5 cards, one per agent)
+   - Card header: Agent name + icon + description
+   - Fields per card:
+     - Primary model dropdown (with price display)
+     - Fallback model dropdown (with price display)
+     - Temperature slider (0-1, step 0.1)
+     - Max tokens input (number)
+   - Model dropdown options from `/settings/models/metadata`
+   - Show pricing: `¥X/M input, ¥Y/M output`
+
+3. **APIConfigSection**
+   - Shengsuanyun API Base URL (readonly: `https://router.shengsuanyun.com/api/v1`)
+   - API Key input (password type, with show/hide toggle)
+   - Timeout input (seconds)
+   - `Test Connection` button → calls `/settings/models/test-connection`
+
+4. **UsageMonitorPanel**
+   - Current month cost: `¥X.XX / Budget: ¥Y.YY`
+   - Progress bar visualization
+   - Breakdown by agent (table):
+     - Agent name
+     - Call count
+     - Total cost
+     - Percentage of budget
+   - Data from `/settings/models/usage`
+
+5. **ModelMetadataDrawer** (optional, triggered by info icon)
+   - Model full name
+   - Provider
+   - Context window
+   - Capabilities tags
+   - Recommended use cases
+   - Pricing details
+
+Agent configuration structure:
+```typescript
+interface AgentConfig {
+  name: string;
+  display_name: string;
+  icon: string;
+  description: string;
+  model: string;
+  fallback: string;
+  temperature: number;
+  max_tokens: number;
+}
+
+const agents: AgentConfig[] = [
+  {
+    name: "data_analyst",
+    display_name: "数据分析",
+    icon: "📊",
+    description: "CV/EIS 信号解读、不确定性分析",
+    model: "zhipu/glm-4.6",
+    fallback: "deepseek/deepseek-v3.2",
+    temperature: 0.1,
+    max_tokens: 2000
+  },
+  // ... 4 more agents
+];
+```
+
+States:
+1. Loading skeleton for usage stats
+2. Unsaved changes warning when switching presets
+3. API key validation (show green checkmark or red error)
+4. Cost alert when approaching budget (>80%)
+
+Persistence: 
+- Model config: backend `/settings/models/config` (POST to save)
+- API key: backend (encrypted storage)
+- Budget: `localStorage` (client-side preference)
 
 ## 5. Reusable Component Catalog
 
@@ -236,6 +331,7 @@ frontend/src/api/
   diagnostics.ts
   context.ts
   agents.ts
+  settings.ts
   types.ts
 ```
 
@@ -281,6 +377,59 @@ export interface ContextSkillResult<T = Record<string, unknown>> {
   message: string;
   artifacts: unknown[];
 }
+
+export interface ModelMetadata {
+  provider: string;
+  display_name: string;
+  pricing: {
+    input: number;
+    output: number;
+    currency: string;
+    unit: string;
+  };
+  context_window: number;
+  capabilities: string[];
+  recommended_for: string[];
+}
+
+export interface AgentModelConfig {
+  model: string;
+  fallback: string;
+  temperature: number;
+  max_tokens: number;
+}
+
+export interface ModelConfigResponse {
+  version: string;
+  active_preset: string;
+  api: {
+    base_url: string;
+    api_key: string;
+    timeout: number;
+  };
+  presets: Record<string, {
+    name: string;
+    description: string;
+    monthly_cost_estimate: string;
+    agents: Record<string, AgentModelConfig>;
+  }>;
+  custom: {
+    enabled: boolean;
+    agents: Record<string, AgentModelConfig>;
+  };
+}
+
+export interface UsageStats {
+  month: string;
+  total_cost: number;
+  budget: number;
+  agents: Array<{
+    agent_name: string;
+    call_count: number;
+    total_cost: number;
+    percentage: number;
+  }>;
+}
 ```
 
 ### 6.4 Query and Mutation Strategy
@@ -293,6 +442,11 @@ export interface ContextSkillResult<T = Record<string, unknown>> {
 6. `useInvokeAgentMutation`
 7. `useCreateTaskMutation`
 8. `useTaskStatusQuery(taskId)`: polling 5s when active
+9. `useModelConfigQuery`: staleTime 60s
+10. `useModelMetadataQuery`: staleTime 300s (5 min, rarely changes)
+11. `useUsageStatsQuery`: staleTime 30s, refetchInterval 60s
+12. `useUpdateModelConfigMutation`
+13. `useTestConnectionMutation`
 
 ### 6.5 Error Handling and UX Rules
 
@@ -313,6 +467,11 @@ export interface ContextSkillResult<T = Record<string, unknown>> {
 | invoke agent | `/agents/invoke` | POST | JSON body from editors |
 | create task | `/tasks/create` | POST | JSON body |
 | refresh task status | `/tasks/{task_id}/status` | GET | path param |
+| load model config | `/settings/models/config` | GET | none |
+| update model config | `/settings/models/config` | POST | JSON body with `active_preset` or `custom` |
+| load model metadata | `/settings/models/metadata` | GET | none |
+| load usage stats | `/settings/models/usage` | GET | none |
+| test API connection | `/settings/models/test-connection` | POST | JSON body with `api_key` |
 
 Integration rule: prefer `/context/invoke` and `/diagnostics/invoke` instead of shortcut endpoints to avoid query-param mismatch and keep payloads typed.
 
@@ -338,6 +497,19 @@ Integration rule: prefer `/context/invoke` and `/diagnostics/invoke` instead of 
 2. Add `GET /data/run-details?run_dir=...` for non-latest run detail retrieval.
 3. Normalize error envelope shape across all routes.
 4. Add `GET /tasks` list endpoint for task dashboard bootstrap.
+5. **Add `/settings/models/*` endpoints for LLM model configuration:**
+   - `GET /settings/models/config` - get current model config
+   - `POST /settings/models/config` - update model config
+   - `GET /settings/models/metadata` - get model metadata (pricing, capabilities)
+   - `GET /settings/models/usage` - get monthly usage statistics
+   - `POST /settings/models/test-connection` - test API key validity
+6. **Create backend config files:**
+   - `configs/llm_models.json` - model configuration with presets
+   - `configs/model_metadata.json` - model metadata (pricing, capabilities)
+7. **Add usage tracking:**
+   - SQLite table `llm_usage` for tracking API calls
+   - Middleware to log token usage and costs
+   - Monthly aggregation queries
 
 ### 8.2 P1 (Improves UX significantly)
 
@@ -362,9 +534,20 @@ Integration rule: prefer `/context/invoke` and `/diagnostics/invoke` instead of 
 2. add robust error handling, retry, and request logs
 3. add integration tests with mocked API responses
 
-### Phase 4: Backend Alignment (parallel)
+### Phase 4: Settings and Model Management (2-3 days)
+1. implement Settings page General tab
+2. implement Settings page Models tab with:
+   - Preset selector
+   - Agent model config cards
+   - API config section
+   - Usage monitor panel
+3. wire `/settings/models/*` endpoints
+
+### Phase 5: Backend Alignment (parallel)
 1. deliver P0 backend endpoints/middleware
-2. update UI to consume new run-details and task-list routes
+2. implement `/settings/models/*` routes
+3. create config files and usage tracking
+4. update UI to consume new run-details and task-list routes
 
 ## 10. Acceptance Criteria
 
@@ -374,3 +557,12 @@ Integration rule: prefer `/context/invoke` and `/diagnostics/invoke` instead of 
 4. User can invoke arbitrary agent tasks and inspect routed result/state.
 5. UI handles 404/422/500 responses without blank pages or crashes.
 6. All API integrations are typed and covered by component/integration tests.
+7. **User can configure LLM models for each Agent:**
+   - Switch between presets (极致省钱/性价比平衡/质量优先)
+   - Customize individual agent models
+   - View real-time pricing information
+   - Test API key validity
+8. **User can monitor LLM usage and costs:**
+   - View monthly total cost and budget progress
+   - See per-agent breakdown of calls and costs
+   - Receive alerts when approaching budget limit
