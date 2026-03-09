@@ -30,12 +30,17 @@ autohyseeker-api = "src.api.main:main"
 rag = ["openviking>=0.1"]
 
 [dependency-groups]
-dev = ["pytest>=8.0"]
+dev = [
+    "httpx>=0.28.1",
+    "pytest>=8.0",
+    "pytest-asyncio>=0.23",
+]
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
 norecursedirs = ["pytest-cache-files-*", ".venv", "data", "logs"]
 addopts = "-p no:cacheprovider"
+asyncio_mode = "auto"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src"]
