@@ -1145,6 +1145,14 @@ class MainWindow(QMainWindow):
         save_action.triggered.connect(self._on_save_exp)
         file_menu.addAction(save_action)
         
+        save_template_action = QAction("保存为模板...", self)
+        save_template_action.triggered.connect(self._on_save_as_template)
+        file_menu.addAction(save_template_action)
+        
+        template_lib_action = QAction("模板库...", self)
+        template_lib_action.triggered.connect(self._on_open_template_library)
+        file_menu.addAction(template_lib_action)
+        
         file_menu.addSeparator()
         
         # 数据浏览器
@@ -1233,6 +1241,16 @@ class MainWindow(QMainWindow):
         flush_btn = QAction(tr("tb_flush"), self)
         flush_btn.triggered.connect(self._on_flush)
         toolbar.addAction(flush_btn)
+        
+        toolbar.addSeparator()
+        
+        template_save_btn = QAction("📋 保存为模板", self)
+        template_save_btn.triggered.connect(self._on_save_as_template)
+        toolbar.addAction(template_save_btn)
+        
+        template_lib_btn = QAction("📚 模板库", self)
+        template_lib_btn.triggered.connect(self._on_open_template_library)
+        toolbar.addAction(template_lib_btn)
     
     def _create_central_widget(self):
         """创建中央区域"""
@@ -1586,6 +1604,48 @@ class MainWindow(QMainWindow):
         from src.dialogs.flusher_dialog import FlusherDialog
         dialog = FlusherDialog(self.config, self)
         dialog.exec()
+    
+    def _on_save_as_template(self):
+        """将当前实验保存为模板"""
+        if not self.single_experiment or not self.single_experiment.steps:
+            QMessageBox.warning(self, tr("warning"), "当前没有可保存的实验步骤。")
+            return
+        
+        from src.ui.template_dialog import SaveTemplateDialog
+        steps = [s.to_dict() for s in self.single_experiment.steps]
+        dialog = SaveTemplateDialog(steps, parent=self)
+        dialog.exec()
+    
+    def _on_open_template_library(self):
+        """打开模板库对话框"""
+        from src.ui.template_dialog import TemplateLibraryDialog
+        dialog = TemplateLibraryDialog(parent=self)
+        dialog.template_loaded.connect(self._on_template_loaded)
+        dialog.exec()
+    
+    def _on_template_loaded(self, template: dict):
+        """从模板库加载步骤到当前实验"""
+        from src.models import Experiment, ProgStep
+        import uuid as _uuid
+        
+        steps_data = template.get("steps", [])
+        try:
+            exp_id = self.single_experiment.exp_id if self.single_experiment else f"exp_{_uuid.uuid4().hex[:8]}"
+            exp_name = template.get("name", "从模板加载的实验")
+            new_exp = Experiment(
+                exp_id=exp_id,
+                exp_name=exp_name,
+                description=template.get("description", ""),
+                tags=list(template.get("tags", [])),
+            )
+            new_exp.steps = [ProgStep.from_dict(s) for s in steps_data]
+            self.single_experiment = new_exp
+            self._refresh_step_list()
+            self.log_message(
+                f"已从模板「{exp_name}」加载 {len(new_exp.steps)} 个步骤", "success"
+            )
+        except Exception as e:
+            QMessageBox.critical(self, tr("error"), f"加载模板失败: {e}")
     
     def _on_about(self):
         """关于"""

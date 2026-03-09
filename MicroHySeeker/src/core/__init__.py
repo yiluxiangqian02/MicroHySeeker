@@ -8,6 +8,7 @@ Core 核心模块
 - batch_injection: 多批次注入管理
 - step_validator: 步骤验证器
 - experiment_adapter: 模型适配器
+- template_manager: 实验模板管理器
 """
 
 from .exp_program import ExpProgram, ProgStep
@@ -38,6 +39,8 @@ from .step_validator import (
     calculate_prep_sol_volumes,
 )
 
+from .template_manager import TemplateManager, get_template_manager
+
 __all__ = [
     # exp_program
     "ExpProgram",
@@ -66,4 +69,8 @@ __all__ = [
     "StepValidator",
     "get_step_summary",
     "calculate_prep_sol_volumes",
+
+    # template_manager
+    "TemplateManager",
+    "get_template_manager",
 ]
