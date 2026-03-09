@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from typing import Any, Iterable
 
 from src.common.config import DEFAULT_MODEL
-from src.common.llm_client import chat_completion
+from src.common.llm_client import chat_completion, load_agent_config
 
 
 def _normalize_role(role: str) -> str:
@@ -34,6 +34,37 @@ class BaseAgent:
     name: str
     system_prompt: str
     model: str = DEFAULT_MODEL
+    api_key: str = ""
+    base_url: str = ""
+    temperature: float = 0.2
+    max_tokens: int | None = None
+
+    def __init__(
+        self,
+        name: str,
+        system_prompt: str,
+        model: str | None = None,
+        api_key: str | None = None,
+        base_url: str | None = None,
+        temperature: float | None = None,
+        max_tokens: int | None = None,
+    ) -> None:
+        agent_config = load_agent_config(name)
+        self.name = name
+        self.system_prompt = system_prompt
+        self.model = model or str(agent_config["model"])
+        self.api_key = api_key or str(agent_config["api_key"])
+        self.base_url = base_url or str(agent_config["base_url"])
+        self.temperature = (
+            float(temperature)
+            if temperature is not None
+            else float(agent_config["temperature"])
+        )
+        self.max_tokens = (
+            max_tokens
+            if max_tokens is not None
+            else agent_config["max_tokens"]
+        )
 
     def build_messages(
         self,
@@ -64,11 +95,19 @@ class BaseAgent:
         messages: Iterable[Any] | None = None,
         **kwargs: Any,
     ) -> dict[str, Any]:
+        temperature = kwargs.pop("temperature", self.temperature)
+        max_tokens = kwargs.pop("max_tokens", self.max_tokens)
+        request_kwargs = dict(kwargs)
+        request_kwargs["temperature"] = temperature
+        if max_tokens is not None:
+            request_kwargs["max_tokens"] = max_tokens
+
         response = await chat_completion(
             self.build_messages(task=task, context=context, messages=messages),
             model=self.model,
-            temperature=kwargs.pop("temperature", 0.2),
-            **kwargs,
+            api_key=self.api_key,
+            base_url=self.base_url,
+            **request_kwargs,
         )
         return {
             "agent": self.name,

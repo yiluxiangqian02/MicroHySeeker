@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+import tomllib
 from typing import Any
 from unittest.mock import AsyncMock, MagicMock, patch
 
@@ -108,6 +109,50 @@ class TestBaseAgent:
             mock_cc.assert_called_once()
             call_kwargs = mock_cc.call_args[1]
             assert call_kwargs.get("model") == "custom-model"
+
+    def test_init_loads_agent_config_defaults(self) -> None:
+        from src.agents.base import BaseAgent
+
+        with patch(
+            "src.agents.base.load_agent_config",
+            return_value={
+                "model": "agent-model",
+                "api_key": "agent-key",
+                "temperature": 0.55,
+                "max_tokens": 1234,
+                "base_url": "https://agent.example.com",
+            },
+        ) as mock_load:
+            agent = BaseAgent(name="agent_a", system_prompt="sys")
+
+        mock_load.assert_called_once_with("agent_a")
+        assert agent.model == "agent-model"
+        assert agent.api_key == "agent-key"
+        assert agent.temperature == pytest.approx(0.55)
+        assert agent.max_tokens == 1234
+        assert agent.base_url == "https://agent.example.com"
+
+    def test_invoke_passes_agent_credentials_and_limits(self) -> None:
+        from src.agents.base import BaseAgent
+
+        agent = BaseAgent(
+            name="test",
+            system_prompt="sys",
+            model="agent-model",
+            api_key="agent-key",
+            base_url="https://agent.example.com",
+            temperature=0.4,
+            max_tokens=987,
+        )
+        with patch("src.agents.base.chat_completion", new=AsyncMock(return_value="ok")) as mock_cc:
+            run_async(agent.invoke(task={}))
+
+        call_kwargs = mock_cc.call_args[1]
+        assert call_kwargs["model"] == "agent-model"
+        assert call_kwargs["api_key"] == "agent-key"
+        assert call_kwargs["base_url"] == "https://agent.example.com"
+        assert call_kwargs["temperature"] == pytest.approx(0.4)
+        assert call_kwargs["max_tokens"] == 987
 
 
 # ── Specialist Agents ─────────────────────────────────────────────────────────
@@ -233,6 +278,49 @@ class TestKnowledgeManagerAgent:
 
 
 # ── agents __init__ exports ────────────────────────────────────────────────────
+
+class TestAgentConfigLoading:
+    def test_all_agents_load_repo_config_and_log_api_key_prefix(self) -> None:
+        from src.agents import (
+            DataAnalystAgent,
+            DiagnosticsExpertAgent,
+            ExperimentDesignerAgent,
+            ExperimentSupervisorAgent,
+            KnowledgeManagerAgent,
+        )
+        from src.common.config import PROJECT_ROOT
+
+        config_path = PROJECT_ROOT / "configs" / "agent_models.toml"
+        with config_path.open("rb") as fh:
+            parsed = tomllib.load(fh)
+
+        cases = [
+            (DataAnalystAgent, "data_analyst"),
+            (DiagnosticsExpertAgent, "diagnostics_expert"),
+            (ExperimentDesignerAgent, "experiment_designer"),
+            (ExperimentSupervisorAgent, "experiment_supervisor"),
+            (KnowledgeManagerAgent, "knowledge_manager"),
+        ]
+
+        for agent_cls, section_name in cases:
+            expected = parsed[section_name]
+            expected_prefix = expected["api_key"][:6]
+            with patch("src.common.llm_client.logger.info") as mock_log:
+                agent = agent_cls()
+
+            assert agent.model == expected["model"]
+            assert agent.api_key == expected["api_key"]
+            assert agent.temperature == pytest.approx(expected["temperature"])
+            assert agent.max_tokens == expected["max_tokens"]
+            assert agent.base_url == expected["base_url"]
+            mock_log.assert_any_call(
+                "loaded agent config for %s (resolved=%s): model=%s, api_key_prefix=%s",
+                agent.name,
+                section_name,
+                expected["model"],
+                expected_prefix,
+            )
+
 
 class TestAgentsInit:
     def test_all_agents_importable_from_package(self) -> None:
