@@ -64,7 +64,7 @@ export function ExperimentDetail() {
 
   const fetchExperiment = async () => {
     try {
-      const res = await fetch(`/api/experiments/${id}`);
+      const res = await fetch(`/api/experiments/detail/${id}`);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
       setExperiment(data);
@@ -83,7 +83,7 @@ export function ExperimentDetail() {
     if (!experiment) return;
     setExecuting(true);
     try {
-      const res = await fetch(`/api/experiments/${experiment.exp_id}/execute`, {
+      const res = await fetch(`/api/experiments/detail/${experiment.exp_id}/execute`, {
         method: 'POST',
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);

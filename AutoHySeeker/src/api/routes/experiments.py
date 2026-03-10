@@ -6,7 +6,7 @@ from datetime import datetime, timezone
 from typing import Any, Dict, List
 
 import httpx
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Path
 from pydantic import BaseModel, Field
 
 router = APIRouter(prefix="/api/experiments", tags=["experiments"])
@@ -129,12 +129,6 @@ async def create_experiment(exp: ExperimentCreate) -> Dict[str, Any]:
     return record
 
 
-@router.get("")
-async def list_experiments() -> List[Dict[str, Any]]:
-    """List all experiments."""
-    return list(_EXP_STORE.values())
-
-
 @router.get("/status")
 async def get_experiments_status() -> Dict[str, Any]:
     """Health-check for the experiments service."""
@@ -160,20 +154,30 @@ async def get_recent_experiments(limit: int = 20) -> Dict[str, Any]:
     }
 
 
+@router.get("")
+async def list_experiments() -> List[Dict[str, Any]]:
+    """List all experiments."""
+    return list(_EXP_STORE.values())
+
+
 # ---------------------------------------------------------------------------
 # Per-experiment routes  (/{exp_id} catch-all must be LAST)
 # ---------------------------------------------------------------------------
 
-@router.get("/{exp_id}")
-async def get_experiment(exp_id: str) -> Dict[str, Any]:
+@router.get("/detail/{exp_id}")
+async def get_experiment(
+    exp_id: str = Path(..., pattern="^exp_.*")
+) -> Dict[str, Any]:
     """Return experiment details."""
     if exp_id not in _EXP_STORE:
         raise HTTPException(status_code=404, detail=f"experiment not found: {exp_id}")
     return _EXP_STORE[exp_id]
 
 
-@router.post("/{exp_id}/execute")
-async def execute_experiment(exp_id: str) -> Dict[str, Any]:
+@router.post("/detail/{exp_id}/execute")
+async def execute_experiment(
+    exp_id: str = Path(..., pattern="^exp_.*")
+) -> Dict[str, Any]:
     """Start experiment execution (delegates to MicroHySeeker if available)."""
     if exp_id not in _EXP_STORE:
         raise HTTPException(status_code=404, detail=f"experiment not found: {exp_id}")
@@ -203,8 +207,10 @@ async def execute_experiment(exp_id: str) -> Dict[str, Any]:
     return {"status": "started", "exp_id": exp_id, "source": "local"}
 
 
-@router.post("/{exp_id}/complete")
-async def complete_experiment(exp_id: str) -> Dict[str, Any]:
+@router.post("/detail/{exp_id}/complete")
+async def complete_experiment(
+    exp_id: str = Path(..., pattern="^exp_.*")
+) -> Dict[str, Any]:
     """Mark experiment as completed (used by worker callbacks)."""
     if exp_id not in _EXP_STORE:
         raise HTTPException(status_code=404, detail=f"experiment not found: {exp_id}")
