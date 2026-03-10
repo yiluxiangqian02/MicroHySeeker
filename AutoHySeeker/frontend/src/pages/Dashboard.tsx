@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { motion } from "framer-motion";
 import { AgentStatusPanel } from "@/components/AgentStatusPanel";
 import { EmergencyStop } from "@/components/EmergencyStop";
 import { ExperimentLog } from "@/components/ExperimentLog";
@@ -27,10 +28,28 @@ export function Dashboard() {
     requestEmergencyStop,
   } = useDashboardPolling();
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.1 },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 },
+  };
+
   return (
-    <div className="space-y-5">
+    <motion.div
+      className="space-y-5"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+    >
       {/* ── Page header ───────────────────────────────────────────────────── */}
-      <div className="flex flex-wrap items-center justify-between gap-3">
+      <motion.div variants={itemVariants} className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 className="text-xl font-bold text-slate-900">Live Dashboard</h2>
           <div className="flex items-center gap-3 text-xs text-slate-500">
@@ -44,7 +63,7 @@ export function Dashboard() {
                 <button
                   type="button"
                   onClick={refresh}
-                  className="font-medium text-blue-600 hover:text-blue-700"
+                  className="font-medium text-blue-600 hover:text-blue-700 transition-colors"
                 >
                   Refresh now
                 </button>
@@ -59,39 +78,54 @@ export function Dashboard() {
           stopSuccess={stopSuccess}
           stopError={stopError}
         />
-      </div>
+      </motion.div>
 
       {/* ── Poll error banner ─────────────────────────────────────────────── */}
       {pollError && !isLoading && (
-        <div className="flex items-center justify-between rounded-lg border border-red-200 bg-red-50 px-4 py-3">
-          <p className="text-sm text-red-800">
-            <span className="font-semibold">Connection error:</span> {pollError.message}
-          </p>
+        <motion.div
+          variants={itemVariants}
+          className="flex items-center justify-between rounded-xl border border-red-200 bg-red-50 px-4 py-3 shadow-sm"
+        >
+          <div className="text-sm text-red-800">
+            <p>
+              <span className="font-semibold">Connection error:</span> {pollError.message}
+            </p>
+            <p className="mt-0.5 text-xs text-red-600">
+              Make sure the AutoHySeeker API server is running at{" "}
+              <code className="font-mono">{import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8100"}</code>.
+              Check <code className="font-mono">/health</code> and{" "}
+              <code className="font-mono">/api/experiments/status</code> endpoints.
+            </p>
+          </div>
           <button
             type="button"
             onClick={refresh}
-            className="text-sm font-medium text-red-700 underline hover:text-red-900"
+            className="ml-4 shrink-0 text-sm font-medium text-red-700 underline hover:text-red-900 transition-colors"
           >
             Retry
           </button>
-        </div>
+        </motion.div>
       )}
 
       {/* ── Top row: Progress + Agents ────────────────────────────────────── */}
-      <div className="grid gap-4 lg:grid-cols-5">
+      <motion.div variants={itemVariants} className="grid gap-4 lg:grid-cols-5">
         <div className="lg:col-span-3">
           <ExperimentProgress experiment={snapshot.experiment} />
         </div>
         <div className="lg:col-span-2">
           <AgentStatusPanel agents={snapshot.agents} />
         </div>
-      </div>
+      </motion.div>
 
       {/* ── Realtime chart ────────────────────────────────────────────────── */}
-      <RealtimeChart data={snapshot.chartData} />
+      <motion.div variants={itemVariants}>
+        <RealtimeChart data={snapshot.chartData} />
+      </motion.div>
 
       {/* ── Log panel ─────────────────────────────────────────────────────── */}
-      <ExperimentLog logs={snapshot.logs} />
-    </div>
+      <motion.div variants={itemVariants}>
+        <ExperimentLog logs={snapshot.logs} />
+      </motion.div>
+    </motion.div>
   );
 }

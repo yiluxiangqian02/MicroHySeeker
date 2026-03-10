@@ -1,20 +1,17 @@
 import { NavLink } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const NAV_ITEMS = [
-  { to: "/", label: "Overview" },
-  { to: "/dashboard", label: "Live Dashboard" },
-  { to: "/agents", label: "Agent Console" },
-  { to: "/settings", label: "Settings" }
-];
-
-const UPCOMING_ITEMS = [
-  "Experiments",
-  "Context & Planning",
-  "Diagnostics",
-  "Tasks"
+  { to: "/", label: "nav.overview" },
+  { to: "/dashboard", label: "nav.dashboard" },
+  { to: "/agents", label: "nav.agents" },
+  { to: "/templates", label: "nav.templates" },
+  { to: "/settings", label: "nav.settings" }
 ];
 
 export function Sidebar() {
+  const { t } = useTranslation();
+  
   return (
     <aside className="w-full border-b border-slate-200 bg-white/90 backdrop-blur md:w-72 md:border-b-0 md:border-r">
       <div className="p-5">
@@ -33,23 +30,10 @@ export function Sidebar() {
                 }`
               }
             >
-              {item.label}
+              {t(item.label)}
             </NavLink>
           ))}
         </nav>
-
-        <div className="mt-7 border-t border-slate-200 pt-4">
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-            Upcoming
-          </p>
-          <ul className="mt-2 space-y-1">
-            {UPCOMING_ITEMS.map((item) => (
-              <li key={item} className="rounded-md px-3 py-2 text-sm text-slate-400">
-                {item}
-              </li>
-            ))}
-          </ul>
-        </div>
       </div>
     </aside>
   );

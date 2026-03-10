@@ -6,6 +6,7 @@ import json
 from dataclasses import dataclass
 from typing import Any, Iterable
 
+from src.common.agent_manager import agent_manager
 from src.common.config import DEFAULT_MODEL
 from src.common.llm_client import chat_completion, load_agent_config
 
@@ -95,6 +96,10 @@ class BaseAgent:
         messages: Iterable[Any] | None = None,
         **kwargs: Any,
     ) -> dict[str, Any]:
+        agent_id = self.name
+        agent_manager.start_agent(agent_id)
+        agent_manager.add_log(agent_id, "INFO", f"Processing task: {task}")
+
         temperature = kwargs.pop("temperature", self.temperature)
         max_tokens = kwargs.pop("max_tokens", self.max_tokens)
         request_kwargs = dict(kwargs)
@@ -102,16 +107,30 @@ class BaseAgent:
         if max_tokens is not None:
             request_kwargs["max_tokens"] = max_tokens
 
-        response = await chat_completion(
-            self.build_messages(task=task, context=context, messages=messages),
-            model=self.model,
-            api_key=self.api_key,
-            base_url=self.base_url,
-            **request_kwargs,
-        )
-        return {
-            "agent": self.name,
-            "model": self.model,
-            "content": response,
-        }
+        try:
+            response = await chat_completion(
+                self.build_messages(task=task, context=context, messages=messages),
+                model=self.model,
+                api_key=self.api_key,
+                base_url=self.base_url,
+                **request_kwargs,
+            )
+            agent_manager.update_metrics(
+                agent_id,
+                success_count=agent_manager.metrics.get(agent_id, {}).get("success_count", 0) + 1,
+            )
+            return {
+                "agent": self.name,
+                "model": self.model,
+                "content": response,
+            }
+        except Exception as exc:
+            agent_manager.add_log(agent_id, "ERROR", str(exc))
+            agent_manager.update_metrics(
+                agent_id,
+                error_count=agent_manager.metrics.get(agent_id, {}).get("error_count", 0) + 1,
+            )
+            raise
+        finally:
+            agent_manager.stop_agent(agent_id)
 
