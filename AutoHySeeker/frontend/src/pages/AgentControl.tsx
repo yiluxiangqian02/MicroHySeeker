@@ -174,6 +174,11 @@ export function AgentControl() {
         <div>
           <h2 className="text-2xl font-bold text-slate-900">{t("agents.title")}</h2>
           <p className="mt-1 text-sm text-slate-500">{t("agents.subtitle")}</p>
+          <p className="mt-3 max-w-3xl rounded-lg border border-blue-100 bg-blue-50 px-4 py-3 text-sm leading-6 text-blue-900">
+            这些不是给用户理解系统架构用的“内部 Agent 编号”，而是可以直接承担科研任务的 AI 角色：
+            <strong>设计方案、监护运行、解读结果、排查故障、检索经验</strong>。
+            如果后续保留这个页面，建议继续强化“什么时候找谁”，弱化 token 和控制台心智。
+          </p>
         </div>
 
         {/* Bulk operations */}

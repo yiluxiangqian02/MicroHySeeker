@@ -29,32 +29,32 @@ export interface AgentDefinition {
 export const AGENT_DEFINITIONS: AgentDefinition[] = [
   {
     id: "C1",
-    name: "数据分析",
-    description: "分析实验电化学数据，提取关键指标与趋势，识别数据中的异常模式",
+    name: "数据解读助手",
+    description: "适合在实验结束后查看结果、提取关键指标、比较多组数据时使用",
     color: "blue"
   },
   {
     id: "D2",
-    name: "故障诊断",
-    description: "诊断实验系统故障，分析失败根因，提供针对性修复建议",
+    name: "故障排查助手",
+    description: "适合实验失败、曲线异常、设备状态不对时帮助定位原因和排查路径",
     color: "red"
   },
   {
     id: "D3",
-    name: "实验设计",
-    description: "基于历史数据智能设计新实验方案，优化实验参数配置",
+    name: "方案设计助手",
+    description: "适合在开始实验前补齐参数、生成起始方案、获得下一轮实验建议时使用",
     color: "purple"
   },
   {
     id: "C2",
-    name: "实验监控",
-    description: "实时监控实验进展与关键参数，检测异常并触发预警通知",
+    name: "运行监护助手",
+    description: "适合在实验执行过程中盯住进展、异常和关键节点，减少人工盯屏",
     color: "green"
   },
   {
     id: "C3",
-    name: "知识管理",
-    description: "管理实验知识库，检索相关文献和历史实验经验数据",
+    name: "知识检索助手",
+    description: "适合回看历史实验、方法经验和知识背景，帮助快速找到可复用信息",
     color: "orange"
   }
 ];

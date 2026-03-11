@@ -13,6 +13,9 @@ import {
   Lightbulb,
   Clock,
   FolderOpen,
+  FlaskConical,
+  Microscope,
+  Sparkles,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { ExperimentCreateDialog } from '@/components/ExperimentCreateDialog';
@@ -165,6 +168,100 @@ export function Overview() {
       initial="hidden"
       animate="visible"
     >
+      <motion.section
+        variants={itemVariants}
+        className="overflow-hidden rounded-2xl border border-slate-200 bg-gradient-to-r from-slate-900 via-blue-900 to-cyan-800 p-6 text-white shadow-sm"
+      >
+        <div className="grid gap-6 lg:grid-cols-[1.5fr,1fr] lg:items-center">
+          <div>
+            <p className="text-sm font-medium uppercase tracking-[0.2em] text-blue-100">AI Experiment Steward</p>
+            <h1 className="mt-3 text-3xl font-bold">像科研助理一样组织实验，而不是像后台一样堆功能。</h1>
+            <p className="mt-3 max-w-3xl text-sm leading-6 text-blue-50/90">
+              这里的主流程应该很简单：先明确实验目的，再创建方案，运行时持续盯住风险，结束后快速得到结果解读和下一步建议。
+            </p>
+            <div className="mt-5 flex flex-wrap gap-3">
+              <button
+                onClick={() => setShowCreateDialog(true)}
+                className="rounded-lg bg-white px-4 py-2 text-sm font-medium text-slate-900 transition hover:bg-slate-100"
+              >
+                开始一个新实验
+              </button>
+              <button
+                onClick={() => setShowExperimentSelector(true)}
+                className="rounded-lg border border-white/30 px-4 py-2 text-sm font-medium text-white transition hover:bg-white/10"
+              >
+                打开最近实验
+              </button>
+            </div>
+          </div>
+
+          <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
+            {[
+              {
+                icon: FlaskConical,
+                title: '实验前',
+                desc: '从目的出发创建方案，而不是直接填参数表。',
+              },
+              {
+                icon: Microscope,
+                title: '实验中',
+                desc: '实时看进度、异常和关键节点，不必一直盯屏。',
+              },
+              {
+                icon: Sparkles,
+                title: '实验后',
+                desc: '快速得到结果摘要、对比分析和下一步建议。',
+              },
+            ].map((item) => {
+              const Icon = item.icon;
+              return (
+                <div key={item.title} className="rounded-xl border border-white/15 bg-white/10 p-4 backdrop-blur-sm">
+                  <div className="flex items-center gap-2 text-sm font-semibold">
+                    <Icon className="h-4 w-4" />
+                    {item.title}
+                  </div>
+                  <p className="mt-2 text-xs leading-5 text-blue-50/85">{item.desc}</p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </motion.section>
+
+      <motion.section variants={itemVariants} className="grid gap-4 lg:grid-cols-3">
+        {[
+          {
+            title: '1. 明确目标',
+            desc: '先说清是筛选、标定、验证还是复现，再进入具体方法。',
+            action: '新建实验',
+            onClick: () => setShowCreateDialog(true),
+          },
+          {
+            title: '2. 盯住运行',
+            desc: '需要看实时状态、日志和曲线时，进入运行中实验视图。',
+            action: '查看运行中实验',
+            onClick: () => navigate('/dashboard'),
+          },
+          {
+            title: '3. 拿到结论',
+            desc: '从最近实验继续分析、对比、诊断，而不是重新找入口。',
+            action: '打开最近实验',
+            onClick: () => setShowExperimentSelector(true),
+          },
+        ].map((card) => (
+          <div key={card.title} className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+            <h2 className="text-base font-semibold text-slate-900">{card.title}</h2>
+            <p className="mt-2 text-sm leading-6 text-slate-600">{card.desc}</p>
+            <button
+              onClick={card.onClick}
+              className="mt-4 rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-slate-800"
+            >
+              {card.action}
+            </button>
+          </div>
+        ))}
+      </motion.section>
+
       {/* System Status Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <motion.div

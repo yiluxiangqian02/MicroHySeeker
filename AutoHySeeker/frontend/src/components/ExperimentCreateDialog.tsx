@@ -414,6 +414,16 @@ export function ExperimentCreateDialog({ onClose, onSubmit }: ExperimentCreateDi
         )}
 
         <div className="space-y-4">
+          <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
+            <p className="font-semibold">建议按科研流程来创建实验</p>
+            <ol className="mt-2 list-decimal space-y-1 pl-5 text-xs leading-5 text-amber-800">
+              <li>先写清楚这次实验想回答什么问题。</li>
+              <li>再选择合适的方法类型（CV / EIS / CA / DPV ...）。</li>
+              <li>优先填写必要参数，高级参数不确定时先保留默认值。</li>
+              <li>利用预估时长快速判断方案是否过长或不合理。</li>
+            </ol>
+          </div>
+
           {/* Basic info */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -421,7 +431,7 @@ export function ExperimentCreateDialog({ onClose, onSubmit }: ExperimentCreateDi
             </label>
             <input
               type="text"
-              placeholder="输入实验名称..."
+              placeholder="例如：Fe3+ 浓度梯度 CV 基线实验"
               value={name}
               onChange={(e) => setName(e.target.value)}
               className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -429,9 +439,9 @@ export function ExperimentCreateDialog({ onClose, onSubmit }: ExperimentCreateDi
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">描述</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">实验目的 / 备注</label>
             <textarea
-              placeholder="实验描述（可选）..."
+              placeholder="例如：验证 0.1–0.5 mM 浓度变化是否能稳定拉开峰电流差异"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={2}
@@ -443,7 +453,7 @@ export function ExperimentCreateDialog({ onClose, onSubmit }: ExperimentCreateDi
             <label className="block text-sm font-medium text-gray-700 mb-1">标签（逗号分隔）</label>
             <input
               type="text"
-              placeholder="例如: CV, 电化学, 基线"
+              placeholder="例如: 标定, CV, Fe3+, 基线"
               value={tags}
               onChange={(e) => setTags(e.target.value)}
               className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -468,10 +478,11 @@ export function ExperimentCreateDialog({ onClose, onSubmit }: ExperimentCreateDi
             {steps.length === 0 ? (
               <div
                 onClick={addStep}
-                className="cursor-pointer text-center py-8 border-2 border-dashed border-gray-200 rounded-xl text-gray-400 text-sm hover:border-blue-300 hover:text-blue-400 transition-colors"
+                className="cursor-pointer text-center py-8 border-2 border-dashed border-gray-200 rounded-xl text-gray-500 text-sm hover:border-blue-300 hover:text-blue-500 transition-colors"
               >
                 <Plus className="h-6 w-6 mx-auto mb-1 opacity-60" />
-                点击添加第一个实验步骤
+                <p className="font-medium">先添加第一个实验步骤</p>
+                <p className="mt-1 text-xs text-gray-400">如果只是做基础摸底，建议从一个 CV 步骤开始。</p>
               </div>
             ) : (
               <div className="space-y-3">

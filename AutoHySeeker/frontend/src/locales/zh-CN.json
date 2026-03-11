@@ -23,11 +23,11 @@
     "collapse": "收起"
   },
   "nav": {
-    "overview": "总览",
-    "dashboard": "实验监控",
-    "agents": "Agent 控制",
+    "overview": "实验工作台",
+    "dashboard": "运行中实验",
+    "agents": "AI 助手分工",
     "templates": "实验模板",
-    "experiments": "实验管理",
+    "experiments": "实验记录",
     "data": "数据分析",
     "knowledge": "知识库",
     "settings": "设置"
@@ -116,8 +116,8 @@
     "agentUsage": "Agent 使用统计"
   },
   "agents": {
-    "title": "Agent 控制",
-    "subtitle": "监控和控制各 Agent 的运行状态",
+    "title": "AI 助手分工",
+    "subtitle": "按科研任务理解各 AI 角色，而不是按内部实现理解系统", 
     "status": "状态",
     "running": "运行中",
     "idle": "空闲",

@@ -16,7 +16,7 @@ export function Sidebar() {
     <aside className="w-full border-b border-slate-200 bg-white/90 backdrop-blur md:w-72 md:border-b-0 md:border-r">
       <div className="p-5">
         <h1 className="text-lg font-bold text-slate-900">AutoHySeeker</h1>
-        <p className="mt-1 text-sm text-slate-600">Web Control Panel</p>
+        <p className="mt-1 text-sm text-slate-600">AI 实验管家工作台</p>
 
         <nav className="mt-6 space-y-1">
           {NAV_ITEMS.map((item) => (

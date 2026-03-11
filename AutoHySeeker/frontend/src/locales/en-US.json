@@ -23,11 +23,11 @@
     "collapse": "Collapse"
   },
   "nav": {
-    "overview": "Overview",
-    "dashboard": "Dashboard",
-    "agents": "Agent Control",
+    "overview": "Workbench",
+    "dashboard": "Running Experiments",
+    "agents": "AI Roles",
     "templates": "Templates",
-    "experiments": "Experiments",
+    "experiments": "Experiment Records",
     "data": "Data Analysis",
     "knowledge": "Knowledge Base",
     "settings": "Settings"
@@ -116,8 +116,8 @@
     "agentUsage": "Agent Usage Statistics"
   },
   "agents": {
-    "title": "Agent Control",
-    "subtitle": "Monitor and control agent runtime status",
+    "title": "AI Roles",
+    "subtitle": "Understand AI helpers by research tasks, not internal architecture", 
     "status": "Status",
     "running": "Running",
     "idle": "Idle",

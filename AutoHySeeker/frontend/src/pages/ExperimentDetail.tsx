@@ -224,6 +224,15 @@ export function ExperimentDetail() {
         </div>
       )}
 
+      <div className="bg-blue-50 rounded-xl border border-blue-100 p-6">
+        <h3 className="font-semibold text-blue-900 mb-2">下一步建议</h3>
+        <ul className="space-y-2 text-sm text-blue-800">
+          <li>• 如果这是首轮摸底实验，优先确认曲线是否符合预期，再决定是否扩展参数范围。</li>
+          <li>• 如果实验失败，建议下一步进入 AI 助手分工页或聊天窗口做故障排查。</li>
+          <li>• 如果数据可用，下一步应补一个对照组、重复组，或与历史实验做对比。</li>
+        </ul>
+      </div>
+
       {/* Data Chart */}
       <div className="bg-white rounded-xl border border-slate-200 p-6">
         <h3 className="font-semibold text-gray-900 mb-4">实验数据</h3>
