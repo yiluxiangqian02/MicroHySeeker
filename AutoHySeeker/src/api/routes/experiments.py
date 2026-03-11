@@ -45,12 +45,37 @@ async def get_statistics() -> Dict[str, Any]:
     completed = [e for e in _EXP_STORE.values() if e.get("status") == "completed"]
     success_rate = round(len(completed) / total * 100, 1) if total > 0 else 0.0
 
+    # Calculate average duration from completed experiments
+    avg_duration = None
+    if completed:
+        total_duration = 0
+        count = 0
+        for exp in completed:
+            if exp.get("started_at") and exp.get("completed_at"):
+                try:
+                    start = datetime.fromisoformat(exp["started_at"].replace("Z", "+00:00"))
+                    end = datetime.fromisoformat(exp["completed_at"].replace("Z", "+00:00"))
+                    duration_seconds = (end - start).total_seconds()
+                    total_duration += duration_seconds
+                    count += 1
+                except (ValueError, KeyError):
+                    continue
+        
+        if count > 0:
+            avg_seconds = total_duration / count
+            if avg_seconds < 60:
+                avg_duration = f"{int(avg_seconds)}s"
+            elif avg_seconds < 3600:
+                avg_duration = f"{int(avg_seconds / 60)}m"
+            else:
+                avg_duration = f"{round(avg_seconds / 3600, 1)}h"
+
     return {
         "totalExperiments": total,
         "todayExperiments": today_count,
         "successRate": success_rate,
         "successTrend": "up" if success_rate >= 80 else "down",
-        "avgDuration": "15m",
+        "avgDuration": avg_duration,
     }
 
 
@@ -64,22 +89,25 @@ async def get_suggestions() -> Dict[str, Any]:
     )[:3]
 
     suggestions = []
-    for exp in recent:
-        suggestions.append(
-            {
-                "exp_id": exp["exp_id"],
-                "name": exp["name"],
-                "suggestion": "建议增大扫描速率以提高灵敏度",
-                "confidence": 0.85,
-            }
-        )
-
-    if not suggestions:
+    
+    # TODO: Integrate with real Agent for intelligent suggestions
+    # For now, return empty suggestions with a note
+    if recent:
+        for exp in recent:
+            suggestions.append(
+                {
+                    "exp_id": exp["exp_id"],
+                    "name": exp["name"],
+                    "suggestion": "智能建议功能开发中，即将接入 Agent 系统",
+                    "confidence": 0.0,
+                }
+            )
+    else:
         suggestions.append(
             {
                 "exp_id": "none",
                 "name": "通用建议",
-                "suggestion": "开始第一个实验，获取基线数据",
+                "suggestion": "开始第一个实验，建立基线数据",
                 "confidence": 1.0,
             }
         )
