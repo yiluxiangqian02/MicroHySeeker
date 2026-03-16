@@ -1319,6 +1319,14 @@ class MainWindow(QMainWindow):
         step_layout.addWidget(self.step_list)
         right_layout.addWidget(step_group)
         
+        # AutoHySeeker Agent Dashboard
+        try:
+            from src.ui.widgets.agent_dashboard import AgentDashboardWidget
+            self.agent_dashboard = AgentDashboardWidget()
+            right_layout.addWidget(self.agent_dashboard)
+        except Exception:
+            self.agent_dashboard = None
+        
         # 运行日志 / 通信日志 - 白色背景，可切换
         log_group = QGroupBox(tr("run_log"))
         log_group.setFont(FONT_TITLE)

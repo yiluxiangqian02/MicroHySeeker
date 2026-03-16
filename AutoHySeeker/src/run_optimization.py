@@ -91,6 +91,7 @@ async def run_optimization(
     history: list[dict[str, Any]] = []
     best_result: dict[str, Any] | None = None
     current_round = 0
+    final_action = "max_rounds"
 
     logger.info("=" * 60)
     logger.info("优化循环启动")
@@ -226,7 +227,10 @@ async def run_optimization(
 
         if decision["action"] == "stop":
             logger.info("优化停止: %s", decision.get("reason"))
+            final_action = decision["action"]
             break
+
+        final_action = decision["action"]
 
     # ── Summary ───────────────────────────────────────────────────────────
     logger.info("\n" + "=" * 60)
@@ -242,7 +246,7 @@ async def run_optimization(
         "total_rounds": current_round,
         "best_result": best_result,
         "history_count": len(history),
-        "final_decision": decision["action"] if "decision" in dir() else "max_rounds",
+        "final_decision": final_action,
     }
 
 

@@ -14,6 +14,7 @@ from src.api.routes.control import router as control_router
 from src.api.routes.data import router as data_router
 from src.api.routes.diagnostics import router as diagnostics_router
 from src.api.routes.experiments import router as experiments_router
+from src.api.routes.optimization import router as optimization_router
 from src.api.routes.system import router as system_router
 from src.api.routes.tasks import router as tasks_router
 from src.api.routes.templates import router as templates_router
@@ -37,6 +38,7 @@ app.add_middleware(
 
 app.include_router(system_router)
 app.include_router(experiments_router)
+app.include_router(optimization_router)
 app.include_router(tasks_router)
 app.include_router(agents_router)
 app.include_router(data_router)

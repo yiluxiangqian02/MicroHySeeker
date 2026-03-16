@@ -23,6 +23,14 @@ from src.agents.base import BaseAgent
 
 _logger = logging.getLogger("autohyseeker.knowledge_mgr")
 
+# ── VikingKnowledgeBase optional integration ──────────────────────────────────
+try:
+    from src.rag import get_viking_kb as _get_viking_kb, VikingKnowledgeBase
+    _VIKING_AVAILABLE = True
+except ImportError:
+    _VIKING_AVAILABLE = False
+    _get_viking_kb = None  # type: ignore[assignment]
+
 KNOWLEDGE_SYSTEM_PROMPT = """\
 你是知识管理 Agent（Knowledge Manager），负责实验知识的归档、检索和总结。
 
@@ -88,7 +96,11 @@ _LITERATURE_KNOWLEDGE: list[dict[str, Any]] = [
 
 
 class KnowledgeManagerAgent(BaseAgent):
-    """Knowledge manager — archives experiments and retrieves knowledge."""
+    """Knowledge manager — archives experiments and retrieves knowledge.
+
+    Uses VikingKnowledgeBase for semantic search when available (``openviking``
+    package installed), falling back to the built-in keyword search otherwise.
+    """
 
     def __init__(self, archive_path: str | None = None) -> None:
         super().__init__(
@@ -99,6 +111,19 @@ class KnowledgeManagerAgent(BaseAgent):
         self._archive_path = Path(archive_path) if archive_path else None
         if self._archive_path and self._archive_path.exists():
             self._load_archive()
+
+        # VikingKnowledgeBase semantic search (optional)
+        self._viking_kb: Any = None
+        if _VIKING_AVAILABLE and _get_viking_kb is not None:
+            try:
+                self._viking_kb = _get_viking_kb()
+                if self._viking_kb.is_available:
+                    _logger.info("KnowledgeManagerAgent: VikingKnowledgeBase enabled")
+                else:
+                    self._viking_kb = None
+            except Exception as exc:
+                _logger.debug("VikingKB unavailable: %s", exc)
+                self._viking_kb = None
 
     # ── Public API ─────────────────────────────────────────────────────────────
 
@@ -127,6 +152,20 @@ class KnowledgeManagerAgent(BaseAgent):
 
         self._archive.append(record)
         self._save_archive()
+
+        # Also ingest into VikingKB when available (write a temp JSON for ingest)
+        if self._viking_kb is not None:
+            try:
+                import tempfile, os
+                tmp = tempfile.NamedTemporaryFile(
+                    mode="w", suffix=".json", delete=False, encoding="utf-8"
+                )
+                json.dump(record, tmp, ensure_ascii=False, indent=2)
+                tmp.close()
+                self._viking_kb.ingest_experiment(tmp.name)
+                os.unlink(tmp.name)
+            except Exception as exc:
+                _logger.debug("VikingKB ingest failed: %s", exc)
 
         _logger.info(
             "KnowledgeManagerAgent: archived run_id=%s (total=%d)",
@@ -252,7 +291,30 @@ class KnowledgeManagerAgent(BaseAgent):
         query: str,
         top_k: int,
     ) -> list[dict[str, Any]]:
-        """Search built-in literature knowledge base."""
+        """Search literature knowledge base.
+
+        Uses VikingKnowledgeBase semantic search when available,
+        falls back to built-in keyword search.
+        """
+        # ── VikingKB semantic search (preferred) ──────────────────────────────
+        if self._viking_kb is not None:
+            try:
+                viking_results = self._viking_kb.search_literature(query, top_k=top_k)
+                if viking_results:
+                    return [
+                        {
+                            "source": "literature",
+                            "title": r.get("uri", "VikingKB Resource"),
+                            "content": r.get("content", ""),
+                            "relevance": round(float(r.get("score", 0.5)), 2),
+                            "category": "semantic_search",
+                        }
+                        for r in viking_results
+                    ]
+            except Exception as exc:
+                _logger.debug("VikingKB literature search failed: %s", exc)
+
+        # ── Fallback: built-in keyword search ────────────────────────────────
         query_lower = query.lower()
         results: list[dict[str, Any]] = []
 

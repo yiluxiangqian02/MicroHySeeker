@@ -29,5 +29,5 @@ FALLBACK_MODEL = os.getenv("FALLBACK_MODEL", "anthropic/claude-opus-4-6")
 DATA_ROOT = _resolve_path(os.getenv("DATA_ROOT", "../data"), PROJECT_ROOT)
 LOG_ROOT = _resolve_path(os.getenv("LOG_ROOT", "./logs"), PROJECT_ROOT)
 API_HOST = os.getenv("API_HOST", "0.0.0.0")
-API_PORT = int(os.getenv("API_PORT", "8100"))
+API_PORT = int(os.getenv("API_PORT", "8200"))   # 8100 is reserved for MicroHySeeker
 OPENAI_TIMEOUT_SECONDS = float(os.getenv("OPENAI_TIMEOUT_SECONDS", "60"))
