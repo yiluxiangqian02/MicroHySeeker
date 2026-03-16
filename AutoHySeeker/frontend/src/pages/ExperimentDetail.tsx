@@ -4,13 +4,16 @@ import { useNavigate, useParams } from 'react-router-dom';
 import {
   AlertCircle,
   ArrowLeft,
+  Beaker,
   Brain,
   CheckCircle,
   Clock,
+  Droplets,
   FlaskConical,
   Lightbulb,
   Play,
   Target,
+  Wind,
 } from 'lucide-react';
 import {
   CartesianGrid,
@@ -25,7 +28,7 @@ import {
 interface ExperimentStep {
   step_type: string;
   description: string;
-  params: Record<string, unknown>;
+  params: Record<string, any>;
 }
 
 interface Experiment {
@@ -52,7 +55,7 @@ const STATUS_CONFIG: Record<string, { icon: ReactNode; label: string; tone: stri
     icon: <Play className="h-5 w-5 animate-pulse" />,
     label: '运行中',
     tone: 'text-blue-700 bg-blue-100 border-blue-200',
-    summary: '实验正在执行，建议重点盯住曲线趋势和异常波动。',
+    summary: '实验正在执行，建议重点盯住当前步骤、曲线趋势和异常波动。',
   },
   completed: {
     icon: <CheckCircle className="h-5 w-5" />,
@@ -64,18 +67,41 @@ const STATUS_CONFIG: Record<string, { icon: ReactNode; label: string; tone: stri
     icon: <AlertCircle className="h-5 w-5" />,
     label: '失败',
     tone: 'text-red-700 bg-red-100 border-red-200',
-    summary: '实验未成功完成，建议优先检查关键参数设置、设备状态和实验前处理。',
+    summary: '实验未成功完成，建议优先检查关键步骤、设备状态和实验前处理。',
   },
 };
 
-const METHOD_LABELS: Record<string, string> = {
-  cv: 'CV',
-  eis: 'EIS',
-  ca: 'CA',
-  cp: 'CP',
-  lsv: 'LSV',
-  dpv: 'DPV',
-  sqv: 'SWV',
+const STEP_TYPE_META: Record<string, { label: string; icon: ReactNode; tone: string }> = {
+  prep_sol: {
+    label: '配液 / 混液',
+    icon: <Beaker className="h-4 w-4" />,
+    tone: 'bg-violet-50 text-violet-700 border-violet-200',
+  },
+  transfer: {
+    label: '移液 / 转移',
+    icon: <FlaskConical className="h-4 w-4" />,
+    tone: 'bg-sky-50 text-sky-700 border-sky-200',
+  },
+  flush: {
+    label: '冲洗',
+    icon: <Droplets className="h-4 w-4" />,
+    tone: 'bg-cyan-50 text-cyan-700 border-cyan-200',
+  },
+  echem: {
+    label: '电化学测试',
+    icon: <FlaskConical className="h-4 w-4" />,
+    tone: 'bg-blue-50 text-blue-700 border-blue-200',
+  },
+  blank: {
+    label: '空白 / 等待',
+    icon: <Clock className="h-4 w-4" />,
+    tone: 'bg-slate-50 text-slate-700 border-slate-200',
+  },
+  evacuate: {
+    label: '排空',
+    icon: <Wind className="h-4 w-4" />,
+    tone: 'bg-amber-50 text-amber-700 border-amber-200',
+  },
 };
 
 function formatDateTime(value?: string) {
@@ -84,36 +110,11 @@ function formatDateTime(value?: string) {
 }
 
 function formatValue(value: unknown) {
+  if (value == null || value === '') return '—';
   if (typeof value === 'number') return Number.isInteger(value) ? `${value}` : value.toFixed(3).replace(/0+$/, '').replace(/\.$/, '');
+  if (typeof value === 'boolean') return value ? '是' : '否';
   if (typeof value === 'string') return value;
   return JSON.stringify(value);
-}
-
-function humanizeParamKey(key: string) {
-  const dict: Record<string, string> = {
-    startVoltage: '起始电压',
-    endVoltage: '终止电压',
-    scanRate: '扫描速率',
-    cycles: '循环次数',
-    stepVoltage: '步进电压',
-    quietTime: '静置时间',
-    sensitivity: '灵敏度',
-    startFreq: '起始频率',
-    endFreq: '终止频率',
-    amplitude: '振幅',
-    dcVoltage: '直流偏压',
-    pointsPerDecade: '每十倍频点数',
-    integrationTime: '积分时间',
-    voltage: '施加电压',
-    duration: '持续时间',
-    sampleInterval: '采样间隔',
-    current: '施加电流',
-    pulseAmplitude: '脉冲幅度',
-    pulseWidth: '脉冲宽度',
-    frequency: '频率',
-    increment: '电位增量',
-  };
-  return dict[key] ?? key;
 }
 
 function inferGoal(experiment: Experiment) {
@@ -122,7 +123,7 @@ function inferGoal(experiment: Experiment) {
   if (text.includes('复现') || text.includes('reproduction')) return '本次目标偏向复现既有结果，重点看一致性。';
   if (text.includes('故障') || text.includes('诊断') || text.includes('排查')) return '本次目标偏向故障复查，重点是找出异常来源。';
   if (text.includes('筛选') || text.includes('screen')) return '本次目标偏向快速筛选条件，先找到值得继续放大的范围。';
-  return '本次实验用于回答一个明确的科研问题，建议先确认曲线是否支持当前假设。';
+  return '本次实验用于回答一个明确的科研问题，建议先确认步骤链是否覆盖你真正想验证的过程。';
 }
 
 function buildResultSummary(experiment: Experiment) {
@@ -135,18 +136,18 @@ function buildResultSummary(experiment: Experiment) {
   const min = Math.min(...ys);
   const max = Math.max(...ys);
   const delta = max - min;
-  return `已采集 ${experiment.data.length} 个数据点，响应范围约为 ${min.toFixed(3)} ~ ${max.toFixed(3)}，整体变化幅度约 ${delta.toFixed(3)}。`;
+  return `已采集 ${experiment.data.length} 个数据点，响应范围约 ${min.toFixed(3)} ~ ${max.toFixed(3)}，整体变化幅度约 ${delta.toFixed(3)}。`;
 }
 
 function buildAiInterpretation(experiment: Experiment) {
   if (experiment.status === 'created') {
-    return 'AI 解读将在实验开始并产生数据后出现。当前建议先确认方案是否覆盖你最关心的参数区间。';
+    return 'AI 解读将在实验开始并产生数据后出现。当前建议先确认 step sequence 是否合理，尤其是配液、转移、冲洗和 echem 的衔接。';
   }
   if (experiment.status === 'running') {
-    return 'AI 解读占位：实验运行中。后续应结合曲线形态、峰位/阻抗变化或稳定性趋势给出初步判断。';
+    return 'AI 解读占位：实验运行中。后续应结合当前步骤、曲线形态、峰位 / 阻抗变化或稳定性趋势给出初步判断。';
   }
   if (experiment.status === 'failed') {
-    return 'AI 解读占位：本次实验失败。后续应结合设备状态、参数范围、样品前处理和历史相似实验给出排查建议。';
+    return 'AI 解读占位：本次实验失败。后续应结合失败前一步、设备状态、参数范围和历史相似实验给出排查建议。';
   }
   return 'AI 解读占位：后续这里会给出结果摘要、关键异常点、与历史实验的对比，以及下一轮实验参数建议。';
 }
@@ -155,22 +156,22 @@ function buildNextActions(experiment: Experiment) {
   if (experiment.status === 'created') {
     return [
       '确认电极、样品和设备状态后开始执行。',
-      '如果这是首轮摸底，优先保持单变量设计，避免一上来把范围铺得太大。',
+      '检查 steps 顺序是否合理，避免把冲洗、配液、转移和 echem 排错。',
       '执行后进入本页回看结果摘要和 AI 解读。',
     ];
   }
   if (experiment.status === 'running') {
     return [
-      '继续观察曲线是否出现超预期波动或平台漂移。',
+      '继续观察当前步骤是否长时间无进展。',
       '记录当前样品批次与环境条件，便于后续对照。',
       '完成后优先判断结果是否足够支撑下一步放大或复现。',
     ];
   }
   if (experiment.status === 'failed') {
     return [
-      '回查关键参数是否超出合理范围，尤其是电压窗口、频率区间和持续时间。',
+      '优先回看失败前一步的 step_type 和关键参数。',
       '检查设备连接、样品状态和实验前处理是否一致。',
-      '建议补一个保守参数版本，用于确认问题来自设备还是方案本身。',
+      '建议补一个更保守的版本，用于确认问题来自设备还是方案本身。',
     ];
   }
   return [
@@ -178,6 +179,75 @@ function buildNextActions(experiment: Experiment) {
     '如果信号趋势明确，建议补重复组或对照组验证稳定性。',
     '如结果与预期不一致，下一步应做故障复查或缩小参数窗口重新验证。',
   ];
+}
+
+function summarizeStep(step: ExperimentStep) {
+  const params = step.params ?? {};
+  switch (step.step_type) {
+    case 'prep_sol': {
+      const prep = params.prep_sol_params ?? {};
+      const selected = Object.entries(prep.selected_solutions ?? {})
+        .filter(([, enabled]) => Boolean(enabled))
+        .map(([name]) => name);
+      return `${((prep.total_volume_ul ?? 0) / 1000).toFixed(1)} mL · ${selected.length ? selected.join(' / ') : '未选溶液'}`;
+    }
+    case 'transfer':
+      return params.volume_ul ? `${params.volume_ul} μL · pump ${params.pump_address ?? '—'}` : `${params.transfer_duration ?? '—'} ${params.transfer_duration_unit ?? 's'} · pump ${params.pump_address ?? '—'}`;
+    case 'flush':
+      return `${params.flush_channel_id ?? '未选通道'} · ${params.flush_cycles ?? 1} cycles`;
+    case 'echem':
+      return `${params.ec_settings?.technique ?? 'CV'} · sample ${params.ec_settings?.sample_interval_ms ?? 100} ms`;
+    case 'blank':
+      return step.description || params.notes || '空白 / 等待';
+    case 'evacuate':
+      return params.volume_ul ? `${params.volume_ul} μL 排空` : `${params.transfer_duration ?? '—'} ${params.transfer_duration_unit ?? 's'} 排空`;
+    default:
+      return step.description || '未配置';
+  }
+}
+
+function getStepKeyFacts(step: ExperimentStep): Array<{ label: string; value: string }> {
+  const params = step.params ?? {};
+  switch (step.step_type) {
+    case 'prep_sol': {
+      const prep = params.prep_sol_params ?? {};
+      const selected = Object.entries(prep.selected_solutions ?? {})
+        .filter(([, enabled]) => Boolean(enabled))
+        .map(([name]) => name)
+        .join(', ');
+      return [
+        { label: '总体积', value: `${formatValue(prep.total_volume_ul)} μL` },
+        { label: '已选溶液', value: selected || '—' },
+      ];
+    }
+    case 'transfer':
+    case 'evacuate':
+      return [
+        { label: '泵地址', value: formatValue(params.pump_address) },
+        { label: '泵方向', value: formatValue(params.pump_direction) },
+        { label: '泵转速', value: `${formatValue(params.pump_rpm)} rpm` },
+        { label: '体积', value: params.volume_ul ? `${formatValue(params.volume_ul)} μL` : '—' },
+        { label: '时长', value: params.transfer_duration ? `${formatValue(params.transfer_duration)} ${formatValue(params.transfer_duration_unit)}` : '—' },
+      ];
+    case 'flush':
+      return [
+        { label: '冲洗通道', value: formatValue(params.flush_channel_id) },
+        { label: '冲洗转速', value: `${formatValue(params.flush_rpm)} rpm` },
+        { label: '单轮时长', value: `${formatValue(params.flush_cycle_duration_s)} s` },
+        { label: '循环次数', value: formatValue(params.flush_cycles) },
+      ];
+    case 'echem': {
+      const ec = params.ec_settings ?? {};
+      return [
+        { label: 'Technique', value: formatValue(ec.technique) },
+        { label: '采样间隔', value: `${formatValue(ec.sample_interval_ms)} ms` },
+        { label: '静置时间', value: `${formatValue(ec.quiet_time_s)} s` },
+        { label: '关键参数', value: [ec.e0, ec.eh, ec.el, ec.ef].filter((item) => item !== undefined).map((item) => formatValue(item)).join(' / ') || '—' },
+      ];
+    }
+    default:
+      return [{ label: '备注', value: step.description || params.notes || '—' }];
+  }
 }
 
 export function ExperimentDetail() {
@@ -222,14 +292,7 @@ export function ExperimentDetail() {
     }
   };
 
-  const keyParamItems = useMemo(() => {
-    if (!experiment?.steps.length) return [] as Array<{ label: string; value: string }>;
-    const firstStep = experiment.steps[0];
-    return Object.entries(firstStep.params)
-      .slice(0, 6)
-      .map(([key, value]) => ({ label: humanizeParamKey(key), value: formatValue(value) }));
-  }, [experiment]);
-
+  const currentStep = useMemo(() => experiment?.steps?.[0] ?? null, [experiment]);
   const timelineItems = useMemo(() => {
     if (!experiment) return [];
     return [
@@ -264,16 +327,12 @@ export function ExperimentDetail() {
   const resultSummary = buildResultSummary(experiment);
   const aiInterpretation = buildAiInterpretation(experiment);
   const nextActions = buildNextActions(experiment);
-  const primaryMethod = experiment.steps[0]?.step_type;
 
   return (
     <div className="space-y-6 p-6">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
         <div>
-          <button
-            onClick={() => navigate(-1)}
-            className="mb-3 flex items-center gap-1 text-sm text-gray-500 transition hover:text-gray-700"
-          >
+          <button onClick={() => navigate(-1)} className="mb-3 flex items-center gap-1 text-sm text-gray-500 transition hover:text-gray-700">
             <ArrowLeft className="h-4 w-4" />
             返回
           </button>
@@ -287,11 +346,6 @@ export function ExperimentDetail() {
               {statusConf.icon}
               {statusConf.label}
             </span>
-            {primaryMethod && (
-              <span className="rounded-full bg-blue-50 px-3 py-1 text-sm font-medium text-blue-700">
-                主要方法：{METHOD_LABELS[primaryMethod] ?? primaryMethod.toUpperCase()}
-              </span>
-            )}
             {experiment.tags.map((tag) => (
               <span key={tag} className="rounded-full bg-slate-100 px-3 py-1 text-xs text-slate-600">
                 {tag}
@@ -349,38 +403,57 @@ export function ExperimentDetail() {
         <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
           <div className="flex items-center gap-2">
             <FlaskConical className="h-5 w-5 text-blue-600" />
-            <h3 className="text-lg font-semibold text-slate-900">关键参数摘要</h3>
+            <h3 className="text-lg font-semibold text-slate-900">运行中的上下文</h3>
           </div>
-          {keyParamItems.length > 0 ? (
-            <div className="mt-4 grid gap-3 sm:grid-cols-2">
-              {keyParamItems.map((item) => (
-                <div key={item.label} className="rounded-xl bg-slate-50 px-4 py-3">
-                  <p className="text-xs text-slate-500">{item.label}</p>
-                  <p className="mt-1 text-sm font-semibold text-slate-900">{item.value}</p>
-                </div>
-              ))}
+
+          <div className="mt-4 grid gap-3 sm:grid-cols-2">
+            <div className="rounded-xl bg-slate-50 px-4 py-3">
+              <p className="text-xs text-slate-500">总步骤数</p>
+              <p className="mt-1 text-sm font-semibold text-slate-900">{experiment.steps.length}</p>
             </div>
-          ) : (
-            <div className="mt-4 rounded-xl border border-dashed border-slate-200 px-4 py-6 text-sm text-slate-500">
-              暂无可展示的关键参数。
+            <div className="rounded-xl bg-slate-50 px-4 py-3">
+              <p className="text-xs text-slate-500">当前步骤</p>
+              <p className="mt-1 text-sm font-semibold text-slate-900">{currentStep ? summarizeStep(currentStep) : '—'}</p>
+            </div>
+          </div>
+
+          {currentStep && (
+            <div className="mt-5 rounded-2xl border border-slate-200 p-4">
+              <div className="flex items-center gap-2">
+                <span className={`inline-flex items-center gap-2 rounded-full border px-2.5 py-1 text-xs font-medium ${STEP_TYPE_META[currentStep.step_type]?.tone ?? 'bg-slate-50 text-slate-700 border-slate-200'}`}>
+                  {STEP_TYPE_META[currentStep.step_type]?.icon}
+                  {STEP_TYPE_META[currentStep.step_type]?.label ?? currentStep.step_type}
+                </span>
+              </div>
+              <p className="mt-3 text-sm text-slate-700">{currentStep.description || summarizeStep(currentStep)}</p>
+              <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                {getStepKeyFacts(currentStep).map((item) => (
+                  <div key={item.label} className="rounded-xl bg-slate-50 px-4 py-3">
+                    <p className="text-xs text-slate-500">{item.label}</p>
+                    <p className="mt-1 text-sm font-medium text-slate-900">{item.value}</p>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
 
           {experiment.steps.length > 0 && (
             <div className="mt-5 border-t border-slate-100 pt-5">
-              <p className="text-sm font-medium text-slate-700">实验步骤</p>
+              <p className="text-sm font-medium text-slate-700">步骤链</p>
               <div className="mt-3 space-y-3">
                 {experiment.steps.map((step, index) => (
                   <div key={`${step.step_type}-${index}`} className="rounded-xl border border-slate-200 p-4">
-                    <div className="flex items-center gap-3">
+                    <div className="flex flex-wrap items-center gap-3">
                       <span className="flex h-7 w-7 items-center justify-center rounded-full bg-blue-100 text-xs font-bold text-blue-700">
                         {index + 1}
                       </span>
-                      <span className="rounded-full bg-blue-50 px-2 py-0.5 text-xs font-semibold text-blue-700">
-                        {METHOD_LABELS[step.step_type] ?? step.step_type.toUpperCase()}
+                      <span className={`inline-flex items-center gap-2 rounded-full border px-2.5 py-1 text-xs font-medium ${STEP_TYPE_META[step.step_type]?.tone ?? 'bg-slate-50 text-slate-700 border-slate-200'}`}>
+                        {STEP_TYPE_META[step.step_type]?.icon}
+                        {STEP_TYPE_META[step.step_type]?.label ?? step.step_type}
                       </span>
-                      <span className="text-sm text-slate-700">{step.description || `步骤 ${index + 1}`}</span>
+                      <span className="text-sm text-slate-700">{step.description || summarizeStep(step)}</span>
                     </div>
+                    <p className="mt-2 text-xs text-slate-500">{summarizeStep(step)}</p>
                   </div>
                 ))}
               </div>
@@ -400,11 +473,21 @@ export function ExperimentDetail() {
           <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
             <div className="flex items-center gap-2">
               <Brain className="h-5 w-5 text-violet-600" />
-              <h3 className="text-lg font-semibold text-slate-900">AI 解读</h3>
+              <h3 className="text-lg font-semibold text-slate-900">Agent 响应 / 分析入口</h3>
             </div>
             <p className="mt-4 text-sm leading-6 text-slate-600">{aiInterpretation}</p>
+            <div className="mt-4 grid gap-3 sm:grid-cols-2">
+              <button className="rounded-xl border border-violet-200 bg-violet-50 px-4 py-3 text-left text-sm text-violet-800 transition hover:bg-violet-100">
+                <div className="font-semibold">数据处理/分析助手</div>
+                <div className="mt-1 text-xs leading-5 text-violet-700">对当前实验做结果摘要、关键指标提取、图表与对比分析。</div>
+              </button>
+              <button className="rounded-xl border border-blue-200 bg-blue-50 px-4 py-3 text-left text-sm text-blue-800 transition hover:bg-blue-100">
+                <div className="font-semibold">知识管理 / 知识库 Chat</div>
+                <div className="mt-1 text-xs leading-5 text-blue-700">带着当前实验上下文继续问文档、历史实验、下一轮方案。</div>
+              </button>
+            </div>
             <div className="mt-4 rounded-xl border border-dashed border-violet-200 bg-violet-50 px-4 py-3 text-sm text-violet-700">
-              这里已预留产品级位置，后续可直接接入真实 Agent 的实验总结、趋势判断与异常解释。
+              这里已预留产品级位置，后续可直接接入真实 Agent 的实验总结、趋势判断、异常解释和知识库上下文问答。
             </div>
           </div>
         </div>

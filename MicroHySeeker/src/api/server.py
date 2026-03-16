@@ -46,6 +46,8 @@ def create_app(bridge: "APIBridge") -> FastAPI:
     from .routes import experiment as exp_router
     from .routes import system as sys_router
     from .routes import data as data_router
+    from .routes import device as dev_router
+    from .routes import template as tpl_router
 
     @asynccontextmanager
     async def lifespan(app: FastAPI):
@@ -64,7 +66,7 @@ def create_app(bridge: "APIBridge") -> FastAPI:
     app.add_middleware(
         CORSMiddleware,
         allow_origins=["http://localhost", "http://127.0.0.1"],
-        allow_methods=["GET", "POST"],
+        allow_methods=["GET", "POST", "DELETE"],
         allow_headers=["*"],
     )
 
@@ -76,6 +78,8 @@ def create_app(bridge: "APIBridge") -> FastAPI:
     app.include_router(exp_router.router,  prefix="/api/experiment", tags=["experiment"])
     app.include_router(sys_router.router,  prefix="/api/system",     tags=["system"])
     app.include_router(data_router.router, prefix="/api/data",       tags=["data"])
+    app.include_router(dev_router.router,  prefix="/api/device",     tags=["device"])
+    app.include_router(tpl_router.router,  prefix="/api/template",   tags=["template"])
 
     return app
 

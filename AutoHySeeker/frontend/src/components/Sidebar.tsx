@@ -5,6 +5,7 @@ const NAV_ITEMS = [
   { to: "/", label: "nav.overview" },
   { to: "/dashboard", label: "nav.dashboard" },
   { to: "/agents", label: "nav.agents" },
+  { to: "/knowledge", label: "知识库 Chat" },
   { to: "/templates", label: "nav.templates" },
   { to: "/settings", label: "nav.settings" }
 ];

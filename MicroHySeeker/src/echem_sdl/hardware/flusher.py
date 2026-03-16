@@ -41,6 +41,9 @@ PHASE_SEQUENCE = [
 ]
 
 
+from src.echem_sdl.utils.constants import SAFETY_MAX_RPM
+
+
 @dataclass
 class FlusherPumpConfig:
     """单个冲洗泵配置"""
@@ -49,6 +52,13 @@ class FlusherPumpConfig:
     rpm: int = 200            # 默认转速
     direction: str = "FWD"    # 默认方向 FWD/REV
     duration_s: float = 10.0  # 默认运行时间（秒）
+
+    def __post_init__(self):
+        if self.rpm > SAFETY_MAX_RPM:
+            raise ValueError(
+                f"泵 {self.name}(地址{self.address}) rpm={self.rpm} "
+                f"超过安全上限 {SAFETY_MAX_RPM}"
+            )
 
 
 @dataclass

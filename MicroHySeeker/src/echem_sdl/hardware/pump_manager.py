@@ -31,6 +31,7 @@ from ..utils.constants import (
     ENCODER_DIVISIONS_PER_REV,
     DEFAULT_DILUTION_ACCELERATION,
     DEFAULT_DILUTION_SPEED,
+    SAFETY_MAX_RPM,
 )
 from .rs485_driver import RS485Driver
 from .rs485_protocol import (
@@ -251,8 +252,11 @@ class PumpManager:
         direction: Literal["forward", "reverse"] = "forward",
         ramp: int = 0x10,
     ) -> None:
-        if rpm < 0 or rpm > 3000:
-            raise ValueError("rpm must be 0..3000")
+        if rpm < 0 or rpm > SAFETY_MAX_RPM:
+            raise ValueError(
+                f"rpm={rpm} 超出安全范围 0..{SAFETY_MAX_RPM}，"
+                f"禁止设置超过 {SAFETY_MAX_RPM} RPM 的转速"
+            )
 
         if rpm == 0:
             payload = bytes([0x00, 0x00, ramp & 0xFF])
@@ -270,13 +274,14 @@ class PumpManager:
         addresses: list[int] | None = None,
         poll_interval_s: float = 0.02,
         commands: tuple[int, ...] = (CMD_READ_ENABLE, CMD_READ_SPEED, CMD_READ_FAULT),
+        request_timeout_s: float | None = None,
     ) -> None:
         self.stop_scan()
         addrs = addresses or list(range(1, 13))
         self._scan_stop.clear()
         self._scan_thread = threading.Thread(
             target=self._scan_loop,
-            args=(addrs, float(poll_interval_s), commands),
+            args=(addrs, float(poll_interval_s), commands, request_timeout_s),
             daemon=True,
         )
         self._scan_thread.start()
@@ -287,7 +292,13 @@ class PumpManager:
             self._scan_thread.join(timeout=1.0)
             self._scan_thread = None
 
-    def _scan_loop(self, addresses: list[int], poll_interval_s: float, commands: tuple[int, ...]) -> None:
+    def _scan_loop(
+        self,
+        addresses: list[int],
+        poll_interval_s: float,
+        commands: tuple[int, ...],
+        request_timeout_s: float | None,
+    ) -> None:
         for addr in self._failures:
             self._failures[addr] = 0
         while not self._scan_stop.is_set():
@@ -298,7 +309,7 @@ class PumpManager:
                     if self._scan_stop.is_set():
                         return
                     try:
-                        self.request(addr, cmd)
+                        self.request(addr, cmd, timeout_s=request_timeout_s)
                     except TimeoutError:
                         pass
                     time.sleep(poll_interval_s)
@@ -395,7 +406,7 @@ class PumpManager:
         Args:
             addr: 泵地址 (1-12)
             direction: 方向 "FWD"/"forward" 或 "REV"/"reverse"
-            rpm: 转速 (0-3000)
+            rpm: 转速 (0-300)，不得超过安全上限
             fire_and_forget: 如果True，发送命令后不等待响应确认
                             适用于响应不稳定的设备（如泵1）
             
@@ -406,6 +417,14 @@ class PumpManager:
             >>> manager.start_pump(1, "FWD", 120)
             True
         """
+        # 安全校验：任何路径都不允许超过 SAFETY_MAX_RPM
+        if rpm < 0 or rpm > SAFETY_MAX_RPM:
+            if self._logger:
+                self._logger.error(
+                    f"❌ 泵 {addr} 启动被拒绝: RPM={rpm} 超出安全范围 0..{SAFETY_MAX_RPM}"
+                )
+            return False
+        
         dir_flag = "forward" if direction.upper() in ("FWD", "FORWARD") else "reverse"
         
         if fire_and_forget:
@@ -506,11 +525,11 @@ class PumpManager:
                 # 1. 位置模式停止: CMD_POSITION_REL speed=0 counts=0
                 pos_payload = bytes([0x00, 0x00, 0x10, 0x00, 0x00, 0x00, 0x00])
                 self.driver.write(build_frame(addr, CMD_POSITION_REL, pos_payload))
-                time.sleep(0.06)  # 60ms: 每条命令之间留足间隔
+                time.sleep(0.01)  # 10ms: 38400波特率下帧传输<5ms，10ms足够
                 # 2. 速度模式停止: CMD_SPEED speed=0
                 spd_payload = bytes([0x00, 0x00, 0x10])
                 self.driver.write(build_frame(addr, CMD_SPEED, spd_payload))
-                time.sleep(0.06)
+                time.sleep(0.01)
                 # 3. 禁用电机
                 dis_payload = bytes([0x00])
                 self.driver.write(build_frame(addr, CMD_ENABLE, dis_payload))
@@ -586,7 +605,8 @@ class PumpManager:
         
         # 已知响应异常但通常能工作的泵列表
         # 这些泵即使扫描不到响应，也假设在线（因为它们能接收和执行命令）
-        RESPONSE_UNSTABLE_PUMPS = [1, 11]
+        # 注：泵1已于2026-03-15更换驱动板，通信100%稳定，已移出此列表
+        RESPONSE_UNSTABLE_PUMPS = [11]
         
         online_pumps = []
         
@@ -679,7 +699,7 @@ class PumpManager:
             addr: 泵地址 (1-12)
             encoder_counts: 相对坐标值 (int32, 16384 = 1圈)
                            正值=正转, 负值=反转
-            speed: 运行速度 (RPM, 0-3000), 默认100
+            speed: 运行速度 (RPM, 0-300)，不得超过安全上限
             acceleration: 加速度参数 (0-255), 默认2(平滑)
             fire_and_forget: 如果True，发送命令后不等待响应
             
@@ -694,6 +714,13 @@ class PumpManager:
             >>> manager.move_position_rel(1, 16384)  # 正转1圈
             1
         """
+        # 安全校验
+        if speed < 0 or speed > SAFETY_MAX_RPM:
+            if self._logger:
+                self._logger.error(
+                    f"❌ 泵 {addr} 位置相对运动被拒绝: speed={speed} 超出安全范围 0..{SAFETY_MAX_RPM}"
+                )
+            return None
         if self._logger:
             direction = "正转" if encoder_counts >= 0 else "反转"
             revolutions = abs(encoder_counts) / ENCODER_DIVISIONS_PER_REV
@@ -767,13 +794,20 @@ class PumpManager:
         Args:
             addr: 泵地址 (1-12)
             encoder_counts: 绝对坐标值 (int32, 16384 = 1圈)
-            speed: 运行速度 (RPM, 0-3000), 默认100
+            speed: 运行速度 (RPM, 0-300)，不得超过安全上限
             acceleration: 加速度参数 (0-255), 默认2(平滑)
             fire_and_forget: 如果True，发送命令后不等待响应
             
         Returns:
             int | None: 响应状态码 (同 move_position_rel)
         """
+        # 安全校验
+        if speed < 0 or speed > SAFETY_MAX_RPM:
+            if self._logger:
+                self._logger.error(
+                    f"❌ 泵 {addr} 位置绝对运动被拒绝: speed={speed} 超出安全范围 0..{SAFETY_MAX_RPM}"
+                )
+            return None
         if self._logger:
             revolutions = encoder_counts / ENCODER_DIVISIONS_PER_REV
             self._logger.debug(
@@ -963,7 +997,7 @@ class PumpManager:
             addr: 泵地址 (1-12)
             encoder_counts: 目标位移 (编码器计数, 16384 = 1圈)
                            正值=正转(通常是出液), 负值=反转(通常是吸液)
-            speed: 运行速度 (RPM, 0-3000)
+            speed: 运行速度 (RPM, 0-300)，不得超过安全上限
             acceleration: 加速度参数 (0-255)
             wait_complete: 是否等待完成
             timeout_s: 等待超时（秒）
@@ -976,6 +1010,14 @@ class PumpManager:
             >>> manager.dispense_by_encoder(1, 8192)
             True
         """
+        # 安全校验：位置模式速度同样不允许超过 SAFETY_MAX_RPM
+        if speed < 0 or speed > SAFETY_MAX_RPM:
+            if self._logger:
+                self._logger.error(
+                    f"❌ 泵 {addr} 配液被拒绝: speed={speed} 超出安全范围 0..{SAFETY_MAX_RPM}"
+                )
+            return False
+        
         try:
             # 1. 使能电机
             if self._logger:

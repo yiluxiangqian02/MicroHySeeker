@@ -26,6 +26,7 @@ dependencies = [
 
 [project.scripts]
 autohyseeker-api = "src.api.main:main"
+autohyseeker-optimize = "src.run_optimization:main"
 
 [project.optional-dependencies]
 rag = ["openviking>=0.1"]

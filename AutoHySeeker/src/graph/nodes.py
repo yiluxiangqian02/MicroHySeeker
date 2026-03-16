@@ -7,16 +7,20 @@ from typing import Any
 from src.agents.data_analyst import DataAnalystAgent
 from src.agents.diagnostics import DiagnosticsExpertAgent
 from src.agents.exp_designer import ExperimentDesignerAgent
+from src.agents.exp_executor import ExperimentExecutorAgent
 from src.agents.exp_supervisor import ExperimentSupervisorAgent
 from src.agents.knowledge_mgr import KnowledgeManagerAgent
+from src.agents.orchestrator import OrchestratorAgent
 from src.graph.state import AutoHySeekerState
 
 AGENT_MAP = {
     "data_analyst": DataAnalystAgent(),
     "exp_designer": ExperimentDesignerAgent(),
+    "exp_executor": ExperimentExecutorAgent(),
     "exp_supervisor": ExperimentSupervisorAgent(),
     "diagnostics": DiagnosticsExpertAgent(),
     "knowledge_mgr": KnowledgeManagerAgent(),
+    "orchestrator": OrchestratorAgent(),
 }
 
 
@@ -36,12 +40,18 @@ def _infer_agent(task: dict[str, Any], requested: str | None = None) -> str:
         return requested
 
     text = _task_text(task)
+
+    # Orchestrator keywords (closed-loop optimization as a whole)
+    if any(keyword in text for keyword in ("闭环", "优化循环", "配比优化", "optimization loop", "closed-loop")):
+        return "orchestrator"
     if any(keyword in text for keyword in ("cv", "eis", "analy", "signal", "data")):
         return "data_analyst"
     if any(keyword in text for keyword in ("design", "next experiment", "optimize", "optuna")):
         return "exp_designer"
     if any(keyword in text for keyword in ("diagnos", "error", "failure", "anomaly", "troubleshoot")):
         return "diagnostics"
+    if any(keyword in text for keyword in ("execute", "run experiment", "启动实验", "执行实验", "start experiment")):
+        return "exp_executor"
     if any(keyword in text for keyword in ("knowledge", "paper", "literature", "summary")):
         return "knowledge_mgr"
     return "exp_supervisor"
@@ -94,12 +104,20 @@ async def run_exp_supervisor(state: AutoHySeekerState) -> dict[str, Any]:
     return await _invoke_agent(state, "exp_supervisor")
 
 
+async def run_exp_executor(state: AutoHySeekerState) -> dict[str, Any]:
+    return await _invoke_agent(state, "exp_executor")
+
+
 async def run_diagnostics(state: AutoHySeekerState) -> dict[str, Any]:
     return await _invoke_agent(state, "diagnostics")
 
 
 async def run_knowledge_mgr(state: AutoHySeekerState) -> dict[str, Any]:
     return await _invoke_agent(state, "knowledge_mgr")
+
+
+async def run_orchestrator(state: AutoHySeekerState) -> dict[str, Any]:
+    return await _invoke_agent(state, "orchestrator")
 
 
 def format_response(state: AutoHySeekerState) -> dict[str, Any]:

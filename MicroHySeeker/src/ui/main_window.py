@@ -542,7 +542,6 @@ class ExperimentProcessWidget(QFrame):
         try:
             import matplotlib
             matplotlib.use('Agg')
-            import matplotlib.pyplot as plt
             from matplotlib.figure import Figure
             from matplotlib.backends.backend_agg import FigureCanvasAgg
             import numpy as np
@@ -574,6 +573,23 @@ class ExperimentProcessWidget(QFrame):
                 ax.set_xlabel('t / s', fontsize=15, fontweight='bold')
                 ax.set_ylabel('I / A', fontsize=15, fontweight='bold')
                 ax.set_title('Amperometric i-t Curve', fontsize=16, fontweight='bold')
+            elif tech_upper == "ADT" and arr.shape[1] >= 3:
+                # ADT 同时展示连续时间轴上的电位与电流，直观看到 CP/CA 交替脉冲。
+                ax2 = ax.twinx()
+                time_axis = arr[:, 0]
+                potential = arr[:, 1]
+                current = arr[:, 2]
+                pot_line = ax.plot(time_axis, potential, color='#1565C0', linewidth=1.6, label='Potential')[0]
+                cur_line = ax2.plot(time_axis, current, color='#D32F2F', linewidth=1.0, alpha=0.75, label='Current')[0]
+                ax.set_xlabel('t / s', fontsize=15, fontweight='bold')
+                ax.set_ylabel('E / V', fontsize=15, fontweight='bold', color='#1565C0')
+                ax2.set_ylabel('I / A', fontsize=15, fontweight='bold', color='#D32F2F')
+                ax.tick_params(axis='y', colors='#1565C0', labelsize=12, width=1.5)
+                ax2.tick_params(axis='y', colors='#D32F2F', labelsize=12, width=1.5)
+                ax.set_title('Accelerated Durability Test (ADT)', fontsize=16, fontweight='bold')
+                ax.legend([pot_line, cur_line], ['Potential', 'Current'], loc='upper right', fontsize=10, frameon=False)
+                for spine in ax2.spines.values():
+                    spine.set_linewidth(1.5)
             elif tech_upper == "ADT" and arr.shape[1] >= 2:
                 ax.plot(arr[:, 0], arr[:, 1], color='#1565C0', linewidth=lw)
                 ax.set_xlabel('t / s', fontsize=15, fontweight='bold')
@@ -602,7 +618,7 @@ class ExperimentProcessWidget(QFrame):
             from PySide6.QtGui import QImage, QPixmap
             qimg = QImage(bytes(buf), w, h, QImage.Format_RGBA8888)
             self._echem_pixmap = QPixmap.fromImage(qimg)
-            plt.close(fig)
+            fig.clear()
             
             self.ws_measurement_status = tr("ws_done", tech=tech_upper)
             self.update()
@@ -1093,6 +1109,7 @@ class MainWindow(QMainWindow):
         self.runner.pump_batch_update.connect(self._on_pump_batch_update)
         self.runner.volume_updated.connect(self._on_volume_updated)
         self.runner.liquid_level_update.connect(self._on_liquid_level_update)
+        self._start_cooldown = False
 
         # ── HTTP API 服务（供 AutoHySeeker 远程控制，端口 8100） ──────────
         self._api_bridge = None
@@ -1116,6 +1133,7 @@ class MainWindow(QMainWindow):
         
         # 加载上次保存的实验
         self._load_last_experiment()
+        self._update_control_buttons()
         
         self.log_message(tr("sys_started"), "info")
     
@@ -1658,9 +1676,31 @@ class MainWindow(QMainWindow):
         )
     
     # === 实验控制 ===
+
+    def _update_control_buttons(self):
+        """根据 Runner 状态刷新控制按钮可用性"""
+        can_start = (not self._start_cooldown) and (not self.runner.is_busy)
+        self.btn_run_single.setEnabled(can_start)
+        self.btn_run_combo.setEnabled(can_start)
+        self.btn_stop.setEnabled(self.runner.is_busy)
+
+    def _can_start_experiment(self) -> bool:
+        """启动门禁：防止停止中/运行中重入启动"""
+        if self._start_cooldown:
+            self.log_message("正在停止上一轮实验，请稍候再开始", "warning")
+            self._update_control_buttons()
+            return False
+        if self.runner.is_busy:
+            self.log_message("实验仍在运行或停止中，无法重复启动", "warning")
+            self._update_control_buttons()
+            return False
+        return True
     
     def _on_run_single(self):
         """运行单次实验"""
+        if not self._can_start_experiment():
+            return
+
         if not self.single_experiment or not self.single_experiment.steps:
             QMessageBox.warning(self, tr("warning"), tr("no_steps_warning"))
             return
@@ -1687,12 +1727,20 @@ class MainWindow(QMainWindow):
                 return
         
         self._refresh_step_list()
-        self.runner.run_experiment(self.single_experiment)
+        started = self.runner.run_experiment(self.single_experiment)
+        if not started:
+            self.log_message("实验启动失败：Runner 正在忙", "warning")
+            self._update_control_buttons()
+            return
         self.status_exp.setText(tr("status_running"))
         self.log_message("开始运行单次实验...", "info")
+        self._update_control_buttons()
     
     def _on_run_combo(self):
         """运行组合实验"""
+        if not self._can_start_experiment():
+            return
+
         if not self.combo_params:
             QMessageBox.warning(self, tr("warning"), tr("no_steps_warning"))
             return
@@ -1757,8 +1805,13 @@ class MainWindow(QMainWindow):
                     self._apply_param_to_step(step, param_name, param_value)
         
         # 运行实验
-        self.runner.run_experiment(experiment_copy)
+        started = self.runner.run_experiment(experiment_copy)
+        if not started:
+            self.log_message("组合实验启动失败：Runner 正在忙", "warning")
+            self._update_control_buttons()
+            return
         self.status_exp.setText(f"状态: 运行中 (组合 {combo_index + 1}/{self.total_combo_count})")
+        self._update_control_buttons()
     
     def _apply_param_to_step(self, step, param_name: str, param_value: float):
         """将参数值应用到步骤
@@ -1800,6 +1853,16 @@ class MainWindow(QMainWindow):
     
     def _on_stop(self):
         """停止实验 - 设标志 + 立即停止所有硬件泵"""
+        if not self.runner.is_busy:
+            self.log_message("当前没有正在运行的实验", "info")
+            self._update_control_buttons()
+            return
+
+        # 停止后短暂冷却，防止用户快速点击导致重入
+        self._start_cooldown = True
+        self._update_control_buttons()
+        QTimer.singleShot(1500, self._release_start_cooldown)
+
         self.runner.stop()
         
         # 立即发送硬件停止命令给所有泵
@@ -1812,13 +1875,21 @@ class MainWindow(QMainWindow):
         except Exception as e:
             self.log_message(f"停止泵异常: {e}", "error")
         
-        self.status_exp.setText("状态: 已停止")
+        self.status_exp.setText("状态: 正在停止...")
         self.log_message("实验已停止", "warning")
         
         # 重置泵状态
         for i in range(12):
             self.pump_diagram.set_pump_running(i + 1, False)
         self.process_widget.set_pump_states(False, False, False)
+
+    def _release_start_cooldown(self):
+        """释放停止后冷却；若仍在停止过程，继续保持禁用"""
+        if self.runner.is_busy:
+            QTimer.singleShot(800, self._release_start_cooldown)
+            return
+        self._start_cooldown = False
+        self._update_control_buttons()
     
     def _on_prev_combo(self):
         """上一个组合实验"""
@@ -1894,6 +1965,16 @@ class MainWindow(QMainWindow):
             self._refresh_step_list()
         self.process_widget.update()
         self.pump_diagram.update()
+
+        # 配置变更后如果已连 RS485，立即补发一次全停，避免异常持续转动
+        try:
+            from src.services.rs485_wrapper import get_rs485_instance
+            rs485 = get_rs485_instance()
+            if rs485.is_connected():
+                rs485.stop_all()
+                self.log_message("配置更新后已执行安全全停", "warning")
+        except Exception as e:
+            self.log_message(f"配置更新后的安全全停失败: {e}", "error")
     
     def _refresh_step_list(self):
         """刷新步骤列表 - 中文显示，不同类型不同颜色，带详细参数"""
@@ -2197,6 +2278,7 @@ class MainWindow(QMainWindow):
         """实验完成"""
         # 确保停止 CHI 截图
         self._stop_echem_capture()
+        self._start_cooldown = False
         
         status = tr("exp_done_ok") if success else tr("exp_done_fail")
         self.status_exp.setText(tr("status_done") if success else tr("status_failed"))
@@ -2219,6 +2301,7 @@ class MainWindow(QMainWindow):
         # 清除步骤列表高亮
         for i in range(self.step_list.count()):
             self.step_list.item(i).setBackground(QColor(Qt.transparent))
+        self._update_control_buttons()
 
     # ── 电化学实时截图 ──────────────────────────────────
     
@@ -2273,10 +2356,8 @@ class MainWindow(QMainWindow):
         try:
             dm = self.runner.data_manager
             if dm and dm.run_dir:
-                # 从 process_widget 获取图表 pixmap
-                chart = getattr(self.process_widget, 'echem_chart', None)
-                if chart:
-                    pixmap = chart.grab()
+                pixmap = getattr(self.process_widget, '_echem_pixmap', None)
+                if pixmap:
                     step_idx = self.runner.current_step_index
                     dm.save_echem_chart(step_idx, technique, pixmap)
         except Exception as e:
@@ -2357,6 +2438,8 @@ class MainWindow(QMainWindow):
                 port = getattr(rs485, '_current_port', '')
                 self.status_rs485.setText(f"RS485: 已连接 ({port})")
                 self.status_rs485.setStyleSheet("color: green;")
+                # 订阅实时泵状态与不符告警回调
+                self._setup_pump_monitoring_callbacks(rs485)
             else:
                 self.status_rs485.setText("RS485: 未连接")
                 self.status_rs485.setStyleSheet("color: red;")
@@ -2364,9 +2447,39 @@ class MainWindow(QMainWindow):
             self.status_rs485.setText("RS485: 状态未知")
             self.status_rs485.setStyleSheet("color: gray;")
 
-    # ================================================================
-    # 预检查结果对话框 (含"连接RS485"按钮)
-    # ================================================================
+    def _setup_pump_monitoring_callbacks(self, rs485=None):
+        """订阅 RS485 实时泵状态与不符告警回调"""
+        try:
+            if rs485 is None:
+                from src.services.rs485_wrapper import get_rs485_instance
+                rs485 = get_rs485_instance()
+            rs485.set_state_callback(self._on_rs485_pump_state)
+            rs485.set_mismatch_callback(self._on_pump_mismatch)
+        except Exception:
+            pass
+
+    def _on_rs485_pump_state(self, addr: int, state: dict):
+        """后台扫描回调 — 用实际硬件状态更新泵指示灯（线程安全）"""
+        try:
+            speed = state.get("speed", 0) or 0
+            enabled = state.get("enabled", False)
+            running = abs(speed) > 0 or bool(enabled)
+            QTimer.singleShot(0, lambda: self.pump_diagram.set_pump_state(addr, 1 if running else 0))
+        except Exception:
+            pass
+
+    def _on_pump_mismatch(self, addr: int, desired: dict, actual: dict):
+        """后台监控发现泵实际状态与指令不符时告警（线程安全）"""
+        desired_str = "运行" if desired.get("enabled") else "停止"
+        actual_running = abs(actual.get("speed", 0) or 0) > 0
+        actual_str = "运行" if actual_running else "停止"
+        actual_speed = actual.get("speed", 0) or 0
+        msg = f"⚠ 泵{addr} 状态异常：期望={desired_str}，实际={actual_str}，speed={actual_speed}RPM"
+        QTimer.singleShot(0, lambda: self.log_message(msg, "warning"))
+
+        # ================================================================
+        # 预检查结果对话框 (含"连接RS485"按钮)
+        # ================================================================
 
     def _show_precheck_error_dialog(self, errors: list, allow_retry: bool = True) -> str:
         """弹出预检查错误对话框 — 含"连接RS485"按钮

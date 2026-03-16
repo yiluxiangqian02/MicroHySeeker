@@ -1,0 +1,5 @@
+timestamp,pump_addr,operation,direction,rpm,volume_ul,duration_s,mode,encoder_counts
+2026-03-12T22:09:52.393503,1,prep_sol_inject,FWD,200,10000.0,35.51,position,1829983
+2026-03-12T22:09:53.716363,5,prep_sol_inject,FWD,100,90000.0,33.53,position,861028
+2026-03-12T22:10:38.726773,11,移液,FWD,100,180000.0,75.86,position,2016965
+2026-03-12T22:11:56.209840,12,排空,FWD,100,100000.0,47.84,position,1251610

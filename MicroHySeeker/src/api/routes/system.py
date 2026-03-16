@@ -51,13 +51,30 @@ async def health_check(bridge=Depends(_get_bridge)) -> Dict[str, Any]:
 @router.get("/logs")
 async def get_logs(
     n: int = Query(default=100, ge=1, le=500, description="返回最近 n 条日志"),
+    level: Optional[str] = Query(default=None, description="过滤级别: info/warning/error"),
     bridge=Depends(_get_bridge),
 ) -> Dict[str, Any]:
-    """获取近期运行日志（来自 ExperimentRunner 的 log_message 信号）。"""
+    """获取近期运行日志（来自 ExperimentRunner 的 log_message 信号）。
+    
+    日志级别说明：
+    - info: 正常操作记录（泵启停、步骤完成等）
+    - warning: 需要关注的异常（通信超时重试、参数边界等）
+    - error: 错误事件（设备故障、步骤失败等）
+    
+    Agent 应关注 warning 和 error 级别用于异常检测。
+    """
     try:
         logs = bridge.get_recent_logs(n)
     except Exception as exc:
         raise HTTPException(500, f"日志获取失败: {exc}") from exc
+
+    # 按级别过滤
+    if level:
+        level_upper = level.upper()
+        level_map = {"INFO": "INFO", "WARNING": "WARNING", "WARN": "WARNING",
+                     "ERROR": "ERROR", "ERR": "ERROR"}
+        filter_level = level_map.get(level_upper, level_upper)
+        logs = [l for l in logs if filter_level in l.upper()]
 
     return {
         "count": len(logs),

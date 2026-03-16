@@ -53,12 +53,15 @@ class RS485Wrapper:
     
     # 已知响应不稳定的泵地址（通信超时频繁），
     # 这些泵的写入命令使用 fire_and_forget 模式，不等待响应确认
-    RESPONSE_UNSTABLE_PUMPS = [1, 11]
+    # 注：泵1已于2026-03-15更换驱动板后验证通信100%稳定，已移出此列表
+    RESPONSE_UNSTABLE_PUMPS = [11]
+    SAFETY_MAX_RPM = 300
     
     def __init__(self):
         self._pump_manager: Optional[PumpManager] = None
         self._connected = False
         self._mock_mode = True  # 默认使用Mock模式
+        self._safety_stop_on_connect = True  # 连接成功后默认执行安全停泵
         self._pump_states: Dict[int, dict] = {}  # 泵状态缓存
         self._state_callback: Optional[Callable] = None  # 状态变化回调
         self._current_port: str = ""  # 当前连接的端口名
@@ -69,13 +72,18 @@ class RS485Wrapper:
         
         # 冲洗功能
         self._flusher: Optional["Flusher"] = None  # Flusher实例
-        
+
         # 通信日志回调 (UI详细日志面板)
         self._comm_log_callback: Optional[Callable] = None
-        
+
+        # 状态监控 — 期望状态与实际状态对账
+        self._desired_states: Dict[int, dict] = {}          # {addr: {"enabled": bool, "rpm": int}}
+        self._mismatch_callback: Optional[Callable] = None  # callback(addr, desired, actual)
+        self._mismatch_last_reported: Dict[int, float] = {} # addr -> last_report_timestamp(s)
+
     def set_mock_mode(self, mock_mode: bool):
         """设置模拟模式
-        
+
         如果模式改变，将在下次open_port时重新创建PumpManager
         """
         if self._mock_mode != mock_mode:
@@ -159,6 +167,10 @@ class RS485Wrapper:
             self._pump_manager.connect(port, baudrate, timeout=0.1)
             self._connected = True
             self._current_port = port  # 保存当前端口名以供状态显示
+
+            # 安全策略：连接成功后立即发送全停命令，清理设备上电后的残留运动状态
+            if self._safety_stop_on_connect and not self._mock_mode:
+                self._apply_startup_safety_stop()
             
             print(f"✅ RS485Wrapper: 连接成功 {port}@{baudrate} (Mock={self._mock_mode})")
             return True
@@ -168,6 +180,26 @@ class RS485Wrapper:
             import traceback
             traceback.print_exc()
             return False
+
+    def _apply_startup_safety_stop(self):
+        """连接后安全停泵序列
+
+        背景：部分设备在上电后可能延续上次状态或受总线噪声影响出现误转。
+        这里主动执行多次 stop_all 并对全部地址发送 stop，尽快回到安全静止态。
+        """
+        try:
+            print("🛡️ RS485Wrapper: 执行连接后安全停泵序列...")
+            addresses = list(range(1, 13))
+
+            # 一次广播全停即可：所有泵通信已验证稳定，无需冗余重发
+            try:
+                self._pump_manager.stop_all(addresses=addresses, fire_and_forget=True)
+            except Exception:
+                pass
+
+            print("✅ RS485Wrapper: 安全停泵序列完成")
+        except Exception as e:
+            print(f"⚠️ RS485Wrapper: 安全停泵序列异常 {e}")
     
     def _on_pump_state_changed(self, state: PumpState):
         """泵状态变化回调"""
@@ -187,7 +219,39 @@ class RS485Wrapper:
                 self._state_callback(state.address, self._pump_states[state.address])
             except:
                 pass
-    
+
+        # 对账：实际状态与期望状态不符时触发告警（每个泵最多 30s 报一次）
+        # 专业口径应以“是否实际在转”判断，而不是仅看 enable 位。
+        if self._mismatch_callback and state.address in self._desired_states:
+            desired_enabled = self._desired_states[state.address].get("enabled")
+            actual_speed = self._pump_states[state.address].get("speed")
+            actual_enabled = self._pump_states[state.address].get("enabled")
+            actual_running = abs(actual_speed or 0) > 0
+            if desired_enabled is not None:
+                mismatch = False
+                if desired_enabled:
+                    mismatch = not actual_running
+                else:
+                    mismatch = actual_running
+
+                # speed 尚未刷新时，退化到 enable 位作为兜底判断
+                if actual_speed is None:
+                    mismatch = bool(desired_enabled) != bool(actual_enabled)
+
+                if mismatch:
+                    now = time.time()
+                    last = self._mismatch_last_reported.get(state.address, 0)
+                    if now - last > 30:
+                        self._mismatch_last_reported[state.address] = now
+                        try:
+                            self._mismatch_callback(
+                                state.address,
+                                self._desired_states[state.address],
+                                self._pump_states[state.address]
+                            )
+                        except Exception:
+                            pass
+
     def close_port(self) -> None:
         """关闭串口连接"""
         if self._pump_manager:
@@ -232,6 +296,19 @@ class RS485Wrapper:
             import traceback
             traceback.print_exc()
             return []
+
+    def _validate_rpm_limit(self, address: int, rpm: int, action: str) -> bool:
+        """统一的泵速安全上限校验。"""
+        if rpm < 0:
+            print(f"❌ RS485Wrapper: 泵 {address} {action}失败，RPM 不能小于 0")
+            return False
+        if rpm > self.SAFETY_MAX_RPM:
+            print(
+                f"❌ RS485Wrapper: 泵 {address} {action}失败，"
+                f"RPM={rpm} 超过安全上限 {self.SAFETY_MAX_RPM}"
+            )
+            return False
+        return True
     
     def start_pump(self, address: int, direction: str, rpm: int) -> bool:
         """启动泵
@@ -241,6 +318,8 @@ class RS485Wrapper:
         """
         if not self.is_connected():
             print(f"❌ RS485Wrapper: 未连接，无法启动泵 {address}")
+            return False
+        if not self._validate_rpm_limit(address, rpm, "启动"):
             return False
         
         # 已知响应不稳定的泵，始终使用fire_and_forget模式
@@ -265,6 +344,9 @@ class RS485Wrapper:
                 "direction": direction
             }
             
+            # 记录期望状态（用于后台监控比对）
+            self._desired_states[address] = {"enabled": True, "rpm": rpm}
+
             if success:
                 print(f"✅ RS485Wrapper: 泵 {address} 启动成功 {direction} {rpm}RPM")
             else:
@@ -302,6 +384,9 @@ class RS485Wrapper:
                 self._pump_states[address]["enabled"] = False
                 self._pump_states[address]["speed"] = 0
             
+            # 记录期望状态（用于后台监控比对）
+            self._desired_states[address] = {"enabled": False, "rpm": 0}
+
             if success or use_fire_and_forget:
                 print(f"✅ RS485Wrapper: 泵 {address} 停止{'命令已发送' if use_fire_and_forget else '成功'}")
                 return True
@@ -334,6 +419,8 @@ class RS485Wrapper:
         """
         if not self.is_connected():
             print(f"❌ RS485Wrapper: 未连接，无法执行位置运动 泵{address}")
+            return False
+        if not self._validate_rpm_limit(address, speed, "位置运动"):
             return False
         
         # 已知响应不稳定的泵，位置命令使用fire_and_forget模式
@@ -512,6 +599,9 @@ class RS485Wrapper:
             if address in self._pump_states:
                 self._pump_states[address]["enabled"] = False
                 self._pump_states[address]["speed"] = 0
+            # 自动启动后台状态监控
+            if not self._mock_mode:
+                self.start_monitoring()
             return True
         except Exception:
             return True  # 即使失败也返回True，不阻塞UI
@@ -778,22 +868,35 @@ class RS485Wrapper:
             callback: 回调函数 callback(address: int, state: dict)
         """
         self._state_callback = callback
-    
+
+    def set_mismatch_callback(self, callback: Optional[Callable]):
+        """设置期望/实际状态不符回调 callback(addr: int, desired: dict, actual: dict)"""
+        self._mismatch_callback = callback
+
     def start_monitoring(self):
         """启动后台状态监控
-        
-        启动PumpManager的后台扫描，实时更新泵状态。
+
+        每轮轮询所有泵的 speed 状态，并使用较短超时，尽量把一轮扫描控制在 2 秒内。
+        用于：① 实时刷新 UI 泵指示灯  ② 检测期望状态与实际状态不符
         """
         if not self.is_connected():
             print("❌ RS485Wrapper: 未连接，无法启动监控")
             return False
         
         try:
+            try:
+                from echem_sdl.utils.constants import CMD_READ_SPEED
+                monitor_cmds = (CMD_READ_SPEED,)
+            except Exception:
+                monitor_cmds = None  # 使用默认命令
+
+            kwargs = dict(addresses=list(range(1, 13)), poll_interval_s=0.02, request_timeout_s=0.12)
+            if monitor_cmds is not None:
+                kwargs["commands"] = monitor_cmds
             self._pump_manager.start_scan(
-                addresses=list(range(1, 13)),
-                poll_interval_s=0.5  # 每0.5秒轮询一次
+                **kwargs
             )
-            print("✅ RS485Wrapper: 启动状态监控")
+            print("✅ RS485Wrapper: 启动状态监控 (12泵，speed-only, <2s/轮)")
             return True
         except Exception as e:
             print(f"❌ RS485Wrapper: 启动监控失败 {e}")
@@ -886,12 +989,15 @@ class RS485Wrapper:
             traceback.print_exc()
             return False
     
-    def start_dilution(self, channel_id: int, volume_ul: float, callback: Optional[Callable] = None) -> bool:
+    def start_dilution(self, channel_id: int, volume_ul: float,
+                       rpm: Optional[int] = None,
+                       callback: Optional[Callable] = None) -> bool:
         """开始配液
         
         Args:
             channel_id: 通道ID（即泵地址）
             volume_ul: 体积（微升）
+            rpm: 转速（可选，默认使用通道配置值，不得超过300）
             callback: 完成回调函数
             
         Returns:
@@ -907,7 +1013,7 @@ class RS485Wrapper:
         
         try:
             diluter = self._diluters[channel_id]
-            success = diluter.infuse_volume(volume_ul, callback)
+            success = diluter.infuse(volume_ul=volume_ul, rpm=rpm, callback=callback)
             
             if success:
                 print(f"✅ RS485Wrapper: 通道 {channel_id} 开始配液 {volume_ul}μL")

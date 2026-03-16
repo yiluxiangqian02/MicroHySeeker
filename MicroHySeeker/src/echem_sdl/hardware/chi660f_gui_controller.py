@@ -61,6 +61,7 @@ BM_GETCHECK = 0x00F0
 BM_SETCHECK = 0x00F1
 BST_CHECKED = 1
 BST_UNCHECKED = 0
+EM_SETLIMITTEXT = 0x00C5      # Edit 控件文本长度上限
 
 # CHI 660F 菜单 WM_COMMAND IDs (从 chi660f.exe 菜单资源提取)
 CMD_TECHNIQUE = 32789       # Setup → Technique...
@@ -406,6 +407,10 @@ def _find_child_by_id(parent: int, ctrl_id: int) -> Optional[int]:
 
 def _set_edit_text(hwnd: int, text: str):
     """设置 Edit 控件文字"""
+    # 扩大文本长度上限 (默认 32KB, ADT 批量宏可能 > 64KB)
+    need_limit = len(text) + 1024
+    if need_limit > 30000:
+        _user32.SendMessageW(hwnd, EM_SETLIMITTEXT, need_limit, 0)
     _user32.SendMessageW(hwnd, WM_SETTEXT, 0, text)
 
 
@@ -510,6 +515,75 @@ class MacroBuilder:
         # 关闭 dummy cell
         if config.use_dummy_cell:
             lines.append("dummyoff")
+        
+        return "\n".join(lines)
+    
+    @staticmethod
+    def build_adt_batch(cp_params: 'CPParams', ca_params: 'CAParams',
+                        config: 'ExperimentConfig', num_cycles: int,
+                        output_prefix: str = "adt") -> str:
+        """生成 ADT 批量宏命令 —— 将 N 轮 CP+CA 合并到一个宏文本中
+        
+        CHI 660F 宏语言支持在一个文本中顺序写多个 tech→params→run→save 块。
+        每条 run 完成后才执行下一条，这样只需打开一次 Macro 对话框，
+        消除每轮 ~8s 的 GUI 开关 overhead。
+        
+        100 轮 × (CP 3s + CA 2s) = ~500s 纯实验时间 vs 旧方式 ~1800s。
+        
+        Args:
+            cp_params: CP 参数
+            ca_params: CA 参数
+            config: 实验配置
+            num_cycles: 循环轮数
+            output_prefix: 输出文件前缀
+            
+        Returns:
+            完整的宏命令文本
+        """
+        lines = []
+        
+        # 输出目录 (只设一次)
+        if config.output_dir:
+            lines.append(f"folder: {config.output_dir}")
+        if config.file_override:
+            lines.append("fileoverride")
+        
+        # Dummy cell
+        if config.use_dummy_cell:
+            lines.append("dummyon")
+        
+        # iR 补偿 (全局设置一次)
+        lines.extend(MacroBuilder._ir_comp_commands(config))
+        
+        # N 轮循环: 每轮 CP → save → CA → save
+        for cycle in range(num_cycles):
+            c = cycle + 1
+            # --- CP 块 ---
+            lines.append("tech: cp")
+            lines.extend(MacroBuilder._cp_params(cp_params))
+            lines.append("run")
+            if config.output_format == "csv":
+                lines.append(f"csvsave: {output_prefix}_c{c}_cathodic")
+            else:
+                lines.append(f"tsave: {output_prefix}_c{c}_cathodic")
+            
+            # --- CA 块 ---
+            lines.append("tech: ca")
+            lines.extend(MacroBuilder._ca_params(ca_params))
+            lines.append("run")
+            if config.output_format == "csv":
+                lines.append(f"csvsave: {output_prefix}_c{c}_anodic")
+            else:
+                lines.append(f"tsave: {output_prefix}_c{c}_anodic")
+        
+        # 关闭 dummy cell
+        if config.use_dummy_cell:
+            lines.append("dummyoff")
+        
+        # 关闭 iR 补偿 (恢复)
+        ir = config.ir_compensation
+        if ir and ir.enabled:
+            lines.append("ircompoff")
         
         return "\n".join(lines)
     
@@ -766,6 +840,10 @@ class CHI660FController:
         # 等额外2秒让窗口完全加载
         time.sleep(2.0)
         
+        # ★ 处理启动时的 "Connecting to instrument" 对话框
+        # CHI660F 启动后会自动尝试连接仪器，可能弹出此对话框
+        self._handle_connecting_dialog(timeout=30.0)
+        
         # 关闭可能出现的错误对话框
         self._dismiss_error_dialogs()
         
@@ -862,6 +940,62 @@ class CHI660FController:
         """
         return self._execute_macro_text(macro_text)
     
+    def run_adt_batch(self, cp_params: CPParams, ca_params: CAParams,
+                      num_cycles: int, output_prefix: str = "adt",
+                      timeout_override: float = 0) -> ExperimentResult:
+        """批量执行 ADT 循环 —— 一次性发送 N 轮 CP+CA 到单个宏命令
+        
+        将所有循环合并到一个宏文本中执行，消除每轮的 GUI overhead。
+        
+        Args:
+            cp_params: CP 参数
+            ca_params: CA 参数  
+            num_cycles: 循环轮数
+            output_prefix: 输出文件前缀
+            timeout_override: 超时覆盖 (秒), 0=自动计算
+            
+        Returns:
+            ExperimentResult
+        """
+        if not self.is_connected():
+            return ExperimentResult(
+                success=False,
+                error_message="未连接到 CHI660F，请先调用 launch()"
+            )
+        
+        # 生成批量宏文本
+        macro_text = MacroBuilder.build_adt_batch(
+            cp_params, ca_params, self._config, num_cycles, output_prefix
+        )
+        
+        macro_size = len(macro_text)
+        logger.info(
+            f"生成 ADT 批量宏命令: {num_cycles} 轮 CP+CA, "
+            f"宏文本 {macro_size} 字符"
+        )
+        
+        # 自动计算超时: 每轮 (CP时间 + CA时间 + 余量) × 轮数 + 启动余量
+        if timeout_override > 0:
+            original_timeout = self._config.timeout
+            self._config.timeout = timeout_override
+        else:
+            per_cycle_s = cp_params.cathodic_time + ca_params.pulse_width + 3.0
+            original_timeout = self._config.timeout
+            self._config.timeout = max(
+                per_cycle_s * num_cycles + 120.0,
+                600.0
+            )
+        
+        logger.info(f"ADT 批量超时设置: {self._config.timeout:.0f}s")
+        
+        try:
+            result = self._execute_macro_text(macro_text)
+            result.technique = f"ADT_batch_{num_cycles}cycles"
+        finally:
+            self._config.timeout = original_timeout
+        
+        return result
+    
     # ----------------------------------------------------------
     # 核心执行流程
     # ----------------------------------------------------------
@@ -894,12 +1028,13 @@ class CHI660FController:
         工作流:
             1. WM_COMMAND 32799 → 打开对话框
             2. 查找 Edit(308) → 填入宏文本
-            3. 点击 Run Macro(312)
+            3. 触发宏执行 (多策略: Run Macro / WM_COMMAND / OK+RunOnOK)
             4. 监测完成
-            5. 关闭对话框
+            5. 关闭对话框 (如果还在)
         """
         result = ExperimentResult()
         start_time = time.time()
+        macro_dialog_closed = False  # 跟踪对话框是否已被 OK 关闭
         
         try:
             # 确保无残留对话框
@@ -935,19 +1070,23 @@ class CHI660FController:
             # 3. 推算预期输出文件
             expected_file = self._extract_output_file(macro_text)
             
-            # 4. 点击 Run Macro
-            run_btn = _find_child_by_id(macro_hwnd, MACRO_RUN_BTN_ID)
-            if not run_btn:
-                result.error_message = "未找到 Run Macro 按钮"
+            # 4. 触发宏执行 (多重策略，自动选择可靠的方式)
+            triggered = self._trigger_macro_run(macro_hwnd)
+            if not triggered:
+                result.error_message = "无法触发宏执行 (所有策略均失败)"
                 self._close_macro_dialog(macro_hwnd)
                 return result
             
-            logger.info("点击 Run Macro...")
-            _click_button(run_btn)
+            # 检查对话框是否已被 OK 按钮关闭
+            time.sleep(0.3)
+            if not _is_visible(macro_hwnd):
+                macro_dialog_closed = True
+                logger.info("Macro 对话框已被 OK 关闭, 宏正在后台执行")
             
             # 5. 等待实验完成
             self._is_running = True
-            success = self._wait_for_completion(expected_file)
+            wait_hwnd = None if macro_dialog_closed else macro_hwnd
+            success = self._wait_for_completion(expected_file, macro_hwnd=wait_hwnd)
             self._is_running = False
             
             if success:
@@ -963,8 +1102,8 @@ class CHI660FController:
             else:
                 result.error_message = "实验执行超时或失败"
             
-            # 7. 关闭 Macro 对话框
-            if self._config.auto_close_macro:
+            # 7. 关闭 Macro 对话框 (仅在对话框仍然打开时)
+            if not macro_dialog_closed and self._config.auto_close_macro:
                 self._close_macro_dialog(macro_hwnd)
         
         except Exception as e:
@@ -973,6 +1112,79 @@ class CHI660FController:
         
         result.elapsed_time = time.time() - start_time
         return result
+    
+    def _trigger_macro_run(self, macro_hwnd: int) -> bool:
+        """触发宏执行 —— 多重策略确保可靠
+        
+        CHI660F 是老式 MFC 应用，部分按钮不响应 BM_CLICK。
+        按优先级依次尝试:
+            策略1: BM_CLICK 点击 Run Macro 按钮
+            策略2: WM_COMMAND 模拟按钮点击通知
+            策略3: 勾选 "Run on OK" → 点击 OK (此策略会关闭对话框)
+        
+        Returns:
+            是否成功触发宏执行
+        """
+        run_btn = _find_child_by_id(macro_hwnd, MACRO_RUN_BTN_ID)
+        
+        # --- 策略 1: BM_CLICK ---
+        if run_btn:
+            # 先聚焦按钮，再点击
+            _user32.SetFocus(run_btn)
+            time.sleep(0.1)
+            logger.info("触发宏 — 策略1: BM_CLICK Run Macro")
+            _click_button(run_btn)
+            time.sleep(2.0)
+            
+            # 检查 Run 按钮是否被禁用 (= 宏正在执行)
+            if run_btn and not _user32.IsWindowEnabled(run_btn):
+                logger.info("✅ 宏开始执行 (策略1: BM_CLICK)")
+                return True
+        
+        # --- 策略 2: WM_COMMAND (BN_CLICKED 通知) ---
+        if run_btn:
+            logger.info("触发宏 — 策略2: WM_COMMAND BN_CLICKED")
+            # BN_CLICKED = 0, wParam = MAKEWPARAM(ctrl_id, BN_CLICKED)
+            _user32.SendMessageW(macro_hwnd, WM_COMMAND,
+                                 MACRO_RUN_BTN_ID, run_btn)
+            time.sleep(2.0)
+            
+            if not _user32.IsWindowEnabled(run_btn):
+                logger.info("✅ 宏开始执行 (策略2: WM_COMMAND)")
+                return True
+        
+        # --- 策略 3: 确保 "Run on OK" 勾选 → 点击 OK ---
+        # OK 按钮会关闭对话框并执行宏 (调用者需检查对话框是否已关闭)
+        logger.info("触发宏 — 策略3: OK 按钮 + Run on OK")
+        run_on_ok_ckb = _find_child_by_id(macro_hwnd, MACRO_RUN_ON_OK_ID)
+        if run_on_ok_ckb:
+            check_state = _user32.SendMessageW(run_on_ok_ckb, BM_GETCHECK, 0, 0)
+            if check_state != BST_CHECKED:
+                # 勾选 "Run on OK"
+                _click_button(run_on_ok_ckb)
+                time.sleep(0.3)
+                logger.info("已勾选 'Run on OK'")
+        
+        ok_btn = _find_child_by_id(macro_hwnd, MACRO_OK_BTN_ID)
+        if ok_btn:
+            logger.info("点击 OK (Run on OK 模式)...")
+            _click_button(ok_btn)
+            time.sleep(1.0)
+            # OK 关闭对话框并触发宏 — 对话框不再可见即为成功
+            if not _is_visible(macro_hwnd):
+                logger.info("✅ 宏开始执行 (策略3: OK + Run on OK)")
+                return True
+            # 对话框仍在 → 尝试 WM_COMMAND 方式点击 OK
+            logger.info("BM_CLICK OK 无效, 尝试 WM_COMMAND OK...")
+            _user32.SendMessageW(macro_hwnd, WM_COMMAND,
+                                 MACRO_OK_BTN_ID, ok_btn)
+            time.sleep(1.0)
+            if not _is_visible(macro_hwnd):
+                logger.info("✅ 宏开始执行 (策略3b: WM_COMMAND OK)")
+                return True
+        
+        logger.error("❌ 所有宏触发策略均失败")
+        return False
     
     # ----------------------------------------------------------
     # Macro 对话框操作
@@ -993,39 +1205,49 @@ class CHI660FController:
         # 发送命令
         _post_command(self._main_hwnd, CMD_MACRO_COMMAND)
         
-        # 等待对话框出现
-        for attempt in range(60):  # 最多等30秒
+        # 等待对话框出现 (总超时 120 秒)
+        start = time.time()
+        timeout = 120.0
+        connecting_seen = False
+        connecting_dismiss_attempted = False
+        
+        while time.time() - start < timeout:
             time.sleep(0.5)
+            elapsed = time.time() - start
             
-            # 检查是否出现了 Connecting 对话框
-            conn = self._find_window_by_title("Connecting")
-            if conn:
-                if attempt == 0:
-                    logger.info("出现 Connecting to instrument 对话框，等待连接完成...")
-                # ★ 不要取消连接！让 CHI 660F 自行完成 USB 通信
-                # 仅等待对话框自动消失（最多 60 秒）
-                for wait_i in range(60):
-                    time.sleep(1)
-                    if not _is_visible(conn):
-                        logger.info(f"Connecting 对话框已关闭 (等待了 {wait_i+1}s)")
-                        break
-                else:
-                    # 60 秒超时仍未连接 — 记录错误但不取消
-                    logger.error("Connecting 超时 (60s)，仪器可能未开机或 USB 未连接")
-                # Connecting 关闭后继续正常流程查找 Macro 对话框
-                continue
-            
-            # 检查 Macro Command 对话框
+            # ★★ 最高优先级: 检查 Macro Command 对话框 ★★
+            # 即使 Connecting 对话框还在，Macro Command 可能已经打开了
             macro_hwnd = self._find_window_by_title("Macro Command")
             if macro_hwnd:
-                logger.info(f"Macro Command 对话框已打开 (hwnd=0x{macro_hwnd:08X})")
+                logger.info(
+                    f"Macro Command 对话框已打开 "
+                    f"(hwnd=0x{macro_hwnd:08X}, 等待 {elapsed:.1f}s)")
                 _set_foreground(macro_hwnd)
                 return macro_hwnd
+            
+            # 处理 Connecting 对话框 (非阻塞方式)
+            conn = self._find_window_by_title("Connecting")
+            if conn:
+                if not connecting_seen:
+                    logger.info("出现 Connecting to instrument 对话框，等待连接...")
+                    connecting_seen = True
+                
+                # 每 10 秒报告一次
+                if int(elapsed) % 10 == 0 and int(elapsed) > 0:
+                    logger.info(f"Connecting 对话框仍在... ({elapsed:.0f}s)")
+                
+                # 超过 30 秒 → 尝试主动关闭 Connecting
+                if elapsed > 30 and not connecting_dismiss_attempted:
+                    connecting_dismiss_attempted = True
+                    logger.warning("Connecting 超时 30s, 尝试主动关闭...")
+                    self._handle_connecting_dialog(timeout=5.0)
+                
+                continue
             
             # 检查错误对话框 (如 Link failed)
             self._dismiss_error_dialogs()
         
-        logger.error("Macro Command 对话框打开超时")
+        logger.error(f"Macro Command 对话框打开超时 ({timeout}s)")
         return None
     
     def _close_macro_dialog(self, hwnd: int):
@@ -1041,30 +1263,72 @@ class CHI660FController:
     # 等待实验完成
     # ----------------------------------------------------------
     
-    def _wait_for_completion(self, expected_file: Optional[str]) -> bool:
+    def _wait_for_completion(self, expected_file: Optional[str],
+                             macro_hwnd: Optional[int] = None) -> bool:
         """等待实验完成
         
-        检测方式:
-            1. 如果有预期输出文件，检测文件是否生成
-            2. 检测主窗口标题变化 (Data 出现)
-            3. 超时退出
+        检测方式 (按优先级):
+            1. 检查 Macro 对话框的 Run 按钮是否重新启用 (最可靠)
+            2. 如果有预期输出文件，检测文件是否生成且大小稳定
+            3. 检测主窗口标题 *变化* (与初始标题不同且包含 Data)
+            4. 超时退出
         """
         timeout = self._config.timeout
         start = time.time()
         last_size = -1
         stable_count = 0
+        run_btn_was_disabled = False  # 标记是否观测到 Run 按钮被禁用
         
-        logger.info(f"等待实验完成 (超时={timeout}s)...")
+        # 记录初始标题，用于检测 *变化* 而非静态匹配
+        # 修复: 旧代码直接检查 'Data' in title，当 CHI660F 窗口保留了
+        # 上一次实验数据的标题时会立即误判为完成
+        initial_title = _get_window_text(self._main_hwnd) if self._main_hwnd else ""
+        
+        # 如果预期文件已存在 (上一次残留)，先删除以避免误判
+        if expected_file and os.path.isfile(expected_file):
+            try:
+                os.remove(expected_file)
+                logger.info(f"已删除旧的输出文件: {expected_file}")
+            except OSError as e:
+                logger.warning(f"删除旧输出文件失败: {e}")
+        
+        logger.info(f"等待实验完成 (超时={timeout}s, 初始标题='{initial_title[:60]}')...")
         
         while time.time() - start < timeout:
             time.sleep(1.0)
+            elapsed = time.time() - start
             
             # 检查错误对话框 (包括 Link failed 检测)
             if self._dismiss_error_dialogs(capture_link_failed=True):
                 logger.error("实验执行时检测到 Link failed - 仪器未连接")
                 return False
             
-            # 方式1: 检查输出文件
+            # 处理宏执行期间弹出的 Connecting 对话框 (非阻塞)
+            # ★ 不再进入60秒子循环！仅记录日志，继续检查其他完成信号
+            conn = self._find_window_by_title("Connecting")
+            if conn:
+                if int(elapsed) % 10 == 0 and int(elapsed) > 0:
+                    logger.info(f"宏执行期间 Connecting 对话框仍在... ({elapsed:.0f}s)")
+                # 超过 30 秒尝试主动关闭
+                if elapsed > 30:
+                    self._handle_connecting_dialog(timeout=3.0)
+            
+            # 方式1: 检查 Macro 对话框 Run Macro 按钮是否重新启用
+            # 宏运行期间 Run 按钮会被禁用；宏完成后按钮重新启用
+            if macro_hwnd:
+                run_btn = _find_child_by_id(macro_hwnd, MACRO_RUN_BTN_ID)
+                if run_btn:
+                    btn_enabled = bool(_user32.IsWindowEnabled(run_btn))
+                    if not btn_enabled:
+                        run_btn_was_disabled = True
+                        logger.debug(f"Run 按钮已禁用 — 宏正在执行 ({elapsed:.0f}s)")
+                    elif run_btn_was_disabled and btn_enabled:
+                        # 按钮从禁用→启用 = 宏执行完毕
+                        logger.info(f"Macro Run 按钮已重新启用 — 宏执行完成 ({elapsed:.1f}s)")
+                        time.sleep(1.0)  # 额外等待文件写入完成
+                        return True
+            
+            # 方式2: 检查输出文件
             if expected_file:
                 if os.path.isfile(expected_file):
                     size = os.path.getsize(expected_file)
@@ -1079,17 +1343,16 @@ class CHI660FController:
                             stable_count = 0
                         last_size = size
             
-            # 方式2: 检查窗口标题 (实验完成后标题可能变化)
+            # 方式3: 检查窗口标题 *变化*
+            # 修复: 必须与初始标题不同才算完成，避免旧数据标题误判
             if self._main_hwnd:
                 title = _get_window_text(self._main_hwnd)
-                # 有些技术完成后标题会包含数据文件信息
-                if 'Data' in title or '.bin' in title:
-                    logger.info(f"检测到标题变化: {title}")
+                if title != initial_title and ('Data' in title or '.bin' in title):
+                    logger.info(f"检测到标题变化: '{initial_title[:40]}' → '{title[:40]}'")
                     time.sleep(2)  # 额外等待数据写入
                     return True
             
-            elapsed = time.time() - start
-            if int(elapsed) % 10 == 0:
+            if int(elapsed) % 10 == 0 and elapsed > 0:
                 logger.debug(f"实验进行中... ({int(elapsed)}s)")
         
         logger.warning(f"实验等待超时 ({timeout}s)")
@@ -1098,6 +1361,70 @@ class CHI660FController:
     # ----------------------------------------------------------
     # 辅助方法
     # ----------------------------------------------------------
+    
+    def _handle_connecting_dialog(self, timeout: float = 30.0) -> bool:
+        """处理 "Connecting to instrument" 对话框
+        
+        CHI660F 在启动或执行宏命令时会弹出此对话框进行仪器通信。
+        先等待自动关闭，超时后尝试主动关闭。
+        
+        Args:
+            timeout: 等待自动关闭的最大时间 (秒)
+            
+        Returns:
+            True = 对话框已关闭或不存在, False = 无法关闭
+        """
+        conn = self._find_window_by_title("Connecting")
+        if not conn:
+            return True
+        
+        logger.info(f"处理 Connecting 对话框 (超时={timeout:.0f}s)...")
+        start = time.time()
+        
+        # 第一阶段: 等待自动关闭
+        while time.time() - start < timeout:
+            time.sleep(0.5)
+            # 每次重新搜索,因为窗口可能被销毁后重建
+            conn = self._find_window_by_title("Connecting")
+            if not conn:
+                logger.info(f"Connecting 对话框已自动关闭 ({time.time()-start:.1f}s)")
+                return True
+        
+        # 第二阶段: 超时,尝试主动关闭
+        conn = self._find_window_by_title("Connecting")
+        if not conn:
+            return True
+        
+        logger.warning(f"Connecting 对话框超时 ({timeout:.0f}s), 尝试主动关闭...")
+        
+        # 尝试1: Cancel 按钮 (id=2)
+        cancel_btn = _find_child_by_id(conn, 2)
+        if cancel_btn:
+            _click_button(cancel_btn)
+            time.sleep(1.0)
+            if not self._find_window_by_title("Connecting"):
+                logger.info("Connecting 已通过 Cancel 关闭")
+                return True
+        
+        # 尝试2: WM_CLOSE
+        _user32.PostMessageW(conn, WM_CLOSE, 0, 0)
+        time.sleep(1.0)
+        if not self._find_window_by_title("Connecting"):
+            logger.info("Connecting 已通过 WM_CLOSE 关闭")
+            return True
+        
+        # 尝试3: 查找对话框中所有按钮并逐个点击
+        for child in _enum_children(conn):
+            cls = _get_class_name(child)
+            if cls.lower() == 'button':
+                _click_button(child)
+                time.sleep(0.5)
+                if not self._find_window_by_title("Connecting"):
+                    logger.info("Connecting 已通过子按钮关闭")
+                    return True
+        
+        logger.error("无法关闭 Connecting 对话框")
+        return False
     
     def _find_chi_window(self) -> Optional[int]:
         """查找 CHI660F 主窗口"""
@@ -1205,6 +1532,17 @@ class CHI660FController:
                     logger.debug(f"关闭运行时错误: {title}")
                     _click_button(ok_btn)
                     time.sleep(0.3)
+            
+            # Warning 对话框 (如 "Amp booster is required for current greater than 0.25 A")
+            # CHI660F 在设置大电流 CP 时弹出此警告，点击"确定"即可继续
+            if title == 'Warning' and cls == '#32770':
+                logger.info(f"检测到 Warning 对话框，自动确认")
+                ok_btn = _find_child_by_id(hwnd, 1)  # 确定按钮
+                if not ok_btn:
+                    ok_btn = _find_child_by_id(hwnd, 2)
+                if ok_btn:
+                    _click_button(ok_btn)
+                    time.sleep(0.3)
         
         return link_failed
     
@@ -1220,10 +1558,14 @@ class CHI660FController:
         return ' '.join(texts)
     
     def _extract_output_file(self, macro_text: str) -> Optional[str]:
-        """从宏命令文本中提取预期输出文件路径"""
+        """从宏命令文本中提取预期输出文件路径
+        
+        对于批量宏 (多个 csvsave/tsave)，返回 **最后一个** 保存文件路径，
+        因为只有最后一个文件写入完成才表示整个宏执行结束。
+        """
         import re
         
-        # 查找 csvsave: 或 tsave: 命令
+        last_file = None
         for line in macro_text.split('\n'):
             line = line.strip()
             m = re.match(r'csvsave:\s*(.+)', line, re.IGNORECASE)
@@ -1231,16 +1573,17 @@ class CHI660FController:
                 name = m.group(1).strip()
                 if not name.endswith('.csv'):
                     name += '.csv'
-                return os.path.join(self._config.output_dir, name)
+                last_file = os.path.join(self._config.output_dir, name)
+                continue
             
             m = re.match(r'tsave:\s*(.+)', line, re.IGNORECASE)
             if m:
                 name = m.group(1).strip()
                 if not name.endswith('.txt'):
                     name += '.txt'
-                return os.path.join(self._config.output_dir, name)
+                last_file = os.path.join(self._config.output_dir, name)
         
-        return None
+        return last_file
     
     def _parse_csv(self, filepath: str) -> Tuple[List[str], List[List[float]]]:
         """解析 CHI 660F CSV 输出文件

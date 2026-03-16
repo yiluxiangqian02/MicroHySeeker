@@ -11,8 +11,10 @@ from src.graph.nodes import (
     run_data_analyst,
     run_diagnostics,
     run_exp_designer,
+    run_exp_executor,
     run_exp_supervisor,
     run_knowledge_mgr,
+    run_orchestrator,
     select_agent_node,
 )
 from src.graph.state import AutoHySeekerState
@@ -36,9 +38,11 @@ class _FallbackGraph:
         runners = {
             "data_analyst": run_data_analyst,
             "exp_designer": run_exp_designer,
+            "exp_executor": run_exp_executor,
             "exp_supervisor": run_exp_supervisor,
             "diagnostics": run_diagnostics,
             "knowledge_mgr": run_knowledge_mgr,
+            "orchestrator": run_orchestrator,
         }
         merged.update(await runners[node](merged))  # type: ignore[arg-type]
         merged.update(format_response(merged))  # type: ignore[arg-type]
@@ -57,9 +61,11 @@ def build_supervisor_graph() -> Any:
     graph.add_node("route_intent", route_intent)
     graph.add_node("data_analyst", run_data_analyst)
     graph.add_node("exp_designer", run_exp_designer)
+    graph.add_node("exp_executor", run_exp_executor)
     graph.add_node("exp_supervisor", run_exp_supervisor)
     graph.add_node("diagnostics", run_diagnostics)
     graph.add_node("knowledge_mgr", run_knowledge_mgr)
+    graph.add_node("orchestrator", run_orchestrator)
     graph.add_node("format_response", format_response)
 
     graph.add_edge(START, "route_intent")
@@ -69,17 +75,21 @@ def build_supervisor_graph() -> Any:
         {
             "data_analyst": "data_analyst",
             "exp_designer": "exp_designer",
+            "exp_executor": "exp_executor",
             "exp_supervisor": "exp_supervisor",
             "diagnostics": "diagnostics",
             "knowledge_mgr": "knowledge_mgr",
+            "orchestrator": "orchestrator",
         },
     )
 
     graph.add_edge("data_analyst", "format_response")
     graph.add_edge("exp_designer", "format_response")
+    graph.add_edge("exp_executor", "format_response")
     graph.add_edge("exp_supervisor", "format_response")
     graph.add_edge("diagnostics", "format_response")
     graph.add_edge("knowledge_mgr", "format_response")
+    graph.add_edge("orchestrator", "format_response")
     graph.add_edge("format_response", END)
     return graph.compile()
 

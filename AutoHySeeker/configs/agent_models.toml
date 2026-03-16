@@ -61,3 +61,27 @@ max_tokens = 3000
 pricing_input = 3.45
 pricing_output = 20.68
 context_window = 1049000
+
+[orchestrator]
+name = "运行管控 Agent"
+provider = "openai"
+model = "ali/qwen3-max-2026-01-23"
+base_url = "https://api.mcxhm.cn"
+api_key = "p-B-_iUEnxAxkA79KsSUtKZNYTW_ntnLpqT9iirKwdQ7XybfnIuqz5fgqC612934rICbjzPQtoazDMjF3cSA9jyhaQhyJSoXz7-v"
+temperature = 0.1
+max_tokens = 1500
+pricing_input = 2.5
+pricing_output = 10.0
+context_window = 256000
+
+[experiment_executor]
+name = "实验执行 Agent"
+provider = "openai"
+model = "ali/qwen3-max-2026-01-23"
+base_url = "https://api.mcxhm.cn"
+api_key = "p-B-_iUEnxAxkA79KsSUtKZNYTW_ntnLpqT9iirKwdQ7XybfnIuqz5fgqC612934rICbjzPQtoazDMjF3cSA9jyhaQhyJSoXz7-v"
+temperature = 0.1
+max_tokens = 1000
+pricing_input = 2.5
+pricing_output = 10.0
+context_window = 256000

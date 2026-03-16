@@ -202,13 +202,20 @@ def health_check() -> dict[str, Any]:
     return _get("/system/health")
 
 
-def get_logs(n: int = 100) -> list[str]:
+def get_logs(n: int = 100, level: str | None = None) -> list[str]:
     """获取最近 n 条 MicroHySeeker 运行日志。
+
+    Args:
+        n: 返回的日志条数。
+        level: 日志级别过滤（"info", "warning", "error"）。
 
     Returns:
         日志字符串列表
     """
-    result = _get("/system/logs", params={"n": n})
+    params: dict[str, Any] = {"n": n}
+    if level:
+        params["level"] = level
+    result = _get("/system/logs", params=params)
     return result.get("logs", [])
 
 
@@ -269,4 +276,254 @@ def is_microhyseeker_available() -> bool:
         return True
     except (MicroHySeekerUnavailableError, MicroHySeekerAPIError):
         return False
+
+
+# ── 设备级控制（泵/清洗/配液/紧急停止） ─────────────────────────────────────
+
+def pump_start(address: int, direction: str = "FWD", rpm: int = 100) -> dict[str, Any]:
+    """启动单个泵。
+
+    Args:
+        address: 泵地址 (1-12)
+        direction: 方向 FWD/REV
+        rpm: 转速 (0-300)
+
+    Returns:
+        {"status": "started", "address": ..., "rpm": ..., ...}
+    """
+    return _post("/device/pump/start", {
+        "address": address, "direction": direction, "rpm": rpm,
+    })
+
+
+def pump_stop(address: int) -> dict[str, Any]:
+    """停止单个泵。"""
+    return _post("/device/pump/stop", {"address": address})
+
+
+def pump_stop_all() -> dict[str, Any]:
+    """紧急停止所有泵。"""
+    return _post("/device/pump/stop-all", {})
+
+
+def get_pump_status(address: int | None = None) -> dict[str, Any]:
+    """查询泵状态。
+
+    Args:
+        address: 指定泵地址 (1-12)，为 None 时返回所有泵状态。
+    """
+    if address is not None:
+        return _get(f"/device/pump/{address}")
+    return _get("/device/pump/status")
+
+
+def flusher_start(cycles: int = 3, channel_id: int | None = None) -> dict[str, Any]:
+    """启动清洗循环。"""
+    body: dict[str, Any] = {"cycles": cycles}
+    if channel_id is not None:
+        body["channel_id"] = channel_id
+    return _post("/device/flusher/start", body)
+
+
+def flusher_stop() -> dict[str, Any]:
+    """停止清洗。"""
+    return _post("/device/flusher/stop", {})
+
+
+def get_flusher_status() -> dict[str, Any]:
+    """查询清洗器状态。"""
+    return _get("/device/flusher/status")
+
+
+def diluter_start(channel_id: int, volume_ul: float, rpm: int | None = None) -> dict[str, Any]:
+    """启动配液。
+
+    Args:
+        channel_id: 配液通道 ID
+        volume_ul: 注液体积 (μL)
+        rpm: 转速 (可选, 0-300)
+    """
+    body: dict[str, Any] = {"channel_id": channel_id, "volume_ul": volume_ul}
+    if rpm is not None:
+        body["rpm"] = rpm
+    return _post("/device/diluter/start", body)
+
+
+def diluter_stop(channel_id: int) -> dict[str, Any]:
+    """停止配液。"""
+    return _post("/device/diluter/stop", {"channel_id": channel_id})
+
+
+def get_diluter_status(channel_id: int) -> dict[str, Any]:
+    """查询配液通道状态。"""
+    return _get(f"/device/diluter/{channel_id}/status")
+
+
+def emergency_stop() -> dict[str, Any]:
+    """紧急停止一切：所有泵 + 清洗 + 配液 + 实验。"""
+    _logger.critical("emergency_stop: 紧急停止一切！")
+    return _post("/device/emergency-stop", {})
+
+
+def get_connection_info() -> dict[str, Any]:
+    """查询 RS485 连接状态。"""
+    return _get("/device/connection")
+
+
+def list_ports() -> list[str]:
+    """列出可用串口。"""
+    result = _get("/device/ports")
+    return result.get("ports", [])
+
+
+def connect_port(port: str, baudrate: int = 38400) -> dict[str, Any]:
+    """打开串口连接。"""
+    return _post("/device/connect", {"port": port, "baudrate": baudrate})
+
+
+def disconnect_port() -> dict[str, Any]:
+    """关闭串口连接。"""
+    return _post("/device/disconnect", {})
+
+
+# ── 模板管理 ─────────────────────────────────────────────────────────────────
+
+def list_templates() -> dict[str, Any]:
+    """列出所有实验模板（摘要信息）。
+
+    Returns:
+        {"templates": [...], "count": int}
+    """
+    return _get("/template/list")
+
+
+def get_template(template_id: str) -> dict[str, Any]:
+    """获取模板完整详情（含所有步骤参数）。"""
+    return _get(f"/template/{template_id}")
+
+
+def save_template(
+    name: str,
+    steps: list[dict[str, Any]],
+    description: str = "",
+    tags: list[str] | None = None,
+    template_id: str | None = None,
+) -> dict[str, Any]:
+    """保存或更新实验模板。
+
+    Args:
+        name: 模板名称
+        steps: 步骤列表 (ProgStep dicts)
+        description: 描述
+        tags: 标签列表
+        template_id: 更新已有模板时提供 ID
+    """
+    body: dict[str, Any] = {
+        "name": name,
+        "steps": steps,
+        "description": description,
+        "tags": tags or [],
+    }
+    if template_id:
+        body["template_id"] = template_id
+    return _post("/template/save", body)
+
+
+def delete_template(template_id: str) -> dict[str, Any]:
+    """删除模板。"""
+    url = f"{_API_BASE}/template/{template_id}"
+    try:
+        resp = httpx.delete(url, timeout=_DEFAULT_TIMEOUT)
+        resp.raise_for_status()
+        return resp.json()
+    except httpx.ConnectError as exc:
+        raise MicroHySeekerUnavailableError(str(exc)) from exc
+    except httpx.HTTPStatusError as exc:
+        raise MicroHySeekerAPIError(str(exc)) from exc
+
+
+def instantiate_template(
+    template_id: str,
+    overrides: dict[str, Any] | None = None,
+    exp_name: str | None = None,
+    dry_run: bool = False,
+) -> dict[str, Any]:
+    """从模板实例化并运行实验。
+
+    Args:
+        template_id: 模板 ID
+        overrides: 参数覆盖，格式:
+            - 按步骤: {"step_overrides": {0: {"pump_rpm": 150}}}
+            - 全局: {"description": "新描述"}
+        exp_name: 实验名称 (默认使用模板名)
+        dry_run: 仅验证不运行
+
+    Returns:
+        dry_run=True: {"status": "validated", "experiment": {...}, ...}
+        dry_run=False: {"status": "started", "run_id": "...", ...}
+    """
+    body: dict[str, Any] = {
+        "overrides": overrides or {},
+        "dry_run": dry_run,
+    }
+    if exp_name:
+        body["exp_name"] = exp_name
+    return _post(f"/template/{template_id}/instantiate", body, timeout=_START_TIMEOUT)
+
+
+def validate_experiment(steps: list[dict[str, Any]]) -> dict[str, Any]:
+    """验证实验步骤参数是否合法。
+
+    Returns:
+        {"valid": bool, "errors": [...], "warnings": [...], "step_count": int}
+    """
+    return _post("/template/validate", {"steps": steps})
+
+
+# ── 系统配置查询 ─────────────────────────────────────────────────────────────
+
+def get_system_config() -> dict[str, Any]:
+    """查询系统完整配置（泵/通道/端口/校准数据）。"""
+    return _get("/template/config/system")
+
+
+def get_capabilities() -> dict[str, Any]:
+    """查询系统能力摘要。
+
+    Agent 设计实验前应先调用此接口了解系统能力。
+
+    Returns:
+        {
+            "pump_count": int,
+            "pump_addresses": [int],
+            "dilution_channel_count": int,
+            "dilution_solutions": [{"channel_id": ..., "name": ..., "concentration": ...}],
+            "flush_channel_count": int,
+            "supported_step_types": [str],
+            "supported_techniques": [str],
+            "max_rpm": 300,
+            ...
+        }
+    """
+    return _get("/template/config/capabilities")
+
+
+def get_dilution_channels() -> list[dict[str, Any]]:
+    """查询配液通道列表及配置。"""
+    result = _get("/template/config/dilution-channels")
+    return result.get("channels", [])
+
+
+def get_flush_channels() -> list[dict[str, Any]]:
+    """查询清洗通道列表及配置。"""
+    result = _get("/template/config/flush-channels")
+    return result.get("channels", [])
+
+
+def get_pump_configs() -> list[dict[str, Any]]:
+    """查询泵配置列表。"""
+    result = _get("/template/config/pumps")
+    return result.get("pumps", [])
+
+
 

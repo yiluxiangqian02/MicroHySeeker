@@ -53,8 +53,9 @@ CMD_POSITION = CMD_POSITION_REL
 # ============================================================================
 
 ENCODER_DIVISIONS_PER_REV = 16384  # 编码器分度/圈 (0x4000)
-MAX_RPM = 3000                      # 最大转速 (RPM)
+MAX_RPM = 3000                      # 最大转速 (RPM) - 硬件物理极限
 MIN_RPM = 0                         # 最小转速 (RPM)
+SAFETY_MAX_RPM = 300                # 安全转速上限 (RPM) - 所有代码路径必须遵守
 DEFAULT_ACCELERATION = 0x10         # 默认加速度 (0-255)
 DEFAULT_DILUTION_ACCELERATION = 0x02  # 配液默认加速度 (较平稳)
 DEFAULT_DILUTION_SPEED = 100        # 配液默认速度 (RPM)

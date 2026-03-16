@@ -17,7 +17,7 @@ from ..utils.constants import (
     CMD_READ_ENCODER, CMD_READ_SPEED, CMD_READ_VERSION,
     CMD_READ_ENCODER_ACCUM, CMD_READ_RUN_STATUS,
     CMD_POSITION_REL, CMD_POSITION_ABS, CMD_STOP_EMERGENCY,
-    ENCODER_DIVISIONS_PER_REV, MAX_RPM, MIN_RPM,
+    ENCODER_DIVISIONS_PER_REV, MAX_RPM, MIN_RPM, SAFETY_MAX_RPM,
     DEFAULT_ACCELERATION,
     DIRECTION_FORWARD, DIRECTION_REVERSE
 )
@@ -314,7 +314,7 @@ def encode_speed(rpm: int, forward: bool = True) -> bytes:
         >>> encode_speed(100, False).hex()
         'ff9c'
     """
-    rpm = max(MIN_RPM, min(MAX_RPM, rpm))
+    rpm = max(MIN_RPM, min(SAFETY_MAX_RPM, rpm))
     value = rpm if forward else -rpm
     return value.to_bytes(2, 'big', signed=True)
 
@@ -637,7 +637,7 @@ def build_position_rel_frame(
         'fa01f402580200004000xx'
     """
     # 速度: 2字节大端序 (无符号)
-    speed = max(0, min(3000, speed))
+    speed = max(0, min(SAFETY_MAX_RPM, speed))
     speed_bytes = speed.to_bytes(2, 'big')
     
     # 加速度: 1字节
@@ -677,7 +677,7 @@ def build_position_abs_frame(
         'fa01f502580200004000xx'
     """
     # 速度: 2字节大端序 (无符号)
-    speed = max(0, min(3000, speed))
+    speed = max(0, min(SAFETY_MAX_RPM, speed))
     speed_bytes = speed.to_bytes(2, 'big')
     
     # 加速度: 1字节
@@ -738,7 +738,7 @@ def build_speed_mode_frame(
         >>> build_speed_mode_frame(1, 640, True, 2).hex()
         'fa01f6028002xx'  # speed=0x280, acc=2, dir=0
     """
-    rpm = max(0, min(3000, rpm))
+    rpm = max(0, min(SAFETY_MAX_RPM, rpm))
     
     # 方向位在字节4的bit7
     dir_bit = 0x00 if forward else 0x80

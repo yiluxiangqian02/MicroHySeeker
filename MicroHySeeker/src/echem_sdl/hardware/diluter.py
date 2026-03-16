@@ -18,6 +18,7 @@ from ..utils.constants import (
     ENCODER_DIVISIONS_PER_REV,
     DEFAULT_DILUTION_ACCELERATION,
     DEFAULT_DILUTION_SPEED,
+    SAFETY_MAX_RPM,
 )
 
 
@@ -43,6 +44,13 @@ class DiluterConfig:
     # 位置模式校准参数 (由校准流程填充)
     ul_per_encoder_count: float = 0.0  # 每编码器计数对应的微升数 (校准值)
     calibration_valid: bool = False    # 校准是否有效
+
+    def __post_init__(self):
+        if self.default_rpm > SAFETY_MAX_RPM:
+            raise ValueError(
+                f"Diluter {self.name}(地址{self.address}) default_rpm={self.default_rpm} "
+                f"超过安全上限 {SAFETY_MAX_RPM}"
+            )
 
 
 class Diluter:
@@ -220,6 +228,15 @@ class Diluter:
         # 设置转速
         if rpm is None:
             rpm = self.config.default_rpm
+        
+        # 安全校验
+        if rpm > SAFETY_MAX_RPM:
+            if self._logger:
+                self._logger.error(
+                    f"❌ {self.config.name} 注液被拒绝: rpm={rpm} 超出安全上限 {SAFETY_MAX_RPM}",
+                    module="Diluter"
+                )
+            return False
         
         # 保存回调
         self._completion_callback = callback

@@ -216,10 +216,9 @@ class APIBridge(QObject):
     # ── FastAPI 路由调用的公开方法（任意线程安全） ──────────────────────────
 
     def start_experiment(self, experiment_dict: dict) -> str:
-        """发出信号，在主线程启动实验。返回 run_id。"""
+        """发出信号，在主线程启动实验。返回 exp_id。"""
         self.start_experiment_signal.emit(experiment_dict)
-        with self._lock:
-            return self._current_run_id or experiment_dict.get("exp_id", "")
+        return experiment_dict.get("exp_id", "")
 
     def stop_experiment(self) -> None:
         self.stop_experiment_signal.emit()
@@ -273,3 +272,299 @@ class APIBridge(QObject):
     def get_recent_logs(self, n: int = 100) -> List[str]:
         with self._lock:
             return list(self._recent_logs[-n:])
+
+    # ── 设备级控制方法（供 /api/device/* 路由调用） ──────────────────────────
+
+    def _get_rs485(self):
+        """获取 RS485Wrapper 实例。"""
+        rs485 = getattr(self._runner, "rs485", None)
+        if rs485 is None:
+            raise RuntimeError("RS485Wrapper 未初始化")
+        return rs485
+
+    def device_pump_start(self, address: int, direction: str, rpm: int) -> bool:
+        """启动单个泵。"""
+        rs485 = self._get_rs485()
+        return rs485.start_pump(address, direction, rpm)
+
+    def device_pump_stop(self, address: int) -> bool:
+        """停止单个泵。"""
+        rs485 = self._get_rs485()
+        return rs485.stop_pump(address)
+
+    def device_stop_all_pumps(self) -> bool:
+        """停止所有泵。"""
+        rs485 = self._get_rs485()
+        return rs485.stop_all()
+
+    def device_get_pump_status(self, address: int) -> Dict[str, Any]:
+        """获取单个泵状态。"""
+        rs485 = self._get_rs485()
+        return rs485.get_pump_status(address)
+
+    def device_get_all_pump_status(self) -> List[Dict[str, Any]]:
+        """获取所有泵状态。"""
+        rs485 = self._get_rs485()
+        return [rs485.get_pump_status(addr) for addr in range(1, 13)]
+
+    def device_flusher_start(self, cycles: int = 3, channel_id: Optional[int] = None) -> bool:
+        """启动清洗循环。"""
+        rs485 = self._get_rs485()
+        return rs485.start_flush(cycles=cycles, channel_id=channel_id)
+
+    def device_flusher_stop(self) -> bool:
+        """停止清洗。"""
+        rs485 = self._get_rs485()
+        return rs485.stop_flush()
+
+    def device_get_flusher_status(self) -> Dict[str, Any]:
+        """获取清洗器状态。"""
+        rs485 = self._get_rs485()
+        status = rs485.get_flush_status()
+        if status is None:
+            return {"state": "not_configured", "is_flushing": False}
+        return status
+
+    def device_diluter_start(
+        self, channel_id: int, volume_ul: float, rpm: Optional[int] = None
+    ) -> bool:
+        """启动配液。"""
+        rs485 = self._get_rs485()
+        return rs485.start_dilution(channel_id, volume_ul, rpm=rpm)
+
+    def device_diluter_stop(self, channel_id: int) -> bool:
+        """停止配液。"""
+        rs485 = self._get_rs485()
+        return rs485.stop_dilution(channel_id)
+
+    def device_get_diluter_status(self, channel_id: int) -> Dict[str, Any]:
+        """获取配液通道状态。"""
+        rs485 = self._get_rs485()
+        return rs485.get_dilution_progress(channel_id)
+
+    def device_emergency_stop(self) -> bool:
+        """紧急停止一切。"""
+        rs485 = self._get_rs485()
+        # 1. 停止实验
+        try:
+            self.stop_experiment()
+        except Exception:
+            pass
+        # 2. 停止清洗
+        try:
+            rs485.stop_flush()
+        except Exception:
+            pass
+        # 3. 停止所有泵
+        try:
+            rs485.stop_all()
+        except Exception:
+            pass
+        return True
+
+    def device_get_connection_info(self) -> Dict[str, Any]:
+        """获取连接信息。"""
+        rs485 = self._get_rs485()
+        return {
+            "connected": rs485.is_connected(),
+            "mock_mode": getattr(rs485, "_mock_mode", True),
+        }
+
+    def device_list_ports(self) -> List[str]:
+        """列出可用串口。"""
+        from src.services.rs485_wrapper import RS485Wrapper
+        return RS485Wrapper.list_available_ports()
+
+    def device_connect(self, port: str, baudrate: int = 38400) -> bool:
+        """打开串口。"""
+        rs485 = self._get_rs485()
+        return rs485.open_port(port, baudrate)
+
+    def device_disconnect(self) -> None:
+        """关闭串口。"""
+        rs485 = self._get_rs485()
+        rs485.close_port()
+
+    # ── 模板管理方法 ─────────────────────────────────────────────────────
+
+    def _get_template_manager(self):
+        from src.core.template_manager import get_template_manager
+        return get_template_manager()
+
+    def template_list(self) -> List[Dict[str, Any]]:
+        return self._get_template_manager().list_templates()
+
+    def template_load(self, template_id: str) -> Optional[Dict[str, Any]]:
+        return self._get_template_manager().load(template_id)
+
+    def template_save(
+        self, name: str, description: str, tags: List[str],
+        steps: List[Dict[str, Any]], template_id: Optional[str] = None,
+    ) -> Dict[str, Any]:
+        return self._get_template_manager().save(
+            name=name, description=description, tags=tags,
+            steps=steps, template_id=template_id,
+        )
+
+    def template_delete(self, template_id: str) -> bool:
+        return self._get_template_manager().delete(template_id)
+
+    def template_instantiate(
+        self,
+        template: Dict[str, Any],
+        overrides: Dict[str, Any],
+        exp_name: Optional[str] = None,
+    ) -> Dict[str, Any]:
+        """从模板 + 参数覆盖 → 生成可运行的 Experiment dict。"""
+        from src.models import (
+            Experiment, ProgStep, ProgramStepType, ECSettings,
+        )
+
+        steps_raw = list(template.get("steps", []))
+        name = exp_name or template.get("name", "模板实验")
+
+        # 应用按步骤覆盖
+        step_overrides = overrides.get("step_overrides", {})
+        for idx_str, patch in step_overrides.items():
+            idx = int(idx_str)
+            if 0 <= idx < len(steps_raw):
+                step = steps_raw[idx]
+                for k, v in patch.items():
+                    if k == "ec_settings" and isinstance(v, dict):
+                        existing_ec = step.get("ec_settings") or {}
+                        existing_ec.update(v)
+                        step["ec_settings"] = existing_ec
+                    elif k == "prep_sol_params" and isinstance(v, dict):
+                        existing_ps = step.get("prep_sol_params") or {}
+                        existing_ps.update(v)
+                        step["prep_sol_params"] = existing_ps
+                    else:
+                        step[k] = v
+
+        exp_id = f"tpl_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{uuid.uuid4().hex[:6]}"
+
+        exp_dict = {
+            "_protocol_version": "2.0",
+            "_created_at": datetime.now().isoformat(),
+            "_modified_at": datetime.now().isoformat(),
+            "exp_id": exp_id,
+            "exp_name": name,
+            "description": overrides.get("description", template.get("description", "")),
+            "tags": overrides.get("tags", template.get("tags", [])),
+            "operator": overrides.get("operator", ""),
+            "steps": steps_raw,
+            "notes": overrides.get("notes", ""),
+        }
+
+        return exp_dict
+
+    def template_validate(self, steps: List[Dict[str, Any]]) -> Dict[str, Any]:
+        """验证步骤参数。"""
+        errors: List[str] = []
+        warnings: List[str] = []
+        valid_types = {"transfer", "prep_sol", "flush", "echem", "blank", "evacuate"}
+
+        for i, step in enumerate(steps):
+            prefix = f"步骤 {i}"
+            st = step.get("step_type", "")
+            if st not in valid_types:
+                errors.append(f"{prefix}: step_type='{st}' 无效，有效值: {valid_types}")
+
+            rpm = step.get("pump_rpm")
+            if rpm is not None and (rpm < 0 or rpm > 300):
+                errors.append(f"{prefix}: pump_rpm={rpm} 超出安全范围 0-300")
+
+            flush_rpm = step.get("flush_rpm")
+            if flush_rpm is not None and (flush_rpm < 0 or flush_rpm > 300):
+                errors.append(f"{prefix}: flush_rpm={flush_rpm} 超出安全范围 0-300")
+
+            addr = step.get("pump_address")
+            if addr is not None and (addr < 1 or addr > 12):
+                errors.append(f"{prefix}: pump_address={addr} 无效，有效范围 1-12")
+
+            ec = step.get("ec_settings")
+            if st == "echem" and ec is None:
+                errors.append(f"{prefix}: echem 步骤必须包含 ec_settings")
+            if ec:
+                technique = ec.get("technique", "")
+                if technique not in ("CV", "LSV", "i-t", "EIS", "ADT"):
+                    errors.append(f"{prefix}: technique='{technique}' 无效")
+                sr = ec.get("scan_rate")
+                if sr is not None and sr <= 0:
+                    errors.append(f"{prefix}: scan_rate 必须 > 0")
+
+            if st == "prep_sol":
+                ps = step.get("prep_sol_params")
+                if ps is None:
+                    warnings.append(f"{prefix}: prep_sol 步骤建议包含 prep_sol_params")
+
+        return {
+            "valid": len(errors) == 0,
+            "errors": errors,
+            "warnings": warnings,
+            "step_count": len(steps),
+        }
+
+    # ── 系统配置查询方法 ─────────────────────────────────────────────────
+
+    def config_get_system(self) -> Dict[str, Any]:
+        """获取完整系统配置。"""
+        cfg = self._config
+        if cfg is None:
+            return {"error": "系统配置未加载"}
+        return cfg.to_dict() if hasattr(cfg, "to_dict") else {}
+
+    def config_get_capabilities(self) -> Dict[str, Any]:
+        """获取系统能力摘要。"""
+        cfg = self._config
+        if cfg is None:
+            return {"error": "系统配置未加载"}
+
+        pumps = getattr(cfg, "pumps", [])
+        dil_channels = getattr(cfg, "dilution_channels", [])
+        flush_channels = getattr(cfg, "flush_channels", [])
+
+        return {
+            "pump_count": len(pumps),
+            "pump_addresses": [
+                p.address if hasattr(p, "address") else p.get("address")
+                for p in pumps
+            ],
+            "dilution_channel_count": len(dil_channels),
+            "dilution_solutions": [
+                {
+                    "channel_id": getattr(ch, "channel_id", None) or ch.get("channel_id"),
+                    "name": getattr(ch, "solution_name", None) or ch.get("solution_name"),
+                    "concentration": getattr(ch, "stock_concentration", None) or ch.get("stock_concentration"),
+                }
+                for ch in dil_channels
+            ],
+            "flush_channel_count": len(flush_channels),
+            "supported_step_types": ["echem", "prep_sol", "flush", "transfer", "evacuate", "blank"],
+            "supported_techniques": ["CV", "LSV", "EIS", "i-t", "ADT"],
+            "max_rpm": 300,
+            "rs485_port": getattr(cfg, "rs485_port", ""),
+            "mock_mode": getattr(cfg, "mock_mode", True),
+            "data_dir": getattr(cfg, "data_dir", "./data"),
+        }
+
+    def config_get_dilution_channels(self) -> List[Dict[str, Any]]:
+        cfg = self._config
+        if cfg is None:
+            return []
+        channels = getattr(cfg, "dilution_channels", [])
+        return [ch.to_dict() if hasattr(ch, "to_dict") else ch for ch in channels]
+
+    def config_get_flush_channels(self) -> List[Dict[str, Any]]:
+        cfg = self._config
+        if cfg is None:
+            return []
+        channels = getattr(cfg, "flush_channels", [])
+        return [ch.to_dict() if hasattr(ch, "to_dict") else ch for ch in channels]
+
+    def config_get_pumps(self) -> List[Dict[str, Any]]:
+        cfg = self._config
+        if cfg is None:
+            return []
+        pumps = getattr(cfg, "pumps", [])
+        return [p.to_dict() if hasattr(p, "to_dict") else p for p in pumps]

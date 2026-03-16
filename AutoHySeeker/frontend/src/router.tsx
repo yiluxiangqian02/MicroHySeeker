@@ -6,6 +6,7 @@ import { Overview } from "@/pages/Overview";
 import { Settings } from "@/pages/Settings";
 import { AgentControl } from "@/pages/AgentControl";
 import { Templates } from "@/pages/Templates";
+import { KnowledgeHub } from "@/pages/KnowledgeHub";
 
 export const router = createBrowserRouter([
   {
@@ -15,6 +16,7 @@ export const router = createBrowserRouter([
       { index: true, element: <Overview /> },
       { path: "dashboard", element: <Dashboard /> },
       { path: "agents", element: <AgentControl /> },
+      { path: "knowledge", element: <KnowledgeHub /> },
       { path: "templates", element: <Templates /> },
       { path: "settings", element: <Settings /> },
       { path: "experiments/:id", element: <ExperimentDetail /> },

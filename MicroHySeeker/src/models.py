@@ -144,8 +144,8 @@ class ECSettings:
     adt_enabled: bool = False
     adt_num_cycles: int = 100              # ADT 循环轮数
     # -- CP (计时电位法) 完整参数 --
-    adt_cathodic_current_mA: float = -500.0  # 阴极电流 ic (mA), 0~250A → 用 mA 表示
-    adt_cp_anodic_current_mA: float = 500.0  # 阳极电流 ia (mA)
+    adt_cathodic_current_mA: float = -250.0  # 阴极电流 ic (mA), 默认使用无 Booster 风险参数
+    adt_cp_anodic_current_mA: float = 250.0  # 阳极电流 ia (mA)
     adt_cp_e_high: float = 2.0               # CP 电位上限 eh (V)
     adt_cp_e_low: float = -2.0               # CP 电位下限 el (V)
     adt_cp_high_e_hold_time: float = 0.0     # 高电位保持时间 heht (s)
@@ -157,7 +157,7 @@ class ECSettings:
     adt_cp_segments: int = 2                 # CP 段数 cl
     adt_cp_priority: str = 'time'            # 优先级: 'time'=时间优先, 'potential'=电位优先
     # -- CA (计时电流法) 完整参数 --
-    adt_anodic_potential_V: float = 1.2      # 初始电位 ei (V)
+    adt_anodic_potential_V: float = 1.5      # 初始电位 ei (V)
     adt_ca_e_high: float = 1.5               # 高电位限 eh (V)
     adt_ca_e_low: float = -0.5               # 低电位限 el (V)
     adt_ca_polarity: str = 'p'               # 变化方向 pn: 'p'=正向, 'n'=负向

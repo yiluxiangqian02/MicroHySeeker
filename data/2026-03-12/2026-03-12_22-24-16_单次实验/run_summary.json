@@ -1,0 +1,131 @@
+{
+  "run_id": "run_20260312_222416",
+  "exp_id": "single_001",
+  "exp_name": "单次实验",
+  "started_at": "2026-03-12T22:24:16.227430",
+  "finished_at": "2026-03-12T22:25:15.421064",
+  "elapsed_seconds": 59.2,
+  "success": false,
+  "operator": "",
+  "step_results": [
+    {
+      "step_index": 0,
+      "step_id": "step_5",
+      "step_type": "echem",
+      "started_at": "2026-03-12T22:24:16.247475",
+      "finished_at": "2026-03-12T22:24:53.842909",
+      "success": true,
+      "details": "LSV 完成, 1000点",
+      "data_file": "echem/step_0_LSV.csv",
+      "data_points_count": 1000
+    },
+    {
+      "step_index": 1,
+      "step_id": "step_2",
+      "step_type": "echem",
+      "started_at": "2026-03-12T22:24:53.945603",
+      "finished_at": "2026-03-12T22:25:11.813609",
+      "success": false,
+      "details": "echem 执行失败"
+    }
+  ],
+  "system_snapshot": {
+    "rs485_port": "COM3",
+    "rs485_baudrate": 38400,
+    "mock_mode": false,
+    "data_dir": "./data",
+    "chi_exe_path": "",
+    "pumps_summary": [
+      {
+        "address": 1,
+        "name": "Pump_1",
+        "direction": "FWD",
+        "default_rpm": 120,
+        "ul_per_sec": 0.5
+      },
+      {
+        "address": 2,
+        "name": "Pump_2",
+        "direction": "FWD",
+        "default_rpm": 120,
+        "ul_per_sec": 0.5
+      },
+      {
+        "address": 3,
+        "name": "Pump_3",
+        "direction": "FWD",
+        "default_rpm": 120,
+        "ul_per_sec": 0.5
+      },
+      {
+        "address": 4,
+        "name": "Pump_4",
+        "direction": "FWD",
+        "default_rpm": 120,
+        "ul_per_sec": 0.5
+      },
+      {
+        "address": 5,
+        "name": "Pump_5",
+        "direction": "FWD",
+        "default_rpm": 120,
+        "ul_per_sec": 0.5
+      },
+      {
+        "address": 6,
+        "name": "Pump_6",
+        "direction": "FWD",
+        "default_rpm": 120,
+        "ul_per_sec": 0.5
+      },
+      {
+        "address": 7,
+        "name": "Pump_7",
+        "direction": "FWD",
+        "default_rpm": 120,
+        "ul_per_sec": 0.5
+      },
+      {
+        "address": 8,
+        "name": "Pump_8",
+        "direction": "FWD",
+        "default_rpm": 120,
+        "ul_per_sec": 0.5
+      },
+      {
+        "address": 9,
+        "name": "Pump_9",
+        "direction": "FWD",
+        "default_rpm": 120,
+        "ul_per_sec": 0.5
+      },
+      {
+        "address": 10,
+        "name": "Pump_10",
+        "direction": "FWD",
+        "default_rpm": 120,
+        "ul_per_sec": 0.5
+      },
+      {
+        "address": 11,
+        "name": "Pump_11",
+        "direction": "FWD",
+        "default_rpm": 120,
+        "ul_per_sec": 0.5
+      },
+      {
+        "address": 12,
+        "name": "Pump_12",
+        "direction": "FWD",
+        "default_rpm": 120,
+        "ul_per_sec": 0.5
+      }
+    ],
+    "dilution_channels_count": 4,
+    "flush_channels_count": 3
+  },
+  "errors": [
+    "步骤1 [echem] 失败: echem 执行失败"
+  ],
+  "warnings": []
+}

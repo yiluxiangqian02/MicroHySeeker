@@ -23,7 +23,7 @@ export function AppShell() {
         <button
           onClick={() => setIsChatOpen(true)}
           className="fixed right-4 bottom-4 w-14 h-14 bg-blue-500 text-white rounded-full shadow-lg hover:bg-blue-600 transition-colors flex items-center justify-center z-40"
-          title="打开 AI 助手"
+          title="打开知识库 Chat"
         >
           <MessageSquare className="w-6 h-6" />
         </button>

@@ -29,10 +29,13 @@ AGENT_NAME_ALIASES = {
     "diagnostics_expert": "diagnostics_expert",
     "exp_designer": "experiment_designer",
     "experiment_designer": "experiment_designer",
+    "exp_executor": "experiment_executor",
+    "experiment_executor": "experiment_executor",
     "exp_supervisor": "experiment_supervisor",
     "experiment_supervisor": "experiment_supervisor",
     "knowledge_mgr": "knowledge_manager",
     "knowledge_manager": "knowledge_manager",
+    "orchestrator": "orchestrator",
 }
 
 

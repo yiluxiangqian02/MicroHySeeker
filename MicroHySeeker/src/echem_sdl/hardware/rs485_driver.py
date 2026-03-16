@@ -476,7 +476,8 @@ class RS485Driver:
             addresses = list(SCAN_ADDRESS_RANGE)
         
         # 已知响应异常但通常能工作的泵列表
-        RESPONSE_UNSTABLE_PUMPS = [1, 11]
+        # 注：泵1已于2026-03-15更换驱动板，通信100%稳定，已移出此列表
+        RESPONSE_UNSTABLE_PUMPS = [11]
         
         self._log_info(f"Scanning devices at addresses: {addresses}")
         found_devices: List[int] = []

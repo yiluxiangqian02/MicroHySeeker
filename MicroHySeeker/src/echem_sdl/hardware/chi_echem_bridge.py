@@ -19,6 +19,7 @@ CHI 660F 电化学桥接层 —— ECSettings ↔ CHI660FController
     bridge.disconnect()
 """
 
+import os
 import logging
 from typing import Optional, Tuple, Any, Callable
 from dataclasses import dataclass
@@ -122,9 +123,9 @@ def _ec_to_adt_it(ec: ECSettings) -> ITParams:
 
 def _ec_to_cp(ec: ECSettings) -> CPParams:
     """ECSettings → CPParams (计时电位法) — 全部参数映射"""
-    cathodic_mA = getattr(ec, 'adt_cathodic_current_mA', -500.0)
+    cathodic_mA = getattr(ec, 'adt_cathodic_current_mA', -250.0)
     cathodic_A = abs(cathodic_mA) / 1000.0  # mA → A, CP 用绝对值
-    anodic_mA = getattr(ec, 'adt_cp_anodic_current_mA', 500.0)
+    anodic_mA = getattr(ec, 'adt_cp_anodic_current_mA', 250.0)
     anodic_A = abs(anodic_mA) / 1000.0
     return CPParams(
         cathodic_current=cathodic_A,
@@ -145,7 +146,7 @@ def _ec_to_cp(ec: ECSettings) -> CPParams:
 def _ec_to_ca(ec: ECSettings) -> CAParams:
     """ECSettings → CAParams (计时电流法) — 全部参数映射"""
     return CAParams(
-        e_init=getattr(ec, 'adt_anodic_potential_V', 1.2),
+        e_init=getattr(ec, 'adt_anodic_potential_V', 1.5),
         e_high=getattr(ec, 'adt_ca_e_high', 1.5) or 1.5,
         e_low=getattr(ec, 'adt_ca_e_low', -0.5) or -0.5,
         polarity=getattr(ec, 'adt_ca_polarity', 'p'),
@@ -343,16 +344,22 @@ class CHIBridge:
                 output_prefix: str = "adt") -> ExperimentResult:
         """执行 ADT (加速耐久性测试) 多轮循环
 
-        每一轮 (参照 JACS 异质界面抗反向电流电极协议):
+        ★ 批量模式: 将 N 轮 CP+CA 合并为一个宏命令一次性执行。
+        消除每轮 ~8s 的 Macro 对话框打开/关闭 overhead。
+        
+        例如: 100 轮 × (CP 3s + CA 2s) 
+            旧: ~1800s (每轮 18s, 含 GUI 开关)
+            新: ~550s  (纯实验 500s + 少量启动时间)
+
+        每一轮:
           1) CP (galvanostatic) — 阴极恒电流 HER 步骤
           2) CA (potentiostatic step) — 阳极电位阶跃 (模拟反向电流)
-
-        对比旧版: 旧版用 i-t (极端负电位近似恒流), 现在用真正的 CP galvanostatic。
 
         Args:
             ec_settings: 包含 ADT 参数的 ECSettings
             on_cycle: 每轮回调 (cycle_index, total_cycles, cycle_data)
-            stop_flag: 返回 True 时中止
+                      批量模式下在宏执行完成后统一回调
+            stop_flag: 返回 True 时中止 (批量模式下仅在执行前检查)
             output_prefix: 输出文件前缀
 
         Returns:
@@ -361,24 +368,43 @@ class CHIBridge:
         if not self.is_connected:
             return ExperimentResult(success=False, error_message="CHI 未连接")
 
-        num = getattr(ec_settings, 'adt_num_cycles', 100)
-        anodic_v = getattr(ec_settings, 'adt_anodic_potential_V', 1.2)
-        anodic_t = getattr(ec_settings, 'adt_anodic_duration_s', 2.0)
-        cathodic_mA = getattr(ec_settings, 'adt_cathodic_current_mA', -500.0)
-        cathodic_t = getattr(ec_settings, 'adt_cathodic_duration_s', 3.0)
-        cathodic_A = abs(cathodic_mA) / 1000.0  # mA → A
-        
-        # CP 扩展参数
-        cp_e_high = getattr(ec_settings, 'adt_cp_e_high', 2.0)
-        cp_e_low = getattr(ec_settings, 'adt_cp_e_low', -2.0)
-        cp_si = getattr(ec_settings, 'adt_cp_sample_interval', 0.01)
-        
-        # CA 扩展参数
-        ca_sens_raw = getattr(ec_settings, 'adt_ca_sensitivity', 0.001)
-        ca_qt = getattr(ec_settings, 'adt_ca_quiet_time', 0.0)
-        ca_si = getattr(ec_settings, 'adt_ca_sample_interval', 0.01)
+        if stop_flag and stop_flag():
+            return ExperimentResult(success=False, error_message="ADT 被用户中止")
 
-        # iR 补偿 (如有)
+        num = getattr(ec_settings, 'adt_num_cycles', 100)
+        cathodic_mA = getattr(ec_settings, 'adt_cathodic_current_mA', -250.0)
+        cathodic_A = abs(cathodic_mA) / 1000.0  # mA → A
+
+        # 构造 CP 参数
+        cp_params = CPParams(
+            cathodic_current=cathodic_A,
+            anodic_current=cathodic_A,
+            e_high=getattr(ec_settings, 'adt_cp_e_high', 2.0),
+            e_low=getattr(ec_settings, 'adt_cp_e_low', -2.0),
+            cathodic_time=getattr(ec_settings, 'adt_cathodic_duration_s', 3.0),
+            anodic_time=getattr(ec_settings, 'adt_cp_anodic_time_s', 3.0),
+            polarity='n',          # 阴极(负方向)先
+            sample_interval=getattr(ec_settings, 'adt_cp_sample_interval', 0.01),
+            segments=1,            # 单段 (仅阴极方向)
+            priority='time',
+        )
+
+        # 构造 CA 参数
+        anodic_v = getattr(ec_settings, 'adt_anodic_potential_V', 1.5)
+        ca_sens_raw = getattr(ec_settings, 'adt_ca_sensitivity', 0.001)
+        ca_params = CAParams(
+            e_init=anodic_v,
+            e_high=getattr(ec_settings, 'adt_ca_e_high', 1.5) or anodic_v + 0.5,
+            e_low=getattr(ec_settings, 'adt_ca_e_low', -0.5),
+            polarity='p',
+            steps=1,
+            pulse_width=getattr(ec_settings, 'adt_anodic_duration_s', 2.0),
+            sample_interval=getattr(ec_settings, 'adt_ca_sample_interval', 0.01),
+            quiet_time=getattr(ec_settings, 'adt_ca_quiet_time', 0.0),
+            sensitivity=ca_sens_raw if ca_sens_raw > 0 else 0.0,
+        )
+
+        # iR 补偿
         ir_enabled = getattr(ec_settings, 'ir_compensation_enabled', False)
         ir_resistance = getattr(ec_settings, 'ir_compensation_ohm', 0.0)
         if ir_enabled and ir_resistance > 0:
@@ -390,71 +416,75 @@ class CHIBridge:
         if hasattr(ec_settings, 'use_dummy_cell'):
             self._controller._config.use_dummy_cell = ec_settings.use_dummy_cell
 
-        all_data = []
-        all_headers = ["time(s)", "potential(V)", "current(A)", "cycle"]
         start_time = __import__('time').time()
+        
+        logger.info(
+            f"ADT 批量执行: {num} 轮, "
+            f"CP ic={cathodic_A}A tc={cp_params.cathodic_time}s, "
+            f"CA ei={anodic_v}V pw={ca_params.pulse_width}s"
+        )
 
-        for cycle in range(num):
-            if stop_flag and stop_flag():
-                return ExperimentResult(
-                    success=False, error_message="ADT 被用户中止",
-                    data_points=all_data, headers=all_headers,
-                    elapsed_time=__import__('time').time() - start_time)
+        # ★ 批量执行: 一次性发送所有轮次
+        batch_result = self._controller.run_adt_batch(
+            cp_params, ca_params, num, output_prefix
+        )
 
-            # -- 阴极步 (cathodic / HER) — 使用真正的 CP (恒电流) --
-            cp_params = CPParams(
-                cathodic_current=cathodic_A,
-                anodic_current=cathodic_A,
-                e_high=cp_e_high,
-                e_low=cp_e_low,
-                cathodic_time=cathodic_t,
-                anodic_time=cathodic_t,
-                polarity='n',          # 阴极(负方向)先
-                sample_interval=cp_si,
-                segments=1,            # 单段 (仅阴极方向)
-                priority='time',
-            )
-            cathodic_result = self._controller.run_cp(
-                cp_params, f"{output_prefix}_c{cycle+1}_cathodic")
-
-            # -- 阳极步 (anodic / RC) — 使用 CA (恒电位阶跃) --
-            ca_params = CAParams(
-                e_init=anodic_v,
-                e_high=anodic_v + 0.5,
-                e_low=-0.5,
-                polarity='p',
-                steps=1,
-                pulse_width=anodic_t,
-                sample_interval=ca_si,
-                quiet_time=ca_qt,
-                sensitivity=ca_sens_raw if ca_sens_raw > 0 else 0.0,
-            )
-            anodic_result = self._controller.run_ca(
-                ca_params, f"{output_prefix}_c{cycle+1}_anodic")
-
-            # 收集数据
-            for pt in cathodic_result.data_points:
-                all_data.append(list(pt) + [cycle + 1])
-            for pt in anodic_result.data_points:
-                all_data.append(list(pt) + [cycle + 1])
-
-            if on_cycle:
-                on_cycle(cycle + 1, num, {
-                    "cathodic_success": cathodic_result.success,
-                    "anodic_success": anodic_result.success,
-                })
+        elapsed = __import__('time').time() - start_time
 
         # 关闭 iR 补偿 (恢复默认)
         if ir_enabled and ir_resistance > 0:
             self._controller.set_ir_compensation(False)
 
-        elapsed = __import__('time').time() - start_time
+        # 收集所有数据文件
+        # 将每个 CP/CA 子文件的本地时间轴拼接成一个连续时间轴，
+        # 这样主界面可直接画出 ADT 的交替脉冲波形。
+        all_data = []
+        all_headers = ["time(s)", "potential(V)", "current(A)", "cycle"]
+        time_offset = 0.0
+        
+        if batch_result.success:
+            output_dir = self._controller._config.output_dir
+            for cycle in range(num):
+                c = cycle + 1
+                for suffix in ("cathodic", "anodic"):
+                    csv_path = os.path.join(
+                        output_dir, f"{output_prefix}_c{c}_{suffix}.csv"
+                    )
+                    if os.path.isfile(csv_path):
+                        headers, data = self._controller._parse_csv(csv_path)
+                        if headers:
+                            all_headers = list(headers) + ["cycle"]
+                        if data:
+                            if len(data) >= 2 and len(data[0]) >= 1 and len(data[1]) >= 1:
+                                step_gap = max(float(data[1][0]) - float(data[0][0]), 1e-6)
+                            else:
+                                step_gap = 1e-3
+                            for pt in data:
+                                row = list(pt)
+                                if row:
+                                    row[0] = float(row[0]) + time_offset
+                                all_data.append(row + [c])
+                            time_offset = float(all_data[-1][0]) + step_gap
+                
+                # 回调 (数据收集完每轮后)
+                if on_cycle:
+                    on_cycle(c, num, {
+                        "cathodic_success": True,
+                        "anodic_success": True,
+                    })
+
+        logger.info(
+            f"ADT 批量完成: success={batch_result.success}, "
+            f"{len(all_data)} 数据点, 耗时 {elapsed:.1f}s"
+        )
+
         return ExperimentResult(
-            success=True,
+            success=batch_result.success,
             data_points=all_data,
             headers=all_headers,
             elapsed_time=elapsed,
             data_file="",
+            error_message=batch_result.error_message,
         )
 
 

@@ -29,34 +29,34 @@ export interface AgentDefinition {
 export const AGENT_DEFINITIONS: AgentDefinition[] = [
   {
     id: "C1",
-    name: "数据解读助手",
-    description: "适合在实验结束后查看结果、提取关键指标、比较多组数据时使用",
-    color: "blue"
+    name: "数据处理/分析助手",
+    description: "负责实验后数据分析、关键指标提取、结构化保存，以及按指定数据生成科研级图表",
+    color: "blue",
   },
   {
     id: "D2",
     name: "故障排查助手",
     description: "适合实验失败、曲线异常、设备状态不对时帮助定位原因和排查路径",
-    color: "red"
+    color: "red",
   },
   {
     id: "D3",
     name: "方案设计助手",
     description: "适合在开始实验前补齐参数、生成起始方案、获得下一轮实验建议时使用",
-    color: "purple"
+    color: "purple",
   },
   {
     id: "C2",
     name: "运行监护助手",
-    description: "适合在实验执行过程中盯住进展、异常和关键节点，减少人工盯屏",
-    color: "green"
+    description: "负责实时监控实验状态、步骤进展、超时与异常，并在需要时触发故障排查助手",
+    color: "green",
   },
   {
     id: "C3",
-    name: "知识检索助手",
-    description: "适合回看历史实验、方法经验和知识背景，帮助快速找到可复用信息",
-    color: "orange"
-  }
+    name: "知识管理 / 知识库 Chat",
+    description: "以聊天框为主入口，调用知识库、历史实验和方法经验，支持带实验上下文的问答",
+    color: "orange",
+  },
 ];
 
 const CONTROL_AGENT_IDS: ControlAgentId[] = ["C1", "D2", "D3", "C2", "C3"];
@@ -69,16 +69,16 @@ const DEFAULT_CONFIGS = Object.fromEntries(
       enabled: true,
       primaryModel: "claude-sonnet-4.6",
       fallbackModel: "rule-based",
-      apiKey: ""
-    } satisfies AgentConfig
-  ])
+      apiKey: "",
+    } satisfies AgentConfig,
+  ]),
 ) as Record<ControlAgentId, AgentConfig>;
 
 const DEFAULT_USAGE = Object.fromEntries(
   CONTROL_AGENT_IDS.map((id) => [
     id,
-    { inputTokens: 0, outputTokens: 0, estimatedCostUsd: 0 } satisfies AgentUsageStats
-  ])
+    { inputTokens: 0, outputTokens: 0, estimatedCostUsd: 0 } satisfies AgentUsageStats,
+  ]),
 ) as Record<ControlAgentId, AgentUsageStats>;
 
 interface AgentControlStore {
@@ -99,31 +99,31 @@ export const useAgentStore = create<AgentControlStore>()(
 
       setConfig: (id, update) =>
         set((state) => ({
-          configs: { ...state.configs, [id]: { ...state.configs[id], ...update } }
+          configs: { ...state.configs, [id]: { ...state.configs[id], ...update } },
         })),
 
       setAllEnabled: (enabled) =>
         set((state) => ({
           configs: Object.fromEntries(
-            Object.entries(state.configs).map(([k, v]) => [k, { ...v, enabled }])
-          ) as Record<ControlAgentId, AgentConfig>
+            Object.entries(state.configs).map(([k, v]) => [k, { ...v, enabled }]),
+          ) as Record<ControlAgentId, AgentConfig>,
         })),
 
       resetAll: () => set({ configs: DEFAULT_CONFIGS }),
 
       updateUsage: (id, usage) =>
         set((state) => ({
-          usage: { ...state.usage, [id]: { ...state.usage[id], ...usage } }
+          usage: { ...state.usage, [id]: { ...state.usage[id], ...usage } },
         })),
 
       importConfigs: (incoming) =>
         set((state) => ({
-          configs: { ...state.configs, ...incoming }
-        }))
+          configs: { ...state.configs, ...incoming },
+        })),
     }),
     {
       name: "autohyseeker-agent-control",
-      partialize: (state) => ({ configs: state.configs })
-    }
-  )
+      partialize: (state) => ({ configs: state.configs }),
+    },
+  ),
 );

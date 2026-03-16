@@ -51,7 +51,7 @@ class CalibrateDialog(QDialog):
         rpm_layout = QHBoxLayout()
         rpm_layout.addWidget(QLabel("转速 (RPM):"))
         self.rpm_spin = QSpinBox()
-        self.rpm_spin.setRange(1, 1000)
+        self.rpm_spin.setRange(1, 300)
         self.rpm_spin.setValue(100)
         rpm_layout.addWidget(self.rpm_spin)
         layout.addLayout(rpm_layout)

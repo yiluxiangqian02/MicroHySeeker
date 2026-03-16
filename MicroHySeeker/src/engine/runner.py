@@ -103,6 +103,12 @@ class ExperimentWorker(QObject):
     
     def stop(self):
         self._stop_flag = True
+        # 尽快中断正在执行的电化学步骤，避免长时间等待超时
+        try:
+            if hasattr(self, '_chi_bridge') and self._chi_bridge:
+                self._chi_bridge.stop()
+        except Exception:
+            pass
     
     def _emergency_stop_all_pumps(self):
         """紧急停止所有泵 — 实验中断/失败时的安全清理"""
@@ -2034,6 +2040,7 @@ class ExperimentRunner(QObject):
         self.rs485 = get_rs485_instance()
         self.config = config
         self.is_running = False
+        self.is_stopping = False
         self.is_paused = False
         self.experiment: Optional[Experiment] = None
         self.current_step_index = -1
@@ -2055,15 +2062,20 @@ class ExperimentRunner(QObject):
         return worker.pre_check()
     
     def run_experiment(self, experiment: Experiment):
-        """在后台线程运行实验"""
-        # 如果有正在运行的线程，先停止
-        if self._thread and self._thread.isRunning():
-            self.stop()
-            self._thread.wait()
+        """在后台线程运行实验
+        
+        Returns:
+            bool: 是否成功启动
+        """
+        # 防重入: 运行中/停止中不允许再次启动
+        if self.is_busy:
+            self.log_message.emit("实验仍在运行或停止中，请稍后再启动")
+            return False
         
         self.experiment = experiment
         self.current_step_index = -1
         self.is_running = True
+        self.is_stopping = False
         self._stop_flag = False
         
         # 创建实验数据管理器（每次运行一个独立实例）
@@ -2088,9 +2100,11 @@ class ExperimentRunner(QObject):
         self._worker.pump_batch_update.connect(self.pump_batch_update.emit)
         self._worker.volume_updated.connect(self.volume_updated.emit)
         self._worker.liquid_level_update.connect(self.liquid_level_update.emit)
+        self._thread.finished.connect(self._on_thread_finished)
         
         # 启动线程
         self._thread.start()
+        return True
     
     def _on_step_started(self, step_index: int, step_id: str):
         self.current_step_index = step_index
@@ -2104,11 +2118,24 @@ class ExperimentRunner(QObject):
     
     def _on_experiment_finished(self, success: bool):
         self.is_running = False
+        self.is_stopping = False
         self.experiment_finished.emit(success)
         # 安全清理线程
         if self._thread:
             self._thread.quit()
-            self._thread.wait()
+
+    def _on_thread_finished(self):
+        """线程真正结束后的资源清理"""
+        self.is_stopping = False
+        self.is_running = False
+        self._thread = None
+        self._worker = None
+
+    @property
+    def is_busy(self) -> bool:
+        """Runner 是否处于不可启动新实验的状态"""
+        thread_running = bool(self._thread and self._thread.isRunning())
+        return self.is_running or self.is_stopping or thread_running
     
     @property
     def data_manager(self) -> Optional[ExperimentDataManager]:
@@ -2117,10 +2144,15 @@ class ExperimentRunner(QObject):
     
     def stop(self):
         """停止运行"""
+        if not self.is_busy:
+            return
         self._stop_flag = True
         self.is_running = False
+        self.is_stopping = True
         if self._worker:
             self._worker.stop()
+        if not self._thread or not self._thread.isRunning():
+            self.is_stopping = False
     
     def pause(self):
         """暂停"""

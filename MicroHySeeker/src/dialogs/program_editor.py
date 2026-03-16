@@ -289,7 +289,7 @@ class ProgramEditorDialog(QDialog):
         layout.addRow("方向:", self.tf_dir_label)
         
         self.tf_rpm_spin = QSpinBox()
-        self.tf_rpm_spin.setRange(1, 1000)
+        self.tf_rpm_spin.setRange(1, 300)
         self.tf_rpm_spin.setValue(100)
         layout.addRow("转速(RPM):", self.tf_rpm_spin)
         
@@ -503,7 +503,7 @@ class ProgramEditorDialog(QDialog):
         layout.addRow("方向:", self.fl_dir_label)
         
         self.fl_rpm_spin = QSpinBox()
-        self.fl_rpm_spin.setRange(1, 1000)
+        self.fl_rpm_spin.setRange(1, 300)
         self.fl_rpm_spin.setValue(100)
         layout.addRow("转速(RPM):", self.fl_rpm_spin)
         
@@ -704,11 +704,11 @@ class ProgramEditorDialog(QDialog):
         cp_box.setStyleSheet("QGroupBox{font-weight:bold;border:1px solid #90CAF9;border-radius:4px;margin-top:6px;padding-top:14px;}")
         cp_grid = QGridLayout(cp_box); cp_grid.setSpacing(6)
         cp_grid.addWidget(QLabel("阴极电流 ic(mA):"), 0, 0)
-        self._adt_cathodic_mA = QDoubleSpinBox(); self._adt_cathodic_mA.setRange(-10000, 0); self._adt_cathodic_mA.setDecimals(1); self._adt_cathodic_mA.setValue(-500.0)
+        self._adt_cathodic_mA = QDoubleSpinBox(); self._adt_cathodic_mA.setRange(-10000, 0); self._adt_cathodic_mA.setDecimals(1); self._adt_cathodic_mA.setValue(-250.0)
         self._adt_cathodic_mA.setToolTip("阴极(负向)恒电流, 0 ~ -250000 mA")
         cp_grid.addWidget(self._adt_cathodic_mA, 0, 1)
         cp_grid.addWidget(QLabel("阳极电流 ia(mA):"), 0, 2)
-        self._adt_cp_anodic_mA = QDoubleSpinBox(); self._adt_cp_anodic_mA.setRange(0, 10000); self._adt_cp_anodic_mA.setDecimals(1); self._adt_cp_anodic_mA.setValue(500.0)
+        self._adt_cp_anodic_mA = QDoubleSpinBox(); self._adt_cp_anodic_mA.setRange(0, 10000); self._adt_cp_anodic_mA.setDecimals(1); self._adt_cp_anodic_mA.setValue(250.0)
         self._adt_cp_anodic_mA.setToolTip("阳极(正向)恒电流, 0 ~ 250000 mA")
         cp_grid.addWidget(self._adt_cp_anodic_mA, 0, 3)
         cp_grid.addWidget(QLabel("电位上限 Eh(V):"), 1, 0)
@@ -752,7 +752,7 @@ class ProgramEditorDialog(QDialog):
         ca_box.setStyleSheet("QGroupBox{font-weight:bold;border:1px solid #FFCC80;border-radius:4px;margin-top:6px;padding-top:14px;}")
         ca_grid = QGridLayout(ca_box); ca_grid.setSpacing(6)
         ca_grid.addWidget(QLabel("初始电位 ei(V):"), 0, 0)
-        self._adt_anodic_V = QDoubleSpinBox(); self._adt_anodic_V.setRange(-10, 10); self._adt_anodic_V.setDecimals(3); self._adt_anodic_V.setValue(1.2)
+        self._adt_anodic_V = QDoubleSpinBox(); self._adt_anodic_V.setRange(-10, 10); self._adt_anodic_V.setDecimals(3); self._adt_anodic_V.setValue(1.5)
         ca_grid.addWidget(self._adt_anodic_V, 0, 1)
         ca_grid.addWidget(QLabel("脉冲宽度 pw(s):"), 0, 2)
         self._adt_anodic_t = QDoubleSpinBox(); self._adt_anodic_t.setRange(1e-4, 1000); self._adt_anodic_t.setDecimals(4); self._adt_anodic_t.setValue(2.0)
@@ -885,7 +885,7 @@ class ProgramEditorDialog(QDialog):
         layout.addRow("方向:", self.ev_dir_label)
         
         self.ev_rpm_spin = QSpinBox()
-        self.ev_rpm_spin.setRange(1, 1000)
+        self.ev_rpm_spin.setRange(1, 300)
         self.ev_rpm_spin.setValue(100)
         layout.addRow("转速(RPM):", self.ev_rpm_spin)
         
@@ -1172,8 +1172,8 @@ class ProgramEditorDialog(QDialog):
             elif tech == ECTechnique.ADT:
                 self._adt_cycles.setValue(getattr(ec, 'adt_num_cycles', 100))
                 # CP 参数
-                self._adt_cathodic_mA.setValue(getattr(ec, 'adt_cathodic_current_mA', -500.0))
-                self._adt_cp_anodic_mA.setValue(getattr(ec, 'adt_cp_anodic_current_mA', 500.0))
+                self._adt_cathodic_mA.setValue(getattr(ec, 'adt_cathodic_current_mA', -250.0))
+                self._adt_cp_anodic_mA.setValue(getattr(ec, 'adt_cp_anodic_current_mA', 250.0))
                 self._adt_cp_eh.setValue(getattr(ec, 'adt_cp_e_high', 2.0))
                 self._adt_cp_el.setValue(getattr(ec, 'adt_cp_e_low', -2.0))
                 self._adt_cathodic_t.setValue(getattr(ec, 'adt_cathodic_duration_s', 3.0))
@@ -1191,7 +1191,7 @@ class ProgramEditorDialog(QDialog):
                 cp_pri_idx = 0 if cp_pri == 'time' else 1
                 self._adt_cp_priority.setCurrentIndex(cp_pri_idx)
                 # CA 参数
-                self._adt_anodic_V.setValue(getattr(ec, 'adt_anodic_potential_V', 1.2))
+                self._adt_anodic_V.setValue(getattr(ec, 'adt_anodic_potential_V', 1.5))
                 self._adt_anodic_t.setValue(getattr(ec, 'adt_anodic_duration_s', 2.0))
                 self._adt_ca_eh.setValue(getattr(ec, 'adt_ca_e_high', 1.5))
                 self._adt_ca_el.setValue(getattr(ec, 'adt_ca_e_low', -0.5))

@@ -199,9 +199,9 @@ class ECConfig:
     # ADT (加速耐久性测试) 参数
     adt_enabled: bool = False
     adt_num_cycles: int = 100
-    adt_cathodic_current_mA: float = -500.0
+    adt_cathodic_current_mA: float = -250.0
     adt_cathodic_duration_s: float = 3.0
-    adt_anodic_potential_V: float = 1.2
+    adt_anodic_potential_V: float = 1.5
     adt_anodic_duration_s: float = 2.0
     
     def to_dict(self) -> Dict[str, Any]:

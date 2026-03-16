@@ -187,7 +187,7 @@ class ConfigDialog(QDialog):
         input_layout.addRow("方向:", self.dil_dir_input)
         
         self.dil_rpm_input = QSpinBox()
-        self.dil_rpm_input.setRange(0, 1000)
+        self.dil_rpm_input.setRange(0, 300)
         self.dil_rpm_input.setValue(120)
         input_layout.addRow("转速(RPM):", self.dil_rpm_input)
         
@@ -264,7 +264,7 @@ class ConfigDialog(QDialog):
         input_layout.addRow("工作类型:", self.flush_type_input)
         
         self.flush_rpm_input = QSpinBox()
-        self.flush_rpm_input.setRange(0, 1000)
+        self.flush_rpm_input.setRange(0, 300)
         self.flush_rpm_input.setValue(100)
         input_layout.addRow("转速(RPM):", self.flush_rpm_input)
         
@@ -376,7 +376,7 @@ class ConfigDialog(QDialog):
             
             # 转速 (可编辑)
             rpm_spin = QSpinBox()
-            rpm_spin.setRange(0, 1000)
+            rpm_spin.setRange(0, 300)
             rpm_spin.setValue(channel.default_rpm)
             rpm_spin.valueChanged.connect(lambda val, r=row: self._on_dilution_param_changed(r, 'default_rpm', val))
             self.dilution_table.setCellWidget(row, 5, rpm_spin)
@@ -497,7 +497,7 @@ class ConfigDialog(QDialog):
             
             # 转速 (可编辑)
             rpm_spin = QSpinBox()
-            rpm_spin.setRange(0, 1000)
+            rpm_spin.setRange(0, 300)
             rpm_spin.setValue(channel.rpm)
             rpm_spin.valueChanged.connect(lambda val, r=row: self._on_flush_param_changed(r, 'rpm', val))
             self.flush_table.setCellWidget(row, 4, rpm_spin)
