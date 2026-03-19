@@ -21,13 +21,17 @@ export function Chat() {
   } = useChatStore();
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     fetchSessions();
   }, [fetchSessions]);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    const el = containerRef.current;
+    if (el) {
+      el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
+    }
   }, [messages]);
 
   return (
@@ -61,7 +65,7 @@ export function Chat() {
         </div>
 
         {/* Message Trace */}
-        <div className="flex-1 overflow-y-auto p-6">
+        <div ref={containerRef} className="flex-1 overflow-y-auto p-6">
           <div className="max-w-3xl mx-auto">
             {messages.length === 0 ? (
               <div className="h-full flex flex-col items-center justify-center text-center text-slate-500 mt-32">

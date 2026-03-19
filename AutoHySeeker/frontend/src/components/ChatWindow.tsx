@@ -191,6 +191,7 @@ export default function ChatWindow({
   const [statusText, setStatusText] = useState('正在连接知识管理服务...');
   const [lastError, setLastError] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const mergedExperimentContext = {
     ...defaultExperimentContext,
@@ -203,7 +204,12 @@ export default function ChatWindow({
       : 'fixed bottom-4 right-4 z-50 flex h-[760px] w-[480px] max-w-[calc(100vw-2rem)] flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-2xl';
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (containerRef.current) {
+        containerRef.current.scrollTo({
+            top: containerRef.current.scrollHeight,
+            behavior: 'smooth'
+        });
+    }
   }, [messages, isLoading]);
 
   useEffect(() => {
@@ -428,7 +434,7 @@ export default function ChatWindow({
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto bg-slate-50/70 p-4">
+      <div ref={containerRef} className="flex-1 overflow-y-auto bg-slate-50/70 p-4">
         <div className="space-y-4">
           {messages.length === 0 && (
             <div className="mt-8 rounded-2xl border border-dashed border-slate-200 bg-white p-6 text-center text-gray-500">
