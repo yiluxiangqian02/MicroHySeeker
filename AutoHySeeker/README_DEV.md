@@ -11,6 +11,14 @@ AutoHySeeker/
     graph/        # LangGraph 编排层
     api/          # FastAPI HTTP 服务
     skills/       # 复合技能（调用 tools + LLM）
+  frontend/       # React Web Dashboard
+    src/
+      api/        # axios HTTP 客户端 + 接口封装
+      components/ # 可复用组件（AgentCard, TemplateCard 等）
+      hooks/      # 自定义 hooks（usePolling 等）
+      i18n/       # 国际化（zh-CN / en-US）
+      pages/      # 页面组件（Dashboard, Experiments, Settings 等）
+      stores/     # zustand 状态管理
   pyproject.toml  # uv 依赖管理
   .env            # 环境变量（从 .env.example 复制）
 ```
@@ -52,6 +60,20 @@ curl -X POST http://localhost:8100/agents/invoke \
 ```
 
 ## 开发指南
+
+### 前端开发
+
+```bash
+cd AutoHySeeker/frontend
+npm install
+npm run dev
+```
+
+前端开发服务器默认运行在 http://localhost:5173，通过 Vite proxy 转发 `/api/*` 到后端 `localhost:8100`。
+
+技术栈：React 18 + TypeScript + Vite + Tailwind CSS + zustand + react-query + recharts
+
+详细前端修改指南见 `docs/FRONTEND_MODIFICATION_GUIDE.md`。
 
 ### 添加新 Tool
 

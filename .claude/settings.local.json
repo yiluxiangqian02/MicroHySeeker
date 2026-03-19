@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Bash(find d:AI4SMicroHySeekerMicroHySeekerAutoHySeekerOpenViking -name *.py -o -name *.cpp -o -name *.h)",
-      "Bash(\"d:/AI4S/MicroHySeeker/MicroHySeeker/AutoHySeeker/docs/UI_PLAN_V3.md\":*)"
+      "Bash(\"d:/AI4S/MicroHySeeker/MicroHySeeker/AutoHySeeker/docs/UI_PLAN_V3.md\":*)",
+      "Bash(find \"d:/AI4S/MicroHySeeker/MicroHySeeker/AutoHySeeker/docs\" -name \"*.md\" -empty -delete)"
     ]
   }
 }
