@@ -30,7 +30,7 @@ export function ExperimentLog({ logs }: Props) {
     if (!el) return;
     const isNearBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 80;
     if (isNearBottom) {
-      bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+      el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
     }
   }, [logs.length]);
 

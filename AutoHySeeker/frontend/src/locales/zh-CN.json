@@ -30,7 +30,9 @@
     "experiments": "实验记录",
     "data": "数据分析",
     "knowledge": "知识库",
-    "settings": "设置"
+    "settings": "设置",
+    "optimization": "优化循环",
+    "chat": "Agent 对话"
   },
   "overview": {
     "title": "系统总览",
@@ -113,11 +115,24 @@
     "statistics": "统计数据",
     "todayExperiments": "今日实验",
     "successRateTrend": "成功率趋势（7天）",
-    "agentUsage": "Agent 使用统计"
+    "agentUsage": "Agent 使用统计",
+    "live_dashboard": "运行状态大盘",
+    "polling_every": "刷新间隔",
+    "opt_status": "优化状态",
+    "recent_exp": "近期实验",
+    "knowledge": "知识库",
+    "system_notif": "系统通知",
+    "refresh_now": "立即刷新",
+    "initializing": "初始化...",
+    "updated": "更新于",
+    "connection_error": "连接错误",
+    "best_yield": "最佳产率 (目标)",
+    "active_experiment": "当前实验",
+    "no_notifications": "暂无新通知。"
   },
   "agents": {
     "title": "AI 助手分工",
-    "subtitle": "按科研任务理解各 AI 角色，而不是按内部实现理解系统", 
+    "subtitle": "按科研任务理解各 AI 角色，而不是按内部实现理解系统",
     "status": "状态",
     "running": "运行中",
     "idle": "空闲",
@@ -247,5 +262,39 @@
     "data": "数据",
     "analysis": "分析",
     "report": "报告"
+  },
+  "optimization": {
+    "title": "优化循环",
+    "subtitle": "AI代理驱动的实验参数持续优化",
+    "start_loop": "启动循环",
+    "stop_loop": "停止循环",
+    "target_func": "目标函数",
+    "optimizer_agent": "优化代理",
+    "max_iter": "最大迭代次数",
+    "convergence_status": "收敛状态",
+    "target_val": "目标值",
+    "current_best": "当前最佳",
+    "current_iter_details": "当前迭代详情",
+    "param_tuning": "参数调节",
+    "agent_predictions": "Agent预测与推理",
+    "latest_reasoning": "最新模型推理",
+    "action": "动作",
+    "prediction": "预测",
+    "confidence": "置信度"
+  },
+  "chat": {
+    "title": "Agent 对话",
+    "subtitle": "与运行中的助理(Agent)直接交互",
+    "active_agents": "活跃Agents",
+    "type_message": "发送消息给",
+    "send": "发送"
+  },
+  "knowledge": {
+    "title": "知识管理 / 知识库",
+    "openviking_integration": "OpenViking 知识集成",
+    "ingest": "录入新知识",
+    "assistant": "知识库助手",
+    "search_results": "搜索结果",
+    "recent_popular": "近期与热门"
   }
 }

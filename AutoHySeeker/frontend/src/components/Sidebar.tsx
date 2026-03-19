@@ -1,11 +1,14 @@
 import { NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { FlaskConical } from "lucide-react";
 
 const NAV_ITEMS = [
   { to: "/", label: "nav.overview" },
   { to: "/dashboard", label: "nav.dashboard" },
+  { to: "/optimization", label: "nav.optimization" },
+  { to: "/chat", label: "nav.chat" },
   { to: "/agents", label: "nav.agents" },
-  { to: "/knowledge", label: "知识库 Chat" },
+  { to: "/knowledge", label: "nav.knowledge" },
   { to: "/templates", label: "nav.templates" },
   { to: "/settings", label: "nav.settings" }
 ];
@@ -16,10 +19,17 @@ export function Sidebar() {
   return (
     <aside className="w-full border-b border-slate-200 bg-white/90 backdrop-blur md:w-72 md:border-b-0 md:border-r">
       <div className="p-5">
-        <h1 className="text-lg font-bold text-slate-900">AutoHySeeker</h1>
-        <p className="mt-1 text-sm text-slate-600">AI 实验管家工作台</p>
+        <div className="flex items-center gap-3">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 text-white shadow-sm flex-shrink-0">
+            <FlaskConical className="h-5 w-5" />
+          </div>
+          <div className="min-w-0">
+            <h1 className="text-lg font-extrabold text-slate-900 tracking-tight truncate">AutoHySeeker</h1>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 truncate">AI EXPERIMENT MGR</p>
+          </div>
+        </div>
 
-        <nav className="mt-6 space-y-1">
+        <nav className="mt-8 space-y-1">
           {NAV_ITEMS.map((item) => (
             <NavLink
               key={item.to}

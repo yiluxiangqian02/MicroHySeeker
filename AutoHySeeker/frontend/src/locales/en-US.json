@@ -29,8 +29,10 @@
     "templates": "Templates",
     "experiments": "Experiment Records",
     "data": "Data Analysis",
-    "knowledge": "Knowledge Base",
-    "settings": "Settings"
+    "knowledge": "Knowledge Hub",
+    "settings": "Settings",
+    "optimization": "Optimization Loop",
+    "chat": "Agent Chat"
   },
   "overview": {
     "title": "System Overview",
@@ -113,11 +115,24 @@
     "statistics": "Statistics",
     "todayExperiments": "Today's Experiments",
     "successRateTrend": "Success Rate Trend (7 days)",
-    "agentUsage": "Agent Usage Statistics"
+    "agentUsage": "Agent Usage Statistics",
+    "live_dashboard": "Live Dashboard",
+    "polling_every": "Polling every",
+    "opt_status": "Optimization Status",
+    "recent_exp": "Recent Experiments",
+    "knowledge": "Knowledge Hub",
+    "system_notif": "System Notifications",
+    "refresh_now": "Refresh now",
+    "initializing": "Initializing...",
+    "updated": "Updated",
+    "connection_error": "Connection error",
+    "best_yield": "Best Yield (Target)",
+    "active_experiment": "Active Experiment",
+    "no_notifications": "No new notifications."
   },
   "agents": {
     "title": "AI Roles",
-    "subtitle": "Understand AI helpers by research tasks, not internal architecture", 
+    "subtitle": "Understand AI helpers by research tasks, not internal architecture",
     "status": "Status",
     "running": "Running",
     "idle": "Idle",
@@ -247,5 +262,39 @@
     "data": "Data",
     "analysis": "Analysis",
     "report": "Report"
+  },
+  "optimization": {
+    "title": "Optimization Loop",
+    "subtitle": "Continuous agentic driven optimization of experiment parameters",
+    "start_loop": "Start Loop",
+    "stop_loop": "Stop Loop",
+    "target_func": "Target Function",
+    "optimizer_agent": "Optimizer Agent",
+    "max_iter": "Max Iterations",
+    "convergence_status": "Convergence Status",
+    "target_val": "Target",
+    "current_best": "Current Best",
+    "current_iter_details": "Current Iteration Details",
+    "param_tuning": "Parameter Tuning",
+    "agent_predictions": "Agent Predictions",
+    "latest_reasoning": "Latest Model Reasoning",
+    "action": "Action",
+    "prediction": "Prediction",
+    "confidence": "Confidence"
+  },
+  "chat": {
+    "title": "Agent Chat",
+    "subtitle": "Collaborate directly with active agents",
+    "active_agents": "Active Agents",
+    "type_message": "Type a message to",
+    "send": "Send"
+  },
+  "knowledge": {
+    "title": "Knowledge Hub",
+    "openviking_integration": "OpenViking Integration",
+    "ingest": "Ingest New Knowledge",
+    "assistant": "Knowledge Assistant",
+    "search_results": "Search Results",
+    "recent_popular": "Recent & Popular"
   }
 }

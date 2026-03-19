@@ -1,102 +1,126 @@
+import { useTranslation } from "react-i18next";
 import { motion } from 'framer-motion';
-import { BookOpen, FlaskConical, MessageSquare, Database, Sparkles, ArrowRightCircle } from 'lucide-react';
+import { BookOpen, FlaskConical, MessageSquare, Database, Sparkles, ArrowRightCircle, Plus } from 'lucide-react';
 import ChatWindow from '@/components/ChatWindow';
+import { KnowledgeSearchBar } from '@/components/knowledge/KnowledgeSearchBar';
+import { KnowledgeResultList } from '@/components/knowledge/KnowledgeResultList';
+import { useState } from 'react';
+import { KnowledgeItem } from '@/api/knowledge';
+
+// Mock Data for local frontend iteration, waiting for P1-20
+const MOCK_RESULTS: Array<{item: KnowledgeItem, score: number}> = [
+  {
+    score: 0.92,
+    item: {
+      id: "k1",
+      partition: "protocols",
+      title: "Standard HER Catalyst Preparation",
+      content: "Detailed procedure for preparing Ni-Fe based catalyst on carbon cloth. Includes ink formulation (5% Nafion, ethanol/water 1:3), sonication timing (30m), and drop-casting volumes to achieve 1.0 mg/cm² loading.",
+      tags: ["HER", "Preparation", "Catalyst"],
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    }
+  },
+  {
+    score: 0.85,
+    item: {
+      id: "k2",
+      partition: "faults",
+      title: "CV Curve Noise Troubleshooting",
+      content: "If the Cyclic Voltammetry (CV) curve shows high frequency noise (wavy lines), check the Ag/AgCl reference electrode connection. Secondary cause: uncompensated iR drop or trapped bubbles in the microfluidic channel.",
+      tags: ["Diagnostics", "CV", "Noise"],
+      createdAt: new Date(Date.now() - 86400000).toISOString(),
+      updatedAt: new Date(Date.now() - 86400000).toISOString()
+    }
+  }
+];
 
 export function KnowledgeHub() {
+  const { t } = useTranslation();
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchResults, setSearchResults] = useState<Array<{item: KnowledgeItem, score: number}> | null>(null);
+
+  const handleSearch = async (query: string) => {
+    if (!query) {
+      setSearchResults(null);
+      return;
+    }
+    
+    setIsSearching(true);
+    // Simulate API delay covering P1-20 integration
+    await new Promise(resolve => setTimeout(resolve, 600));
+    setSearchResults(MOCK_RESULTS);
+    setIsSearching(false);
+  };
+
   return (
     <motion.div
-      className="space-y-6 p-6"
+      className="space-y-8 p-6"
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
     >
-      <section className="overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-r from-slate-950 via-indigo-900 to-cyan-800 p-6 text-white shadow-sm">
+      <section className="overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-r from-slate-950 via-indigo-900 to-cyan-800 p-8 text-white shadow-sm">
         <div className="grid gap-6 lg:grid-cols-[1.35fr,1fr] lg:items-center">
           <div>
-            <p className="text-sm font-medium uppercase tracking-[0.2em] text-cyan-100">Knowledge Management</p>
-            <h1 className="mt-3 text-3xl font-bold">知识管理 / 知识库 Chat</h1>
-            <p className="mt-3 max-w-3xl text-sm leading-6 text-cyan-50/90">
-              这里是面向实验工作的知识入口，不再只是“有个 Chat 按钮”。现在它至少具备独立页面、稳定消息流、清晰状态提示、实验上下文和 fallback mock flow。
+            <p className="text-sm font-medium uppercase tracking-[0.2em] text-cyan-100 flex items-center gap-2">
+              <Database className="h-4 w-4" /> OpenViking Integration
             </p>
-            <div className="mt-5 flex flex-wrap gap-3 text-xs text-cyan-50/90">
-              <span className="rounded-full border border-white/20 bg-white/10 px-3 py-1.5">可直接输入并发送消息</span>
-              <span className="rounded-full border border-white/20 bg-white/10 px-3 py-1.5">后端异常时自动 fallback</span>
-              <span className="rounded-full border border-white/20 bg-white/10 px-3 py-1.5">强调实验上下文，而不是普通闲聊</span>
-            </div>
+            <h1 className="mt-3 text-3xl font-bold">{t('knowledge.title', 'Knowledge Hub')}</h1>
+            <p className="mt-3 max-w-3xl text-sm leading-6 text-cyan-50/90">
+              Vector + Structural search powered by OpenViking. Allows agents and users to efficiently fetch protocols, historical experiments, and troubleshooting methods directly into the experimentation workflow.
+            </p>
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
-            {[
-              { icon: FlaskConical, title: '问当前实验', desc: '带着 step 上下文追问 technique、参数和风险点。' },
-              { icon: Database, title: '问历史实验', desc: '把最近 run 当作经验库来查相似方案和异常。' },
-              { icon: BookOpen, title: '问知识库', desc: '把文档、方法卡片和实验经验汇成同一个入口。' },
-            ].map((item) => {
-              const Icon = item.icon;
-              return (
-                <div key={item.title} className="rounded-2xl border border-white/15 bg-white/10 p-4 backdrop-blur-sm">
-                  <div className="flex items-center gap-2 text-sm font-semibold">
-                    <Icon className="h-4 w-4" />
-                    {item.title}
-                  </div>
-                  <p className="mt-2 text-xs leading-5 text-cyan-50/85">{item.desc}</p>
-                </div>
-              );
-            })}
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1 justify-items-end">
+            <button className="flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white border border-white/20 px-5 py-2.5 rounded-xl font-medium transition backdrop-blur-sm">
+              <Plus className="h-5 w-5" />
+              Ingest New Knowledge 
+            </button>
           </div>
         </div>
       </section>
 
-      <section className="grid gap-6 xl:grid-cols-[0.72fr,1.28fr]">
+      <section className="max-w-4xl mx-auto -mt-12 relative z-10 px-4">
+        <KnowledgeSearchBar onSearch={handleSearch} isLoading={isSearching} />
+      </section>
+
+      <section className="grid gap-6 xl:grid-cols-[1fr,1fr] pt-4">
+        {/* Left Column: Search Results or Default View */}
         <div className="space-y-4">
-          <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-            <div className="flex items-center gap-2 text-slate-900">
-              <MessageSquare className="h-5 w-5 text-blue-600" />
-              <h2 className="text-lg font-semibold">现在能怎么用</h2>
-            </div>
-            <ul className="mt-4 space-y-3 text-sm leading-6 text-slate-600">
-              <li>• 围绕某个 step 提问：例如“这个 echem 步骤为什么先用 CV？”</li>
-              <li>• 围绕运行异常提问：例如“transfer 卡住时优先看什么？”</li>
-              <li>• 围绕下一轮设计提问：例如“结合最近实验，下一轮先改哪个变量？”</li>
-              <li>• 围绕历史经验提问：例如“最近和 EIS 相关的 run 有什么共性？”</li>
-            </ul>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-bold text-slate-900">
+              {searchResults ? t('knowledge.search_results', 'Search Results') : t('knowledge.recent_popular', 'Recent & Popular')}
+            </h2>
+            {searchResults && (
+              <span className="text-sm text-slate-500 bg-slate-100 px-3 py-1 rounded-full font-medium">
+                {searchResults.length} items found
+              </span>
+            )}
           </div>
-
-          <div className="rounded-2xl border border-violet-200 bg-violet-50 p-5 shadow-sm">
-            <div className="flex items-center gap-2 text-violet-900">
-              <Sparkles className="h-5 w-5" />
-              <h2 className="text-lg font-semibold">这次补齐的可用性</h2>
-            </div>
-            <ul className="mt-4 space-y-3 text-sm leading-6 text-violet-900">
-              <li>• 欢迎语 + quick actions，不再是空白聊天框。</li>
-              <li>• 明确状态提示：连接中 / 在线 / fallback / 错误。</li>
-              <li>• 本地历史兜底，后端不通也能持续展示对话。</li>
-              <li>• 实验上下文卡片让用户知道它服务于实验，而不是泛聊天。</li>
-            </ul>
-          </div>
-
-          <div className="rounded-2xl border border-cyan-200 bg-cyan-50 p-5 shadow-sm">
-            <div className="flex items-center gap-2 text-cyan-900">
-              <ArrowRightCircle className="h-5 w-5" />
-              <h2 className="text-lg font-semibold">下一阶段最值得接的是真后端能力</h2>
-            </div>
-            <ul className="mt-4 space-y-3 text-sm leading-6 text-cyan-900">
-              <li>• 实验详情页真实注入 step / run / 最近结果摘要。</li>
-              <li>• 返回 citations、相似实验和结构化建议卡片。</li>
-              <li>• 把当前会话和 experiment_id 绑定，而不只是全局历史。</li>
-            </ul>
-          </div>
+          
+          <KnowledgeResultList results={searchResults || MOCK_RESULTS} />
         </div>
 
-        <ChatWindow
-          mode="embedded"
-          contextItems={['当前实验上下文', '知识库文档 / 方法经验', '历史实验 / 最近 run', '失败复盘 / 下一轮建议']}
-          experimentContext={{
-            experimentName: 'Electrochemical sensing workflow（占位）',
-            stage: '等待接入当前 experiment / step 信息',
-            objective: '帮助用户围绕当前实验提问，而不是脱离实验背景闲聊。',
-            latestObservation: '前端已显示实验上下文卡；后端暂未返回真实 run 摘要。',
-            nextSuggestion: '可直接问 technique 选择、异常排查、相似实验或下一轮变量。',
-          }}
-        />
+        {/* Right Column: Embedded Chat & Context tools */}
+        <div className="flex flex-col h-[600px] sticky top-6">
+          <div className="flex items-center gap-2 text-slate-900 mb-4 px-2">
+            <Sparkles className="h-5 w-5 text-indigo-600" />
+            <h2 className="text-xl font-bold">{t('knowledge.assistant', 'Knowledge Assistant')}</h2>
+          </div>
+          <div className="flex-1 bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
+            <ChatWindow
+              mode="embedded"
+              contextItems={['OpenViking Vectors', 'Search Results Context', 'Historical Run Summary']}
+              experimentContext={{
+                experimentName: 'Global Knowledge Query',
+                stage: 'Ready',
+                objective: 'Help users summarize search results and ask open-ended domain questions.',
+                latestObservation: 'Agent C3 connected to OpenViking cluster.',
+                nextSuggestion: 'Try asking: "What is the relation between flow rate constraint and signal noise?"',
+              }}
+            />
+          </div>
+        </div>
       </section>
     </motion.div>
   );
