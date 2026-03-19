@@ -67,14 +67,14 @@ async def invoke_diagnostics(request: DiagnosticsRequest) -> dict[str, Any]:
 
 
 @router.post("/analyze-failure")
-async def analyze_failure_endpoint(run_dir: str) -> dict[str, Any]:
+async def analyze_failure_endpoint(run_dir: str = "") -> dict[str, Any]:
     """Shortcut to invoke D1 DiagnoseFailureSkill via the diagnostics subgraph."""
     req = DiagnosticsRequest(action="analyze_failure", run_dir=run_dir)
     return await invoke_diagnostics(req)
 
 
 @router.post("/check-health")
-async def check_health_endpoint(data_dir: str, recent_n: int = 10) -> dict[str, Any]:
+async def check_health_endpoint(data_dir: str = "", recent_n: int = 10) -> dict[str, Any]:
     """Shortcut to invoke D2 SystemHealthCheckSkill via the diagnostics subgraph."""
     req = DiagnosticsRequest(action="check_health", data_dir=data_dir, recent_n=recent_n)
     return await invoke_diagnostics(req)

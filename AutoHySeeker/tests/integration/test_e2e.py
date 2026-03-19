@@ -294,16 +294,16 @@ class TestEndToEnd:
         """Multi-agent routing: orchestrator sends tasks to correct specialists.
 
         Verifies that the supervisor graph routes three distinct task types:
-        - Data-analysis task → ``data_analyst`` agent.
+        - Data-analysis task → ``orchestrator`` agent (via DataAnalysisSkill).
         - Diagnostics/failure task → ``diagnostics`` agent.
         - Experiment-design task → ``exp_designer`` agent.
 
         LLM calls are mocked at the graph level so no real API credentials
         are needed; the routing logic itself is exercised without mocking.
         """
-        # Mock result for data_analyst
+        # Mock result for orchestrator (data analysis routed here)
         da_result = {
-            "agent": "data_analyst",
+            "agent": "orchestrator",
             "model": "mock",
             "content": "CV peak at -0.35 V; Tafel slope 62 mV/dec",
             "ok": True,
@@ -344,7 +344,7 @@ class TestEndToEnd:
             )
             assert resp_da["ok"] is True, f"Data analyst failed: {resp_da}"
             assert resp_da["result"] is not None
-            assert resp_da["result"]["agent"] == "data_analyst"
+            assert resp_da["result"]["agent"] == "orchestrator"
 
             # --- Diagnostics task ---
             resp_diag = await api_client.invoke_agent(
@@ -368,7 +368,7 @@ class TestEndToEnd:
 
         # Cross-cutting: all responses have the expected envelope keys
         for resp, label in [
-            (resp_da, "data_analyst"),
+            (resp_da, "orchestrator"),
             (resp_diag, "diagnostics"),
             (resp_design, "exp_designer"),
         ]:

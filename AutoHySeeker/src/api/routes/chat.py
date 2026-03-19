@@ -35,22 +35,24 @@ class ChatResponse(BaseModel):
 
 def classify_question(question: str) -> str:
     """
-    Classify question type to route to appropriate agent
+    Classify question type to route to appropriate agent.
+    After consolidation: data analysis and knowledge management are
+    skills of the orchestrator, so we route to "orchestrator" for those.
     """
     question_lower = question.lower()
 
-    # Data analysis keywords
+    # Data analysis keywords → orchestrator (via DataAnalysisSkill)
     analysis_keywords = ["分析", "数据", "对比", "比较", "趋势", "峰值", "电流"]
     if any(keyword in question_lower for keyword in analysis_keywords):
-        return "data_analyst"
+        return "orchestrator"
 
     # Experiment design keywords
     design_keywords = ["建议", "推荐", "优化", "设计", "参数", "如何", "怎么"]
     if any(keyword in question_lower for keyword in design_keywords):
         return "experiment_designer"
 
-    # Default to knowledge manager
-    return "knowledge_manager"
+    # Default to orchestrator (via KnowledgeArchiveSkill)
+    return "orchestrator"
 
 
 def generate_mock_response(question: str, agent_type: str, context: Optional[Dict] = None) -> str:
@@ -58,8 +60,12 @@ def generate_mock_response(question: str, agent_type: str, context: Optional[Dic
     Generate mock response based on agent type
     (In production, this would call actual agents)
     """
-    if agent_type == "data_analyst":
-        return f"""根据您的问题"{question}"，我分析了相关实验数据：
+    if agent_type == "orchestrator":
+        # Handle both data analysis and knowledge queries
+        question_lower = question.lower()
+        analysis_keywords = ["分析", "数据", "对比", "比较", "趋势", "峰值", "电流"]
+        if any(keyword in question_lower for keyword in analysis_keywords):
+            return f"""根据您的问题"{question}"，我分析了相关实验数据：
 
 **数据分析结果：**
 - 峰电流：约 45.2 μA
@@ -72,30 +78,8 @@ def generate_mock_response(question: str, agent_type: str, context: Optional[Dic
 - 如需提高灵敏度，可尝试降低扫描速率至 20 mV/s
 
 需要更详细的分析吗？"""
-
-    elif agent_type == "experiment_designer":
-        return f"""针对您的问题"{question}"，我提供以下实验建议：
-
-**推荐实验方案：**
-1. **循环伏安法 (CV)**
-   - 扫描速率：50 mV/s
-   - 电位范围：-0.2 V 到 0.8 V
-   - 循环次数：3 次
-
-2. **差分脉冲伏安法 (DPV)**
-   - 脉冲幅度：50 mV
-   - 脉冲宽度：50 ms
-   - 扫描速率：20 mV/s
-
-**注意事项：**
-- 确保电极表面清洁
-- 使用新鲜配制的缓冲液
-- 先进行空白对照实验
-
-需要更多细节吗？"""
-
-    else:  # knowledge_manager
-        return f"""关于您的问题"{question}"：
+        else:
+            return f"""关于您的问题"{question}"：
 
 **循环伏安法 (CV) 扫描速率选择指南：**
 
@@ -120,6 +104,30 @@ def generate_mock_response(question: str, agent_type: str, context: Optional[Dic
 - 根据结果调整：信号弱则降低，时间紧则提高
 
 还有其他问题吗？"""
+
+    elif agent_type == "experiment_designer":
+        return f"""针对您的问题"{question}"，我提供以下实验建议：
+
+**推荐实验方案：**
+1. **循环伏安法 (CV)**
+   - 扫描速率：50 mV/s
+   - 电位范围：-0.2 V 到 0.8 V
+   - 循环次数：3 次
+
+2. **差分脉冲伏安法 (DPV)**
+   - 脉冲幅度：50 mV
+   - 脉冲宽度：50 ms
+   - 扫描速率：20 mV/s
+
+**注意事项：**
+- 确保电极表面清洁
+- 使用新鲜配制的缓冲液
+- 先进行空白对照实验
+
+需要更多细节吗？"""
+
+    else:
+        return f"收到您的问题：{question}。请稍后，正在查询相关信息..."
 
 
 @router.post("/api/v1/chat/ask", response_model=ChatResponse)

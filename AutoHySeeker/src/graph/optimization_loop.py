@@ -280,24 +280,23 @@ class OptimizationLoop:
     async def _step_analyse(
         self, state: dict[str, Any], exec_result: dict[str, Any],
     ) -> dict[str, Any]:
-        """Ask the Analyst agent to extract metrics from completed experiment."""
-        from src.agents.data_analyst import DataAnalystAgent
-
-        analyst = DataAnalystAgent()
+        """Analyse completed experiment via Orchestrator's DataAnalysisSkill."""
         run_id = exec_result.get("run_id", "")
-
-        task = {
-            "type": "analyze_completed_experiment",
-            "run_id": run_id,
-            "target_metric": state["optimization"].get("target_metric", ""),
-        }
+        optimization = state["optimization"]
 
         try:
-            result = await analyst.invoke(task=task, context={
-                "optimization_goal": state["optimization"].get("goal", ""),
-            })
-            content = result.get("content", "")
-            return self._parse_analysis_result(content)
+            result = await self._orchestrator.analyze_experiment(
+                run_id=run_id,
+                data_path=exec_result.get("data_path", ""),
+                params=exec_result.get("params", {}),
+                target_metric=optimization.get("target_metric", ""),
+                best_result=state.get("best_result"),
+            )
+            return {
+                "metrics": result.get("metrics", {}),
+                "data_quality": result.get("data_quality", {"reliable": True}),
+                "interpretation": result.get("interpretation", ""),
+            }
         except Exception as exc:
             _logger.error("Analysis step failed: %s", exc)
             return {"metrics": {}, "data_quality": {"reliable": False}}

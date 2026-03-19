@@ -12,7 +12,7 @@ import logging
 from datetime import datetime, timezone
 from typing import Any, Dict
 
-from fastapi import APIRouter, BackgroundTasks, HTTPException
+from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 
 _logger = logging.getLogger("autohyseeker.api.optimization")
@@ -25,6 +25,54 @@ _loop_task: asyncio.Task | None = None
 _last_state: dict[str, Any] = {}    # snapshot of the most recent loop state
 _start_time: str | None = None
 _config: dict[str, Any] = {}
+
+
+class _ManagedOptimizationRun:
+    """Tracks the background optimization task for status polling and stop control."""
+
+    def __init__(self, config: dict[str, Any], start_time: str) -> None:
+        self._stop_requested = False
+        self._is_running = True
+        self._state: dict[str, Any] = {
+            "status": "starting",
+            "current_round": 0,
+            "best_result": None,
+            "experiment_history": [],
+            "errors": [],
+            "optimization": config,
+            "start_time": start_time,
+            "final_decision": None,
+        }
+
+    @property
+    def is_running(self) -> bool:
+        return self._is_running
+
+    @property
+    def current_state(self) -> dict[str, Any]:
+        return dict(self._state)
+
+    def publish(self, snapshot: dict[str, Any]) -> None:
+        self._state.update(snapshot)
+
+    def stop(self) -> None:
+        self._stop_requested = True
+        self._state["status"] = "stopping"
+
+    def should_stop(self) -> bool:
+        return self._stop_requested
+
+    def finish(self, result: dict[str, Any]) -> None:
+        if "current_round" not in result and "total_rounds" in result:
+            result = dict(result)
+            result["current_round"] = result["total_rounds"]
+        self._state.update(result)
+        self._is_running = False
+
+    def fail(self, exc: Exception) -> None:
+        self._state["status"] = "error"
+        self._state.setdefault("errors", []).append(str(exc))
+        self._is_running = False
 
 
 # ── Request / response models ─────────────────────────────────────────────────
@@ -82,7 +130,6 @@ async def get_optimization_status() -> Dict[str, Any]:
 @router.post("/start")
 async def start_optimization(
     req: OptimizationStartRequest,
-    background_tasks: BackgroundTasks,
 ) -> Dict[str, Any]:
     """Start a new optimization loop run.
 
@@ -104,12 +151,14 @@ async def start_optimization(
     _config = req.model_dump()
     _last_state = {}
     _start_time = datetime.now(timezone.utc).isoformat()
+    _loop_instance = _ManagedOptimizationRun(_config, _start_time)
+    _last_state = _loop_instance.current_state
 
     async def _run() -> None:
         global _loop_instance, _last_state
-        try:
+        def _runner() -> dict[str, Any]:
             from src.run_optimization import run_optimization
-            result = await run_optimization(
+            return asyncio.run(run_optimization(
                 goal=req.goal,
                 max_rounds=req.max_rounds,
                 target_metric=req.target_metric,
@@ -117,18 +166,24 @@ async def start_optimization(
                 template_id=req.template_id,
                 elements=req.elements,
                 dry_run=req.dry_run,
-            )
-            _last_state = {
-                "status": "completed",
-                "current_round": result.get("total_rounds", 0),
-                "best_result": result.get("best_result"),
-                "optimization": _config,
-                "errors": [],
-            }
+                progress_callback=_loop_instance.publish,
+                should_stop=_loop_instance.should_stop,
+            ))
+
+        try:
+            # Yield once so the HTTP response can flush before the loop starts heavy work.
+            await asyncio.sleep(0)
+            result = await asyncio.to_thread(_runner)
+            _loop_instance.finish(result)
+            _last_state = _loop_instance.current_state
         except Exception as exc:
             _logger.exception("Optimization loop failed")
-            _last_state["status"] = "error"
-            _last_state.setdefault("errors", []).append(str(exc))
+            if _loop_instance is not None:
+                _loop_instance.fail(exc)
+                _last_state = _loop_instance.current_state
+            else:
+                _last_state["status"] = "error"
+                _last_state.setdefault("errors", []).append(str(exc))
 
     # Launch as background task
     _loop_task = asyncio.ensure_future(_run())

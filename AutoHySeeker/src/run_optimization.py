@@ -12,7 +12,7 @@ import asyncio
 import json
 import logging
 import sys
-from typing import Any
+from typing import Any, Callable
 
 from src.common.logger import configure_logging, get_logger
 
@@ -49,6 +49,8 @@ async def run_optimization(
     template_id: str = "tpl_her_standard",
     elements: list[str] | None = None,
     dry_run: bool = False,
+    progress_callback: Callable[[dict[str, Any]], None] | None = None,
+    should_stop: Callable[[], bool] | None = None,
 ) -> dict[str, Any]:
     """Run the full optimization loop.
 
@@ -67,17 +69,13 @@ async def run_optimization(
     from src.agents.orchestrator import OrchestratorAgent
     from src.agents.exp_designer import ExperimentDesignerAgent
     from src.agents.exp_executor import ExperimentExecutorAgent
-    from src.agents.data_analyst import DataAnalystAgent
-    from src.agents.knowledge_mgr import KnowledgeManagerAgent
 
     elements = elements or ["Fe", "Co", "Ni"]
     search_space = {e: {"min": 0.05, "max": 0.9} for e in elements}
 
-    orchestrator = OrchestratorAgent()
+    orchestrator = OrchestratorAgent(archive_path="data/experiment_archive.json")
     designer = ExperimentDesignerAgent()
     executor = ExperimentExecutorAgent()
-    analyst = DataAnalystAgent()
-    knowledge = KnowledgeManagerAgent(archive_path="data/experiment_archive.json")
 
     optimization = {
         "goal": goal,
@@ -92,6 +90,21 @@ async def run_optimization(
     best_result: dict[str, Any] | None = None
     current_round = 0
     final_action = "max_rounds"
+    run_status = "running"
+
+    def publish(status: str, **extra: Any) -> None:
+        if progress_callback is None:
+            return
+        snapshot = {
+            "status": status,
+            "current_round": current_round,
+            "best_result": best_result,
+            "experiment_history": list(history),
+            "optimization": optimization,
+            "final_decision": final_action,
+        }
+        snapshot.update(extra)
+        progress_callback(snapshot)
 
     logger.info("=" * 60)
     logger.info("优化循环启动")
@@ -101,10 +114,18 @@ async def run_optimization(
     logger.info("  模板: %s", template_id)
     logger.info("  元素: %s", elements)
     logger.info("=" * 60)
+    publish("running")
 
     while current_round < max_rounds:
+        if should_stop and should_stop():
+            logger.info("收到停止请求，结束优化循环。")
+            final_action = "stopped"
+            run_status = "stopped"
+            break
+
         current_round += 1
         logger.info("\n--- 第 %d/%d 轮 ---", current_round, max_rounds)
+        publish("designing")
 
         # ── Step 1: Design ────────────────────────────────────────────────
         logger.info("[1/4] 设计实验参数...")
@@ -119,6 +140,7 @@ async def run_optimization(
             design["strategy"],
             design["params"],
         )
+        publish("executing", latest_design=design)
 
         # ── Step 2: Execute ───────────────────────────────────────────────
         logger.info("[2/4] 执行实验...")
@@ -152,6 +174,20 @@ async def run_optimization(
                 "severity": "high",
                 "details": exec_result.get("error", "unknown"),
             })
+            blocking_statuses = {"pre_check_failed", "validation_failed"}
+            if exec_result.get("status") in blocking_statuses:
+                logger.error("Blocking execution failure: %s", exec_result)
+                history.append({
+                    "round": current_round,
+                    "params": design["params"],
+                    "metrics": {},
+                    "status": "failed",
+                    "data_quality": {"reliable": False, "score": 0},
+                })
+                final_action = "blocked"
+                run_status = "blocked"
+                publish(run_status, last_execution=exec_result)
+                break
             decision = await orchestrator.handle_anomaly(
                 anomaly=anomaly,
                 optimization=optimization,
@@ -170,17 +206,35 @@ async def run_optimization(
                 "status": "failed",
                 "data_quality": {"reliable": False, "score": 0},
             })
+            publish("running", last_execution=exec_result)
             continue
+
+        if should_stop and should_stop():
+            logger.info("执行完成后收到停止请求，结束优化循环。")
+            final_action = "stopped"
+            run_status = "stopped"
+            break
 
         # ── Step 3: Analyse ───────────────────────────────────────────────
         logger.info("[3/4] 分析实验数据...")
-        analysis = await analyst.analyze_experiment(
-            run_id=exec_result.get("run_id", ""),
-            data_path=exec_result.get("data_path", ""),
-            params=design["params"],
-            target_metric=target_metric,
-            best_result=best_result,
-        )
+        publish("analyzing", last_execution=exec_result)
+        if dry_run:
+            analysis = _simulate_dry_run_analysis(
+                params=design["params"],
+                current_round=current_round,
+                target_metric=target_metric,
+                direction=direction,
+                orchestrator=orchestrator,
+                best_result=best_result,
+            )
+        else:
+            analysis = await orchestrator.analyze_experiment(
+                run_id=exec_result.get("run_id", ""),
+                data_path=exec_result.get("data_path", ""),
+                params=design["params"],
+                target_metric=target_metric,
+                best_result=best_result,
+            )
         logger.info(
             "  指标: %s | 质量: %.2f | 可靠: %s",
             analysis.get("metrics", {}),
@@ -200,7 +254,7 @@ async def run_optimization(
         history.append(entry)
 
         # Archive to knowledge base
-        await knowledge.archive_experiment(
+        await orchestrator.archive_experiment(
             run_id=exec_result.get("run_id", ""),
             params=design["params"],
             metrics=analysis.get("metrics", {}),
@@ -210,6 +264,7 @@ async def run_optimization(
 
         # ── Step 4: Evaluate & Decide ─────────────────────────────────────
         logger.info("[4/4] 评估结果...")
+        publish("evaluating", latest_analysis=analysis)
         best_result = orchestrator.update_best_result(history, optimization)
         decision = await orchestrator.evaluate_and_decide(
             optimization=optimization,
@@ -228,9 +283,11 @@ async def run_optimization(
         if decision["action"] == "stop":
             logger.info("优化停止: %s", decision.get("reason"))
             final_action = decision["action"]
+            run_status = "completed"
             break
 
         final_action = decision["action"]
+        publish("running", latest_decision=decision)
 
     # ── Summary ───────────────────────────────────────────────────────────
     logger.info("\n" + "=" * 60)
@@ -242,11 +299,62 @@ async def run_optimization(
         logger.info("  来自第 %s 轮", best_result.get("round"))
     logger.info("=" * 60)
 
+    if run_status == "running":
+        run_status = "completed"
+    publish(run_status)
+
     return {
+        "status": run_status,
         "total_rounds": current_round,
         "best_result": best_result,
+        "experiment_history": history,
         "history_count": len(history),
         "final_decision": final_action,
+    }
+
+
+def _simulate_dry_run_analysis(
+    params: dict[str, float],
+    current_round: int,
+    target_metric: str,
+    direction: str,
+    orchestrator: Any,
+    best_result: dict[str, Any] | None,
+) -> dict[str, Any]:
+    """Generate deterministic synthetic metrics for dry-run validation."""
+    optimum = {"Fe": 0.5, "Co": 0.3, "Ni": 0.2}
+    distance = sum(abs(params.get(element, 0.0) - optimum[element]) for element in optimum)
+    overpotential = round(165 + distance * 180 + max(0, 12 - current_round * 2), 2)
+    current_density = round(max(1.0, 24 - distance * 20 - current_round * 0.5), 2)
+    tafel_slope = round(58 + distance * 65, 2)
+    onset = round(-0.08 - distance * 0.18, 3)
+
+    metrics = {
+        "overpotential_mV": overpotential,
+        "current_density_mA_cm2": current_density,
+        "tafel_slope_mV_dec": tafel_slope,
+        "onset_potential_V": onset,
+    }
+
+    if target_metric not in metrics:
+        metrics[target_metric] = (
+            overpotential if direction == "minimize" else current_density
+        )
+
+    analysis_skill = orchestrator._analysis_skill
+    quality = analysis_skill.assess_quality(metrics, "dry_run")
+    comparison = {}
+    if best_result:
+        comparison = analysis_skill.compare_with_best(metrics, best_result, target_metric)
+
+    return {
+        "status": "analyzed",
+        "run_id": f"dry_run_{current_round:03d}",
+        "params": params,
+        "metrics": metrics,
+        "data_quality": quality,
+        "interpretation": "dry-run synthetic analysis",
+        "comparison": comparison,
     }
 
 

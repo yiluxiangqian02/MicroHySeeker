@@ -1,30 +1,19 @@
-# AutoHySeeker Agent 模型配置
-# 每个 Agent 使用独立的 API Key 以便单独追踪使用量
-# 最后更新：2026-03-09
+# AutoHySeeker Agent 模型配置 (4-Agent 架构)
+# 精简后保留 4 个独立 Agent，DataAnalyst / KnowledgeManager / ExperimentSupervisor
+# 已降级为 Orchestrator 内部 Skill（不再使用独立 LLM 调用）
+# 最后更新：2026-03-18
 
-[data_analyst]
-name = "数据分析 Agent"
+[orchestrator]
+name = "运行管控 Agent（含数据分析 + 知识管理 Skill）"
 provider = "openai"
-model = "bigmodel/GLM-4.7"
+model = "ali/qwen3-max-2026-01-23"
 base_url = "https://api.mcxhm.cn"
-api_key = "fqwZFpnDUd_r8qdY7WOh-ra02TtvuGiIDUyqttcG1MEzi_UAj6D399A1fT6eR51CuisNshb3byhytwIjhqgS5uQzoajhoGnoXWYB"
+api_key = "p-B-_iUEnxAxkA79KsSUtKZNYTW_ntnLpqT9iirKwdQ7XybfnIuqz5fgqC612934rICbjzPQtoazDMjF3cSA9jyhaQhyJSoXz7-v"
 temperature = 0.1
-max_tokens = 2000
-pricing_input = 2.0   # ¥/M tokens
-pricing_output = 8.0  # ¥/M tokens
-context_window = 200000
-
-[diagnostics_expert]
-name = "故障诊断 Agent"
-provider = "openai"
-model = "bigmodel/GLM-4.6 Thinking"
-base_url = "https://api.mcxhm.cn"
-api_key = "oHsCKCRb2bVT8t8_6EbCElKLDARFJ0Vs0O5D6HEAhowh_LAd9jSPyCFlnR97tVagyb8XM5H9b68UZN9WZRaeWXFUQw_095k_g9ID"
-temperature = 0.1
-max_tokens = 1000
-pricing_input = 2.0
-pricing_output = 8.0
-context_window = 200000
+max_tokens = 1500
+pricing_input = 2.5
+pricing_output = 10.0
+context_window = 256000
 
 [experiment_designer]
 name = "实验设计 Agent"
@@ -38,42 +27,6 @@ pricing_input = 3.45   # $0.50 * 6.89
 pricing_output = 20.68 # $3.00 * 6.89
 context_window = 1049000
 
-[experiment_supervisor]
-name = "实验监控 Agent"
-provider = "openai"
-model = "ali/qwen3-max-2026-01-23"
-base_url = "https://api.mcxhm.cn"
-api_key = "p-B-_iUEnxAxkA79KsSUtKZNYTW_ntnLpqT9iirKwdQ7XybfnIuqz5fgqC612934rICbjzPQtoazDMjF3cSA9jyhaQhyJSoXz7-v"
-temperature = 0.1
-max_tokens = 800
-pricing_input = 2.5
-pricing_output = 10.0
-context_window = 256000
-
-[knowledge_manager]
-name = "知识管理 Agent"
-provider = "openai"
-model = "google/gemini-3-flash-preview"
-base_url = "https://api.mcxhm.cn"
-api_key = "pCmsFd7W6_pSaXvwq3KZQnX40_VBy90Vbsk_-8laWXruYZKUFHsby19O3lAN7UKgr4tSa3sftxJakKVw-MJt_Z1WjAVyYLf16iA0"
-temperature = 0.2
-max_tokens = 3000
-pricing_input = 3.45
-pricing_output = 20.68
-context_window = 1049000
-
-[orchestrator]
-name = "运行管控 Agent"
-provider = "openai"
-model = "ali/qwen3-max-2026-01-23"
-base_url = "https://api.mcxhm.cn"
-api_key = "p-B-_iUEnxAxkA79KsSUtKZNYTW_ntnLpqT9iirKwdQ7XybfnIuqz5fgqC612934rICbjzPQtoazDMjF3cSA9jyhaQhyJSoXz7-v"
-temperature = 0.1
-max_tokens = 1500
-pricing_input = 2.5
-pricing_output = 10.0
-context_window = 256000
-
 [experiment_executor]
 name = "实验执行 Agent"
 provider = "openai"
@@ -85,3 +38,15 @@ max_tokens = 1000
 pricing_input = 2.5
 pricing_output = 10.0
 context_window = 256000
+
+[diagnostics_expert]
+name = "故障诊断 Agent"
+provider = "openai"
+model = "bigmodel/GLM-4.6 Thinking"
+base_url = "https://api.mcxhm.cn"
+api_key = "oHsCKCRb2bVT8t8_6EbCElKLDARFJ0Vs0O5D6HEAhowh_LAd9jSPyCFlnR97tVagyb8XM5H9b68UZN9WZRaeWXFUQw_095k_g9ID"
+temperature = 0.1
+max_tokens = 1000
+pricing_input = 2.0
+pricing_output = 8.0
+context_window = 200000

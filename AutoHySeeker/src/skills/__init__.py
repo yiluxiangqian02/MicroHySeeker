@@ -1,68 +1,45 @@
-"""Built-in skills for AutoHySeeker."""
+"""Lazy exports for built-in skills."""
 
-from src.skills.analyze_cv import analyze_cv_skill
-from src.skills.diagnose_exp import diagnose_experiment_skill
-from src.skills.diagnostics import (
-    DiagnoseFailureSkill,
-    InteractiveTroubleshootingSkill,
-    SystemHealthCheckSkill,
-    diagnose_failure_skill,
-    interactive_troubleshooting_skill,
-    system_health_check_skill,
-)
-from src.skills.single_experiment_analysis import (
-    SingleExperimentAnalysisSkill,
-    single_experiment_analysis_skill,
-)
-from src.skills.generate_experiment_plan import (
-    GenerateExperimentPlanSkill,
-    generate_experiment_plan_skill,
-)
-from src.skills.contextualize_experiment import (
-    ContextualizeExperimentSkill,
-    contextualize_experiment_skill,
-)
-from src.skills.suggest_next_experiment import (
-    SuggestNextExperimentSkill,
-    suggest_next_experiment_skill,
-)
-from src.skills.experiment_execution import (
-    ExecutionMonitorSkill,
-    SmartSchedulerSkill,
-    execution_monitor_skill,
-    smart_scheduler_skill,
-)
+from __future__ import annotations
 
-__all__ = [
-    # Legacy function-based skills
-    "analyze_cv_skill",
-    "diagnose_experiment_skill",
-    # D1 — rule-based failure diagnosis
-    "DiagnoseFailureSkill",
-    "diagnose_failure_skill",
-    # D2 — system health check
-    "SystemHealthCheckSkill",
-    "system_health_check_skill",
-    # D3 — interactive troubleshooting
-    "InteractiveTroubleshootingSkill",
-    "interactive_troubleshooting_skill",
-    # A1 — single experiment analysis
-    "SingleExperimentAnalysisSkill",
-    "single_experiment_analysis_skill",
-    # B1 — generate experiment plan
-    "GenerateExperimentPlanSkill",
-    "generate_experiment_plan_skill",
-    # C1 — OpenViking-backed experiment contextualization
-    "ContextualizeExperimentSkill",
-    "contextualize_experiment_skill",
-    # C2 — rule-based next-experiment suggestion
-    "SuggestNextExperimentSkill",
-    "suggest_next_experiment_skill",
-    # A1 — execution monitor (post-run quality assessment)
-    "ExecutionMonitorSkill",
-    "execution_monitor_skill",
-    # A2 — smart scheduler (multi-experiment dependency-aware scheduling)
-    "SmartSchedulerSkill",
-    "smart_scheduler_skill",
-]
+from importlib import import_module
+from typing import Any
 
+_EXPORTS = {
+    "analyze_cv_skill": "src.skills.analyze_cv",
+    "diagnose_experiment_skill": "src.skills.diagnose_exp",
+    "DiagnoseFailureSkill": "src.skills.diagnostics",
+    "InteractiveTroubleshootingSkill": "src.skills.diagnostics",
+    "SystemHealthCheckSkill": "src.skills.diagnostics",
+    "diagnose_failure_skill": "src.skills.diagnostics",
+    "interactive_troubleshooting_skill": "src.skills.diagnostics",
+    "system_health_check_skill": "src.skills.diagnostics",
+    "SingleExperimentAnalysisSkill": "src.skills.single_experiment_analysis",
+    "single_experiment_analysis_skill": "src.skills.single_experiment_analysis",
+    "GenerateExperimentPlanSkill": "src.skills.generate_experiment_plan",
+    "generate_experiment_plan_skill": "src.skills.generate_experiment_plan",
+    "ContextualizeExperimentSkill": "src.skills.contextualize_experiment",
+    "contextualize_experiment_skill": "src.skills.contextualize_experiment",
+    "SuggestNextExperimentSkill": "src.skills.suggest_next_experiment",
+    "suggest_next_experiment_skill": "src.skills.suggest_next_experiment",
+    "ExecutionMonitorSkill": "src.skills.experiment_execution",
+    "RealtimeMonitorSkill": "src.skills.experiment_execution",
+    "SmartSchedulerSkill": "src.skills.experiment_execution",
+    "execution_monitor_skill": "src.skills.experiment_execution",
+    "realtime_monitor_skill": "src.skills.experiment_execution",
+    "smart_scheduler_skill": "src.skills.experiment_execution",
+    "DataAnalysisSkill": "src.skills.data_analysis_skill",
+    "data_analysis_skill": "src.skills.data_analysis_skill",
+    "KnowledgeArchiveSkill": "src.skills.knowledge_archive_skill",
+    "knowledge_archive_skill": "src.skills.knowledge_archive_skill",
+}
+
+__all__ = list(_EXPORTS)
+
+
+def __getattr__(name: str) -> Any:
+    module_name = _EXPORTS.get(name)
+    if module_name is None:
+        raise AttributeError(name)
+    module = import_module(module_name)
+    return getattr(module, name)

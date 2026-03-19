@@ -153,11 +153,11 @@ class TestAgentsRoutes:
 
     def _mock_graph(self, result_payload: dict[str, Any] | None = None) -> MagicMock:
         """Return a mock graph with ainvoke that returns a valid state."""
-        payload = result_payload or {"agent": "data_analyst", "content": "analysis", "ok": True}
+        payload = result_payload or {"agent": "orchestrator", "content": "analysis", "ok": True}
         mock_graph = MagicMock()
         mock_graph.ainvoke = AsyncMock(return_value={
             "messages": [],
-            "current_agent": "data_analyst",
+            "current_agent": "orchestrator",
             "task": {},
             "context": {},
             "error": None,
@@ -231,9 +231,9 @@ class TestAgentsRoutes:
         assert response.status_code == 500
 
     def test_invoke_agent_with_data_analyst_task(self, client: TestClient) -> None:
-        """Smoke test with realistic data_analyst task payload."""
+        """Smoke test with realistic data analysis task payload (now routed to orchestrator)."""
         result_payload = {
-            "agent": "data_analyst",
+            "agent": "orchestrator",
             "model": "claude-opus-4.6",
             "content": "CV analysis: peak at -0.35V",
             "ok": True,

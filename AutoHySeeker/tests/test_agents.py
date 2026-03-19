@@ -157,31 +157,6 @@ class TestBaseAgent:
 
 # ── Specialist Agents ─────────────────────────────────────────────────────────
 
-class TestDataAnalystAgent:
-    def test_import(self) -> None:
-        from src.agents.data_analyst import DataAnalystAgent
-        assert DataAnalystAgent is not None
-
-    def test_name_is_data_analyst(self) -> None:
-        from src.agents.data_analyst import DataAnalystAgent
-        agent = DataAnalystAgent()
-        assert agent.name == "data_analyst"
-
-    def test_system_prompt_contains_cv_eis(self) -> None:
-        from src.agents.data_analyst import DataAnalystAgent
-        agent = DataAnalystAgent()
-        prompt_lower = agent.system_prompt.lower()
-        assert "cv" in prompt_lower or "eis" in prompt_lower
-
-    def test_invoke_returns_expected_keys(self) -> None:
-        from src.agents.data_analyst import DataAnalystAgent
-        agent = DataAnalystAgent()
-        with patch("src.agents.base.chat_completion", new=AsyncMock(return_value="peaks found")):
-            result = run_async(agent.invoke(task={"intent": "analyze cv"}))
-        assert set(result.keys()) >= {"agent", "model", "content"}
-        assert result["content"] == "peaks found"
-
-
 class TestDiagnosticsExpertAgent:
     def test_import(self) -> None:
         from src.agents.diagnostics import DiagnosticsExpertAgent
@@ -229,52 +204,15 @@ class TestExperimentDesignerAgent:
         assert result["content"] == "design plan"
 
 
-class TestExperimentSupervisorAgent:
+class TestExperimentExecutorAgent:
     def test_import(self) -> None:
-        from src.agents.exp_supervisor import ExperimentSupervisorAgent
-        assert ExperimentSupervisorAgent is not None
+        from src.agents.exp_executor import ExperimentExecutorAgent
+        assert ExperimentExecutorAgent is not None
 
-    def test_name_is_exp_supervisor(self) -> None:
-        from src.agents.exp_supervisor import ExperimentSupervisorAgent
-        agent = ExperimentSupervisorAgent()
-        assert agent.name == "exp_supervisor"
-
-    def test_system_prompt_mentions_coordinate(self) -> None:
-        from src.agents.exp_supervisor import ExperimentSupervisorAgent
-        agent = ExperimentSupervisorAgent()
-        prompt_lower = agent.system_prompt.lower()
-        assert "coordinat" in prompt_lower or "supervis" in prompt_lower or "lifecycle" in prompt_lower
-
-    def test_invoke_mocked(self) -> None:
-        from src.agents.exp_supervisor import ExperimentSupervisorAgent
-        agent = ExperimentSupervisorAgent()
-        with patch("src.agents.base.chat_completion", new=AsyncMock(return_value="supervised")):
-            result = run_async(agent.invoke(task={"type": "monitor"}))
-        assert result["content"] == "supervised"
-
-
-class TestKnowledgeManagerAgent:
-    def test_import(self) -> None:
-        from src.agents.knowledge_mgr import KnowledgeManagerAgent
-        assert KnowledgeManagerAgent is not None
-
-    def test_name_is_knowledge_mgr(self) -> None:
-        from src.agents.knowledge_mgr import KnowledgeManagerAgent
-        agent = KnowledgeManagerAgent()
-        assert agent.name == "knowledge_mgr"
-
-    def test_system_prompt_mentions_knowledge(self) -> None:
-        from src.agents.knowledge_mgr import KnowledgeManagerAgent
-        agent = KnowledgeManagerAgent()
-        assert "knowledge" in agent.system_prompt.lower()
-
-    def test_invoke_mocked(self) -> None:
-        from src.agents.knowledge_mgr import KnowledgeManagerAgent
-        agent = KnowledgeManagerAgent()
-        with patch("src.agents.base.chat_completion", new=AsyncMock(return_value="knowledge summary")):
-            result = run_async(agent.invoke(task={"query": "HER catalyst"}))
-        assert result["agent"] == "knowledge_mgr"
-        assert result["content"] == "knowledge summary"
+    def test_name_is_exp_executor(self) -> None:
+        from src.agents.exp_executor import ExperimentExecutorAgent
+        agent = ExperimentExecutorAgent()
+        assert agent.name == "exp_executor"
 
 
 # ── agents __init__ exports ────────────────────────────────────────────────────
@@ -282,11 +220,10 @@ class TestKnowledgeManagerAgent:
 class TestAgentConfigLoading:
     def test_all_agents_load_repo_config_and_log_api_key_prefix(self) -> None:
         from src.agents import (
-            DataAnalystAgent,
             DiagnosticsExpertAgent,
             ExperimentDesignerAgent,
-            ExperimentSupervisorAgent,
-            KnowledgeManagerAgent,
+            ExperimentExecutorAgent,
+            OrchestratorAgent,
         )
         from src.common.config import PROJECT_ROOT
 
@@ -295,11 +232,10 @@ class TestAgentConfigLoading:
             parsed = tomllib.load(fh)
 
         cases = [
-            (DataAnalystAgent, "data_analyst"),
+            (OrchestratorAgent, "orchestrator"),
             (DiagnosticsExpertAgent, "diagnostics_expert"),
             (ExperimentDesignerAgent, "experiment_designer"),
-            (ExperimentSupervisorAgent, "experiment_supervisor"),
-            (KnowledgeManagerAgent, "knowledge_manager"),
+            (ExperimentExecutorAgent, "experiment_executor"),
         ]
 
         for agent_cls, section_name in cases:
@@ -325,35 +261,31 @@ class TestAgentConfigLoading:
 class TestAgentsInit:
     def test_all_agents_importable_from_package(self) -> None:
         from src.agents import (
-            DataAnalystAgent,
             DiagnosticsExpertAgent,
             ExperimentDesignerAgent,
-            ExperimentSupervisorAgent,
-            KnowledgeManagerAgent,
+            ExperimentExecutorAgent,
+            OrchestratorAgent,
         )
         for cls in (
-            DataAnalystAgent,
             DiagnosticsExpertAgent,
             ExperimentDesignerAgent,
-            ExperimentSupervisorAgent,
-            KnowledgeManagerAgent,
+            ExperimentExecutorAgent,
+            OrchestratorAgent,
         ):
             assert cls is not None
 
     def test_all_agents_are_base_agent_subclasses(self) -> None:
         from src.agents.base import BaseAgent
         from src.agents import (
-            DataAnalystAgent,
             DiagnosticsExpertAgent,
             ExperimentDesignerAgent,
-            ExperimentSupervisorAgent,
-            KnowledgeManagerAgent,
+            ExperimentExecutorAgent,
+            OrchestratorAgent,
         )
         for cls in (
-            DataAnalystAgent,
             DiagnosticsExpertAgent,
             ExperimentDesignerAgent,
-            ExperimentSupervisorAgent,
-            KnowledgeManagerAgent,
+            ExperimentExecutorAgent,
+            OrchestratorAgent,
         ):
             assert issubclass(cls, BaseAgent)

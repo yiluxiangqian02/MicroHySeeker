@@ -1,5 +1,7 @@
 # 01 运行管控 Agent (Orchestrator)
 
+> **最后更新：2026-03-18 — Phase 10 架构精简**
+
 ## 1. 定位
 
 **运行管控 Agent 是整个 Multi-Agent 系统的大脑。**
@@ -10,8 +12,19 @@
 - 跟踪优化进度
 - 做出"下一步做什么"的决策
 - 异常时协调故障排查
+- **通过内置 Skill 完成数据分析和知识管理**（Phase 10 新增）
 
 类比：它是实验室的 **项目负责人 (PI)**，指挥但不亲自操作。
+
+### 内置 Skill（Phase 10 新增）
+
+| Skill | 文件 | 功能 |
+|-------|------|------|
+| `DataAnalysisSkill` | `skills/data_analysis_skill.py` | 电化学指标提取、质量评估、历史对比 |
+| `KnowledgeArchiveSkill` | `skills/knowledge_archive_skill.py` | 实验归档、文献/历史检索 |
+
+这两个 Skill 原为独立 Agent（DataAnalystAgent、KnowledgeManagerAgent），
+因其逻辑为确定性/模板化操作（无需独立 LLM 推理），已转为 Orchestrator 的内置技能。
 
 ---
 
@@ -30,8 +43,9 @@
 ### 不负责的工作
 - ❌ 不生成实验参数（Designer 的工作）
 - ❌ 不执行实验（Executor 的工作）
-- ❌ 不分析数据（Analyst 的工作）
 - ❌ 不诊断故障（Diagnostics 的工作）
+
+> 注意：数据分析和知识管理现在由 Orchestrator 内置 Skill 完成，不再是独立 Agent。
 
 ---
 
@@ -95,10 +109,12 @@
 
 | 文件 | 状态 | 说明 |
 |------|------|------|
-| `graph/orchestrator.py` | ✅ 完整 | LangGraph 图构建 + 回退机制 |
-| `graph/nodes.py` | ✅ 完整 | 路由节点 + Agent 调用器 |
+| `graph/orchestrator.py` | ✅ 完整 | LangGraph 图构建 — 4 Agent 节点 + 回退机制 |
+| `graph/nodes.py` | ✅ 完整 | 路由节点 + _AGENT_ALIASES 向后兼容 |
 | `graph/state.py` | ✅ 基础 | AutoHySeekerState TypedDict |
-| `agents/exp_supervisor.py` | ✅ 完整 | 314行，含监控/调度逻辑 |
+| `agents/orchestrator.py` | ✅ 完整 | 决策/异常处理 + DataAnalysisSkill + KnowledgeArchiveSkill |
+| `skills/data_analysis_skill.py` | ✅ 完整 | 指标提取、质量评估、历史对比 |
+| `skills/knowledge_archive_skill.py` | ✅ 完整 | 归档、检索、文献知识 |
 
 ### 问题分析
 
@@ -279,7 +295,7 @@ def build_optimization_subgraph():
 
 ---
 
-## 8. 与其他 Agent 的交互
+## 8. 与其他 Agent / Skill 的交互
 
 ```
 Orchestrator ──task──▶ Designer
@@ -288,14 +304,15 @@ Orchestrator ──task──▶ Designer
 Orchestrator ──task──▶ Executor
     "执行实验，模板: tpl_xxx，参数覆盖: {concentrations: {...}}"
 
-Orchestrator ──task──▶ Analyst
-    "分析 run_id=xxx 的电化学数据，提取 overpotential 和 current_density"
+Orchestrator ──skill──▶ DataAnalysisSkill (内置)
+    analyze_experiment(run_id, data_path, params, target_metric, best_result)
 
 Orchestrator ──task──▶ Diagnostics
     "诊断异常: {type: 'pump_timeout', pump_addr: 3, error_msg: '...'}"
 
-Orchestrator ──query──▶ Knowledge
-    "检索 Fe-Co-Ni 催化剂的已知最优配比范围"
+Orchestrator ──skill──▶ KnowledgeArchiveSkill (内置)
+    archive_experiment(run_id, params, metrics, interpretation)
+    retrieve_knowledge(query, search_type, top_k)
 
 Designer ──result──▶ Orchestrator
     {params: {Fe: 0.3, Co: 0.5, Ni: 0.2}, strategy: "bayesian", confidence: 0.8}
@@ -305,9 +322,6 @@ Executor ──result──▶ Orchestrator
 
 Executor ──alert──▶ Orchestrator
     {severity: "medium", type: "pump_speed_deviation", details: {...}}
-
-Analyst ──result──▶ Orchestrator
-    {metrics: {overpotential_mV: 182.5, j_mA_cm2: 15.3}, quality: "good"}
 
 Diagnostics ──result──▶ Orchestrator
     {resolved: true, action_taken: "重启串口连接", recommendation: "检查 COM3 线缆"}

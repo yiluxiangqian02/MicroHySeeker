@@ -1,87 +1,101 @@
-# AutoHySeeker 规划文档导航
+# AutoHySeeker 文档导航
 
-> 2026-02-27 | 文档体系 v3.0 — 新增前后端开发指南、创新提案
+> 2026-03-18 | 文档体系 v4.0 — 多 Agent 实验闭环 + 科研产出
 
 ---
 
 ## 项目简介
 
-AutoHySeeker 是与 MicroHySeeker（微流控电化学实验桌面端）配套的 **AI 多 Agent 科研助手系统**。基于 LangGraph 编排 5 个专家 Agent，覆盖实验执行监控、故障诊断、数据分析、实验设计、知识管理全流程。
+AutoHySeeker 是 MicroHySeeker（微流控电化学实验桌面端）的 AI 多 Agent 科研助手。基于 LangGraph 编排 Agent，覆盖实验设计、执行监控、数据分析、故障诊断、知识管理、文献检索、科研产出全流程。
 
-**核心理念**：充分利用开源生态（OpenViking、SkillsMCP 等）加速构建，而非从零造轮子。
+前端形态：PySide6 嵌入式 Dashboard（嵌入 MicroHySeeker 主窗口右侧面板）。
 
 ---
 
 ## 文档阅读顺序
 
-```
-1. 系统总览         → architecture_overview.md        （项目定位、四层架构、交互方式）
-2. 开源集成策略     → open_source_integration.md      （OpenViking、SkillsMCP、复用策略）
-3. 创新提案         → innovation_proposals.md          （OpenViking 魔改方案、学术创新点）
-4. 编排架构         → langgraph_architecture.md        （State 设计、Graph 拓扑、编排逻辑）
-5. 工具与技能规格   → skills_architecture.md           （Tool 清单、Skill 详细设计、依赖关系）
-6. 后端开发指南     → dev_backend.md                   （FastAPI + LangGraph + OpenViking 服务端）
-7. 前端开发指南     → dev_frontend.md                  （React + WebSocket Web 前端）
-8. Agent 开发指南（按优先级）：
-   ├── P1: dev_agent_diagnostics_expert.md   → dev_agent_experiment_supervisor.md
-   ├── P2: dev_agent_data_analyst.md
-   ├── P3: dev_agent_knowledge_manager.md    → dev_agent_experiment_designer.md
-   └── 路由: dev_agent_orchestrator.md
-9. 项目路线图       → project_plan.md                  （优先级、四阶段路线图、依赖、配置）
-10. 未来规划        → literature_automation_plan.md     （文献自动获取，暂不实施）
-```
+### 第一步：理解架构（5 分钟）
+
+| 顺序 | 文档 | 内容 |
+| --- | --- | --- |
+| 1 | `multiagent_00_architecture.md` | 系统总览：4 Agent 架构、交互流程 |
+| 2 | `multiagent_01_orchestrator.md` | Orchestrator 详设：决策引擎、人机协作 |
+| 3 | `multiagent_02_experiment_designer.md` | Designer 详设：三阶段策略、ML 切换 |
+| 4 | `multiagent_03_experiment_executor.md` | Executor 详设：两层监控、实验执行 |
+| 5 | `multiagent_05_diagnostics.md` | Diagnostics 详设：故障模式库 |
+
+### 第二步：了解规划（10 分钟）
+
+| 顺序 | 文档 | 内容 |
+| --- | --- | --- |
+| 6 | `PLAN_PHASE1_EXPERIMENT_LOOP.md` | Phase 1 后端规划：5 Agent + 5 Skill + 22 步实施 |
+| 7 | `PLAN_PHASE2_RESEARCH_OUTPUT.md` | Phase 2 后端规划：LiteratureAgent + ResearchAnalystAgent |
+| 8 | `UI_PLAN_V3.md` | 前端规划：10 Tab Dashboard（Phase 1 + Phase 2） |
+
+### 第三步：开始开发
+
+| 顺序 | 文档 | 内容 |
+| --- | --- | --- |
+| 9 | `COLLABORATION_GUIDE.md` | 多端协作规范：认领规则、冲突避免、提交格式 |
+| 10 | `PROGRESS_TRACKER.md` | 实时进度：后端 P1-01~P1-22 + 前端 F1-01~F2-05 |
+| 11 | `VALIDATION_AND_TESTING_GUIDE.md` | 测试验证指南 |
 
 ---
 
-## 文档职责矩阵（每个主题只有一个归属文档）
+## 文档职责矩阵
 
-| 主题                                | **唯一归属文档**             | 说明                           |
-| ----------------------------------- | ---------------------------------- | ------------------------------ |
-| 项目定位、与 MicroHySeeker 关系     | `architecture_overview.md`       | 四层架构、交互模式             |
-| OpenViking / SkillsMCP / 开源策略   | `open_source_integration.md`     | 引入评估、替换映射、改造方案   |
-| OpenViking 魔改创新提案             | `innovation_proposals.md`        | 5 个创新提案、优先级排序       |
-| Agent 清单与职责总览                | `langgraph_architecture.md` §二 | 6 个 Agent 的职责和协作        |
-| **所有 State TypedDict 定义** | `langgraph_architecture.md` §三 | 其他文档引用此处               |
-| **所有 Graph 拓扑定义**       | `langgraph_architecture.md` §四 | 其他文档引用此处               |
-| Tool 函数清单（输入/输出/依赖）     | `skills_architecture.md` §二    | 全部 50+ Tool 函数             |
-| Skill 详细设计（流程/依赖/LLM角色） | `skills_architecture.md` §三    | 全部 17 个 Skill               |
-| Skill ↔ Tool ↔ 外部库关系表       | `skills_architecture.md` §四    | 一张总表                       |
-| **后端架构与 API 设计**       | `dev_backend.md`                 | FastAPI、LangGraph、OpenViking 适配层、IPC |
-| **前端架构与组件设计**        | `dev_frontend.md`                | React、WebSocket、电化学图表组件 |
-| Agent 节点函数实现                  | 各 `dev_agent_*.md`              | 每个 Agent 一份独立开发指南    |
-| System Prompt 设计                  | 各 `dev_agent_*.md`              | Agent 专属 Prompt              |
-| 测试计划                            | 各 `dev_agent_*.md`              | 每个 Agent 的测试清单          |
-| **优先级排序与路线图**        | `project_plan.md`                | 四阶段路线图+周粒度清单        |
-| **项目结构与依赖**            | `project_plan.md`                | 目录结构、pyproject.toml、配置 |
-| 文献自动化管线                      | `literature_automation_plan.md`  | 独立规划，暂不实施             |
+| 主题 | 唯一归属文档 |
+| --- | --- |
+| 系统架构、Agent 职责 | `multiagent_00_architecture.md` |
+| Orchestrator 详设 | `multiagent_01_orchestrator.md` |
+| Designer 详设 | `multiagent_02_experiment_designer.md` |
+| Executor 详设 | `multiagent_03_experiment_executor.md` |
+| Diagnostics 详设 | `multiagent_05_diagnostics.md` |
+| Phase 1 后端实施计划 | `PLAN_PHASE1_EXPERIMENT_LOOP.md` |
+| Phase 2 后端实施计划 | `PLAN_PHASE2_RESEARCH_OUTPUT.md` |
+| 前端 UI 技术方案 | `UI_PLAN_V3.md` |
+| 协作规范 | `COLLABORATION_GUIDE.md` |
+| 开发进度追踪 | `PROGRESS_TRACKER.md` |
+| 测试验证 | `VALIDATION_AND_TESTING_GUIDE.md` |
 
 ---
 
-## 关键架构决策记录（ADR）
+## 任务编号体系
 
-| #      | 决策                                         | 理由                                                              | 归属文档                                    |
-| ------ | -------------------------------------------- | ----------------------------------------------------------------- | ------------------------------------------- |
-| ADR-01 | 使用 LangGraph 而非手写编排                  | StateGraph 原生条件边、Checkpoint 可恢复、HiL 内置                | `langgraph_architecture.md` §1.1         |
-| ADR-02 | 用 ToolRegistry + Function Calling，不用 MCP | 项目规模不需要 MCP 服务化开销，ToolRegistry 更轻量直接            | `skills_architecture.md` §四             |
-| ADR-03 | Phase 1 用"后分析模式"模拟执行               | 无需 IPC 即可验证完整 C→D→C 闭环                                | `dev_agent_experiment_supervisor.md` §九 |
-| ADR-04 | 引入 OpenViking 替代手写 RAG 管线            | 文件系统范式天然契合实验数据、L0/L1/L2 分层降低 Token、记忆自迭代 | `open_source_integration.md` §一         |
-| ADR-05 | 利用 SkillsMCP 生态加速 Skill 开发           | 28万+ 开源 Skill，适配改造比从零写更快                            | `open_source_integration.md` §二         |
-| ADR-06 | 文献 RAG 不再独立建设，复用 OpenViking       | OpenViking 统一资源管理能力覆盖文献入库/检索                      | `open_source_integration.md` §三         |
-| ADR-07 | Web 前端独立于 PySide6 桌面端                | AI 对话/图表天然适合 Web，零侵入 MicroHySeeker                    | `dev_frontend.md` §一                   |
-| ADR-08 | 后端 FastAPI 服务进程独立于 MicroHySeeker     | Phase 1-3 通过文件系统读取数据，Phase 4 通过 IPC 桥接             | `dev_backend.md` §七                    |
+| 前缀 | 含义 | 范围 | 追踪位置 |
+| --- | --- | --- | --- |
+| P1-xx | Phase 1 后端任务 | P1-01 ~ P1-22 | `PROGRESS_TRACKER.md` |
+| F1-xx | Phase 1 前端任务 | F1-01 ~ F1-10 | `PROGRESS_TRACKER.md` |
+| F2-xx | Phase 2 前端任务 | F2-01 ~ F2-05 | `PROGRESS_TRACKER.md` |
 
 ---
 
-## 文档间引用约定
+## 快速定位
 
-- 跨文档引用统一格式：`详见 [文档名](文档名.md) §X.Y`
-- State 定义引用：`State 定义详见 langgraph_architecture.md §三`
-- Graph 拓扑引用：`Graph 定义详见 langgraph_architecture.md §四`
-- Tool/Skill 规格引用：`详见 skills_architecture.md §二/§三`
-- 后端 API 引用：`详见 dev_backend.md §四`
-- 前端组件引用：`详见 dev_frontend.md §四`
-- 路线图引用：`详见 project_plan.md §X`
+- 想认领任务？→ `PROGRESS_TRACKER.md`，找 `待认领` 状态的任务
+- 想了解协作规则？→ `COLLABORATION_GUIDE.md`
+- 想看后端 API 设计？→ `PLAN_PHASE1_EXPERIMENT_LOOP.md` 第七节
+- 想看前端 Tab 设计？→ `UI_PLAN_V3.md` 第三~四节
+- 想看 Agent 详细设计？→ `multiagent_0x_*.md` 系列
+- 想跑测试？→ `VALIDATION_AND_TESTING_GUIDE.md`
 
 ---
 
-*此文档是 AutoHySeeker 规划体系的入口。所有重要内容都有且仅有一个归属文档，杜绝信息重复和版本不一致。*
+## 已归档文档（历史参考，不再维护）
+
+以下文档保留供历史参考，新开发请以上方文档为准：
+
+- `architecture_overview.md` — 旧架构总览（已被 multiagent_00 替代）
+- `langgraph_architecture.md` — 旧编排架构
+- `skills_architecture.md` — 旧 Skill 架构
+- `dev_backend.md` / `dev_frontend.md` — 旧开发指南
+- `dev_agent_*.md` — 旧 Agent 开发指南（已被 multiagent_0x 替代）
+- `project_plan.md` — 旧路线图
+- `UI_PLAN.md` / `UI_PLAN_V2.md` — 旧前端规划（已被 UI_PLAN_V3 替代）
+- `MODEL_PLANNING.md` / `MODEL_REQUIREMENTS.md` / `LLM_CONFIG.md` — 模型配置参考
+- `dual_config_system.md` — 双配置系统说明
+- `file-bridge-*.md` / `http-api-task.md` / `web-ui-task.md` — 旧任务文档
+
+---
+
+*此文档是 AutoHySeeker 文档体系的唯一入口。任何 AI 或开发者应从此文档开始阅读。*

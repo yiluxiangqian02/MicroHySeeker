@@ -111,13 +111,13 @@ class TestOrchestratorAnomalyDispatch(unittest.TestCase):
 
 
 class TestAnalystOutputForOrchestrator(unittest.TestCase):
-    """Test Analyst output can be consumed by Orchestrator."""
+    """Test DataAnalysisSkill output can be consumed by Orchestrator."""
 
     def test_analyst_quality_assessment_format(self) -> None:
-        from src.agents.data_analyst import DataAnalystAgent
+        from src.skills.data_analysis_skill import DataAnalysisSkill
 
-        analyst = DataAnalystAgent()
-        quality = analyst._assess_quality(
+        skill = DataAnalysisSkill()
+        quality = skill.assess_quality(
             {"overpotential_mV": 200, "onset_potential_V": -0.15},
             "/data/path",
         )
@@ -127,10 +127,10 @@ class TestAnalystOutputForOrchestrator(unittest.TestCase):
         assert isinstance(quality["reliable"], bool)
 
     def test_analyst_comparison_format(self) -> None:
-        from src.agents.data_analyst import DataAnalystAgent
+        from src.skills.data_analysis_skill import DataAnalysisSkill
 
-        analyst = DataAnalystAgent()
-        result = analyst._compare_with_best(
+        skill = DataAnalysisSkill()
+        result = skill.compare_with_best(
             {"overpotential_mV": 180},
             {"metrics": {"overpotential_mV": 200}},
             "overpotential_mV",
@@ -158,16 +158,16 @@ class TestOrchestratorBestResult(unittest.TestCase):
 
 
 class TestKnowledgeArchiveIntegration(unittest.TestCase):
-    """Test knowledge archival after experiment completion."""
+    """Test knowledge archival after experiment completion (now via skill)."""
 
     def test_archive_and_retrieve(self) -> None:
-        from src.agents.knowledge_mgr import KnowledgeManagerAgent
+        from src.skills.knowledge_archive_skill import KnowledgeArchiveSkill
 
-        km = KnowledgeManagerAgent()
+        skill = KnowledgeArchiveSkill()
 
         # Archive 3 experiments
         for i, (fe, ovp) in enumerate([(0.3, 250), (0.5, 200), (0.6, 180)]):
-            asyncio.run(km.archive_experiment(
+            asyncio.run(skill.archive_experiment(
                 run_id=f"exp_{i}",
                 params={"Fe": fe, "Co": 0.7 - fe, "Ni": 0.3},
                 metrics={"overpotential_mV": ovp},
@@ -175,11 +175,11 @@ class TestKnowledgeArchiveIntegration(unittest.TestCase):
             ))
 
         # Retrieve best
-        best = km.get_best_experiments("overpotential_mV", "minimize", top_k=1)
+        best = skill.get_best_experiments("overpotential_mV", "minimize", top_k=1)
         assert best[0]["metrics"]["overpotential_mV"] == 180
 
         # Search
-        results = km._search_experiments("Fe overpotential", ["Fe", "Co", "Ni"], 5)
+        results = skill._search_experiments("Fe overpotential", ["Fe", "Co", "Ni"], 5)
         assert len(results) == 3
 
 
@@ -189,7 +189,7 @@ class TestFullAgentPipeline(unittest.TestCase):
     def test_design_to_analysis(self) -> None:
         """Full pipeline: design → executor format check → analyst format check."""
         from src.agents.exp_designer import ExperimentDesignerAgent
-        from src.agents.data_analyst import DataAnalystAgent
+        from src.skills.data_analysis_skill import DataAnalysisSkill
         from src.agents.orchestrator import OrchestratorAgent
 
         # Step 1: Design
@@ -207,10 +207,10 @@ class TestFullAgentPipeline(unittest.TestCase):
             "data_path": "data/test/",
         }
 
-        # Step 3: Analyst quality check on mock metrics
-        analyst = DataAnalystAgent()
+        # Step 3: DataAnalysisSkill quality check on mock metrics
+        skill = DataAnalysisSkill()
         mock_metrics = {"overpotential_mV": 195, "onset_potential_V": -0.13}
-        quality = analyst._assess_quality(mock_metrics, exec_result["data_path"])
+        quality = skill.assess_quality(mock_metrics, exec_result["data_path"])
         assert quality["reliable"] is True
 
         # Step 4: Orchestrator evaluates
@@ -228,6 +228,35 @@ class TestFullAgentPipeline(unittest.TestCase):
         )
         assert best is not None
         assert best["metrics"]["overpotential_mV"] == 195
+
+
+class TestRunOptimizationBlockingFailures(unittest.TestCase):
+    """Blocking setup failures should stop the loop with a clear status."""
+
+    def test_pre_check_failure_returns_blocked(self) -> None:
+        from src.run_optimization import run_optimization
+
+        async def fake_execute_experiment(_self: Any, _task: dict[str, Any]) -> dict[str, Any]:
+            return {
+                "status": "pre_check_failed",
+                "error": "RS485 not connected",
+            }
+
+        with patch(
+            "src.agents.exp_executor.ExperimentExecutorAgent.execute_experiment",
+            new=fake_execute_experiment,
+        ):
+            result = asyncio.run(
+                run_optimization(
+                    goal="integration smoke",
+                    max_rounds=1,
+                    dry_run=False,
+                )
+            )
+
+        assert result["status"] == "blocked"
+        assert result["final_decision"] == "blocked"
+        assert result["history_count"] == 1
 
 
 if __name__ == "__main__":

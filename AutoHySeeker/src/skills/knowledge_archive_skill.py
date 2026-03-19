@@ -1,15 +1,14 @@
-"""Knowledge manager agent — experiment archival and retrieval.
+"""Knowledge archive skill — experiment archival and retrieval.
 
-The knowledge manager maintains two stores:
+Converted from the former KnowledgeManagerAgent.  This skill manages two
+stores:
 
-1. **Experiment archive** (in-memory → future ChromaDB): all completed
-   experiment results indexed by element ratios and metrics.
-2. **Literature knowledge** (future ChromaDB): reference papers and known
-   performance ranges for catalysts.
+1. **Experiment archive** (in-memory + JSON file): all completed experiment
+   results indexed by element ratios and metrics.
+2. **Literature knowledge** (built-in + optional VikingKB): reference data
+   and known performance ranges for catalysts.
 
-For now, the archive is kept in a simple JSON file for persistence and an
-in-memory list for fast queries.  ChromaDB integration will replace this
-when the embedding infrastructure is ready.
+No LLM calls — summaries are template-based.
 """
 
 from __future__ import annotations
@@ -19,52 +18,21 @@ import logging
 from pathlib import Path
 from typing import Any
 
-from src.agents.base import BaseAgent
+from src.skills.base import BaseSkill, SkillResult
 
-_logger = logging.getLogger("autohyseeker.knowledge_mgr")
+_logger = logging.getLogger("autohyseeker.skill.knowledge_archive")
 
 # ── VikingKnowledgeBase optional integration ──────────────────────────────────
 try:
-    from src.rag import get_viking_kb as _get_viking_kb, VikingKnowledgeBase
+    from src.rag import get_viking_kb as _get_viking_kb, VikingKnowledgeBase  # noqa: F401
     _VIKING_AVAILABLE = True
 except ImportError:
     _VIKING_AVAILABLE = False
     _get_viking_kb = None  # type: ignore[assignment]
 
-KNOWLEDGE_SYSTEM_PROMPT = """\
-你是知识管理 Agent（Knowledge Manager），负责实验知识的归档、检索和总结。
-
-## 职责
-1. 归档每轮实验结果（参数、指标、质量评估）
-2. 检索历史实验中与当前查询相关的记录
-3. 提供文献参考范围（已知 HER 催化剂性能基线）
-4. 生成知识总结供其他 Agent 参考
-
-## 查询类型
-- experiment_history: 检索历史实验记录
-- literature: 检索文献参考（当前为内置知识库）
-- both: 同时检索两者
-
-## 输出格式（严格 JSON）
-```json
-{
-  "status": "retrieved",
-  "results": [
-    {
-      "source": "experiment_history|literature",
-      "title": "描述",
-      "content": "详细内容",
-      "relevance": 0.92
-    }
-  ],
-  "summary": "综合总结"
-}
-```
-"""
-
 # ── Built-in literature reference data ────────────────────────────────────────
 
-_LITERATURE_KNOWLEDGE: list[dict[str, Any]] = [
+LITERATURE_KNOWLEDGE: list[dict[str, Any]] = [
     {
         "title": "Fe-Co-Ni 三元合金 HER 催化剂性能基线",
         "content": (
@@ -95,18 +63,21 @@ _LITERATURE_KNOWLEDGE: list[dict[str, Any]] = [
 ]
 
 
-class KnowledgeManagerAgent(BaseAgent):
-    """Knowledge manager — archives experiments and retrieves knowledge.
+class KnowledgeArchiveSkill(BaseSkill):
+    """Archive experiments and retrieve knowledge.
 
-    Uses VikingKnowledgeBase for semantic search when available (``openviking``
-    package installed), falling back to the built-in keyword search otherwise.
+    Uses VikingKnowledgeBase for semantic search when available,
+    falling back to built-in keyword search otherwise.
+
+    This is a stateful skill — it maintains an in-memory archive with
+    optional JSON persistence.
     """
 
+    name = "knowledge_archive"
+    description = "Archive experiment results and retrieve historical knowledge."
+    required_tools: list[str] = []
+
     def __init__(self, archive_path: str | None = None) -> None:
-        super().__init__(
-            name="knowledge_mgr",
-            system_prompt=KNOWLEDGE_SYSTEM_PROMPT,
-        )
         self._archive: list[dict[str, Any]] = []
         self._archive_path = Path(archive_path) if archive_path else None
         if self._archive_path and self._archive_path.exists():
@@ -118,12 +89,56 @@ class KnowledgeManagerAgent(BaseAgent):
             try:
                 self._viking_kb = _get_viking_kb()
                 if self._viking_kb.is_available:
-                    _logger.info("KnowledgeManagerAgent: VikingKnowledgeBase enabled")
+                    _logger.info("KnowledgeArchiveSkill: VikingKnowledgeBase enabled")
                 else:
                     self._viking_kb = None
             except Exception as exc:
                 _logger.debug("VikingKB unavailable: %s", exc)
                 self._viking_kb = None
+
+    # ── BaseSkill interface ───────────────────────────────────────────────────
+
+    async def execute(self, **kwargs: Any) -> SkillResult:
+        """Dispatch to archive or retrieve based on ``action`` kwarg.
+
+        Keyword Args:
+            action: ``"archive"`` or ``"retrieve"`` (default: ``"archive"``).
+            For archive: run_id, params, metrics, data_quality, round_num, extra.
+            For retrieve: query, search_type, top_k, elements.
+        """
+        action = kwargs.get("action", "archive")
+
+        if action == "archive":
+            result = await self.archive_experiment(
+                run_id=kwargs.get("run_id", ""),
+                params=kwargs.get("params", {}),
+                metrics=kwargs.get("metrics", {}),
+                data_quality=kwargs.get("data_quality"),
+                round_num=kwargs.get("round_num"),
+                extra=kwargs.get("extra"),
+            )
+            return SkillResult(
+                success=True, data=result,
+                message=f"Archived {kwargs.get('run_id', '')}", artifacts=[],
+            )
+
+        if action == "retrieve":
+            result = await self.retrieve(
+                query=kwargs.get("query", ""),
+                search_type=kwargs.get("search_type", "both"),
+                top_k=kwargs.get("top_k", 5),
+                elements=kwargs.get("elements"),
+            )
+            return SkillResult(
+                success=True, data=result,
+                message=f"Retrieved {len(result.get('results', []))} results",
+                artifacts=[],
+            )
+
+        return SkillResult(
+            success=False, data={},
+            message=f"Unknown action: {action}", artifacts=[],
+        )
 
     # ── Public API ─────────────────────────────────────────────────────────────
 
@@ -136,10 +151,7 @@ class KnowledgeManagerAgent(BaseAgent):
         round_num: int | None = None,
         extra: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
-        """Archive a completed experiment result.
-
-        Returns confirmation with the total archive size.
-        """
+        """Archive a completed experiment result."""
         record: dict[str, Any] = {
             "run_id": run_id,
             "params": params,
@@ -153,10 +165,12 @@ class KnowledgeManagerAgent(BaseAgent):
         self._archive.append(record)
         self._save_archive()
 
-        # Also ingest into VikingKB when available (write a temp JSON for ingest)
+        # Ingest into VikingKB when available
         if self._viking_kb is not None:
             try:
-                import tempfile, os
+                import tempfile
+                import os
+
                 tmp = tempfile.NamedTemporaryFile(
                     mode="w", suffix=".json", delete=False, encoding="utf-8"
                 )
@@ -168,7 +182,7 @@ class KnowledgeManagerAgent(BaseAgent):
                 _logger.debug("VikingKB ingest failed: %s", exc)
 
         _logger.info(
-            "KnowledgeManagerAgent: archived run_id=%s (total=%d)",
+            "KnowledgeArchiveSkill: archived run_id=%s (total=%d)",
             run_id, len(self._archive),
         )
         return {
@@ -184,33 +198,24 @@ class KnowledgeManagerAgent(BaseAgent):
         top_k: int = 5,
         elements: list[str] | None = None,
     ) -> dict[str, Any]:
-        """Retrieve relevant knowledge for a query.
-
-        Args:
-            query: Natural language query.
-            search_type: ``"experiment_history"``, ``"literature"``, or ``"both"``.
-            top_k: Maximum results to return.
-            elements: Optional element filter for experiment history.
-
-        Returns:
-            Dict with ``results`` list and ``summary``.
-        """
+        """Retrieve relevant knowledge for a query."""
         results: list[dict[str, Any]] = []
 
         if search_type in ("experiment_history", "both"):
-            exp_results = self._search_experiments(query, elements, top_k)
-            results.extend(exp_results)
+            results.extend(self._search_experiments(query, elements, top_k))
 
         if search_type in ("literature", "both"):
-            lit_results = self._search_literature(query, top_k)
-            results.extend(lit_results)
+            results.extend(self._search_literature(query, top_k))
 
-        # Sort by relevance, take top_k
         results.sort(key=lambda r: r.get("relevance", 0), reverse=True)
         results = results[:top_k]
 
-        # Generate summary
-        summary = await self._summarize(query, results)
+        # Simple summary (no LLM)
+        if not results:
+            summary = "未找到相关记录。"
+        else:
+            titles = [r.get("title", "") for r in results[:3]]
+            summary = f"找到 {len(results)} 条相关记录: {'; '.join(titles)}"
 
         return {
             "status": "retrieved",
@@ -220,7 +225,7 @@ class KnowledgeManagerAgent(BaseAgent):
         }
 
     def get_experiment_history(self) -> list[dict[str, Any]]:
-        """Return the full experiment archive (for Orchestrator/Designer)."""
+        """Return the full experiment archive."""
         return list(self._archive)
 
     def get_best_experiments(
@@ -235,19 +240,13 @@ class KnowledgeManagerAgent(BaseAgent):
             if r.get("metrics", {}).get(target_metric) is not None
         ]
         reverse = direction == "maximize"
-        valid.sort(
-            key=lambda r: r["metrics"][target_metric],
-            reverse=reverse,
-        )
+        valid.sort(key=lambda r: r["metrics"][target_metric], reverse=reverse)
         return valid[:top_k]
 
     # ── Private: Search ───────────────────────────────────────────────────────
 
     def _search_experiments(
-        self,
-        query: str,
-        elements: list[str] | None,
-        top_k: int,
+        self, query: str, elements: list[str] | None, top_k: int
     ) -> list[dict[str, Any]]:
         """Simple keyword-based search over experiment archive."""
         query_lower = query.lower()
@@ -257,13 +256,11 @@ class KnowledgeManagerAgent(BaseAgent):
             relevance = 0.0
             content_parts: list[str] = []
 
-            # Check element match
             params = record.get("params", {})
             if elements:
                 matching = sum(1 for e in elements if e in params)
                 relevance += matching / len(elements) * 0.5
 
-            # Keyword matching in params/metrics
             record_str = json.dumps(record, ensure_ascii=False).lower()
             keywords = query_lower.split()
             keyword_hits = sum(1 for kw in keywords if kw in record_str)
@@ -286,17 +283,9 @@ class KnowledgeManagerAgent(BaseAgent):
         results.sort(key=lambda r: r["relevance"], reverse=True)
         return results[:top_k]
 
-    def _search_literature(
-        self,
-        query: str,
-        top_k: int,
-    ) -> list[dict[str, Any]]:
-        """Search literature knowledge base.
-
-        Uses VikingKnowledgeBase semantic search when available,
-        falls back to built-in keyword search.
-        """
-        # ── VikingKB semantic search (preferred) ──────────────────────────────
+    def _search_literature(self, query: str, top_k: int) -> list[dict[str, Any]]:
+        """Search literature knowledge base."""
+        # VikingKB semantic search (preferred)
         if self._viking_kb is not None:
             try:
                 viking_results = self._viking_kb.search_literature(query, top_k=top_k)
@@ -314,11 +303,11 @@ class KnowledgeManagerAgent(BaseAgent):
             except Exception as exc:
                 _logger.debug("VikingKB literature search failed: %s", exc)
 
-        # ── Fallback: built-in keyword search ────────────────────────────────
+        # Fallback: built-in keyword search
         query_lower = query.lower()
         results: list[dict[str, Any]] = []
 
-        for entry in _LITERATURE_KNOWLEDGE:
+        for entry in LITERATURE_KNOWLEDGE:
             text = (entry["title"] + " " + entry["content"]).lower()
             keywords = query_lower.split()
             hits = sum(1 for kw in keywords if kw in text)
@@ -335,32 +324,6 @@ class KnowledgeManagerAgent(BaseAgent):
 
         results.sort(key=lambda r: r["relevance"], reverse=True)
         return results[:top_k]
-
-    # ── Private: Summary ──────────────────────────────────────────────────────
-
-    async def _summarize(
-        self,
-        query: str,
-        results: list[dict[str, Any]],
-    ) -> str:
-        """Generate a summary of search results using LLM."""
-        if not results:
-            return "未找到相关记录。"
-
-        try:
-            task = {
-                "type": "summarize_knowledge",
-                "query": query,
-                "result_count": len(results),
-            }
-            context = {"results": results[:5]}
-            result = await self.invoke(task=task, context=context)
-            return result.get("content", "")[:500]
-        except Exception as exc:
-            _logger.debug("LLM summary failed: %s", exc)
-            # Fallback: simple concatenation
-            summaries = [r.get("title", "") for r in results[:3]]
-            return f"找到 {len(results)} 条相关记录: {'; '.join(summaries)}"
 
     # ── Private: Persistence ──────────────────────────────────────────────────
 
@@ -385,11 +348,27 @@ class KnowledgeManagerAgent(BaseAgent):
             text = self._archive_path.read_text(encoding="utf-8")
             self._archive = json.loads(text)
             _logger.info(
-                "KnowledgeManagerAgent: loaded %d records from %s",
+                "KnowledgeArchiveSkill: loaded %d records from %s",
                 len(self._archive), self._archive_path,
             )
         except Exception as exc:
             _logger.warning("Archive load failed: %s", exc)
             self._archive = []
 
-
+    def get_schema(self) -> dict:
+        return {
+            "type": "object",
+            "title": self.name,
+            "description": self.description,
+            "properties": {
+                "action": {
+                    "type": "string",
+                    "enum": ["archive", "retrieve"],
+                },
+                "run_id": {"type": "string"},
+                "params": {"type": "object"},
+                "metrics": {"type": "object"},
+                "query": {"type": "string"},
+            },
+            "required": ["action"],
+        }

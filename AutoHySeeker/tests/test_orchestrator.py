@@ -34,17 +34,17 @@ def _base_state(**overrides: Any) -> dict[str, Any]:
 # ── route_intent ───────────────────────────────────────────────────────────────
 
 class TestRouteIntent:
-    def test_cv_keyword_routes_to_data_analyst(self) -> None:
+    def test_cv_keyword_routes_to_orchestrator(self) -> None:
         from src.graph.nodes import route_intent
         state = _base_state(task={"intent": "analyze cv data"})
         result = route_intent(state)
-        assert result["current_agent"] == "data_analyst"
+        assert result["current_agent"] == "orchestrator"
 
-    def test_eis_keyword_routes_to_data_analyst(self) -> None:
+    def test_eis_keyword_routes_to_orchestrator(self) -> None:
         from src.graph.nodes import route_intent
         state = _base_state(task={"goal": "analyze EIS signal"})
         result = route_intent(state)
-        assert result["current_agent"] == "data_analyst"
+        assert result["current_agent"] == "orchestrator"
 
     def test_design_keyword_routes_to_exp_designer(self) -> None:
         from src.graph.nodes import route_intent
@@ -70,32 +70,32 @@ class TestRouteIntent:
         result = route_intent(state)
         assert result["current_agent"] == "diagnostics"
 
-    def test_knowledge_keyword_routes_to_knowledge_mgr(self) -> None:
+    def test_knowledge_keyword_routes_to_orchestrator(self) -> None:
         from src.graph.nodes import route_intent
         state = _base_state(task={"prompt": "search knowledge base"})
         result = route_intent(state)
-        assert result["current_agent"] == "knowledge_mgr"
+        assert result["current_agent"] == "orchestrator"
 
-    def test_literature_keyword_routes_to_knowledge_mgr(self) -> None:
+    def test_literature_keyword_routes_to_orchestrator(self) -> None:
         from src.graph.nodes import route_intent
         state = _base_state(task={"query": "find paper on HER"})
         result = route_intent(state)
-        assert result["current_agent"] == "knowledge_mgr"
+        assert result["current_agent"] == "orchestrator"
 
-    def test_unknown_task_defaults_to_exp_supervisor(self) -> None:
+    def test_unknown_task_defaults_to_orchestrator(self) -> None:
         from src.graph.nodes import route_intent
         state = _base_state(task={"prompt": "run the experiment"})
         result = route_intent(state)
-        assert result["current_agent"] == "exp_supervisor"
+        assert result["current_agent"] == "orchestrator"
 
     def test_explicit_current_agent_overrides_inference(self) -> None:
         from src.graph.nodes import route_intent
         state = _base_state(
             task={"intent": "analyze cv"},
-            current_agent="knowledge_mgr",
+            current_agent="orchestrator",
         )
         result = route_intent(state)
-        assert result["current_agent"] == "knowledge_mgr"
+        assert result["current_agent"] == "orchestrator"
 
     def test_route_intent_sets_routed_by_context(self) -> None:
         from src.graph.nodes import route_intent
@@ -115,19 +115,25 @@ class TestRouteIntent:
 class TestSelectAgentNode:
     def test_valid_agent_names_returned_as_is(self) -> None:
         from src.graph.nodes import select_agent_node
-        for name in ("data_analyst", "exp_designer", "exp_supervisor", "diagnostics", "knowledge_mgr"):
+        for name in ("orchestrator", "exp_designer", "exp_executor", "diagnostics"):
             state = _base_state(current_agent=name)
             assert select_agent_node(state) == name
 
-    def test_unknown_agent_defaults_to_exp_supervisor(self) -> None:
+    def test_alias_agent_resolves_to_orchestrator(self) -> None:
+        from src.graph.nodes import select_agent_node
+        for alias in ("data_analyst", "knowledge_mgr", "exp_supervisor"):
+            state = _base_state(current_agent=alias)
+            assert select_agent_node(state) == "orchestrator"
+
+    def test_unknown_agent_defaults_to_orchestrator(self) -> None:
         from src.graph.nodes import select_agent_node
         state = _base_state(current_agent="nonexistent_agent")
-        assert select_agent_node(state) == "exp_supervisor"
+        assert select_agent_node(state) == "orchestrator"
 
-    def test_empty_agent_defaults_to_exp_supervisor(self) -> None:
+    def test_empty_agent_defaults_to_orchestrator(self) -> None:
         from src.graph.nodes import select_agent_node
         state = _base_state(current_agent="")
-        assert select_agent_node(state) == "exp_supervisor"
+        assert select_agent_node(state) == "orchestrator"
 
 
 # ── format_response ────────────────────────────────────────────────────────────
@@ -136,8 +142,8 @@ class TestFormatResponse:
     def test_successful_result_has_ok_true(self) -> None:
         from src.graph.nodes import format_response
         state = _base_state(
-            current_agent="data_analyst",
-            result={"agent": "data_analyst", "content": "found peaks"},
+            current_agent="orchestrator",
+            result={"agent": "orchestrator", "content": "found peaks"},
             error=None,
         )
         result = format_response(state)
@@ -146,8 +152,8 @@ class TestFormatResponse:
     def test_error_state_has_ok_false(self) -> None:
         from src.graph.nodes import format_response
         state = _base_state(
-            current_agent="data_analyst",
-            result={"agent": "data_analyst", "content": ""},
+            current_agent="orchestrator",
+            result={"agent": "orchestrator", "content": ""},
             error="something went wrong",
         )
         result = format_response(state)
@@ -166,16 +172,16 @@ class TestFormatResponse:
 class TestAgentRunnerNodes:
     """Test that run_* coroutines call _invoke_agent and return result/error keys."""
 
-    def test_run_data_analyst_success(self) -> None:
-        from src.graph.nodes import run_data_analyst
+    def test_run_orchestrator_success(self) -> None:
+        from src.graph.nodes import run_orchestrator
         state = _base_state(task={"intent": "analyze"}, context={})
         with patch("src.agents.base.chat_completion", new=AsyncMock(return_value="peaks found")), \
              patch("src.common.llm_client.OPENAI_API_KEY", "test-key"):
-            result = run_async(run_data_analyst(state))
+            result = run_async(run_orchestrator(state))
         assert "result" in result
         assert "error" in result
         assert result["error"] is None
-        assert result["result"]["agent"] == "data_analyst"
+        assert result["result"]["agent"] == "orchestrator"
 
     def test_run_diagnostics_success(self) -> None:
         from src.graph.nodes import run_diagnostics
@@ -195,23 +201,14 @@ class TestAgentRunnerNodes:
         assert result["error"] is None
         assert result["result"]["agent"] == "exp_designer"
 
-    def test_run_knowledge_mgr_success(self) -> None:
-        from src.graph.nodes import run_knowledge_mgr
-        state = _base_state(task={"query": "find paper"})
-        with patch("src.agents.base.chat_completion", new=AsyncMock(return_value="paper found")), \
+    def test_run_exp_executor_success(self) -> None:
+        from src.graph.nodes import run_exp_executor
+        state = _base_state(task={"action": "execute"})
+        with patch("src.agents.base.chat_completion", new=AsyncMock(return_value="executed")), \
              patch("src.common.llm_client.OPENAI_API_KEY", "test-key"):
-            result = run_async(run_knowledge_mgr(state))
+            result = run_async(run_exp_executor(state))
         assert result["error"] is None
-        assert result["result"]["agent"] == "knowledge_mgr"
-
-    def test_run_exp_supervisor_success(self) -> None:
-        from src.graph.nodes import run_exp_supervisor
-        state = _base_state(task={"type": "monitor"})
-        with patch("src.agents.base.chat_completion", new=AsyncMock(return_value="monitoring")), \
-             patch("src.common.llm_client.OPENAI_API_KEY", "test-key"):
-            result = run_async(run_exp_supervisor(state))
-        assert result["error"] is None
-        assert result["result"]["agent"] == "exp_supervisor"
+        assert result["result"]["agent"] == "exp_executor"
 
     def test_run_agent_captures_exception(self) -> None:
         """If agent.invoke raises, the runner should return error dict (not raise)."""
@@ -258,7 +255,7 @@ class TestBuildSupervisorGraph:
 # ── full orchestrator ainvoke (mocked LLM) ─────────────────────────────────────
 
 class TestOrchestratorAinvoke:
-    def test_ainvoke_end_to_end_data_analyst(self) -> None:
+    def test_ainvoke_end_to_end_orchestrator(self) -> None:
         """End-to-end invoke through graph with mocked LLM call."""
         from src.graph.orchestrator import build_supervisor_graph
 

@@ -74,14 +74,9 @@ class TestExecutorPreCheck(unittest.TestCase):
         from src.agents.exp_executor import ExperimentExecutorAgent
 
         agent = ExperimentExecutorAgent()
-        with patch("src.agents.exp_executor.ctrl") as mock_ctrl:
-            mock_ctrl = MagicMock()
-            mock_ctrl.health_check.return_value = {"status": "ok"}
-            mock_ctrl.get_connection_info.return_value = {"connected": True}
-
-            with patch.dict("sys.modules", {"src.tools.experiment_ctrl": mock_ctrl}):
-                # We need to test _pre_check directly
-                result = asyncio.run(agent._pre_check())
+        with patch("src.tools.experiment_ctrl.health_check", return_value={"status": "ok"}), \
+             patch("src.tools.experiment_ctrl.get_connection_info", return_value={"connected": True}):
+            result = asyncio.run(agent._pre_check())
 
         # When import succeeds and returns healthy → ok
         # The actual test is that the logic flow is correct
@@ -109,6 +104,43 @@ class TestExecutorValidation(unittest.TestCase):
         result = asyncio.run(agent.execute_experiment(task))
         assert result["status"] == "validation_failed"
         assert "template_id" in result["error"]
+
+    def test_validate_params_rejects_missing_solution_names(self) -> None:
+        from src.agents.exp_executor import ExperimentExecutorAgent
+
+        agent = ExperimentExecutorAgent()
+        instantiate_result = {
+            "status": "validated",
+            "experiment": {
+                "steps": [
+                    {
+                        "step_type": "prep_sol",
+                        "prep_sol_params": {
+                            "selected_solutions": {
+                                "Fe": True,
+                                "Co": True,
+                                "Ni": True,
+                            }
+                        },
+                    }
+                ]
+            },
+        }
+        capabilities = {
+            "dilution_solutions": [
+                {"name": "Fe(OH)2"},
+                {"name": "Ni(OH)2"},
+                {"name": "321"},
+            ]
+        }
+
+        with patch("src.tools.experiment_ctrl.instantiate_template", return_value=instantiate_result), \
+             patch("src.tools.experiment_ctrl.get_capabilities", return_value=capabilities):
+            result = asyncio.run(agent._validate_params("tpl_her_standard", {}))
+
+        assert result["valid"] is False
+        assert "Template requires dilution solutions" in result["errors"][0]
+        assert "Co" in result["errors"][0]
 
 
 class TestExecutorAnomalyDetection(unittest.TestCase):

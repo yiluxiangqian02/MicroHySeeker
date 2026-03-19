@@ -1,0 +1,222 @@
+[
+  {
+    "run_id": "dry_run_001",
+    "params": {
+      "Co": 0.3333,
+      "Fe": 0.3333,
+      "Ni": 0.3334
+    },
+    "metrics": {
+      "overpotential_mV": 235.01,
+      "current_density_mA_cm2": 16.83,
+      "tafel_slope_mV_dec": 79.67,
+      "onset_potential_V": -0.14
+    },
+    "data_quality": {
+      "score": 1.0,
+      "issues": [],
+      "reliable": true
+    },
+    "round": 1
+  },
+  {
+    "run_id": "dry_run_002",
+    "params": {
+      "Co": 0.3333,
+      "Fe": 0.3333,
+      "Ni": 0.3334
+    },
+    "metrics": {
+      "overpotential_mV": 233.01,
+      "current_density_mA_cm2": 16.33,
+      "tafel_slope_mV_dec": 79.67,
+      "onset_potential_V": -0.14
+    },
+    "data_quality": {
+      "score": 1.0,
+      "issues": [],
+      "reliable": true
+    },
+    "round": 2
+  },
+  {
+    "run_id": "dry_run_001",
+    "params": {
+      "Co": 0.3333,
+      "Fe": 0.3333,
+      "Ni": 0.3334
+    },
+    "metrics": {
+      "overpotential_mV": 235.01,
+      "current_density_mA_cm2": 16.83,
+      "tafel_slope_mV_dec": 79.67,
+      "onset_potential_V": -0.14
+    },
+    "data_quality": {
+      "score": 1.0,
+      "issues": [],
+      "reliable": true
+    },
+    "round": 1
+  },
+  {
+    "run_id": "dry_run_002",
+    "params": {
+      "Co": 0.3333,
+      "Fe": 0.3333,
+      "Ni": 0.3334
+    },
+    "metrics": {
+      "overpotential_mV": 233.01,
+      "current_density_mA_cm2": 16.33,
+      "tafel_slope_mV_dec": 79.67,
+      "onset_potential_V": -0.14
+    },
+    "data_quality": {
+      "score": 1.0,
+      "issues": [],
+      "reliable": true
+    },
+    "round": 2
+  },
+  {
+    "run_id": "dry_run_001",
+    "params": {
+      "Co": 0.3333,
+      "Fe": 0.3333,
+      "Ni": 0.3334
+    },
+    "metrics": {
+      "overpotential_mV": 235.01,
+      "current_density_mA_cm2": 16.83,
+      "tafel_slope_mV_dec": 79.67,
+      "onset_potential_V": -0.14
+    },
+    "data_quality": {
+      "score": 1.0,
+      "issues": [],
+      "reliable": true
+    },
+    "round": 1
+  },
+  {
+    "run_id": "dry_run_002",
+    "params": {
+      "Co": 0.3333,
+      "Fe": 0.3333,
+      "Ni": 0.3334
+    },
+    "metrics": {
+      "overpotential_mV": 233.01,
+      "current_density_mA_cm2": 16.33,
+      "tafel_slope_mV_dec": 79.67,
+      "onset_potential_V": -0.14
+    },
+    "data_quality": {
+      "score": 1.0,
+      "issues": [],
+      "reliable": true
+    },
+    "round": 2
+  },
+  {
+    "run_id": "dry_run_001",
+    "params": {
+      "Co": 0.3333,
+      "Fe": 0.3333,
+      "Ni": 0.3334
+    },
+    "metrics": {
+      "overpotential_mV": 235.01,
+      "current_density_mA_cm2": 16.83,
+      "tafel_slope_mV_dec": 79.67,
+      "onset_potential_V": -0.14
+    },
+    "data_quality": {
+      "score": 1.0,
+      "issues": [],
+      "reliable": true
+    },
+    "round": 1
+  },
+  {
+    "run_id": "dry_run_001",
+    "params": {
+      "Co": 0.3333,
+      "Fe": 0.3333,
+      "Ni": 0.3334
+    },
+    "metrics": {
+      "overpotential_mV": 235.01,
+      "current_density_mA_cm2": 16.83,
+      "tafel_slope_mV_dec": 79.67,
+      "onset_potential_V": -0.14
+    },
+    "data_quality": {
+      "score": 1.0,
+      "issues": [],
+      "reliable": true
+    },
+    "round": 1
+  },
+  {
+    "run_id": "dry_run_002",
+    "params": {
+      "Co": 0.3333,
+      "Fe": 0.3333,
+      "Ni": 0.3334
+    },
+    "metrics": {
+      "overpotential_mV": 233.01,
+      "current_density_mA_cm2": 16.33,
+      "tafel_slope_mV_dec": 79.67,
+      "onset_potential_V": -0.14
+    },
+    "data_quality": {
+      "score": 1.0,
+      "issues": [],
+      "reliable": true
+    },
+    "round": 2
+  },
+  {
+    "run_id": "dry_run_001",
+    "params": {
+      "Co": 0.3333,
+      "Fe": 0.3333,
+      "Ni": 0.3334
+    },
+    "metrics": {
+      "overpotential_mV": 235.01,
+      "current_density_mA_cm2": 16.83,
+      "tafel_slope_mV_dec": 79.67,
+      "onset_potential_V": -0.14
+    },
+    "data_quality": {
+      "score": 1.0,
+      "issues": [],
+      "reliable": true
+    },
+    "round": 1
+  },
+  {
+    "run_id": "dry_run_002",
+    "params": {
+      "Co": 0.3333,
+      "Fe": 0.3333,
+      "Ni": 0.3334
+    },
+    "metrics": {
+      "overpotential_mV": 233.01,
+      "current_density_mA_cm2": 16.33,
+      "tafel_slope_mV_dec": 79.67,
+      "onset_potential_V": -0.14
+    },
+    "data_quality": {
+      "score": 1.0,
+      "issues": [],
+      "reliable": true
+    },
+    "round": 2
+  }
+]

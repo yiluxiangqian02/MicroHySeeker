@@ -215,11 +215,76 @@ class ExperimentExecutorAgent(BaseAgent):
                     "valid": False,
                     "errors": result.get("errors", [result.get("message", "unknown")]),
                 }
+            experiment = result.get("experiment")
+            if isinstance(experiment, dict):
+                solution_errors = self._validate_solution_configuration(ctrl, experiment)
+                if solution_errors:
+                    return {"valid": False, "errors": solution_errors}
             return {"valid": True}
         except Exception as exc:
             return {"valid": False, "errors": [str(exc)]}
 
     # ── Private: Start ────────────────────────────────────────────────────────
+
+    def _validate_solution_configuration(
+        self,
+        ctrl: Any,
+        experiment: dict[str, Any],
+    ) -> list[str]:
+        """Ensure prep-sol solution names exist in MicroHySeeker capabilities."""
+        if not hasattr(ctrl, "get_capabilities"):
+            return []
+
+        try:
+            capabilities = ctrl.get_capabilities()
+        except Exception as exc:
+            return [f"Failed to query MicroHySeeker capabilities: {exc}"]
+
+        if not isinstance(capabilities, dict):
+            return []
+
+        available = [
+            item.get("name", "").strip()
+            for item in capabilities.get("dilution_solutions", [])
+            if isinstance(item, dict) and item.get("name")
+        ]
+        if not available:
+            return []
+
+        required = self._extract_required_solution_names(experiment)
+        missing = [name for name in required if name not in available]
+        if not missing:
+            return []
+
+        return [
+            "Template requires dilution solutions not present in MicroHySeeker "
+            f"config: {missing}. Available solutions: {available}"
+        ]
+
+    def _extract_required_solution_names(self, experiment: dict[str, Any]) -> list[str]:
+        """Extract selected prep-sol solution names from an instantiated experiment."""
+        names: list[str] = []
+        for step in experiment.get("steps", []):
+            if not isinstance(step, dict) or step.get("step_type") != "prep_sol":
+                continue
+            params = step.get("prep_sol_params") or {}
+            selected = params.get("selected_solutions") or {}
+            if isinstance(selected, dict) and selected:
+                names.extend(
+                    str(name)
+                    for name, enabled in selected.items()
+                    if enabled
+                )
+                continue
+            injection_order = params.get("injection_order") or []
+            if isinstance(injection_order, list):
+                names.extend(str(name) for name in injection_order)
+
+        deduped: list[str] = []
+        for name in names:
+            if name not in deduped:
+                deduped.append(name)
+        return deduped
 
     async def _start_experiment(
         self,

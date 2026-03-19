@@ -18,7 +18,7 @@ logger = logging.getLogger("microhyseeker.autohyseeker_client")
 class AutoHySeekerClient:
     """AutoHySeeker API 客户端"""
     
-    def __init__(self, base_url: str = "http://127.0.0.1:8100"):
+    def __init__(self, base_url: str = "http://127.0.0.1:8200"):
         """初始化客户端
         
         Args:
@@ -36,7 +36,7 @@ class AutoHySeekerClient:
             raise RuntimeError("httpx not installed")
         
         if self._client is None:
-            self._client = httpx.AsyncClient(timeout=30.0)
+            self._client = httpx.AsyncClient(timeout=30.0, trust_env=False)
         return self._client
     
     async def close(self) -> None:
@@ -137,14 +137,11 @@ class AutoHySeekerClient:
                 "history": history or [],
                 "context": context or {}
             }
-            response = await client.post(
-                f"{self.base_url}/experiments/suggest",
-                json=payload
-            )
+            response = await client.get(f"{self.base_url}/api/experiments/suggestions")
             response.raise_for_status()
             result = response.json()
-            logger.info("Got experiment suggestion")
-            return result
+            logger.info("Got experiment suggestion snapshot")
+            return {"payload": payload, **result}
         except Exception as e:
             logger.exception("Failed to get experiment suggestion: %s", e)
             return {"error": str(e)}
@@ -342,7 +339,7 @@ class AutoHySeekerClient:
 _client: Optional[AutoHySeekerClient] = None
 
 
-def get_autohyseeker_client(base_url: str = "http://127.0.0.1:8100") -> AutoHySeekerClient:
+def get_autohyseeker_client(base_url: str = "http://127.0.0.1:8200") -> AutoHySeekerClient:
     """获取全局 AutoHySeeker 客户端实例"""
     global _client
     if _client is None:

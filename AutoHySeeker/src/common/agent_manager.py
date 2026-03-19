@@ -10,11 +10,10 @@ from src.common.logger import get_logger
 logger = get_logger(__name__)
 
 _AGENT_IDS = [
-    "data_analyst",
+    "orchestrator",
     "exp_designer",
-    "exp_supervisor",
+    "exp_executor",
     "diagnostics",
-    "knowledge_mgr",
 ]
 
 

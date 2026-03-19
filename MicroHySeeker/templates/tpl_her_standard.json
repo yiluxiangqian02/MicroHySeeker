@@ -1,0 +1,99 @@
+{
+  "id": "tpl_her_standard",
+  "name": "HER Standard Template",
+  "description": "Default HER closed-loop template for AutoHySeeker integration.",
+  "tags": [
+    "autohyseeker",
+    "her",
+    "standard"
+  ],
+  "steps": [
+    {
+      "step_id": "step_000",
+      "step_type": "prep_sol",
+      "prep_sol_params": {
+        "target_concentration": 0.0,
+        "is_solvent": false,
+        "injection_order": [
+          "Fe",
+          "Co",
+          "Ni"
+        ],
+        "total_volume_ul": 1000.0,
+        "target_concentrations": {
+          "Fe": 0.3333,
+          "Co": 0.3333,
+          "Ni": 0.3334
+        },
+        "solvent_flags": {
+          "Fe": false,
+          "Co": false,
+          "Ni": false
+        },
+        "selected_solutions": {
+          "Fe": true,
+          "Co": true,
+          "Ni": true
+        },
+        "injection_order_numbers": {
+          "Fe": 1,
+          "Co": 2,
+          "Ni": 3
+        }
+      },
+      "notes": "AutoHySeeker updates target_concentrations here."
+    },
+    {
+      "step_id": "step_001",
+      "step_type": "echem",
+      "ec_settings": {
+        "technique": "LSV",
+        "e0": 0.0,
+        "eh": 0.2,
+        "el": -0.6,
+        "ef": 0.2,
+        "scan_rate": 0.005,
+        "sample_interval_ms": 100,
+        "sensitivity": null,
+        "autosensitivity": true,
+        "quiet_time_s": 2.0,
+        "run_time_s": null,
+        "seg_num": 1,
+        "scan_dir": "FWD",
+        "freq_low": 1.0,
+        "freq_high": 100000.0,
+        "amplitude": 0.005,
+        "bias_mode": 0,
+        "use_dummy_cell": false,
+        "adt_enabled": false,
+        "adt_num_cycles": 100,
+        "adt_cathodic_current_mA": -250.0,
+        "adt_cp_anodic_current_mA": 250.0,
+        "adt_cp_e_high": 2.0,
+        "adt_cp_e_low": -2.0,
+        "adt_cp_high_e_hold_time": 0.0,
+        "adt_cp_low_e_hold_time": 0.0,
+        "adt_cathodic_duration_s": 3.0,
+        "adt_cp_anodic_time_s": 3.0,
+        "adt_cp_polarity": "n",
+        "adt_cp_sample_interval": 0.01,
+        "adt_cp_segments": 2,
+        "adt_cp_priority": "time",
+        "adt_anodic_potential_V": 1.5,
+        "adt_ca_e_high": 1.5,
+        "adt_ca_e_low": -0.5,
+        "adt_ca_polarity": "p",
+        "adt_ca_steps": 1,
+        "adt_anodic_duration_s": 2.0,
+        "adt_ca_sample_interval": 0.01,
+        "adt_ca_quiet_time": 0.0,
+        "adt_ca_sensitivity": 0.001,
+        "ir_compensation_enabled": false,
+        "ir_compensation_ohm": 0.0
+      },
+      "notes": "Baseline HER LSV measurement."
+    }
+  ],
+  "created_at": "2026-03-18T00:00:00",
+  "updated_at": "2026-03-18T00:00:00"
+}

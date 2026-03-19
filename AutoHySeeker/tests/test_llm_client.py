@@ -12,7 +12,7 @@ import pytest
 
 
 def run_async(coro: Any) -> Any:
-    return asyncio.get_event_loop().run_until_complete(coro)
+    return asyncio.run(coro)
 
 
 # ── _extract_text ──────────────────────────────────────────────────────────────
@@ -63,29 +63,34 @@ class TestGetClient:
         # Reset singleton so test is isolated
         llm_client._client = None
         llm_client._custom_clients.clear()
+        llm_client._endpoint_backoff_until.clear()
         with patch("src.common.llm_client.OPENAI_API_KEY", "test-key"):
             c1 = llm_client.get_client()
             c2 = llm_client.get_client()
             assert c1 is c2
         llm_client._client = None
         llm_client._custom_clients.clear()
+        llm_client._endpoint_backoff_until.clear()
 
     def test_client_has_base_url(self) -> None:
         from src.common import llm_client
         llm_client._client = None
         llm_client._custom_clients.clear()
+        llm_client._endpoint_backoff_until.clear()
         with patch("src.common.llm_client.OPENAI_API_KEY", "test-key"), \
              patch("src.common.llm_client.OPENAI_BASE_URL", "https://test.example.com"):
             client = llm_client.get_client()
             assert client.base_url is not None
         llm_client._client = None
         llm_client._custom_clients.clear()
+        llm_client._endpoint_backoff_until.clear()
 
     def test_returns_cached_custom_client_for_same_credentials(self) -> None:
         from src.common import llm_client
 
         llm_client._client = None
         llm_client._custom_clients.clear()
+        llm_client._endpoint_backoff_until.clear()
         c1 = llm_client.get_client(
             api_key="agent-key",
             base_url="https://agent.example.com",
@@ -97,6 +102,7 @@ class TestGetClient:
         assert c1 is c2
         llm_client._client = None
         llm_client._custom_clients.clear()
+        llm_client._endpoint_backoff_until.clear()
 
 
 # ── chat_completion ────────────────────────────────────────────────────────────
@@ -170,7 +176,8 @@ class TestChatCompletion:
 
     def test_raises_when_api_key_empty(self) -> None:
         from src.common.llm_client import chat_completion
-        with patch("src.common.llm_client.OPENAI_API_KEY", ""):
+        with patch("src.common.llm_client.OPENAI_API_KEY", ""), \
+             patch.dict("src.common.llm_client._endpoint_backoff_until", {}, clear=True):
             with pytest.raises(RuntimeError, match="OPENAI_API_KEY"):
                 run_async(chat_completion([{"role": "user", "content": "hi"}]))
 
@@ -179,7 +186,8 @@ class TestChatCompletion:
         mock_response = self._make_mock_response("Hello from LLM")
         mock_create = AsyncMock(return_value=mock_response)
         with patch("src.common.llm_client.OPENAI_API_KEY", "test-key"), \
-             patch("src.common.llm_client.get_client") as mock_get_client:
+             patch("src.common.llm_client.get_client") as mock_get_client, \
+             patch.dict("src.common.llm_client._endpoint_backoff_until", {}, clear=True):
             mock_client = MagicMock()
             mock_client.chat.completions.create = mock_create
             mock_get_client.return_value = mock_client
@@ -191,7 +199,8 @@ class TestChatCompletion:
         mock_create = AsyncMock(side_effect=RuntimeError("network error"))
         with patch("src.common.llm_client.OPENAI_API_KEY", "test-key"), \
              patch("src.common.llm_client.get_client") as mock_get_client, \
-             patch("src.common.llm_client.asyncio.sleep", new=AsyncMock()):
+             patch("src.common.llm_client.asyncio.sleep", new=AsyncMock()), \
+             patch.dict("src.common.llm_client._endpoint_backoff_until", {}, clear=True):
             mock_client = MagicMock()
             mock_client.chat.completions.create = mock_create
             mock_get_client.return_value = mock_client
@@ -211,7 +220,8 @@ class TestChatCompletion:
              patch("src.common.llm_client.FALLBACK_MODEL", "fallback-model"), \
              patch("src.common.llm_client.DEFAULT_MODEL", "default-model"), \
              patch("src.common.llm_client.get_client") as mock_get_client, \
-             patch("src.common.llm_client.asyncio.sleep", new=AsyncMock()):
+             patch("src.common.llm_client.asyncio.sleep", new=AsyncMock()), \
+             patch.dict("src.common.llm_client._endpoint_backoff_until", {}, clear=True):
             mock_client = MagicMock()
             mock_client.chat.completions.create = fake_create
             mock_get_client.return_value = mock_client
@@ -230,7 +240,8 @@ class TestChatCompletion:
             return mock_response
 
         with patch("src.common.llm_client.OPENAI_API_KEY", "test-key"), \
-             patch("src.common.llm_client.get_client") as mock_get_client:
+             patch("src.common.llm_client.get_client") as mock_get_client, \
+             patch.dict("src.common.llm_client._endpoint_backoff_until", {}, clear=True):
             mock_client = MagicMock()
             mock_client.chat.completions.create = fake_create
             mock_get_client.return_value = mock_client
@@ -241,7 +252,8 @@ class TestChatCompletion:
         from src.common.llm_client import chat_completion
 
         mock_response = self._make_mock_response("response")
-        with patch("src.common.llm_client.get_client") as mock_get_client:
+        with patch("src.common.llm_client.get_client") as mock_get_client, \
+             patch.dict("src.common.llm_client._endpoint_backoff_until", {}, clear=True):
             mock_client = MagicMock()
             mock_client.chat.completions.create = AsyncMock(return_value=mock_response)
             mock_get_client.return_value = mock_client
@@ -266,9 +278,44 @@ class TestChatCompletion:
         mock_response.choices = []
         mock_create = AsyncMock(return_value=mock_response)
         with patch("src.common.llm_client.OPENAI_API_KEY", "test-key"), \
-             patch("src.common.llm_client.get_client") as mock_get_client:
+             patch("src.common.llm_client.get_client") as mock_get_client, \
+             patch.dict("src.common.llm_client._endpoint_backoff_until", {}, clear=True):
             mock_client = MagicMock()
             mock_client.chat.completions.create = mock_create
             mock_get_client.return_value = mock_client
             result = run_async(chat_completion([{"role": "user", "content": "hi"}]))
         assert result == ""
+
+    def test_connectivity_error_skips_retries_and_marks_backoff(self) -> None:
+        from src.common import llm_client
+        from src.common.llm_client import chat_completion
+
+        mock_create = AsyncMock(side_effect=RuntimeError("Connection error"))
+        with patch("src.common.llm_client.OPENAI_API_KEY", "test-key"), \
+             patch("src.common.llm_client.get_client") as mock_get_client, \
+             patch("src.common.llm_client.asyncio.sleep", new=AsyncMock()) as mock_sleep, \
+             patch.dict("src.common.llm_client._endpoint_backoff_until", {}, clear=True):
+            mock_client = MagicMock()
+            mock_client.chat.completions.create = mock_create
+            mock_get_client.return_value = mock_client
+            with pytest.raises(RuntimeError, match="failed after"):
+                run_async(chat_completion([{"role": "user", "content": "hi"}]))
+
+            assert mock_create.call_count == 1
+            mock_sleep.assert_not_awaited()
+            assert "https://api.mcxhm.cn" in llm_client._endpoint_backoff_until
+
+    def test_backoff_short_circuits_new_requests(self) -> None:
+        from src.common.llm_client import chat_completion
+
+        with patch("src.common.llm_client.OPENAI_API_KEY", "test-key"), \
+             patch("src.common.llm_client.get_client") as mock_get_client, \
+             patch.dict(
+                 "src.common.llm_client._endpoint_backoff_until",
+                 {"https://api.mcxhm.cn": float("inf")},
+                 clear=True,
+             ):
+            with pytest.raises(RuntimeError, match="temporarily unavailable"):
+                run_async(chat_completion([{"role": "user", "content": "hi"}]))
+
+        mock_get_client.assert_not_called()

@@ -3,18 +3,22 @@
 from __future__ import annotations
 
 import asyncio
+import time
 from pathlib import Path
 import tomllib
-from typing import Any, Mapping, Sequence
+from typing import TYPE_CHECKING, Any, Mapping, Sequence
 
-from openai import AsyncOpenAI
+if TYPE_CHECKING:
+    from openai import AsyncOpenAI
 
 from src.common.config import (
     DEFAULT_MODEL,
     FALLBACK_MODEL,
     OPENAI_API_KEY,
     OPENAI_BASE_URL,
+    OPENAI_CONNECT_TIMEOUT_SECONDS,
     OPENAI_TIMEOUT_SECONDS,
+    OPENAI_UNAVAILABLE_COOLDOWN_SECONDS,
     PROJECT_ROOT,
 )
 from src.common.logger import get_logger
@@ -22,19 +26,16 @@ from src.common.logger import get_logger
 logger = get_logger(__name__)
 _client: AsyncOpenAI | None = None
 _custom_clients: dict[tuple[str, str], AsyncOpenAI] = {}
+_async_openai_cls: type[AsyncOpenAI] | None = None
+_endpoint_backoff_until: dict[str, float] = {}
 AGENT_CONFIG_PATH = PROJECT_ROOT / "configs" / "agent_models.toml"
 AGENT_NAME_ALIASES = {
-    "data_analyst": "data_analyst",
     "diagnostics": "diagnostics_expert",
     "diagnostics_expert": "diagnostics_expert",
     "exp_designer": "experiment_designer",
     "experiment_designer": "experiment_designer",
     "exp_executor": "experiment_executor",
     "experiment_executor": "experiment_executor",
-    "exp_supervisor": "experiment_supervisor",
-    "experiment_supervisor": "experiment_supervisor",
-    "knowledge_mgr": "knowledge_manager",
-    "knowledge_manager": "knowledge_manager",
     "orchestrator": "orchestrator",
 }
 
@@ -51,6 +52,80 @@ def _default_agent_config() -> dict[str, Any]:
 
 def _mask_key_prefix(api_key: str) -> str:
     return api_key[:6] if api_key else "empty"
+
+
+def _get_async_openai_class() -> type[AsyncOpenAI]:
+    """Import AsyncOpenAI lazily so non-LLM code paths can still run."""
+    global _async_openai_cls
+    if _async_openai_cls is None:
+        try:
+            from openai import AsyncOpenAI as imported_cls
+        except ImportError as exc:
+            raise RuntimeError(
+                "openai package is not installed. Run `pip install -e \".[dev]\"` "
+                "inside AutoHySeeker before enabling LLM-backed agents."
+            ) from exc
+        _async_openai_cls = imported_cls
+    return _async_openai_cls
+
+
+def _build_timeout() -> Any:
+    """Use a short connect timeout so unreachable gateways fail fast."""
+    try:
+        import httpx
+    except ImportError:
+        return OPENAI_TIMEOUT_SECONDS
+    return httpx.Timeout(
+        timeout=OPENAI_TIMEOUT_SECONDS,
+        connect=OPENAI_CONNECT_TIMEOUT_SECONDS,
+    )
+
+
+def _iter_error_chain(exc: BaseException) -> Sequence[BaseException]:
+    chain: list[BaseException] = []
+    current: BaseException | None = exc
+    while current is not None and current not in chain:
+        chain.append(current)
+        current = current.__cause__ or current.__context__
+    return chain
+
+
+def _is_connectivity_error(exc: BaseException) -> bool:
+    markers = (
+        "connection error",
+        "connect error",
+        "connecterror",
+        "api connection error",
+        "all connection attempts failed",
+        "connection refused",
+        "failed to establish a new connection",
+        "temporarily unavailable",
+        "winerror 10013",
+        "winerror 10061",
+        "nodename nor servname provided",
+    )
+    for item in _iter_error_chain(exc):
+        type_name = type(item).__name__.lower()
+        message = str(item).lower()
+        if "connect" in type_name or "timeout" in type_name:
+            return True
+        if any(marker in message for marker in markers):
+            return True
+    return False
+
+
+def _is_endpoint_backing_off(base_url: str) -> bool:
+    return _endpoint_backoff_until.get(base_url, 0.0) > time.monotonic()
+
+
+def _mark_endpoint_unavailable(base_url: str) -> None:
+    _endpoint_backoff_until[base_url] = (
+        time.monotonic() + OPENAI_UNAVAILABLE_COOLDOWN_SECONDS
+    )
+
+
+def _clear_endpoint_backoff(base_url: str) -> None:
+    _endpoint_backoff_until.pop(base_url, None)
 
 
 def load_agent_config(agent_name: str) -> dict[str, Any]:
@@ -114,24 +189,25 @@ def get_client(
 ) -> AsyncOpenAI:
     """Return a singleton AsyncOpenAI client."""
     global _client
+    async_openai_cls = _get_async_openai_class()
     resolved_api_key = api_key or OPENAI_API_KEY
     resolved_base_url = base_url or OPENAI_BASE_URL
 
     if resolved_api_key == OPENAI_API_KEY and resolved_base_url == OPENAI_BASE_URL:
         if _client is None:
-            _client = AsyncOpenAI(
+            _client = async_openai_cls(
                 base_url=resolved_base_url,
                 api_key=resolved_api_key,
-                timeout=OPENAI_TIMEOUT_SECONDS,
+                timeout=_build_timeout(),
             )
         return _client
 
     cache_key = (resolved_base_url, resolved_api_key)
     if cache_key not in _custom_clients:
-        _custom_clients[cache_key] = AsyncOpenAI(
+        _custom_clients[cache_key] = async_openai_cls(
             base_url=resolved_base_url,
             api_key=resolved_api_key,
-            timeout=OPENAI_TIMEOUT_SECONDS,
+            timeout=_build_timeout(),
         )
     return _custom_clients[cache_key]
 
@@ -163,6 +239,11 @@ async def chat_completion(
 
     if not resolved_api_key:
         raise RuntimeError("OPENAI_API_KEY is empty. Set it in environment or .env file.")
+    if _is_endpoint_backing_off(resolved_base_url):
+        raise RuntimeError(
+            f"LLM endpoint temporarily unavailable for {resolved_base_url}; "
+            "skipping request during cooldown window."
+        )
 
     attempts = 3  # 1 initial + 2 retries
     last_error: Exception | None = None
@@ -178,6 +259,7 @@ async def chat_completion(
                 messages=list(messages),
                 **kwargs,
             )
+            _clear_endpoint_backoff(resolved_base_url)
             content = response.choices[0].message.content if response.choices else ""
             return _extract_text(content)
         except Exception as exc:  # pragma: no cover - network/runtime dependent
@@ -189,8 +271,10 @@ async def chat_completion(
                 model_name,
                 exc,
             )
+            if _is_connectivity_error(exc):
+                _mark_endpoint_unavailable(resolved_base_url)
+                break
             if attempt < attempts - 1:
                 await asyncio.sleep(2)
 
     raise RuntimeError(f"chat completion failed after {attempts} attempts: {last_error}")
-

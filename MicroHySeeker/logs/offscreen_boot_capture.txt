@@ -1,0 +1,8 @@
+[2026-03-18 01:24:29.920] [INFO   ] [MicroHySeeker] 日志系统已初始化 → logs\2026-03-18\app_01-24-29.log（永久保留，无大小限制）
+[2026-03-18 01:24:29.920] [INFO   ] [MicroHySeeker] 通信日志已初始化 → logs\2026-03-18\comm_01-24-29.log
+🔧 RS485Wrapper: Mock模式 关闭
+✅ RS485Wrapper: 实例已创建 (Mock模式: False)，请手动连接
+[2026-03-18 01:24:30.407] [INFO   ] [MicroHySeeker.UI] API server thread started on port 8100
+[ExperimentProcess] 已从文件加载布局参数
+[2026-03-18 01:24:30.527] [INFO   ] [MicroHySeeker.UI] 已加载上次实验: 单次实验
+[2026-03-18 01:24:30.528] [INFO   ] [MicroHySeeker.UI] 系统已启动，欢迎使用 MicroHySeeker

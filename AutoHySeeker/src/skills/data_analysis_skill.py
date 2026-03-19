@@ -1,91 +1,40 @@
-"""Data analyst agent — extracts metrics and assesses experiment quality.
+"""Data analysis skill — extracts metrics and assesses experiment quality.
 
-The analyst processes completed experiment data (CV/LSV/EIS) and returns
-structured metrics that the Orchestrator uses for optimization decisions.
+Converted from the former DataAnalystAgent.  This skill is deterministic
+(no LLM calls) and is owned by the OrchestratorAgent.
 
 Key outputs:
 - ``metrics``: overpotential_mV, current_density, tafel_slope, etc.
 - ``data_quality``: score 0–1, issues list, ``reliable`` boolean.
-- ``interpretation``: LLM-generated textual analysis.
+- ``comparison``: vs-best tracking.
 """
 
 from __future__ import annotations
 
-import json
 import logging
-import re
-from pathlib import Path
 from typing import Any
 
-from src.agents.base import BaseAgent
+from src.skills.base import BaseSkill, SkillResult
 
-_logger = logging.getLogger("autohyseeker.data_analyst")
-
-ANALYST_SYSTEM_PROMPT = """\
-你是数据分析 Agent（Data Analyst），负责分析电化学实验数据并提取关键指标。
-
-## 工作流程
-1. 读取实验数据文件（CV/LSV/EIS CSV 文件）
-2. 提取关键指标（过电位、电流密度、Tafel 斜率等）
-3. 评估数据质量（完整性、可靠性）
-4. 给出结构化分析结果
-
-## 关键指标
-- overpotential_mV: HER 过电位（在 10 mA/cm² 时）
-- current_density_mA_cm2: 电流密度
-- tafel_slope_mV_dec: Tafel 斜率
-- onset_potential_V: 起始电位
-- ecsa_cm2: 电化学活性面积
-
-## 数据质量评估
-- score: 0-1 之间的质量评分
-- reliable: score ≥ 0.6 则为 true
-- issues: 数据问题列表（噪声大、数据点少、异常值等）
-
-## 输出格式（严格 JSON）
-```json
-{
-  "status": "analyzed",
-  "metrics": {
-    "overpotential_mV": 182.5,
-    "current_density_mA_cm2": 15.3,
-    "tafel_slope_mV_dec": 68.2,
-    "onset_potential_V": -0.15
-  },
-  "data_quality": {
-    "score": 0.92,
-    "issues": [],
-    "reliable": true
-  },
-  "interpretation": "分析解读文本",
-  "comparison": {}
-}
-```
-"""
+_logger = logging.getLogger("autohyseeker.skill.data_analysis")
 
 
-class DataAnalystAgent(BaseAgent):
-    """Data analyst — extracts metrics and assesses quality from echem data."""
+class DataAnalysisSkill(BaseSkill):
+    """Extract electrochemistry metrics and assess data quality.
 
-    def __init__(self) -> None:
-        super().__init__(
-            name="data_analyst",
-            system_prompt=ANALYST_SYSTEM_PROMPT,
-        )
+    This is a pure-computation skill — it does **not** call any LLM.
+    """
+
+    name = "data_analysis"
+    description = "Extract metrics, assess quality, and compare with best result."
+    required_tools: list[str] = []
 
     # ── Public API ─────────────────────────────────────────────────────────────
 
-    async def analyze_experiment(
-        self,
-        run_id: str,
-        data_path: str = "",
-        params: dict[str, float] | None = None,
-        target_metric: str = "overpotential_mV",
-        best_result: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
-        """Analyze a completed experiment and extract structured metrics.
+    async def execute(self, **kwargs: Any) -> SkillResult:
+        """Run the full analysis pipeline.
 
-        Args:
+        Keyword Args:
             run_id: Experiment run identifier.
             data_path: Path to the run data directory.
             params: Element ratios used in this experiment.
@@ -93,32 +42,33 @@ class DataAnalystAgent(BaseAgent):
             best_result: Current best result for comparison.
 
         Returns:
-            Analysis dict with ``metrics``, ``data_quality``, ``interpretation``.
+            SkillResult with analysis data.
         """
+        run_id: str = kwargs.get("run_id", "")
+        data_path: str = kwargs.get("data_path", "")
+        params: dict[str, float] | None = kwargs.get("params")
+        target_metric: str = kwargs.get("target_metric", "overpotential_mV")
+        best_result: dict[str, Any] | None = kwargs.get("best_result")
+
         _logger.info(
-            "DataAnalystAgent: analyze_experiment run_id=%s path=%s",
-            run_id, data_path,
+            "DataAnalysisSkill: analyze run_id=%s path=%s", run_id, data_path
         )
 
-        # ── 1. Try to extract metrics from data files ─────────────────────────
+        # 1. Extract metrics
         metrics = await self._extract_metrics(data_path, run_id)
 
-        # ── 2. Assess data quality ────────────────────────────────────────────
-        quality = self._assess_quality(metrics, data_path)
+        # 2. Assess quality
+        quality = self.assess_quality(metrics, data_path)
 
-        # ── 3. Compare with best ──────────────────────────────────────────────
-        comparison = {}
+        # 3. Compare with best
+        comparison: dict[str, Any] = {}
         if best_result and metrics:
-            comparison = self._compare_with_best(
-                metrics, best_result, target_metric,
-            )
+            comparison = self.compare_with_best(metrics, best_result, target_metric)
 
-        # ── 4. LLM interpretation ────────────────────────────────────────────
-        interpretation = await self._interpret(
-            metrics, quality, params, comparison,
-        )
+        # 4. Generate simple interpretation (no LLM)
+        interpretation = self._make_interpretation(metrics, quality, comparison)
 
-        return {
+        data = {
             "status": "analyzed",
             "run_id": run_id,
             "params": params or {},
@@ -128,26 +78,28 @@ class DataAnalystAgent(BaseAgent):
             "comparison": comparison,
         }
 
-    # ── Private: Metric Extraction ────────────────────────────────────────────
+        return SkillResult(
+            success=True,
+            data=data,
+            message=f"Analysis complete for {run_id}",
+            artifacts=[],
+        )
+
+    # ── Metric Extraction ──────────────────────────────────────────────────────
 
     async def _extract_metrics(
-        self,
-        data_path: str,
-        run_id: str,
+        self, data_path: str, run_id: str
     ) -> dict[str, float]:
-        """Extract metrics from experiment data files.
-
-        Tries the SingleExperimentAnalysisSkill first, then falls back to
-        API-based data retrieval.
-        """
+        """Extract metrics from experiment data files."""
         metrics: dict[str, float] = {}
 
-        # Strategy 1: Use existing skill
+        # Strategy 1: Use SingleExperimentAnalysisSkill
         if data_path:
             try:
                 from src.skills.single_experiment_analysis import (
                     SingleExperimentAnalysisSkill,
                 )
+
                 skill = SingleExperimentAnalysisSkill()
                 result = await skill.execute(run_dir=data_path)
                 if result.success and result.data:
@@ -160,19 +112,21 @@ class DataAnalystAgent(BaseAgent):
         # Strategy 2: Get data from API
         try:
             from src.tools import experiment_ctrl as ctrl
+
             detail = ctrl.get_run_detail(run_id)
-            # Extract from run detail metadata
             if detail.get("metrics"):
-                return {k: float(v) for k, v in detail["metrics"].items()
-                        if isinstance(v, (int, float))}
+                return {
+                    k: float(v)
+                    for k, v in detail["metrics"].items()
+                    if isinstance(v, (int, float))
+                }
         except Exception as exc:
             _logger.debug("API data retrieval failed: %s", exc)
 
         return metrics
 
     def _extract_from_skill_result(
-        self,
-        skill_data: list[dict[str, Any]] | dict[str, Any],
+        self, skill_data: list[dict[str, Any]] | dict[str, Any]
     ) -> dict[str, float]:
         """Extract standard metrics from SingleExperimentAnalysisSkill output."""
         metrics: dict[str, float] = {}
@@ -187,7 +141,6 @@ class DataAnalystAgent(BaseAgent):
                 lsv = analysis.get("analysis", {})
                 if "onset_potential_V" in lsv:
                     metrics["onset_potential_V"] = float(lsv["onset_potential_V"])
-                # Extract overpotential at 10 mA/cm2
                 if "overpotential_mV" in lsv:
                     metrics["overpotential_mV"] = float(lsv["overpotential_mV"])
 
@@ -205,14 +158,16 @@ class DataAnalystAgent(BaseAgent):
 
         return metrics
 
-    # ── Private: Quality Assessment ───────────────────────────────────────────
+    # ── Quality Assessment ─────────────────────────────────────────────────────
 
-    def _assess_quality(
-        self,
-        metrics: dict[str, float],
-        data_path: str,
+    def assess_quality(
+        self, metrics: dict[str, float], data_path: str = ""
     ) -> dict[str, Any]:
-        """Assess data quality based on metrics completeness and values."""
+        """Assess data quality based on metrics completeness and values.
+
+        This is a public method so it can be called directly (e.g. by
+        ``_simulate_dry_run_analysis``).
+        """
         issues: list[str] = []
         score = 1.0
 
@@ -256,9 +211,9 @@ class DataAnalystAgent(BaseAgent):
             "reliable": score >= 0.6,
         }
 
-    # ── Private: Comparison ───────────────────────────────────────────────────
+    # ── Comparison ─────────────────────────────────────────────────────────────
 
-    def _compare_with_best(
+    def compare_with_best(
         self,
         metrics: dict[str, float],
         best_result: dict[str, Any],
@@ -273,7 +228,9 @@ class DataAnalystAgent(BaseAgent):
             return {"vs_best": {"comparable": False}}
 
         change = round(current_val - best_val, 2)
-        pct_change = round(change / abs(best_val) * 100, 1) if best_val != 0 else 0.0
+        pct_change = (
+            round(change / abs(best_val) * 100, 1) if best_val != 0 else 0.0
+        )
 
         return {
             "vs_best": {
@@ -286,33 +243,37 @@ class DataAnalystAgent(BaseAgent):
             }
         }
 
-    # ── Private: LLM Interpretation ───────────────────────────────────────────
+    # ── Interpretation (template-based, no LLM) ───────────────────────────────
 
-    async def _interpret(
+    def _make_interpretation(
         self,
         metrics: dict[str, float],
         quality: dict[str, Any],
-        params: dict[str, float] | None,
         comparison: dict[str, Any],
     ) -> str:
-        """Use LLM to generate a textual interpretation of the results."""
-        task = {
-            "type": "interpret_results",
-            "metrics": metrics,
-            "quality": quality,
+        """Generate a simple textual interpretation without LLM."""
+        parts = [f"{k}: {v}" for k, v in metrics.items()]
+        text = f"指标提取完成: {', '.join(parts)}。质量评分: {quality.get('score', 'N/A')}"
+
+        vs = comparison.get("vs_best", {})
+        if vs.get("comparable"):
+            pct = vs.get("change_pct", 0)
+            direction = "改善" if vs.get("is_improvement") else "劣于"
+            text += f"。与最优结果比较: {direction} {abs(pct)}%"
+
+        return text
+
+    def get_schema(self) -> dict:
+        return {
+            "type": "object",
+            "title": self.name,
+            "description": self.description,
+            "properties": {
+                "run_id": {"type": "string"},
+                "data_path": {"type": "string"},
+                "params": {"type": "object"},
+                "target_metric": {"type": "string"},
+                "best_result": {"type": "object"},
+            },
+            "required": ["run_id"],
         }
-        context = {
-            "params": params or {},
-            "comparison": comparison,
-        }
-
-        try:
-            result = await self.invoke(task=task, context=context)
-            return result.get("content", "")[:500]
-        except Exception as exc:
-            _logger.warning("LLM interpretation failed: %s", exc)
-            # Fallback text
-            parts = [f"{k}: {v}" for k, v in metrics.items()]
-            return f"指标提取完成: {', '.join(parts)}。质量评分: {quality.get('score', 'N/A')}"
-
-

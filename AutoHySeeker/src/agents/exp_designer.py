@@ -293,7 +293,7 @@ class ExperimentDesignerAgent(BaseAgent):
                     )
                     for e in elements
                 },
-                values=[float(metric_val)],
+                value=float(metric_val),  # single-objective: use value= not values=
             )
             study.add_trial(trial)
 

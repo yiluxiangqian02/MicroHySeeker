@@ -5,8 +5,6 @@ from __future__ import annotations
 from datetime import datetime
 from pathlib import Path
 
-from jinja2 import Environment, Template
-
 from src.common.types import HealthStatus, RunSummary
 from src.tools.log_analysis import summarize_run
 
@@ -104,8 +102,8 @@ _HEALTH_REPORT_TEMPLATE = """\
 """
 
 
-def _load_template(template_name: str, fallback: str) -> Template:
-    """Load Jinja2 template from data/templates/ or fall back to inline string."""
+def _load_template(template_name: str, fallback: str):
+    """Load a report template, falling back to a minimal string renderer."""
     from src.common.config import DATA_ROOT
 
     tmpl_path = DATA_ROOT / "templates" / template_name
@@ -113,6 +111,38 @@ def _load_template(template_name: str, fallback: str) -> Template:
         source = tmpl_path.read_text(encoding="utf-8")
     else:
         source = fallback
+    try:
+        from jinja2 import Environment
+    except ImportError:
+        class _SimpleTemplate:
+            def __init__(self, template_source: str) -> None:
+                self._template_source = template_source
+
+            def render(self, **context: object) -> str:
+                lines = [
+                    "# AutoHySeeker Report",
+                    "",
+                    "Jinja2 未安装，使用简化报告输出。",
+                    "",
+                    f"template: {template_name}",
+                    f"context_keys: {', '.join(sorted(context))}",
+                ]
+                summary = context.get("summary")
+                if summary is not None:
+                    lines.extend(
+                        [
+                            "",
+                            f"run_id: {getattr(summary, 'run_id', 'unknown')}",
+                            f"success: {getattr(summary, 'success', False)}",
+                        ]
+                    )
+                statuses = context.get("statuses")
+                if isinstance(statuses, list):
+                    lines.extend(["", f"status_count: {len(statuses)}"])
+                return "\n".join(lines) + "\n"
+
+        return _SimpleTemplate(source)
+
     env = Environment(autoescape=False)
     return env.from_string(source)
 

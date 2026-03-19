@@ -1,12 +1,13 @@
 """Orchestrator agent — closed-loop optimization coordinator.
 
-The orchestrator is the "brain" of the multi-agent system.  It does NOT
-execute experiments or analyse data itself; instead it:
+The orchestrator is the "brain" of the multi-agent system.  It:
 
 1. Manages the optimization goal and search state.
-2. Dispatches tasks to specialist agents (Designer → Executor → Analyst).
-3. Evaluates results and decides: *continue / stop / retry / diagnose*.
-4. Handles anomaly escalation from the Executor.
+2. Dispatches tasks to specialist agents (Designer → Executor).
+3. Analyses experiment data via DataAnalysisSkill (built-in).
+4. Archives results via KnowledgeArchiveSkill (built-in).
+5. Evaluates results and decides: *continue / stop / retry / diagnose*.
+6. Handles anomaly escalation from the Executor.
 """
 
 from __future__ import annotations
@@ -51,15 +52,84 @@ ORCHESTRATOR_SYSTEM_PROMPT = """\
 
 
 class OrchestratorAgent(BaseAgent):
-    """Orchestrator agent — decides next action in the optimization loop."""
+    """Orchestrator agent — decides next action in the optimization loop.
 
-    def __init__(self) -> None:
+    Owns two built-in skills:
+
+    * :class:`DataAnalysisSkill` — metric extraction and quality assessment.
+    * :class:`KnowledgeArchiveSkill` — experiment archival and retrieval.
+    """
+
+    def __init__(self, archive_path: str | None = None) -> None:
         super().__init__(
             name="orchestrator",
             system_prompt=ORCHESTRATOR_SYSTEM_PROMPT,
         )
 
+        # ── Built-in skills ───────────────────────────────────────────────────
+        from src.skills.data_analysis_skill import DataAnalysisSkill
+        from src.skills.knowledge_archive_skill import KnowledgeArchiveSkill
+
+        self._analysis_skill = DataAnalysisSkill()
+        self._knowledge_skill = KnowledgeArchiveSkill(archive_path=archive_path)
+
     # ── Public API ─────────────────────────────────────────────────────────────
+
+    async def analyze_experiment(
+        self,
+        run_id: str,
+        data_path: str = "",
+        params: dict[str, float] | None = None,
+        target_metric: str = "overpotential_mV",
+        best_result: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        """Analyze a completed experiment (delegates to DataAnalysisSkill).
+
+        Returns analysis dict with ``metrics``, ``data_quality``,
+        ``interpretation``, ``comparison``.
+        """
+        result = await self._analysis_skill.execute(
+            run_id=run_id,
+            data_path=data_path,
+            params=params,
+            target_metric=target_metric,
+            best_result=best_result,
+        )
+        return result.data
+
+    async def archive_experiment(
+        self,
+        run_id: str,
+        params: dict[str, float],
+        metrics: dict[str, float],
+        data_quality: dict[str, Any] | None = None,
+        round_num: int | None = None,
+        extra: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        """Archive experiment result (delegates to KnowledgeArchiveSkill)."""
+        return await self._knowledge_skill.archive_experiment(
+            run_id=run_id,
+            params=params,
+            metrics=metrics,
+            data_quality=data_quality,
+            round_num=round_num,
+            extra=extra,
+        )
+
+    async def retrieve_knowledge(
+        self,
+        query: str,
+        search_type: str = "both",
+        top_k: int = 5,
+        elements: list[str] | None = None,
+    ) -> dict[str, Any]:
+        """Retrieve knowledge (delegates to KnowledgeArchiveSkill)."""
+        return await self._knowledge_skill.retrieve(
+            query=query,
+            search_type=search_type,
+            top_k=top_k,
+            elements=elements,
+        )
 
     async def evaluate_and_decide(
         self,
@@ -109,8 +179,19 @@ class OrchestratorAgent(BaseAgent):
                 "summary": self._build_summary(experiment_history, best_result),
             }
 
-        result = await self.invoke(task=task, context=context)
-        return self._parse_decision(result.get("content", ""))
+        try:
+            result = await self.invoke(task=task, context=context)
+            return self._parse_decision(result.get("content", ""))
+        except Exception as exc:
+            _logger.warning("Orchestrator LLM decision failed, using rule fallback: %s", exc)
+            return self._fallback_decision(
+                optimization=optimization,
+                experiment_history=experiment_history,
+                current_result=current_result,
+                best_result=best_result,
+                current_round=current_round,
+                error=exc,
+            )
 
     async def handle_anomaly(
         self,
@@ -243,3 +324,50 @@ class OrchestratorAgent(BaseAgent):
             lines.append(f"最优参数: {best.get('params', {})}")
             lines.append(f"来自第 {best.get('round', '?')} 轮")
         return " ".join(lines)
+
+    def _fallback_decision(
+        self,
+        optimization: dict[str, Any],
+        experiment_history: list[dict[str, Any]],
+        current_result: dict[str, Any] | None,
+        best_result: dict[str, Any] | None,
+        current_round: int,
+        error: Exception,
+    ) -> dict[str, Any]:
+        """Deterministic fallback when the LLM is unavailable."""
+        quality = (current_result or {}).get("data_quality", {})
+        metrics = (current_result or {}).get("metrics", {})
+        target_metric = optimization.get("target_metric", "overpotential_mV")
+        direction = optimization.get("optimization_direction", "minimize")
+        current_value = metrics.get(target_metric)
+        best_value = (best_result or {}).get("metrics", {}).get(target_metric)
+
+        if quality and not quality.get("reliable", True):
+            action = "continue"
+            reason = "LLM 不可用，当前数据质量不足，继续收集更多实验结果"
+        elif current_value is not None and best_value is not None:
+            improved = (
+                current_value <= best_value
+                if direction == "minimize"
+                else current_value >= best_value
+            )
+            if improved:
+                action = "continue"
+                reason = "LLM 不可用，但当前结果仍在改进，继续优化"
+            elif len(experiment_history) >= 3:
+                action = "adjust_strategy"
+                reason = "LLM 不可用，近期结果未改善，建议调整搜索策略"
+            else:
+                action = "continue"
+                reason = "LLM 不可用，历史数据仍不足，继续优化"
+        else:
+            action = "continue"
+            reason = "LLM 不可用，采用保守策略继续下一轮"
+
+        return {
+            "action": action,
+            "reason": f"{reason}（fallback: {type(error).__name__}）",
+            "confidence": 0.35,
+            "next_params_hint": {},
+            "summary": self._build_summary(experiment_history, best_result),
+        }

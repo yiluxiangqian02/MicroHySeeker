@@ -1,20 +1,23 @@
-"""Agent definitions for AutoHySeeker."""
+"""Lazy agent exports for AutoHySeeker."""
 
-from src.agents.data_analyst import DataAnalystAgent
-from src.agents.diagnostics import DiagnosticsExpertAgent
-from src.agents.exp_designer import ExperimentDesignerAgent
-from src.agents.exp_executor import ExperimentExecutorAgent
-from src.agents.exp_supervisor import ExperimentSupervisorAgent
-from src.agents.knowledge_mgr import KnowledgeManagerAgent
-from src.agents.orchestrator import OrchestratorAgent
+from __future__ import annotations
 
-__all__ = [
-    "DataAnalystAgent",
-    "DiagnosticsExpertAgent",
-    "ExperimentDesignerAgent",
-    "ExperimentExecutorAgent",
-    "ExperimentSupervisorAgent",
-    "KnowledgeManagerAgent",
-    "OrchestratorAgent",
-]
+from importlib import import_module
+from typing import Any
 
+_EXPORTS = {
+    "DiagnosticsExpertAgent": "src.agents.diagnostics",
+    "ExperimentDesignerAgent": "src.agents.exp_designer",
+    "ExperimentExecutorAgent": "src.agents.exp_executor",
+    "OrchestratorAgent": "src.agents.orchestrator",
+}
+
+__all__ = list(_EXPORTS)
+
+
+def __getattr__(name: str) -> Any:
+    module_name = _EXPORTS.get(name)
+    if module_name is None:
+        raise AttributeError(name)
+    module = import_module(module_name)
+    return getattr(module, name)

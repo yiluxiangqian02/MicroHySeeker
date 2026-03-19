@@ -60,7 +60,8 @@ def _plan_to_payload(plan: Any) -> dict[str, Any]:
 def _post(path: str, json_body: dict, timeout: float = _DEFAULT_TIMEOUT) -> dict[str, Any]:
     url = f"{_API_BASE}{path}"
     try:
-        resp = httpx.post(url, json=json_body, timeout=timeout)
+        with httpx.Client(timeout=timeout, trust_env=False) as client:
+            resp = client.post(url, json=json_body)
         resp.raise_for_status()
         return resp.json()
     except httpx.ConnectError as exc:
@@ -80,7 +81,8 @@ def _post(path: str, json_body: dict, timeout: float = _DEFAULT_TIMEOUT) -> dict
 def _get(path: str, params: Optional[dict] = None, timeout: float = _DEFAULT_TIMEOUT) -> dict[str, Any]:
     url = f"{_API_BASE}{path}"
     try:
-        resp = httpx.get(url, params=params, timeout=timeout)
+        with httpx.Client(timeout=timeout, trust_env=False) as client:
+            resp = client.get(url, params=params)
         resp.raise_for_status()
         return resp.json()
     except httpx.ConnectError as exc:
@@ -258,7 +260,8 @@ def download_run_file(run_id: str, filename: str) -> bytes:
     """
     url = f"{_API_BASE}/data/runs/{run_id}/files/{filename}"
     try:
-        resp = httpx.get(url, timeout=60.0)
+        with httpx.Client(timeout=60.0, trust_env=False) as client:
+            resp = client.get(url)
         resp.raise_for_status()
         return resp.content
     except httpx.ConnectError as exc:
@@ -433,7 +436,8 @@ def delete_template(template_id: str) -> dict[str, Any]:
     """删除模板。"""
     url = f"{_API_BASE}/template/{template_id}"
     try:
-        resp = httpx.delete(url, timeout=_DEFAULT_TIMEOUT)
+        with httpx.Client(timeout=_DEFAULT_TIMEOUT, trust_env=False) as client:
+            resp = client.delete(url)
         resp.raise_for_status()
         return resp.json()
     except httpx.ConnectError as exc:

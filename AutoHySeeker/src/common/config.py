@@ -26,6 +26,12 @@ OPENAI_BASE_URL = os.getenv("OPENAI_BASE_URL", "https://api.mcxhm.cn")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
 DEFAULT_MODEL = os.getenv("DEFAULT_MODEL", "anthropic/claude-sonnet-4-6")
 FALLBACK_MODEL = os.getenv("FALLBACK_MODEL", "anthropic/claude-opus-4-6")
+OPENAI_CONNECT_TIMEOUT_SECONDS = float(
+    os.getenv("OPENAI_CONNECT_TIMEOUT_SECONDS", "5"),
+)
+OPENAI_UNAVAILABLE_COOLDOWN_SECONDS = float(
+    os.getenv("OPENAI_UNAVAILABLE_COOLDOWN_SECONDS", "60"),
+)
 DATA_ROOT = _resolve_path(os.getenv("DATA_ROOT", "../data"), PROJECT_ROOT)
 LOG_ROOT = _resolve_path(os.getenv("LOG_ROOT", "./logs"), PROJECT_ROOT)
 API_HOST = os.getenv("API_HOST", "0.0.0.0")

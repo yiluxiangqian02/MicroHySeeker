@@ -1,6 +1,8 @@
 # AutoHySeeker Multi-Agent 系统架构总览
 
-## 1. 系统目标
+> **最后更新：2026-03-18 — Phase 10 架构精简（7→4 Agent）**
+
+## 1. 系统目��
 
 AutoHySeeker 是一个 **闭环自驱动实验室 (Self-Driving Lab, SDL)** 的 AI 代理层，
 目标是 **自主优化析氢反应 (HER) 催化剂的元素配比**。
@@ -15,19 +17,23 @@ AutoHySeeker 是一个 **闭环自驱动实验室 (Self-Driving Lab, SDL)** 的 
 
 ---
 
-## 2. Agent 总览
+## 2. Agent 总览（4 Agent + 2 Skill 架构）
 
-| # | Agent 名称 | 英文标识 | 定位 | 当前状态 |
-|---|-----------|---------|------|---------|
-| 1 | **运行管控 Agent** | `orchestrator` | 多Agent系统大脑，闭环调度 | 图/路由已实现，闭环逻辑待构建 |
-| 2 | **实验设计 Agent** | `exp_designer` | 生成实验参数（元素配比） | Stub（仅 system prompt） |
-| 3 | **实验执行 Agent** | `exp_executor` | 执行/监控单次实验 | 需新建（当前由 supervisor 兼任） |
-| 4 | **数据分析 Agent** | `data_analyst` | 分析电化学数据 | Stub + 丰富工具/技能 |
-| 5 | **故障排查 Agent** | `diagnostics` | 异常诊断与自动修复 | Stub（仅 system prompt） |
-| 6 | **知识管理 Agent** | `knowledge_mgr` | RAG 文献检索与知识沉淀 | Stub + RAG 基础设施 |
+| # | 名称 | 英文标识 | 定位 | 类型 |
+|---|------|---------|------|------|
+| 1 | **运行管控 Agent** | `orchestrator` | 多Agent系统大脑，闭环调度 + 数据分析 + 知识管理 | Agent |
+| 2 | **实���设计 Agent** | `exp_designer` | 生成实验参数（元素配比） | Agent |
+| 3 | **实验执行 Agent** | `exp_executor` | 执行/监控单次实验 | Agent |
+| 4 | **故障排查 Agent** | `diagnostics` | 异常诊断与自动修复 | Agent |
+| — | *数据分析技能* | `DataAnalysisSkill` | 电化学数据指标提取与质量评估 | Orchestrator Skill |
+| — | *知识归档技能* | `KnowledgeArchiveSkill` | 实验归档与文献/历史检索 | Orchestrator Skill |
 
-> **关键调整**：将现有 `ExperimentSupervisorAgent`（314行，已完整实现）拆分为
-> **运行管控 Agent**（高层调度）+ **实验执行 Agent**（单次实验生命周期管理）。
+> **Phase 10 架构精简**：原 7 个 Agent 精简为 4 个。
+> - `DataAnalystAgent` → 转为 `DataAnalysisSkill`（确定性逻辑，无需独立 LLM）
+> - `KnowledgeManagerAgent` → 转为 `KnowledgeArchiveSkill`（模板化归档/检索，无需独立 LLM）
+> - `ExperimentSupervisorAgent` → 已消除（职责与 Orchestrator 重叠）
+>
+> 旧 Agent 名称通过 `_AGENT_ALIASES` 向后兼容路由到 `orchestrator`。
 
 ---
 
@@ -36,31 +42,30 @@ AutoHySeeker 是一个 **闭环自驱动实验室 (Self-Driving Lab, SDL)** 的 
 ### 3.1 闭环优化主循环 (Optimization Loop)
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│                   运行管控 Agent (Orchestrator)           │
-│  ┌─────────┐    ┌──────────┐    ┌──────────┐           │
-│  │ 接收目标 │───▶│ 分配任务  │───▶│ 决策判断 │──▶ 完成/继续│
-│  └─────────┘    └──────────┘    └──────────┘           │
-│       │              │               ▲                  │
-│       │              │               │                  │
-│       ▼              ▼               │                  │
-│  ┌─────────┐    ┌──────────┐    ┌──────────┐           │
-│  │知识管理  │    │实验设计   │    │数据分析   │           │
-│  │ Agent   │    │ Agent    │    │ Agent    │           │
-│  └─────────┘    └──────────┘    └──────────┘           │
-│                      │               ▲                  │
-│                      ▼               │                  │
-│                 ┌──────────┐         │                  │
-│                 │实验执行   │─────────┘                  │
-│                 │ Agent    │                            │
-│                 └──────────┘                            │
-│                      │                                  │
-│                      ▼ (异常时)                          │
-│                 ┌──────────┐                            │
-│                 │故障排查   │                            │
-│                 │ Agent    │                            │
-│                 └──────────┘                            │
-└─────────────────────────────────────────────────────────┘
+┌───────────────────────────────────���──────────────────────────┐
+│              运行管控 Agent (Orchestrator)                      │
+│  ┌─────────┐    ┌──────────┐    ┌──────────┐                 │
+│  │ 接收目标 │───▶│ 分配任务  │───▶│ 决策判断 │──▶ 完成/继续     │
+│  └─────────┘    └──────────┘    └──────────┘                 │
+│       │              │               ▲                        │
+│       │              │               │                        │
+│       │         ┌──────────┐    ┌──────────────┐             │
+│       │         │ 知识归档  │    │ 数据分析      │             │
+│       │         │  Skill   │    │  Skill       │             │
+│       │         └──────────┘    └──────────────┘             │
+│       │              │               ▲                        │
+│       ▼              ▼               │                        │
+│  ┌──────────┐   ┌──────────┐         │                        │
+│  │实验设计   │   │实验执行   │─────────┘                        │
+│  │ Agent    │──▶│ Agent    │                                  │
+│  └──────────┘   └──────────┘                                  │
+│                      │                                        │
+│                      ▼ (异常时)                                │
+│                 ┌──────────┐                                  │
+│                 │故障排查   │                                  │
+│                 │ Agent    │                                  │
+│                 └──────────┘                                  │
+└──────────────────────────────────────────────────────────────┘
 ```
 
 ### 3.2 单次实验流程
@@ -77,7 +82,8 @@ Executor: 调用 POST /api/template/{id}/instantiate
           → 监控实验状态 (轮询 /api/experiment/status)
           → 等待完成或检测到异常
     │
-    ├─── 正常完成 ──▶ Analyst: 分析 CV/LSV 数据
+    ├─── 正常完成 ──▶ Orchestrator (DataAnalysisSkill):
+    │                          分析 CV/LSV 数据
     │                          提取 overpotential, current density
     │                          返回结构化结果
     │
@@ -137,18 +143,16 @@ class AgentMessage:
 
 ### 4.2 Agent 路由表
 
-| 源 Agent | 目标 Agent | 消息类型 | 触发条件 |
-|----------|-----------|---------|---------|
+| 源 | 目标 | 消息类型 | 触发条件 |
+|----|------|---------|---------|
 | Orchestrator | Designer | task | 需要新实验参数 |
 | Orchestrator | Executor | task | 有实验需要执行 |
-| Orchestrator | Analyst | task | 实验完成需分析 |
+| Orchestrator | DataAnalysisSkill | skill_call | 实验完成需分析 |
+| Orchestrator | KnowledgeArchiveSkill | skill_call | 需要归档/检索知识 |
 | Orchestrator | Diagnostics | task | 收到异常报告 |
-| Orchestrator | Knowledge | query | 需要文献/历史上下文 |
 | Designer | Orchestrator | result | 实验参数已生成 |
 | Executor | Orchestrator | result/alert | 实验完成/异常 |
-| Analyst | Orchestrator | result | 分析结果 |
 | Diagnostics | Orchestrator | result | 诊断/修复结果 |
-| Knowledge | Orchestrator | result | 检索结果 |
 
 ### 4.3 共享状态 (Optimization State)
 
@@ -180,25 +184,27 @@ class OptimizationState:
 
 每个 Agent 只能使用其权限范围内的工具，遵循最小权限原则：
 
-| 工具类别 | Orchestrator | Designer | Executor | Analyst | Diagnostics | Knowledge |
-|---------|:---:|:---:|:---:|:---:|:---:|:---:|
-| **实验控制** (start/stop/pause) | — | — | ✅ | — | ✅ | — |
-| **泵控制** (pump_start/stop) | — | — | ✅ | — | ✅ | — |
-| **清洗控制** (flusher) | — | — | ✅ | — | ✅ | — |
-| **配液控制** (diluter) | — | — | ✅ | — | ✅ | — |
-| **紧急停止** | ✅ | — | ✅ | — | ✅ | — |
-| **模板管理** (list/get/save) | ✅ | ✅ | ✅ | — | — | — |
-| **模板实例化** (instantiate) | — | — | ✅ | — | — | — |
-| **参数验证** (validate) | — | ✅ | ✅ | — | — | — |
-| **系统配置查询** | ✅ | ✅ | ✅ | — | ✅ | — |
-| **数据读取** (run data/echem) | — | ✅ | — | ✅ | ✅ | ✅ |
-| **电化学分析** (CV/EIS/LSV) | — | — | — | ✅ | — | — |
-| **可视化** (plot) | — | — | — | ✅ | — | — |
-| **日志查询** | ✅ | — | ✅ | — | ✅ | — |
-| **日志分析** (parse/classify) | — | — | — | — | ✅ | — |
-| **健康检查** | ✅ | — | ✅ | — | ✅ | — |
-| **知识检索** (RAG) | — | ✅ | — | ✅ | — | ✅ |
-| **报告生成** | ✅ | — | — | ✅ | — | — |
+| 工具类别 | Orchestrator | Designer | Executor | Diagnostics |
+|---------|:---:|:---:|:---:|:---:|
+| **实验控制** (start/stop/pause) | — | — | ✅ | ✅ |
+| **泵控制** (pump_start/stop) | — | — | ✅ | ✅ |
+| **清洗控制** (flusher) | — | — | ✅ | ✅ |
+| **配液控制** (diluter) | — | — | ✅ | ✅ |
+| **紧急停止** | ✅ | — | ✅ | ✅ |
+| **模板管理** (list/get/save) | ✅ | ✅ | ✅ | — |
+| **模板实例化** (instantiate) | — | — | ✅ | — |
+| **参数验证** (validate) | — | ✅ | ✅ | — |
+| **系统配置查询** | ✅ | ✅ | ✅ | ✅ |
+| **数据读取** (run data/echem) | ✅* | ✅ | — | ✅ |
+| **电化学分析** (CV/EIS/LSV) | ✅* | — | — | — |
+| **可视化** (plot) | ✅* | — | — | — |
+| **日志查询** | ✅ | — | ✅ | ✅ |
+| **日志分析** (parse/classify) | — | — | — | ✅ |
+| **健康检查** | ✅ | — | ✅ | ✅ |
+| **知识检索** (RAG) | ✅* | ✅ | — | — |
+| **报告生成** | ✅ | — | — | — |
+
+> ✅* = 通过 Orchestrator 内置的 DataAnalysisSkill / KnowledgeArchiveSkill 调用
 
 ---
 
@@ -216,45 +222,43 @@ class OptimizationState:
 
 ---
 
-## 7. 文件结构（目标状态）
+## 7. 文件结构（当前状态）
 
 ```
 AutoHySeeker/src/
 ├── agents/
-│   ├── base.py                    # BaseAgent (已有 ✅)
-│   ├── orchestrator.py            # 运行管控 Agent (需重构)
-│   ├── exp_designer.py            # 实验设计 Agent (需充实)
-│   ├── exp_executor.py            # 实验执行 Agent (需新建 🆕)
-│   ├── data_analyst.py            # 数据分析 Agent (需充实)
-│   ├── diagnostics.py             # 故障排查 Agent (需充实)
-│   ├── knowledge_mgr.py           # 知识管理 Agent (需充实)
+│   ├── base.py                    # BaseAgent (✅)
+│   ├── orchestrator.py            # 运行管控 Agent + Skills (✅)
+│   ├── exp_designer.py            # 实验设计 Agent (✅)
+│   ├── exp_executor.py            # 实验执行 Agent (✅)
+│   ├── diagnostics.py             # 故障排查 Agent (✅)
+│   └── __init__.py                # 导出 4 个 Agent
+│
+├── skills/
+│   ├── data_analysis_skill.py     # DataAnalysisSkill (✅)
+│   ├── knowledge_archive_skill.py # KnowledgeArchiveSkill (✅)
+│   ├── experiment_execution/      # 执行技能 (✅)
+│   ├── diagnostics/               # 诊断技能 (✅)
 │   └── __init__.py
 │
 ├── graph/
-│   ├── state.py                   # OptimizationState (需扩展)
-│   ├── orchestrator.py            # 主图构建 (需重构)
-│   ├── nodes.py                   # 路由节点 (需增强)
-│   ├── optimization_loop.py       # 闭环优化子图 (需新建 🆕)
-│   └── diagnostics_graph.py       # 诊断子图 (已有 ✅)
+│   ├── state.py                   # AutoHySeekerState (✅)
+│   ├── orchestrator.py            # 主图 — 4 Agent 节点 (✅)
+│   ├── nodes.py                   # 路由 + _AGENT_ALIASES (✅)
+│   ├── optimization_loop.py       # 闭环优化子图 (✅)
+│   └── diagnostics_graph.py       # 诊断子图 (✅)
 │
 ├── tools/
-│   ├── experiment_ctrl.py         # MicroHySeeker API 客户端 (已完善 ✅)
-│   ├── experiment_builder.py      # 实验构建工具 (已有 ✅)
-│   ├── echem_analysis.py          # 电化学分析 (已有 ✅)
-│   ├── registry.py                # 工具注册表 (已有，需添加权限 🔧)
+│   ├── experiment_ctrl.py         # MicroHySeeker API 客户端 (✅)
+│   ├── experiment_builder.py      # 实验构建工具 (✅)
+│   ├── echem_analysis.py          # 电化学分析 (✅)
+│   ├── registry.py                # 工具注册表 (✅)
 │   └── ...
 │
-├── skills/
-│   ├── experiment_execution/      # 执行技能 (已有 ✅)
-│   ├── diagnostics/               # 诊断技能 (已有 ✅)
-│   └── optimization/              # 优化技能 (需新建 🆕)
-│       ├── bayesian_optimizer.py
-│       ├── grid_search.py
-│       └── result_evaluator.py
-│
 └── common/
-    ├── agent_message.py           # Agent 通信协议 (需新建 🆕)
-    ├── optimization_state.py      # 优化状态管理 (需新建 🆕)
+    ├── llm_client.py              # LLM 客户端 — 4 Agent 配置 (✅)
+    ├── agent_manager.py           # Agent 状态管理 — 4 Agent (✅)
+    ├── config.py                  # 配置管理 (✅)
     └── ...
 ```
 
@@ -262,24 +266,23 @@ AutoHySeeker/src/
 
 ## 8. 实施阶段
 
-### Phase 1: 核心循环 (当前阶段)
-1. 实现 `OptimizationState` 共享状态
-2. 重构 Orchestrator 为闭环调度器
-3. 充实 Designer（元素配比生成 + 参数验证）
-4. 新建 Executor（从 Supervisor 拆分）
-5. 充实 Analyst（结构化分析输出）
+### Phase 1~9: 已完成（详见 VALIDATION_AND_TESTING_GUIDE.md 第十四节）
 
-### Phase 2: 智能增强
-6. 充实 Diagnostics（结构化诊断流程）
-7. 充实 Knowledge Manager（RAG + 实验历史索引）
-8. 替换关键词路由为 LLM 路由
-9. 添加工具权限控制
+### Phase 10: 架构精简（当前阶段 — 已完成）
+1. ✅ 评估 7 个 Agent 必要性，确定 4 Agent + 2 Skill 架构
+2. ✅ 创建 `DataAnalysisSkill`（从 DataAnalystAgent 转化）
+3. ✅ 创建 `KnowledgeArchiveSkill`（从 KnowledgeManagerAgent 转化）
+4. ✅ 更新 Orchestrator 集成两个 Skill
+5. ✅ 更新 LangGraph 图（7→4 节点）+ 路由别名兼容
+6. ✅ 更新全部测试文件（9 个文件）
+7. ✅ 更新配置文件（agent_models.toml、llm_client.py、agent_manager.py）
+8. ✅ 更新文档
 
-### Phase 3: 优化与可靠性
-10. 集成 Optuna 贝叶斯优化
-11. 添加 Agent 测试套件
-12. 添加分布式追踪 (OpenTelemetry)
-13. 构建优化结果仪表板
+### Phase 11: 下一步（待规划）
+- [ ] 前端 UI 适配 4 Agent 架构（UI_PLAN_V3）
+- [ ] 真实 LLM 联调验证
+- [ ] MicroHySeeker 硬件联调
+- [ ] OptimizationLoop.run() 端到端测试
 
 ---
 
