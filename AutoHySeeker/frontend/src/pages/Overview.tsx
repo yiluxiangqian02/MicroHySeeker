@@ -158,7 +158,7 @@ export function Overview() {
     try {
       await fetch('/api/experiments/analyze-recent', { method: 'POST' });
       alert(t('overview.analyzeSuccess'));
-    } catch (error) {
+    } catch {
       alert(t('overview.analyzeError'));
     }
   };
@@ -168,7 +168,7 @@ export function Overview() {
       const res = await fetch('/api/experiments/suggestions');
       const data = await res.json();
       alert(JSON.stringify(data, null, 2));
-    } catch (error) {
+    } catch {
       alert(t('overview.suggestionsError'));
     }
   };

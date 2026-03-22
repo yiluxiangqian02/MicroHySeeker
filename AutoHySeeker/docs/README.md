@@ -1,6 +1,6 @@
 # AutoHySeeker 文档导航
 
-> 2026-03-19 | 文档体系 v5.0 — 多 Agent 实验闭环 + 科研产出
+> 2026-03-22 | 文档体系 v5.1 — 多 Agent 实验闭环 + 科研产出
 
 ---
 
@@ -36,7 +36,7 @@ AutoHySeeker 是一个 AI 多 Agent 科研助手平台，服务于微流控电�
 | 6 | `PLAN_PHASE1_EXPERIMENT_LOOP.md` | Phase 1 后端：实验闭环（监控、设计增强、人机协作、Chat） |
 | 7 | `PLAN_PHASE2_RESEARCH_OUTPUT.md` | Phase 2 后端：文献检索下载 + 科研分析绘图写作 |
 | 8 | `FRONTEND_MODIFICATION_GUIDE.md` | 前端逐文件修改指南（保留/调整/新增分类） |
-| 9 | `UI_PLAN_V3.md` | 前端页面设计方案 |
+| 9 | `OPENVIKING_GUIDE.md` | OpenViking 知识库引擎使用指南 |
 
 ### 第三步：认领任务并开发
 
@@ -55,25 +55,33 @@ AutoHySeeker 是一个 AI 多 Agent 科研助手平台，服务于微流控电�
 ```text
 1. 阅读本文件（docs/README.md）了解文档结构
        ↓
-2. 阅读 COLLABORATION_GUIDE.md 了解协作规则和验收机制
+2. 阅读 COLLABORATION_GUIDE.md 了解协作规则和验收机制（必须完整阅读，特别是第八节）
        ↓
 3. 阅读 PROGRESS_TRACKER.md 找到 `待认领` 的任务
        ↓
-4. 阅读任务对应的设计文档（PLAN_PHASE1 或 PLAN_PHASE2）理解需求
+4. 【认领】立即将任务状态改为 `进行中`，填写负责人名称和开始时间
+   ⚠️ 必须先认领再开发，不得跳过此步骤
        ↓
-5. 阅读相关的 multiagent_0x 文档理解 Agent 设计细节
+5. 阅读任务对应的设计文档（PLAN_PHASE1 或 PLAN_PHASE2）理解需求
        ↓
-6. 在 PROGRESS_TRACKER.md 中认领任务（改状态为 `进行中`）
+6. 阅读相关的 multiagent_0x 文档理解 Agent 设计细节
        ↓
-7. 开发实现
+7. 严格按照设计文档的要求进行开发实现
+   ⚠️ 不得自行修改设计、跳过功能、或用占位代码替代真实实现
        ↓
-8. 按 COLLABORATION_GUIDE 第八节的验收清单逐项检查
+8. 开发完成后，按 COLLABORATION_GUIDE 第八节的验收清单逐项检查
+   ⚠️ 每一项都必须实际验证通过，不得跳过或假设通过
        ↓
-9. 全部通过后，更新 PROGRESS_TRACKER.md（改状态为 `已完成` + 写备注）
+9. 全部验收通过后，更新 PROGRESS_TRACKER.md：
+   - 状态改为 `已完成`
+   - 填写完成时间
+   - 备注中写明实际完成内容摘要（不得只写"已完成"）
 ```
 
-**关键警告：**
+**关键警告（所有参与者必须遵守）：**
 
+- 认领任务后必须立即将状态改为 `进行中`，防止其他人重复认领
+- 开发过程中必须严格遵循设计文档，任何偏离必须在「设计偏离记录」中说明
 - 未通过验收清单的任务，严禁标记为 `已完成`
 - 只完成部分工作时，状态保持 `进行中`，在备注中说明已完成和未完成的部分
 - 代码中不得留有 `pass` / `TODO` / `NotImplementedError` 等占位就声称完成
@@ -87,6 +95,8 @@ AutoHySeeker 是一个 AI 多 Agent 科研助手平台，服务于微流控电�
 | --- | --- | --- | --- |
 | P1-xx | Phase 1 后端任务 | P1-01 ~ P1-22 | `PROGRESS_TRACKER.md` |
 | F1-xx | Phase 1 前端任务 | F1-01 ~ F1-10 | `PROGRESS_TRACKER.md` |
+| W-xx | Phase 1 收尾（前端对接） | W-01 ~ W-04 | `PROGRESS_TRACKER.md` |
+| B-xx | Phase 1 收尾（Bug 修复） | B-01 ~ B-02 | `PROGRESS_TRACKER.md` |
 | F2-xx | Phase 2 前端任务 | F2-01 ~ F2-04 | `PROGRESS_TRACKER.md` |
 
 ---
@@ -97,6 +107,7 @@ AutoHySeeker 是一个 AI 多 Agent 科研助手平台，服务于微流控电�
 - 想了解协作规则和验收标准？→ `COLLABORATION_GUIDE.md`
 - 想看后端 API 设计？→ `PLAN_PHASE1_EXPERIMENT_LOOP.md`
 - 想看前端修改方案？→ `FRONTEND_MODIFICATION_GUIDE.md`
+- 想了解 OpenViking 知识库？→ `OPENVIKING_GUIDE.md`
 - 想看 Agent 详细设计？→ `multiagent_0x_*.md` 系列
 - 想跑测试？→ `VALIDATION_AND_TESTING_GUIDE.md`
 - 想看代码目录结构和开发环境搭建？→ `../README_DEV.md`

@@ -1,42 +1,24 @@
-"""Closed-loop optimization sub-graph.
-
-Implements the core cycle:
-    design → execute → analyse → evaluate → (loop or stop)
-
-This module provides *both* a LangGraph-based implementation (when available)
-and a plain-async fallback so that AutoHySeeker works without LangGraph.
-"""
+"""Closed-loop optimization sub-graph."""
 
 from __future__ import annotations
 
 import asyncio
+import json
 import logging
+import re
 from typing import Any
 
-from src.agents.orchestrator import OrchestratorAgent
+from src.agents.orchestrator_shared import get_shared_orchestrator_agent
 from src.graph.state import AutoHySeekerState, make_initial_optimization
 
 _logger = logging.getLogger("autohyseeker.optimization_loop")
 
 
 class OptimizationLoop:
-    """Runs the full optimisation loop without requiring LangGraph.
-
-    Usage::
-
-        loop = OptimizationLoop()
-        final_state = await loop.run(
-            goal="最小化 HER 过电位",
-            target_metric="overpotential_mV",
-            optimization_direction="minimize",
-            search_space={"Fe": {"min": 0.05, "max": 0.8}, ...},
-            template_id="tpl_her_standard",
-            max_rounds=20,
-        )
-    """
+    """Runs the full optimisation loop without requiring LangGraph."""
 
     def __init__(self) -> None:
-        self._orchestrator = OrchestratorAgent()
+        self._orchestrator = get_shared_orchestrator_agent()
         self._running = False
         self._current_state: dict[str, Any] | None = None
 
@@ -64,10 +46,7 @@ class OptimizationLoop:
         total_volume_ul: float = 1000.0,
         max_rounds: int = 20,
     ) -> dict[str, Any]:
-        """Run the full optimization loop.
-
-        Returns the final state dict with experiment_history, best_result, etc.
-        """
+        """Run the full optimization loop."""
         optimization = make_initial_optimization(
             goal=goal,
             target_metric=target_metric,
@@ -86,13 +65,17 @@ class OptimizationLoop:
             "best_result": None,
             "status": "running",
             "errors": [],
+            "latest_decision": None,
         }
         self._current_state = state
         self._running = True
 
         _logger.info(
-            "OptimizationLoop: starting — goal=%r metric=%s direction=%s max_rounds=%d",
-            goal, target_metric, optimization_direction, max_rounds,
+            "OptimizationLoop: starting goal=%r metric=%s direction=%s max_rounds=%d",
+            goal,
+            target_metric,
+            optimization_direction,
+            max_rounds,
         )
 
         try:
@@ -101,9 +84,8 @@ class OptimizationLoop:
                 state["current_round"] = round_num
                 optimization["status"] = "designing"
 
-                _logger.info("OptimizationLoop: ═══ Round %d/%d ═══", round_num, max_rounds)
+                _logger.info("OptimizationLoop: round %d/%d", round_num, max_rounds)
 
-                # ── Step 1: Design ──────────────────────────────────────────
                 design_result = await self._step_design(state)
                 if design_result is None:
                     state["errors"].append(f"Round {round_num}: design failed")
@@ -113,7 +95,6 @@ class OptimizationLoop:
                 if not self._running:
                     break
 
-                # ── Step 2: Execute ─────────────────────────────────────────
                 optimization["status"] = "executing"
                 exec_result = await self._step_execute(state, design_result)
 
@@ -121,17 +102,25 @@ class OptimizationLoop:
                     anomaly = (exec_result or {}).get("anomaly")
                     if anomaly:
                         handling = await self._orchestrator.handle_anomaly(
-                            anomaly, optimization, round_num,
+                            anomaly,
+                            optimization,
+                            round_num,
                         )
+                        handling = await self._resolve_human_gate(state, handling)
                         if handling["action"] == "emergency_stop":
                             state["errors"].append(f"Round {round_num}: emergency stop")
-                            state["status"] = "emergency_stopped"
+                            state["status"] = handling.get("status_override", "emergency_stopped")
+                            state["conclusion"] = handling.get("reason", "")
                             self._running = False
                             break
-                        elif handling["action"] == "diagnose":
-                            # In future: dispatch to Diagnostics agent
+                        if handling["action"] == "stop":
+                            state["status"] = handling.get("status_override", "stopped")
+                            state["conclusion"] = handling.get("reason", "")
+                            self._running = False
+                            break
+                        if handling["action"] == "diagnose":
                             state["errors"].append(
-                                f"Round {round_num}: anomaly needs diagnosis — "
+                                f"Round {round_num}: anomaly needs diagnosis "
                                 f"{anomaly.get('type', 'unknown')}"
                             )
                     else:
@@ -141,7 +130,6 @@ class OptimizationLoop:
                 if not self._running:
                     break
 
-                # ── Step 3: Analyse ─────────────────────────────────────────
                 optimization["status"] = "analyzing"
                 analysis = await self._step_analyse(state, exec_result)
 
@@ -153,16 +141,14 @@ class OptimizationLoop:
                     "data_quality": analysis.get("data_quality", {}),
                 }
                 state["experiment_history"].append(round_record)
-
-                # Update best
                 state["best_result"] = self._orchestrator.update_best_result(
-                    state["experiment_history"], optimization,
+                    state["experiment_history"],
+                    optimization,
                 )
 
                 if not self._running:
                     break
 
-                # ── Step 4: Evaluate ────────────────────────────────────────
                 optimization["status"] = "evaluating"
                 decision = await self._orchestrator.evaluate_and_decide(
                     optimization=optimization,
@@ -171,6 +157,8 @@ class OptimizationLoop:
                     best_result=state["best_result"],
                     current_round=round_num,
                 )
+                decision = await self._resolve_human_gate(state, decision)
+                state["latest_decision"] = decision
 
                 _logger.info(
                     "OptimizationLoop: decision=%s reason=%s confidence=%.2f",
@@ -180,19 +168,16 @@ class OptimizationLoop:
                 )
 
                 if decision["action"] == "stop":
-                    state["status"] = "completed"
-                    state["conclusion"] = decision.get("summary", "")
+                    state["status"] = decision.get("status_override", "completed")
+                    state["conclusion"] = decision.get("summary") or decision.get("reason", "")
                     self._running = False
                     break
-                elif decision["action"] == "retry":
-                    # Retry uses same params — decrement round so it redoes
+                if decision["action"] == "retry":
                     state["current_round"] -= 1
                     state["experiment_history"].pop()
-                elif decision["action"] == "adjust_strategy":
-                    # Store hint for designer
+                    continue
+                if decision["action"] == "adjust_strategy":
                     state["strategy_hint"] = decision.get("next_params_hint", {})
-
-                # "continue" → loop back to design
 
         except Exception as exc:
             _logger.exception("OptimizationLoop: unhandled exception")
@@ -206,14 +191,99 @@ class OptimizationLoop:
             self._current_state = state
 
         _logger.info(
-            "OptimizationLoop: finished — rounds=%d best=%s status=%s",
+            "OptimizationLoop: finished rounds=%d best=%s status=%s",
             state["current_round"],
             state.get("best_result", {}).get("metrics") if state.get("best_result") else None,
             state["status"],
         )
         return state
 
-    # ── Step implementations (delegate to agents via LLM) ──────────────────
+    async def _resolve_human_gate(
+        self,
+        state: dict[str, Any],
+        decision: dict[str, Any],
+    ) -> dict[str, Any]:
+        pending = decision.get("pending_approval")
+        if decision.get("action") != "pause_for_human" and not pending:
+            return decision
+
+        approval_id = (pending or {}).get("approval_id")
+        if not approval_id:
+            return decision
+
+        state["status"] = "paused"
+        state["pause_reason"] = decision.get("reason", "human_approval")
+        state["pending_approval"] = pending
+        state["latest_decision"] = decision
+        state["optimization"]["status"] = "paused"
+
+        while self._running:
+            approval = self._orchestrator.get_approval_status(approval_id)
+            if approval and approval.get("status") in {"approved", "rejected"}:
+                state["last_approval"] = approval
+                state.pop("pending_approval", None)
+                state.pop("pause_reason", None)
+                state["status"] = "running"
+                state["optimization"]["status"] = "running"
+                return self._apply_approval_resolution(decision, approval)
+            await asyncio.sleep(0.1)
+
+        return {
+            "action": "stop",
+            "reason": "loop_stopped_while_waiting_for_human",
+            "status_override": "stopped",
+        }
+
+    def _apply_approval_resolution(
+        self,
+        decision: dict[str, Any],
+        approval: dict[str, Any],
+    ) -> dict[str, Any]:
+        actionable = dict(decision.get("original_decision") or decision)
+        actionable.pop("pending_approval", None)
+        actionable.pop("work_mode", None)
+        actionable["human_approval"] = approval
+
+        if approval.get("approved"):
+            return actionable
+
+        action = actionable.get("action")
+        if action == "stop":
+            return {
+                "action": "continue",
+                "reason": "human_rejected_stop_decision",
+                "human_approval": approval,
+            }
+        if action == "adjust_strategy":
+            return {
+                "action": "continue",
+                "reason": "human_rejected_strategy_change",
+                "human_approval": approval,
+            }
+        if action == "retry":
+            return {
+                "action": "continue",
+                "reason": "human_rejected_retry",
+                "human_approval": approval,
+            }
+        if action == "diagnose":
+            return {
+                "action": "log_and_continue",
+                "reason": "human_rejected_anomaly_diagnosis",
+                "human_approval": approval,
+            }
+        if action == "emergency_stop":
+            return {
+                "action": "stop",
+                "reason": "critical_anomaly_requires_manual_intervention",
+                "status_override": "blocked",
+                "human_approval": approval,
+            }
+        return {
+            "action": "continue",
+            "reason": "human_rejected_pause_request",
+            "human_approval": approval,
+        }
 
     async def _step_design(self, state: dict[str, Any]) -> dict[str, Any] | None:
         """Ask the Designer agent for next experiment params."""
@@ -235,10 +305,13 @@ class OptimizationLoop:
         }
 
         try:
-            result = await designer.invoke(task=task, context={
-                "current_round": state["current_round"],
-                "best_result": state.get("best_result"),
-            })
+            result = await designer.invoke(
+                task=task,
+                context={
+                    "current_round": state["current_round"],
+                    "best_result": state.get("best_result"),
+                },
+            )
             content = result.get("content", "")
             return self._parse_design_result(content, optimization)
         except Exception as exc:
@@ -246,16 +319,18 @@ class OptimizationLoop:
             return None
 
     async def _step_execute(
-        self, state: dict[str, Any], design: dict[str, Any],
+        self,
+        state: dict[str, Any],
+        design: dict[str, Any],
     ) -> dict[str, Any] | None:
         """Execute the designed experiment via ExperimentExecutorAgent."""
-        from src.agents.exp_executor import ExperimentExecutorAgent
+        from src.agents.exp_executor import get_shared_executor_agent
 
         template_id = design.get("template_id") or state["optimization"].get("template_id", "")
         step_overrides = design.get("step_overrides", {})
         exp_name = f"opt_round_{state['current_round']}"
 
-        executor = ExperimentExecutorAgent()
+        executor = get_shared_executor_agent()
         task = {
             "action": "execute_experiment",
             "template_id": template_id,
@@ -278,7 +353,9 @@ class OptimizationLoop:
             return {"status": "failed", "error": str(exc)}
 
     async def _step_analyse(
-        self, state: dict[str, Any], exec_result: dict[str, Any],
+        self,
+        state: dict[str, Any],
+        exec_result: dict[str, Any],
     ) -> dict[str, Any]:
         """Analyse completed experiment via Orchestrator's DataAnalysisSkill."""
         run_id = exec_result.get("run_id", "")
@@ -301,23 +378,18 @@ class OptimizationLoop:
             _logger.error("Analysis step failed: %s", exc)
             return {"metrics": {}, "data_quality": {"reliable": False}}
 
-    # ── Parsing helpers ────────────────────────────────────────────────────────
-
     def _parse_design_result(
-        self, content: str, optimization: dict[str, Any],
+        self,
+        content: str,
+        optimization: dict[str, Any],
     ) -> dict[str, Any]:
         """Extract params and step_overrides from designer LLM output."""
-        import re, json
-
-        # Try JSON extraction
         json_match = re.search(r"\{[\s\S]*\}", content)
         if json_match:
             try:
                 parsed = json.loads(json_match.group())
                 params = parsed.get("params") or parsed.get("target_concentrations", {})
                 step_overrides = parsed.get("step_overrides", {})
-
-                # If no step_overrides but we have params, build them
                 if not step_overrides and params:
                     step_overrides = {
                         "0": {
@@ -327,7 +399,6 @@ class OptimizationLoop:
                             }
                         }
                     }
-
                 return {
                     "params": params,
                     "step_overrides": step_overrides,
@@ -337,14 +408,11 @@ class OptimizationLoop:
             except (json.JSONDecodeError, ValueError):
                 pass
 
-        # Fallback: couldn't parse — return empty (will trigger design retry)
         _logger.warning("Could not parse design result from LLM output")
         return {"params": {}, "step_overrides": {}, "strategy": "fallback"}
 
     def _parse_analysis_result(self, content: str) -> dict[str, Any]:
         """Extract metrics from analyst LLM output."""
-        import re, json
-
         json_match = re.search(r"\{[\s\S]*\}", content)
         if json_match:
             try:

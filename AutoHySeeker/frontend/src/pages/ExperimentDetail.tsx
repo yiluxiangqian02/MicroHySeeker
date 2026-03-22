@@ -1,6 +1,8 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { ReactNode } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { chatApi } from '../api/chat';
+import toast from 'react-hot-toast';
 import {
   AlertCircle,
   ArrowLeft,
@@ -15,15 +17,9 @@ import {
   Target,
   Wind,
 } from 'lucide-react';
-import {
-  CartesianGrid,
-  Line,
-  LineChart,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from 'recharts';
+import { useTranslation } from 'react-i18next';
+import { SkeletonList } from '@/components/Skeleton';
+import { EmptyState } from '@/components/EmptyState';
 
 interface ExperimentStep {
   step_type: string;
@@ -251,29 +247,35 @@ function getStepKeyFacts(step: ExperimentStep): Array<{ label: string; value: st
 }
 
 export function ExperimentDetail() {
+  const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [experiment, setExperiment] = useState<Experiment | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [executing, setExecuting] = useState(false);
+  const [analyzing, setAnalyzing] = useState(false);
+  const [agentResponse, setAgentResponse] = useState<string | null>(null);
 
-  const fetchExperiment = async () => {
+  const fetchExperiment = useCallback(async () => {
     try {
       const res = await fetch(`/api/experiments/detail/${id}`);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
       setExperiment(data);
+      setError('');
     } catch (err) {
-      setError(err instanceof Error ? err.message : '加载失败');
+      const errorMsg = err instanceof Error ? err.message : t('experimentDetail.loading');
+      setError(errorMsg);
+      toast.error(errorMsg);
     } finally {
       setLoading(false);
     }
-  };
+  }, [id, t]);
 
   useEffect(() => {
     if (id) fetchExperiment();
-  }, [id]);
+  }, [id, fetchExperiment]);
 
   const handleExecute = async () => {
     if (!experiment) return;
@@ -284,11 +286,36 @@ export function ExperimentDetail() {
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       await fetchExperiment();
-      alert('实验已开始执行，建议留在本页持续关注进展。');
+      toast.success(t('experimentDetail.startExecuting') + ' - 建议留在本页持续关注进展');
     } catch (err) {
-      alert(err instanceof Error ? err.message : '执行失败');
+      const errorMsg = err instanceof Error ? err.message : '执行失败';
+      toast.error(errorMsg);
     } finally {
       setExecuting(false);
+    }
+  };
+
+  const handleAnalyze = async (promptType: string) => {
+    if (!id) return;
+    setAnalyzing(true);
+    setAgentResponse(null);
+    try {
+      let message = '请分析当前实验：\n';
+      if (promptType === 'data') {
+        message += '重点对结果做摘要、关键指标提取、图表与对比分析。';
+      } else {
+        message += '提供文献上下文、历史实验对比，以及下一轮改进方案的建议。';
+      }
+      
+      const res = await chatApi.analyzeExperiment(id, message);
+      setAgentResponse(res.message || 'Agent 请求成功，但未返回实际内容。');
+      toast.success('分析完成');
+    } catch (err) {
+      const errorMsg = `分析失败: ${err instanceof Error ? err.message: '网络异常'}`;
+      setAgentResponse(errorMsg);
+      toast.error(errorMsg);
+    } finally {
+      setAnalyzing(false);
     }
   };
 
@@ -304,8 +331,8 @@ export function ExperimentDetail() {
 
   if (loading) {
     return (
-      <div className="flex h-64 items-center justify-center">
-        <div className="text-gray-500">加载中...</div>
+      <div className="space-y-6 p-6">
+        <SkeletonList count={2} />
       </div>
     );
   }
@@ -313,11 +340,17 @@ export function ExperimentDetail() {
   if (error || !experiment) {
     return (
       <div className="p-6">
-        <div className="rounded-lg bg-red-50 p-4 text-red-600">{error || '实验不存在'}</div>
-        <button onClick={() => navigate(-1)} className="mt-4 flex items-center gap-2 text-blue-600">
-          <ArrowLeft className="h-4 w-4" />
-          返回
-        </button>
+        <EmptyState
+          icon={<AlertCircle className="h-12 w-12 text-red-400" />}
+          title={t('experimentDetail.notFound')}
+          subtitle={error || '实验不存在'}
+          action={
+            <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-blue-600 hover:underline">
+              <ArrowLeft className="h-4 w-4" />
+              {t('experimentDetail.goBack')}
+            </button>
+          }
+        />
       </div>
     );
   }
@@ -334,12 +367,12 @@ export function ExperimentDetail() {
         <div>
           <button onClick={() => navigate(-1)} className="mb-3 flex items-center gap-1 text-sm text-gray-500 transition hover:text-gray-700">
             <ArrowLeft className="h-4 w-4" />
-            返回
+            {t('experimentDetail.goBack')}
           </button>
-          <p className="text-sm font-medium text-blue-600">实验工作页</p>
+          <p className="text-sm font-medium text-blue-600">{t('experimentDetail.title')}</p>
           <h2 className="mt-1 text-3xl font-bold text-slate-900">{experiment.name}</h2>
           <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600">
-            {experiment.description || '当前未填写额外说明。建议后续补充实验背景、假设或样品信息，便于回看。'}
+            {experiment.description || t('experimentDetail.noDescription')}
           </p>
           <div className="mt-3 flex flex-wrap items-center gap-2">
             <span className={`inline-flex items-center gap-2 rounded-full border px-3 py-1 text-sm font-medium ${statusConf.tone}`}>
@@ -361,7 +394,7 @@ export function ExperimentDetail() {
             className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-sm font-medium text-white transition hover:bg-blue-700 disabled:bg-blue-400"
           >
             <Play className="h-4 w-4" />
-            {executing ? '提交中...' : '开始执行这次实验'}
+            {executing ? t('experimentDetail.submitting') : t('experimentDetail.startExecuting')}
           </button>
         )}
       </div>
@@ -371,15 +404,15 @@ export function ExperimentDetail() {
           <div className="flex items-start gap-3">
             <Target className="mt-1 h-5 w-5 text-blue-200" />
             <div>
-              <p className="text-sm font-medium text-blue-200">实验目标</p>
-              <h3 className="mt-1 text-xl font-semibold">这次实验想回答什么问题？</h3>
+              <p className="text-sm font-medium text-blue-200">{t('experimentDetail.goalTitle')}</p>
+              <h3 className="mt-1 text-xl font-semibold">{t('experimentDetail.goalQuestion')}</h3>
               <p className="mt-3 max-w-2xl text-sm leading-6 text-blue-50/90">{goalSummary}</p>
             </div>
           </div>
         </div>
 
         <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-          <p className="text-sm font-medium text-slate-500">执行状态</p>
+          <p className="text-sm font-medium text-slate-500">{t('experimentDetail.executionStatus')}</p>
           <div className="mt-3 flex items-center gap-3">
             <div className={`rounded-full border p-3 ${statusConf.tone}`}>{statusConf.icon}</div>
             <div>
@@ -403,16 +436,16 @@ export function ExperimentDetail() {
         <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
           <div className="flex items-center gap-2">
             <FlaskConical className="h-5 w-5 text-blue-600" />
-            <h3 className="text-lg font-semibold text-slate-900">运行中的上下文</h3>
+            <h3 className="text-lg font-semibold text-slate-900">{t('experimentDetail.runningContext')}</h3>
           </div>
 
           <div className="mt-4 grid gap-3 sm:grid-cols-2">
             <div className="rounded-xl bg-slate-50 px-4 py-3">
-              <p className="text-xs text-slate-500">总步骤数</p>
+              <p className="text-xs text-slate-500">{t('experimentDetail.totalSteps')}</p>
               <p className="mt-1 text-sm font-semibold text-slate-900">{experiment.steps.length}</p>
             </div>
             <div className="rounded-xl bg-slate-50 px-4 py-3">
-              <p className="text-xs text-slate-500">当前步骤</p>
+              <p className="text-xs text-slate-500">{t('experimentDetail.currentStep')}</p>
               <p className="mt-1 text-sm font-semibold text-slate-900">{currentStep ? summarizeStep(currentStep) : '—'}</p>
             </div>
           </div>
@@ -439,7 +472,7 @@ export function ExperimentDetail() {
 
           {experiment.steps.length > 0 && (
             <div className="mt-5 border-t border-slate-100 pt-5">
-              <p className="text-sm font-medium text-slate-700">步骤链</p>
+              <p className="text-sm font-medium text-slate-700">{t('experimentDetail.stepChain')}</p>
               <div className="mt-3 space-y-3">
                 {experiment.steps.map((step, index) => (
                   <div key={`${step.step_type}-${index}`} className="rounded-xl border border-slate-200 p-4">
@@ -465,7 +498,7 @@ export function ExperimentDetail() {
           <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
             <div className="flex items-center gap-2">
               <CheckCircle className="h-5 w-5 text-emerald-600" />
-              <h3 className="text-lg font-semibold text-slate-900">结果摘要</h3>
+              <h3 className="text-lg font-semibold text-slate-900">{t('experimentDetail.resultSummary')}</h3>
             </div>
             <p className="mt-4 text-sm leading-6 text-slate-600">{resultSummary}</p>
           </div>
@@ -473,29 +506,60 @@ export function ExperimentDetail() {
           <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
             <div className="flex items-center gap-2">
               <Brain className="h-5 w-5 text-violet-600" />
-              <h3 className="text-lg font-semibold text-slate-900">Agent 响应 / 分析入口</h3>
+              <h3 className="text-lg font-semibold text-slate-900">{t('experimentDetail.agentResponse')}</h3>
             </div>
             <p className="mt-4 text-sm leading-6 text-slate-600">{aiInterpretation}</p>
-            <div className="mt-4 grid gap-3 sm:grid-cols-2">
-              <button className="rounded-xl border border-violet-200 bg-violet-50 px-4 py-3 text-left text-sm text-violet-800 transition hover:bg-violet-100">
-                <div className="font-semibold">数据处理/分析助手</div>
-                <div className="mt-1 text-xs leading-5 text-violet-700">对当前实验做结果摘要、关键指标提取、图表与对比分析。</div>
-              </button>
-              <button className="rounded-xl border border-blue-200 bg-blue-50 px-4 py-3 text-left text-sm text-blue-800 transition hover:bg-blue-100">
-                <div className="font-semibold">知识管理 / 知识库 Chat</div>
-                <div className="mt-1 text-xs leading-5 text-blue-700">带着当前实验上下文继续问文档、历史实验、下一轮方案。</div>
-              </button>
-            </div>
-            <div className="mt-4 rounded-xl border border-dashed border-violet-200 bg-violet-50 px-4 py-3 text-sm text-violet-700">
-              这里已预留产品级位置，后续可直接接入真实 Agent 的实验总结、趋势判断、异常解释和知识库上下文问答。
-            </div>
+            
+            {analyzing ? (
+              <div className="mt-4 flex items-center justify-center p-6 text-violet-600">
+                <div className="flex flex-col items-center gap-2">
+                  <Play className="h-6 w-6 animate-spin opacity-70" style={{ animationDirection: 'reverse' }} />
+                  <span className="text-sm font-medium">{t('experimentDetail.analyzing')}</span>
+                </div>
+              </div>
+            ) : agentResponse ? (
+              <div className="mt-4 rounded-xl border border-violet-200 bg-violet-50/50 p-4">
+                <div className="flex items-start justify-between">
+                  <h4 className="text-sm font-semibold text-violet-900">{t('experimentDetail.analysisResult')}</h4>
+                  <button 
+                    onClick={() => setAgentResponse(null)}
+                    className="text-xs text-violet-600 hover:text-violet-800"
+                  >
+                    {t('experimentDetail.clear')}
+                  </button>
+                </div>
+                <p className="mt-2 whitespace-pre-wrap text-sm leading-6 text-slate-700">{agentResponse}</p>
+              </div>
+            ) : (
+              <>
+                <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                  <button 
+                    onClick={() => handleAnalyze('data')}
+                    className="rounded-xl border border-violet-200 bg-violet-50 px-4 py-3 text-left text-sm text-violet-800 transition hover:bg-violet-100"
+                  >
+                    <div className="font-semibold">{t('experimentDetail.dataAssistant')}</div>
+                    <div className="mt-1 text-xs leading-5 text-violet-700">{t('experimentDetail.dataAssistantDesc')}</div>
+                  </button>
+                  <button 
+                    onClick={() => handleAnalyze('knowledge')}
+                    className="rounded-xl border border-blue-200 bg-blue-50 px-4 py-3 text-left text-sm text-blue-800 transition hover:bg-blue-100"
+                  >
+                    <div className="font-semibold">{t('experimentDetail.knowledgeAssistant')}</div>
+                    <div className="mt-1 text-xs leading-5 text-blue-700">{t('experimentDetail.knowledgeAssistantDesc')}</div>
+                  </button>
+                </div>
+                <div className="mt-4 rounded-xl border border-dashed border-violet-200 bg-violet-50 px-4 py-3 text-sm text-violet-700">
+                  {t('experimentDetail.agentSimDesc')}
+                </div>
+              </>
+            )}
           </div>
         </div>
 
         <div className="rounded-2xl border border-amber-200 bg-amber-50 p-6 shadow-sm">
           <div className="flex items-center gap-2 text-amber-900">
             <Lightbulb className="h-5 w-5" />
-            <h3 className="text-lg font-semibold">下一步建议</h3>
+            <h3 className="text-lg font-semibold">{t('experimentDetail.nextSteps')}</h3>
           </div>
           <ul className="mt-4 space-y-3 text-sm leading-6 text-amber-900">
             {nextActions.map((item) => (
@@ -505,29 +569,6 @@ export function ExperimentDetail() {
               </li>
             ))}
           </ul>
-        </div>
-      </section>
-
-      <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-        <h3 className="text-lg font-semibold text-slate-900">实验数据</h3>
-        <p className="mt-1 text-sm text-slate-600">这里承接本次实验的原始数据或关键曲线，避免创建、执行、分析之间断开。</p>
-
-        <div className="mt-5">
-          {experiment.data.length > 0 ? (
-            <ResponsiveContainer width="100%" height={320}>
-              <LineChart data={experiment.data}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="x" label={{ value: 'E / V', position: 'insideBottomRight', offset: -5 }} />
-                <YAxis label={{ value: 'I / A', angle: -90, position: 'insideLeft' }} />
-                <Tooltip />
-                <Line type="monotone" dataKey="y" stroke="#2563EB" dot={false} strokeWidth={2} />
-              </LineChart>
-            </ResponsiveContainer>
-          ) : (
-            <div className="flex h-40 items-center justify-center rounded-xl border-2 border-dashed border-slate-200 text-sm text-slate-400">
-              暂无数据{experiment.status === 'created' ? ' — 请先开始执行实验' : ''}
-            </div>
-          )}
         </div>
       </section>
     </div>

@@ -6,8 +6,10 @@ OpenViking optional in local/offline test environments.
 
 from __future__ import annotations
 
+import importlib
 import json
 import os
+import sys
 import tempfile
 from pathlib import Path
 from typing import Any
@@ -18,15 +20,43 @@ from src.knowledge.schema import PARTITION_URIS, KnowledgePartition
 
 logger = get_logger(__name__)
 
-try:
-    import openviking as ov  # type: ignore[import-untyped]
-
-    _OPENVIKING_AVAILABLE = True
-except ImportError:  # pragma: no cover
-    ov = None  # type: ignore[assignment]
-    _OPENVIKING_AVAILABLE = False
-
 _DEFAULT_WORKSPACE = str(Path(__file__).resolve().parents[2] / "OpenViking")
+_DEFAULT_OPENVIKING_SRC = Path(__file__).resolve().parents[2] / "OpenViking"
+_DEFAULT_PYAGFS_SRC = _DEFAULT_OPENVIKING_SRC / "third_party" / "agfs" / "agfs-sdk" / "python"
+_DEFAULT_OPENVIKING_CONFIG = _DEFAULT_OPENVIKING_SRC / ".local_dev" / "ov.conf"
+
+
+def _load_openviking_module() -> tuple[Any | None, bool, str | None]:
+    try:
+        return importlib.import_module("openviking"), True, None
+    except ImportError as exc:
+        initial_error = str(exc)
+
+    openviking_src = Path(os.getenv("AUTOHYSEEKER_OPENVIKING_SRC", str(_DEFAULT_OPENVIKING_SRC)))
+    pyagfs_src = Path(os.getenv("AUTOHYSEEKER_PYAGFS_SRC", str(_DEFAULT_PYAGFS_SRC)))
+
+    extra_paths: list[str] = []
+    if pyagfs_src.exists():
+        extra_paths.append(str(pyagfs_src))
+    if openviking_src.exists():
+        extra_paths.append(str(openviking_src))
+
+    inserted = False
+    for path in reversed(extra_paths):
+        if path not in sys.path:
+            sys.path.insert(0, path)
+            inserted = True
+
+    if inserted:
+        try:
+            return importlib.import_module("openviking"), True, None
+        except ImportError as exc:
+            return None, False, str(exc)
+
+    return None, False, initial_error
+
+
+ov, _OPENVIKING_AVAILABLE, _OPENVIKING_IMPORT_ERROR = _load_openviking_module()
 
 
 class OpenVikingClient:
@@ -36,6 +66,7 @@ class OpenVikingClient:
         self._workspace = workspace_path or os.getenv("VIKING_WORKSPACE", _DEFAULT_WORKSPACE)
         self._client: Any = None
         self._available = False
+        self._init_error: str | None = None
         self._fallback_store: dict[str, list[dict[str, Any]]] = {
             partition.value: [] for partition in KnowledgePartition
         }
@@ -45,18 +76,26 @@ class OpenVikingClient:
         """Initialize OpenViking SDK; fallback to in-memory mode when unavailable."""
         if not _OPENVIKING_AVAILABLE:
             self._available = False
-            logger.info("OpenViking SDK unavailable, using fallback store")
+            self._init_error = _OPENVIKING_IMPORT_ERROR
+            logger.info(
+                "OpenViking SDK unavailable, using fallback store (%s)",
+                _OPENVIKING_IMPORT_ERROR or "import failed",
+            )
             return False
 
         try:
+            if "OPENVIKING_CONFIG_FILE" not in os.environ and _DEFAULT_OPENVIKING_CONFIG.exists():
+                os.environ["OPENVIKING_CONFIG_FILE"] = str(_DEFAULT_OPENVIKING_CONFIG)
             self._client = ov.SyncOpenViking(path=self._workspace)
             self._client.initialize()
             self._available = True
+            self._init_error = None
             logger.info("OpenViking initialized: %s", self._workspace)
             return True
         except Exception as exc:  # pragma: no cover
             self._client = None
             self._available = False
+            self._init_error = str(exc)
             logger.warning("OpenViking init failed (%s), using fallback store", exc)
             return False
 
@@ -67,6 +106,10 @@ class OpenVikingClient:
     @property
     def workspace(self) -> str:
         return self._workspace
+
+    @property
+    def availability_reason(self) -> str | None:
+        return None if self._available else (self._init_error or _OPENVIKING_IMPORT_ERROR)
 
     def get_partition_uri(self, partition: KnowledgePartition | str) -> str:
         """Return viking URI for a partition."""
@@ -94,29 +137,35 @@ class OpenVikingClient:
             )
             return {"written": True, "uri": uri, "partition": partition_enum.value, "mode": "fallback"}
 
+        temp_dir: tempfile.TemporaryDirectory[str] | None = None
         tmp_path = ""
         try:
-            with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False, encoding="utf-8") as tmp:
+            temp_dir = tempfile.TemporaryDirectory()
+            stem = Path(name).stem or f"{partition_enum.value}_{uuid4().hex[:8]}"
+            tmp_path = str(Path(temp_dir.name) / f"{stem}.json")
+            with open(tmp_path, "w", encoding="utf-8") as tmp:
                 json.dump(payload, tmp, ensure_ascii=False, indent=2)
-                tmp_path = tmp.name
-            result = self._client.add_resource(path=tmp_path, uri=self.get_partition_uri(partition_enum))
+            result = self._client.add_resource(
+                path=tmp_path,
+                target=self.get_partition_uri(partition_enum),
+            )
             self._client.wait_processed()
+            result_dict = _to_plain_dict(result)
+            actual_uri = result_dict.get("root_uri") or uri
             return {
                 "written": True,
-                "uri": uri,
+                "uri": actual_uri,
                 "partition": partition_enum.value,
                 "mode": "openviking",
-                "result": _to_plain_dict(result),
+                "verified_partition": actual_uri.startswith(self.get_partition_uri(partition_enum)),
+                "result": result_dict,
             }
         except Exception as exc:  # pragma: no cover
             logger.warning("OpenViking write_json failed (%s)", exc)
             return {"written": False, "uri": uri, "partition": partition_enum.value, "error": str(exc)}
         finally:
-            if tmp_path and os.path.exists(tmp_path):
-                try:
-                    os.unlink(tmp_path)
-                except OSError:
-                    pass
+            if temp_dir is not None:
+                temp_dir.cleanup()
 
     def write_text(
         self,
@@ -148,12 +197,19 @@ class OpenVikingClient:
             return self._fallback_search(query=query, partition=target_partition, top_k=top_k)
 
         try:
-            result = self._client.find(query, target_uri=target_uri, top_k=top_k)
+            result = self._client.find(query, target_uri=target_uri, limit=top_k)
             resources = getattr(result, "resources", result) if result else []
             return [_normalise_resource(item) for item in resources]
         except Exception as exc:  # pragma: no cover
             logger.warning("OpenViking search failed (%s)", exc)
-            return []
+            workspace_hits = self._workspace_search(
+                query=query,
+                partition=target_partition,
+                top_k=top_k,
+            )
+            if workspace_hits:
+                return workspace_hits
+            return self._fallback_search(query=query, partition=target_partition, top_k=top_k)
 
     def read(self, uri: str, level: str = "overview") -> dict[str, Any]:
         """Read resource context from OpenViking by URI.
@@ -214,6 +270,103 @@ class OpenVikingClient:
 
         results.sort(key=lambda x: x.get("score", 0.0), reverse=True)
         return results[:top_k]
+
+    def _workspace_search(
+        self,
+        query: str,
+        partition: KnowledgePartition | None,
+        top_k: int,
+    ) -> list[dict[str, Any]]:
+        root = self._workspace_resource_root
+        if root is None or not root.exists():
+            return []
+
+        query_lower = query.lower().strip()
+        buckets = [partition.value] if partition else [item.value for item in KnowledgePartition]
+        results: list[dict[str, Any]] = []
+
+        for bucket in buckets:
+            bucket_root = root / bucket
+            if not bucket_root.exists():
+                continue
+
+            seen_uris: set[str] = set()
+            for resource_file in bucket_root.rglob("*"):
+                if not resource_file.is_file() or resource_file.name.startswith("."):
+                    continue
+
+                uri = self._workspace_resource_uri(resource_file, root)
+                if not uri or uri in seen_uris:
+                    continue
+                seen_uris.add(uri)
+
+                try:
+                    content = resource_file.read_text(encoding="utf-8")
+                except Exception:
+                    continue
+
+                score = self._keyword_score(
+                    query_lower=query_lower,
+                    haystack=f"{uri} {content}".lower(),
+                )
+                if score <= 0:
+                    continue
+
+                results.append(
+                    {
+                        "uri": uri,
+                        "content": content,
+                        "score": score,
+                        "metadata": {
+                            "partition": bucket,
+                            "resource_name": resource_file.name,
+                            "mode": "workspace_fallback",
+                        },
+                    }
+                )
+
+        results.sort(key=lambda item: item.get("score", 0.0), reverse=True)
+        return results[:top_k]
+
+    @property
+    def _workspace_resource_root(self) -> Path | None:
+        root = Path(self._workspace)
+        if not root.exists():
+            return None
+
+        direct_root = root / "default" / "resources"
+        if direct_root.exists():
+            return direct_root
+
+        configured_root = root / "resources"
+        if configured_root.exists():
+            return configured_root
+
+        return None
+
+    @staticmethod
+    def _workspace_resource_uri(resource_file: Path, root: Path) -> str | None:
+        try:
+            relative_parent = resource_file.parent.relative_to(root)
+        except ValueError:
+            return None
+
+        relative_text = relative_parent.as_posix().strip(".")
+        if not relative_text:
+            return "viking://resources/"
+        return f"viking://resources/{relative_text}"
+
+    @staticmethod
+    def _keyword_score(query_lower: str, haystack: str) -> float:
+        if not query_lower:
+            return 0.5
+
+        keywords = [item for item in query_lower.split() if item]
+        if not keywords:
+            return 0.5
+
+        hits = sum(1 for keyword in keywords if keyword in haystack)
+        return hits / len(keywords)
 
     @staticmethod
     def _to_partition(partition: KnowledgePartition | str) -> KnowledgePartition:

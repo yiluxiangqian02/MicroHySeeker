@@ -257,5 +257,74 @@ class TestExecutorProperties(unittest.TestCase):
         assert not agent.is_monitoring
 
 
+class TestExecutorMonitoringIntegration(unittest.TestCase):
+    """Test L1/L2 monitor integration in the executor."""
+
+    def test_execute_experiment_includes_environment_snapshot(self) -> None:
+        from src.agents.exp_executor import ExperimentExecutorAgent
+
+        agent = ExperimentExecutorAgent()
+        agent._pre_check = AsyncMock(return_value={"ok": True})  # type: ignore[method-assign]
+        agent._validate_params = AsyncMock(return_value={"valid": True})  # type: ignore[method-assign]
+        agent._start_experiment = AsyncMock(return_value={"run_id": "run_001"})  # type: ignore[method-assign]
+        agent._monitor_until_complete = AsyncMock(return_value={"status": "completed", "run_id": "run_001", "anomalies": []})  # type: ignore[method-assign]
+        agent._collect_data = AsyncMock(return_value={"data_path": "data/run_001"})  # type: ignore[method-assign]
+        agent._record_environment_snapshot = AsyncMock(return_value={"template_id": "tpl_her_standard"})  # type: ignore[method-assign]
+
+        result = asyncio.run(
+            agent.execute_experiment(
+                {
+                    "template_id": "tpl_her_standard",
+                    "heartbeat_enabled": True,
+                }
+            )
+        )
+
+        assert result["status"] == "completed"
+        assert result["environment_snapshot"]["template_id"] == "tpl_her_standard"
+        assert "monitor_status" in result
+
+    def test_monitor_until_complete_calls_l1_and_l2(self) -> None:
+        from src.agents.exp_executor import ExperimentExecutorAgent
+        from src.skills.base import SkillResult
+
+        agent = ExperimentExecutorAgent()
+        agent._current_run_id = "run_001"
+        agent._realtime_monitor_skill.execute = AsyncMock(  # type: ignore[method-assign]
+            return_value=SkillResult(
+                success=True,
+                data={"anomalies": [], "highest_severity": "low"},
+                message="ok",
+                artifacts=[],
+            )
+        )
+        agent._heartbeat_inspector_skill.execute = AsyncMock(  # type: ignore[method-assign]
+            return_value=SkillResult(
+                success=True,
+                data={"status": "normal", "executed_at": 123.0, "reason": "ok", "risks": []},
+                message="ok",
+                artifacts=[],
+            )
+        )
+
+        with patch("src.tools.experiment_ctrl.get_experiment_status", side_effect=[
+            {"state": "running", "is_running": True, "current_step": 1, "total_steps": 3},
+            {"state": "idle", "is_running": False, "current_step": 3, "total_steps": 3},
+        ]), patch("src.tools.experiment_ctrl.get_logs", return_value=[]), \
+             patch("src.tools.experiment_ctrl.get_connection_info", return_value={"connected": True}), \
+             patch("src.tools.experiment_ctrl.get_pump_status", return_value={"pumps": {}}):
+            result = asyncio.run(
+                agent._monitor_until_complete(
+                    interval_s=0.0,
+                    task={"heartbeat_enabled": True, "heartbeat_allow_llm": False},
+                )
+            )
+
+        assert result["status"] == "completed"
+        assert agent._realtime_monitor_skill.execute.await_count >= 1
+        assert agent._heartbeat_inspector_skill.execute.await_count >= 1
+        assert agent._last_l2_report["status"] == "normal"
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -1,0 +1,175 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e6]:
+        - img [ref=e8]
+        - generic [ref=e10]:
+          - heading "AutoHySeeker" [level=1] [ref=e11]
+          - paragraph [ref=e12]: AI EXPERIMENT MGR
+      - navigation [ref=e13]:
+        - link "实验工作台" [ref=e14] [cursor=pointer]:
+          - /url: /
+        - link "运行中实验" [ref=e15] [cursor=pointer]:
+          - /url: /dashboard
+        - link "实验记录" [ref=e16] [cursor=pointer]:
+          - /url: /experiments
+        - link "优化循环" [ref=e17] [cursor=pointer]:
+          - /url: /optimization
+        - link "Agent 对话" [ref=e18] [cursor=pointer]:
+          - /url: /chat
+        - link "nav.diagnostics" [ref=e19] [cursor=pointer]:
+          - /url: /diagnostics
+        - link "AI 助手分工" [ref=e20] [cursor=pointer]:
+          - /url: /agents
+        - link "知识库" [ref=e21] [cursor=pointer]:
+          - /url: /knowledge
+        - link "实验模板" [ref=e22] [cursor=pointer]:
+          - /url: /templates
+        - link "设置" [ref=e23] [cursor=pointer]:
+          - /url: /settings
+  - generic [ref=e24]:
+    - banner [ref=e25]:
+      - generic [ref=e26]:
+        - generic [ref=e27]:
+          - heading "AutoHySeeker" [level=2] [ref=e28]
+          - paragraph [ref=e29]:
+            - text: "API Base URL:"
+            - code [ref=e30]: http://localhost:8100
+        - button "中文" [ref=e31] [cursor=pointer]:
+          - img [ref=e32]
+          - generic [ref=e35]: 中文
+    - main [ref=e36]:
+      - generic [ref=e37]:
+        - generic [ref=e39]:
+          - generic [ref=e40]:
+            - paragraph [ref=e41]:
+              - img [ref=e42]
+              - text: OpenViking Integration
+            - heading "知识管理 / 知识库" [level=1] [ref=e46]
+            - paragraph [ref=e47]: Vector + Structural search powered by OpenViking. Allows agents and users to efficiently fetch protocols, historical experiments, and troubleshooting methods directly into the experimentation workflow.
+          - button "Ingest New Knowledge" [ref=e49] [cursor=pointer]:
+            - img [ref=e50]
+            - text: Ingest New Knowledge
+        - generic [ref=e52]:
+          - generic [ref=e53]:
+            - generic:
+              - img
+            - textbox "Search OpenViking Knowledge Base (e.g. HER catalyst protocols...)" [ref=e54]
+          - generic [ref=e55]:
+            - generic [ref=e56]: "Partitions:"
+            - generic [ref=e57] [cursor=pointer]: protocols
+            - generic [ref=e58] [cursor=pointer]: experiments
+            - generic [ref=e59] [cursor=pointer]: faults
+        - generic [ref=e60]:
+          - generic [ref=e61]:
+            - heading "近期与热门" [level=2] [ref=e63]
+            - generic [ref=e64]:
+              - generic [ref=e65] [cursor=pointer]:
+                - generic [ref=e66]:
+                  - heading "Standard HER Catalyst Preparation" [level=3] [ref=e67]
+                  - generic [ref=e69]: "Score: 92%"
+                - generic [ref=e70]:
+                  - generic [ref=e71]:
+                    - img [ref=e72]
+                    - text: protocols
+                  - generic [ref=e75]: •
+                  - generic [ref=e76]: 3/20/2026
+                - paragraph [ref=e77]: Detailed procedure for preparing Ni-Fe based catalyst on carbon cloth. Includes ink formulation (5% Nafion, ethanol/water 1:3), sonication timing (30m), and drop-casting volumes to achieve 1.0 mg/cm² loading.
+                - generic [ref=e78]:
+                  - generic [ref=e79]: HER
+                  - generic [ref=e80]: Preparation
+                  - generic [ref=e81]: Catalyst
+              - generic [ref=e82] [cursor=pointer]:
+                - generic [ref=e83]:
+                  - heading "CV Curve Noise Troubleshooting" [level=3] [ref=e84]
+                  - generic [ref=e86]: "Score: 85%"
+                - generic [ref=e87]:
+                  - generic [ref=e88]:
+                    - img [ref=e89]
+                    - text: faults
+                  - generic [ref=e91]: •
+                  - generic [ref=e92]: 3/19/2026
+                - paragraph [ref=e93]: "If the Cyclic Voltammetry (CV) curve shows high frequency noise (wavy lines), check the Ag/AgCl reference electrode connection. Secondary cause: uncompensated iR drop or trapped bubbles in the microfluidic channel."
+                - generic [ref=e94]:
+                  - generic [ref=e95]: Diagnostics
+                  - generic [ref=e96]: CV
+                  - generic [ref=e97]: Noise
+          - generic [ref=e98]:
+            - generic [ref=e99]:
+              - img [ref=e100]
+              - heading "知识库助手" [level=2] [ref=e103]
+            - generic [ref=e105]:
+              - generic [ref=e107]:
+                - generic [ref=e108]:
+                  - generic [ref=e109]:
+                    - img [ref=e110]
+                    - heading "知识管理 / 知识库 Chat" [level=3] [ref=e112]
+                  - paragraph [ref=e113]: 围绕实验上下文、知识库文档、历史实验和方案经验提问；即使后端暂时不可用，前端也保持可聊、可看、可演示。
+                - button "清空历史" [ref=e115] [cursor=pointer]:
+                  - img [ref=e116]
+              - generic [ref=e119]:
+                - generic [ref=e120]:
+                  - generic [ref=e121]:
+                    - img [ref=e122]
+                    - text: 服务异常
+                  - generic [ref=e124]:
+                    - img [ref=e125]
+                    - text: 后端未响应，已进入本地 mock/fallback 模式。
+                - generic [ref=e128]: 最近一次错误：HTTP 500
+              - generic [ref=e130]:
+                - generic [ref=e131]:
+                  - generic [ref=e132]:
+                    - img [ref=e133]
+                    - text: 当前实验上下文
+                  - generic [ref=e135]:
+                    - paragraph [ref=e136]: 实验：Global Knowledge Query
+                    - paragraph [ref=e137]: 阶段：Ready
+                    - paragraph [ref=e138]: 目标：Help users summarize search results and ask open-ended domain questions.
+                    - paragraph [ref=e139]: 最新观察：Agent C3 connected to OpenViking cluster.
+                    - paragraph [ref=e140]: "下一步建议：Try asking: \"What is the relation between flow rate constraint and signal noise?\""
+                - generic [ref=e141]:
+                  - generic [ref=e142]:
+                    - generic [ref=e143]:
+                      - img [ref=e144]
+                      - text: 当前检索范围
+                    - generic [ref=e146]:
+                      - generic [ref=e147]: OpenViking Vectors
+                      - generic [ref=e148]: Search Results Context
+                      - generic [ref=e149]: Historical Run Summary
+                  - generic [ref=e150]:
+                    - generic [ref=e151]:
+                      - img [ref=e152]
+                      - text: 推荐追问方向
+                    - paragraph [ref=e156]: step 设计、运行异常、参数经验、历史实验对比、下一轮修改策略。
+              - generic [ref=e160]:
+                - generic [ref=e161]: 这里是知识管理 / 知识库 Chat。 我不是普通闲聊框，而是围绕实验设计、知识库文档、历史实验和运行异常服务的实验助手入口。 你可以直接问：当前 step 为什么这么设计、某个 technique 怎么选、最近相似 run 有什么经验、下一轮优先改什么变量。
+                - generic [ref=e162]:
+                  - generic [ref=e163]:
+                    - generic [ref=e164]: 📚 知识管理 / 知识库 Chat
+                    - generic [ref=e165]: fallback
+                  - generic [ref=e166]: 15:08
+              - generic [ref=e167]:
+                - generic [ref=e168]:
+                  - button "问当前实验" [ref=e169] [cursor=pointer]
+                  - button "问知识库" [ref=e170] [cursor=pointer]
+                  - button "问运行异常" [ref=e171] [cursor=pointer]
+                  - button "问历史经验" [ref=e172] [cursor=pointer]
+                  - button "一键开始" [ref=e173] [cursor=pointer]
+                - generic [ref=e174]:
+                  - textbox "输入你的实验问题，例如：结合当前 step，为什么建议先用 CV 而不是直接做 EIS？（Enter 发送，Shift + Enter 换行）" [ref=e175]
+                  - generic [ref=e176]:
+                    - generic [ref=e177]:
+                      - img [ref=e178]
+                      - text: 无后端结果时自动切换 fallback，保证入口不是空壳。
+                    - button "发送" [disabled] [ref=e181]:
+                      - img [ref=e182]
+                      - text: 发送
+                - generic [ref=e185]:
+                  - img [ref=e186]
+                  - text: 欢迎语、quick actions、稳定消息流、状态提示、fallback mock flow 已就位。
+  - button "打开知识库 Chat" [ref=e189] [cursor=pointer]:
+    - img [ref=e190]
+```

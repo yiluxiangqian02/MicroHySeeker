@@ -5,7 +5,7 @@ from __future__ import annotations
 import asyncio
 import unittest
 from typing import Any
-from unittest.mock import MagicMock, patch
+from unittest.mock import AsyncMock, MagicMock, patch
 
 
 class TestDiagnosticsKnownFaults(unittest.TestCase):
@@ -61,6 +61,21 @@ class TestDiagnosticsDiagnose(unittest.TestCase):
 
         assert result["category"] == "unknown"
         assert result["confidence"] <= 0.5
+
+    def test_diagnose_known_fault_includes_knowledge_context(self) -> None:
+        from src.agents.diagnostics import DiagnosticsExpertAgent
+
+        knowledge_skill = AsyncMock()
+        knowledge_skill.get_fault_history = AsyncMock(return_value=[{"id": "fault-1"}])
+        knowledge_skill.search = AsyncMock(return_value=[{"id": "exp-1"}])
+        agent = DiagnosticsExpertAgent(knowledge_skill=knowledge_skill)
+        anomaly = {"type": "communication_timeout", "severity": "medium"}
+
+        knowledge_context = asyncio.run(agent._collect_knowledge_context(anomaly, {}))
+        result = asyncio.run(agent._diagnose(anomaly, {"knowledge_context": knowledge_context}))
+
+        assert result["knowledge_hits"] == 1
+        assert "Historical context" in result["recommendation"]
 
 
 class TestDiagnosticsParseResponse(unittest.TestCase):
@@ -181,6 +196,38 @@ class TestDiagnosticsUnknownFault(unittest.TestCase):
         assert result["status"] == "unresolved"
         assert result["can_continue"] is False
         assert result["need_human"] is True
+
+
+class TestDiagnosticsKnowledgeIntegration(unittest.TestCase):
+    def test_diagnose_and_fix_returns_knowledge_context(self) -> None:
+        from src.agents.diagnostics import DiagnosticsExpertAgent
+
+        knowledge_skill = AsyncMock()
+        knowledge_skill.get_fault_history = AsyncMock(return_value=[{"id": "fault-1"}])
+        knowledge_skill.search = AsyncMock(return_value=[{"id": "record-1"}])
+        agent = DiagnosticsExpertAgent(knowledge_skill=knowledge_skill)
+
+        with patch.object(
+            agent,
+            "_fix_communication",
+            new=AsyncMock(return_value={"steps": [{"step": "disconnect", "result": "ok"}], "description": "reconnected"}),
+        ), patch.object(
+            agent,
+            "_verify_fix",
+            new=AsyncMock(return_value=True),
+        ):
+            result = asyncio.run(
+                agent.diagnose_and_fix(
+                    {
+                        "anomaly": {"type": "communication_timeout", "severity": "medium"},
+                        "context": {"run_id": "run_001"},
+                    }
+                )
+            )
+
+        assert result["status"] == "resolved"
+        assert result["knowledge_context"]["fault_history"][0]["id"] == "fault-1"
+        assert result["knowledge_context"]["related_records"][0]["id"] == "record-1"
 
 
 class TestDiagnosticsRouting(unittest.TestCase):

@@ -4,6 +4,7 @@ import { useOptimizationStore } from "@/stores/optimizationStore";
 import { motion } from "framer-motion";
 import { Play, Square, Settings as SettingsIcon, BrainCircuit, RefreshCw, Trophy, FlaskConical, Target, AlertCircle } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from "recharts";
+import toast from "react-hot-toast";
 
 export function Optimization() {
   const { t } = useTranslation();
@@ -12,6 +13,29 @@ export function Optimization() {
   useEffect(() => {
     fetchConfigAndState();
   }, [fetchConfigAndState]);
+
+  const handleStartLoop = async () => {
+    try {
+      await startLoop();
+      toast.success(t('optimization.start_loop'));
+    } catch {
+      toast.error(t('optimization.failed'));
+    }
+  };
+
+  const handleStopLoop = async () => {
+    try {
+      await stopLoop();
+      toast.success(t('optimization.stop_loop'));
+    } catch {
+      toast.error(t('optimization.failed'));
+    }
+  };
+
+  const handleRetry = () => {
+    fetchConfigAndState();
+    toast.success(t('common.refresh'));
+  };
 
   if (isLoading && !config) {
     return (
@@ -24,15 +48,19 @@ export function Optimization() {
   if (!config || !state) {
     return (
       <div className="p-6 text-center text-slate-500">
-        <p>Failed to load optimization context.</p>
-        <button onClick={fetchConfigAndState} className="mt-4 text-blue-500 hover:underline">Retry</button>
+        <p>{t('optimization.failed')}</p>
+        <button 
+          onClick={handleRetry} 
+          className="mt-4 inline-flex items-center gap-1.5 px-3 py-2 text-blue-600 hover:text-blue-700 font-medium"
+        >
+          <RefreshCw className="h-4 w-4" />
+          {t('common.retry')}
+        </button>
       </div>
     );
   }
 
   const isRunning = state.status === "running";
-  const progressPercent = (state.currentIteration / state.maxIterations) * 100;
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
@@ -41,9 +69,9 @@ export function Optimization() {
     >
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-slate-900">{t('optimization.title', 'Optimization Loop')}</h2>
+          <h2 className="text-2xl font-bold text-slate-900">{t('optimization.title')}</h2>
           <p className="mt-1 text-sm text-slate-500">
-            Autonomous closed-loop experimentation controlled by Designer Agent.
+            {t('optimization.subtitle')}
           </p>
         </div>
         <div className="flex items-center gap-3">
@@ -52,12 +80,18 @@ export function Optimization() {
             <span className="font-medium capitalize text-slate-700">{state.status}</span>
           </div>
           {isRunning ? (
-            <button onClick={stopLoop} className="flex items-center gap-2 rounded-lg bg-red-50 text-red-700 px-4 py-2 border border-red-200 hover:bg-red-100 transition shadow-sm font-medium">
-              <Square className="h-4 w-4" /> Stop Loop
+            <button 
+              onClick={handleStopLoop} 
+              className="flex items-center gap-2 rounded-lg bg-red-50 text-red-700 px-4 py-2 border border-red-200 hover:bg-red-100 transition shadow-sm font-medium"
+            >
+              <Square className="h-4 w-4" /> {t('optimization.stop_loop')}
             </button>
           ) : (
-            <button onClick={startLoop} className="flex items-center gap-2 rounded-lg bg-blue-600 text-white px-4 py-2 border border-blue-700 hover:bg-blue-700 transition shadow-sm font-medium">
-              <Play className="h-4 w-4" /> Start Loop
+            <button 
+              onClick={handleStartLoop} 
+              className="flex items-center gap-2 rounded-lg bg-blue-600 text-white px-4 py-2 border border-blue-700 hover:bg-blue-700 transition shadow-sm font-medium"
+            >
+              <Play className="h-4 w-4" /> {t('optimization.start_loop')}
             </button>
           )}
         </div>
@@ -70,22 +104,22 @@ export function Optimization() {
           <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
             <div className="flex items-center gap-2 border-b border-slate-100 pb-3 mb-4">
               <SettingsIcon className="h-5 w-5 text-slate-400" />
-              <h3 className="font-semibold text-slate-900">Configuration</h3>
+              <h3 className="font-semibold text-slate-900">{t('optimization.configuration')}</h3>
             </div>
             <div className="space-y-4">
               <div>
-                <label className="text-xs font-medium text-slate-500">{t('optimization.target_func', 'Target Function')}</label>
+                <label className="text-xs font-medium text-slate-500">{t('optimization.target_func')}</label>
                 <div className="mt-1 flex justify-between items-center bg-slate-50 border border-slate-200 px-3 py-2 rounded-lg text-sm">
                   <span className="font-mono text-slate-700">{config.targetFunction}</span>
                   <Target className="h-4 w-4 text-blue-500" />
                 </div>
               </div>
               <div>
-                <label className="text-xs font-medium text-slate-500">{t('optimization.max_iter', 'Max Iterations')}</label>
-                <div className="mt-1 text-sm font-medium text-slate-900">{config.maxIterations} cycles</div>
+                <label className="text-xs font-medium text-slate-500">{t('optimization.max_iter')}</label>
+                <div className="mt-1 text-sm font-medium text-slate-900">{config.maxIterations} {t('optimization.cycles')}</div>
               </div>
               <div>
-                <label className="text-xs font-medium text-slate-500">Constraints</label>
+                <label className="text-xs font-medium text-slate-500">{t('optimization.constraints')}</label>
                 <ul className="mt-1 space-y-1">
                   {config.constraints.map((c, i) => (
                     <li key={i} className="flex items-start gap-1.5 text-xs text-orange-700 bg-orange-50 px-2 py-1 rounded">
@@ -99,18 +133,18 @@ export function Optimization() {
           </div>
 
           <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-            <h3 className="font-semibold text-slate-900 mb-4">Parameter Space</h3>
+            <h3 className="font-semibold text-slate-900 mb-4">{t('optimization.parameterSpace')}</h3>
             <div className="space-y-3">
               {Object.entries(config.parameterSpace).map(([key, boundary]) => (
                 <div key={key} className="p-3 rounded-lg border border-slate-100 bg-slate-50">
                   <div className="flex justify-between items-center mb-2">
                     <span className="text-sm font-medium text-slate-700">{key}</span>
-                    <span className="text-[10px] uppercase tracking-wider text-slate-400 font-bold">{boundary.type}</span>
+                    <span className="text-[10px] uppercase tracking-wider text-slate-400 font-bold">{(boundary as any).type}</span>
                   </div>
                   <div className="flex items-center gap-2 text-xs font-mono text-slate-500">
-                    <span>{boundary.min}</span>
+                    <span>{(boundary as any).min}</span>
                     <div className="flex-1 h-1.5 rounded-full bg-slate-200" />
-                    <span>{boundary.max}</span>
+                    <span>{(boundary as any).max}</span>
                   </div>
                 </div>
               ))}
@@ -122,9 +156,9 @@ export function Optimization() {
         <div className="xl:col-span-2 flex flex-col gap-6">
           <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm flex-1">
             <div className="flex justify-between items-center mb-6">
-              <h3 className="font-semibold text-slate-900">Convergence Curve</h3>
+              <h3 className="font-semibold text-slate-900">{t('optimization.convergenceCurve')}</h3>
               <div className="text-sm font-medium text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full">
-                Iteration: {state.currentIteration} / {state.maxIterations}
+                {t('optimization.iteration', { current: state.currentIteration, max: state.maxIterations })}
               </div>
             </div>
             
@@ -165,13 +199,13 @@ export function Optimization() {
             <div className="mt-4 pt-4 border-t border-slate-100">
                <div className="flex items-center gap-2 mb-2 text-sm font-medium text-slate-700">
                  <FlaskConical className="h-4 w-4 text-purple-500" />
-                 Current Iteration Details
+                 {t('optimization.current_iter_details')}
                </div>
                <div className="grid grid-cols-3 gap-4">
                  {Object.entries(state.history[state.history.length-1]?.params || {}).map(([k, v]) => (
                    <div key={k} className="bg-slate-50 rounded-lg p-2 text-center border border-slate-100">
                      <div className="text-[10px] text-slate-500 mb-1">{k}</div>
-                     <div className="text-sm font-mono font-medium">{v}</div>
+                     <div className="text-sm font-mono font-medium">{String(v)}</div>
                    </div>
                  ))}
                </div>
@@ -184,18 +218,18 @@ export function Optimization() {
           <div className="rounded-2xl border border-green-200 bg-green-50/50 p-5 shadow-sm">
             <div className="flex items-center gap-2 pb-3 mb-4 border-b border-green-100">
               <Trophy className="h-5 w-5 text-green-600" />
-              <h3 className="font-semibold text-green-900">Global Best</h3>
+              <h3 className="font-semibold text-green-900">{t('optimization.globalBest')}</h3>
             </div>
             <div className="text-center mb-6">
-              <div className="text-sm font-medium text-green-700">Highest Yield Achieved</div>
+              <div className="text-sm font-medium text-green-700">{t('optimization.highestYieldAchieved')}</div>
               <div className="text-3xl font-bold text-green-600 mt-1">{state.bestYield.toFixed(2)}%</div>
             </div>
             <div className="space-y-2">
-              <div className="text-xs font-semibold text-green-800 uppercase tracking-wider mb-2">Optimal Parameters</div>
+              <div className="text-xs font-semibold text-green-800 uppercase tracking-wider mb-2">{t('optimization.optimalParameters')}</div>
               {Object.entries(state.bestParams).map(([k, v]) => (
                 <div key={k} className="flex justify-between text-sm py-1.5 border-b border-green-100 last:border-0">
                   <span className="text-green-700">{k}</span>
-                  <span className="font-mono font-medium text-green-900">{v}</span>
+                  <span className="font-mono font-medium text-green-900">{String(v)}</span>
                 </div>
               ))}
             </div>
@@ -205,7 +239,7 @@ export function Optimization() {
             <div className="rounded-2xl border border-purple-200 bg-purple-50/50 p-5 shadow-sm">
               <div className="flex items-center gap-2 pb-3 mb-4 border-b border-purple-100">
                 <BrainCircuit className="h-5 w-5 text-purple-600" />
-                <h3 className="font-semibold text-purple-900">Agent Proposal</h3>
+                <h3 className="font-semibold text-purple-900">{t('optimization.agentProposal')}</h3>
               </div>
               <p className="text-sm text-purple-800 mb-4 leading-relaxed bg-white/60 p-3 rounded-lg border border-purple-100">
                 {state.nextSuggestion.reason}
@@ -213,17 +247,17 @@ export function Optimization() {
               
               <div className="mb-4">
                 <div className="text-xs font-medium text-purple-600 mb-1 flex justify-between">
-                  <span>Predicted Yield</span>
+                  <span>{t('optimization.predictedYield')}</span>
                   <span className="font-bold">{state.nextSuggestion.predictedYield.toFixed(1)}%</span>
                 </div>
               </div>
 
               <div className="space-y-2">
-                <div className="text-xs font-semibold text-purple-800 uppercase tracking-wider mb-2">Suggested Params</div>
+                <div className="text-xs font-semibold text-purple-800 uppercase tracking-wider mb-2">{t('optimization.suggestedParams')}</div>
                 {Object.entries(state.nextSuggestion.suggestedParams).map(([k, v]) => (
                   <div key={k} className="flex justify-between text-sm py-1.5 border-b border-purple-100 last:border-0">
                     <span className="text-purple-700">{k}</span>
-                    <span className="font-mono font-medium text-purple-900">{v}</span>
+                    <span className="font-mono font-medium text-purple-900">{String(v)}</span>
                   </div>
                 ))}
               </div>

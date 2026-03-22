@@ -9,14 +9,16 @@ from __future__ import annotations
 
 from typing import Any
 
+from src.agents.chat_agent import ChatAgent
 from src.agents.diagnostics import DiagnosticsExpertAgent
 from src.agents.exp_designer import ExperimentDesignerAgent
 from src.agents.exp_executor import ExperimentExecutorAgent
-from src.agents.orchestrator import OrchestratorAgent
+from src.agents.orchestrator_shared import get_shared_orchestrator_agent
 from src.graph.state import AutoHySeekerState
 
 AGENT_MAP = {
-    "orchestrator": OrchestratorAgent(),
+    "chat": ChatAgent(),
+    "orchestrator": get_shared_orchestrator_agent(),
     "exp_designer": ExperimentDesignerAgent(),
     "exp_executor": ExperimentExecutorAgent(),
     "diagnostics": DiagnosticsExpertAgent(),
@@ -24,6 +26,7 @@ AGENT_MAP = {
 
 # Backward-compatible aliases: old agent names → orchestrator
 _AGENT_ALIASES = {
+    "chat_agent": "chat",
     "data_analyst": "orchestrator",
     "knowledge_mgr": "orchestrator",
     "exp_supervisor": "orchestrator",
@@ -48,6 +51,27 @@ def _infer_agent(task: dict[str, Any], requested: str | None = None) -> str:
             return resolved
 
     text = _task_text(task)
+
+    if task.get("type") == "chat":
+        return "chat"
+    if any(
+        keyword in text
+        for keyword in (
+            "chat",
+            "聊天",
+            "问答",
+            "现在优化到",
+            "第几轮",
+            "帮我停",
+            "停止优化",
+            "现在实验",
+            "有没有跑过",
+            "之前有没有",
+            "知识库",
+            "tafel",
+        )
+    ):
+        return "chat"
 
     # Orchestrator keywords (closed-loop optimization as a whole)
     if any(keyword in text for keyword in ("闭环", "优化循环", "配比优化", "optimization loop", "closed-loop")):
@@ -106,6 +130,10 @@ async def _invoke_agent(state: AutoHySeekerState, agent_name: str) -> dict[str, 
 
 async def run_orchestrator(state: AutoHySeekerState) -> dict[str, Any]:
     return await _invoke_agent(state, "orchestrator")
+
+
+async def run_chat(state: AutoHySeekerState) -> dict[str, Any]:
+    return await _invoke_agent(state, "chat")
 
 
 async def run_exp_designer(state: AutoHySeekerState) -> dict[str, Any]:

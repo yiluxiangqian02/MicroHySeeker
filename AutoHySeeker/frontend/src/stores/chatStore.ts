@@ -106,7 +106,7 @@ export const useChatStore = create<ChatStore>((set, get) => ({
         isWaitingForResponse: false 
       });
       
-    } catch (e) {
+    } catch {
       set({ isWaitingForResponse: false });
     }
   }

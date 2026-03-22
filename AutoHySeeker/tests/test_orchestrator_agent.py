@@ -26,6 +26,7 @@ class TestOrchestratorAgent:
         from src.agents.orchestrator import OrchestratorAgent
 
         orch = OrchestratorAgent()
+        orch._work_mode = "full_auto"
         optimization = {
             "goal": "minimize overpotential",
             "target_metric": "overpotential_mV",
@@ -97,7 +98,7 @@ class TestOrchestratorAgent:
             optimization={"goal": "test"},
             current_round=3,
         ))
-        assert result["action"] == "diagnose"
+        assert result["action"] in ("diagnose", "pause_for_human")
 
     def test_handle_anomaly_low(self) -> None:
         from src.agents.orchestrator import OrchestratorAgent
@@ -149,6 +150,111 @@ class TestOrchestratorAgent:
         best = orch.update_best_result(history, optimization)
         assert best["metrics"]["op"] == 200  # 100 was unreliable
 
+    def test_semi_auto_first_round_requires_approval(self) -> None:
+        from src.agents.orchestrator import OrchestratorAgent
+
+        orch = OrchestratorAgent()
+        orch._work_mode = "semi_auto"
+
+        with patch.object(orch, "invoke", new=AsyncMock(return_value={"content": '{"action": "continue"}'})):
+            result = run_async(
+                orch.evaluate_and_decide(
+                    optimization={
+                        "goal": "test",
+                        "target_metric": "overpotential_mV",
+                        "optimization_direction": "minimize",
+                        "max_rounds": 10,
+                        "search_space": {},
+                    },
+                    experiment_history=[],
+                    current_result={"metrics": {"overpotential_mV": 250}},
+                    best_result=None,
+                    current_round=1,
+                )
+            )
+
+        assert result["action"] == "pause_for_human"
+        assert result["pending_approval"]["decision"]["decision_type"] == "initial_round_confirmation"
+
+    def test_manual_mode_always_requires_approval(self) -> None:
+        from src.agents.orchestrator import OrchestratorAgent
+
+        orch = OrchestratorAgent()
+        orch._work_mode = "manual"
+
+        with patch.object(orch, "invoke", new=AsyncMock(return_value={"content": '{"action": "continue"}'})):
+            result = run_async(
+                orch.evaluate_and_decide(
+                    optimization={
+                        "goal": "test",
+                        "target_metric": "overpotential_mV",
+                        "optimization_direction": "minimize",
+                        "max_rounds": 10,
+                        "search_space": {},
+                    },
+                    experiment_history=[{"metrics": {"overpotential_mV": 250}}],
+                    current_result={"metrics": {"overpotential_mV": 240}},
+                    best_result={"metrics": {"overpotential_mV": 240}},
+                    current_round=2,
+                )
+            )
+
+        assert result["action"] == "pause_for_human"
+        assert result["pending_approval"]["decision"]["decision_type"] == "manual_round_confirmation"
+
+    def test_request_and_respond_human_approval(self) -> None:
+        from src.agents.orchestrator import OrchestratorAgent
+
+        orch = OrchestratorAgent()
+        request = run_async(
+            orch.request_human_approval(
+                decision={"action": "stop"},
+                context={"current_round": 3},
+            )
+        )
+
+        approval_id = request["approval_id"]
+        pending = orch.get_pending_approvals()
+        assert len(pending) == 1
+        assert pending[0]["approval_id"] == approval_id
+
+        resolved = orch.respond_human_approval(approval_id, approved=True, feedback="ok")
+        assert resolved["found"] is True
+        assert resolved["approval"]["approved"] is True
+        assert orch.get_pending_approvals() == []
+
+    def test_retrieve_knowledge_uses_query_skill(self) -> None:
+        from src.agents.orchestrator import OrchestratorAgent
+
+        orch = OrchestratorAgent()
+        with patch.object(
+            orch._knowledge_query_skill,
+            "search",
+            new=AsyncMock(return_value=[{"partition": "experiments"}]),
+        ):
+            result = run_async(orch.retrieve_knowledge("Fe-Co-Ni", search_type="both", top_k=3))
+
+        assert result["status"] == "retrieved"
+        assert result["results"][0]["partition"] == "experiments"
+
+    def test_update_ml_training_data_returns_fit_status(self) -> None:
+        from src.agents.orchestrator import OrchestratorAgent
+
+        orch = OrchestratorAgent()
+        result = run_async(
+            orch.update_ml_training_data(
+                {
+                    "history": [
+                        {
+                            "params": {"Fe": 0.3, "Co": 0.5, "Ni": 0.2},
+                            "metrics": {"overpotential_mV": 200},
+                        }
+                    ]
+                }
+            )
+        )
+        assert result["ready"] is False
+
 
 # ── OptimizationLoop tests ─────────────────────────────────────────────────────
 
@@ -176,6 +282,69 @@ class TestOptimizationLoop:
         assert opt["max_rounds"] == 10
         assert opt["status"] == "idle"
         assert "Fe" in opt["search_space"]
+
+    def test_pause_for_human_waits_for_approval_and_resumes(self) -> None:
+        from src.agents.orchestrator import OrchestratorAgent
+        from src.graph.optimization_loop import OptimizationLoop
+
+        async def scenario() -> dict[str, Any]:
+            loop = OptimizationLoop()
+            orchestrator = OrchestratorAgent()
+            loop._orchestrator = orchestrator
+            approval_id: dict[str, str] = {}
+
+            async def fake_decide(**_: Any) -> dict[str, Any]:
+                request = await orchestrator.request_human_approval(
+                    decision={"action": "continue", "decision_type": "initial_round_confirmation"},
+                    context={"current_round": 1},
+                )
+                approval_id["value"] = request["approval_id"]
+                return {
+                    "action": "pause_for_human",
+                    "reason": "initial_round_confirmation",
+                    "pending_approval": request["pending_approval"],
+                    "original_decision": {"action": "continue"},
+                }
+
+            async def approve_later() -> None:
+                while "value" not in approval_id:
+                    await asyncio.sleep(0.01)
+                orchestrator.respond_human_approval(approval_id["value"], approved=True, feedback="ok")
+
+            with patch.object(
+                loop,
+                "_step_design",
+                new=AsyncMock(return_value={"params": {"Fe": 0.5}, "step_overrides": {}, "template_id": ""}),
+            ), patch.object(
+                loop,
+                "_step_execute",
+                new=AsyncMock(return_value={"status": "completed", "run_id": "run_001", "data_path": ""}),
+            ), patch.object(
+                loop,
+                "_step_analyse",
+                new=AsyncMock(return_value={"metrics": {"overpotential_mV": 180}, "data_quality": {"reliable": True}}),
+            ), patch.object(
+                orchestrator,
+                "evaluate_and_decide",
+                new=AsyncMock(side_effect=fake_decide),
+            ):
+                approval_task = asyncio.create_task(approve_later())
+                result = await loop.run(
+                    goal="test",
+                    target_metric="overpotential_mV",
+                    search_space={"Fe": {"min": 0.1, "max": 0.9}},
+                    max_rounds=1,
+                )
+                await approval_task
+
+            assert result["status"] == "completed"
+            assert loop.current_state is not None
+            assert loop.current_state["last_approval"]["approved"] is True
+            assert loop.current_state.get("pending_approval") is None
+            return result
+
+        result = run_async(scenario())
+        assert result["current_round"] == 1
 
 
 # ── Route intent includes orchestrator ─────────────────────────────────────────

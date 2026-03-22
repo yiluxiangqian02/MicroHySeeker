@@ -176,7 +176,7 @@ export function StepEditor({ steps, onChange }: StepEditorProps) {
                         try {
                           const params = JSON.parse(e.target.value);
                           updateStep(index, 'parameters', params);
-                        } catch (error) {
+                        } catch {
                           // Invalid JSON, don't update
                         }
                       }}

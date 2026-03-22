@@ -1,0 +1,27 @@
+# ExperimentDesignerAgent 配置（策略切换阈值、约束等）
+#
+# 参考: docs/PLAN_PHASE1_EXPERIMENT_LOOP.md（第 7 节配置结构）
+
+[designer]
+# ≥N 轮切换到 ML 混合模式
+ml_switch_threshold = 5
+
+# ML 模型最少需要的数据点数
+ml_min_data_points = 10
+
+# ML 生成候选点数量（供 LLM 审核选择）
+ml_candidate_count = 10
+
+# "auto" | "random_forest" | "gaussian_process"
+ml_model_type = "auto"
+
+[designer.constraints]
+# 最小组分比例（例如 0.05 表示每个元素至少 5%）
+min_fraction = 0.05
+
+# 最大转速（RPM）
+max_rpm = 300
+
+# 比例和容差（例如目标和为 1.0 时允许 ±0.001）
+sum_tolerance = 0.001
+

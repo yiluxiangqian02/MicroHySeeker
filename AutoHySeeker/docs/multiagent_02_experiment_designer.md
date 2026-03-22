@@ -119,23 +119,29 @@
 
 ### 已有代码
 
-| 文件 | 行数 | 状态 | 说明 |
-|------|------|------|------|
-| `agents/exp_designer.py` | 18 | ⚠️ Stub | 仅有类定义 + system prompt |
-| `tools/experiment_builder.py` | ~200 | ✅ 完整 | build_experiment_plan, generate_param_grid |
-| `skills/generate_experiment_plan.py` | ~100 | ✅ 完整 | 高级技能封装 |
-| `skills/suggest_next_experiment.py` | ~80 | ✅ 完整 | 下一实验建议 |
+| 文件 | 状态 | 说明 |
+|------|------|------|
+| `agents/exp_designer.py` | ✅ 完整 | 三阶段策略（文献引导→LLM引导→ML混合），含约束处理和 step_overrides 格式化 |
+| `skills/knowledge_query_skill.py` | ✅ 完整 | 文献检索接口，Designer 第 0 轮使用 |
+| `ml/performance_predictor.py` | ✅ 完整 | ML 预测模型，≥5 轮时启用 |
+| `tools/experiment_builder.py` | ✅ 完整 | build_experiment_plan, generate_param_grid |
+| `skills/generate_experiment_plan.py` | ✅ 完整 | 高级技能封装 |
+| `skills/suggest_next_experiment.py` | ✅ 完整 | 下一实验建议 |
 
 ### 关键问题
 
-1. **Agent 只有 system prompt**：没有任何结构化的参数生成逻辑
-2. **缺少优化算法集成**：没有贝叶斯优化 (BO) 或其他搜索策略
-3. **缺少约束处理**：没有"元素比例和 = 1"等约束的处理
-4. **输出格式不标准**：没有生成标准的 `step_overrides` 格式
+> **✅ 以下问题已全部在 Phase 1 (P1-12) 中解决（2026-03-19）：**
+
+1. ~~**Agent 只有 system prompt**~~：已实现完整的三阶段策略和参数生成逻辑
+2. ~~**缺少优化算法集成**~~：已集成 PerformancePredictor（随机森林/高斯过程/轻量 surrogate）
+3. ~~**缺少约束处理**~~：已实现 `_apply_constraints()`（归一化、最小值截断）
+4. ~~**输出格式不标准**~~：已实现标准 `step_overrides` 格式输出
 
 ---
 
-## 6. 需要修改的内容
+## 6. 已完成的修改（参考实现）
+
+> 以下修改已在 Phase 1 (P1-12) 中完成，此处保留作为实现参考。
 
 ### 6.1 充实 `agents/exp_designer.py`
 
@@ -256,7 +262,9 @@ class ExperimentDesignerAgent(BaseAgent):
 
 ---
 
-## 7. 需要新增的内容
+## 7. 已完成的新增内容（参考实现）
+
+> 以下新增已在 Phase 1 中完成，此处保留作为实现参考。
 
 ### 7.1 优化策略模块 (`skills/optimization/`)
 
@@ -391,14 +399,14 @@ Designer 收到任务（有 N 轮历史数据）
 
 ---
 
-## 10. 执行计划
+## 10. 执行计划（✅ 全部完成）
 
-| 步骤 | 任务 | 涉及文件 | 依赖 |
+| 步骤 | 任务 | 涉及文件 | 状态 |
 |------|------|---------|------|
-| 1 | 充实 exp_designer.py，添加 design_experiment 方法 | `agents/exp_designer.py` | 无 |
-| 2 | 实现约束处理逻辑 | `agents/exp_designer.py` | 步骤 1 |
-| 3 | 实现 step_overrides 格式化输出 | `agents/exp_designer.py` | 步骤 1 |
-| 4 | 创建 bayesian_optimizer.py (Optuna 集成) | `skills/optimization/` | 无 |
-| 5 | 创建 constraint_handler.py | `skills/optimization/` | 无 |
-| 6 | 更新 System Prompt | `agents/exp_designer.py` | 步骤 1 |
-| 7 | 添加单元测试 | `tests/test_designer.py` | 步骤 1-5 |
+| 1 | 充实 exp_designer.py，添加 design_experiment 方法 | `agents/exp_designer.py` | ✅ |
+| 2 | 实现约束处理逻辑 | `agents/exp_designer.py` | ✅ |
+| 3 | 实现 step_overrides 格式化输出 | `agents/exp_designer.py` | ✅ |
+| 4 | ML 预测模型替代独立 BO | `ml/performance_predictor.py` | ✅ |
+| 5 | 约束处理集成到 Designer | `agents/exp_designer.py` | ✅ |
+| 6 | 更新 System Prompt | `agents/exp_designer.py` | ✅ |
+| 7 | 添加单元测试 | `tests/test_designer_agent.py` (16项通过) | ✅ |

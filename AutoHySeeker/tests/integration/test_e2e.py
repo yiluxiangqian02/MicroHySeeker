@@ -34,6 +34,7 @@ LLM is unavailable or returns errors.
 
 from __future__ import annotations
 
+import asyncio
 import json
 from pathlib import Path
 from typing import Any
@@ -509,3 +510,134 @@ class TestEndToEnd:
         assert "count" in data_resp
         assert "items" in data_resp
         assert isinstance(data_resp["items"], list)
+
+    async def test_approval_api_round_trip(
+        self,
+        async_client,
+        monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
+        from src.agents.orchestrator import OrchestratorAgent
+        import src.agents.orchestrator_shared as shared_mod
+
+        orchestrator = OrchestratorAgent()
+        monkeypatch.setattr(shared_mod, "_SHARED_ORCHESTRATOR", orchestrator)
+
+        request = await orchestrator.request_human_approval(
+            decision={"action": "stop", "decision_type": "stop_decision"},
+            context={"current_round": 3},
+        )
+
+        pending_resp = await async_client.get("/api/approval/pending")
+        assert pending_resp.status_code == 200
+        pending_body = pending_resp.json()
+        assert pending_body["count"] == 1
+        assert pending_body["items"][0]["approval_id"] == request["approval_id"]
+
+        respond_resp = await async_client.post(
+            "/api/approval/respond",
+            json={
+                "approval_id": request["approval_id"],
+                "approved": True,
+                "feedback": "approved in integration test",
+            },
+        )
+        assert respond_resp.status_code == 200
+        respond_body = respond_resp.json()
+        assert respond_body["approval"]["approved"] is True
+        assert respond_body["pending_count"] == 0
+
+    async def test_optimization_pause_resume_via_approval_api(
+        self,
+        async_client,
+        monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
+        from src.agents.orchestrator import OrchestratorAgent
+        import src.agents.orchestrator_shared as shared_mod
+        import src.api.routes.optimization as optimization_routes
+
+        orchestrator = OrchestratorAgent()
+        monkeypatch.setattr(shared_mod, "_SHARED_ORCHESTRATOR", orchestrator)
+        optimization_routes._loop_instance = None
+        optimization_routes._loop_task = None
+        optimization_routes._last_state = {}
+        optimization_routes._start_time = None
+        optimization_routes._config = {}
+
+        async def fake_run_optimization(**kwargs):
+            progress_callback = kwargs["progress_callback"]
+            request = await orchestrator.request_human_approval(
+                decision={"action": "continue", "decision_type": "initial_round_confirmation"},
+                context={"current_round": 1},
+            )
+            progress_callback(
+                {
+                    "status": "paused",
+                    "current_round": 1,
+                    "best_result": None,
+                    "experiment_history": [{"round": 1}],
+                    "optimization": {
+                        "goal": "integration test",
+                        "target_metric": "overpotential_mV",
+                        "max_rounds": 2,
+                    },
+                    "pending_approval": request["pending_approval"],
+                    "pause_reason": "initial_round_confirmation",
+                    "latest_decision": {
+                        "action": "pause_for_human",
+                        "pending_approval": request["pending_approval"],
+                    },
+                }
+            )
+
+            approval_id = request["approval_id"]
+            while True:
+                approval = orchestrator.get_approval_status(approval_id)
+                if approval and approval.get("status") in {"approved", "rejected"}:
+                    return {
+                        "status": "completed" if approval["approved"] else "stopped",
+                        "total_rounds": 1,
+                        "best_result": None,
+                        "experiment_history": [{"round": 1}],
+                        "history_count": 1,
+                        "final_decision": "continue" if approval["approved"] else "stopped",
+                        "last_approval": approval,
+                    }
+                await asyncio.sleep(0.02)
+
+        with patch("src.run_optimization.run_optimization", new=fake_run_optimization):
+            start_resp = await async_client.post(
+                "/api/optimization/start",
+                json={"goal": "integration test", "max_rounds": 2, "dry_run": True},
+            )
+            assert start_resp.status_code == 200
+
+            await asyncio.sleep(0.08)
+
+            status_resp = await async_client.get("/api/optimization/status")
+            assert status_resp.status_code == 200
+            status_body = status_resp.json()
+            assert status_body["status"] == "paused"
+            assert status_body["pending_approval"]["approval_id"].startswith("approval_")
+
+            pending_resp = await async_client.get("/api/approval/pending")
+            assert pending_resp.status_code == 200
+            pending_body = pending_resp.json()
+            approval_id = pending_body["items"][0]["approval_id"]
+
+            respond_resp = await async_client.post(
+                "/api/approval/respond",
+                json={
+                    "approval_id": approval_id,
+                    "approved": True,
+                    "feedback": "resume integration flow",
+                },
+            )
+            assert respond_resp.status_code == 200
+
+            await optimization_routes._loop_task
+
+            final_status_resp = await async_client.get("/api/optimization/status")
+            assert final_status_resp.status_code == 200
+            final_status = final_status_resp.json()
+            assert final_status["status"] == "completed"
+            assert final_status["last_approval"]["approved"] is True

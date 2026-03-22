@@ -22,6 +22,9 @@ import re
 from typing import Any
 
 from src.agents.base import BaseAgent
+from src.common.config import DESIGNER_CONFIG
+from src.ml.performance_predictor import PerformancePredictor
+from src.skills.knowledge_query_skill import KnowledgeQuerySkill
 
 _logger = logging.getLogger("autohyseeker.exp_designer")
 
@@ -87,6 +90,9 @@ class ExperimentDesignerAgent(BaseAgent):
             name="exp_designer",
             system_prompt=DESIGNER_SYSTEM_PROMPT,
         )
+        self._knowledge_query_skill = KnowledgeQuerySkill()
+        self._designer_config = dict(DESIGNER_CONFIG)
+        self._constraints_config = self._designer_config.get("constraints", {})
 
     # ── Public API ─────────────────────────────────────────────────────────────
 
@@ -115,6 +121,11 @@ class ExperimentDesignerAgent(BaseAgent):
         """
         space = search_space or DEFAULT_SEARCH_SPACE
         elements = sorted(space.keys())
+        merged_constraints = dict(constraints or {})
+        for key, value in self._constraints_config.items():
+            merged_constraints.setdefault(key, value)
+        if "min_component" not in merged_constraints and "min_fraction" in merged_constraints:
+            merged_constraints["min_component"] = merged_constraints["min_fraction"]
 
         n_history = len(history)
         _logger.info(
@@ -124,29 +135,35 @@ class ExperimentDesignerAgent(BaseAgent):
 
         # ── Strategy selection ────────────────────────────────────────────────
         if n_history == 0:
-            params = self._initial_design(elements, space)
-            strategy = "initial_sampling"
-            reasoning = "首轮实验，使用均匀初始采样"
+            params, reasoning, confidence = await self._literature_guided_design(
+                history=history,
+                elements=elements,
+                space=space,
+                target_metric=target_metric,
+                optimization_direction=optimization_direction,
+            )
+            strategy = "literature_guided"
             expected_improvement = 0.0
-        elif n_history < 5:
-            params = await self._llm_guided_design(
+        elif n_history < int(self._designer_config.get("ml_switch_threshold", 5)):
+            params, reasoning, confidence = await self._llm_guided_design(
                 history, elements, space, target_metric, optimization_direction,
             )
             strategy = "llm_guided"
-            reasoning = f"历史数据 {n_history} 轮，使用 LLM 指导设计"
             expected_improvement = 0.0
         else:
-            params = self._bayesian_design(
-                history, elements, space, target_metric, optimization_direction,
+            params, reasoning, confidence, strategy = await self._ml_hybrid_design(
+                history=history,
+                elements=elements,
+                space=space,
+                target_metric=target_metric,
+                optimization_direction=optimization_direction,
             )
-            strategy = "bayesian"
-            reasoning = f"历史数据 {n_history} 轮，使用贝叶斯优化"
             expected_improvement = self._estimate_improvement(
                 params, history, target_metric, optimization_direction,
             )
 
         # ── Apply constraints ─────────────────────────────────────────────────
-        params = self._apply_constraints(params, elements, space)
+        params = self._apply_constraints(params, elements, space, merged_constraints)
 
         # ── Format output ─────────────────────────────────────────────────────
         step_overrides = self._format_step_overrides(params, total_volume_ul)
@@ -156,8 +173,36 @@ class ExperimentDesignerAgent(BaseAgent):
             "step_overrides": step_overrides,
             "strategy": strategy,
             "reasoning": reasoning,
+            "confidence": confidence,
             "expected_improvement": expected_improvement,
         }
+
+    async def _literature_guided_design(
+        self,
+        history: list[dict[str, Any]],
+        elements: list[str],
+        space: dict[str, Any],
+        target_metric: str,
+        optimization_direction: str,
+    ) -> tuple[dict[str, float], str, float]:
+        """Round 0: query literature and derive the initial composition."""
+        topic = f"{'-'.join(elements)} {target_metric} {optimization_direction}"
+        try:
+            insights = await self._knowledge_query_skill.get_literature_insights(topic, top_k=3)
+        except Exception as exc:
+            _logger.warning("Knowledge query failed for literature-guided design: %s", exc)
+            insights = []
+
+        params = self._initial_design(elements, space)
+        if insights:
+            params = self._derive_params_from_literature(insights, elements, space)
+            reasoning = "首轮实验，结合知识库文献线索生成初始配比"
+            confidence = 0.75
+        else:
+            reasoning = "首轮实验未检索到可靠文献线索，回退到均匀初始采样"
+            confidence = 0.55
+
+        return params, reasoning, confidence
 
     # ── Strategy: Initial Sampling ────────────────────────────────────────────
 
@@ -185,8 +230,9 @@ class ExperimentDesignerAgent(BaseAgent):
         space: dict[str, Any],
         target_metric: str,
         direction: str,
-    ) -> dict[str, float]:
+    ) -> tuple[dict[str, float], str, float]:
         """Use LLM to reason about trends and suggest next point."""
+        literature_context = await self._safe_literature_context(elements, target_metric)
         task = {
             "type": "design_next_experiment",
             "elements": elements,
@@ -197,15 +243,17 @@ class ExperimentDesignerAgent(BaseAgent):
         }
         context = {
             "experiment_history": history[-10:],
+            "literature_context": literature_context,
         }
 
         try:
             result = await self.invoke(task=task, context=context)
             content = result.get("content", "")
-            return self._parse_params_from_llm(content, elements, space)
+            params = self._parse_params_from_llm(content, elements, space)
+            return params, f"历史数据 {len(history)} 轮，使用 LLM 结合历史趋势与知识库建议设计", 0.7
         except Exception as exc:
             _logger.warning("LLM design failed: %s — falling back to center", exc)
-            return self._initial_design(elements, space)
+            return self._initial_design(elements, space), "LLM 不可用，回退到确定性中心点设计", 0.4
 
     def _parse_params_from_llm(
         self,
@@ -236,71 +284,72 @@ class ExperimentDesignerAgent(BaseAgent):
 
     # ── Strategy: Bayesian Optimization ───────────────────────────────────────
 
-    def _bayesian_design(
+    async def _ml_hybrid_design(
         self,
         history: list[dict[str, Any]],
         elements: list[str],
         space: dict[str, Any],
         target_metric: str,
-        direction: str,
-    ) -> dict[str, float]:
-        """Use Optuna TPE to suggest the next point."""
-        try:
-            from src.optimization.bayesian_optimizer import (
-                BayesianOptimizer,
-                ParameterSpace,
-            )
-        except ImportError:
-            _logger.warning("Optuna not available, falling back to LLM center")
-            return self._initial_design(elements, space)
-
-        # Build parameter space
-        param_space = ParameterSpace()
-        for e in elements:
-            bounds = space.get(e, {"min": 0.05, "max": 0.9})
-            param_space.add_float(
-                e,
-                low=float(bounds.get("min", 0.05)),
-                high=float(bounds.get("max", 0.9)),
-            )
-
-        optimizer = BayesianOptimizer(
-            parameter_space=param_space,
-            direction="minimize" if direction == "minimize" else "maximize",
-            seed=42,
+        optimization_direction: str,
+    ) -> tuple[dict[str, float], str, float, str]:
+        """Use ML candidate generation with optional LLM review."""
+        predictor = PerformancePredictor(
+            target_metric=target_metric,
+            direction=optimization_direction,
+            model_type=str(self._designer_config.get("ml_model_type", "auto")),
         )
-
-        # Feed historical data into Optuna study
-        import optuna
-        study = optimizer._create_study()
-        optimizer._study = study
-
-        for exp in history:
-            metrics = exp.get("metrics", {})
-            metric_val = metrics.get(target_metric)
-            if metric_val is None:
-                continue
-            params = exp.get("params", {})
-            if not all(e in params for e in elements):
-                continue
-
-            trial = optuna.trial.create_trial(
-                params={e: float(params[e]) for e in elements},
-                distributions={
-                    e: optuna.distributions.FloatDistribution(
-                        low=float(space.get(e, {}).get("min", 0.05)),
-                        high=float(space.get(e, {}).get("max", 0.9)),
-                    )
-                    for e in elements
-                },
-                value=float(metric_val),  # single-objective: use value= not values=
+        fit_result = predictor.fit(history)
+        if not fit_result["ready"]:
+            params, reasoning, confidence = await self._llm_guided_design(
+                history,
+                elements,
+                space,
+                target_metric,
+                optimization_direction,
             )
-            study.add_trial(trial)
+            return (
+                params,
+                f"{reasoning}；ML 数据点不足，暂不启用预测模型",
+                min(confidence, 0.65),
+                "llm_guided",
+            )
 
-        # Suggest next point
-        trial = study.ask()
-        params = param_space.suggest(trial)
-        return {e: round(float(params[e]), 4) for e in elements}
+        candidate_count = int(self._designer_config.get("ml_candidate_count", 10))
+        candidates = predictor.predict_candidates(candidate_count)
+        if not candidates:
+            params, reasoning, confidence = await self._llm_guided_design(
+                history,
+                elements,
+                space,
+                target_metric,
+                optimization_direction,
+            )
+            return params, f"{reasoning}；ML 未产出候选点，回退到 LLM 设计", min(confidence, 0.6), "llm_guided"
+
+        literature_context = await self._safe_literature_context(elements, target_metric)
+        try:
+            reviewed = await self.invoke(
+                task={
+                    "type": "review_ml_candidates",
+                    "target_metric": target_metric,
+                    "optimization_direction": optimization_direction,
+                    "candidates": candidates[:5],
+                },
+                context={
+                    "experiment_history": history[-10:],
+                    "literature_context": literature_context,
+                },
+            )
+            params = self._select_candidate_from_llm(reviewed.get("content", ""), candidates, elements, space)
+            reasoning = f"历史数据 {len(history)} 轮，使用 ML 候选点并由 LLM 审核选择"
+            confidence = 0.82
+        except Exception as exc:
+            _logger.warning("ML candidate review failed: %s", exc)
+            params = candidates[0]["params"]
+            reasoning = f"历史数据 {len(history)} 轮，使用 ML 预测候选点直接选择最优"
+            confidence = 0.72
+
+        return params, reasoning, confidence, "ml_hybrid"
 
     # ── Constraints ───────────────────────────────────────────────────────────
 
@@ -309,22 +358,27 @@ class ExperimentDesignerAgent(BaseAgent):
         params: dict[str, float],
         elements: list[str],
         space: dict[str, Any],
+        constraints: dict[str, Any] | None = None,
     ) -> dict[str, float]:
         """Normalize params so they sum to 1.0 and respect min/max bounds."""
+        constraints = constraints or {}
         # Clamp to bounds
         for e in elements:
             bounds = space.get(e, {"min": 0.05, "max": 0.9})
-            lo = float(bounds.get("min", 0.05))
+            lo = float(
+                constraints.get("min_component", constraints.get("min_fraction", bounds.get("min", 0.05)))
+            )
             hi = float(bounds.get("max", 0.9))
             params[e] = max(lo, min(hi, params.get(e, lo)))
 
         # Normalize to sum = 1.0
+        target_sum = float(constraints.get("sum_equals", 1.0))
         total = sum(params[e] for e in elements)
         if total > 0:
-            params = {e: round(params[e] / total, 4) for e in elements}
+            params = {e: round(params[e] / total * target_sum, 4) for e in elements}
 
         # Fix rounding residual
-        residual = round(1.0 - sum(params.values()), 6)
+        residual = round(target_sum - sum(params.values()), 6)
         if residual != 0 and elements:
             params[elements[-1]] = round(params[elements[-1]] + residual, 4)
 
@@ -373,5 +427,70 @@ class ExperimentDesignerAgent(BaseAgent):
             best = max(values)
             avg_recent = sum(values[-3:]) / len(values[-3:])
             return round((best - avg_recent) / max(abs(best), 1e-6) * 100, 1)
+
+    async def _safe_literature_context(
+        self,
+        elements: list[str],
+        target_metric: str,
+    ) -> list[dict[str, Any]]:
+        try:
+            return await self._knowledge_query_skill.get_literature_insights(
+                f"{'-'.join(elements)} {target_metric}",
+                top_k=3,
+            )
+        except Exception:
+            return []
+
+    def _derive_params_from_literature(
+        self,
+        insights: list[dict[str, Any]],
+        elements: list[str],
+        space: dict[str, Any],
+    ) -> dict[str, float]:
+        scores = {element: 0.0 for element in elements}
+        for insight in insights:
+            text = json.dumps(insight, ensure_ascii=False).lower()
+            for element in elements:
+                element_lower = element.lower()
+                if f"{element_lower}>40" in text or f"{element_lower} > 40" in text:
+                    scores[element] += 0.25
+                if f"{element_lower}>60" in text or f"{element_lower} > 60" in text:
+                    scores[element] += 0.4
+                if f"{element_lower}高" in text or f"{element_lower}-rich" in text:
+                    scores[element] += 0.3
+
+        if not any(scores.values()):
+            return self._initial_design(elements, space)
+
+        baseline = 1.0 / len(elements)
+        params = {element: baseline + scores[element] for element in elements}
+        return self._apply_constraints(params, elements, space, {"sum_equals": 1.0})
+
+    def _select_candidate_from_llm(
+        self,
+        content: str,
+        candidates: list[dict[str, Any]],
+        elements: list[str],
+        space: dict[str, Any],
+    ) -> dict[str, float]:
+        json_match = re.search(r"\{[\s\S]*\}", content)
+        if json_match:
+            try:
+                parsed = json.loads(json_match.group())
+                if isinstance(parsed.get("params"), dict):
+                    params = {
+                        element: float(parsed["params"][element])
+                        for element in elements
+                        if element in parsed["params"]
+                    }
+                    if len(params) == len(elements):
+                        return params
+                candidate_index = parsed.get("candidate_index")
+                if isinstance(candidate_index, int) and 0 <= candidate_index < len(candidates):
+                    return dict(candidates[candidate_index]["params"])
+            except (json.JSONDecodeError, ValueError, TypeError, KeyError):
+                pass
+
+        return self._apply_constraints(dict(candidates[0]["params"]), elements, space, {"sum_equals": 1.0})
 
 

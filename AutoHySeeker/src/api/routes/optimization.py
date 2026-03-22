@@ -115,13 +115,17 @@ async def get_optimization_status() -> Dict[str, Any]:
 
     return {
         "running": running,
-        "status": "running" if running else _last_state.get("status", "idle"),
+        "status": _last_state.get("status", "idle"),
         "current_round": _last_state.get("current_round", 0),
         "max_rounds": optimization.get("max_rounds", _config.get("max_rounds", 0)),
         "best_result": best,
         "goal": optimization.get("goal", _config.get("goal", "")),
         "target_metric": optimization.get("target_metric", _config.get("target_metric", "")),
         "errors": _last_state.get("errors", [])[-5:],  # last 5 errors
+        "pending_approval": _last_state.get("pending_approval"),
+        "pause_reason": _last_state.get("pause_reason"),
+        "latest_decision": _last_state.get("latest_decision"),
+        "last_approval": _last_state.get("last_approval"),
         "start_time": _start_time,
         "timestamp": datetime.now(timezone.utc).isoformat(),
     }

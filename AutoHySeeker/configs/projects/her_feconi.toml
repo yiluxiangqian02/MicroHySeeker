@@ -1,0 +1,43 @@
+# 项目配置: HER Fe-Co-Ni（三元合金）优化
+#
+# 该文件作为 Phase 1 的示例项目配置，供 OptimizationLoop/Orchestrator 加载。
+# 建议将项目相关的搜索空间、目标与约束固定在此处，避免散落在代码里。
+
+[project]
+id = "her_feconi"
+name = "HER Fe-Co-Ni"
+goal = "优化 Fe-Co-Ni 三元催化剂的 HER 性能（最小化过电位）"
+
+[optimization]
+max_rounds = 20
+target_metric = "overpotential_mV"
+direction = "minimize"
+template_id = "tpl_her_standard"
+total_volume_ul = 1000
+
+# 搜索空间：每个元素的取值范围（建议保留 5% 以上以满足配比约束）
+[search_space.Fe]
+min = 0.05
+max = 0.80
+
+[search_space.Co]
+min = 0.05
+max = 0.80
+
+[search_space.Ni]
+min = 0.05
+max = 0.80
+
+[constraints]
+# 各元素比例之和 = 1
+sum_equals = 1.0
+
+# 每个元素至少 5%
+min_component = 0.05
+
+# 实验步骤相关约束（供 Designer/Executor 参考）
+max_rpm = 300
+
+# 允许的比例和容差
+sum_tolerance = 0.001
+

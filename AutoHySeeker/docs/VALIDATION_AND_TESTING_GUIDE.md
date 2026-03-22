@@ -1,6 +1,6 @@
 # AutoHySeeker 验证与测试指南
 
-> 最后更新：2026-03-18（Phase 10 架构精简 7→4 Agent）  
+> 最后更新：2026-03-22（Phase 1 全部完成，收尾阶段）
 > 适用对象：开发者、AI 协作者  
 > 目标：任何人（包括其他 AI）读完本文件后，都能清楚地知道：哪些功能已实现、如何验证、如何测试、已知问题在哪里、下一步该做什么。
 
@@ -112,26 +112,31 @@ pytest tests/ -v
 ### 4.3 按模块分别运行
 
 ```bash
-# Agent 单元测试（4个 Agent + 2个 Skill）
-pytest tests/test_orchestrator_agent.py   -v   # 决策/停止/异常路由
-pytest tests/test_executor_agent.py       -v   # 预检/异常检测/错误分类
-pytest tests/test_designer_agent.py       -v   # 初始设计/约束/Bayesian
-pytest tests/test_analyst_agent.py        -v   # DataAnalysisSkill 质量评分/指标提取/比较
-pytest tests/test_diagnostics_agent.py    -v   # 已知故障/自动修复/验证
+# Agent 单元测试（4个 Agent + Skills）
+pytest tests/test_orchestrator_agent.py   -v   # 决策/停止/异常路由/人机协作/审批
+pytest tests/test_executor_agent.py       -v   # 预检/异常检测/错误分类/L1+L2 监控
+pytest tests/test_designer_agent.py       -v   # 初始设计/约束/三阶段策略/ML 混合
+pytest tests/test_diagnostics_agent.py    -v   # 已知故障/自动修复/知识库集成
 pytest tests/test_knowledge_agent.py      -v   # KnowledgeArchiveSkill 归档/检索/持久化
+pytest tests/test_chat_agent.py           -v   # ChatAgent 意图识别/多轮对话
 
-# 集成测试（Agent 间数据流）
-pytest tests/test_integration_pipeline.py -v   # Designer→Executor→Analyst→Orchestrator 串联
+# Skill 单元测试
+pytest tests/test_knowledge_query_skill.py      -v   # 公共知识查询
+pytest tests/test_realtime_monitor_skill.py     -v   # L1 规则引擎
+pytest tests/test_heartbeat_inspector_skill.py  -v   # L2 心跳巡检
+pytest tests/test_performance_predictor.py      -v   # ML 预测模型
 
-# 端到端技能流水线测试
-pytest tests/test_pipeline_e2e.py         -v   # A1→C1→C2 技能链
+# API 路由测试
+pytest tests/test_api_routes.py            -v   # 全部 API 路由（含 monitor/approval/chat）
+pytest tests/test_optimization_api.py      -v   # 优化控制 API
+pytest tests/test_project_knowledge_routes.py -v # 项目管理 + 知识库路由
 
-# 贝叶斯优化测试
-pytest tests/test_optimization.py         -v   # 参数空间/Optuna 优化
+# 集成测试
+pytest tests/integration/test_e2e.py       -v   # 审批往返 + 优化暂停/恢复
 
-# 早期阶段测试（Phase 2-4）
-pytest tests/test_phase3.py               -v   # 诊断图/API
-pytest tests/test_phase4.py               -v   # C1/C2 技能 + SupervisorGraph
+# 基础设施测试
+pytest tests/test_knowledge_foundation.py  -v   # OpenViking 客户端 + 数据模型
+pytest tests/test_import_smoke.py          -v   # 全模块导入烟雾测试
 ```
 
 ### 4.4 生成覆盖率报告
@@ -169,14 +174,12 @@ pytest tests/ -k "async" -v
 
 | 未覆盖项 | 说明 | 风险等级 |
 |----------|------|----------|
-| **LangGraph 状态转换** | graph/nodes.py 的条件边、状态传递未测试 | 中 |
 | **真实 LLM 调用** | 所有 LLM 调用均用 AsyncMock 替代，真实 API 未验证 | 高 |
-| **FastAPI 端点** | `/api/optimization/*`、`/api/agents/*` 等接口无 HTTP 层测试 | 高 |
 | **MicroHySeeker 实际通信** | experiment_ctrl.py 调用硬件均被 mock，未做真实联调 | 高 |
 | **并发安全性** | 多轮并发执行的线程安全性未测试 | 中 |
-| **极端参数** | 元素比例极端值（0、1）、超大/超小量程未测试 | 低 |
-| **OptimizationLoop.run()** | 完整闭环 run() 方法未有专属测试 | 高 |
-| **VikingKB 集成** | knowledge_mgr 的 VikingKB 语义搜索路径未测试 | 低 |
+| **前端-后端联调** | Chat/Optimization store 仍使用 mock 数据（见任务 W-01, W-02） | 高 |
+| **Python 3.13 兼容性** | test_orchestrator_agent.py 11 个测试因 asyncio 弃用 API 失败（见任务 B-02） | 中 |
+| **Fallback 多词搜索** | `_fallback_search` 多词查询返回空（见任务 B-01） | 低 |
 
 ---
 
@@ -262,7 +265,26 @@ uvicorn src.api.main:app --host 0.0.0.0 --port 8200 --reload
 | POST | `/api/agents/invoke` | 调用指定 Agent，路由由关键词决定 |
 | GET | `/api/agents/status` | 查看所有 Agent 运行状态 |
 
-### 7.3 其他接口
+### 7.3 Phase 1 新增接口
+
+| 路径前缀 | 功能 |
+|----------|------|
+| `POST /api/chat` | ChatAgent 对话 |
+| `GET /api/chat/history` | 对话历史 |
+| `POST /api/monitor/toggle` | 心跳监控开关 |
+| `GET /api/monitor/status` | 监控状态 |
+| `PUT /api/monitor/config` | 监控配置更新 |
+| `GET /api/approval/pending` | 待审批决策 |
+| `POST /api/approval/respond` | 提交审批结果 |
+| `GET /api/knowledge/search` | 知识库搜索 |
+| `GET /api/knowledge/experiments` | 实验记录查询 |
+| `GET /api/knowledge/faults` | 故障历史查询 |
+| `GET /api/projects` | 项目列表 |
+| `POST /api/projects` | 创建项目 |
+| `GET /api/projects/{id}` | 项目详情 |
+| `POST /api/projects/{id}/select` | 切换当前项目 |
+
+### 7.4 其他接口
 
 | 路径前缀 | 功能 |
 |----------|------|
@@ -285,8 +307,10 @@ uvicorn src.api.main:app --host 0.0.0.0 --port 8200 --reload
 | experiment_designer | Gemini-3-Flash | 0.3 | 2500 |
 | experiment_executor | Qwen3-Max | 0.1 | 1000 |
 | diagnostics_expert | GLM-4.6 Thinking | 0.1 | 1000 |
+| chat | Qwen3-Max | 0.3 | 2000 |
 
-> DataAnalysisSkill 和 KnowledgeArchiveSkill 为确定性逻辑，不使用 LLM。
+> DataAnalysisSkill、KnowledgeArchiveSkill、RealtimeMonitorSkill 为确定性逻辑，不使用 LLM。
+> HeartbeatInspectorSkill 可选使用 LLM，也可降级为规则化判断。
 
 **所有 Agent 使用统一 API 端点：** `https://api.mcxhm.cn`
 
@@ -397,24 +421,26 @@ python -m src.run_optimization \
 
 ---
 
-## 十二、下一步待完成事项（最新版）
+## 十二、下一步待完成事项（2026-03-22 更新）
 
-### 🔴 优先级 1 — 立刻需要做
+### 🔴 优先级 1 — Phase 1 收尾
 
-- [ ] **运行干跑测试**：`python -m src.run_optimization --dry-run --max-rounds 2`，验证完整数据流
-- [ ] **运行全部单元测试**：`pytest tests/ -v`，确认无回归错误
+- [ ] **[W-01] Chat Store 接真实 API**：移除 mock 数据，调用 `POST /api/chat` 和 `GET /api/chat/history`
+- [ ] **[W-02] Optimization Store 接真实 API**：取消注释已有的真实 API 调用，移除 mock
+- [ ] **[B-01] Fallback 搜索修复**：`_fallback_search` 改为逐词匹配
+- [ ] **[B-02] asyncio 3.13 兼容**：修复 test_orchestrator_agent.py 的 11 个失败
 
-### 🟡 优先级 2 — 补充测试覆盖
+### 🟡 优先级 2 — 端到端验证
 
-- [ ] **补充 API 端点测试**：为 `/api/optimization/*` 编写 httpx 测试（当前完全无 HTTP 层测试）
-- [ ] **补充 OptimizationLoop.run() 测试**：覆盖完整闭环 run() 方法（当前未有专属测试）
-- [ ] **LangGraph 状态转换测试**：验证 `graph/nodes.py` 条件边
+- [ ] **[W-03] Knowledge 页面联调**：启动前后端验证数据流
+- [ ] **[W-04] Dashboard 状态卡片接真实数据**：改用 optimizationStore 真实状态
+- [ ] **前端集成测试**：所有页面接真实 API 后的端到端验证
 
 ### 🟢 优先级 3 — 功能增强
 
-- [ ] **MicroHySeeker 硬件联调**：启动 MicroHySeeker，通过 `--check-only` 确认连接，完整走通一次真实实验
-- [ ] **真实 LLM 联调**：验证各 Agent 的 LLM 调用是否正常返回（当前所有测试均为 mock）
-- [ ] **VikingKB 配置**：在 `.env` 中配置 OpenViking 本地知识库，启用语义搜索
+- [ ] **MicroHySeeker 硬件联调**：完整走通一次真实实验
+- [ ] **真实 LLM 联调**：验证各 Agent 的 LLM 调用
+- [ ] **OpenViking 语义搜索验证**：在 Linux 部署环境或重编译 engine.pyd 后验证
 
 ### ⏳ 配置项（使用前需确认）
 
@@ -540,10 +566,7 @@ curl http://localhost:8100/api/experiment/status
 | Orchestrator 详细设计 | `docs/multiagent_01_orchestrator.md` |
 | ExperimentDesigner 详细设计 | `docs/multiagent_02_experiment_designer.md` |
 | ExperimentExecutor 详细设计 | `docs/multiagent_03_experiment_executor.md` |
-| ~~DataAnalyst 详细设计~~ | `docs/multiagent_04_data_analyst.md` ⚠️ 已废弃 → DataAnalysisSkill |
 | DiagnosticsExpert 详细设计 | `docs/multiagent_05_diagnostics.md` |
-| ~~KnowledgeManager 详细设计~~ | `docs/multiagent_06_knowledge_manager.md` ⚠️ 已废弃 → KnowledgeArchiveSkill |
+| OpenViking 使用指南 | `docs/OPENVIKING_GUIDE.md` |
 | LLM 模型配置 | `configs/agent_models.toml` |
 | 环境变量配置 | `.env`（需手动创建） |
-| Phase 4 进度记录 | `docs/PROGRESS.md` |
-| 配置待办清单 | `docs/TODO.md` |

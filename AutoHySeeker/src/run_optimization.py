@@ -1,9 +1,4 @@
-"""CLI entry point for running closed-loop optimization.
-
-Usage:
-    python -m src.run_optimization --goal "最小化 HER 过电位" --max-rounds 10
-    python -m src.run_optimization --check-only     # verify connectivity only
-"""
+"""CLI entry point for running closed-loop optimization."""
 
 from __future__ import annotations
 
@@ -34,7 +29,7 @@ def _check_microhyseeker() -> bool:
             logger.error("MicroHySeeker health check failed: %s", health)
             return False
 
-        logger.info("MicroHySeeker API is healthy ✓")
+        logger.info("MicroHySeeker API is healthy")
         return True
     except Exception as exc:
         logger.error("MicroHySeeker connectivity check failed: %s", exc)
@@ -52,28 +47,15 @@ async def run_optimization(
     progress_callback: Callable[[dict[str, Any]], None] | None = None,
     should_stop: Callable[[], bool] | None = None,
 ) -> dict[str, Any]:
-    """Run the full optimization loop.
-
-    Args:
-        goal: Human-readable optimization goal.
-        max_rounds: Maximum optimization rounds.
-        target_metric: Metric to optimize.
-        direction: ``"minimize"`` or ``"maximize"``.
-        template_id: MicroHySeeker template ID.
-        elements: Element list (default: ["Fe", "Co", "Ni"]).
-        dry_run: If True, skip actual experiment execution.
-
-    Returns:
-        Final optimization state summary.
-    """
-    from src.agents.orchestrator import OrchestratorAgent
+    """Run the full optimization loop."""
     from src.agents.exp_designer import ExperimentDesignerAgent
     from src.agents.exp_executor import ExperimentExecutorAgent
+    from src.agents.orchestrator_shared import get_shared_orchestrator_agent
 
     elements = elements or ["Fe", "Co", "Ni"]
-    search_space = {e: {"min": 0.05, "max": 0.9} for e in elements}
+    search_space = {element: {"min": 0.05, "max": 0.9} for element in elements}
 
-    orchestrator = OrchestratorAgent(archive_path="data/experiment_archive.json")
+    orchestrator = get_shared_orchestrator_agent()
     designer = ExperimentDesignerAgent()
     executor = ExperimentExecutorAgent()
 
@@ -91,6 +73,7 @@ async def run_optimization(
     current_round = 0
     final_action = "max_rounds"
     run_status = "running"
+    latest_decision: dict[str, Any] | None = None
 
     def publish(status: str, **extra: Any) -> None:
         if progress_callback is None:
@@ -102,50 +85,110 @@ async def run_optimization(
             "experiment_history": list(history),
             "optimization": optimization,
             "final_decision": final_action,
+            "latest_decision": latest_decision,
         }
         snapshot.update(extra)
         progress_callback(snapshot)
 
+    def apply_approval_resolution(
+        decision: dict[str, Any],
+        approval: dict[str, Any],
+    ) -> dict[str, Any]:
+        actionable = dict(decision.get("original_decision") or decision)
+        actionable.pop("pending_approval", None)
+        actionable.pop("work_mode", None)
+        actionable["human_approval"] = approval
+
+        if approval.get("approved"):
+            return actionable
+
+        action = actionable.get("action")
+        if action == "stop":
+            return {"action": "continue", "reason": "human_rejected_stop_decision", "human_approval": approval}
+        if action == "adjust_strategy":
+            return {"action": "continue", "reason": "human_rejected_strategy_change", "human_approval": approval}
+        if action == "retry":
+            return {"action": "continue", "reason": "human_rejected_retry", "human_approval": approval}
+        if action == "diagnose":
+            return {"action": "log_and_continue", "reason": "human_rejected_anomaly_diagnosis", "human_approval": approval}
+        if action == "emergency_stop":
+            return {
+                "action": "stop",
+                "reason": "critical_anomaly_requires_manual_intervention",
+                "status_override": "blocked",
+                "human_approval": approval,
+            }
+        return {"action": "continue", "reason": "human_rejected_pause_request", "human_approval": approval}
+
+    async def resolve_human_gate(decision: dict[str, Any]) -> dict[str, Any]:
+        nonlocal latest_decision, run_status, final_action
+
+        pending = decision.get("pending_approval")
+        if decision.get("action") != "pause_for_human" and not pending:
+            return decision
+
+        approval_id = (pending or {}).get("approval_id")
+        if not approval_id:
+            return decision
+
+        latest_decision = decision
+        run_status = "paused"
+        final_action = "pause_for_human"
+        publish(
+            "paused",
+            pending_approval=pending,
+            pause_reason=decision.get("reason", "human_approval"),
+        )
+
+        while True:
+            if should_stop and should_stop():
+                return {
+                    "action": "stop",
+                    "reason": "loop_stopped_while_waiting_for_human",
+                    "status_override": "stopped",
+                }
+
+            approval = orchestrator.get_approval_status(approval_id)
+            if approval and approval.get("status") in {"approved", "rejected"}:
+                run_status = "running"
+                resolved = apply_approval_resolution(decision, approval)
+                latest_decision = resolved
+                publish("running", last_approval=approval)
+                return resolved
+
+            await asyncio.sleep(0.1)
+
     logger.info("=" * 60)
-    logger.info("优化循环启动")
-    logger.info("  目标: %s", goal)
-    logger.info("  指标: %s (%s)", target_metric, direction)
-    logger.info("  最大轮次: %d", max_rounds)
-    logger.info("  模板: %s", template_id)
-    logger.info("  元素: %s", elements)
+    logger.info("Optimization loop starting")
+    logger.info("  Goal: %s", goal)
+    logger.info("  Metric: %s (%s)", target_metric, direction)
+    logger.info("  Max rounds: %d", max_rounds)
+    logger.info("  Template: %s", template_id)
+    logger.info("  Elements: %s", elements)
     logger.info("=" * 60)
     publish("running")
 
     while current_round < max_rounds:
         if should_stop and should_stop():
-            logger.info("收到停止请求，结束优化循环。")
+            logger.info("Stop requested; terminating optimization loop")
             final_action = "stopped"
             run_status = "stopped"
             break
 
         current_round += 1
-        logger.info("\n--- 第 %d/%d 轮 ---", current_round, max_rounds)
+        logger.info("--- Round %d/%d ---", current_round, max_rounds)
         publish("designing")
 
-        # ── Step 1: Design ────────────────────────────────────────────────
-        logger.info("[1/4] 设计实验参数...")
         design = await designer.design_experiment(
             history=history,
             search_space=search_space,
             target_metric=target_metric,
             optimization_direction=direction,
         )
-        logger.info(
-            "  策略: %s | 参数: %s",
-            design["strategy"],
-            design["params"],
-        )
+        logger.info("Design strategy=%s params=%s", design["strategy"], design["params"])
         publish("executing", latest_design=design)
 
-        # ── Step 2: Execute ───────────────────────────────────────────────
-        logger.info("[2/4] 执行实验...")
         if dry_run:
-            logger.info("  [DRY-RUN] 跳过实际执行")
             exec_result = {
                 "status": "completed",
                 "run_id": f"dry_run_{current_round:03d}",
@@ -156,67 +199,82 @@ async def run_optimization(
                 "template_id": template_id,
                 "step_overrides": design["step_overrides"],
                 "exp_name": f"opt_round_{current_round:03d}",
-                "pre_check": current_round == 1,  # only first round
+                "pre_check": current_round == 1,
                 "monitor_interval_s": 5,
             }
             exec_result = await executor.execute_experiment(exec_task)
 
         logger.info(
-            "  状态: %s | run_id: %s",
+            "Execution status=%s run_id=%s",
             exec_result.get("status"),
             exec_result.get("run_id"),
         )
 
         if exec_result.get("status") != "completed":
-            # Handle failure
-            anomaly = exec_result.get("anomaly", {
-                "type": "execution_failure",
-                "severity": "high",
-                "details": exec_result.get("error", "unknown"),
-            })
+            anomaly = exec_result.get(
+                "anomaly",
+                {
+                    "type": "execution_failure",
+                    "severity": "high",
+                    "details": exec_result.get("error", "unknown"),
+                },
+            )
             blocking_statuses = {"pre_check_failed", "validation_failed"}
             if exec_result.get("status") in blocking_statuses:
                 logger.error("Blocking execution failure: %s", exec_result)
-                history.append({
-                    "round": current_round,
-                    "params": design["params"],
-                    "metrics": {},
-                    "status": "failed",
-                    "data_quality": {"reliable": False, "score": 0},
-                })
+                history.append(
+                    {
+                        "round": current_round,
+                        "params": design["params"],
+                        "metrics": {},
+                        "status": "failed",
+                        "data_quality": {"reliable": False, "score": 0},
+                    }
+                )
                 final_action = "blocked"
                 run_status = "blocked"
                 publish(run_status, last_execution=exec_result)
                 break
+
             decision = await orchestrator.handle_anomaly(
                 anomaly=anomaly,
                 optimization=optimization,
                 current_round=current_round,
             )
-            logger.warning("  异常处理: %s", decision["action"])
+            decision = await resolve_human_gate(decision)
+            latest_decision = decision
+            logger.warning("Anomaly action: %s", decision["action"])
 
             if decision["action"] == "emergency_stop":
-                logger.critical("紧急停止！中断优化循环。")
+                logger.critical("Emergency stop triggered")
+                final_action = "emergency_stop"
+                run_status = decision.get("status_override", "blocked")
+                publish(run_status, latest_decision=decision)
                 break
-            # Log failure and continue
-            history.append({
-                "round": current_round,
-                "params": design["params"],
-                "metrics": {},
-                "status": "failed",
-                "data_quality": {"reliable": False, "score": 0},
-            })
-            publish("running", last_execution=exec_result)
+            if decision["action"] == "stop":
+                final_action = decision.get("action", "stop")
+                run_status = decision.get("status_override", "stopped")
+                publish(run_status, latest_decision=decision)
+                break
+
+            history.append(
+                {
+                    "round": current_round,
+                    "params": design["params"],
+                    "metrics": {},
+                    "status": "failed",
+                    "data_quality": {"reliable": False, "score": 0},
+                }
+            )
+            publish("running", last_execution=exec_result, latest_decision=decision)
             continue
 
         if should_stop and should_stop():
-            logger.info("执行完成后收到停止请求，结束优化循环。")
+            logger.info("Stop requested after execution; terminating optimization loop")
             final_action = "stopped"
             run_status = "stopped"
             break
 
-        # ── Step 3: Analyse ───────────────────────────────────────────────
-        logger.info("[3/4] 分析实验数据...")
         publish("analyzing", last_execution=exec_result)
         if dry_run:
             analysis = _simulate_dry_run_analysis(
@@ -236,13 +294,12 @@ async def run_optimization(
                 best_result=best_result,
             )
         logger.info(
-            "  指标: %s | 质量: %.2f | 可靠: %s",
+            "Analysis metrics=%s quality=%.2f reliable=%s",
             analysis.get("metrics", {}),
             analysis.get("data_quality", {}).get("score", 0),
             analysis.get("data_quality", {}).get("reliable", False),
         )
 
-        # Build history entry
         entry = {
             "round": current_round,
             "params": design["params"],
@@ -253,7 +310,6 @@ async def run_optimization(
         }
         history.append(entry)
 
-        # Archive to knowledge base
         await orchestrator.archive_experiment(
             run_id=exec_result.get("run_id", ""),
             params=design["params"],
@@ -262,8 +318,6 @@ async def run_optimization(
             round_num=current_round,
         )
 
-        # ── Step 4: Evaluate & Decide ─────────────────────────────────────
-        logger.info("[4/4] 评估结果...")
         publish("evaluating", latest_analysis=analysis)
         best_result = orchestrator.update_best_result(history, optimization)
         decision = await orchestrator.evaluate_and_decide(
@@ -273,30 +327,37 @@ async def run_optimization(
             best_result=best_result,
             current_round=current_round,
         )
+        decision = await resolve_human_gate(decision)
+        latest_decision = decision
         logger.info(
-            "  决策: %s | 置信度: %.2f | 原因: %s",
+            "Decision action=%s confidence=%.2f reason=%s",
             decision["action"],
             decision.get("confidence", 0),
             decision.get("reason", "")[:100],
         )
 
         if decision["action"] == "stop":
-            logger.info("优化停止: %s", decision.get("reason"))
+            logger.info("Optimization stopping: %s", decision.get("reason"))
             final_action = decision["action"]
-            run_status = "completed"
+            run_status = decision.get("status_override", "completed")
             break
+        if decision["action"] == "retry":
+            history.pop()
+            current_round -= 1
+            final_action = "retry"
+            publish("running", latest_decision=decision)
+            continue
 
         final_action = decision["action"]
         publish("running", latest_decision=decision)
 
-    # ── Summary ───────────────────────────────────────────────────────────
-    logger.info("\n" + "=" * 60)
-    logger.info("优化循环完成")
-    logger.info("  总轮次: %d", current_round)
+    logger.info("=" * 60)
+    logger.info("Optimization loop finished")
+    logger.info("  Total rounds: %d", current_round)
     if best_result:
-        logger.info("  最优参数: %s", best_result.get("params"))
-        logger.info("  最优指标: %s", best_result.get("metrics"))
-        logger.info("  来自第 %s 轮", best_result.get("round"))
+        logger.info("  Best params: %s", best_result.get("params"))
+        logger.info("  Best metrics: %s", best_result.get("metrics"))
+        logger.info("  Best round: %s", best_result.get("round"))
     logger.info("=" * 60)
 
     if run_status == "running":
@@ -310,6 +371,7 @@ async def run_optimization(
         "experiment_history": history,
         "history_count": len(history),
         "final_decision": final_action,
+        "latest_decision": latest_decision,
     }
 
 
@@ -335,11 +397,8 @@ def _simulate_dry_run_analysis(
         "tafel_slope_mV_dec": tafel_slope,
         "onset_potential_V": onset,
     }
-
     if target_metric not in metrics:
-        metrics[target_metric] = (
-            overpotential if direction == "minimize" else current_density
-        )
+        metrics[target_metric] = overpotential if direction == "minimize" else current_density
 
     analysis_skill = orchestrator._analysis_skill
     quality = analysis_skill.assess_quality(metrics, "dry_run")
@@ -359,67 +418,35 @@ def _simulate_dry_run_analysis(
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(
-        description="AutoHySeeker 闭环优化 CLI",
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-    )
-    parser.add_argument(
-        "--goal",
-        default="最小化 Fe-Co-Ni 三元合金 HER 过电位",
-        help="优化目标描述",
-    )
-    parser.add_argument(
-        "--max-rounds", type=int, default=10,
-        help="最大优化轮次 (default: 10)",
-    )
-    parser.add_argument(
-        "--metric", default="overpotential_mV",
-        help="目标指标 (default: overpotential_mV)",
-    )
-    parser.add_argument(
-        "--direction", choices=["minimize", "maximize"], default="minimize",
-        help="优化方向 (default: minimize)",
-    )
-    parser.add_argument(
-        "--template", default="tpl_her_standard",
-        help="MicroHySeeker 模板 ID",
-    )
-    parser.add_argument(
-        "--elements", nargs="+", default=["Fe", "Co", "Ni"],
-        help="优化元素列表 (default: Fe Co Ni)",
-    )
-    parser.add_argument(
-        "--dry-run", action="store_true",
-        help="干跑模式：跳过实际实验执行",
-    )
-    parser.add_argument(
-        "--check-only", action="store_true",
-        help="仅检查 MicroHySeeker 连接状态",
-    )
-
+    parser = argparse.ArgumentParser(description="AutoHySeeker optimization CLI")
+    parser.add_argument("--goal", default="Minimize Fe-Co-Ni HER overpotential")
+    parser.add_argument("--max-rounds", type=int, default=10)
+    parser.add_argument("--metric", default="overpotential_mV")
+    parser.add_argument("--direction", choices=["minimize", "maximize"], default="minimize")
+    parser.add_argument("--template", default="tpl_her_standard")
+    parser.add_argument("--elements", nargs="+", default=["Fe", "Co", "Ni"])
+    parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument("--check-only", action="store_true")
     args = parser.parse_args()
 
     if args.check_only:
-        ok = _check_microhyseeker()
-        sys.exit(0 if ok else 1)
+        sys.exit(0 if _check_microhyseeker() else 1)
 
-    if not args.dry_run:
-        if not _check_microhyseeker():
-            logger.error("MicroHySeeker 不可达，请先启动 MicroHySeeker。")
-            logger.info("提示：使用 --dry-run 可跳过实际硬件连接。")
-            sys.exit(1)
+    if not args.dry_run and not _check_microhyseeker():
+        logger.error("MicroHySeeker is not reachable; use --dry-run to skip hardware")
+        sys.exit(1)
 
-    result = asyncio.run(run_optimization(
-        goal=args.goal,
-        max_rounds=args.max_rounds,
-        target_metric=args.metric,
-        direction=args.direction,
-        template_id=args.template,
-        elements=args.elements,
-        dry_run=args.dry_run,
-    ))
-
-    print("\n结果摘要:")
+    result = asyncio.run(
+        run_optimization(
+            goal=args.goal,
+            max_rounds=args.max_rounds,
+            target_metric=args.metric,
+            direction=args.direction,
+            template_id=args.template,
+            elements=args.elements,
+            dry_run=args.dry_run,
+        )
+    )
     print(json.dumps(result, ensure_ascii=False, indent=2, default=str))
 
 

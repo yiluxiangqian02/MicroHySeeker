@@ -1,14 +1,12 @@
 import { useEffect, useState, useRef, type ChangeEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Settings as SettingsIcon, Bell, Palette, Globe, Database, Download, Upload } from "lucide-react";
+import { Settings as SettingsIcon, Bell, Palette, Database, Download, Upload } from "lucide-react";
 import { useShallow } from "zustand/react/shallow";
 import { DEFAULT_SETTINGS, useSettingsStore } from "@/stores/settingsStore";
 import { AGENT_DEFINITIONS, useAgentStore, AVAILABLE_MODELS, type ControlAgentId, type AgentConfig } from "@/stores/agentStore";
-import { ModelSelector } from "@/components/ModelSelector";
-import { ApiKeyInput } from "@/components/ApiKeyInput";
 
 const settingsSchema = z.object({
   apiBaseUrl: z.string().url("Please input a valid URL."),

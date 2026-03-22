@@ -1,5 +1,5 @@
 import { ChatMessagePayload } from "@/api/chat";
-import { User, Bot, Info, BrainCircuit } from "lucide-react";
+import { User, Info, BrainCircuit } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 
 interface ChatMessageProps {

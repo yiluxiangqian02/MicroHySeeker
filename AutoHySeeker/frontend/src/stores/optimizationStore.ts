@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { optimizationApi, OptimizationConfig, OptimizationState } from "@/api/optimization";
+import { OptimizationConfig, OptimizationState } from "@/api/optimization";
 
 // Default Mock Data for development UI testing
 const MOCK_CONFIG: OptimizationConfig = {

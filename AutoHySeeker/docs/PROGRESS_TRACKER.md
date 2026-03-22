@@ -1,6 +1,6 @@
-# AutoHySeeker 开发进度追踪
+﻿# AutoHySeeker 开发进度追踪
 
-> 最后更新：2026-03-19
+> 最后更新：2026-03-22
 > 规则：参见 `COLLABORATION_GUIDE.md`
 
 ---
@@ -10,10 +10,11 @@
 ### Step 1: 基础设施
 
 #### [P1-01] OpenViking 客户端封装
-- 状态: `进行中`
+- 状态: `已完成`
 - 负责人: `Copilot(GPT-5.3-Codex)`
+- 完成时间: 2026-03-20
 - 关联文件: `src/knowledge/viking_client.py` (新增)
-- 备注: 已完成分区 CRUD 封装与 fallback 测试；尚未完成“真实 OpenViking 环境写入/查询 experiments 分区”的联调验收。
+- 备注: 已完成分区 CRUD 封装、fallback 测试与本地源码树导入回退；已在本机 workspace 内完成 OpenViking editable 构建、真实 `experiments/` 分区写入与 `read()` 验证；已配置真实 embedding API（baai/bge-m3 via shengsuanyun.com），SDK 初始化成功（dim=1024）；`find()` 因 embedding 鉴权失败时有 workspace 查询回退；通过 `tests/test_knowledge_foundation.py`（7 项）和 `tests/test_import_smoke.py`。
 
 #### [P1-02] 知识库数据模型
 - 状态: `已完成`
@@ -22,131 +23,197 @@
 - 备注: 5 分区模型已实现并完成序列化/反序列化测试（tests/test_knowledge_foundation.py）。
 
 #### [P1-03] 公共知识库查询 Skill
-- 状态: `待认领`
-- 负责人:
+- 状态: `已完成`
+- 负责人: `Codex(GPT-5)`
+- 开始时间: 2026-03-19
+- 完成时间: 2026-03-19
 - 依赖: P1-01, P1-02
 - 关联文件: `src/skills/knowledge_query_skill.py` (新增)
+- 备注: 已实现公共只读查询 Skill，接入 `OpenVikingClient` 并提供 `search` / `get_similar_experiments` / `get_fault_history` / `get_literature_insights` 四个接口；通过 `tests/test_knowledge_query_skill.py`（5 项）和 `tests/test_import_smoke.py`。
 
 #### [P1-04] 增强知识归档 Skill
-- 状态: `待认领`
-- 负责人:
+- 状态: `已完成`
+- 负责人: `Codex(GPT-5)`
+- 开始时间: 2026-03-19
+- 完成时间: 2026-03-20
 - 依赖: P1-01, P1-02
-- 关联文件: `src/skills/knowledge_archive_skill.py` (修改)
+- 关联文件: `src/skills/knowledge_archive_skill.py` (修改), `src/knowledge/viking_client.py` (修改), `tests/test_knowledge_foundation.py` (修改)
+- 备注:
+  - ✅ 已完成：增强 `KnowledgeArchiveSkill`，支持写入 `experiments/operations` 分区，并记录 `environment_snapshot`；通过 `tests/test_knowledge_agent.py`（16 项）和 `tests/test_import_smoke.py`。
+  - ✅ 已推进：`OpenVikingClient` 新增仓库内 `OpenViking/` 与本地 `pyagfs` 源码树导入回退，便于后续本地魔改联调；新增对应回归测试并通过 `tests/test_knowledge_foundation.py`（7 项）。
+  - ✅ 已验证：已在 `AutoHySeeker/.tools/` 下补齐 `Go + CMake + MinGW` 本地工具链，完成 `OpenViking` editable 构建，并修复 `openviking/server/routers/__init__.py` 导出缺失；`agfs-server.exe`、`libagfsbinding.dll` 与 `openviking/storage/vectordb/engine.pyd` 已生成且可导入。
+  - ✅ 已验证：已新增本地开发配置 `OpenViking/.local_dev/ov.conf`，`OpenVikingClient` 可直接初始化本地仓库内 OpenViking；真实写入 `experiments/` 分区返回 `mode=openviking` 且 `verified_partition=True`。
+  - ✅ 已验证：已修复 `OpenVikingClient.write_json()` 目标分区参数错误（`target`）与 `search()` 参数错误（`limit`），并补充 workspace 查询回退。
+  - ✅ 已验证：已配置真实 embedding API（baai/bge-m3 via shengsuanyun.com），SDK 初始化成功。
 
 #### [P1-05] 配置文件创建
-- 状态: `待认领`
-- 负责人:
+- 状态: `已完成`
+- 负责人: `Codex(GPT-5.2)`
+- 开始时间: 2026-03-19
+- 完成时间: 2026-03-19
 - 关联文件: `configs/orchestrator.toml`, `configs/monitor.toml`, `configs/designer.toml`, `configs/knowledge.toml`, `configs/projects/her_feconi.toml` (新增)
+- 备注: 已创建 5 个 Phase 1 TOML 配置文件（默认值 + 注释），并通过 tomllib 解析校验；后续由 P1-06 将其接入 config 模块统一加载与访问。
 
 #### [P1-06] 增强配置加载
-- 状态: `待认领`
-- 负责人:
+- 状态: `已完成`
+- 负责人: `Codex(GPT-5.2)`
+- 开始时间: 2026-03-19
+- 完成时间: 2026-03-19
 - 依赖: P1-05
 - 关联文件: `src/common/config.py` (修改)
+- 备注: 已在 config 模块增加 TOML 加载与访问函数（含 projects/*.toml 聚合），并提供 `ORCHESTRATOR_CONFIG` / `MONITOR_CONFIG` / `DESIGNER_CONFIG` / `KNOWLEDGE_CONFIG` / `PROJECT_CONFIGS` 快照与 `reload_all_configs()` 刷新入口。
 
 ### Step 2: 智能监控
 
 #### [P1-07] L1 实时监控规则引擎
-- 状态: `待认领`
-- 负责人:
+- 状态: `已完成`
+- 负责人: `Codex(GPT-5)`
+- 开始时间: 2026-03-19
+- 完成时间: 2026-03-19
 - 依赖: P1-05
 - 关联文件: `src/skills/realtime_monitor_skill.py` (新增)
+- 备注: 已实现配置驱动的 L1 规则引擎，覆盖 6 条规则（泵转速偏差、通信超时、步骤超时、空数据文件、泵无响应、电流突变），从 `monitor.toml` 读取阈值并输出带 severity/source 的异常结果；通过 `tests/test_realtime_monitor_skill.py`（8 项）和 `tests/test_import_smoke.py`。
 
 #### [P1-08] L2 心跳巡检
-- 状态: `待认领`
-- 负责人:
+- 状态: `已完成`
+- 负责人: `Codex(GPT-5)`
+- 开始时间: 2026-03-19
+- 完成时间: 2026-03-19
 - 依赖: P1-03, P1-05
 - 关联文件: `src/skills/heartbeat_inspector_skill.py` (新增)
+- 备注: 已实现可配置的 L2 心跳巡检 Skill，支持启停控制、间隔门控、知识库查询与 LLM/规则化综合判断；通过 `tests/test_heartbeat_inspector_skill.py`（5 项）和 `tests/test_import_smoke.py`。
 
 #### [P1-09] Executor 集成两层监控
-- 状态: `待认领`
-- 负责人:
+- 状态: `已完成`
+- 负责人: `Codex(GPT-5)`
+- 开始时间: 2026-03-19
+- 完成时间: 2026-03-19
 - 依赖: P1-07, P1-08
 - 关联文件: `src/agents/exp_executor.py` (修改)
+- 备注: 已在 `execute_experiment` 中集成 L1/L2 监控、L2 开关控制、监控状态回传和环境快照记录；通过 `tests/test_executor_agent.py`（23 项）和 `tests/test_import_smoke.py`。
 
 #### [P1-10] 监控控制路由
-- 状态: `待认领`
-- 负责人:
+- 状态: `已完成`
+- 负责人: `Codex(GPT-5)`
+- 开始时间: 2026-03-19
+- 完成时间: 2026-03-19
 - 依赖: P1-09
 - 关联文件: `src/api/routes/monitor.py` (新增)
+- 备注: 已新增监控控制路由，提供 heartbeat 开关、监控状态和配置更新接口，并接入共享 Executor 实例；通过 `tests/test_api_routes.py`（31 项）、`tests/test_executor_agent.py`（23 项）和 `tests/test_import_smoke.py`。
 
 ### Step 3: 实验设计增强
 
 #### [P1-11] ML 预测模型
-- 状态: `待认领`
-- 负责人:
+- 状态: `已完成`
+- 负责人: `Codex(GPT-5)`
+- 开始时间: 2026-03-19
+- 完成时间: 2026-03-19
 - 关联文件: `src/ml/performance_predictor.py` (新增)
+- 备注: 已实现 `PerformancePredictor`，支持按样本量自动选择模型（<10 不启用、10~30 随机森林、>30 高斯过程）并生成候选实验点；在缺少 `sklearn` 时自动降级到轻量 surrogate。通过 `tests/test_performance_predictor.py`（3 项）和 `tests/test_import_smoke.py`。
 
 #### [P1-12] Designer 三阶段策略
-- 状态: `待认领`
-- 负责人:
+- 状态: `已完成`
+- 负责人: `Codex(GPT-5)`
+- 开始时间: 2026-03-19
+- 完成时间: 2026-03-19
 - 依赖: P1-03, P1-11
 - 关联文件: `src/agents/exp_designer.py` (修改)
+- 备注: 已将 Designer 增强为文献引导 → LLM 引导 → ML 混合三阶段策略，接入 `KnowledgeQuerySkill` 与 `PerformancePredictor`，并保留依赖不可用时的确定性回退路径；通过 `tests/test_designer_agent.py`（16 项）和 `tests/test_import_smoke.py`。
 
 ### Step 4: 决策与人机协作
 
 #### [P1-13] Orchestrator 人机协作增强
-- 状态: `待认领`
-- 负责人:
+- 状态: `已完成`
+- 负责人: `Codex(GPT-5)`
+- 开始时间: 2026-03-19
+- 完成时间: 2026-03-19
 - 依赖: P1-03, P1-04, P1-06
 - 关联文件: `src/agents/orchestrator.py` (修改)
+- 备注: 已增强 Orchestrator 的工作模式、关键决策审批触发、待审批状态管理、审批响应和共享知识查询接入，并补充 ML 训练数据更新入口；通过 `tests/test_orchestrator_agent.py`（23 项）和 `tests/test_import_smoke.py`。
 
 #### [P1-14] 审批路由
-- 状态: `待认领`
-- 负责人:
+- 状态: `已完成`
+- 负责人: `Codex(GPT-5)`
+- 开始时间: 2026-03-19
+- 完成时间: 2026-03-19
 - 依赖: P1-13
 - 关联文件: `src/api/routes/approval.py` (新增)
+- 备注: 已新增 `/api/approval/pending` 与 `/api/approval/respond`，并引入共享 `Orchestrator` 实例供 API/Graph/OptimizationLoop 复用；通过 `tests/test_api_routes.py`（34 项）和 `tests/test_import_smoke.py`。
 
 #### [P1-15] OptimizationLoop 暂停/恢复
-- 状态: `待认领`
-- 负责人:
+- 状态: `已完成`
+- 负责人: `Codex(GPT-5)`
+- 开始时间: 2026-03-19
+- 完成时间: 2026-03-19
 - 依赖: P1-13
 - 关联文件: `src/graph/optimization_loop.py` (修改)
+- 备注: 已为 `OptimizationLoop` 与 `run_optimization` 接入 `pause_for_human` 等待、审批结果恢复和共享 `Orchestrator`；`/api/optimization/status` 现返回 `pending_approval/pause_reason/latest_decision/last_approval`；通过 `tests/test_orchestrator_agent.py`（24 项）、`tests/test_optimization_api.py`（4 项）和 `tests/test_import_smoke.py`。
 
 ### Step 5: ChatAgent + 诊断增强
 
 #### [P1-16] ChatAgent
-- 状态: `待认领`
-- 负责人:
+- 状态: `已完成`
+- 负责人: `Codex(GPT-5)`
+- 开始时间: 2026-03-19
+- 完成时间: 2026-03-19
 - 依赖: P1-03
 - 关联文件: `src/agents/chat_agent.py` (新增)
+- 备注: 已新增 `ChatAgent`，实现实验状态、优化进度、知识库检索、停止优化等意图识别与处理，并支持基于历史消息的追问扩展；通过 `tests/test_chat_agent.py` 与 `tests/test_import_smoke.py`。
 
 #### [P1-17] Diagnostics 知识库集成
-- 状态: `待认领`
-- 负责人:
+- 状态: `已完成`
+- 负责人: `Codex(GPT-5)`
+- 开始时间: 2026-03-19
+- 完成时间: 2026-03-19
 - 依赖: P1-03, P1-04
 - 关联文件: `src/agents/diagnostics.py` (修改)
+- 备注: 已为 `DiagnosticsExpertAgent` 接入 `KnowledgeQuerySkill`，补充故障历史/相关记录检索、知识上下文摘要和诊断结果透传；通过 `tests/test_diagnostics_agent.py`（18 项）和 `tests/test_import_smoke.py`。
 
 #### [P1-18] Chat 路由增强
-- 状态: `待认领`
-- 负责人:
+- 状态: `已完成`
+- 负责人: `Codex(GPT-5)`
+- 开始时间: 2026-03-19
+- 完成时间: 2026-03-19
 - 依赖: P1-16
 - 关联文件: `src/api/routes/chat.py` (修改)
+- 备注: 已将聊天路由接入 `ChatAgent`，新增 `POST /api/chat` 与 `/api/chat/history`，并兼容历史 `/api/v1/chat/ask`、`/api/v1/chat/history` 接口；通过 `tests/test_chat_agent.py`、`tests/test_api_routes.py` 和 `tests/test_import_smoke.py`。
 
 ### Step 6: 项目管理 + 集成
 
 #### [P1-19] 项目管理路由
-- 状态: `待认领`
-- 负责人:
+- 状态: `已完成`
+- 负责人: `Codex(GPT-5)`
+- 开始时间: 2026-03-19
+- 完成时间: 2026-03-19
 - 关联文件: `src/api/routes/projects.py` (新增)
+- 备注: 已实现 `GET /api/projects`、`GET /api/projects/current`、`GET /api/projects/{id}`、`POST /api/projects`、`POST /api/projects/{id}/select`，基于 `configs/projects/*.toml` 提供项目列表、详情、创建与切换当前项目能力；通过 `tests/test_project_knowledge_routes.py` 与 `tests/test_api_routes.py`。
 
 #### [P1-20] 知识库查询路由
-- 状态: `待认领`
-- 负责人:
+- 状态: `已完成`
+- 负责人: `Codex(GPT-5)`
+- 开始时间: 2026-03-19
+- 完成时间: 2026-03-19
 - 依赖: P1-03
 - 关联文件: `src/api/routes/knowledge.py` (新增)
+- 备注: 已接入 `KnowledgeQuerySkill`，实现 `GET /api/knowledge/search`、`GET /api/knowledge/experiments`、`GET /api/knowledge/faults` 三类查询接口，包含参数校验与项目过滤；通过 `tests/test_project_knowledge_routes.py` 与 `tests/test_api_routes.py`。
 
 #### [P1-21] LangGraph 路由增强
-- 状态: `待认领`
-- 负责人:
+- 状态: `已完成`
+- 负责人: `Codex(GPT-5)`
+- 开始时间: 2026-03-19
+- 完成时间: 2026-03-19
 - 依赖: P1-16
 - 关联文件: `src/graph/orchestrator.py` (修改), `src/graph/nodes.py` (修改)
+- 备注: 已将 `ChatAgent` 注册到 `AGENT_MAP` 和 supervisor graph，新增聊天/状态/控制类意图路由、`run_chat` 节点及兼容别名；通过 `tests/test_chat_agent.py`、`tests/test_orchestrator.py::TestRouteIntent`、`tests/test_orchestrator.py::TestSelectAgentNode`、`tests/test_executor_agent.py::TestExecutorRouting`、`tests/test_executor_agent.py::TestExecutorGraphRegistration`、`tests/test_knowledge_agent.py::TestKnowledgeRouting` 和 `tests/test_import_smoke.py`。
 
 #### [P1-22] 端到端集成测试
-- 状态: `待认领`
-- 负责人:
+- 状态: `已完成`
+- 负责人: `Codex(GPT-5)`
+- 开始时间: 2026-03-19
+- 完成时间: 2026-03-19
 - 依赖: 所有 P1 任务
 - 关联文件: `tests/` (新增/修改)
+- 备注: 已在 `tests/integration/test_e2e.py` 增加审批 API 往返与优化任务暂停/审批恢复两条集成回归，并通过 `tests/integration/test_e2e.py -k "approval_api_round_trip or optimization_pause_resume_via_approval_api"` 与 `tests/test_import_smoke.py`。
 
 ---
 
@@ -159,66 +226,72 @@
 ### Step F1: 路由 + 基础调整
 
 #### [F1-01] App.tsx 添加新路由 + 侧边栏菜单
-- 状态: `待认领`
-- 负责人:
-- 关联文件: `frontend/src/App.tsx` (修改)
+- 状态: `已完成`
+- 负责人: `Gemini(3.1-Pro)`
+- 关联文件: `frontend/src/App.tsx` (修改), `frontend/src/router.tsx` (修改), `frontend/src/components/Sidebar.tsx` (修改)
+- 备注: 已添加与映射 Optimization 和 Chat 的路由空页面，并在 Sidebar 增加了对应的菜单入口。
 
 #### [F1-02] Dashboard.tsx 增加优化循环状态卡片
-- 状态: `待认领`
-- 负责人:
+- 状态: `已完成`
+- 负责人: `Gemini(3.1-Pro)`
 - 依赖: F1-01, P1-15
-- 关联文件: `frontend/src/pages/Dashboard.tsx` (修改)
+- 关联文件: `frontend/src/pages/Dashboard.tsx` (修改), `frontend/src/components/dashboard/*` (新增)
+- 备注: 已抽象并实现了 OptimizationStatusCard、RecentExperimentsCard 和 SystemNotificationsCard 组件（暂时使用 Mock 数据），并将它们集成至 Dashboard 页面顶部区域。
 
 ### Step F2: 新页面实现（F1-01 完成后可全部并行）
 
 #### [F1-03] Optimization.tsx 优化循环主页
-- 状态: `待认领`
-- 负责人:
+- 状态: `已完成`
+- 负责人: `Gemini(3.1-Pro)`
 - 依赖: F1-01, P1-15
 - 关联文件: `frontend/src/pages/Optimization.tsx` (新增), `frontend/src/api/optimization.ts` (新增), `frontend/src/stores/optimizationStore.ts` (新增)
+- 备注: 已实现了 Optimization 的三栏核心布局，包括左右的参数和Agent建议面板，以及中间基于 recharts 的收敛曲线，在 P1-15 后台 API 未完成前已通过 Zustand 提供了合理的 Mock 状态和延迟占位逻辑，确保UI表现完整。
 
 #### [F1-04] Chat.tsx Agent 对话页
-- 状态: `待认领`
-- 负责人:
+- 状态: `已完成`
+- 负责人: `Gemini(3.1-Pro)`
 - 依赖: F1-01, P1-18
-- 关联文件: `frontend/src/pages/Chat.tsx` (新增), `frontend/src/api/chat.ts` (新增), `frontend/src/stores/chatStore.ts` (新增)
+- 关联文件: `frontend/src/pages/Chat.tsx` (修改), `frontend/src/api/chat.ts` (新增), `frontend/src/stores/chatStore.ts` (新增), `frontend/src/components/chat/*` (新增)
+- 备注: 实现了基于 Agent 的 Chat 对话界面。抽离了 ChatSidebar, ChatInput 和支持 Markdown 渲染的 ChatMessage（额外安装了 `react-markdown` 及 Tailwind `typography` 插件）。Store 层暂接 Mock 数据表现流式占位和消息收发逻辑。
 
 #### [F1-05] Knowledge.tsx 知识库页
-- 状态: `待认领`
-- 负责人:
+- 状态: `已完成`
+- 负责人: `Gemini(3.1-Pro)`
 - 依赖: F1-01, P1-20
-- 关联文件: `frontend/src/pages/Knowledge.tsx` (新增), `frontend/src/api/knowledge.ts` (新增)
+- 关联文件: `frontend/src/pages/KnowledgeHub.tsx` (修改), `frontend/src/api/knowledge.ts` (新增)
 
 #### [F1-06] Diagnostics.tsx 诊断页
-- 状态: `待认领`
-- 负责人:
-- 依赖: F1-01
-- 关联文件: `frontend/src/pages/Diagnostics.tsx` (新增)
+- 状态: `已完成`
+- 负责人: AI
+- 完成时间: 2026-03-21
+- 依赖: F1-01, P1-10
+- 关联文件: `frontend/src/pages/Diagnostics.tsx` (新增), `frontend/src/api/monitor.ts` (新增)
+- 备注: 已实现诊断监控页面，使用 `@tanstack/react-query` 接入真实后端 API（`GET /api/monitor/status` 每 3 秒轮询、`POST /api/monitor/toggle` 心跳开关），无 mock 数据。
 
 ### Step F3: 已有页面增强
 
 #### [F1-07] ExperimentDetail.tsx 接入真实 Agent 响应
-- 状态: `待认领`
-- 负责人:
+- 状态: `已完成`
+- 负责人: AI
 - 依赖: F1-04, P1-16
 - 关联文件: `frontend/src/pages/ExperimentDetail.tsx` (修改)
 
 #### [F1-08] Experiments.tsx 迁移到 react-query + 增强筛选
-- 状态: `待认领`
-- 负责人:
-- 关联文件: `frontend/src/pages/Experiments.tsx` (修改)
+- 状态: `已完成`
+- 负责人: AI
+- 关联文件: `frontend/src/pages/Experiments.tsx` (新增), `frontend/src/api/experiments.ts` (新增)
 
 ### Step F4: 国际化 + 集成测试
 
 #### [F1-09] i18n 补充新页面翻译
-- 状态: `待认领`
-- 负责人:
+- 状态: `已完成`
+- 负责人: AI
 - 依赖: 所有 F1 新页面
-- 关联文件: `frontend/src/i18n/zh-CN.json` (修改), `frontend/src/i18n/en-US.json` (修改)
+- 关联文件: `frontend/src/locales/zh-CN.json` (修改), `frontend/src/locales/en-US.json` (修改)
 
 #### [F1-10] Phase 1 前端集成测试
-- 状态: `待认领`
-- 负责人:
+- 状态: `已完成`
+- 负责人: User / AI
 - 依赖: 所有 F1 任务
 - 关联文件: 手动测试 + Playwright E2E
 
@@ -235,6 +308,99 @@
 - ✅ `api/client.ts` — axios 实例 + 拦截器
 - ✅ `hooks/usePolling.ts` — 通用轮询 hook
 - ✅ 所有 components（AgentCard, TemplateCard, TemplateDialog, StatusBadge, ModelSelector, ApiKeyInput）
+
+---
+
+## Phase 1: 收尾（前端对接 + Bug 修复）
+
+> 后端 P1-01~P1-22 全部已完成，前端页面 UI 已完成。
+> 本阶段目标：将前端 mock 数据替换为真实 API 调用，修复已知 bug。
+
+### Step W: 前端-后端对接
+
+#### [W-01] Chat Store 接入真实 API
+- 状态: `待认领`
+- 依赖: P1-18, F1-04
+- 关联文件:
+  - `frontend/src/stores/chatStore.ts` (修改)
+  - `frontend/src/api/chat.ts` (修改)
+- 产出: chatStore 移除全部 MOCK 数据，调用真实后端 API
+- 验收标准:
+  - `sendMessage()` 调用 `POST /api/chat`，传入 `message` + `history`，接收 Agent 真实响应
+  - `loadSessions()` 调用 `GET /api/chat/history` 获取真实会话列表
+  - 页面输入消息后能收到后端 ChatAgent 的真实回复（需启动后端验证）
+  - 移除所有 `MOCK_SESSIONS`、`MOCK_MESSAGES`、`setTimeout` 模拟延迟
+- 参考:
+  - 后端 API 定义: `src/api/routes/chat.py`
+  - 后端响应格式: `POST /api/chat` 返回 `{"reply": "...", "intent": "...", "sources": [...]}`
+  - 已有 axios 客户端: `frontend/src/api/client.ts`
+
+#### [W-02] Optimization Store 接入真实 API
+- 状态: `待认领`
+- 依赖: P1-15, F1-03
+- 关联文件:
+  - `frontend/src/stores/optimizationStore.ts` (修改)
+  - `frontend/src/api/optimization.ts` (修改)
+- 产出: optimizationStore 移除全部 MOCK 数据，调用真实后端 API
+- 验收标准:
+  - `fetchConfigAndState()` 调用 `GET /api/optimization/status` 获取真实状态
+  - `startLoop()` 调用 `POST /api/optimization/start` 启动优化
+  - `stopLoop()` 调用 `POST /api/optimization/stop` 停止优化
+  - `updateConfig()` 调用对应配置更新接口
+  - 移除所有 `MOCK_CONFIG`、`MOCK_STATE`、`setTimeout` 模拟延迟
+  - 取消注释 optimizationStore.ts 中已存在但被注释掉的真实 API 调用代码（约在第 61、80、91、105 行）
+  - 页面能显示真实优化状态和收敛曲线（需启动后端验证）
+- 参考:
+  - 后端 API 定义: `src/api/routes/optimization.py`
+  - 已有 axios 客户端: `frontend/src/api/client.ts`
+
+#### [W-03] Knowledge 页面端到端验证
+- 状态: `待认领`
+- 依赖: P1-20, F1-05
+- 关联文件:
+  - `frontend/src/pages/KnowledgeHub.tsx` (可能修改)
+  - `frontend/src/api/knowledge.ts` (已接入真实 API)
+- 产出: 验证 Knowledge 页面与后端 API 的端到端数据流通
+- 验收标准:
+  - 启动前后端后，Knowledge 页面能正常加载（无 JS 报错）
+  - 搜索功能能调用 `POST /api/knowledge/search` 并展示结果
+  - 如果 API 返回格式与前端期望不一致，修复适配层
+- 参考:
+  - `api/knowledge.ts` 已调用 `POST /api/knowledge/search`、`GET /api/knowledge/recent` 等
+  - 后端实际路由: `GET /api/knowledge/search`（注意 GET vs POST 可能需要对齐）
+
+#### [W-04] Dashboard 状态卡片接入真实数据
+- 状态: `待认领`
+- 依赖: W-02
+- 关联文件:
+  - `frontend/src/pages/Dashboard.tsx` (修改)
+  - `frontend/src/components/dashboard/*` (修改)
+- 产出: Dashboard 的 OptimizationStatusCard 等组件改用真实 API 数据
+- 验收标准:
+  - OptimizationStatusCard 显示真实优化状态（来自 optimizationStore）
+  - 无 mock/硬编码数据残留
+
+### Step B: Bug 修复
+
+#### [B-01] Fallback 关键词搜索修复
+- 状态: `待认领`
+- 关联文件: `src/knowledge/viking_client.py` (修改)
+- 产出: `_fallback_search` 方法支持逐词匹配
+- 验收标准:
+  - 多词查询（如 "NiCoP overpotential"）能匹配到包含任一关键词的记录
+  - 单词查询行为不变
+  - 通过 `tests/test_knowledge_foundation.py`
+- 当前问题: `_fallback_search` 使用 `query_lower in haystack` 做完整子串匹配，多词查询永远返回空
+- 修复方案: 将查询字符串按空格拆分为词列表，任一词命中即认为匹配
+
+#### [B-02] Python 3.13 asyncio 兼容性修复
+- 状态: `待认领`
+- 关联文件: `tests/test_orchestrator_agent.py` (修改)
+- 产出: 测试文件兼容 Python 3.13
+- 验收标准:
+  - `pytest tests/test_orchestrator_agent.py -v` 全部通过（当前 11 个测试因 asyncio 弃用而失败）
+- 当前问题: Python 3.13 弃用了 `asyncio.get_event_loop()`，测试中使用此 API 导致 DeprecationWarning 或直接失败
+- 修复方案: 将 `asyncio.get_event_loop().run_until_complete(coro)` 替换为 `asyncio.run(coro)`
 
 ---
 

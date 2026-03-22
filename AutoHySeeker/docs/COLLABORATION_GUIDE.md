@@ -1,6 +1,6 @@
 # 多端协作开发指南
 
-> 版本：1.0 | 日期：2026-03-18
+> 版本：1.1 | 日期：2026-03-22
 > 目标：让多个 AI 模型（或开发者）能够并发开发 AutoHySeeker，互不冲突，进度透明。
 
 ---
@@ -239,6 +239,76 @@
 - 验收标准: 模拟完整优化流程通过
 ```
 
+### 3.1b Phase 1 收尾任务列表（前端对接 + Bug 修复）
+
+> P1-01~P1-22 后端全部已完成，F1-01~F1-10 前端 UI 全部已完成。
+> 以下任务将前端 mock 数据替换为真实 API 调用，并修复已知 bug。
+
+```markdown
+### Step W: 前端-后端对接
+
+#### [W-01] Chat Store 接入真实 API
+- 状态: `待认领`
+- 依赖: P1-18, F1-04
+- 关联文件:
+  - `frontend/src/stores/chatStore.ts` (修改)
+  - `frontend/src/api/chat.ts` (修改)
+- 产出: chatStore 移除全部 MOCK 数据，调用真实后端 API
+- 验收标准:
+  - `sendMessage()` 调用 `POST /api/chat`，接收真实 ChatAgent 回复
+  - `loadSessions()` 调用 `GET /api/chat/history`
+  - 移除所有 MOCK_SESSIONS、MOCK_MESSAGES、setTimeout 模拟
+  - 启动前后端后可正常对话
+
+#### [W-02] Optimization Store 接入真实 API
+- 状态: `待认领`
+- 依赖: P1-15, F1-03
+- 关联文件:
+  - `frontend/src/stores/optimizationStore.ts` (修改)
+  - `frontend/src/api/optimization.ts` (修改)
+- 产出: optimizationStore 移除全部 MOCK 数据，调用真实后端 API
+- 验收标准:
+  - 取消注释已有的真实 API 调用（约在第 61、80、91、105 行）
+  - 移除所有 MOCK_CONFIG、MOCK_STATE、setTimeout
+  - 页面能显示真实优化状态
+
+#### [W-03] Knowledge 页面端到端验证
+- 状态: `待认领`
+- 依赖: P1-20, F1-05
+- 关联文件:
+  - `frontend/src/pages/KnowledgeHub.tsx` (可能修改)
+  - `frontend/src/api/knowledge.ts` (已接入真实 API)
+- 产出: 验证 Knowledge 页面与后端 API 的数据流通
+- 验收标准:
+  - 启动前后端后页面正常加载无 JS 报错
+  - 搜索功能能返回并展示结果
+
+#### [W-04] Dashboard 状态卡片接入真实数据
+- 状态: `待认领`
+- 依赖: W-02
+- 关联文件:
+  - `frontend/src/pages/Dashboard.tsx` (修改)
+  - `frontend/src/components/dashboard/*` (修改)
+- 产出: Dashboard 组件改用真实 API 数据
+- 验收标准: 无 mock/硬编码数据残留
+
+### Step B: Bug 修复
+
+#### [B-01] Fallback 关键词搜索修复
+- 状态: `待认领`
+- 关联文件: `src/knowledge/viking_client.py` (修改)
+- 产出: `_fallback_search` 支持逐词匹配
+- 验收标准: 多词查询能匹配到包含任一关键词的记录
+- 修复方案: 将查询按空格拆词，任一词命中即匹配
+
+#### [B-02] Python 3.13 asyncio 兼容性修复
+- 状态: `待认领`
+- 关联文件: `tests/test_orchestrator_agent.py` (修改)
+- 产出: 测试兼容 Python 3.13
+- 验收标准: `pytest tests/test_orchestrator_agent.py -v` 全部通过
+- 修复方案: 将 `asyncio.get_event_loop().run_until_complete()` 替换为 `asyncio.run()`
+```
+
 ### 3.2 认领规则
 
 1. 开始任务前，将状态改为 `进行中`，填写负责人和开始时间
@@ -279,6 +349,18 @@
   P1-15             OptimizationLoop
   P1-21             LangGraph 路由
   P1-22             集成测试
+
+=== Phase 1 收尾（可全部并行，无文件冲突）===
+
+并行组 W（前端对接）:
+  W-01              Chat Store（frontend/src/stores/chatStore.ts）
+  W-02              Optimization Store（frontend/src/stores/optimizationStore.ts）
+  W-03              Knowledge 页面验证（frontend/src/pages/KnowledgeHub.tsx）
+  B-01              Fallback 搜索修复（src/knowledge/viking_client.py）
+  B-02              asyncio 兼容（tests/test_orchestrator_agent.py）
+
+最后（W-02 完成后）:
+  W-04              Dashboard 状态卡片
 ```
 
 ---

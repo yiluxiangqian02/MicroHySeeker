@@ -1,0 +1,431 @@
+{
+  "timestamp": "2026-03-20 16:37:34",
+  "paper": {
+    "title": "10,000-h-stable intermittent alkaline seawater electrolysis",
+    "doi": "10.1038/s41586-025-08610-1",
+    "catalyst": "NiCoP-Cr2O3"
+  },
+  "chunk_count": 27,
+  "embedding_benchmark": {
+    "mode": "embedding_api_direct",
+    "total_queries": 12,
+    "top_k": 3,
+    "avg_precision_at_k": 0.444,
+    "hit_rate": 0.917,
+    "hit_count": 11,
+    "miss_count": 1,
+    "per_query": [
+      {
+        "query_id": 1,
+        "query": "NiCoP催化剂的过电位是多少",
+        "description": "查找催化剂过电位数据",
+        "expected_sections": [
+          "Abstract",
+          "Activity and stability"
+        ],
+        "hit_sections": [
+          "Synthesis of NiCoP",
+          "Cathode oxidation during start–shutdown water splitting cycles",
+          "Theoretical insight"
+        ],
+        "hit_scores": [
+          0.5487,
+          0.5296,
+          0.5265
+        ],
+        "precision_at_k": 0.0,
+        "any_hit": false
+      },
+      {
+        "query_id": 2,
+        "query": "seawater electrolysis cathode degradation mechanism",
+        "description": "查找阴极降解机制",
+        "expected_sections": [
+          "Abstract",
+          "Cathode oxidation"
+        ],
+        "hit_sections": [
+          "Discussion",
+          "Cathode oxidation during start–shutdown water splitting cycles",
+          "Activity and stability of NiCoP– $\\mathbf { C r _ { 2 } 0 _ { 3 } }$ cathode in intermittent electrolysis"
+        ],
+        "hit_scores": [
+          0.5631,
+          0.5562,
+          0.5131
+        ],
+        "precision_at_k": 0.3333333333333333,
+        "any_hit": true
+      },
+      {
+        "query_id": 3,
+        "query": "phosphate passivation layer protection",
+        "description": "查找磷酸盐钝化层保护作用",
+        "expected_sections": [
+          "Catalysts design strategy",
+          "Reaction mechanism",
+          "Article"
+        ],
+        "hit_sections": [
+          "Catalysts design strategy",
+          "Article",
+          "TOF-SIMS measurement"
+        ],
+        "hit_scores": [
+          0.5999,
+          0.4688,
+          0.4617
+        ],
+        "precision_at_k": 0.6666666666666666,
+        "any_hit": true
+      },
+      {
+        "query_id": 4,
+        "query": "intermittent electrolysis stability test 10000 hours",
+        "description": "查找间歇稳定性测试结果",
+        "expected_sections": [
+          "Abstract",
+          "Activity and stability"
+        ],
+        "hit_sections": [
+          "10,000-h-stable intermittent alkaline seawater electrolysis",
+          "Activity and stability of NiCoP– $\\mathbf { C r _ { 2 } 0 _ { 3 } }$ cathode in intermittent electrolysis",
+          "Reaction mechanism"
+        ],
+        "hit_scores": [
+          0.5816,
+          0.5349,
+          0.5286
+        ],
+        "precision_at_k": 0.3333333333333333,
+        "any_hit": true
+      },
+      {
+        "query_id": 5,
+        "query": "TOF-SIMS characterization element distribution",
+        "description": "查找 TOF-SIMS 表征结果",
+        "expected_sections": [
+          "Reaction mechanism",
+          "Article"
+        ],
+        "hit_sections": [
+          "TOF-SIMS measurement",
+          "Reaction mechanism",
+          "Article"
+        ],
+        "hit_scores": [
+          0.5983,
+          0.5733,
+          0.5229
+        ],
+        "precision_at_k": 0.6666666666666666,
+        "any_hit": true
+      },
+      {
+        "query_id": 6,
+        "query": "DFT calculation oxygen migration energy barrier",
+        "description": "查找理论计算结果",
+        "expected_sections": [
+          "Theoretical insight",
+          "Computational methods"
+        ],
+        "hit_sections": [
+          "Computational methods",
+          "Theoretical insight",
+          "Article"
+        ],
+        "hit_scores": [
+          0.4954,
+          0.4865,
+          0.4238
+        ],
+        "precision_at_k": 0.6666666666666666,
+        "any_hit": true
+      },
+      {
+        "query_id": 7,
+        "query": "NiCo-LDH hydrothermal synthesis method",
+        "description": "查找合成方法",
+        "expected_sections": [
+          "Synthesis of NiCo",
+          "Synthesis of NiCoP"
+        ],
+        "hit_sections": [
+          "Synthesis of NiCo–LDH",
+          "Synthesis of NiCoP",
+          "Synthesis of NiCoFeP"
+        ],
+        "hit_scores": [
+          0.7403,
+          0.6311,
+          0.5936
+        ],
+        "precision_at_k": 1.0,
+        "any_hit": true
+      },
+      {
+        "query_id": 8,
+        "query": "AEM electrolyser performance voltage current density",
+        "description": "查找 AEM 电解槽性能",
+        "expected_sections": [
+          "Activity and stability",
+          "AEM electrolyser measurement"
+        ],
+        "hit_sections": [
+          "AEM electrolyser measurement",
+          "HAADF-STEM characterization",
+          "10,000-h-stable intermittent alkaline seawater electrolysis"
+        ],
+        "hit_scores": [
+          0.6674,
+          0.4929,
+          0.4827
+        ],
+        "precision_at_k": 0.3333333333333333,
+        "any_hit": true
+      },
+      {
+        "query_id": 9,
+        "query": "chloride ion corrosion resistance",
+        "description": "查找氯离子腐蚀抵抗",
+        "expected_sections": [
+          "Abstract",
+          "Reaction mechanism",
+          "Discussion"
+        ],
+        "hit_sections": [
+          "Activity and stability of NiCoP– $\\mathbf { C r _ { 2 } 0 _ { 3 } }$ cathode in intermittent electrolysis",
+          "Discussion",
+          "Materials"
+        ],
+        "hit_scores": [
+          0.4775,
+          0.4591,
+          0.4571
+        ],
+        "precision_at_k": 0.3333333333333333,
+        "any_hit": true
+      },
+      {
+        "query_id": 10,
+        "query": "operando Raman spectroscopy P-O vibration",
+        "description": "查找原位拉曼表征",
+        "expected_sections": [
+          "Reaction mechanism",
+          "Operando Raman"
+        ],
+        "hit_sections": [
+          "Operando Raman characterization",
+          "Operando ATR-SEIRAS characterization",
+          "Computational methods"
+        ],
+        "hit_scores": [
+          0.6078,
+          0.5231,
+          0.4417
+        ],
+        "precision_at_k": 0.3333333333333333,
+        "any_hit": true
+      },
+      {
+        "query_id": 11,
+        "query": "HAADF-STEM atomic structure passivation layer",
+        "description": "查找 STEM 原子结构",
+        "expected_sections": [
+          "Structural evolution",
+          "HAADF-STEM characterization"
+        ],
+        "hit_sections": [
+          "HAADF-STEM characterization",
+          "Catalysts design strategy",
+          "Article"
+        ],
+        "hit_scores": [
+          0.578,
+          0.5196,
+          0.4722
+        ],
+        "precision_at_k": 0.3333333333333333,
+        "any_hit": true
+      },
+      {
+        "query_id": 12,
+        "query": "renewable energy hydrogen production seawater",
+        "description": "查找可再生能源制氢概述",
+        "expected_sections": [
+          "Abstract",
+          "Discussion"
+        ],
+        "hit_sections": [
+          "10,000-h-stable intermittent alkaline seawater electrolysis",
+          "Discussion",
+          "Online content"
+        ],
+        "hit_scores": [
+          0.6137,
+          0.5564,
+          0.5123
+        ],
+        "precision_at_k": 0.3333333333333333,
+        "any_hit": true
+      }
+    ]
+  },
+  "fallback_benchmark": {
+    "mode": "fallback_keyword",
+    "total_queries": 12,
+    "top_k": 3,
+    "avg_precision_at_k": 0.0,
+    "hit_rate": 0.0,
+    "hit_count": 0,
+    "miss_count": 12,
+    "per_query": [
+      {
+        "query_id": 1,
+        "query": "NiCoP催化剂的过电位是多少",
+        "description": "查找催化剂过电位数据",
+        "expected_sections": [
+          "Abstract",
+          "Activity and stability"
+        ],
+        "hit_sections": [],
+        "precision_at_k": 0.0,
+        "any_hit": false
+      },
+      {
+        "query_id": 2,
+        "query": "seawater electrolysis cathode degradation mechanism",
+        "description": "查找阴极降解机制",
+        "expected_sections": [
+          "Abstract",
+          "Cathode oxidation"
+        ],
+        "hit_sections": [],
+        "precision_at_k": 0.0,
+        "any_hit": false
+      },
+      {
+        "query_id": 3,
+        "query": "phosphate passivation layer protection",
+        "description": "查找磷酸盐钝化层保护作用",
+        "expected_sections": [
+          "Catalysts design strategy",
+          "Reaction mechanism",
+          "Article"
+        ],
+        "hit_sections": [],
+        "precision_at_k": 0.0,
+        "any_hit": false
+      },
+      {
+        "query_id": 4,
+        "query": "intermittent electrolysis stability test 10000 hours",
+        "description": "查找间歇稳定性测试结果",
+        "expected_sections": [
+          "Abstract",
+          "Activity and stability"
+        ],
+        "hit_sections": [],
+        "precision_at_k": 0.0,
+        "any_hit": false
+      },
+      {
+        "query_id": 5,
+        "query": "TOF-SIMS characterization element distribution",
+        "description": "查找 TOF-SIMS 表征结果",
+        "expected_sections": [
+          "Reaction mechanism",
+          "Article"
+        ],
+        "hit_sections": [],
+        "precision_at_k": 0.0,
+        "any_hit": false
+      },
+      {
+        "query_id": 6,
+        "query": "DFT calculation oxygen migration energy barrier",
+        "description": "查找理论计算结果",
+        "expected_sections": [
+          "Theoretical insight",
+          "Computational methods"
+        ],
+        "hit_sections": [],
+        "precision_at_k": 0.0,
+        "any_hit": false
+      },
+      {
+        "query_id": 7,
+        "query": "NiCo-LDH hydrothermal synthesis method",
+        "description": "查找合成方法",
+        "expected_sections": [
+          "Synthesis of NiCo",
+          "Synthesis of NiCoP"
+        ],
+        "hit_sections": [],
+        "precision_at_k": 0.0,
+        "any_hit": false
+      },
+      {
+        "query_id": 8,
+        "query": "AEM electrolyser performance voltage current density",
+        "description": "查找 AEM 电解槽性能",
+        "expected_sections": [
+          "Activity and stability",
+          "AEM electrolyser measurement"
+        ],
+        "hit_sections": [],
+        "precision_at_k": 0.0,
+        "any_hit": false
+      },
+      {
+        "query_id": 9,
+        "query": "chloride ion corrosion resistance",
+        "description": "查找氯离子腐蚀抵抗",
+        "expected_sections": [
+          "Abstract",
+          "Reaction mechanism",
+          "Discussion"
+        ],
+        "hit_sections": [],
+        "precision_at_k": 0.0,
+        "any_hit": false
+      },
+      {
+        "query_id": 10,
+        "query": "operando Raman spectroscopy P-O vibration",
+        "description": "查找原位拉曼表征",
+        "expected_sections": [
+          "Reaction mechanism",
+          "Operando Raman"
+        ],
+        "hit_sections": [],
+        "precision_at_k": 0.0,
+        "any_hit": false
+      },
+      {
+        "query_id": 11,
+        "query": "HAADF-STEM atomic structure passivation layer",
+        "description": "查找 STEM 原子结构",
+        "expected_sections": [
+          "Structural evolution",
+          "HAADF-STEM characterization"
+        ],
+        "hit_sections": [],
+        "precision_at_k": 0.0,
+        "any_hit": false
+      },
+      {
+        "query_id": 12,
+        "query": "renewable energy hydrogen production seawater",
+        "description": "查找可再生能源制氢概述",
+        "expected_sections": [
+          "Abstract",
+          "Discussion"
+        ],
+        "hit_sections": [],
+        "precision_at_k": 0.0,
+        "any_hit": false
+      }
+    ]
+  }
+}

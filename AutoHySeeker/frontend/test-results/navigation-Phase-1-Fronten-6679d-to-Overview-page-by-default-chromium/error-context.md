@@ -1,0 +1,187 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e6]:
+        - img [ref=e8]
+        - generic [ref=e10]:
+          - heading "AutoHySeeker" [level=1] [ref=e11]
+          - paragraph [ref=e12]: AI EXPERIMENT MGR
+      - navigation [ref=e13]:
+        - link "实验工作台" [ref=e14] [cursor=pointer]:
+          - /url: /
+        - link "运行中实验" [ref=e15] [cursor=pointer]:
+          - /url: /dashboard
+        - link "实验记录" [ref=e16] [cursor=pointer]:
+          - /url: /experiments
+        - link "优化循环" [ref=e17] [cursor=pointer]:
+          - /url: /optimization
+        - link "Agent 对话" [ref=e18] [cursor=pointer]:
+          - /url: /chat
+        - link "nav.diagnostics" [ref=e19] [cursor=pointer]:
+          - /url: /diagnostics
+        - link "AI 助手分工" [ref=e20] [cursor=pointer]:
+          - /url: /agents
+        - link "知识库" [ref=e21] [cursor=pointer]:
+          - /url: /knowledge
+        - link "实验模板" [ref=e22] [cursor=pointer]:
+          - /url: /templates
+        - link "设置" [ref=e23] [cursor=pointer]:
+          - /url: /settings
+  - generic [ref=e24]:
+    - banner [ref=e25]:
+      - generic [ref=e26]:
+        - generic [ref=e27]:
+          - heading "实验工作台" [level=2] [ref=e28]
+          - paragraph [ref=e29]:
+            - text: "API Base URL:"
+            - code [ref=e30]: http://localhost:8100
+        - button "中文" [ref=e31] [cursor=pointer]:
+          - img [ref=e32]
+          - generic [ref=e35]: 中文
+    - main [ref=e36]:
+      - generic [ref=e37]:
+        - generic [ref=e39]:
+          - generic [ref=e40]:
+            - paragraph [ref=e41]: AI Experiment Steward
+            - heading "没有能不能，只有要不要，小氢挖最棒！" [level=1] [ref=e42]
+            - paragraph [ref=e43]: 主流程现在更清楚了：先按真实 step 编辑实验，再在运行中盯住当前步骤，最后从知识管理 / 知识库 Chat 和数据处理/分析助手拿到结论。
+            - generic [ref=e44]:
+              - button "开始一个新实验" [ref=e45] [cursor=pointer]
+              - button "打开知识库 Chat" [ref=e46] [cursor=pointer]
+          - generic [ref=e47]:
+            - generic [ref=e48]:
+              - generic [ref=e49]:
+                - img [ref=e50]
+                - text: 实验前
+              - paragraph [ref=e52]: 按真实 steps 组装实验，不再把 technique 当作整个实验。
+            - generic [ref=e53]:
+              - generic [ref=e54]:
+                - img [ref=e55]
+                - text: 实验中
+              - paragraph [ref=e59]: 运行卡片直接告诉你实验名、当前步骤、状态、开始时间和来源。
+            - generic [ref=e60]:
+              - generic [ref=e61]:
+                - img [ref=e62]
+                - text: 实验后
+              - paragraph [ref=e65]: 进入知识管理 / 知识库 Chat 或数据处理/分析助手继续追问。
+        - generic [ref=e66]:
+          - generic [ref=e67]:
+            - heading "1. 明确目标并编排步骤" [level=2] [ref=e68]
+            - paragraph [ref=e69]: 先说清目的，再进入真实 step editor，给每一步选 step_type。
+            - button "新建实验" [ref=e70] [cursor=pointer]
+          - generic [ref=e71]:
+            - heading "2. 盯住运行中的步骤" [level=2] [ref=e72]
+            - paragraph [ref=e73]: 重点看当前在跑哪个 step，而不是只看一个模糊的 running 状态。
+            - button "查看运行中实验" [ref=e74] [cursor=pointer]
+          - generic [ref=e75]:
+            - heading "3. 问知识库 / 历史实验" [level=2] [ref=e76]
+            - paragraph [ref=e77]: 从知识管理 / 知识库 Chat 入口继续问方案、对比经验和历史记录。
+            - button "打开知识库 Chat" [ref=e78] [cursor=pointer]
+        - generic [ref=e79]:
+          - generic [ref=e80]:
+            - generic [ref=e81]:
+              - generic [ref=e82]:
+                - heading "运行中的实验" [level=2] [ref=e83]
+                - paragraph [ref=e84]: 让人一眼看懂现在到底在跑什么。
+              - button "打开实时监控" [ref=e85] [cursor=pointer]
+            - generic [ref=e87]: 暂无运行中的实验。创建实验后开始执行，这里会显示实验名、当前步骤、状态、开始时间和来源。
+          - generic [ref=e88]:
+            - generic [ref=e89]:
+              - generic [ref=e90]:
+                - heading "知识管理 / 知识库 Chat" [level=2] [ref=e91]
+                - paragraph [ref=e92]: 有明确入口、有上下文区，不再藏在抽象 agent 名字里。
+              - button "打开 Chat" [ref=e93] [cursor=pointer]
+            - generic [ref=e94]:
+              - generic [ref=e95]:
+                - img [ref=e96]
+                - text: 当前上下文区
+              - list [ref=e98]:
+                - listitem [ref=e99]: • 最近实验数：0
+                - listitem [ref=e100]: • 运行中的实验：0
+                - listitem [ref=e101]: • 当前可追问：方案设计、历史实验、参数经验、异常复盘
+            - generic [ref=e102]:
+              - button "这个 echem 步骤为什么建议先用 CV 而不是 EIS？" [ref=e103] [cursor=pointer]
+              - button "结合最近实验，下一轮应该优先改哪个 step？" [ref=e104] [cursor=pointer]
+              - button "运行中的实验如果卡在 transfer，常见原因是什么？" [ref=e105] [cursor=pointer]
+        - generic [ref=e106]:
+          - generic [ref=e108]:
+            - generic [ref=e109]:
+              - paragraph [ref=e110]: AutoHySeeker 后端
+              - generic [ref=e113]: 在线
+            - img [ref=e114]
+          - generic [ref=e118]:
+            - generic [ref=e119]:
+              - paragraph [ref=e120]: MicroHySeeker 连接
+              - generic [ref=e123]: 已连接
+            - img [ref=e124]
+          - generic [ref=e127]:
+            - generic [ref=e128]:
+              - paragraph [ref=e129]: 数据库
+              - generic [ref=e132]: 在线
+            - img [ref=e133]
+          - generic [ref=e138]:
+            - generic [ref=e139]:
+              - paragraph [ref=e140]: Agents
+              - paragraph [ref=e141]: 3/5
+              - paragraph [ref=e142]: 运行中
+            - img [ref=e143]
+        - generic [ref=e146]:
+          - generic [ref=e147]:
+            - paragraph [ref=e148]: 总实验数
+            - paragraph [ref=e149]: "0"
+          - generic [ref=e150]:
+            - paragraph [ref=e151]: 今日实验
+            - paragraph [ref=e152]: "0"
+          - generic [ref=e153]:
+            - paragraph [ref=e154]: 成功率
+            - paragraph [ref=e156]: 0%
+          - generic [ref=e157]:
+            - paragraph [ref=e158]: 平均时长
+            - paragraph [ref=e159]: 0m
+        - generic [ref=e160]:
+          - generic [ref=e161]:
+            - heading "最近活动" [level=2] [ref=e162]:
+              - img [ref=e163]
+              - text: 最近活动
+            - paragraph [ref=e167]: 暂无活动记录
+          - generic [ref=e168]:
+            - heading "快速入口" [level=2] [ref=e169]
+            - generic [ref=e170]:
+              - button "真实 step editor" [ref=e171] [cursor=pointer]:
+                - img [ref=e172]
+                - generic [ref=e173]: 真实 step editor
+              - button "知识库 Chat" [ref=e174] [cursor=pointer]:
+                - img [ref=e175]
+                - generic [ref=e177]: 知识库 Chat
+              - button "数据处理/分析助手" [ref=e178] [cursor=pointer]:
+                - img [ref=e179]
+                - generic [ref=e180]: 数据处理/分析助手
+              - button "方案设计助手" [ref=e181] [cursor=pointer]:
+                - img [ref=e182]
+                - generic [ref=e184]: 方案设计助手
+              - button "运行监护助手 / 故障排查助手" [ref=e185] [cursor=pointer]:
+                - img [ref=e186]
+                - generic [ref=e190]: 运行监护助手 / 故障排查助手
+              - button "加载最近实验" [ref=e191] [cursor=pointer]:
+                - img [ref=e192]
+                - generic [ref=e194]: 加载最近实验
+        - generic [ref=e195]:
+          - heading "系统健康状态（24小时）" [level=2] [ref=e196]:
+            - img [ref=e197]
+            - text: 系统健康状态（24小时）
+          - generic [ref=e198]:
+            - generic [ref=e199]:
+              - paragraph [ref=e200]: CPU 使用率
+              - generic [ref=e202]: 暂无数据
+            - generic [ref=e203]:
+              - paragraph [ref=e204]: 内存使用率
+              - generic [ref=e206]: 暂无数据
+            - generic [ref=e207]:
+              - paragraph [ref=e208]: API 响应时间
+              - generic [ref=e210]: 暂无数据
+  - button "打开知识库 Chat" [ref=e211] [cursor=pointer]:
+    - img [ref=e212]
+```

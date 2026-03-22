@@ -6,6 +6,7 @@ from importlib import import_module
 from typing import Any
 
 _EXPORTS = {
+    "ChatAgent": "src.agents.chat_agent",
     "DiagnosticsExpertAgent": "src.agents.diagnostics",
     "ExperimentDesignerAgent": "src.agents.exp_designer",
     "ExperimentExecutorAgent": "src.agents.exp_executor",

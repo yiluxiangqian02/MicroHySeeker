@@ -132,24 +132,29 @@
 
 ### 已有代码
 
-| 文件 | 行数 | 状态 | 说明 |
-|------|------|------|------|
-| `agents/diagnostics.py` | 17 | ⚠️ Stub | 仅有类定义 + system prompt |
-| `skills/diagnostics/diagnose_failure.py` | ~100 | ✅ 完整 | 故障诊断技能 |
-| `skills/diagnostics/system_health_check.py` | ~80 | ✅ 完整 | 健康检查技能 |
-| `skills/diagnostics/interactive_troubleshooting.py` | ~90 | ✅ 完整 | 交互式排障 |
-| `tools/log_analysis.py` | ~200 | ✅ 完整 | 日志解析/错误分类 |
-| `graph/diagnostics_graph.py` | ~50 | ✅ 基础 | 诊断子图 |
+| 文件 | 状态 | 说明 |
+|------|------|------|
+| `agents/diagnostics.py` | ✅ 完整 | 故障注册表 + 自动修复 + 知识库集成 |
+| `skills/knowledge_query_skill.py` | ✅ 完整 | 故障历史检索接口 |
+| `skills/diagnostics/diagnose_failure.py` | ✅ 完整 | 故障诊断技能 |
+| `skills/diagnostics/system_health_check.py` | ✅ 完整 | 健康检查技能 |
+| `skills/diagnostics/interactive_troubleshooting.py` | ✅ 完整 | 交互式排障 |
+| `tools/log_analysis.py` | ✅ 完整 | 日志解析/错误分类 |
+| `graph/diagnostics_graph.py` | ✅ 完整 | 诊断子图 |
 
 ### 关键问题
 
-1. **Agent 只有 system prompt**：没有结构化的诊断和修复逻辑
-2. **技能丰富但未连接**：skills 层已实现但 Agent 没有调用编排
-3. **缺少自动修复流程**：只有诊断，没有"尝试修复→验证"的闭环
+> **✅ 以下问题已全部在 Phase 1 (P1-17) 中解决（2026-03-19）：**
+
+1. ~~**Agent 只有 system prompt**~~：已实现完整的 `diagnose_and_fix()` 结构化诊断修复逻辑
+2. ~~**技能丰富但未连接**~~：已将 skills 层编排到 Agent 调用链中
+3. ~~**缺少自动修复流程**~~：已实现"诊断→自动修复→验证"闭环，含知识库历史查询
 
 ---
 
-## 6. 需要修改的内容
+## 6. 已完成的修改（参考实现）
+
+> 以下修改已在 Phase 1 (P1-17) 中完成，此处保留作为实现参考。
 
 ### 6.1 充实 `agents/diagnostics.py`
 
@@ -315,13 +320,13 @@ Diagnostics → Orchestrator:
 
 ---
 
-## 9. 执行计划
+## 9. 执行计划（✅ 全部完成）
 
-| 步骤 | 任务 | 涉及文件 | 依赖 |
+| 步骤 | 任务 | 涉及文件 | 状态 |
 |------|------|---------|------|
-| 1 | 充实 diagnostics.py，添加 diagnose_and_fix 方法 | `agents/diagnostics.py` | 无 |
-| 2 | 实现已知故障自动修复策略 | `agents/diagnostics.py` | 步骤 1 |
-| 3 | 实现修复验证逻辑 | `agents/diagnostics.py` | 步骤 1 |
-| 4 | 接入 skills/diagnostics/ 已有技能 | `agents/diagnostics.py` | 步骤 1 |
-| 5 | 更新 System Prompt | `agents/diagnostics.py` | 步骤 1 |
-| 6 | 添加单元测试（模拟故障场景） | `tests/test_diagnostics.py` | 步骤 1-3 |
+| 1 | 充实 diagnostics.py，添加 diagnose_and_fix 方法 | `agents/diagnostics.py` | ✅ |
+| 2 | 实现已知故障自动修复策略 | `agents/diagnostics.py` | ✅ |
+| 3 | 实现修复验证逻辑 | `agents/diagnostics.py` | ✅ |
+| 4 | 接入 skills/diagnostics/ 已有技能 | `agents/diagnostics.py` | ✅ |
+| 5 | 更新 System Prompt | `agents/diagnostics.py` | ✅ |
+| 6 | 添加单元测试（模拟故障场景） | `tests/test_diagnostics_agent.py` (18项通过) | ✅ |

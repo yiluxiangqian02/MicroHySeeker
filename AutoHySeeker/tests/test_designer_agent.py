@@ -90,12 +90,17 @@ class TestDesignerFullDesign(unittest.TestCase):
         from src.agents.exp_designer import ExperimentDesignerAgent
 
         agent = ExperimentDesignerAgent()
-        result = asyncio.run(agent.design_experiment(
-            history=[],
-            target_metric="overpotential_mV",
-            optimization_direction="minimize",
-        ))
-        assert result["strategy"] == "initial_sampling"
+        with patch.object(
+            agent._knowledge_query_skill,
+            "get_literature_insights",
+            return_value=[],
+        ):
+            result = asyncio.run(agent.design_experiment(
+                history=[],
+                target_metric="overpotential_mV",
+                optimization_direction="minimize",
+            ))
+        assert result["strategy"] == "literature_guided"
         assert "params" in result
         assert "step_overrides" in result
         assert abs(sum(result["params"].values()) - 1.0) < 1e-6
@@ -121,6 +126,48 @@ class TestDesignerFullDesign(unittest.TestCase):
 
         assert result["strategy"] == "llm_guided"
         assert abs(sum(result["params"].values()) - 1.0) < 1e-6
+
+    def test_design_no_history_uses_literature_hint(self) -> None:
+        from src.agents.exp_designer import ExperimentDesignerAgent
+
+        agent = ExperimentDesignerAgent()
+        with patch.object(
+            agent._knowledge_query_skill,
+            "get_literature_insights",
+            return_value=[{"summary": "Co-rich Fe-Co-Ni catalysts often perform better"}],
+        ):
+            result = asyncio.run(agent.design_experiment(history=[]))
+
+        assert result["strategy"] == "literature_guided"
+        assert result["params"]["Co"] >= result["params"]["Fe"]
+
+    def test_design_many_history_uses_ml_hybrid(self) -> None:
+        from src.agents.exp_designer import ExperimentDesignerAgent
+
+        agent = ExperimentDesignerAgent()
+        history = []
+        for index in range(12):
+            history.append(
+                {
+                    "params": {
+                        "Fe": round(0.2 + index * 0.01, 4),
+                        "Co": round(0.5 - index * 0.005, 4),
+                        "Ni": round(0.3 - index * 0.005, 4),
+                    },
+                    "metrics": {"overpotential_mV": 220 - index},
+                }
+            )
+
+        with patch.object(agent, "invoke", side_effect=Exception("no LLM")):
+            result = asyncio.run(agent.design_experiment(
+                history=history,
+                target_metric="overpotential_mV",
+                optimization_direction="minimize",
+            ))
+
+        assert result["strategy"] == "ml_hybrid"
+        assert abs(sum(result["params"].values()) - 1.0) < 1e-6
+        assert "confidence" in result
 
 
 class TestDesignerLLMParsing(unittest.TestCase):
@@ -174,6 +221,24 @@ class TestDesignerImprovement(unittest.TestCase):
             {"Fe": 0.5}, [], "ovp", "minimize",
         )
         assert result == 0.0
+
+
+class TestDesignerLiteratureHelpers(unittest.TestCase):
+    def test_derive_params_from_literature_biases_rich_element(self) -> None:
+        from src.agents.exp_designer import ExperimentDesignerAgent
+
+        agent = ExperimentDesignerAgent()
+        result = agent._derive_params_from_literature(
+            [{"summary": "Co-rich catalysts and Co > 60% often show lower overpotential"}],
+            ["Co", "Fe", "Ni"],
+            {
+                "Fe": {"min": 0.05, "max": 0.9},
+                "Co": {"min": 0.05, "max": 0.9},
+                "Ni": {"min": 0.05, "max": 0.9},
+            },
+        )
+
+        assert result["Co"] > result["Fe"]
 
 
 class TestDesignerRouting(unittest.TestCase):

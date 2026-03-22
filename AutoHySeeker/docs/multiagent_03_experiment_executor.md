@@ -125,27 +125,25 @@
 
 ### 已有代码
 
-| 文件 | 行数 | 状态 | 说明 |
-|------|------|------|------|
-| `agents/exp_supervisor.py` | 314 | ✅ 完整 | 包含监控+调度（需拆分） |
-| `skills/experiment_execution/execution_monitor.py` | ~100 | ✅ 完整 | 执行监控技能 |
-| `skills/experiment_execution/realtime_monitor.py` | ~80 | ✅ 完整 | 实时轮询监控 |
-| `tools/experiment_ctrl.py` | ~420 | ✅ 完整 | 全部 API 客户端函数 |
+| 文件 | 状态 | 说明 |
+|------|------|------|
+| `agents/exp_executor.py` | ✅ 完整 | 实验执行 + L1/L2 两层监控集成 |
+| `skills/realtime_monitor_skill.py` | ✅ 完整 | L1 规则引擎（6 条规则） |
+| `skills/heartbeat_inspector_skill.py` | ✅ 完整 | L2 心跳巡检（LLM 综合判断） |
+| `tools/experiment_ctrl.py` | ✅ 完整 | 全部 API 客户端函数 |
+| `api/routes/monitor.py` | ✅ 完整 | 监控控制路由（toggle/status/config） |
 
 ### 关键洞察
 
-**现有 `ExperimentSupervisorAgent` 中可以直接复用的代码**：
+> **✅ 以下迁移已全部在 Phase 1 (P1-09, P1-10) 中完成（2026-03-19）：**
 
-1. `_monitor_experiment_loop()` — 实验监控循环（轮询状态、检测异常）
-2. `_poll_status()` — 状态轮询逻辑
-3. `_check_anomalies()` — 异常检测（超时、泵故障、速度偏差）
-4. 异常严重度分类逻辑
-
-**这些逻辑应从 exp_supervisor.py 迁移到新的 exp_executor.py。**
+原 `ExperimentSupervisorAgent` 已移除。监控循环、异常检测、状态轮询等逻辑已迁移到 `exp_executor.py`，并集成了 L1 (RealtimeMonitorSkill) 和 L2 (HeartbeatInspectorSkill) 两层监控。
 
 ---
 
-## 6. 需要新增的内容
+## 6. 已完成的新增内容（参考实现）
+
+> 以下新增已在 Phase 1 中完成，此处保留作为实现参考。
 
 ### 6.1 创建 `agents/exp_executor.py`
 
@@ -411,31 +409,30 @@ Executor 收到任务
 
 ---
 
-## 9. 从 ExperimentSupervisor 迁移计划
+## 9. 从 ExperimentSupervisor 迁移（✅ 已完成）
 
-| 原位置 (exp_supervisor.py) | 目标 | 迁移到 |
-|---------------------------|------|--------|
-| `_monitor_experiment_loop()` | 实验状态轮询 | exp_executor.py |
-| `_poll_status()` | API 调用封装 | exp_executor.py |
-| `_check_anomalies()` | 异常检测 | exp_executor.py |
-| 异常严重度分类 | 错误分类 | exp_executor.py |
-| Agent 协调/调度 | 任务路由 | orchestrator.py |
-| `_dispatch_to_analyst()` | 调度分析 | orchestrator.py |
-| `_dispatch_to_diagnostics()` | 调度诊断 | orchestrator.py |
+> 以下迁移已全部完成，`exp_supervisor.py` 已移除。
 
-**原 exp_supervisor.py 保留为精简版**，仅保留基本的监控入口。
-新的 Executor 和 Orchestrator 分别承接其执行和调度职责。
+| 原位置 (exp_supervisor.py) | 迁移到 | 状态 |
+|---------------------------|--------|------|
+| `_monitor_experiment_loop()` | exp_executor.py | ✅ |
+| `_poll_status()` | exp_executor.py | ✅ |
+| `_check_anomalies()` | exp_executor.py | ✅ |
+| 异常严重度分类 | exp_executor.py | ✅ |
+| Agent 协调/调度 | orchestrator.py | ✅ |
+| `_dispatch_to_analyst()` | orchestrator.py | ✅ |
+| `_dispatch_to_diagnostics()` | orchestrator.py | ✅ |
 
 ---
 
-## 10. 执行计划
+## 10. 执行计划（✅ 全部完成）
 
-| 步骤 | 任务 | 涉及文件 | 依赖 |
+| 步骤 | 任务 | 涉及文件 | 状态 |
 |------|------|---------|------|
-| 1 | 创建 exp_executor.py 基础框架 | `agents/exp_executor.py` | 无 |
-| 2 | 迁移监控逻辑从 exp_supervisor | `agents/exp_executor.py` | 步骤 1 |
-| 3 | 实现预检查流程 | `agents/exp_executor.py` | 步骤 1 |
-| 4 | 实现异常检测和分类 | `agents/exp_executor.py` | 步骤 2 |
-| 5 | 注册到 graph nodes | `graph/nodes.py` | 步骤 1 |
-| 6 | 精简 exp_supervisor.py | `agents/exp_supervisor.py` | 步骤 2 |
-| 7 | 添加集成测试 | `tests/test_executor.py` | 步骤 1-4 |
+| 1 | 创建 exp_executor.py 基础框架 | `agents/exp_executor.py` | ✅ |
+| 2 | 迁移监控逻辑 | `agents/exp_executor.py` | ✅ |
+| 3 | 实现预检查流程 | `agents/exp_executor.py` | ✅ |
+| 4 | 实现异常检测和分类 | `agents/exp_executor.py` | ✅ |
+| 5 | 注册到 graph nodes | `graph/nodes.py` | ✅ |
+| 6 | 移除 exp_supervisor.py | ~~`agents/exp_supervisor.py`~~ 已删除 | ✅ |
+| 7 | 添加集成测试 | `tests/test_executor_agent.py` (23项通过) | ✅ |

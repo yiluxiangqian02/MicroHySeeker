@@ -1,0 +1,17 @@
+# Orchestrator 配置（工作模式、人机协作策略等）
+#
+# 参考: docs/PLAN_PHASE1_EXPERIMENT_LOOP.md（第 3.1 节）
+
+[orchestrator]
+# "full_auto" | "semi_auto" | "manual"
+work_mode = "semi_auto"
+
+# 连续无改善轮次阈值（达到后可触发策略调整/人工确认）
+max_no_improve_rounds = 3
+
+# 策略变更时是否暂停等待人工确认（建议在 semi_auto / manual 开启）
+pause_on_strategy_change = true
+
+# 异常修复方案是否需要人工确认
+pause_on_anomaly_fix = true
+

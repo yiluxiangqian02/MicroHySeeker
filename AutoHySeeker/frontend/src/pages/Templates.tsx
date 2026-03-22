@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { Plus, Search } from 'lucide-react';
@@ -27,26 +27,7 @@ export function Templates() {
     fetchTemplates();
   }, []);
 
-  useEffect(() => {
-    filterTemplates();
-  }, [searchQuery, selectedTags, templates]);
-
-  const fetchTemplates = async () => {
-    setIsLoading(true);
-    try {
-      const res = await fetch('/api/templates');
-      if (res.ok) {
-        const data = await res.json();
-        setTemplates(data);
-      }
-    } catch (error) {
-      console.error('Failed to fetch templates:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const filterTemplates = () => {
+  const filterTemplates = useCallback(() => {
     let filtered = templates;
 
     if (searchQuery) {
@@ -62,6 +43,25 @@ export function Templates() {
     }
 
     setFilteredTemplates(filtered);
+  }, [searchQuery, selectedTags, templates]);
+
+  useEffect(() => {
+    filterTemplates();
+  }, [filterTemplates]);
+
+  const fetchTemplates = async () => {
+    setIsLoading(true);
+    try {
+      const res = await fetch('/api/templates');
+      if (res.ok) {
+        const data = await res.json();
+        setTemplates(data);
+      }
+    } catch (error) {
+      console.error('Failed to fetch templates:', error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const allTags = Array.from(new Set(templates.flatMap((t) => t.tags)));

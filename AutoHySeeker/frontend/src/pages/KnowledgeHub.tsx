@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { motion } from 'framer-motion';
-import { BookOpen, FlaskConical, MessageSquare, Database, Sparkles, ArrowRightCircle, Plus } from 'lucide-react';
+import { Database, Sparkles, Plus } from 'lucide-react';
 import ChatWindow from '@/components/ChatWindow';
 import { KnowledgeSearchBar } from '@/components/knowledge/KnowledgeSearchBar';
 import { KnowledgeResultList } from '@/components/knowledge/KnowledgeResultList';

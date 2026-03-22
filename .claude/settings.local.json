@@ -3,7 +3,20 @@
     "allow": [
       "Bash(find d:AI4SMicroHySeekerMicroHySeekerAutoHySeekerOpenViking -name *.py -o -name *.cpp -o -name *.h)",
       "Bash(\"d:/AI4S/MicroHySeeker/MicroHySeeker/AutoHySeeker/docs/UI_PLAN_V3.md\":*)",
-      "Bash(find \"d:/AI4S/MicroHySeeker/MicroHySeeker/AutoHySeeker/docs\" -name \"*.md\" -empty -delete)"
+      "Bash(find \"d:/AI4S/MicroHySeeker/MicroHySeeker/AutoHySeeker/docs\" -name \"*.md\" -empty -delete)",
+      "Bash(python -c \":*)",
+      "Read(//d/minerU/Analysis/10,000-h-stable intermittent alkaline seawater electrolysis.pdf-115d9b9d-c45f-4f91-95c2-c8aee82be06c/**)",
+      "Read(//d/minerU/Analysis/**)",
+      "Bash(ls \"D:/minerU/Analysis/面上项目-正文-2026-R3 \\(1\\).pdf-3cc0c532-1826-4348-a3da-f5edcbf27e57/\")",
+      "Bash(python -m tests._tmp_manual.test_openviking_semantic_benchmark)",
+      "Bash(python -c \"import json_repair; print\\(''ok''\\)\")",
+      "Bash(python -c \"import sys; print\\(sys.executable\\)\")",
+      "Bash(C:/Users/25922/AppData/Local/Programs/Python/Python313/python.exe -m pip install json_repair)",
+      "Bash(find d:/AI4S/MicroHySeeker/MicroHySeeker/AutoHySeeker/OpenViking -name *.conf -o -name ov.conf)",
+      "Bash(find d:/AI4S/MicroHySeeker/MicroHySeeker/AutoHySeeker/OpenViking -name *.py -path */storage/*)",
+      "Bash(npm run:*)",
+      "WebFetch(domain:localhost)",
+      "Bash(curl -s http://localhost:5175/)"
     ]
   }
 }

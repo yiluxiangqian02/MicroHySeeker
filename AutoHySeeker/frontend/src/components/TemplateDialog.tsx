@@ -76,7 +76,7 @@ export function TemplateDialog({ isOpen, onClose, onSuccess, template }: Templat
       } else {
         alert(t('templates.saveError'));
       }
-    } catch (error) {
+    } catch {
       alert(t('templates.saveError'));
     } finally {
       setIsSaving(false);

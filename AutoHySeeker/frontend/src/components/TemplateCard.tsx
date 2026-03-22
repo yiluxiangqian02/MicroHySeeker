@@ -38,7 +38,7 @@ export function TemplateCard({ template, onUpdate }: TemplateCardProps) {
       } else {
         alert(t('templates.deleteError'));
       }
-    } catch (error) {
+    } catch {
       alert(t('templates.deleteError'));
     } finally {
       setIsDeleting(false);
@@ -58,7 +58,7 @@ export function TemplateCard({ template, onUpdate }: TemplateCardProps) {
       } else {
         alert(t('templates.instantiateError'));
       }
-    } catch (error) {
+    } catch {
       alert(t('templates.instantiateError'));
     }
   };

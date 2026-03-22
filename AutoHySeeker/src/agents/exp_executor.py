@@ -17,13 +17,20 @@ The executor does NOT design parameters (Designer's job), analyse data
 from __future__ import annotations
 
 import asyncio
+from datetime import datetime, timezone
+import hashlib
+import json
 import logging
 import time
 from typing import Any
 
 from src.agents.base import BaseAgent
+from src.common.config import DESIGNER_CONFIG, KNOWLEDGE_CONFIG, MONITOR_CONFIG, ORCHESTRATOR_CONFIG
+from src.skills.heartbeat_inspector_skill import HeartbeatInspectorSkill
+from src.skills.realtime_monitor_skill import RealtimeMonitorSkill
 
 _logger = logging.getLogger("autohyseeker.exp_executor")
+_SHARED_EXECUTOR: "ExperimentExecutorAgent | None" = None
 
 # ── Severity ordering ─────────────────────────────────────────────────────────
 _SEVERITY_RANK = {"low": 0, "medium": 1, "high": 2, "critical": 3}
@@ -62,6 +69,14 @@ class ExperimentExecutorAgent(BaseAgent):
         )
         self._monitoring = False
         self._current_run_id: str | None = None
+        self._realtime_monitor_skill = RealtimeMonitorSkill()
+        self._heartbeat_inspector_skill = HeartbeatInspectorSkill()
+        self._last_l1_report: dict[str, Any] | None = None
+        self._last_l2_report: dict[str, Any] | None = None
+        self._heartbeat_last_run_at: float | None = None
+        self._last_observed_step: int | None = None
+        self._last_step_change_at: float | None = None
+        self._recent_currents: list[float] = []
 
     # ── Public API ─────────────────────────────────────────────────────────────
 
@@ -78,6 +93,14 @@ class ExperimentExecutorAgent(BaseAgent):
         """
         start_ts = time.monotonic()
         self._current_run_id = None
+        self._heartbeat_last_run_at = None
+        self._last_l1_report = None
+        self._last_l2_report = None
+        self._last_observed_step = None
+        self._last_step_change_at = None
+        self._recent_currents = []
+        if "heartbeat_enabled" in task:
+            self._heartbeat_inspector_skill.set_enabled(bool(task["heartbeat_enabled"]))
 
         # ── 1. Pre-flight checks ──────────────────────────────────────────────
         if task.get("pre_check", True):
@@ -128,10 +151,17 @@ class ExperimentExecutorAgent(BaseAgent):
                 "duration_s": time.monotonic() - start_ts,
             }
 
+        environment_snapshot = await self._record_environment_snapshot(
+            template_id=template_id,
+            params_source=str(task.get("params_source", "executor_task")),
+        )
+
         # ── 4. Monitor until complete ─────────────────────────────────────────
         interval = task.get("monitor_interval_s", 5.0)
-        monitor_result = await self._monitor_until_complete(interval_s=interval)
+        monitor_result = await self._monitor_until_complete(interval_s=interval, task=task)
         monitor_result["duration_s"] = time.monotonic() - start_ts
+        monitor_result["environment_snapshot"] = environment_snapshot
+        monitor_result["monitor_status"] = self.get_monitor_status()
 
         # ── 5. Collect data on success ────────────────────────────────────────
         if monitor_result["status"] == "completed" and self._current_run_id:
@@ -156,6 +186,33 @@ class ExperimentExecutorAgent(BaseAgent):
         """Cancel the monitoring loop (called externally by Orchestrator)."""
         self._monitoring = False
         _logger.info("Monitoring stop requested")
+
+    def set_heartbeat_enabled(self, enabled: bool) -> None:
+        """Enable/disable the L2 heartbeat inspector at runtime."""
+        self._heartbeat_inspector_skill.set_enabled(enabled)
+
+    def get_monitor_status(self) -> dict[str, Any]:
+        """Return the current state of the embedded L1/L2 monitors."""
+        return {
+            "monitoring": self._monitoring,
+            "run_id": self._current_run_id,
+            "l1": self._last_l1_report or {},
+            "l2": self._last_l2_report or {},
+            "heartbeat_last_run_at": self._heartbeat_last_run_at,
+        }
+
+    def update_monitor_config(
+        self,
+        *,
+        heartbeat: dict[str, Any] | None = None,
+        realtime: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        """Update embedded monitor configs and return current monitor status."""
+        if heartbeat is not None:
+            self._heartbeat_inspector_skill.reload_config(heartbeat)
+        if realtime is not None:
+            self._realtime_monitor_skill.reload_config(realtime)
+        return self.get_monitor_status()
 
     @property
     def is_monitoring(self) -> bool:
@@ -190,6 +247,51 @@ class ExperimentExecutorAgent(BaseAgent):
             return {"ok": False, "error": f"Connection check failed: {exc}"}
 
         return {"ok": True}
+
+    async def _record_environment_snapshot(
+        self,
+        *,
+        template_id: str,
+        params_source: str,
+    ) -> dict[str, Any]:
+        """Capture a reproducibility snapshot for the current execution."""
+        device_status: dict[str, Any] = {}
+        try:
+            from src.tools import experiment_ctrl as ctrl
+
+            try:
+                device_status["health"] = ctrl.health_check()
+            except Exception as exc:
+                device_status["health_error"] = str(exc)
+            try:
+                device_status["connection"] = ctrl.get_connection_info()
+            except Exception as exc:
+                device_status["connection_error"] = str(exc)
+            try:
+                device_status["pump_status"] = ctrl.get_pump_status()
+            except Exception as exc:
+                device_status["pump_status_error"] = str(exc)
+        except ImportError:
+            device_status["module"] = "experiment_ctrl unavailable"
+
+        config_payload = {
+            "orchestrator": ORCHESTRATOR_CONFIG,
+            "monitor": MONITOR_CONFIG,
+            "designer": DESIGNER_CONFIG,
+            "knowledge": KNOWLEDGE_CONFIG,
+        }
+        config_hash = hashlib.sha256(
+            json.dumps(config_payload, ensure_ascii=False, sort_keys=True).encode("utf-8")
+        ).hexdigest()[:12]
+
+        return {
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "device_status": device_status,
+            "software_version": "0.1.0",
+            "config_hash": config_hash,
+            "params_source": params_source,
+            "template_id": template_id,
+        }
 
     # ── Private: Validation ───────────────────────────────────────────────────
 
@@ -315,12 +417,14 @@ class ExperimentExecutorAgent(BaseAgent):
     async def _monitor_until_complete(
         self,
         interval_s: float = 5.0,
+        task: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
         """Poll experiment status until completion, failure, or external stop.
 
         Returns a result dict with ``status``, ``run_id``, ``anomalies``, etc.
         """
         self._monitoring = True
+        task = task or {}
         anomalies: list[dict[str, Any]] = []
         seen_log_ids: set[str] = set()
 
@@ -351,6 +455,28 @@ class ExperimentExecutorAgent(BaseAgent):
                 })
                 await asyncio.sleep(interval_s)
                 continue
+
+            monitor_snapshot = self._build_monitor_snapshot(status, task, interval_s, poll_count, anomalies)
+            l1_result = await self._realtime_monitor_skill.execute(snapshot=monitor_snapshot)
+            self._last_l1_report = l1_result.data if isinstance(l1_result.data, dict) else {}
+            anomalies = self._merge_anomalies(
+                anomalies,
+                self._last_l1_report.get("anomalies", []),
+            )
+
+            l2_result = await self._heartbeat_inspector_skill.execute(
+                snapshot=monitor_snapshot,
+                last_run_at=self._heartbeat_last_run_at,
+                now=time.monotonic(),
+                force=bool(task.get("force_heartbeat", False)),
+                allow_llm=bool(task.get("heartbeat_allow_llm", True)),
+            )
+            if isinstance(l2_result.data, dict) and l2_result.data.get("status") != "skipped":
+                self._last_l2_report = l2_result.data
+                self._heartbeat_last_run_at = float(l2_result.data.get("executed_at", time.monotonic()))
+                heartbeat_anomaly = self._heartbeat_report_to_anomaly(l2_result.data)
+                if heartbeat_anomaly is not None:
+                    anomalies = self._merge_anomalies(anomalies, [heartbeat_anomaly])
 
             state = status.get("state", "unknown")
 
@@ -420,6 +546,31 @@ class ExperimentExecutorAgent(BaseAgent):
                         }
             except Exception as exc:
                 _logger.debug("Log query failed (non-critical): %s", exc)
+
+            critical_anomaly = self._highest_severity_anomaly(anomalies, "critical")
+            if critical_anomaly and critical_anomaly.get("source") == "L1_realtime_monitor":
+                _logger.critical("L1 CRITICAL anomaly detected — executing emergency stop")
+                await self.emergency_stop()
+                return {
+                    "status": "emergency_stopped",
+                    "run_id": self._current_run_id,
+                    "anomaly": critical_anomaly,
+                    "anomalies": anomalies,
+                    "poll_count": poll_count,
+                }
+
+            high_anomaly = self._highest_severity_anomaly(anomalies, "high")
+            if high_anomaly or critical_anomaly:
+                chosen = critical_anomaly or high_anomaly
+                _logger.warning("Monitor anomaly requires stop: %s", chosen)
+                self._monitoring = False
+                return {
+                    "status": "failed",
+                    "run_id": self._current_run_id,
+                    "anomaly": chosen,
+                    "anomalies": anomalies,
+                    "poll_count": poll_count,
+                }
 
             await asyncio.sleep(interval_s)
 
@@ -502,6 +653,153 @@ class ExperimentExecutorAgent(BaseAgent):
 
         return anomalies
 
+    def _build_monitor_snapshot(
+        self,
+        status: dict[str, Any],
+        task: dict[str, Any],
+        interval_s: float,
+        poll_count: int,
+        anomalies: list[dict[str, Any]],
+    ) -> dict[str, Any]:
+        now = time.monotonic()
+        current_step = status.get("current_step")
+        if current_step != self._last_observed_step:
+            self._last_observed_step = current_step if isinstance(current_step, int) else None
+            self._last_step_change_at = now
+
+        step_elapsed_s = 0.0
+        if self._last_step_change_at is not None:
+            step_elapsed_s = now - self._last_step_change_at
+
+        current_value = self._extract_current_value(status)
+        if current_value is not None:
+            self._recent_currents.append(current_value)
+            self._recent_currents = self._recent_currents[-2:]
+
+        snapshot: dict[str, Any] = dict(status)
+        snapshot.update(
+            {
+                "run_id": self._current_run_id or status.get("run_id", ""),
+                "poll_count": poll_count,
+                "recent_anomalies": anomalies[-5:],
+                "current_step_elapsed_s": step_elapsed_s,
+                "expected_step_duration_s": float(task.get("expected_step_duration_s", max(interval_s * 2.0, 1.0))),
+                "current_values": list(self._recent_currents),
+            }
+        )
+
+        pump_target_rpm = task.get("pump_target_rpm")
+        if isinstance(pump_target_rpm, dict):
+            snapshot["pump_target_rpm"] = pump_target_rpm
+
+        try:
+            from src.tools import experiment_ctrl as ctrl
+
+            connection = ctrl.get_connection_info()
+            if not connection.get("connected", True):
+                snapshot["communication_age_s"] = MONITOR_CONFIG.get("realtime_monitor", {}).get("rules", {}).get(
+                    "communication_timeout_s",
+                    3.0,
+                ) + 1.0
+
+            pump_status = ctrl.get_pump_status()
+            if isinstance(pump_status, dict):
+                pump_actual_rpm: dict[str, float] = {}
+                pump_responsive: dict[str, bool] = {}
+                pumps = pump_status.get("pumps", pump_status)
+                if isinstance(pumps, dict):
+                    iterable = pumps.items()
+                elif isinstance(pumps, list):
+                    iterable = (
+                        (str(item.get("address", index + 1)), item)
+                        for index, item in enumerate(pumps)
+                        if isinstance(item, dict)
+                    )
+                else:
+                    iterable = []
+
+                for pump_id, item in iterable:
+                    if not isinstance(item, dict):
+                        continue
+                    rpm = item.get("rpm") or item.get("current_rpm")
+                    if isinstance(rpm, (int, float)):
+                        pump_actual_rpm[str(pump_id)] = float(rpm)
+                    responsive = item.get("responsive")
+                    if isinstance(responsive, bool):
+                        pump_responsive[str(pump_id)] = responsive
+
+                if pump_actual_rpm:
+                    snapshot["pump_actual_rpm"] = pump_actual_rpm
+                if pump_responsive:
+                    snapshot["pump_responsive"] = pump_responsive
+        except Exception:
+            pass
+
+        return snapshot
+
+    def _extract_current_value(self, status: dict[str, Any]) -> float | None:
+        for key in ("current_value", "current", "latest_current"):
+            value = status.get(key)
+            if isinstance(value, (int, float)):
+                return float(value)
+        return None
+
+    def _merge_anomalies(
+        self,
+        existing: list[dict[str, Any]],
+        new_items: list[dict[str, Any]],
+    ) -> list[dict[str, Any]]:
+        merged = list(existing)
+        seen = {
+            (
+                item.get("type"),
+                item.get("severity"),
+                item.get("details"),
+                item.get("source"),
+            )
+            for item in merged
+        }
+        for item in new_items:
+            key = (
+                item.get("type"),
+                item.get("severity"),
+                item.get("details"),
+                item.get("source"),
+            )
+            if key in seen:
+                continue
+            seen.add(key)
+            merged.append(item)
+        return merged
+
+    def _heartbeat_report_to_anomaly(
+        self,
+        report: dict[str, Any],
+    ) -> dict[str, Any] | None:
+        status = str(report.get("status", "")).lower()
+        if status not in {"warning", "critical"}:
+            return None
+
+        severity = "critical" if status == "critical" else "high"
+        return {
+            "type": "heartbeat_inspection",
+            "severity": severity,
+            "details": report.get("reason", ""),
+            "source": "L2_heartbeat_inspector",
+            "run_id": self._current_run_id,
+            "risks": report.get("risks", []),
+        }
+
+    def _highest_severity_anomaly(
+        self,
+        anomalies: list[dict[str, Any]],
+        severity: str,
+    ) -> dict[str, Any] | None:
+        for item in reversed(anomalies):
+            if item.get("severity") == severity:
+                return item
+        return None
+
     def _classify_error(
         self,
         error_msg: str,
@@ -520,3 +818,11 @@ class ExperimentExecutorAgent(BaseAgent):
             return {"type": "serial_failure", "severity": "high", "details": error_msg}
 
         return {"type": "unknown", "severity": "medium", "details": error_msg}
+
+
+def get_shared_executor_agent() -> ExperimentExecutorAgent:
+    """Return a shared executor instance for API/runtime coordination."""
+    global _SHARED_EXECUTOR
+    if _SHARED_EXECUTOR is None:
+        _SHARED_EXECUTOR = ExperimentExecutorAgent()
+    return _SHARED_EXECUTOR

@@ -14,6 +14,7 @@ from typing import Any
 from src.graph.nodes import (
     format_response,
     route_intent,
+    run_chat,
     run_diagnostics,
     run_exp_designer,
     run_exp_executor,
@@ -39,6 +40,7 @@ class _FallbackGraph:
         node = select_agent_node(merged)  # type: ignore[arg-type]
 
         runners = {
+            "chat": run_chat,
             "orchestrator": run_orchestrator,
             "exp_designer": run_exp_designer,
             "exp_executor": run_exp_executor,
@@ -59,6 +61,7 @@ def build_supervisor_graph() -> Any:
 
     graph = StateGraph(AutoHySeekerState)
     graph.add_node("route_intent", route_intent)
+    graph.add_node("chat", run_chat)
     graph.add_node("orchestrator", run_orchestrator)
     graph.add_node("exp_designer", run_exp_designer)
     graph.add_node("exp_executor", run_exp_executor)
@@ -70,6 +73,7 @@ def build_supervisor_graph() -> Any:
         "route_intent",
         select_agent_node,
         {
+            "chat": "chat",
             "orchestrator": "orchestrator",
             "exp_designer": "exp_designer",
             "exp_executor": "exp_executor",
@@ -77,6 +81,7 @@ def build_supervisor_graph() -> Any:
         },
     )
 
+    graph.add_edge("chat", "format_response")
     graph.add_edge("orchestrator", "format_response")
     graph.add_edge("exp_designer", "format_response")
     graph.add_edge("exp_executor", "format_response")

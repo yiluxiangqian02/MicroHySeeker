@@ -1,11 +1,13 @@
 import { useTranslation } from "react-i18next";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useChatStore } from "@/stores/chatStore";
 import { ChatSidebar } from "@/components/chat/ChatSidebar";
 import { ChatMessage } from "@/components/chat/ChatMessage";
 import { ChatInput } from "@/components/chat/ChatInput";
 import { motion } from "framer-motion";
-import { Bot, RefreshCw } from "lucide-react";
+import { Bot, RefreshCw, ChevronDown } from "lucide-react";
+
+const SCROLL_THRESHOLD = 100; // pixels from bottom to consider "at bottom"
 
 export function Chat() {
   const { t } = useTranslation();
@@ -22,17 +24,49 @@ export function Chat() {
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const [isAtBottom, setIsAtBottom] = useState(true);
+  const [isUserScrolling, setIsUserScrolling] = useState(false);
 
   useEffect(() => {
     fetchSessions();
   }, [fetchSessions]);
 
+  // Detect if user is scrolling
+  const handleScroll = () => {
+    setIsUserScrolling(true);
+    const el = containerRef.current;
+    if (!el) return;
+
+    const distance = el.scrollHeight - el.scrollTop - el.clientHeight;
+    setIsAtBottom(distance < SCROLL_THRESHOLD);
+  };
+
+  // Auto-scroll only if user is at bottom or just received first message
   useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    // Use requestAnimationFrame to ensure DOM is updated
+    const timer = requestAnimationFrame(() => {
+      // If user is already at bottom, auto-scroll to new messages
+      if (isAtBottom && !isUserScrolling) {
+        el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
+      }
+      
+      // Reset scroll state after a brief delay
+      setIsUserScrolling(false);
+    });
+
+    return () => cancelAnimationFrame(timer);
+  }, [messages, isAtBottom, isUserScrolling]);
+
+  // Scroll to bottom when there are new messages and user hasn't scrolled
+  const scrollToBottom = () => {
     const el = containerRef.current;
     if (el) {
       el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
     }
-  }, [messages]);
+  };
 
   return (
     <div className="flex h-[calc(100vh-8rem)] -m-6 rounded-tl-2xl overflow-hidden border-t border-l border-slate-200 bg-white">
@@ -57,22 +91,26 @@ export function Chat() {
             </div>
             <div>
               <h2 className="font-semibold text-slate-900 leading-tight">
-                {sessions.find(s => s.id === activeSessionId)?.title || "Agent Assistant"}
+                {sessions.find(s => s.id === activeSessionId)?.title || t('chat.assistant')}
               </h2>
-              <p className="text-xs text-slate-500">Multimodal Research Agents · Context Aware</p>
+              <p className="text-xs text-slate-500">{t('chat.contextAware')}</p>
             </div>
           </div>
         </div>
 
         {/* Message Trace */}
-        <div ref={containerRef} className="flex-1 overflow-y-auto p-6">
+        <div 
+          ref={containerRef} 
+          className="flex-1 overflow-y-auto p-6 relative"
+          onScroll={handleScroll}
+        >
           <div className="max-w-3xl mx-auto">
             {messages.length === 0 ? (
               <div className="h-full flex flex-col items-center justify-center text-center text-slate-500 mt-32">
                 <Bot className="h-12 w-12 text-slate-300 mb-4" />
-                <h3 className="text-lg font-medium text-slate-900 mb-2">How can I help you today?</h3>
+                <h3 className="text-lg font-medium text-slate-900 mb-2">{t('chat.welcomeTitle')}</h3>
                 <p className="text-sm max-w-sm">
-                  You can ask about experiment anomalies, search the open knowledge base, or request suggestions for the next iteration.
+                  {t('chat.welcomeDesc')}
                 </p>
               </div>
             ) : (
@@ -97,6 +135,17 @@ export function Chat() {
               </motion.div>
             )}
           </div>
+
+          {/* "Scroll to Bottom" Button (shown when not at bottom) */}
+          {!isAtBottom && messages.length > 0 && (
+            <button
+              onClick={scrollToBottom}
+              className="absolute bottom-6 right-6 inline-flex items-center gap-1.5 px-3 py-2 rounded-full bg-blue-600 text-white text-xs font-medium shadow-lg hover:bg-blue-700 transition animate-pulse"
+            >
+              <ChevronDown className="h-4 w-4" />
+              {t('chat.scrollToBottom')}
+            </button>
+          )}
         </div>
 
         {/* Input Area */}
@@ -107,7 +156,7 @@ export function Chat() {
               disabled={isWaitingForResponse || !activeSessionId}
             />
             <p className="text-center text-[10px] text-slate-400 mt-3">
-              AI Agents can make mistakes. Consider verifying critical experiment suggestions.
+              {t('chat.disclaimer')}
             </p>
           </div>
         </div>

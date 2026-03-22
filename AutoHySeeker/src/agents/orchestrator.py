@@ -12,12 +12,16 @@ The orchestrator is the "brain" of the multi-agent system.  It:
 
 from __future__ import annotations
 
+from datetime import datetime, timezone
 import json
 import logging
 import re
 from typing import Any
+from uuid import uuid4
 
 from src.agents.base import BaseAgent
+from src.common.config import ORCHESTRATOR_CONFIG
+from src.ml.performance_predictor import PerformancePredictor
 
 _logger = logging.getLogger("autohyseeker.orchestrator")
 
@@ -69,9 +73,19 @@ class OrchestratorAgent(BaseAgent):
         # ── Built-in skills ───────────────────────────────────────────────────
         from src.skills.data_analysis_skill import DataAnalysisSkill
         from src.skills.knowledge_archive_skill import KnowledgeArchiveSkill
+        from src.skills.knowledge_query_skill import KnowledgeQuerySkill
 
         self._analysis_skill = DataAnalysisSkill()
         self._knowledge_skill = KnowledgeArchiveSkill(archive_path=archive_path)
+        self._knowledge_query_skill = KnowledgeQuerySkill()
+        self._config = dict(ORCHESTRATOR_CONFIG)
+        self._work_mode = str(self._config.get("work_mode", "semi_auto"))
+        self._max_no_improve_rounds = int(self._config.get("max_no_improve_rounds", 3))
+        self._pause_on_strategy_change = bool(self._config.get("pause_on_strategy_change", True))
+        self._pause_on_anomaly_fix = bool(self._config.get("pause_on_anomaly_fix", True))
+        self._pending_approvals: dict[str, dict[str, Any]] = {}
+        self._approval_history: list[dict[str, Any]] = []
+        self._predictor = PerformancePredictor()
 
     # ── Public API ─────────────────────────────────────────────────────────────
 
@@ -104,6 +118,7 @@ class OrchestratorAgent(BaseAgent):
         metrics: dict[str, float],
         data_quality: dict[str, Any] | None = None,
         round_num: int | None = None,
+        interpretation: str = "",
         extra: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
         """Archive experiment result (delegates to KnowledgeArchiveSkill)."""
@@ -113,6 +128,7 @@ class OrchestratorAgent(BaseAgent):
             metrics=metrics,
             data_quality=data_quality,
             round_num=round_num,
+            interpretation=interpretation,
             extra=extra,
         )
 
@@ -123,13 +139,37 @@ class OrchestratorAgent(BaseAgent):
         top_k: int = 5,
         elements: list[str] | None = None,
     ) -> dict[str, Any]:
-        """Retrieve knowledge (delegates to KnowledgeArchiveSkill)."""
-        return await self._knowledge_skill.retrieve(
-            query=query,
-            search_type=search_type,
-            top_k=top_k,
-            elements=elements,
-        )
+        """Retrieve knowledge via the shared read-only knowledge query skill."""
+        if search_type == "literature":
+            results = await self._knowledge_query_skill.get_literature_insights(query, top_k=top_k)
+        elif search_type == "experiment_history" and elements:
+            params = {element: 1.0 / len(elements) for element in elements}
+            results = await self._knowledge_query_skill.get_similar_experiments(
+                params=params,
+                threshold=0.5,
+                top_k=top_k,
+            )
+        elif search_type == "fault_history":
+            results = await self._knowledge_query_skill.get_fault_history(query, top_k=top_k)
+        else:
+            partitions = None
+            if search_type == "literature":
+                partitions = ["literature"]
+            elif search_type == "experiment_history":
+                partitions = ["experiments"]
+            elif search_type == "fault_history":
+                partitions = ["operations"]
+            results = await self._knowledge_query_skill.search(
+                query=query,
+                partitions=partitions,
+                top_k=top_k,
+            )
+
+        return {
+            "status": "retrieved",
+            "results": results,
+            "summary": f"找到 {len(results)} 条相关记录",
+        }
 
     async def evaluate_and_decide(
         self,
@@ -171,20 +211,28 @@ class OrchestratorAgent(BaseAgent):
         # Hard stop: max rounds reached
         if current_round >= optimization.get("max_rounds", 20):
             _logger.info("OrchestratorAgent: max rounds reached, forcing stop")
-            return {
+            decision = {
                 "action": "stop",
                 "reason": f"已达到最大轮次 {current_round}",
                 "confidence": 1.0,
                 "next_params_hint": {},
                 "summary": self._build_summary(experiment_history, best_result),
             }
+            return await self._apply_human_collaboration(
+                decision=decision,
+                optimization=optimization,
+                experiment_history=experiment_history,
+                current_result=current_result,
+                best_result=best_result,
+                current_round=current_round,
+            )
 
         try:
             result = await self.invoke(task=task, context=context)
-            return self._parse_decision(result.get("content", ""))
+            decision = self._parse_decision(result.get("content", ""))
         except Exception as exc:
             _logger.warning("Orchestrator LLM decision failed, using rule fallback: %s", exc)
-            return self._fallback_decision(
+            decision = self._fallback_decision(
                 optimization=optimization,
                 experiment_history=experiment_history,
                 current_result=current_result,
@@ -192,6 +240,14 @@ class OrchestratorAgent(BaseAgent):
                 current_round=current_round,
                 error=exc,
             )
+        return await self._apply_human_collaboration(
+            decision=decision,
+            optimization=optimization,
+            experiment_history=experiment_history,
+            current_result=current_result,
+            best_result=best_result,
+            current_round=current_round,
+        )
 
     async def handle_anomaly(
         self,
@@ -210,23 +266,25 @@ class OrchestratorAgent(BaseAgent):
             _logger.warning(
                 "OrchestratorAgent: CRITICAL anomaly — recommending emergency stop"
             )
-            return {
+            decision = {
                 "action": "emergency_stop",
                 "severity": "critical",
                 "reason": f"严重异常: {anomaly.get('type', 'unknown')}",
                 "need_user": True,
             }
+            return await self._apply_anomaly_collaboration(decision, anomaly, optimization, current_round)
 
         if severity == "high":
             _logger.warning(
                 "OrchestratorAgent: HIGH anomaly — dispatching to diagnostics"
             )
-            return {
+            decision = {
                 "action": "diagnose",
                 "severity": "high",
                 "anomaly": anomaly,
                 "reason": f"高级异常: {anomaly.get('type', 'unknown')}，需要诊断",
             }
+            return await self._apply_anomaly_collaboration(decision, anomaly, optimization, current_round)
 
         # medium / low
         _logger.info(
@@ -237,6 +295,80 @@ class OrchestratorAgent(BaseAgent):
             "severity": severity,
             "reason": f"低级异常: {anomaly.get('type', 'unknown')}，记录并继续",
         }
+
+    async def request_human_approval(
+        self,
+        decision: dict[str, Any],
+        context: dict[str, Any],
+    ) -> dict[str, Any]:
+        """Create a pending approval record for a key orchestration decision."""
+        approval_id = f"approval_{uuid4().hex[:8]}"
+        pending = {
+            "approval_id": approval_id,
+            "status": "pending",
+            "decision": decision,
+            "context": context,
+            "created_at": datetime.now(timezone.utc).isoformat(),
+        }
+        self._pending_approvals[approval_id] = pending
+        return {
+            "approved": False,
+            "approval_id": approval_id,
+            "pending_approval": pending,
+        }
+
+    def get_pending_approvals(self) -> list[dict[str, Any]]:
+        """Return all pending approvals."""
+        return list(self._pending_approvals.values())
+
+    def get_approval_status(self, approval_id: str) -> dict[str, Any] | None:
+        """Return a pending or resolved approval by id."""
+        pending = self._pending_approvals.get(approval_id)
+        if pending is not None:
+            return dict(pending)
+
+        for item in reversed(self._approval_history):
+            if item.get("approval_id") == approval_id:
+                return dict(item)
+        return None
+
+    def get_approval_history(self) -> list[dict[str, Any]]:
+        """Return resolved approval records."""
+        return list(self._approval_history)
+
+    def respond_human_approval(
+        self,
+        approval_id: str,
+        approved: bool,
+        feedback: str = "",
+    ) -> dict[str, Any]:
+        """Resolve a pending approval."""
+        pending = self._pending_approvals.pop(approval_id, None)
+        if pending is None:
+            return {
+                "found": False,
+                "approval_id": approval_id,
+                "status": "missing",
+            }
+
+        resolved = dict(pending)
+        resolved.update(
+            {
+                "status": "approved" if approved else "rejected",
+                "approved": approved,
+                "human_feedback": feedback,
+                "resolved_at": datetime.now(timezone.utc).isoformat(),
+            }
+        )
+        self._approval_history.append(resolved)
+        return {"found": True, "approval": resolved}
+
+    async def update_ml_training_data(self, experiment_result: dict[str, Any]) -> dict[str, Any]:
+        """Update the internal predictor from completed experiment history."""
+        history = experiment_result.get("history", [])
+        if not isinstance(history, list):
+            history = []
+        return self._predictor.fit(history)
 
     def update_best_result(
         self,
@@ -324,6 +456,156 @@ class OrchestratorAgent(BaseAgent):
             lines.append(f"最优参数: {best.get('params', {})}")
             lines.append(f"来自第 {best.get('round', '?')} 轮")
         return " ".join(lines)
+
+    async def _apply_human_collaboration(
+        self,
+        *,
+        decision: dict[str, Any],
+        optimization: dict[str, Any],
+        experiment_history: list[dict[str, Any]],
+        current_result: dict[str, Any] | None,
+        best_result: dict[str, Any] | None,
+        current_round: int,
+    ) -> dict[str, Any]:
+        decision = dict(decision)
+        decision.setdefault("work_mode", self._work_mode)
+
+        approval_reason = self._approval_reason_for_decision(
+            decision=decision,
+            experiment_history=experiment_history,
+            current_round=current_round,
+        )
+        if approval_reason is None:
+            return decision
+
+        approval = await self.request_human_approval(
+            decision={
+                **decision,
+                "decision_type": approval_reason,
+            },
+            context={
+                "optimization": optimization,
+                "current_round": current_round,
+                "current_result": current_result,
+                "best_result": best_result,
+                "history_size": len(experiment_history),
+            },
+        )
+        return {
+            "action": "pause_for_human",
+            "reason": approval_reason,
+            "work_mode": self._work_mode,
+            "pending_approval": approval["pending_approval"],
+            "original_decision": decision,
+        }
+
+    async def _apply_anomaly_collaboration(
+        self,
+        decision: dict[str, Any],
+        anomaly: dict[str, Any],
+        optimization: dict[str, Any],
+        current_round: int,
+    ) -> dict[str, Any]:
+        if self._work_mode == "full_auto":
+            return decision
+        if not self._pause_on_anomaly_fix:
+            return decision
+        if decision.get("action") == "emergency_stop":
+            approval = await self.request_human_approval(
+                decision={
+                    **decision,
+                    "decision_type": "anomaly_fix",
+                },
+                context={
+                    "optimization": optimization,
+                    "current_round": current_round,
+                    "anomaly": anomaly,
+                },
+            )
+            enriched = dict(decision)
+            enriched["pending_approval"] = approval["pending_approval"]
+            enriched["work_mode"] = self._work_mode
+            return enriched
+
+        approval = await self.request_human_approval(
+            decision={
+                **decision,
+                "decision_type": "anomaly_fix",
+            },
+            context={
+                "optimization": optimization,
+                "current_round": current_round,
+                "anomaly": anomaly,
+            },
+        )
+        return {
+            "action": "pause_for_human",
+            "reason": "anomaly_fix",
+            "work_mode": self._work_mode,
+            "pending_approval": approval["pending_approval"],
+            "original_decision": decision,
+        }
+
+    def _approval_reason_for_decision(
+        self,
+        *,
+        decision: dict[str, Any],
+        experiment_history: list[dict[str, Any]],
+        current_round: int,
+    ) -> str | None:
+        if self._work_mode == "full_auto":
+            return None
+        if self._work_mode == "manual":
+            return "manual_round_confirmation"
+
+        action = decision.get("action")
+        if current_round <= 1:
+            return "initial_round_confirmation"
+        if action == "stop":
+            return "stop_decision"
+        if action == "adjust_strategy" and self._pause_on_strategy_change:
+            return "strategy_change"
+        if self._count_no_improvement_rounds(experiment_history) >= self._max_no_improve_rounds:
+            return "no_improvement_threshold"
+        return None
+
+    def _count_no_improvement_rounds(
+        self,
+        history: list[dict[str, Any]],
+    ) -> int:
+        if len(history) < 2:
+            return 0
+
+        values = [
+            item.get("metrics", {})
+            for item in history
+            if item.get("metrics")
+        ]
+        if len(values) < 2:
+            return 0
+
+        metric_name = None
+        for metrics in reversed(values):
+            if metrics:
+                metric_name = next(iter(metrics.keys()))
+                break
+        if metric_name is None:
+            return 0
+
+        consecutive = 0
+        best_so_far: float | None = None
+        for item in history:
+            metrics = item.get("metrics", {})
+            value = metrics.get(metric_name)
+            if not isinstance(value, (int, float)):
+                continue
+            value_f = float(value)
+            if best_so_far is None or value_f < best_so_far:
+                best_so_far = value_f
+                consecutive = 0
+            else:
+                consecutive += 1
+        return consecutive
 
     def _fallback_decision(
         self,

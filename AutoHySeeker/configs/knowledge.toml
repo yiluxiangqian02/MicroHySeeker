@@ -1,0 +1,20 @@
+# 知识库配置（OpenViking）
+#
+# 备注:
+# - OpenViking SDK 不可用时，系统会自动降级到 fallback store（仅内存）。
+# - workspace_path 支持写相对路径（相对 AutoHySeeker/），也可用环境变量覆盖。
+
+[openviking]
+# 是否启用 OpenViking（即使启用，SDK 缺失或初始化失败也会降级）
+enabled = true
+
+# OpenViking 工作目录（默认使用 AutoHySeeker/OpenViking）
+# 推荐用环境变量覆盖: VIKING_WORKSPACE
+workspace_path = "${VIKING_WORKSPACE:-./OpenViking}"
+
+# 语义检索默认返回条数
+default_top_k = 5
+
+# 读取资源上下文级别: "abstract" | "overview"
+read_level = "overview"
+

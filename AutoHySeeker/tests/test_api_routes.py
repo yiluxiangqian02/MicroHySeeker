@@ -6,6 +6,7 @@ Uses FastAPI TestClient (sync httpx).
 
 from __future__ import annotations
 
+import asyncio
 import json
 from typing import Any
 from unittest.mock import AsyncMock, MagicMock, patch
@@ -14,6 +15,10 @@ import pytest
 
 # TestClient is available via httpx (httpx is a declared dependency)
 from fastapi.testclient import TestClient
+
+
+def run_async(coro: Any) -> Any:
+    return asyncio.run(coro)
 
 
 # ── app fixture ────────────────────────────────────────────────────────────────
@@ -276,6 +281,100 @@ class TestDiagnosticsRoutesSmoke:
     def test_diagnostics_analyze_failure_returns_200(self, client: TestClient) -> None:
         response = client.post("/diagnostics/analyze-failure", json={})
         assert response.status_code == 200
+
+
+class TestMonitorRoutes:
+    def test_toggle_monitor_returns_200(self, client: TestClient) -> None:
+        response = client.post("/api/monitor/toggle", json={"enabled": True})
+        assert response.status_code == 200
+        assert response.json()["heartbeat_enabled"] is True
+
+    def test_monitor_status_returns_payload(self, client: TestClient) -> None:
+        response = client.get("/api/monitor/status")
+        assert response.status_code == 200
+        data = response.json()
+        assert "monitor_status" in data
+        assert "heartbeat_enabled" in data
+
+    def test_update_monitor_config(self, client: TestClient) -> None:
+        response = client.put(
+            "/api/monitor/config",
+            json={
+                "heartbeat_enabled": True,
+                "heartbeat_interval_s": 45,
+                "heartbeat_model": "test-model",
+            },
+        )
+        assert response.status_code == 200
+        data = response.json()
+        assert data["config"]["heartbeat_enabled"] is True
+        assert data["config"]["heartbeat_interval_s"] == 45
+        assert data["config"]["heartbeat_model"] == "test-model"
+
+
+class TestApprovalRoutes:
+    def test_get_pending_approvals_returns_seeded_item(self, client: TestClient) -> None:
+        from src.agents.orchestrator import OrchestratorAgent
+
+        orchestrator = OrchestratorAgent()
+        seeded = run_async(
+            orchestrator.request_human_approval(
+                decision={"action": "stop", "decision_type": "stop_decision"},
+                context={"current_round": 3},
+            )
+        )
+
+        with patch("src.api.routes.approval.get_shared_orchestrator_agent", return_value=orchestrator):
+            response = client.get("/api/approval/pending")
+
+        assert response.status_code == 200
+        data = response.json()
+        assert data["count"] == 1
+        assert data["items"][0]["approval_id"] == seeded["approval_id"]
+
+    def test_respond_approval_resolves_pending_item(self, client: TestClient) -> None:
+        from src.agents.orchestrator import OrchestratorAgent
+
+        orchestrator = OrchestratorAgent()
+        seeded = run_async(
+            orchestrator.request_human_approval(
+                decision={"action": "adjust_strategy", "decision_type": "strategy_change"},
+                context={"current_round": 4},
+            )
+        )
+
+        with patch("src.api.routes.approval.get_shared_orchestrator_agent", return_value=orchestrator):
+            response = client.post(
+                "/api/approval/respond",
+                json={
+                    "approval_id": seeded["approval_id"],
+                    "approved": True,
+                    "feedback": "proceed",
+                },
+            )
+
+        assert response.status_code == 200
+        data = response.json()
+        assert data["ok"] is True
+        assert data["approval"]["approved"] is True
+        assert data["approval"]["human_feedback"] == "proceed"
+        assert data["pending_count"] == 0
+
+    def test_respond_approval_missing_returns_404(self, client: TestClient) -> None:
+        from src.agents.orchestrator import OrchestratorAgent
+
+        orchestrator = OrchestratorAgent()
+        with patch("src.api.routes.approval.get_shared_orchestrator_agent", return_value=orchestrator):
+            response = client.post(
+                "/api/approval/respond",
+                json={
+                    "approval_id": "approval_missing",
+                    "approved": False,
+                    "feedback": "reject",
+                },
+            )
+
+        assert response.status_code == 404
 
 
 # ── /context (existing, smoke-tested for regression) ──────────────────────────

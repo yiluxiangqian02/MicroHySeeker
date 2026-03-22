@@ -1,6 +1,6 @@
 # 01 运行管控 Agent (Orchestrator)
 
-> **最后更新：2026-03-18 — Phase 10 架构精简**
+> **最后更新：2026-03-22 — Phase 1 全部实现完成**
 
 ## 1. 定位
 
@@ -118,18 +118,18 @@
 
 ### 问题分析
 
-1. **exp_supervisor 职责过重**：当前 `ExperimentSupervisorAgent` 同时承担了调度和执行，
-   需要拆分为 Orchestrator（调度） + Executor（执行）
+> **✅ 以下问题已全部在 Phase 1 (P1-13~P1-15) 中解决（2026-03-19）：**
 
-2. **路由是关键词匹配**：`_infer_agent()` 用关键词判断意图，不够智能
-
-3. **缺少闭环状态**：当前 `AutoHySeekerState` 没有优化进度追踪
-
-4. **缺少决策逻辑**：没有"是否继续优化"的判断机制
+1. ~~**exp_supervisor 职责过重**~~：已拆分为 Orchestrator（调度） + Executor（执行），ExperimentSupervisorAgent 已移除
+2. ~~**路由是关键词匹配**~~：已增强为多层路由（优化状态路由 + 意图关键词 + ChatAgent 兼容别名）
+3. ~~**缺少闭环状态**~~：`OptimizationLoop` 已实现完整优化进度追踪，含 `pending_approval` 暂停/恢复
+4. ~~**缺少决策逻辑**~~：`evaluate_and_decide()` 已实现，支持 continue/stop/retry/adjust_strategy
 
 ---
 
-## 6. 需要修改的内容
+## 6. 已完成的修改（参考实现）
+
+> 以下所有修改已在 Phase 1 中完成，此处保留作为实现参考。
 
 ### 6.1 重构 `graph/state.py` — 扩展状态定义
 
@@ -202,7 +202,9 @@ def _route_optimization_step(opt):
 
 ---
 
-## 7. 需要新增的内容
+## 7. 已完成的新增内容（参考实现）
+
+> 以下所有新增已在 Phase 1 中完成，此处保留作为实现参考。
 
 ### 7.1 闭环决策方法
 
@@ -329,14 +331,14 @@ Diagnostics ──result──▶ Orchestrator
 
 ---
 
-## 9. 执行计划
+## 9. 执行计划（✅ 全部完成）
 
-| 步骤 | 任务 | 涉及文件 | 依赖 |
+| 步骤 | 任务 | 涉及文件 | 状态 |
 |------|------|---------|------|
-| 1 | 扩展 `AutoHySeekerState` 加入优化字段 | `graph/state.py` | 无 |
-| 2 | 创建 `OrchestratorAgent` 类 | `agents/orchestrator.py` | 步骤 1 |
-| 3 | 创建优化循环子图 | `graph/optimization_loop.py` | 步骤 1, 2 |
-| 4 | 重构路由节点支持优化状态 | `graph/nodes.py` | 步骤 1, 3 |
-| 5 | 更新主图注册优化子图 | `graph/orchestrator.py` | 步骤 3, 4 |
-| 6 | 将 exp_supervisor 的调度逻辑迁移 | `agents/exp_supervisor.py` | 步骤 2 |
-| 7 | 添加集成测试 | `tests/test_orchestrator.py` | 步骤 2-5 |
+| 1 | 扩展 `AutoHySeekerState` 加入优化字段 | `graph/state.py` | ✅ |
+| 2 | 创建 `OrchestratorAgent` 类 | `agents/orchestrator.py` | ✅ |
+| 3 | 创建优化循环子图 | `graph/optimization_loop.py` | ✅ |
+| 4 | 重构路由节点支持优化状态 | `graph/nodes.py` | ✅ |
+| 5 | 更新主图注册优化子图 | `graph/orchestrator.py` | ✅ |
+| 6 | 将 exp_supervisor 的调度逻辑迁移 | ~~`agents/exp_supervisor.py`~~ 已移除 | ✅ |
+| 7 | 添加集成测试 | `tests/test_orchestrator_agent.py` (24项通过) | ✅ |

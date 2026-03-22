@@ -3,7 +3,8 @@
     "allow": [
       "Read(//d/AI4S/MicroHySeeker/AutoHySeeker/docs/**)",
       "Bash(grep \"\\\\.py$\")",
-      "Bash(grep -r \"DataAnalystAgent\\\\|KnowledgeManagerAgent\\\\|ExperimentSupervisorAgent\\\\|data_analyst\\\\|knowledge_mgr\\\\|exp_supervisor\" /d/AI4S/MicroHySeeker/MicroHySeeker/AutoHySeeker/src/api --include=*.py)"
+      "Bash(grep -r \"DataAnalystAgent\\\\|KnowledgeManagerAgent\\\\|ExperimentSupervisorAgent\\\\|data_analyst\\\\|knowledge_mgr\\\\|exp_supervisor\" /d/AI4S/MicroHySeeker/MicroHySeeker/AutoHySeeker/src/api --include=*.py)",
+      "Bash(uv run:*)"
     ]
   }
 }

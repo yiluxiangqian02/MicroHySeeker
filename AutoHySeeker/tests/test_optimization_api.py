@@ -148,3 +148,62 @@ class TestOptimizationAPI:
         data = run_async(optimization_routes.get_optimization_status())
         assert data["status"] == "idle"
         assert data["current_round"] == 0
+
+    def test_status_exposes_pending_approval_when_paused(self) -> None:
+        import src.api.routes.optimization as optimization_routes
+
+        async def fake_run_optimization(**kwargs):
+            progress_callback = kwargs.get("progress_callback")
+            should_stop = kwargs.get("should_stop")
+            if progress_callback:
+                progress_callback(
+                    {
+                        "status": "paused",
+                        "current_round": 1,
+                        "experiment_history": [{"round": 1}],
+                        "optimization": {
+                            "goal": "test",
+                            "target_metric": "overpotential_mV",
+                            "max_rounds": 3,
+                        },
+                        "pending_approval": {"approval_id": "approval_123"},
+                        "pause_reason": "initial_round_confirmation",
+                        "latest_decision": {"action": "pause_for_human"},
+                    }
+                )
+            for _ in range(20):
+                if should_stop and should_stop():
+                    return {
+                        "status": "stopped",
+                        "total_rounds": 1,
+                        "best_result": None,
+                        "experiment_history": [{"round": 1}],
+                        "history_count": 1,
+                        "final_decision": "stopped",
+                    }
+                await asyncio.sleep(0.01)
+            return {
+                "status": "paused",
+                "total_rounds": 1,
+                "best_result": None,
+                "experiment_history": [{"round": 1}],
+                "history_count": 1,
+                "final_decision": "pause_for_human",
+            }
+
+        with patch("src.run_optimization.run_optimization", new=fake_run_optimization):
+            run_async(
+                optimization_routes.start_optimization(
+                    optimization_routes.OptimizationStartRequest(goal="test", dry_run=True),
+                )
+            )
+            run_async(asyncio.sleep(0.03))
+            status = run_async(optimization_routes.get_optimization_status())
+            stop = run_async(optimization_routes.stop_optimization())
+            run_async(optimization_routes._loop_task)
+
+        assert status["running"] is True
+        assert status["status"] == "paused"
+        assert status["pending_approval"]["approval_id"] == "approval_123"
+        assert status["pause_reason"] == "initial_round_confirmation"
+        assert stop["status"] == "stop_requested"

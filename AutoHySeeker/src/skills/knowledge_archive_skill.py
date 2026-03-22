@@ -18,6 +18,9 @@ import logging
 from pathlib import Path
 from typing import Any
 
+from src.common.config import get_knowledge_config
+from src.knowledge.schema import ExperimentRecord, KnowledgePartition, OperationRecord
+from src.knowledge.viking_client import OpenVikingClient
 from src.skills.base import BaseSkill, SkillResult
 
 _logger = logging.getLogger("autohyseeker.skill.knowledge_archive")
@@ -77,11 +80,19 @@ class KnowledgeArchiveSkill(BaseSkill):
     description = "Archive experiment results and retrieve historical knowledge."
     required_tools: list[str] = []
 
-    def __init__(self, archive_path: str | None = None) -> None:
+    def __init__(
+        self,
+        archive_path: str | None = None,
+        viking_client: OpenVikingClient | None = None,
+    ) -> None:
         self._archive: list[dict[str, Any]] = []
         self._archive_path = Path(archive_path) if archive_path else None
         if self._archive_path and self._archive_path.exists():
             self._load_archive()
+
+        knowledge_config = get_knowledge_config()
+        workspace_path = knowledge_config.get("workspace_path")
+        self._viking_client = viking_client or OpenVikingClient(workspace_path=workspace_path)
 
         # VikingKnowledgeBase semantic search (optional)
         self._viking_kb: Any = None
@@ -102,8 +113,12 @@ class KnowledgeArchiveSkill(BaseSkill):
         """Dispatch to archive or retrieve based on ``action`` kwarg.
 
         Keyword Args:
-            action: ``"archive"`` or ``"retrieve"`` (default: ``"archive"``).
-            For archive: run_id, params, metrics, data_quality, round_num, extra.
+            action: ``"archive"``, ``"archive_operation"``, or ``"retrieve"``
+                (default: ``"archive"``).
+            For archive: run_id, params, metrics, data_quality, round_num,
+                interpretation, environment_snapshot, extra.
+            For archive_operation: event_type, severity, message, component,
+                run_id, action_taken, resolved, environment_snapshot, extra.
             For retrieve: query, search_type, top_k, elements.
         """
         action = kwargs.get("action", "archive")
@@ -115,11 +130,32 @@ class KnowledgeArchiveSkill(BaseSkill):
                 metrics=kwargs.get("metrics", {}),
                 data_quality=kwargs.get("data_quality"),
                 round_num=kwargs.get("round_num"),
+                interpretation=kwargs.get("interpretation", ""),
+                environment_snapshot=kwargs.get("environment_snapshot"),
                 extra=kwargs.get("extra"),
             )
             return SkillResult(
                 success=True, data=result,
                 message=f"Archived {kwargs.get('run_id', '')}", artifacts=[],
+            )
+
+        if action == "archive_operation":
+            result = await self.archive_operation(
+                event_type=kwargs.get("event_type", ""),
+                severity=kwargs.get("severity", "info"),
+                message=kwargs.get("message", ""),
+                component=kwargs.get("component", "system"),
+                run_id=kwargs.get("run_id"),
+                action_taken=kwargs.get("action_taken", ""),
+                resolved=kwargs.get("resolved", False),
+                environment_snapshot=kwargs.get("environment_snapshot"),
+                extra=kwargs.get("extra"),
+            )
+            return SkillResult(
+                success=True,
+                data=result,
+                message=f"Archived operation {kwargs.get('event_type', '')}",
+                artifacts=[],
             )
 
         if action == "retrieve":
@@ -149,21 +185,32 @@ class KnowledgeArchiveSkill(BaseSkill):
         metrics: dict[str, float],
         data_quality: dict[str, Any] | None = None,
         round_num: int | None = None,
+        interpretation: str = "",
+        environment_snapshot: dict[str, Any] | None = None,
         extra: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
         """Archive a completed experiment result."""
-        record: dict[str, Any] = {
-            "run_id": run_id,
-            "params": params,
-            "metrics": metrics,
-            "data_quality": data_quality or {},
-            "round": round_num,
-        }
+        record_model = ExperimentRecord(
+            run_id=run_id,
+            params=params,
+            metrics=metrics,
+            data_quality=data_quality or {},
+            round_num=round_num,
+            interpretation=interpretation,
+            environment_snapshot=environment_snapshot or {},
+        )
+        record: dict[str, Any] = record_model.model_dump(mode="json")
         if extra:
             record.update(extra)
 
         self._archive.append(record)
         self._save_archive()
+
+        knowledge_write = self._viking_client.write_json(
+            partition=KnowledgePartition.EXPERIMENTS,
+            payload=record,
+            resource_name=f"{run_id}.json",
+        )
 
         # Ingest into VikingKB when available
         if self._viking_kb is not None:
@@ -189,6 +236,49 @@ class KnowledgeArchiveSkill(BaseSkill):
             "status": "archived",
             "run_id": run_id,
             "total_records": len(self._archive),
+            "knowledge_write": knowledge_write,
+            "environment_snapshot": record.get("environment_snapshot", {}),
+        }
+
+    async def archive_operation(
+        self,
+        event_type: str,
+        severity: str,
+        message: str,
+        component: str = "system",
+        run_id: str | None = None,
+        action_taken: str = "",
+        resolved: bool = False,
+        environment_snapshot: dict[str, Any] | None = None,
+        extra: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        """Archive an operational event into the operations partition."""
+        record_model = OperationRecord(
+            event_type=event_type,
+            severity=severity,
+            message=message,
+            component=component,
+            run_id=run_id,
+            action_taken=action_taken,
+            resolved=resolved,
+            environment_snapshot=environment_snapshot or {},
+        )
+        record = record_model.model_dump(mode="json")
+        if extra:
+            record.update(extra)
+
+        knowledge_write = self._viking_client.write_json(
+            partition=KnowledgePartition.OPERATIONS,
+            payload=record,
+            resource_name=f"{event_type}_{record['record_id'][:8]}.json",
+        )
+
+        return {
+            "status": "archived",
+            "partition": KnowledgePartition.OPERATIONS.value,
+            "event_type": event_type,
+            "knowledge_write": knowledge_write,
+            "environment_snapshot": record.get("environment_snapshot", {}),
         }
 
     async def retrieve(
@@ -363,11 +453,14 @@ class KnowledgeArchiveSkill(BaseSkill):
             "properties": {
                 "action": {
                     "type": "string",
-                    "enum": ["archive", "retrieve"],
+                    "enum": ["archive", "archive_operation", "retrieve"],
                 },
                 "run_id": {"type": "string"},
                 "params": {"type": "object"},
                 "metrics": {"type": "object"},
+                "event_type": {"type": "string"},
+                "severity": {"type": "string"},
+                "message": {"type": "string"},
                 "query": {"type": "string"},
             },
             "required": ["action"],

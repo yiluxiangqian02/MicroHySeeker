@@ -1,31 +1,35 @@
-"""
-Chat API routes for Q&A functionality
-"""
-from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel
-from typing import List, Optional, Dict, Any
-from datetime import datetime
-import json
-from pathlib import Path
+"""Chat API routes backed by ChatAgent."""
 
-router = APIRouter()
+from __future__ import annotations
 
-# Simple in-memory chat history (in production, use database)
-chat_history: List[Dict[str, Any]] = []
+from datetime import datetime, timezone
+from typing import Any
 
+from fastapi import APIRouter, HTTPException, Query
+from pydantic import BaseModel, Field
 
-class ChatRequest(BaseModel):
-    question: str
-    context: Optional[Dict[str, Any]] = None
-    experiment_id: Optional[str] = None
+from src.agents.chat_agent import ChatAgent
+
+router = APIRouter(tags=["chat"])
+
+_chat_sessions: dict[str, list[dict[str, Any]]] = {}
 
 
 class ChatMessage(BaseModel):
     id: str
-    role: str  # "user" or "assistant"
+    role: str
     content: str
     timestamp: str
-    agent_type: Optional[str] = None
+    agent_type: str | None = None
+
+
+class ChatRequest(BaseModel):
+    message: str | None = None
+    question: str | None = None
+    context: dict[str, Any] = Field(default_factory=dict)
+    history: list[ChatMessage] = Field(default_factory=list)
+    session_id: str = "default"
+    experiment_id: str | None = None
 
 
 class ChatResponse(BaseModel):
@@ -33,176 +37,123 @@ class ChatResponse(BaseModel):
     agent_type: str
 
 
-def classify_question(question: str) -> str:
-    """
-    Classify question type to route to appropriate agent.
-    After consolidation: data analysis and knowledge management are
-    skills of the orchestrator, so we route to "orchestrator" for those.
-    """
-    question_lower = question.lower()
-
-    # Data analysis keywords → orchestrator (via DataAnalysisSkill)
-    analysis_keywords = ["分析", "数据", "对比", "比较", "趋势", "峰值", "电流"]
-    if any(keyword in question_lower for keyword in analysis_keywords):
-        return "orchestrator"
-
-    # Experiment design keywords
-    design_keywords = ["建议", "推荐", "优化", "设计", "参数", "如何", "怎么"]
-    if any(keyword in question_lower for keyword in design_keywords):
-        return "experiment_designer"
-
-    # Default to orchestrator (via KnowledgeArchiveSkill)
-    return "orchestrator"
+def _now() -> str:
+    return datetime.now(timezone.utc).isoformat()
 
 
-def generate_mock_response(question: str, agent_type: str, context: Optional[Dict] = None) -> str:
-    """
-    Generate mock response based on agent type
-    (In production, this would call actual agents)
-    """
-    if agent_type == "orchestrator":
-        # Handle both data analysis and knowledge queries
-        question_lower = question.lower()
-        analysis_keywords = ["分析", "数据", "对比", "比较", "趋势", "峰值", "电流"]
-        if any(keyword in question_lower for keyword in analysis_keywords):
-            return f"""根据您的问题"{question}"，我分析了相关实验数据：
+def _make_message(
+    *,
+    index: int,
+    role: str,
+    content: str,
+    agent_type: str | None = None,
+) -> dict[str, Any]:
+    timestamp = _now()
+    return {
+        "id": f"msg_{index}",
+        "role": role,
+        "content": content,
+        "timestamp": timestamp,
+        "agent_type": agent_type,
+    }
 
-**数据分析结果：**
-- 峰电流：约 45.2 μA
-- 峰电位：0.35 V vs Ag/AgCl
-- 扫描速率：50 mV/s
-- 信噪比：良好
 
-**建议：**
-- 数据质量较好，可以继续使用当前参数
-- 如需提高灵敏度，可尝试降低扫描速率至 20 mV/s
+def _get_session_history(session_id: str) -> list[dict[str, Any]]:
+    return _chat_sessions.setdefault(session_id, [])
 
-需要更详细的分析吗？"""
-        else:
-            return f"""关于您的问题"{question}"：
 
-**循环伏安法 (CV) 扫描速率选择指南：**
+def _resolve_user_message(request: ChatRequest) -> str:
+    content = (request.message or request.question or "").strip()
+    if not content:
+        raise HTTPException(status_code=422, detail="message or question is required")
+    return content
 
-1. **常规分析**：50-100 mV/s
-   - 适用于大多数电化学体系
-   - 平衡了灵敏度和实验时间
 
-2. **动力学研究**：10-500 mV/s
-   - 研究电极反应速率
-   - 需要多个扫描速率对比
+def _serialise_history(items: list[dict[str, Any]], limit: int) -> list[dict[str, Any]]:
+    if limit <= 0:
+        return []
+    return list(items[-limit:])
 
-3. **高灵敏度检测**：10-20 mV/s
-   - 提高信噪比
-   - 适合低浓度样品
 
-4. **快速筛选**：100-200 mV/s
-   - 快速获得初步结果
-   - 适合批量样品
+@router.post("/api/chat")
+async def chat(request: ChatRequest) -> dict[str, Any]:
+    try:
+        user_message = _resolve_user_message(request)
+        session_history = _get_session_history(request.session_id)
+        agent_history: list[dict[str, Any]] = [item.model_dump() for item in request.history] or list(session_history)
 
-**选择建议：**
-- 首次实验：从 50 mV/s 开始
-- 根据结果调整：信号弱则降低，时间紧则提高
+        chat_agent = ChatAgent()
+        context = dict(request.context)
+        if request.experiment_id:
+            context["experiment_id"] = request.experiment_id
 
-还有其他问题吗？"""
+        result = await chat_agent.chat(
+            message=user_message,
+            context=context,
+            history=agent_history,
+        )
 
-    elif agent_type == "experiment_designer":
-        return f"""针对您的问题"{question}"，我提供以下实验建议：
+        data = result.get("data", {})
+        reply = str(data.get("reply", "")).strip() or "暂时没有可返回的内容。"
+        intent = str(data.get("intent", "chat"))
 
-**推荐实验方案：**
-1. **循环伏安法 (CV)**
-   - 扫描速率：50 mV/s
-   - 电位范围：-0.2 V 到 0.8 V
-   - 循环次数：3 次
+        user_record = _make_message(index=len(session_history), role="user", content=user_message)
+        assistant_record = _make_message(
+            index=len(session_history) + 1,
+            role="assistant",
+            content=reply,
+            agent_type=intent,
+        )
 
-2. **差分脉冲伏安法 (DPV)**
-   - 脉冲幅度：50 mV
-   - 脉冲宽度：50 ms
-   - 扫描速率：20 mV/s
+        session_history.extend([user_record, assistant_record])
 
-**注意事项：**
-- 确保电极表面清洁
-- 使用新鲜配制的缓冲液
-- 先进行空白对照实验
-
-需要更多细节吗？"""
-
-    else:
-        return f"收到您的问题：{question}。请稍后，正在查询相关信息..."
+        return {
+            "status": result.get("status", "success"),
+            "agent": result.get("agent", "chat"),
+            "timestamp": result.get("timestamp", _now()),
+            "session_id": request.session_id,
+            "intent": intent,
+            "message": assistant_record,
+            "history_length": len(session_history),
+            "data": data,
+        }
+    except HTTPException:
+        raise
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"Failed to process chat request: {exc}") from exc
 
 
 @router.post("/api/v1/chat/ask", response_model=ChatResponse)
-async def ask_question(request: ChatRequest):
-    """
-    Process user question and route to appropriate agent
-    """
-    try:
-        # Classify question
-        agent_type = classify_question(request.question)
+async def ask_question(request: ChatRequest) -> ChatResponse:
+    response = await chat(request)
+    message = ChatMessage(**response["message"])
+    return ChatResponse(message=message, agent_type=str(response.get("intent", "chat")))
 
-        # Generate response (mock for now)
-        response_content = generate_mock_response(
-            request.question,
-            agent_type,
-            request.context
-        )
 
-        # Create message objects
-        timestamp = datetime.now().isoformat()
-        user_msg_id = f"msg_{len(chat_history)}"
-        assistant_msg_id = f"msg_{len(chat_history) + 1}"
-
-        user_message = {
-            "id": user_msg_id,
-            "role": "user",
-            "content": request.question,
-            "timestamp": timestamp,
-            "agent_type": None
-        }
-
-        assistant_message = {
-            "id": assistant_msg_id,
-            "role": "assistant",
-            "content": response_content,
-            "timestamp": timestamp,
-            "agent_type": agent_type
-        }
-
-        # Store in history
-        chat_history.append(user_message)
-        chat_history.append(assistant_message)
-
-        return ChatResponse(
-            message=ChatMessage(**assistant_message),
-            agent_type=agent_type
-        )
-
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to process question: {str(e)}")
+@router.get("/api/chat/history")
+async def get_chat_history(
+    session_id: str = Query(default="default"),
+    limit: int = Query(default=50, ge=1, le=200),
+) -> dict[str, Any]:
+    messages = _serialise_history(_get_session_history(session_id), limit)
+    return {"messages": messages, "total": len(_get_session_history(session_id)), "session_id": session_id}
 
 
 @router.get("/api/v1/chat/history")
-async def get_chat_history(limit: int = 50):
-    """
-    Get chat history
-    """
-    try:
-        # Return most recent messages
-        recent_messages = chat_history[-limit:] if len(chat_history) > limit else chat_history
-        return {
-            "messages": recent_messages,
-            "total": len(chat_history)
-        }
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to get chat history: {str(e)}")
+async def get_chat_history_v1(
+    session_id: str = Query(default="default"),
+    limit: int = Query(default=50, ge=1, le=200),
+) -> dict[str, Any]:
+    return await get_chat_history(session_id=session_id, limit=limit)
+
+
+@router.delete("/api/chat/history")
+async def clear_chat_history(session_id: str = Query(default="default")) -> dict[str, Any]:
+    messages = _get_session_history(session_id)
+    messages.clear()
+    return {"message": "Chat history cleared", "success": True, "session_id": session_id}
 
 
 @router.delete("/api/v1/chat/history")
-async def clear_chat_history():
-    """
-    Clear chat history
-    """
-    try:
-        chat_history.clear()
-        return {"message": "Chat history cleared", "success": True}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to clear chat history: {str(e)}")
+async def clear_chat_history_v1(session_id: str = Query(default="default")) -> dict[str, Any]:
+    return await clear_chat_history(session_id=session_id)

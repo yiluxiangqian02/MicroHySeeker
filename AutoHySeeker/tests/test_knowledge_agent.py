@@ -7,8 +7,6 @@ the Orchestrator.  These tests verify the skill directly.
 from __future__ import annotations
 
 import asyncio
-import json
-import tempfile
 import unittest
 from pathlib import Path
 from typing import Any
@@ -29,6 +27,7 @@ class TestKnowledgeArchive(unittest.TestCase):
         ))
         assert result["status"] == "archived"
         assert result["total_records"] == 1
+        assert result["knowledge_write"]["partition"] == "experiments"
 
     def test_archive_multiple(self) -> None:
         from src.skills.knowledge_archive_skill import KnowledgeArchiveSkill
@@ -55,6 +54,41 @@ class TestKnowledgeArchive(unittest.TestCase):
         history = skill.get_experiment_history()
         assert len(history) == 1
         assert history[0]["run_id"] == "test_001"
+
+    def test_archive_experiment_records_environment_snapshot(self) -> None:
+        from src.skills.knowledge_archive_skill import KnowledgeArchiveSkill
+
+        skill = KnowledgeArchiveSkill()
+        result = asyncio.run(skill.archive_experiment(
+            run_id="test_env_001",
+            params={"Fe": 0.4, "Co": 0.4, "Ni": 0.2},
+            metrics={"overpotential_mV": 195.0},
+            environment_snapshot={"template_id": "tpl_her_standard", "config_hash": "abc123"},
+        ))
+
+        assert result["environment_snapshot"]["template_id"] == "tpl_her_standard"
+        assert skill._archive[0]["environment_snapshot"]["config_hash"] == "abc123"
+
+    def test_archive_operation_writes_to_operations_partition(self) -> None:
+        from src.skills.knowledge_archive_skill import KnowledgeArchiveSkill
+
+        skill = KnowledgeArchiveSkill()
+        result = asyncio.run(skill.archive_operation(
+            event_type="communication_timeout",
+            severity="error",
+            message="RS485 timeout on COM3",
+            component="executor",
+            run_id="run_001",
+            action_taken="disconnect and reconnect",
+            resolved=True,
+            environment_snapshot={"port": "COM3"},
+        ))
+
+        assert result["status"] == "archived"
+        assert result["partition"] == "operations"
+        assert result["knowledge_write"]["partition"] == "operations"
+        hits = skill._viking_client.search("communication_timeout", partition="operations", top_k=5)
+        assert len(hits) >= 1
 
 
 class TestKnowledgeBestExperiments(unittest.TestCase):
@@ -163,22 +197,26 @@ class TestKnowledgePersistence(unittest.TestCase):
     def test_save_and_load(self) -> None:
         from src.skills.knowledge_archive_skill import KnowledgeArchiveSkill
 
-        with tempfile.TemporaryDirectory() as tmpdir:
-            path = str(Path(tmpdir) / "archive.json")
-
-            # Save
-            skill1 = KnowledgeArchiveSkill(archive_path=path)
+        tmpdir = Path("tests/_tmp_persistence")
+        tmpdir.mkdir(parents=True, exist_ok=True)
+        path = tmpdir / "archive.json"
+        try:
+            skill1 = KnowledgeArchiveSkill(archive_path=str(path))
             asyncio.run(skill1.archive_experiment(
                 run_id="test1",
                 params={"Fe": 0.5},
                 metrics={"ovp": 200},
             ))
-            assert Path(path).exists()
+            assert path.exists()
 
-            # Load
-            skill2 = KnowledgeArchiveSkill(archive_path=path)
+            skill2 = KnowledgeArchiveSkill(archive_path=str(path))
             assert len(skill2._archive) == 1
             assert skill2._archive[0]["run_id"] == "test1"
+        finally:
+            if path.exists():
+                path.unlink()
+            if tmpdir.exists():
+                tmpdir.rmdir()
 
 
 class TestKnowledgeRouting(unittest.TestCase):
