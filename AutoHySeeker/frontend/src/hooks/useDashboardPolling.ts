@@ -20,11 +20,12 @@ const CHART_MAX_POINTS = 60;
 const LOG_MAX_ENTRIES = 200;
 
 const AGENT_META: Record<AgentId, { name: string }> = {
-  C1: { name: "Data Analyst" },
-  C2: { name: "Experiment Supervisor" },
-  C3: { name: "Knowledge Manager" },
-  D2: { name: "Diagnostics Expert" },
-  D3: { name: "Experiment Designer" },
+  orchestrator: { name: "Orchestrator" },
+  experiment_designer: { name: "Experiment Designer" },
+  experiment_executor: { name: "Experiment Executor" },
+  diagnostics_expert: { name: "Diagnostics Expert" },
+  chat: { name: "Chat Agent" },
+  heartbeat_inspector: { name: "Heartbeat Inspector" },
 };
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -47,11 +48,12 @@ function generateEchemPoint(t: number, isRunning: boolean): EchemDataPoint {
 
 function deriveAgentStates(isHealthy: boolean, isRunning: boolean): AgentState[] {
   const statusMap: Record<AgentId, AgentStatus> = {
-    C1: isRunning ? "working" : "idle",
-    C2: "idle",
-    C3: "idle",
-    D2: isHealthy ? "working" : "error",
-    D3: "idle",
+    orchestrator: isRunning ? "working" : "idle",
+    experiment_designer: "idle",
+    experiment_executor: isRunning ? "working" : "idle",
+    diagnostics_expert: isHealthy ? "working" : "error",
+    chat: "idle",
+    heartbeat_inspector: isHealthy ? "idle" : "error",
   };
   if (!isHealthy) {
     return (Object.keys(statusMap) as AgentId[]).map((id) => ({
@@ -69,11 +71,11 @@ function deriveAgentStates(isHealthy: boolean, isRunning: boolean): AgentState[]
 }
 
 const RUNNING_MESSAGES: Array<{ agent: AgentId; template: (tick: number) => string }> = [
-  { agent: "D2", template: (t) => `System health nominal – tick ${t}: CPU 42%, Mem 58%` },
-  { agent: "C1", template: (t) => `Contextualizing run data – iteration ${t}` },
-  { agent: "D2", template: () => "Electrochemical cell voltage within normal range" },
-  { agent: "C1", template: () => "Trend analysis: efficiency stable ±0.3%" },
-  { agent: "C2", template: () => "Evaluating next-experiment suggestions" },
+  { agent: "diagnostics_expert", template: (t) => `System health nominal – tick ${t}: CPU 42%, Mem 58%` },
+  { agent: "orchestrator", template: (t) => `Contextualizing run data – iteration ${t}` },
+  { agent: "diagnostics_expert", template: () => "Electrochemical cell voltage within normal range" },
+  { agent: "orchestrator", template: () => "Trend analysis: efficiency stable ±0.3%" },
+  { agent: "experiment_designer", template: () => "Evaluating next-experiment suggestions" },
 ];
 
 function generateLogEntry(tick: number, isHealthy: boolean, isRunning: boolean): ExperimentLogEntry {

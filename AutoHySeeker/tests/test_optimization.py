@@ -925,7 +925,7 @@ class TestOptimizerWithMockedLLM:
         )
 
         def llm_objective(params: dict[str, Any]) -> float:
-            with patch("src.common.llm_client.OPENAI_API_KEY", "test-key"), \
+            with patch("src.common.llm_client.app_config.OPENAI_API_KEY", "test-key"), \
                  patch("src.common.llm_client.get_client") as mock_gc:
                 mock_client = MagicMock()
                 mock_client.chat.completions.create = mock_create
@@ -957,7 +957,7 @@ class TestOptimizerWithMockedLLM:
 
         def llm_result_getter(params: dict[str, Any]) -> dict[str, Any]:
             """Simulate calling LLM to interpret raw instrument data."""
-            with patch("src.common.llm_client.OPENAI_API_KEY", "test-key"), \
+            with patch("src.common.llm_client.app_config.OPENAI_API_KEY", "test-key"), \
                  patch("src.common.llm_client.get_client") as mock_gc:
                 mock_client = MagicMock()
                 mock_client.chat.completions.create = mock_create
@@ -992,7 +992,7 @@ class TestOptimizerWithMockedLLM:
             import asyncio
 
             async def _call() -> str:
-                with patch("src.common.llm_client.OPENAI_API_KEY", "test-key"), \
+                with patch("src.common.llm_client.app_config.OPENAI_API_KEY", "test-key"), \
                      patch("src.common.llm_client.get_client") as mock_gc, \
                      patch("src.common.llm_client.asyncio.sleep", new=AsyncMock()):
                     mock_client = MagicMock()
@@ -1024,14 +1024,14 @@ class TestOptimizerWithMockedLLM:
 
         def mocked_multi_objective(params: dict[str, Any]) -> tuple[float, float]:
             x = float(params["x"])
-            with patch("src.common.llm_client.OPENAI_API_KEY", "test-key"), \
+            with patch("src.common.llm_client.app_config.OPENAI_API_KEY", "test-key"), \
                  patch("src.common.llm_client.get_client") as mock_gc:
                 mock_client = MagicMock()
                 mock_client.chat.completions.create = peak_mock
                 mock_gc.return_value = mock_client
                 peak_val = x * 0.1  # simulated parsed output
 
-            with patch("src.common.llm_client.OPENAI_API_KEY", "test-key"), \
+            with patch("src.common.llm_client.app_config.OPENAI_API_KEY", "test-key"), \
                  patch("src.common.llm_client.get_client") as mock_gc:
                 mock_client = MagicMock()
                 mock_client.chat.completions.create = snr_mock

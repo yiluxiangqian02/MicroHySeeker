@@ -1,0 +1,24 @@
+{
+  "run_id": "exp_run_001",
+  "device_id": "test_device_001",
+  "success": true,
+  "steps": [
+    {
+      "id": "cv_step_0",
+      "type": "cv",
+      "success": true,
+      "data_file": "cv_step_00.csv",
+      "n_points": 100
+    },
+    {
+      "id": "eis_step_1",
+      "type": "eis",
+      "success": true,
+      "data_file": "eis_step_01.csv",
+      "n_points": 50
+    }
+  ],
+  "efficiency": 0.85,
+  "peak_current": 0.042,
+  "exp_name": "HER_NiFe_integration_test"
+}

@@ -1,0 +1,31 @@
+{
+  "run_id": "analysis_run_001",
+  "device_id": "analysis_device_e2e",
+  "success": true,
+  "steps": [
+    {
+      "id": "cv_step_0",
+      "type": "cv",
+      "success": true,
+      "data_file": "cv_step_00.csv",
+      "n_points": 120
+    },
+    {
+      "id": "eis_step_1",
+      "type": "eis",
+      "success": true,
+      "data_file": "eis_step_01.csv",
+      "n_points": 60
+    },
+    {
+      "id": "lsv_step_2",
+      "type": "lsv",
+      "success": true,
+      "data_file": "lsv_step_02.csv",
+      "n_points": 61
+    }
+  ],
+  "efficiency": 0.88,
+  "peak_current": 0.045,
+  "ph": 7.0
+}

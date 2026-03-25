@@ -1,0 +1,16 @@
+{
+  "run_id": "hist_001",
+  "device_id": "hist_analysis_device",
+  "success": true,
+  "steps": [
+    {
+      "id": "cv_step_0",
+      "type": "cv",
+      "success": true,
+      "data_file": "cv_step_00.csv",
+      "n_points": 100
+    }
+  ],
+  "efficiency": 0.8,
+  "peak_current": 0.038
+}

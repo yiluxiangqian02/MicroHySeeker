@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
 import { AgentStatusPanel } from "@/components/AgentStatusPanel";
@@ -10,6 +10,7 @@ import { OptimizationStatusCard } from "@/components/dashboard/OptimizationStatu
 import { RecentExperimentsCard } from "@/components/dashboard/RecentExperimentsCard";
 import { SystemNotificationsCard } from "@/components/dashboard/SystemNotificationsCard";
 import { useDashboardPolling } from "@/hooks/useDashboardPolling";
+import { useOptimizationStore } from "@/stores/optimizationStore";
 
 function LastUpdatedBadge({ iso }: { iso: string }) {
   const { t } = useTranslation();
@@ -22,6 +23,11 @@ function LastUpdatedBadge({ iso }: { iso: string }) {
 
 export function Dashboard() {
   const { t } = useTranslation();
+  const {
+    config: optimizationConfig,
+    state: optimizationState,
+    fetchConfigAndState: fetchOptimizationState,
+  } = useOptimizationStore();
   const {
     snapshot,
     isLoading,
@@ -47,27 +53,72 @@ export function Dashboard() {
     visible: { opacity: 1, y: 0, transition: { duration: 0.3 } },
   };
 
-  // Mock data for new Dashboard components
-  const mockOptimizationStatus = {
-    status: "running" as const,
-    currentIteration: 3,
-    maxIterations: 10,
-    bestYield: 85.4,
-    activeExperiment: "Exp-003-HER-Opt",
-    projectName: "Project Alpha"
-  };
+  useEffect(() => {
+    const refreshOptimization = () => {
+      fetchOptimizationState().catch(() => undefined);
+    };
 
-  const mockRecentExperiments = [
-    { id: "exp_1", name: "Exp-003-HER-Opt", status: "running" as const, timeAgo: "10 mins ago" },
-    { id: "exp_2", name: "Exp-002-Base", status: "completed" as const, timeAgo: "2 hours ago" },
-    { id: "exp_3", name: "Exp-001-Test", status: "failed" as const, timeAgo: "1 day ago" },
-  ];
+    refreshOptimization();
+    const timer = window.setInterval(refreshOptimization, 5000);
+    return () => window.clearInterval(timer);
+  }, [fetchOptimizationState]);
 
-  const mockNotifications = [
-    { id: "no_1", type: "warning" as const, message: "Pump A pressure slightly above normal range.", timeAgo: "5 mins ago" },
-    { id: "no_2", type: "info" as const, message: "Agent D3 started designing the next iteration.", timeAgo: "10 mins ago" },
-    { id: "no_3", type: "error" as const, message: "Connection to potentiostat temporarily lost.", timeAgo: "1 hour ago" }
-  ];
+  const optimizationStatus = useMemo(() => {
+    const latestHistoryItem = optimizationState?.history[optimizationState.history.length - 1];
+    return {
+      status: optimizationState?.status ?? "idle",
+      currentIteration: optimizationState?.currentIteration ?? 0,
+      maxIterations: optimizationState?.maxIterations ?? 0,
+      bestYield: optimizationState?.bestYield,
+      activeExperiment: latestHistoryItem?.experiment_id ?? snapshot.experiment.runName,
+      projectName: optimizationConfig?.goal ?? "Optimization Loop",
+    };
+  }, [optimizationConfig?.goal, optimizationState, snapshot.experiment.runName]);
+
+  const recentExperiments = useMemo(() => (
+    optimizationState?.history
+      .slice(-3)
+      .reverse()
+      .map((item, index) => ({
+        id: item.experiment_id || `optimization-${item.iteration}-${index}`,
+        name: item.experiment_id || `Round ${item.iteration}`,
+        status: item.status === "failed" ? "failed" as const : item.status === "completed" ? "completed" as const : "running" as const,
+        timeAgo: `Round ${item.iteration}`,
+      })) ?? []
+  ), [optimizationState?.history]);
+
+  const systemNotifications = useMemo(() => {
+    const items = [];
+
+    if (optimizationState?.pendingApproval) {
+      items.push({
+        id: "approval-pending",
+        type: "warning" as const,
+        message: `Optimization paused: ${optimizationState.pauseReason || "waiting for human approval"}`,
+        timeAgo: "now",
+      });
+    }
+
+    for (const [index, error] of (optimizationState?.errors ?? []).slice(-3).entries()) {
+      items.push({
+        id: `optimization-error-${index}`,
+        type: "error" as const,
+        message: error,
+        timeAgo: "recent",
+      });
+    }
+
+    if (items.length === 0 && optimizationState) {
+      items.push({
+        id: "optimization-status",
+        type: "info" as const,
+        message: `Optimization status: ${optimizationState.status}`,
+        timeAgo: "live",
+      });
+    }
+
+    return items;
+  }, [optimizationState]);
 
   return (
     <motion.div
@@ -138,10 +189,10 @@ export function Dashboard() {
       {/* ── Top row 1: Optimization Status + Recent Experiments ───────────── */}
       <motion.div variants={itemVariants} className="grid gap-4 lg:grid-cols-5">
         <div className="lg:col-span-3">
-          <OptimizationStatusCard {...mockOptimizationStatus} />
+          <OptimizationStatusCard {...optimizationStatus} />
         </div>
         <div className="lg:col-span-2">
-          <RecentExperimentsCard experiments={mockRecentExperiments} />
+          <RecentExperimentsCard experiments={recentExperiments} />
         </div>
       </motion.div>
 
@@ -161,7 +212,7 @@ export function Dashboard() {
           <RealtimeChart data={snapshot.chartData} />
         </div>
         <div className="lg:col-span-1">
-          <SystemNotificationsCard notifications={mockNotifications} />
+          <SystemNotificationsCard notifications={systemNotifications} />
         </div>
       </motion.div>
 

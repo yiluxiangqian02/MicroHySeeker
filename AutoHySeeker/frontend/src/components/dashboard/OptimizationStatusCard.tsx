@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight, RefreshCw, Play, Square } from "lucide-react";
 
 export interface OptimizationLoopStatus {
-  status: "idle" | "running" | "paused" | "completed" | "error";
+  status: "idle" | "running" | "paused" | "completed" | "error" | "stopped" | "blocked" | "starting" | "stopping" | "executing" | "designing" | "evaluating" | "analyzing";
   currentIteration?: number;
   maxIterations?: number;
   bestYield?: number;
@@ -19,6 +19,7 @@ export function OptimizationStatusCard({
   projectName = "Default Project",
 }: Partial<OptimizationLoopStatus>) {
   const isRunning = status === "running";
+  const isPaused = status === "paused";
   const progressPercent = maxIterations > 0 ? (currentIteration / maxIterations) * 100 : 0;
 
   return (
@@ -38,7 +39,7 @@ export function OptimizationStatusCard({
               <span className="flex items-center gap-1.5">
                 <span
                   className={`h-2 w-2 rounded-full ${
-                    isRunning ? "bg-blue-500" : status === "paused" ? "bg-orange-500" : "bg-slate-300"
+                    isRunning ? "bg-blue-500" : isPaused ? "bg-orange-500" : status === "error" || status === "blocked" ? "bg-red-500" : "bg-slate-300"
                   }`}
                 />
                 {status.charAt(0).toUpperCase() + status.slice(1)}

@@ -8,7 +8,6 @@ import re
 from typing import Any, Iterable
 
 from src.agents.base import BaseAgent
-from src.common.llm_client import load_agent_config
 from src.skills.knowledge_query_skill import KnowledgeQuerySkill
 from src.tools import echem_reader
 
@@ -78,15 +77,9 @@ class ChatAgent(BaseAgent):
     """Unified conversational interface for AutoHySeeker."""
 
     def __init__(self, knowledge_skill: KnowledgeQuerySkill | None = None) -> None:
-        orchestrator_config = load_agent_config("orchestrator")
         super().__init__(
             name="chat",
             system_prompt=CHAT_SYSTEM_PROMPT,
-            model=str(orchestrator_config["model"]),
-            api_key=str(orchestrator_config["api_key"]),
-            base_url=str(orchestrator_config["base_url"]),
-            temperature=float(orchestrator_config["temperature"]),
-            max_tokens=orchestrator_config["max_tokens"],
         )
         self._knowledge_skill = knowledge_skill or KnowledgeQuerySkill()
 

@@ -1,0 +1,1 @@
+{"run_id": "run_test", "success": false, "elapsed_seconds": 42.0, "steps": [{"id": "s1", "success": true, "type": "init"}, {"id": "s2", "success": false, "type": "measure"}, {"id": "s3", "success": true, "type": "cleanup"}], "errors": [], "warnings": []}

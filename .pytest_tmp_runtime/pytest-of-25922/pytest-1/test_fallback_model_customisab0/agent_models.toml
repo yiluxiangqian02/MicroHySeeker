@@ -1,0 +1,2 @@
+[defaults]
+fallback_model = 'other/fallback-model'

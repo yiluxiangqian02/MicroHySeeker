@@ -4,23 +4,13 @@ from __future__ import annotations
 
 import asyncio
 import time
-from pathlib import Path
-import tomllib
 from typing import TYPE_CHECKING, Any, Mapping, Sequence
 
 if TYPE_CHECKING:
     from openai import AsyncOpenAI
 
-from src.common.config import (
-    DEFAULT_MODEL,
-    FALLBACK_MODEL,
-    OPENAI_API_KEY,
-    OPENAI_BASE_URL,
-    OPENAI_CONNECT_TIMEOUT_SECONDS,
-    OPENAI_TIMEOUT_SECONDS,
-    OPENAI_UNAVAILABLE_COOLDOWN_SECONDS,
-    PROJECT_ROOT,
-)
+import src.common.config as app_config
+from src.common.config import load_agent_config
 from src.common.logger import get_logger
 
 logger = get_logger(__name__)
@@ -28,25 +18,17 @@ _client: AsyncOpenAI | None = None
 _custom_clients: dict[tuple[str, str], AsyncOpenAI] = {}
 _async_openai_cls: type[AsyncOpenAI] | None = None
 _endpoint_backoff_until: dict[str, float] = {}
-AGENT_CONFIG_PATH = PROJECT_ROOT / "configs" / "agent_models.toml"
-AGENT_NAME_ALIASES = {
-    "diagnostics": "diagnostics_expert",
-    "diagnostics_expert": "diagnostics_expert",
-    "exp_designer": "experiment_designer",
-    "experiment_designer": "experiment_designer",
-    "exp_executor": "experiment_executor",
-    "experiment_executor": "experiment_executor",
-    "orchestrator": "orchestrator",
-}
 
 
 def _default_agent_config() -> dict[str, Any]:
     return {
-        "model": DEFAULT_MODEL,
-        "api_key": OPENAI_API_KEY,
+        "model": app_config.DEFAULT_MODEL,
+        "fallback_model": app_config.FALLBACK_MODEL,
+        "api_key": app_config.OPENAI_API_KEY,
         "temperature": 0.2,
         "max_tokens": None,
-        "base_url": OPENAI_BASE_URL,
+        "base_url": app_config.OPENAI_BASE_URL,
+        "enabled": True,
     }
 
 
@@ -74,10 +56,10 @@ def _build_timeout() -> Any:
     try:
         import httpx
     except ImportError:
-        return OPENAI_TIMEOUT_SECONDS
+        return app_config.OPENAI_TIMEOUT_SECONDS
     return httpx.Timeout(
-        timeout=OPENAI_TIMEOUT_SECONDS,
-        connect=OPENAI_CONNECT_TIMEOUT_SECONDS,
+        timeout=app_config.OPENAI_TIMEOUT_SECONDS,
+        connect=app_config.OPENAI_CONNECT_TIMEOUT_SECONDS,
     )
 
 
@@ -120,67 +102,12 @@ def _is_endpoint_backing_off(base_url: str) -> bool:
 
 def _mark_endpoint_unavailable(base_url: str) -> None:
     _endpoint_backoff_until[base_url] = (
-        time.monotonic() + OPENAI_UNAVAILABLE_COOLDOWN_SECONDS
+        time.monotonic() + app_config.OPENAI_UNAVAILABLE_COOLDOWN_SECONDS
     )
 
 
 def _clear_endpoint_backoff(base_url: str) -> None:
     _endpoint_backoff_until.pop(base_url, None)
-
-
-def load_agent_config(agent_name: str) -> dict[str, Any]:
-    """Load per-agent model settings from configs/agent_models.toml."""
-    default_config = _default_agent_config()
-    config_path = Path(AGENT_CONFIG_PATH)
-    if not config_path.exists():
-        logger.warning(
-            "agent config file not found at %s; using defaults for %s",
-            config_path,
-            agent_name,
-        )
-        return default_config
-
-    try:
-        with config_path.open("rb") as fh:
-            parsed = tomllib.load(fh)
-    except Exception as exc:  # pragma: no cover - file/runtime dependent
-        logger.warning(
-            "failed to read agent config file %s; using defaults for %s: %s",
-            config_path,
-            agent_name,
-            exc,
-        )
-        return default_config
-
-    section_name = AGENT_NAME_ALIASES.get(agent_name, agent_name)
-    section = parsed.get(section_name)
-    if not isinstance(section, dict):
-        logger.info(
-            "agent config not found for %s (resolved=%s); using defaults",
-            agent_name,
-            section_name,
-        )
-        return default_config
-
-    resolved = {
-        "model": str(section.get("model", default_config["model"])),
-        "api_key": str(section.get("api_key", default_config["api_key"])),
-        "temperature": float(section.get("temperature", default_config["temperature"])),
-        "max_tokens": (
-            int(section["max_tokens"])
-            if section.get("max_tokens") is not None
-            else default_config["max_tokens"]
-        ),
-        "base_url": str(section.get("base_url", default_config["base_url"])),
-    }
-    logger.info(
-        "loaded agent config for %s (resolved=%s): model=%s, api_key_prefix=%s",
-        agent_name,
-        section_name,
-        resolved["model"],
-        _mask_key_prefix(resolved["api_key"]),
-    )
-    return resolved
 
 
 def get_client(
@@ -190,10 +117,12 @@ def get_client(
     """Return a singleton AsyncOpenAI client."""
     global _client
     async_openai_cls = _get_async_openai_class()
-    resolved_api_key = api_key or OPENAI_API_KEY
-    resolved_base_url = base_url or OPENAI_BASE_URL
+    default_api_key = app_config.OPENAI_API_KEY
+    default_base_url = app_config.OPENAI_BASE_URL
+    resolved_api_key = api_key or default_api_key
+    resolved_base_url = base_url or default_base_url
 
-    if resolved_api_key == OPENAI_API_KEY and resolved_base_url == OPENAI_BASE_URL:
+    if resolved_api_key == default_api_key and resolved_base_url == default_base_url:
         if _client is None:
             _client = async_openai_cls(
                 base_url=resolved_base_url,
@@ -228,14 +157,17 @@ def _extract_text(message_content: Any) -> str:
 
 async def chat_completion(
     messages: Sequence[Mapping[str, Any]],
-    model: str = DEFAULT_MODEL,
+    model: str | None = None,
     api_key: str | None = None,
     base_url: str | None = None,
+    fallback_model: str | None = None,
     **kwargs: Any,
 ) -> str:
     """Create a chat completion with 2 retries and 2-second backoff."""
-    resolved_api_key = api_key or OPENAI_API_KEY
-    resolved_base_url = base_url or OPENAI_BASE_URL
+    resolved_model = model or app_config.DEFAULT_MODEL
+    resolved_fallback_model = fallback_model or app_config.FALLBACK_MODEL
+    resolved_api_key = api_key or app_config.OPENAI_API_KEY
+    resolved_base_url = base_url or app_config.OPENAI_BASE_URL
 
     if not resolved_api_key:
         raise RuntimeError("OPENAI_API_KEY is empty. Set it in environment or .env file.")
@@ -249,7 +181,7 @@ async def chat_completion(
     last_error: Exception | None = None
 
     for attempt in range(attempts):
-        model_name = model if attempt < attempts - 1 else FALLBACK_MODEL
+        model_name = resolved_model if attempt < attempts - 1 else resolved_fallback_model
         try:
             response = await get_client(
                 api_key=resolved_api_key,

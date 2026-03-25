@@ -6,7 +6,7 @@ import json
 import time
 from typing import Any, Awaitable, Callable
 
-from src.common.config import get_monitor_config
+from src.common.config import get_monitor_config, load_agent_config
 from src.common.llm_client import chat_completion
 from src.skills.base import BaseSkill, SkillResult
 from src.skills.knowledge_query_skill import KnowledgeQuerySkill
@@ -32,6 +32,9 @@ class HeartbeatInspectorSkill(BaseSkill):
         self._enabled = False
         self._interval_s = 30.0
         self._model = "qwen3-max"
+        self._fallback_model: str | None = None
+        self._api_key = ""
+        self._base_url = ""
         self.reload_config(config)
 
     async def execute(self, **kwargs: Any) -> SkillResult:
@@ -69,9 +72,13 @@ class HeartbeatInspectorSkill(BaseSkill):
         if not isinstance(raw, dict):
             raw = {}
 
+        agent_config = load_agent_config("heartbeat_inspector")
         self._enabled = bool(raw.get("enabled", False))
         self._interval_s = float(raw.get("interval_s", 30))
-        self._model = str(raw.get("model", "qwen3-max"))
+        self._model = str(agent_config.get("model", "qwen3-max"))
+        self._fallback_model = str(agent_config.get("fallback_model", "")) or None
+        self._api_key = str(agent_config.get("api_key", ""))
+        self._base_url = str(agent_config.get("base_url", ""))
 
     def set_enabled(self, enabled: bool) -> None:
         self._enabled = enabled
@@ -281,6 +288,9 @@ class HeartbeatInspectorSkill(BaseSkill):
             content = await self._llm_callable(
                 messages=messages,
                 model=self._model,
+                fallback_model=self._fallback_model,
+                api_key=self._api_key or None,
+                base_url=self._base_url or None,
                 temperature=0.0,
             )
         except Exception:

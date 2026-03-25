@@ -1,0 +1,15 @@
+{
+  "run_id": "failed_run_e2e",
+  "device_id": "failing_device_e2e",
+  "success": false,
+  "error_code": "ELECTRODE_TIMEOUT",
+  "steps": [
+    {
+      "id": "cv_step_0",
+      "type": "cv",
+      "success": false,
+      "error": "CV measurement timeout \u2014 electrode contact lost",
+      "data_file": "cv_partial.csv"
+    }
+  ]
+}

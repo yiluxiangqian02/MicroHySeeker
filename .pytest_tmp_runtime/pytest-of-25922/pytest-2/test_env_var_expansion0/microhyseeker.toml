@@ -1,0 +1,4 @@
+[paths]
+data_dir = '${AUTOHYSEEKER_TEST_DATA_DIR:-./data}'
+[engine]
+mode = 'file'

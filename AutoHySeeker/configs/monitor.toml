@@ -28,7 +28,3 @@ enabled = false
 
 # 心跳间隔（秒）
 interval_s = 30
-
-# 心跳巡检用的模型（OpenAI-compatible / 本地网关均可）
-model = "qwen3-max"
-

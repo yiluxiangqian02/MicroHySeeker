@@ -254,10 +254,7 @@ class OpenVikingClient:
             for item in self._fallback_store[bucket]:
                 content = str(item.get("content", ""))
                 haystack = f"{item.get('uri', '')} {content}".lower()
-                if not query_lower:
-                    score = 0.5
-                else:
-                    score = 1.0 if query_lower in haystack else 0.0
+                score = self._keyword_score(query_lower=query_lower, haystack=haystack)
                 if score > 0:
                     results.append(
                         {

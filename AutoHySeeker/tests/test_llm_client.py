@@ -64,7 +64,7 @@ class TestGetClient:
         llm_client._client = None
         llm_client._custom_clients.clear()
         llm_client._endpoint_backoff_until.clear()
-        with patch("src.common.llm_client.OPENAI_API_KEY", "test-key"):
+        with patch("src.common.llm_client.app_config.OPENAI_API_KEY", "test-key"):
             c1 = llm_client.get_client()
             c2 = llm_client.get_client()
             assert c1 is c2
@@ -77,8 +77,8 @@ class TestGetClient:
         llm_client._client = None
         llm_client._custom_clients.clear()
         llm_client._endpoint_backoff_until.clear()
-        with patch("src.common.llm_client.OPENAI_API_KEY", "test-key"), \
-             patch("src.common.llm_client.OPENAI_BASE_URL", "https://test.example.com"):
+        with patch("src.common.llm_client.app_config.OPENAI_API_KEY", "test-key"), \
+             patch("src.common.llm_client.app_config.OPENAI_BASE_URL", "https://test.example.com"):
             client = llm_client.get_client()
             assert client.base_url is not None
         llm_client._client = None
@@ -112,19 +112,27 @@ class TestLoadAgentConfig:
         from src.common.llm_client import load_agent_config
 
         missing_path = Path(".pytest_tmp") / "missing-agent-models.toml"
-        with patch("src.common.llm_client.AGENT_CONFIG_PATH", missing_path), \
-             patch("src.common.llm_client.DEFAULT_MODEL", "default-model"), \
-             patch("src.common.llm_client.OPENAI_API_KEY", "default-key"), \
-             patch("src.common.llm_client.OPENAI_BASE_URL", "https://default.example.com"):
+        with patch("src.common.config._AGENT_CONFIG_PATH", missing_path), \
+             patch("src.common.config._agent_models_config", None), \
+             patch("src.common.config._DEFAULT_AGENT_SETTINGS", {
+                 "provider": "openai",
+                 "model": "default-model",
+                 "fallback_model": "fallback-model",
+                 "base_url": "https://default.example.com",
+                 "api_key": "default-key",
+                 "temperature": 0.2,
+                 "max_tokens": None,
+                 "enabled": True,
+             }):
             config = load_agent_config("ghost_agent")
 
-        assert config == {
-            "model": "default-model",
-            "api_key": "default-key",
-            "temperature": 0.2,
-            "max_tokens": None,
-            "base_url": "https://default.example.com",
-        }
+        assert config["model"] == "default-model"
+        assert config["fallback_model"] == "fallback-model"
+        assert config["api_key"] == "default-key"
+        assert config["temperature"] == 0.2
+        assert config["max_tokens"] is None
+        assert config["base_url"] == "https://default.example.com"
+        assert config["enabled"] is True
 
     def test_returns_defaults_when_agent_missing(self) -> None:
         from src.common.llm_client import load_agent_config
@@ -136,13 +144,22 @@ class TestLoadAgentConfig:
             "[known_agent]\nmodel='known-model'\napi_key='known-key'\n",
             encoding="utf-8",
         )
-        with patch("src.common.llm_client.AGENT_CONFIG_PATH", config_path), \
-             patch("src.common.llm_client.DEFAULT_MODEL", "default-model"), \
-             patch("src.common.llm_client.OPENAI_API_KEY", "default-key"), \
-             patch("src.common.llm_client.OPENAI_BASE_URL", "https://default.example.com"):
+        with patch("src.common.config._AGENT_CONFIG_PATH", config_path), \
+             patch("src.common.config._agent_models_config", None), \
+             patch("src.common.config._DEFAULT_AGENT_SETTINGS", {
+                 "provider": "openai",
+                 "model": "default-model",
+                 "fallback_model": "fallback-model",
+                 "base_url": "https://default.example.com",
+                 "api_key": "default-key",
+                 "temperature": 0.2,
+                 "max_tokens": None,
+                 "enabled": True,
+             }):
             config = load_agent_config("unknown_agent")
 
         assert config["model"] == "default-model"
+        assert config["fallback_model"] == "fallback-model"
         assert config["api_key"] == "default-key"
         assert config["temperature"] == 0.2
         assert config["max_tokens"] is None
@@ -176,7 +193,7 @@ class TestChatCompletion:
 
     def test_raises_when_api_key_empty(self) -> None:
         from src.common.llm_client import chat_completion
-        with patch("src.common.llm_client.OPENAI_API_KEY", ""), \
+        with patch("src.common.llm_client.app_config.OPENAI_API_KEY", ""), \
              patch.dict("src.common.llm_client._endpoint_backoff_until", {}, clear=True):
             with pytest.raises(RuntimeError, match="OPENAI_API_KEY"):
                 run_async(chat_completion([{"role": "user", "content": "hi"}]))
@@ -185,7 +202,7 @@ class TestChatCompletion:
         from src.common.llm_client import chat_completion
         mock_response = self._make_mock_response("Hello from LLM")
         mock_create = AsyncMock(return_value=mock_response)
-        with patch("src.common.llm_client.OPENAI_API_KEY", "test-key"), \
+        with patch("src.common.llm_client.app_config.OPENAI_API_KEY", "test-key"), \
              patch("src.common.llm_client.get_client") as mock_get_client, \
              patch.dict("src.common.llm_client._endpoint_backoff_until", {}, clear=True):
             mock_client = MagicMock()
@@ -197,7 +214,7 @@ class TestChatCompletion:
     def test_retries_on_failure_then_raises(self) -> None:
         from src.common.llm_client import chat_completion
         mock_create = AsyncMock(side_effect=RuntimeError("network error"))
-        with patch("src.common.llm_client.OPENAI_API_KEY", "test-key"), \
+        with patch("src.common.llm_client.app_config.OPENAI_API_KEY", "test-key"), \
              patch("src.common.llm_client.get_client") as mock_get_client, \
              patch("src.common.llm_client.asyncio.sleep", new=AsyncMock()), \
              patch.dict("src.common.llm_client._endpoint_backoff_until", {}, clear=True):
@@ -216,9 +233,9 @@ class TestChatCompletion:
             called_models.append(kwargs.get("model", ""))
             raise RuntimeError("fail")
 
-        with patch("src.common.llm_client.OPENAI_API_KEY", "test-key"), \
-             patch("src.common.llm_client.FALLBACK_MODEL", "fallback-model"), \
-             patch("src.common.llm_client.DEFAULT_MODEL", "default-model"), \
+        with patch("src.common.llm_client.app_config.OPENAI_API_KEY", "test-key"), \
+             patch("src.common.llm_client.app_config.FALLBACK_MODEL", "fallback-model"), \
+             patch("src.common.llm_client.app_config.DEFAULT_MODEL", "default-model"), \
              patch("src.common.llm_client.get_client") as mock_get_client, \
              patch("src.common.llm_client.asyncio.sleep", new=AsyncMock()), \
              patch.dict("src.common.llm_client._endpoint_backoff_until", {}, clear=True):
@@ -239,7 +256,7 @@ class TestChatCompletion:
             called_models.append(kwargs.get("model", ""))
             return mock_response
 
-        with patch("src.common.llm_client.OPENAI_API_KEY", "test-key"), \
+        with patch("src.common.llm_client.app_config.OPENAI_API_KEY", "test-key"), \
              patch("src.common.llm_client.get_client") as mock_get_client, \
              patch.dict("src.common.llm_client._endpoint_backoff_until", {}, clear=True):
             mock_client = MagicMock()
@@ -277,7 +294,7 @@ class TestChatCompletion:
         mock_response = MagicMock()
         mock_response.choices = []
         mock_create = AsyncMock(return_value=mock_response)
-        with patch("src.common.llm_client.OPENAI_API_KEY", "test-key"), \
+        with patch("src.common.llm_client.app_config.OPENAI_API_KEY", "test-key"), \
              patch("src.common.llm_client.get_client") as mock_get_client, \
              patch.dict("src.common.llm_client._endpoint_backoff_until", {}, clear=True):
             mock_client = MagicMock()
@@ -291,7 +308,7 @@ class TestChatCompletion:
         from src.common.llm_client import chat_completion
 
         mock_create = AsyncMock(side_effect=RuntimeError("Connection error"))
-        with patch("src.common.llm_client.OPENAI_API_KEY", "test-key"), \
+        with patch("src.common.llm_client.app_config.OPENAI_API_KEY", "test-key"), \
              patch("src.common.llm_client.get_client") as mock_get_client, \
              patch("src.common.llm_client.asyncio.sleep", new=AsyncMock()) as mock_sleep, \
              patch.dict("src.common.llm_client._endpoint_backoff_until", {}, clear=True):
@@ -308,7 +325,7 @@ class TestChatCompletion:
     def test_backoff_short_circuits_new_requests(self) -> None:
         from src.common.llm_client import chat_completion
 
-        with patch("src.common.llm_client.OPENAI_API_KEY", "test-key"), \
+        with patch("src.common.llm_client.app_config.OPENAI_API_KEY", "test-key"), \
              patch("src.common.llm_client.get_client") as mock_get_client, \
              patch.dict(
                  "src.common.llm_client._endpoint_backoff_until",

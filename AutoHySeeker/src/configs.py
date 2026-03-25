@@ -3,7 +3,7 @@
 Loads and exposes typed configuration from TOML files under ``configs/``:
 
 - ``settings.toml``       → :class:`Settings`
-- ``llm_config.toml``     → :class:`LLMConfig`
+- ``agent_models.toml``   → :class:`LLMConfig`
 - ``microhyseeker.toml``  → :class:`MicroHySeekerConfig`
 
 Usage::
@@ -91,7 +91,7 @@ class Settings:
         )
 
 
-# ── llm_config.toml ───────────────────────────────────────────────────────────
+# ── agent_models.toml [defaults] ──────────────────────────────────────────────
 
 @dataclass
 class LLMModelConfig:
@@ -110,17 +110,29 @@ class LLMFallbackConfig:
 
 @dataclass
 class LLMConfig:
-    """Typed representation of ``llm_config.toml``."""
+    """Typed representation of ``agent_models.toml`` defaults."""
 
     default: LLMModelConfig = field(default_factory=LLMModelConfig)
     fallback: LLMFallbackConfig = field(default_factory=LLMFallbackConfig)
 
     @classmethod
     def load(cls) -> "LLMConfig":
-        data = _load_toml("llm_config.toml")
+        data = _load_toml("agent_models.toml")
+        defaults = data.get("defaults", {})
+        if not isinstance(defaults, dict):
+            defaults = {}
         return cls(
-            default=LLMModelConfig(**data.get("default", {})),
-            fallback=LLMFallbackConfig(**data.get("fallback", {})),
+            default=LLMModelConfig(
+                provider=str(defaults.get("provider", "openai")),
+                model=str(defaults.get("model", "anthropic/claude-sonnet-4-6")),
+                temperature=float(defaults.get("temperature", 0.1)),
+                max_tokens=int(defaults.get("max_tokens", 4096)),
+                base_url=str(defaults.get("base_url", "https://api.mcxhm.cn")),
+                api_key_env="OPENAI_API_KEY",
+            ),
+            fallback=LLMFallbackConfig(
+                model=str(defaults.get("fallback_model", "anthropic/claude-opus-4-6")),
+            ),
         )
 
 

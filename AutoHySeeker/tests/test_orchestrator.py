@@ -176,7 +176,7 @@ class TestAgentRunnerNodes:
         from src.graph.nodes import run_orchestrator
         state = _base_state(task={"intent": "analyze"}, context={})
         with patch("src.agents.base.chat_completion", new=AsyncMock(return_value="peaks found")), \
-             patch("src.common.llm_client.OPENAI_API_KEY", "test-key"):
+             patch("src.common.llm_client.app_config.OPENAI_API_KEY", "test-key"):
             result = run_async(run_orchestrator(state))
         assert "result" in result
         assert "error" in result
@@ -187,7 +187,7 @@ class TestAgentRunnerNodes:
         from src.graph.nodes import run_diagnostics
         state = _base_state(task={"error": "voltage spike"})
         with patch("src.agents.base.chat_completion", new=AsyncMock(return_value="no issues")), \
-             patch("src.common.llm_client.OPENAI_API_KEY", "test-key"):
+             patch("src.common.llm_client.app_config.OPENAI_API_KEY", "test-key"):
             result = run_async(run_diagnostics(state))
         assert result["error"] is None
         assert result["result"]["agent"] == "diagnostics"
@@ -196,7 +196,7 @@ class TestAgentRunnerNodes:
         from src.graph.nodes import run_exp_designer
         state = _base_state(task={"goal": "design experiment"})
         with patch("src.agents.base.chat_completion", new=AsyncMock(return_value="plan")), \
-             patch("src.common.llm_client.OPENAI_API_KEY", "test-key"):
+             patch("src.common.llm_client.app_config.OPENAI_API_KEY", "test-key"):
             result = run_async(run_exp_designer(state))
         assert result["error"] is None
         assert result["result"]["agent"] == "exp_designer"
@@ -205,7 +205,7 @@ class TestAgentRunnerNodes:
         from src.graph.nodes import run_exp_executor
         state = _base_state(task={"action": "execute"})
         with patch("src.agents.base.chat_completion", new=AsyncMock(return_value="executed")), \
-             patch("src.common.llm_client.OPENAI_API_KEY", "test-key"):
+             patch("src.common.llm_client.app_config.OPENAI_API_KEY", "test-key"):
             result = run_async(run_exp_executor(state))
         assert result["error"] is None
         assert result["result"]["agent"] == "exp_executor"
@@ -217,7 +217,7 @@ class TestAgentRunnerNodes:
         # Mock chat_completion to raise (simulates LLM failure)
         with patch("src.agents.base.chat_completion",
                    new=AsyncMock(side_effect=RuntimeError("LLM down"))), \
-             patch("src.common.llm_client.OPENAI_API_KEY", "test-key"):
+             patch("src.common.llm_client.app_config.OPENAI_API_KEY", "test-key"):
             result = run_async(run_diagnostics(state))
         assert result["error"] is not None
 
@@ -243,7 +243,7 @@ class TestBuildSupervisorGraph:
 
         fallback = _FallbackGraph()
         with patch("src.agents.base.chat_completion", new=AsyncMock(return_value="analysis ok")), \
-             patch("src.common.llm_client.OPENAI_API_KEY", "test-key"):
+             patch("src.common.llm_client.app_config.OPENAI_API_KEY", "test-key"):
             state = _base_state(task={"intent": "analyze cv data"})
             result = run_async(fallback.ainvoke(state))
 
@@ -263,7 +263,7 @@ class TestOrchestratorAinvoke:
 
         with patch("src.common.llm_client.chat_completion", new=AsyncMock(return_value=fake_llm_response)):
             # Need to also patch OPENAI_API_KEY
-            with patch("src.common.llm_client.OPENAI_API_KEY", "test-key"):
+            with patch("src.common.llm_client.app_config.OPENAI_API_KEY", "test-key"):
                 g = build_supervisor_graph()
                 state = _base_state(task={"intent": "analyze cv data from run_001"})
                 result = run_async(g.ainvoke(state))
@@ -275,7 +275,7 @@ class TestOrchestratorAinvoke:
         from src.graph.orchestrator import build_supervisor_graph
 
         with patch("src.common.llm_client.chat_completion", new=AsyncMock(return_value="analysis done")):
-            with patch("src.common.llm_client.OPENAI_API_KEY", "test-key"):
+            with patch("src.common.llm_client.app_config.OPENAI_API_KEY", "test-key"):
                 g = build_supervisor_graph()
                 state = _base_state(task={"intent": "analyze cv"})
                 out = run_async(g.ainvoke(state))

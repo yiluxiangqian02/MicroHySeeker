@@ -19,6 +19,12 @@ AutoHySeeker 是一个 AI 多 Agent 科研助手平台，服务于微流控电�
 
 ## 文档索引
 
+### 先看这一份（面向使用者）
+
+| 顺序 | 文档 | 内容 |
+| --- | --- | --- |
+| 0 | `USER_MANUAL.md` | 面向使用者的详细说明书：启动、页面说明、典型流程、数据落盘位置、当前限制 |
+
 ### 第一步：理解架构（必读）
 
 | 顺序 | 文档 | 内容 |
@@ -103,6 +109,7 @@ AutoHySeeker 是一个 AI 多 Agent 科研助手平台，服务于微流控电�
 
 ## 快速定位
 
+- 想直接把系统跑起来并开始使用？→ `USER_MANUAL.md`
 - 想认领任务？→ `PROGRESS_TRACKER.md`，找 `待认领` 状态的任务
 - 想了解协作规则和验收标准？→ `COLLABORATION_GUIDE.md`
 - 想看后端 API 设计？→ `PLAN_PHASE1_EXPERIMENT_LOOP.md`

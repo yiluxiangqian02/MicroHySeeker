@@ -26,27 +26,27 @@ Phase 1 聚焦 **实验闭环（场景 A）**：
 
 ### 2.1 Agent 清单（6 个 Agent）
 
-| # | Agent | 标识 | 职责 | LLM | 新增/已有 |
-|---|-------|------|------|-----|----------|
-| 1 | OrchestratorAgent | `orchestrator` | 调度中心 + 决策 + 人机协作 | Qwen3-Max | 已有，需增强 |
-| 2 | ExperimentDesignerAgent | `exp_designer` | 参数生成（LLM + ML 混合优化） | Gemini-3-Flash | 已有，需增强 |
-| 3 | ExperimentExecutorAgent | `exp_executor` | 实验执行 + 两层智能监控 | Qwen3-Max (轻量) | 已有，需增强 |
-| 4 | DiagnosticsExpertAgent | `diagnostics` | 故障诊断 + 自动修复 + 知识库查询 | GLM-4.6 Thinking | 已有，需增强 |
-| 5 | ChatAgent | `chat` | 综合问答入口（实验进度/知识库/指令） | Qwen3-Max | 新增 |
-| 6 | LiteratureAgent | `literature` | 文献检索 + 下载 + 解析入库 | Gemini-3-Flash | Phase 2 新增 |
+| # | Agent                   | 标识             | 职责                                 | LLM              | 新增/已有    |
+| - | ----------------------- | ---------------- | ------------------------------------ | ---------------- | ------------ |
+| 1 | OrchestratorAgent       | `orchestrator` | 调度中心 + 决策 + 人机协作           | Qwen3-Max        | 已有，需增强 |
+| 2 | ExperimentDesignerAgent | `exp_designer` | 参数生成（LLM + ML 混合优化）        | Gemini-3-Flash   | 已有，需增强 |
+| 3 | ExperimentExecutorAgent | `exp_executor` | 实验执行 + 两层智能监控              | Qwen3-Max (轻量) | 已有，需增强 |
+| 4 | DiagnosticsExpertAgent  | `diagnostics`  | 故障诊断 + 自动修复 + 知识库查询     | GLM-4.6 Thinking | 已有，需增强 |
+| 5 | ChatAgent               | `chat`         | 综合问答入口（实验进度/知识库/指令） | Qwen3-Max        | 新增         |
+| 6 | LiteratureAgent         | `literature`   | 文献检索 + 下载 + 解析入库           | Gemini-3-Flash   | Phase 2 新增 |
 
 > Agent 5 (ChatAgent) 在 Phase 1 实现。
 > Agent 6 (LiteratureAgent) 在 Phase 2 实现，Phase 1 中文献通过手动导入。
 
 ### 2.2 Skill 清单（5 个 Skill）
 
-| Skill | 文件 | 归属 | 共享/专属 | 功能 |
-|-------|------|------|----------|------|
-| DataAnalysisSkill | `skills/data_analysis_skill.py` | Orchestrator | 专属 | 在线指标提取、质量评估、历史对比 |
-| KnowledgeArchiveSkill | `skills/knowledge_archive_skill.py` | Orchestrator | 专属 | 实验归档、检索 |
-| RealtimeMonitorSkill | `skills/realtime_monitor_skill.py` | Executor | 专属 | L1 代码级规则引擎监控 |
-| HeartbeatInspectorSkill | `skills/heartbeat_inspector_skill.py` | Executor | 专属 | L2 Agent 级心跳巡检 |
-| KnowledgeQuerySkill | `skills/knowledge_query_skill.py` | 公共 | 共享 | 查询 OpenViking 知识库（只读） |
+| Skill                   | 文件                                    | 归属         | 共享/专属 | 功能                             |
+| ----------------------- | --------------------------------------- | ------------ | --------- | -------------------------------- |
+| DataAnalysisSkill       | `skills/data_analysis_skill.py`       | Orchestrator | 专属      | 在线指标提取、质量评估、历史对比 |
+| KnowledgeArchiveSkill   | `skills/knowledge_archive_skill.py`   | Orchestrator | 专属      | 实验归档、检索                   |
+| RealtimeMonitorSkill    | `skills/realtime_monitor_skill.py`    | Executor     | 专属      | L1 代码级规则引擎监控            |
+| HeartbeatInspectorSkill | `skills/heartbeat_inspector_skill.py` | Executor     | 专属      | L2 Agent 级心跳巡检              |
+| KnowledgeQuerySkill     | `skills/knowledge_query_skill.py`     | 公共         | 共享      | 查询 OpenViking 知识库（只读）   |
 
 #### Skill 权限说明
 
@@ -126,6 +126,7 @@ Phase 1 聚焦 **实验闭环（场景 A）**：
 **职责**：闭环调度中心 + 决策引擎 + 人机协作入口
 
 **内置 Skill**：
+
 - `DataAnalysisSkill`（专属）— 在线数据分析
 - `KnowledgeArchiveSkill`（专属）— 实验归档
 - `KnowledgeQuerySkill`（共享）— 知识库查询
@@ -223,6 +224,7 @@ pause_on_anomaly_fix = true      # 异常修复时暂停
 **职责**：根据历史数据、知识库和优化算法，生成下一组实验参数
 
 **使用 Skill**：
+
 - `KnowledgeQuerySkill`（共享）— 查询文献推荐配比、历史实验结果
 
 **核心方法**：
@@ -302,6 +304,7 @@ class PerformancePredictor:
 **职责**：执行实验、两层智能监控、数据收集
 
 **内置 Skill**：
+
 - `RealtimeMonitorSkill`（专属）— L1 代码级规则引擎
 - `HeartbeatInspectorSkill`（专属）— L2 Agent 级心跳巡检
 - `KnowledgeQuerySkill`（共享）— 查询历史运维记录
@@ -432,6 +435,7 @@ L2 发现隐患：
 **职责**：故障诊断、自动修复、经验沉淀
 
 **使用 Skill**：
+
 - `KnowledgeQuerySkill`（共享）— 查询历史故障记录
 
 **核心方法**：
@@ -492,6 +496,7 @@ class DiagnosticsExpertAgent(BaseAgent):
 **职责**：自然语言交互入口，综合回答实验相关问题
 
 **使用 Skill**：
+
 - `KnowledgeQuerySkill`（共享）— 查询知识库
 
 **核心方法**：
@@ -707,7 +712,7 @@ OptimizationLoop.run()
 ### 5.2 状态管理
 
 ```python
-# LangGraph State 定义
+# LangGraph State 定义  #langchain
 class OptimizationState(TypedDict):
     # 基本信息
     project_id: str

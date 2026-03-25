@@ -11,7 +11,16 @@ export function Optimization() {
   const { config, state, isLoading, fetchConfigAndState, startLoop, stopLoop } = useOptimizationStore();
 
   useEffect(() => {
-    fetchConfigAndState();
+    const refreshStatus = () => {
+      fetchConfigAndState().catch(() => undefined);
+    };
+
+    refreshStatus();
+    const timer = window.setInterval(() => {
+      refreshStatus();
+    }, 3000);
+
+    return () => window.clearInterval(timer);
   }, [fetchConfigAndState]);
 
   const handleStartLoop = async () => {

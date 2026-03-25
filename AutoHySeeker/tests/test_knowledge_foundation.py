@@ -79,6 +79,27 @@ def test_viking_client_fallback_partition_write_and_search(monkeypatch) -> None:
     assert "experiments" in hits[0]["uri"]
 
 
+def test_viking_client_fallback_search_matches_any_keyword(monkeypatch) -> None:
+    from src.knowledge.schema import KnowledgePartition
+    from src.knowledge.viking_client import OpenVikingClient
+
+    monkeypatch.setattr(OpenVikingClient, "initialize", lambda self: False)
+
+    client = OpenVikingClient(workspace_path="./.tmp_viking_workspace")
+    client._available = False
+    client._client = None
+
+    client.write_json(
+        partition=KnowledgePartition.EXPERIMENTS,
+        payload={"run_id": "r2", "metrics": {"overpotential_mV": 185}, "notes": "NiCoP catalyst"},
+        resource_name="r2.json",
+    )
+
+    hits = client.search("NiCoP overpotential", partition=KnowledgePartition.EXPERIMENTS, top_k=3)
+    assert len(hits) == 1
+    assert "NiCoP catalyst" in hits[0]["content"]
+
+
 def test_viking_client_partition_uri_method() -> None:
     from src.knowledge.viking_client import OpenVikingClient
 

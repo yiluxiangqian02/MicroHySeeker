@@ -6,7 +6,7 @@ export interface KnowledgeItem {
   title: string;
   content: string;
   tags: string[];
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
   createdAt: string;
   updatedAt: string;
 }
@@ -15,42 +15,138 @@ export interface KnowledgeSearchRequest {
   query: string;
   partitions?: string[];
   limit?: number;
-  minScore?: number;
 }
 
-export interface KnowledgeSearchResponse {
-  results: Array<{
-    item: KnowledgeItem;
-    score: number;
-  }>;
-  total: number;
-  partitionCounts?: Record<string, number>;
+interface KnowledgeSearchBackendItem {
+  uri?: string;
+  content?: string;
+  score?: number;
+  metadata?: Record<string, unknown>;
 }
+
+interface KnowledgeSearchResponse {
+  count: number;
+  items: KnowledgeSearchBackendItem[];
+}
+
+interface ExperimentQueryResponse {
+  count: number;
+  items: Array<Record<string, unknown>>;
+}
+
+interface FaultQueryResponse {
+  count: number;
+  items: Array<Record<string, unknown>>;
+}
+
+const nowIso = () => new Date().toISOString();
+
+const titleFromUri = (uri?: string, fallback: string = "Knowledge Record") => {
+  if (!uri) {
+    return fallback;
+  }
+  const trimmed = uri.replace(/\/+$/, "");
+  const segments = trimmed.split("/");
+  return decodeURIComponent(segments[segments.length - 1] || fallback);
+};
+
+const normalizeTags = (metadata?: Record<string, unknown>) => {
+  const partition = typeof metadata?.partition === "string" ? metadata.partition : undefined;
+  return partition ? [partition] : [];
+};
+
+const toKnowledgeItem = (
+  item: KnowledgeSearchBackendItem,
+  partitionFallback: string,
+): KnowledgeItem => {
+  const timestamp = nowIso();
+  const partition =
+    typeof item.metadata?.partition === "string" ? item.metadata.partition : partitionFallback;
+  const uri = typeof item.uri === "string" ? item.uri : undefined;
+
+  return {
+    id: uri || `${partition}-${timestamp}`,
+    partition,
+    title: titleFromUri(uri),
+    content: item.content || "",
+    tags: normalizeTags(item.metadata),
+    metadata: item.metadata,
+    createdAt: timestamp,
+    updatedAt: timestamp,
+  };
+};
+
+const toScoredResults = (
+  items: KnowledgeSearchBackendItem[],
+  partitionFallback: string,
+): Array<{ item: KnowledgeItem; score: number }> =>
+  items.map((item) => ({
+    item: toKnowledgeItem(item, partitionFallback),
+    score: typeof item.score === "number" ? item.score : 0.5,
+  }));
 
 export const knowledgeApi = {
-  /** 搜索知识库 */
   search: async (req: KnowledgeSearchRequest) => {
-    const res = await apiClient.post<KnowledgeSearchResponse>("/api/knowledge/search", req);
-    return res.data;
-  },
-
-  /** 获取最近录入的知识点（列表） */
-  getRecent: async (limit: number = 10, partition?: string) => {
-    const res = await apiClient.get<KnowledgeItem[]>("/api/knowledge/recent", {
-      params: { limit, partition }
+    const res = await apiClient.get<KnowledgeSearchResponse>("/api/knowledge/search", {
+      params: {
+        query: req.query,
+        partitions: req.partitions?.join(","),
+        top_k: req.limit ?? 10,
+      },
     });
-    return res.data;
+    return {
+      results: toScoredResults(res.data.items, "knowledge"),
+      total: res.data.count,
+    };
   },
 
-  /** 获取单条知识详情 */
-  getById: async (id: string) => {
-    const res = await apiClient.get<KnowledgeItem>(`/api/knowledge/items/${id}`);
-    return res.data;
+  getSimilarExperiments: async (params: Record<string, number>, topK: number = 5) => {
+    const res = await apiClient.get<ExperimentQueryResponse>("/api/knowledge/experiments", {
+      params: {
+        params: JSON.stringify(params),
+        top_k: topK,
+      },
+    });
+
+    const results = res.data.items.map((item, index) => ({
+      item: {
+        id: String(item.run_id || `experiment-${index}`),
+        partition: "experiments",
+        title: String(item.run_id || `Experiment ${index + 1}`),
+        content: JSON.stringify(item, null, 2),
+        tags: ["experiments"],
+        metadata: item,
+        createdAt: nowIso(),
+        updatedAt: nowIso(),
+      },
+      score: 0.8,
+    }));
+
+    return { results, total: res.data.count };
   },
 
-  /** 摄入/上传新的知识条目 */
-  ingest: async (item: Partial<KnowledgeItem>) => {
-    const res = await apiClient.post<{ ok: boolean; id: string }>("/api/knowledge/ingest", item);
-    return res.data;
-  }
+  getFaultHistory: async (faultType: string, topK: number = 5) => {
+    const res = await apiClient.get<FaultQueryResponse>("/api/knowledge/faults", {
+      params: {
+        fault_type: faultType,
+        top_k: topK,
+      },
+    });
+
+    const results = res.data.items.map((item, index) => ({
+      item: {
+        id: String(item.uri || `fault-${index}`),
+        partition: "faults",
+        title: titleFromUri(typeof item.uri === "string" ? item.uri : undefined, `Fault ${index + 1}`),
+        content: typeof item.content === "string" ? item.content : JSON.stringify(item, null, 2),
+        tags: ["faults"],
+        metadata: item,
+        createdAt: nowIso(),
+        updatedAt: nowIso(),
+      },
+      score: typeof item.score === "number" ? item.score : 0.7,
+    }));
+
+    return { results, total: res.data.count };
+  },
 };

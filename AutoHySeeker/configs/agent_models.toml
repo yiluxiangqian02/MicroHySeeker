@@ -1,13 +1,22 @@
-# AutoHySeeker Agent 模型配置 (4-Agent 架构)
-# 精简后保留 4 个独立 Agent，DataAnalyst / KnowledgeManager / ExperimentSupervisor
-# 已降级为 Orchestrator 内部 Skill（不再使用独立 LLM 调用）
-# 最后更新：2026-03-18
+# AutoHySeeker LLM model configuration
+# Last updated: 2026-03-24
+
+[defaults]
+provider = "openai"
+model = "anthropic/claude-sonnet-4-6"
+fallback_model = "anthropic/claude-opus-4-6"
+base_url = "https://api.mcxhm.cn"
+api_key = "${OPENAI_API_KEY:-}"
+temperature = 0.2
+enabled = true
 
 [orchestrator]
-name = "运行管控 Agent（含数据分析 + 知识管理 Skill）"
+name = "运行管控 Agent"
 provider = "openai"
+enabled = true
 model = "ali/qwen3-max-2026-01-23"
-base_url = "https://api.mcxhm.cn"
+fallback_model = "anthropic/claude-opus-4-6"
+base_url = "https://router.shengsuanyun.com/api/v1"
 api_key = "p-B-_iUEnxAxkA79KsSUtKZNYTW_ntnLpqT9iirKwdQ7XybfnIuqz5fgqC612934rICbjzPQtoazDMjF3cSA9jyhaQhyJSoXz7-v"
 temperature = 0.1
 max_tokens = 1500
@@ -18,20 +27,24 @@ context_window = 256000
 [experiment_designer]
 name = "实验设计 Agent"
 provider = "openai"
+enabled = true
 model = "google/gemini-3-flash-preview"
-base_url = "https://api.mcxhm.cn"
+fallback_model = "anthropic/claude-opus-4-6"
+base_url = "https://router.shengsuanyun.com/api/v1"
 api_key = "AZu-zWLYvmRIWATNBp5F_Cr4yQDJWMavJuovDzntyqN9wAyNzLPoitGEMVWsASuXXKkYud4iXKcXU1zcb4QEKeZ681elulIcjNYU"
 temperature = 0.3
 max_tokens = 2500
-pricing_input = 3.45   # $0.50 * 6.89
-pricing_output = 20.68 # $3.00 * 6.89
+pricing_input = 3.45
+pricing_output = 20.68
 context_window = 1049000
 
 [experiment_executor]
 name = "实验执行 Agent"
 provider = "openai"
+enabled = true
 model = "ali/qwen3-max-2026-01-23"
-base_url = "https://api.mcxhm.cn"
+fallback_model = "anthropic/claude-opus-4-6"
+base_url = "https://router.shengsuanyun.com/api/v1"
 api_key = "p-B-_iUEnxAxkA79KsSUtKZNYTW_ntnLpqT9iirKwdQ7XybfnIuqz5fgqC612934rICbjzPQtoazDMjF3cSA9jyhaQhyJSoXz7-v"
 temperature = 0.1
 max_tokens = 1000
@@ -42,11 +55,35 @@ context_window = 256000
 [diagnostics_expert]
 name = "故障诊断 Agent"
 provider = "openai"
+enabled = true
 model = "bigmodel/GLM-4.6 Thinking"
-base_url = "https://api.mcxhm.cn"
+fallback_model = "anthropic/claude-opus-4-6"
+base_url = "https://router.shengsuanyun.com/api/v1"
 api_key = "oHsCKCRb2bVT8t8_6EbCElKLDARFJ0Vs0O5D6HEAhowh_LAd9jSPyCFlnR97tVagyb8XM5H9b68UZN9WZRaeWXFUQw_095k_g9ID"
 temperature = 0.1
 max_tokens = 1000
 pricing_input = 2.0
 pricing_output = 8.0
 context_window = 200000
+
+[chat]
+name = "对话 Agent"
+provider = "openai"
+enabled = true
+model = "ali/qwen3-max-2026-01-23"
+fallback_model = "anthropic/claude-opus-4-6"
+base_url = "https://router.shengsuanyun.com/api/v1"
+api_key = "p-B-_iUEnxAxkA79KsSUtKZNYTW_ntnLpqT9iirKwdQ7XybfnIuqz5fgqC612934rICbjzPQtoazDMjF3cSA9jyhaQhyJSoXz7-v"
+temperature = 0.3
+max_tokens = 2000
+
+[heartbeat_inspector]
+name = "心跳巡检"
+provider = "openai"
+enabled = true
+model = "ali/qwen3-max-2026-01-23"
+fallback_model = "anthropic/claude-opus-4-6"
+base_url = "https://router.shengsuanyun.com/api/v1"
+api_key = "p-B-_iUEnxAxkA79KsSUtKZNYTW_ntnLpqT9iirKwdQ7XybfnIuqz5fgqC612934rICbjzPQtoazDMjF3cSA9jyhaQhyJSoXz7-v"
+temperature = 0.0
+max_tokens = 500

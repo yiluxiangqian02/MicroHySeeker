@@ -24,8 +24,8 @@ interface AgentStatus {
 }
 
 const mockAgentStatuses: Record<string, AgentStatus> = {
-  C1: {
-    id: "C1",
+  orchestrator: {
+    id: "orchestrator",
     status: "running",
     currentTask: "Analyzing CV data for experiment #1234",
     queuedTasks: 2,
@@ -42,8 +42,8 @@ const mockAgentStatuses: Record<string, AgentStatus> = {
       { timestamp: "2026-03-10T14:28:10", level: "WARNING", message: "High token usage detected" }
     ]
   },
-  D2: {
-    id: "D2",
+  diagnostics_expert: {
+    id: "diagnostics_expert",
     status: "idle",
     queuedTasks: 0,
     metrics: {
@@ -57,8 +57,8 @@ const mockAgentStatuses: Record<string, AgentStatus> = {
       { timestamp: "2026-03-10T14:15:30", level: "INFO", message: "Diagnostics check completed successfully" }
     ]
   },
-  D3: {
-    id: "D3",
+  experiment_designer: {
+    id: "experiment_designer",
     status: "running",
     currentTask: "Designing experiment parameters",
     queuedTasks: 1,
@@ -74,8 +74,8 @@ const mockAgentStatuses: Record<string, AgentStatus> = {
       { timestamp: "2026-03-10T14:33:45", level: "INFO", message: "Retrieved historical data" }
     ]
   },
-  C2: {
-    id: "C2",
+  experiment_executor: {
+    id: "experiment_executor",
     status: "error",
     queuedTasks: 0,
     metrics: {
@@ -90,8 +90,8 @@ const mockAgentStatuses: Record<string, AgentStatus> = {
       { timestamp: "2026-03-10T14:30:15", level: "WARNING", message: "Slow response from API" }
     ]
   },
-  C3: {
-    id: "C3",
+  chat: {
+    id: "chat",
     status: "idle",
     queuedTasks: 0,
     metrics: {
@@ -103,6 +103,21 @@ const mockAgentStatuses: Record<string, AgentStatus> = {
     },
     logs: [
       { timestamp: "2026-03-10T14:20:00", level: "INFO", message: "Knowledge base indexed successfully" }
+    ]
+  },
+  heartbeat_inspector: {
+    id: "heartbeat_inspector",
+    status: "idle",
+    queuedTasks: 0,
+    metrics: {
+      todayTokens: 2210,
+      totalTokens: 65432,
+      avgResponseTime: 1.7,
+      successRate: 98.7,
+      errorCount: 1
+    },
+    logs: [
+      { timestamp: "2026-03-10T14:22:00", level: "INFO", message: "Heartbeat inspection completed" }
     ]
   }
 };

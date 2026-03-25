@@ -18,7 +18,6 @@ export function Chat() {
     isWaitingForResponse,
     fetchSessions, 
     setActiveSession, 
-    createNewSession, 
     sendMessage 
   } = useChatStore();
 
@@ -76,7 +75,6 @@ export function Chat() {
           sessions={sessions} 
           activeId={activeSessionId} 
           onSelect={setActiveSession} 
-          onNew={createNewSession}
         />
       </div>
 

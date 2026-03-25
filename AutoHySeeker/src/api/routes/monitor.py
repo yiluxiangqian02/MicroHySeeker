@@ -8,7 +8,7 @@ from fastapi import APIRouter
 from pydantic import BaseModel, Field
 
 from src.agents.exp_executor import get_shared_executor_agent
-from src.common.config import MONITOR_CONFIG
+from src.common.config import MONITOR_CONFIG, load_agent_config, update_agent_model_config
 
 router = APIRouter(prefix="/api/monitor", tags=["monitor"])
 
@@ -43,10 +43,11 @@ async def get_monitor_status() -> dict[str, Any]:
     executor = get_shared_executor_agent()
     heartbeat_cfg = MONITOR_CONFIG.get("heartbeat_inspector", {})
     realtime_cfg = MONITOR_CONFIG.get("realtime_monitor", {})
+    heartbeat_model_cfg = load_agent_config("heartbeat_inspector")
     return {
         "heartbeat_enabled": bool(heartbeat_cfg.get("enabled", False)),
         "heartbeat_interval_s": heartbeat_cfg.get("interval_s", 30),
-        "heartbeat_model": heartbeat_cfg.get("model", "qwen3-max"),
+        "heartbeat_model": heartbeat_model_cfg.get("model", "qwen3-max"),
         "realtime_monitor_enabled": bool(realtime_cfg.get("enabled", True)),
         "monitor_status": executor.get_monitor_status(),
     }
@@ -60,17 +61,18 @@ async def update_monitor_config(req: MonitorConfigUpdateRequest) -> dict[str, An
     if req.heartbeat_interval_s is not None:
         heartbeat_cfg["interval_s"] = req.heartbeat_interval_s
     if req.heartbeat_model is not None:
-        heartbeat_cfg["model"] = req.heartbeat_model
+        update_agent_model_config("heartbeat_inspector", {"model": req.heartbeat_model})
 
     executor = get_shared_executor_agent()
     executor.update_monitor_config(heartbeat=heartbeat_cfg)
+    heartbeat_model_cfg = load_agent_config("heartbeat_inspector", reload=True)
 
     return {
         "ok": True,
         "config": {
             "heartbeat_enabled": heartbeat_cfg.get("enabled", False),
             "heartbeat_interval_s": heartbeat_cfg.get("interval_s", 30),
-            "heartbeat_model": heartbeat_cfg.get("model", "qwen3-max"),
+            "heartbeat_model": heartbeat_model_cfg.get("model", "qwen3-max"),
         },
         "monitor_status": executor.get_monitor_status(),
     }

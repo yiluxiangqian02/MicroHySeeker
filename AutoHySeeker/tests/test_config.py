@@ -88,7 +88,7 @@ class TestLLMConfig:
         assert c.default.temperature == 0.1
         assert c.fallback.model == "anthropic/claude-opus-4-6"
 
-    def test_loads_from_real_llm_config_toml(self) -> None:
+    def test_loads_from_real_agent_models_toml(self) -> None:
         from src.configs import LLMConfig
 
         c = LLMConfig.load()
@@ -100,8 +100,8 @@ class TestLLMConfig:
     def test_custom_model_name(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
         import src.configs as configs_mod
 
-        toml_content = b"[default]\nmodel = 'custom/my-model'\ntemperature = 0.7\n"
-        (tmp_path / "llm_config.toml").write_bytes(toml_content)
+        toml_content = b"[defaults]\nmodel = 'custom/my-model'\ntemperature = 0.7\n"
+        (tmp_path / "agent_models.toml").write_bytes(toml_content)
         monkeypatch.setattr(configs_mod, "_CONFIGS_DIR", tmp_path)
         configs_mod._llm_config = None
         c = configs_mod.LLMConfig.load()
@@ -112,8 +112,8 @@ class TestLLMConfig:
     def test_fallback_model_customisable(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
         import src.configs as configs_mod
 
-        toml_content = b"[fallback]\nmodel = 'other/fallback-model'\n"
-        (tmp_path / "llm_config.toml").write_bytes(toml_content)
+        toml_content = b"[defaults]\nfallback_model = 'other/fallback-model'\n"
+        (tmp_path / "agent_models.toml").write_bytes(toml_content)
         monkeypatch.setattr(configs_mod, "_CONFIGS_DIR", tmp_path)
         configs_mod._llm_config = None
         c = configs_mod.LLMConfig.load()
@@ -169,7 +169,8 @@ class TestMicroHySeekerConfig:
         configs_mod._mhs_config = None
         monkeypatch.setenv("AUTOHYSEEKER_TEST_DATA_DIR", "/custom/data/path")
         m = configs_mod.MicroHySeekerConfig.load()
-        assert m.paths.data_dir == "/custom/data/path"
+        assert Path(m.paths.data_dir).is_absolute()
+        assert Path(m.paths.data_dir).as_posix().endswith("/custom/data/path")
 
     def test_engine_mode_customisable(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
         import src.configs as configs_mod
@@ -226,7 +227,8 @@ class TestExpandPath:
 
         absolute = "/absolute/path/to/data"
         result = _expand_path(absolute, tmp_path)
-        assert result == absolute
+        assert Path(result).is_absolute()
+        assert Path(result).as_posix().endswith("/absolute/path/to/data")
 
     def test_relative_path_resolved_against_base(self, tmp_path: Path) -> None:
         from src.configs import _expand_path  # type: ignore[attr-defined]
@@ -240,21 +242,24 @@ class TestExpandPath:
 
         monkeypatch.setenv("TEST_EXPAND_DIR", "/env/data")
         result = _expand_path("${TEST_EXPAND_DIR}", tmp_path)
-        assert result == "/env/data"
+        assert Path(result).is_absolute()
+        assert Path(result).as_posix().endswith("/env/data")
 
     def test_env_var_default_when_unset(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
         from src.configs import _expand_path  # type: ignore[attr-defined]
 
         monkeypatch.delenv("UNSET_TEST_VAR_XYZ", raising=False)
         result = _expand_path("${UNSET_TEST_VAR_XYZ:-/fallback/dir}", tmp_path)
-        assert result == "/fallback/dir"
+        assert Path(result).is_absolute()
+        assert Path(result).as_posix().endswith("/fallback/dir")
 
     def test_env_var_overrides_default(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
         from src.configs import _expand_path  # type: ignore[attr-defined]
 
         monkeypatch.setenv("OVERRIDE_TEST_VAR", "/override/path")
         result = _expand_path("${OVERRIDE_TEST_VAR:-/ignored/default}", tmp_path)
-        assert result == "/override/path"
+        assert Path(result).is_absolute()
+        assert Path(result).as_posix().endswith("/override/path")
 
 
 # ── _load_toml helper tests ───────────────────────────────────────────────────

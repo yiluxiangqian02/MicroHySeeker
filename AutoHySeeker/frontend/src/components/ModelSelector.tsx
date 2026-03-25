@@ -1,5 +1,5 @@
 import type { FC } from "react";
-import { AVAILABLE_MODELS } from "@/stores/agentStore";
+import { useAgentStore } from "@/stores/agentStore";
 
 interface Props {
   label: string;
@@ -9,6 +9,8 @@ interface Props {
 }
 
 export const ModelSelector: FC<Props> = ({ label, value, onChange, id }) => {
+  const availableModels = useAgentStore((state) => state.availableModels);
+
   return (
     <div>
       <label
@@ -23,7 +25,7 @@ export const ModelSelector: FC<Props> = ({ label, value, onChange, id }) => {
         onChange={(e) => onChange(e.target.value)}
         className="w-full rounded-md border border-slate-300 bg-white px-2.5 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
       >
-        {AVAILABLE_MODELS.map((m) => (
+        {availableModels.map((m) => (
           <option key={m.value} value={m.value}>
             {m.label}
           </option>

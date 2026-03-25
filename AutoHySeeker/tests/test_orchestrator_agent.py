@@ -13,7 +13,7 @@ import pytest
 
 
 def run_async(coro: Any) -> Any:
-    return asyncio.get_event_loop().run_until_complete(coro)
+    return asyncio.run(coro)
 
 
 # ── OrchestratorAgent tests ────────────────────────────────────────────────────
@@ -411,7 +411,7 @@ class TestOrchestratorRouting:
         }
         with patch("src.agents.base.chat_completion",
                     new=AsyncMock(return_value='{"action": "continue"}')), \
-             patch("src.common.llm_client.OPENAI_API_KEY", "test-key"):
+             patch("src.common.llm_client.app_config.OPENAI_API_KEY", "test-key"):
             result = run_async(run_orchestrator(state))
 
         assert result["error"] is None

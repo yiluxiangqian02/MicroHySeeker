@@ -6,7 +6,7 @@ import { z } from "zod";
 import { Settings as SettingsIcon, Bell, Palette, Database, Download, Upload } from "lucide-react";
 import { useShallow } from "zustand/react/shallow";
 import { DEFAULT_SETTINGS, useSettingsStore } from "@/stores/settingsStore";
-import { AGENT_DEFINITIONS, useAgentStore, AVAILABLE_MODELS, type ControlAgentId, type AgentConfig } from "@/stores/agentStore";
+import { AGENT_DEFINITIONS, useAgentStore, type ControlAgentId, type AgentConfig } from "@/stores/agentStore";
 
 const settingsSchema = z.object({
   apiBaseUrl: z.string().url("Please input a valid URL."),
@@ -45,6 +45,12 @@ export function Settings() {
   const setConfig = useAgentStore((s) => s.setConfig);
   const importConfigs = useAgentStore((s) => s.importConfigs);
   const resetAll = useAgentStore((s) => s.resetAll);
+  const availableModels = useAgentStore((s) => s.availableModels);
+  const loadAgentConfigs = useAgentStore((s) => s.loadConfigs);
+  const saveAgentConfig = useAgentStore((s) => s.saveConfig);
+  const agentConfigsLoading = useAgentStore((s) => s.loading);
+  const agentConfigsLoaded = useAgentStore((s) => s.loaded);
+  const agentConfigsError = useAgentStore((s) => s.error);
 
   // Interface settings
   const [theme, setTheme] = useState<"light" | "dark">(
@@ -82,6 +88,10 @@ export function Settings() {
   // store, but this ensures it's in sync even after hydration.
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { reset(settings); }, []);
+
+  useEffect(() => {
+    void loadAgentConfigs().catch(() => undefined);
+  }, [loadAgentConfigs]);
 
   const onSubmit = (values: SettingsFormValues) => {
     setSettings(values);
@@ -182,6 +192,16 @@ export function Settings() {
       setNotice(t("settings.resetDefaults") + " ✓");
       setTimeout(() => setNotice(""), 3000);
     }
+  };
+
+  const handleSaveAgentConfig = async (agentId: ControlAgentId) => {
+    try {
+      await saveAgentConfig(agentId);
+      setNotice(`${t("settings.saveSettings")} ✓`);
+    } catch {
+      setNotice("Agent 配置保存失败");
+    }
+    setTimeout(() => setNotice(""), 3000);
   };
 
   const tabs: Array<{ id: TabType; label: string; icon: any }> = [
@@ -338,6 +358,16 @@ export function Settings() {
         {/* Agents tab */}
         {activeTab === "agents" && (
           <div className="space-y-4">
+            {agentConfigsLoading && !agentConfigsLoaded && (
+              <div className="rounded-md bg-slate-100 px-4 py-3 text-sm text-slate-700">
+                正在加载 Agent 模型配置...
+              </div>
+            )}
+            {agentConfigsError && (
+              <div className="rounded-md bg-red-50 px-4 py-3 text-sm text-red-700">
+                {agentConfigsError}
+              </div>
+            )}
             <div className="flex justify-end gap-2">
               <button
                 onClick={handleExportAgentConfigs}
@@ -400,7 +430,7 @@ export function Settings() {
                         onChange={(e) => setConfig(def.id, { primaryModel: e.target.value })}
                         className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
                       >
-                        {AVAILABLE_MODELS.map((model) => (
+                        {availableModels.map((model) => (
                           <option key={model.value} value={model.value}>
                             {model.label}
                           </option>
@@ -416,7 +446,7 @@ export function Settings() {
                         onChange={(e) => setConfig(def.id, { fallbackModel: e.target.value })}
                         className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
                       >
-                        {AVAILABLE_MODELS.map((model) => (
+                        {availableModels.map((model) => (
                           <option key={model.value} value={model.value}>
                             {model.label}
                           </option>
@@ -436,6 +466,16 @@ export function Settings() {
                       placeholder="sk-..."
                       className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
                     />
+                  </div>
+
+                  <div className="mt-4 flex justify-end">
+                    <button
+                      type="button"
+                      onClick={() => void handleSaveAgentConfig(def.id)}
+                      className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+                    >
+                      {t("settings.saveSettings")}
+                    </button>
                   </div>
                 </div>
               );

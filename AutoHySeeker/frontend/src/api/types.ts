@@ -106,11 +106,23 @@ export interface AgentUsageStats {
   estimatedCostUsd: number;
 }
 
+export type AgentId =
+  | "orchestrator"
+  | "experiment_designer"
+  | "experiment_executor"
+  | "diagnostics_expert"
+  | "chat"
+  | "heartbeat_inspector";
+
 export interface AgentModelConfig {
   enabled: boolean;
   primaryModel: string;
   fallbackModel: string;
   apiKey: string;
+  baseUrl?: string;
+  temperature?: number;
+  maxTokens?: number | null;
+  displayName?: string;
 }
 
 export interface AgentConfigSaveRequest {
@@ -150,9 +162,50 @@ export interface AgentInvokeResponse {
   state: Record<string, unknown>;
 }
 
-// ── Dashboard / realtime monitoring types ─────────────────────────────────────
+export interface AgentModelOption {
+  value: string;
+  label: string;
+}
 
-export type AgentId = "C1" | "C2" | "C3" | "D2" | "D3";
+export interface AgentModelRecord {
+  agent_name: AgentId;
+  display_name: string;
+  enabled: boolean;
+  primary_model: string;
+  fallback_model: string;
+  api_key: string;
+  temperature: number;
+  max_tokens: number | null;
+  base_url: string;
+}
+
+export interface AgentModelsResponse {
+  ok: boolean;
+  defaults: {
+    model: string;
+    fallback_model: string;
+    base_url: string;
+  };
+  available_models: AgentModelOption[];
+  agents: Partial<Record<AgentId, AgentModelRecord>>;
+}
+
+export interface AgentModelUpdateRequest {
+  enabled?: boolean;
+  primary_model?: string;
+  fallback_model?: string;
+  api_key?: string;
+  temperature?: number;
+  max_tokens?: number | null;
+  base_url?: string;
+}
+
+export interface AgentModelUpdateResponse {
+  ok: boolean;
+  agent: AgentModelRecord;
+}
+
+// ── Dashboard / realtime monitoring types ─────────────────────────────────────
 export type AgentStatus = "idle" | "working" | "error";
 
 export interface AgentState {

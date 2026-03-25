@@ -35,6 +35,7 @@ class BaseAgent:
     name: str
     system_prompt: str
     model: str = DEFAULT_MODEL
+    fallback_model: str | None = None
     api_key: str = ""
     base_url: str = ""
     temperature: float = 0.2
@@ -45,6 +46,7 @@ class BaseAgent:
         name: str,
         system_prompt: str,
         model: str | None = None,
+        fallback_model: str | None = None,
         api_key: str | None = None,
         base_url: str | None = None,
         temperature: float | None = None,
@@ -54,6 +56,7 @@ class BaseAgent:
         self.name = name
         self.system_prompt = system_prompt
         self.model = model or str(agent_config["model"])
+        self.fallback_model = fallback_model or str(agent_config.get("fallback_model", ""))
         self.api_key = api_key or str(agent_config["api_key"])
         self.base_url = base_url or str(agent_config["base_url"])
         self.temperature = (
@@ -111,6 +114,7 @@ class BaseAgent:
             response = await chat_completion(
                 self.build_messages(task=task, context=context, messages=messages),
                 model=self.model,
+                fallback_model=self.fallback_model or None,
                 api_key=self.api_key,
                 base_url=self.base_url,
                 **request_kwargs,

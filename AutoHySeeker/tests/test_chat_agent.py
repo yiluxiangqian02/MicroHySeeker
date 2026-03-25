@@ -7,6 +7,25 @@ from fastapi.testclient import TestClient
 
 
 class TestChatAgent:
+    def test_chat_agent_uses_chat_model_config(self) -> None:
+        from src.agents.chat_agent import ChatAgent
+
+        with patch(
+            "src.agents.base.load_agent_config",
+            return_value={
+                "model": "chat-model",
+                "fallback_model": "chat-fallback",
+                "api_key": "chat-key",
+                "base_url": "https://chat.example.com",
+                "temperature": 0.3,
+                "max_tokens": 2000,
+            },
+        ):
+            agent = ChatAgent()
+
+        assert agent.model == "chat-model"
+        assert agent.base_url == "https://chat.example.com"
+
     def test_optimization_status_intent_returns_summary(self) -> None:
         from src.agents.chat_agent import ChatAgent
 

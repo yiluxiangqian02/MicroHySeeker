@@ -268,6 +268,67 @@ class TestAgentsRoutes:
             })
         assert response.status_code == 200
 
+    def test_get_agent_models_returns_backend_configs(self, client: TestClient) -> None:
+        with patch(
+            "src.api.routes.agents.get_agent_models_config",
+            return_value={
+                "defaults": {"model": "default-model", "fallback_model": "fallback-model", "base_url": "https://api.example.com"},
+                "orchestrator": {},
+                "chat": {},
+            },
+        ), patch(
+            "src.api.routes.agents.get_default_llm_config",
+            return_value={"model": "default-model", "fallback_model": "fallback-model", "base_url": "https://api.example.com"},
+        ), patch(
+            "src.api.routes.agents.load_agent_config",
+            side_effect=lambda agent_name, reload=False: {
+                "name": agent_name,
+                "enabled": True,
+                "model": f"{agent_name}-model",
+                "fallback_model": "fallback-model",
+                "api_key": "secret",
+                "temperature": 0.2,
+                "max_tokens": 1000,
+                "base_url": "https://api.example.com",
+            },
+        ):
+            response = client.get("/api/agents/models")
+
+        assert response.status_code == 200
+        data = response.json()
+        assert data["ok"] is True
+        assert data["defaults"]["model"] == "default-model"
+        assert "orchestrator" in data["agents"]
+
+    def test_update_agent_model_persists_and_reloads(self, client: TestClient) -> None:
+        with patch(
+            "src.api.routes.agents.update_agent_model_config",
+            return_value={"model": "updated-model"},
+        ) as update_mock, patch(
+            "src.api.routes.agents.reload_all_configs",
+        ) as reload_mock, patch(
+            "src.api.routes.agents.load_agent_config",
+            return_value={
+                "name": "chat",
+                "enabled": True,
+                "model": "updated-model",
+                "fallback_model": "fallback-model",
+                "api_key": "secret",
+                "temperature": 0.3,
+                "max_tokens": 2000,
+                "base_url": "https://api.example.com",
+            },
+        ):
+            response = client.put(
+                "/api/agents/models/chat",
+                json={"primary_model": "updated-model", "fallback_model": "fallback-model"},
+            )
+
+        assert response.status_code == 200
+        update_mock.assert_called_once()
+        reload_mock.assert_called_once()
+        assert response.json()["agent"]["primary_model"] == "updated-model"
+
 
 # ── /diagnostics (existing, smoke-tested for regression) ──────────────────────
 
@@ -297,16 +358,23 @@ class TestMonitorRoutes:
         assert "heartbeat_enabled" in data
 
     def test_update_monitor_config(self, client: TestClient) -> None:
-        response = client.put(
-            "/api/monitor/config",
-            json={
-                "heartbeat_enabled": True,
-                "heartbeat_interval_s": 45,
-                "heartbeat_model": "test-model",
-            },
-        )
+        with patch(
+            "src.api.routes.monitor.update_agent_model_config",
+        ) as update_model_mock, patch(
+            "src.api.routes.monitor.load_agent_config",
+            return_value={"model": "test-model"},
+        ):
+            response = client.put(
+                "/api/monitor/config",
+                json={
+                    "heartbeat_enabled": True,
+                    "heartbeat_interval_s": 45,
+                    "heartbeat_model": "test-model",
+                },
+            )
         assert response.status_code == 200
         data = response.json()
+        update_model_mock.assert_called_once_with("heartbeat_inspector", {"model": "test-model"})
         assert data["config"]["heartbeat_enabled"] is True
         assert data["config"]["heartbeat_interval_s"] == 45
         assert data["config"]["heartbeat_model"] == "test-model"
