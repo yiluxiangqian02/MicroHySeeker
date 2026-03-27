@@ -25,7 +25,7 @@ class ExperimentWorker(QObject):
     
     step_started = Signal(int, str)  # step_index, step_id
     step_finished = Signal(int, str, bool)  # step_index, step_id, success
-    log_message = Signal(str)
+    log_message = Signal(str, str, str)  # message, level, source
     experiment_finished = Signal(bool)  # success
     echem_result = Signal(str, list, list)  # technique, data_points, headers
     pump_batch_update = Signal(list, list)  # running_pump_addrs, waiting_pump_addrs
@@ -312,10 +312,11 @@ class ExperimentWorker(QObject):
     
     def _emit_log(self, msg: str, level: str = "INFO", source: str = "RUNNER"):
         """统一日志：同时发信号到UI + 写文件日志 + 写实验运行日志"""
-        self.log_message.emit(msg)
-        _logger.log(_LOG_LEVEL_MAP.get(level, logging.INFO), msg)
+        normalized = (level or "INFO").upper()
+        self.log_message.emit(msg, normalized, source)
+        _logger.log(_LOG_LEVEL_MAP.get(normalized, logging.INFO), msg)
         if self.dm:
-            self.dm.log(level, source, msg)
+            self.dm.log(normalized, source, msg)
 
     def _build_compact_snapshot(self) -> dict:
         """构建精简的系统快照（去除冗余泵配置，只保留关键信息）"""
@@ -2026,7 +2027,7 @@ class ExperimentRunner(QObject):
     # 信号
     step_started = Signal(int, str)  # step_index, step_id
     step_finished = Signal(int, str, bool)  # step_index, step_id, success
-    log_message = Signal(str)
+    log_message = Signal(str, str, str)  # message, level, source
     experiment_finished = Signal(bool)  # success
     echem_result = Signal(str, list, list)  # technique, data_points, headers
     pump_batch_update = Signal(list, list)  # running_pump_addrs, waiting_pump_addrs
@@ -2113,8 +2114,8 @@ class ExperimentRunner(QObject):
     def _on_step_finished(self, step_index: int, step_id: str, success: bool):
         self.step_finished.emit(step_index, step_id, success)
     
-    def _on_log_message(self, message: str):
-        self.log_message.emit(message)
+    def _on_log_message(self, message: str, level: str, source: str):
+        self.log_message.emit(message, level, source)
     
     def _on_experiment_finished(self, success: bool):
         self.is_running = False

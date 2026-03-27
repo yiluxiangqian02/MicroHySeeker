@@ -845,10 +845,16 @@ class MainWindow(QMainWindow):
         
         self.log_text.append(f'<span style="color:{color}; font-size:11px;">[{timestamp}] {msg}</span>')
     
-    @Slot(str)
-    def _on_log_message(self, msg: str):
+    @Slot(str, str, str)
+    def _on_log_message(self, msg: str, level: str, source: str):
         """接收引擎日志"""
-        self.log_message(msg, "info")
+        msg_type = {
+            "WARNING": "warning",
+            "ERROR": "error",
+            "CRITICAL": "error",
+            "DEBUG": "blank",
+        }.get((level or "INFO").upper(), "info")
+        self.log_message(f"[{source}] {msg}", msg_type)
     
     @Slot(int, str)
     def _on_step_started(self, index: int, step_id: str):

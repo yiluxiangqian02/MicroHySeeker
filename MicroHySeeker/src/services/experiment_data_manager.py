@@ -34,6 +34,8 @@ class ExperimentDataManager:
         self._step_results: List[Dict[str, Any]] = []
         self._warnings: List[str] = []
         self._errors: List[str] = []
+        self._warning_keys: set[str] = set()
+        self._error_keys: set[str] = set()
         self._pump_ops: List[Dict[str, Any]] = []
 
     # ────────── 生命周期 ──────────
@@ -69,6 +71,8 @@ class ExperimentDataManager:
         self._step_results = []
         self._warnings = []
         self._errors = []
+        self._warning_keys = set()
+        self._error_keys = set()
         self._pump_ops = []
 
         # 保存实验方案副本
@@ -184,17 +188,26 @@ class ExperimentDataManager:
 
     def log(self, level: str, source: str, message: str):
         """写入运行日志（外部调用入口）"""
-        self._log(level, source, message)
+        normalized = (level or "INFO").upper()
+        self._log(normalized, source, message)
+        if normalized == "WARNING":
+            self._remember_issue(self._warnings, self._warning_keys, message)
+        elif normalized in {"ERROR", "CRITICAL"}:
+            self._remember_issue(self._errors, self._error_keys, message)
 
     def log_warning(self, message: str):
         """记录警告并追加到 warnings 列表"""
-        self._log("WARNING", "RUNNER", message)
-        self._warnings.append(message)
+        self.log("WARNING", "RUNNER", message)
 
     def log_error(self, message: str):
         """记录错误并追加到 errors 列表"""
-        self._log("ERROR", "RUNNER", message)
-        self._errors.append(message)
+        self.log("ERROR", "RUNNER", message)
+
+    @staticmethod
+    def _remember_issue(bucket: List[str], dedup: set[str], message: str):
+        if message not in dedup:
+            dedup.add(message)
+            bucket.append(message)
 
     def _log(self, level: str, source: str, message: str):
         """内部日志写入"""

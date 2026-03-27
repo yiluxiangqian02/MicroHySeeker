@@ -8,6 +8,7 @@
 - 字体统一放大
 - 内嵌 FastAPI HTTP 控制服务（端口 8100，供 AutoHySeeker 远程控制）
 """
+import html
 import json
 import threading
 from PySide6.QtWidgets import (
@@ -16,7 +17,7 @@ from PySide6.QtWidgets import (
     QMenuBar, QMenu, QMessageBox, QFileDialog, QFrame, QSpinBox,
     QGroupBox, QGridLayout, QScrollArea, QInputDialog
 )
-from PySide6.QtCore import Qt, Slot, QSize, QRectF, QTimer, QPointF
+from PySide6.QtCore import Qt, Signal, Slot, QSize, QRectF, QTimer, QPointF
 from PySide6.QtGui import QAction, QIcon, QFont, QColor, QPainter, QPen, QBrush, QLinearGradient, QPainterPath, QPolygonF
 from pathlib import Path
 
@@ -24,6 +25,7 @@ from src.models import SystemConfig, Experiment, ProgStep, ProgramStepType, ECSe
 from src.engine.runner import ExperimentRunner
 from src.services.i18n import tr, get_lang, set_lang
 from src.services.app_logger import get_app_logger
+from src.services.fault_feedback import PumpFaultTracker
 
 _logger = get_app_logger("UI")
 
@@ -1080,6 +1082,8 @@ class MainWindow(QMainWindow):
     2. CHIWrapper: run_cv, run_lsv, run_it, get_data, stop
     3. ExperimentRunner: run_experiment, stop, pause, resume
     """
+
+    hardware_log_message = Signal(str, str, str)
     
     def __init__(self):
         super().__init__()
@@ -1115,7 +1119,8 @@ class MainWindow(QMainWindow):
         self._api_bridge = None
         self._api_thread = None
         self._start_api_server(port=8100)
-
+        self.hardware_log_message.connect(self._on_log_message)
+        self._pump_fault_tracker = PumpFaultTracker()
         # 电化学实时截图定时器 (测量期间捕获CHI660F窗口)
         self._echem_capture_timer = QTimer(self)
         self._echem_capture_timer.timeout.connect(self._capture_chi_window)
@@ -1125,6 +1130,7 @@ class MainWindow(QMainWindow):
         self._create_toolbar()
         self._create_central_widget()
         self._create_status_bar()
+        self._setup_fault_feedback()
         
         # EChem 连接状态轮询定时器 (每3秒检查 CHI660F 窗口是否存在)
         self._chi_status_timer = QTimer(self)
@@ -2068,9 +2074,6 @@ class MainWindow(QMainWindow):
     
     def log_message(self, msg: str, msg_type: str = "info"):
         """添加日志 - 不同类型不同颜色，同时写入文件日志"""
-        from datetime import datetime
-        timestamp = datetime.now().strftime("%H:%M:%S")
-        
         # 写入文件日志
         log_level_map = {
             "info": "info", "success": "info", "warning": "warning",
@@ -2079,27 +2082,79 @@ class MainWindow(QMainWindow):
         }
         file_level = log_level_map.get(msg_type, "info")
         getattr(_logger, file_level, _logger.info)(msg)
-        
-        # 根据类型设置颜色
-        color_map = {
-            "info": "#000000",      # 黑色
-            "success": "#4CAF50",   # 绿色
-            "warning": "#FF9800",   # 橙色
-            "error": "#f44336",     # 红色
-            "transfer": "#2196F3",  # 蓝色 - 移液
-            "prep_sol": "#4CAF50",  # 绿色 - 配液
-            "flush": "#FF9800",     # 橙色 - 冲洗
-            "echem": "#9C27B0",     # 紫色 - 电化学
-            "blank": "#607D8B",     # 灰色 - 空白
+
+        level_map = {
+            "warning": "WARNING",
+            "error": "ERROR",
+            "blank": "DEBUG",
         }
-        color = color_map.get(msg_type, "#000000")
-        
-        self.log_text.append(f'<span style="color:{color};">[{timestamp}] {msg}</span>')
+        self._append_run_log_entry(
+            msg,
+            level=level_map.get(msg_type, "INFO"),
+            source="UI",
+            msg_type=msg_type,
+        )
     
-    @Slot(str)
-    def _on_log_message(self, msg: str):
+    def _append_run_log_entry(
+        self,
+        msg: str,
+        level: str = "INFO",
+        source: str = "RUNNER",
+        msg_type: str | None = None,
+    ):
+        from datetime import datetime
+
+        timestamp = datetime.now().strftime("%H:%M:%S")
+        normalized_level = (level or "INFO").upper()
+
+        color_map = {
+            "INFO": "#000000",
+            "DEBUG": "#607D8B",
+            "WARNING": "#FF9800",
+            "ERROR": "#f44336",
+            "CRITICAL": "#B71C1C",
+        }
+        msg_type_color_map = {
+            "info": "#000000",
+            "success": "#4CAF50",
+            "warning": "#FF9800",
+            "error": "#f44336",
+            "transfer": "#2196F3",
+            "prep_sol": "#4CAF50",
+            "flush": "#FF9800",
+            "echem": "#9C27B0",
+            "blank": "#607D8B",
+        }
+        color = msg_type_color_map.get(msg_type, color_map.get(normalized_level, "#000000"))
+        escaped = html.escape(msg)
+        escaped_source = html.escape(source)
+        escaped_level = html.escape(normalized_level)
+        self.log_text.append(
+            f'<span style="color:{color};">[{timestamp}] [{escaped_level}] [{escaped_source}] {escaped}</span>'
+        )
+
+    @Slot(str, str, str)
+    def _on_log_message(self, msg: str, level: str, source: str):
         """接收引擎日志"""
-        self.log_message(msg, "info")
+        self._append_run_log_entry(msg, level=level, source=source)
+
+    def _setup_fault_feedback(self):
+        """将 RS485 / 泵故障状态接入运行日志面板。"""
+        try:
+            from src.services.rs485_wrapper import get_rs485_instance
+
+            rs485 = get_rs485_instance()
+            rs485.set_state_callback(self._on_rs485_state_changed)
+            if rs485.is_connected():
+                rs485.start_monitoring()
+        except Exception as e:
+            _logger.warning(f"安装故障反馈回调失败: {e}")
+
+    def _on_rs485_state_changed(self, address: int, state: dict):
+        """RS485 状态变化回调，转为运行日志中的故障/恢复提示。"""
+        events = self._pump_fault_tracker.consume_state(address, state)
+        for event in events:
+            self.hardware_log_message.emit(event.message, event.level, event.source)
     
     @Slot(int, str)
     def _on_step_started(self, index: int, step_id: str):
@@ -2381,7 +2436,7 @@ class MainWindow(QMainWindow):
             with open(last_exp_file, 'w', encoding='utf-8') as f:
                 f.write(self.single_experiment.to_json_str())
         except Exception as e:
-            print(f"⚠️ 保存上次实验失败: {e}")
+            self.log_message(f"⚠️ 保存上次实验失败: {e}", "warning")
     
     def _load_last_experiment(self):
         """加载上次保存的实验"""
@@ -2430,6 +2485,7 @@ class MainWindow(QMainWindow):
         try:
             from src.services.rs485_wrapper import get_rs485_instance
             rs485 = get_rs485_instance()
+            rs485.stop_monitoring()
             if rs485.is_connected():
                 rs485.close_port()
                 print("✅ 已自动断开RS485连接")
@@ -2443,6 +2499,7 @@ class MainWindow(QMainWindow):
             from src.services.rs485_wrapper import get_rs485_instance
             rs485 = get_rs485_instance()
             if rs485.is_connected():
+                self._setup_fault_feedback()
                 port = getattr(rs485, '_current_port', '')
                 self.status_rs485.setText(f"RS485: 已连接 ({port})")
                 self.status_rs485.setStyleSheet("color: green;")
@@ -2564,6 +2621,7 @@ class MainWindow(QMainWindow):
             rs485.set_mock_mode(is_mock)
             ok = rs485.open_port(port, baud)
             if ok:
+                self._setup_fault_feedback()
                 self.log_message(f"RS485 已连接: {port}@{baud}", "success")
                 self.update_rs485_status()
             return ok
