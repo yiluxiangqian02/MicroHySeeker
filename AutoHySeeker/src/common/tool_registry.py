@@ -93,7 +93,8 @@ class ToolRegistry:
         func = tool.func
         if inspect.iscoroutinefunction(func):
             return await func(**kwargs)
-        return await asyncio.get_event_loop().run_in_executor(None, lambda: func(**kwargs))
+        loop = asyncio.get_running_loop()
+        return await loop.run_in_executor(None, lambda: func(**kwargs))
 
 
 # Global registry instance

@@ -91,7 +91,7 @@ class AutoHySeekerAPIClient:
                 within ``timeout_s`` seconds.
             APIError: if the task status becomes ``"failed"`` or ``"error"``.
         """
-        loop = asyncio.get_event_loop()
+        loop = asyncio.get_running_loop()
         deadline = loop.time() + timeout_s
         while loop.time() < deadline:
             record = await self.get_task_status(task_id)

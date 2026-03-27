@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { FileText, Edit, Trash2, Play, Calendar } from 'lucide-react';
 import { TemplateDialog } from './TemplateDialog';
 import { useNavigate } from 'react-router-dom';
@@ -149,13 +149,16 @@ export function TemplateCard({ template, onUpdate }: TemplateCardProps) {
       />
 
       {/* Delete Confirmation Dialog */}
-      {isDeleteDialogOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="bg-white rounded-xl p-6 max-w-md w-full mx-4"
-          >
+      <AnimatePresence>
+        {isDeleteDialogOpen && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <motion.div
+              key="delete-dialog"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              className="bg-white rounded-xl p-6 max-w-md w-full mx-4"
+            >
             <h3 className="text-lg font-semibold mb-2">{t('templates.deleteConfirm')}</h3>
             <p className="text-gray-600 mb-6">
               {t('templates.deleteWarning', { name: template.name })}
@@ -176,9 +179,10 @@ export function TemplateCard({ template, onUpdate }: TemplateCardProps) {
                 {isDeleting ? t('common.deleting') : t('common.delete')}
               </button>
             </div>
-          </motion.div>
-        </div>
-      )}
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </>
   );
 }

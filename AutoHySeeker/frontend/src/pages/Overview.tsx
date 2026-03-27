@@ -177,18 +177,8 @@ export function Overview() {
     navigate(`/experiments/${experiment.exp_id}`);
   };
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: 0.1 },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 },
-  };
+  // Simple per-element fade-in — no staggerChildren
+  const fadeIn = { initial: { opacity: 0, y: 12 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.3 } } as const;
 
   const getActivityColor = (type: string) => {
     switch (type) {
@@ -211,9 +201,9 @@ export function Overview() {
   );
 
   return (
-    <motion.div className="space-y-6 p-6" variants={containerVariants} initial="hidden" animate="visible">
+    <div className="space-y-6 p-6">
       <motion.section
-        variants={itemVariants}
+        {...fadeIn}
         className="overflow-hidden rounded-2xl border border-slate-200 bg-gradient-to-r from-slate-900 via-blue-900 to-cyan-800 p-6 text-white shadow-sm"
       >
         <div className="grid gap-6 lg:grid-cols-[1.5fr,1fr] lg:items-center">
@@ -272,7 +262,7 @@ export function Overview() {
         </div>
       </motion.section>
 
-      <motion.section variants={itemVariants} className="grid gap-4 lg:grid-cols-3">
+      <motion.section {...fadeIn} className="grid gap-4 lg:grid-cols-3">
         {[
           {
             title: '1. 明确目标并编排步骤',
@@ -306,7 +296,7 @@ export function Overview() {
         ))}
       </motion.section>
 
-      <motion.section variants={itemVariants} className="grid gap-6 xl:grid-cols-[1.2fr,0.8fr]">
+      <motion.section {...fadeIn} className="grid gap-6 xl:grid-cols-[1.2fr,0.8fr]">
         <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
           <div className="flex items-center justify-between gap-3">
             <div>
@@ -409,7 +399,7 @@ export function Overview() {
       </motion.section>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <motion.div variants={itemVariants} className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-200 hover:shadow-md">
+        <motion.div {...fadeIn} className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-200 hover:shadow-md">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600">{t('overview.autohyseeker')}</p>
@@ -422,7 +412,7 @@ export function Overview() {
           </div>
         </motion.div>
 
-        <motion.div variants={itemVariants} className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-200 hover:shadow-md">
+        <motion.div {...fadeIn} className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-200 hover:shadow-md">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600">{t('overview.microhyseeker')}</p>
@@ -435,7 +425,7 @@ export function Overview() {
           </div>
         </motion.div>
 
-        <motion.div variants={itemVariants} className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-200 hover:shadow-md">
+        <motion.div {...fadeIn} className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-200 hover:shadow-md">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600">{t('overview.database')}</p>
@@ -448,7 +438,7 @@ export function Overview() {
           </div>
         </motion.div>
 
-        <motion.div variants={itemVariants} className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-200 hover:shadow-md">
+        <motion.div {...fadeIn} className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-200 hover:shadow-md">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600">{t('overview.agents')}</p>
@@ -461,17 +451,17 @@ export function Overview() {
       </div>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <motion.div variants={itemVariants} className="rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 p-6 text-white shadow-sm transition-all duration-200 hover:shadow-md">
+        <motion.div {...fadeIn} className="rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 p-6 text-white shadow-sm transition-all duration-200 hover:shadow-md">
           <p className="text-sm opacity-90">{t('overview.totalExperiments')}</p>
           <p className="mt-2 text-3xl font-bold">{statistics.totalExperiments}</p>
         </motion.div>
 
-        <motion.div variants={itemVariants} className="rounded-xl bg-gradient-to-br from-green-500 to-green-600 p-6 text-white shadow-sm transition-all duration-200 hover:shadow-md">
+        <motion.div {...fadeIn} className="rounded-xl bg-gradient-to-br from-green-500 to-green-600 p-6 text-white shadow-sm transition-all duration-200 hover:shadow-md">
           <p className="text-sm opacity-90">{t('overview.todayExperiments')}</p>
           <p className="mt-2 text-3xl font-bold">{statistics.todayExperiments}</p>
         </motion.div>
 
-        <motion.div variants={itemVariants} className="rounded-xl bg-gradient-to-br from-purple-500 to-purple-600 p-6 text-white shadow-sm transition-all duration-200 hover:shadow-md">
+        <motion.div {...fadeIn} className="rounded-xl bg-gradient-to-br from-purple-500 to-purple-600 p-6 text-white shadow-sm transition-all duration-200 hover:shadow-md">
           <p className="text-sm opacity-90">{t('overview.successRate')}</p>
           <div className="mt-2 flex items-center">
             <p className="text-3xl font-bold">{statistics.successRate}%</p>
@@ -480,14 +470,14 @@ export function Overview() {
           </div>
         </motion.div>
 
-        <motion.div variants={itemVariants} className="rounded-xl bg-gradient-to-br from-orange-500 to-orange-600 p-6 text-white shadow-sm transition-all duration-200 hover:shadow-md">
+        <motion.div {...fadeIn} className="rounded-xl bg-gradient-to-br from-orange-500 to-orange-600 p-6 text-white shadow-sm transition-all duration-200 hover:shadow-md">
           <p className="text-sm opacity-90">{t('overview.avgDuration')}</p>
           <p className="mt-2 text-3xl font-bold">{statistics.avgDuration || '—'}</p>
         </motion.div>
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <motion.div variants={itemVariants} className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-200 hover:shadow-md">
+        <motion.div {...fadeIn} className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-200 hover:shadow-md">
           <h2 className="mb-4 flex items-center text-lg font-semibold">
             <Clock className="mr-2 h-5 w-5 text-blue-500" />
             {t('overview.recentActivities')}
@@ -514,7 +504,7 @@ export function Overview() {
           </div>
         </motion.div>
 
-        <motion.div variants={itemVariants} className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-200 hover:shadow-md">
+        <motion.div {...fadeIn} className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-200 hover:shadow-md">
           <h2 className="mb-4 text-lg font-semibold">快速入口</h2>
           <div className="grid grid-cols-2 gap-4">
             <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => setShowCreateDialog(true)} className="flex flex-col items-center justify-center rounded-xl bg-blue-50 p-6 transition-colors hover:bg-blue-100">
@@ -550,7 +540,7 @@ export function Overview() {
         </motion.div>
       </div>
 
-      <motion.div variants={itemVariants} className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-200 hover:shadow-md">
+      <motion.div {...fadeIn} className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-200 hover:shadow-md">
         <h2 className="mb-4 flex items-center text-lg font-semibold">
           <BarChart className="mr-2 h-5 w-5 text-blue-500" />
           {t('overview.systemHealth')}
@@ -609,6 +599,6 @@ export function Overview() {
       )}
 
       <ChatWindow isOpen={showKnowledgeChat} onClose={() => setShowKnowledgeChat(false)} />
-    </motion.div>
+    </div>
   );
 }

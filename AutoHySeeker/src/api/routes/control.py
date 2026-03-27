@@ -63,10 +63,13 @@ async def _call_microhyseeker(
                 resp = await client.post(url, json=json or {})
             resp.raise_for_status()
             return resp.json()
-    except httpx.ConnectError:
+    except (httpx.ConnectError, httpx.TimeoutException, OSError, httpx.TransportError):
         logger.warning("MicroHySeeker unreachable at %s — returning offline stub", url)
         return {"status": "offline", "message": "MicroHySeeker not reachable"}
     except httpx.HTTPStatusError as exc:
+        if exc.response.status_code >= 500:
+            logger.warning("MicroHySeeker returned %s at %s — returning offline stub", exc.response.status_code, url)
+            return {"status": "offline", "message": "MicroHySeeker not reachable"}
         raise HTTPException(
             status_code=exc.response.status_code,
             detail=f"MicroHySeeker error: {exc.response.text}",

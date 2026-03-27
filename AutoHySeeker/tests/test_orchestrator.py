@@ -15,7 +15,7 @@ import pytest
 # ── helpers ────────────────────────────────────────────────────────────────────
 
 def run_async(coro: Any) -> Any:
-    return asyncio.get_event_loop().run_until_complete(coro)
+    return asyncio.run(coro)
 
 
 def _base_state(**overrides: Any) -> dict[str, Any]:
@@ -208,7 +208,7 @@ class TestAgentRunnerNodes:
              patch("src.common.llm_client.app_config.OPENAI_API_KEY", "test-key"):
             result = run_async(run_exp_executor(state))
         assert result["error"] is None
-        assert result["result"]["agent"] == "exp_executor"
+        assert result["result"]["agent"] == "experiment_executor"
 
     def test_run_agent_captures_exception(self) -> None:
         """If agent.invoke raises, the runner should return error dict (not raise)."""

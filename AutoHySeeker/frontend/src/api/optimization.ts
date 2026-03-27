@@ -45,6 +45,7 @@ export interface OptimizationState {
   latestDecision?: Record<string, unknown> | null;
   lastApproval?: Record<string, unknown> | null;
   errors: string[];
+  hardwareAvailable: boolean;
 }
 
 export interface OptimizationStatusResponse {
@@ -63,6 +64,7 @@ export interface OptimizationStatusResponse {
   pause_reason?: string | null;
   latest_decision?: Record<string, unknown> | null;
   last_approval?: Record<string, unknown> | null;
+  hardware_available?: boolean;
 }
 
 export interface OptimizationHistoryResponse {
@@ -156,6 +158,7 @@ export const mapOptimizationState = (
     latestDecision: status.latest_decision ?? null,
     lastApproval: status.last_approval ?? null,
     errors: status.errors || [],
+    hardwareAvailable: status.hardware_available ?? false,
   };
 };
 

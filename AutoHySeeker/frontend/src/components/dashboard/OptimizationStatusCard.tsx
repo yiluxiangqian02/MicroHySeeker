@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, RefreshCw, Play, Square } from "lucide-react";
+import { ArrowRight, Loader2, RefreshCw, Play, Square } from "lucide-react";
 
 export interface OptimizationLoopStatus {
   status: "idle" | "running" | "paused" | "completed" | "error" | "stopped" | "blocked" | "starting" | "stopping" | "executing" | "designing" | "evaluating" | "analyzing";
@@ -8,6 +8,9 @@ export interface OptimizationLoopStatus {
   bestYield?: number;
   activeExperiment?: string;
   projectName?: string;
+  onStart?: () => void;
+  onStop?: () => void;
+  isActionLoading?: boolean;
 }
 
 export function OptimizationStatusCard({
@@ -17,8 +20,11 @@ export function OptimizationStatusCard({
   bestYield,
   activeExperiment,
   projectName = "Default Project",
+  onStart,
+  onStop,
+  isActionLoading = false,
 }: Partial<OptimizationLoopStatus>) {
-  const isRunning = status === "running";
+  const isRunning = status === "running" || status === "executing" || status === "designing" || status === "evaluating" || status === "analyzing" || status === "starting";
   const isPaused = status === "paused";
   const progressPercent = maxIterations > 0 ? (currentIteration / maxIterations) * 100 : 0;
 
@@ -51,12 +57,22 @@ export function OptimizationStatusCard({
         </div>
         <div className="flex gap-2">
           {isRunning ? (
-            <button className="flex items-center gap-1.5 rounded-lg border border-red-200 bg-red-50 px-3 py-1.5 text-sm font-medium text-red-700 hover:bg-red-100 transition-colors">
-              <Square className="h-4 w-4" /> Stop
+            <button
+              type="button"
+              onClick={onStop}
+              disabled={isActionLoading}
+              className="flex items-center gap-1.5 rounded-lg border border-red-200 bg-red-50 px-3 py-1.5 text-sm font-medium text-red-700 hover:bg-red-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isActionLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Square className="h-4 w-4" />} Stop
             </button>
           ) : (
-            <button className="flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors">
-              <Play className="h-4 w-4" /> Start
+            <button
+              type="button"
+              onClick={onStart}
+              disabled={isActionLoading}
+              className="flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isActionLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Play className="h-4 w-4" />} Start
             </button>
           )}
           <Link

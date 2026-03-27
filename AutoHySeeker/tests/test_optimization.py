@@ -932,7 +932,7 @@ class TestOptimizerWithMockedLLM:
                 mock_gc.return_value = mock_client
                 # In real code this would call chat_completion; we simulate the
                 # parsed result directly to keep the test deterministic.
-                return asyncio.get_event_loop().run_until_complete(
+                return asyncio.run(
                     fake_llm_score(params)
                 )
 
@@ -970,7 +970,7 @@ class TestOptimizerWithMockedLLM:
                         [{"role": "user", "content": f"params={params}"}]
                     )
 
-                _text = asyncio.get_event_loop().run_until_complete(_call())
+                _text = asyncio.run(_call())
                 # Simulate parsing the LLM response into a peak current value.
                 voltage = float(params.get("voltage", 1.0))
                 return {"peak_current": voltage * 0.06}
@@ -1004,7 +1004,7 @@ class TestOptimizerWithMockedLLM:
                         [{"role": "user", "content": "score this"}]
                     )
 
-            asyncio.get_event_loop().run_until_complete(_call())
+            asyncio.run(_call())
             return 0.0  # unreachable
 
         opt = BayesianOptimizer({"x": [0.0, 1.0]}, seed=0)
@@ -1063,7 +1063,7 @@ class TestOptimizerWithMockedLLM:
                 "src.common.llm_client.chat_completion",
                 new=fake_chat_completion,
             ):
-                result_text = asyncio.get_event_loop().run_until_complete(
+                result_text = asyncio.run(
                     fake_chat_completion(
                         [{"role": "user", "content": f"evaluate {params}"}]
                     )

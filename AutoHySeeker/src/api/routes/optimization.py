@@ -12,6 +12,7 @@ import logging
 from datetime import datetime, timezone
 from typing import Any, Dict
 
+import httpx
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 
@@ -87,6 +88,41 @@ class OptimizationStartRequest(BaseModel):
     dry_run: bool = False
 
 
+# ── Helpers ──────────────────────────────────────────────────────────────────
+
+MICROHYSEEKER_BASE = "http://localhost:8100"
+
+_hardware_available: bool = False
+_hardware_check_time: float = 0.0
+_HARDWARE_CHECK_INTERVAL = 10.0  # seconds between real checks
+_hardware_check_running: bool = False
+
+
+def _get_hardware_available() -> bool:
+    """Return cached MicroHySeeker reachability (non-blocking)."""
+    global _hardware_check_running, _hardware_check_time
+    import time
+    now = time.monotonic()
+    if now - _hardware_check_time >= _HARDWARE_CHECK_INTERVAL and not _hardware_check_running:
+        _hardware_check_running = True
+        asyncio.ensure_future(_refresh_hardware_status())
+    return _hardware_available
+
+
+async def _refresh_hardware_status() -> None:
+    """Background refresh of hardware reachability status."""
+    global _hardware_available, _hardware_check_time, _hardware_check_running
+    import time
+    try:
+        async with httpx.AsyncClient(timeout=1.0) as client:
+            resp = await client.get(f"{MICROHYSEEKER_BASE}/health")
+            _hardware_available = resp.status_code < 500
+    except Exception:
+        _hardware_available = False
+    _hardware_check_time = time.monotonic()
+    _hardware_check_running = False
+
+
 # ── Routes ───────────────────────────────────────────────────────────────────
 
 @router.get("/status")
@@ -113,6 +149,9 @@ async def get_optimization_status() -> Dict[str, Any]:
     best = _last_state.get("best_result")
     optimization = _last_state.get("optimization", {})
 
+    # Check hardware reachability (non-blocking, cached)
+    hardware_available = _get_hardware_available()
+
     return {
         "running": running,
         "status": _last_state.get("status", "idle"),
@@ -127,6 +166,7 @@ async def get_optimization_status() -> Dict[str, Any]:
         "latest_decision": _last_state.get("latest_decision"),
         "last_approval": _last_state.get("last_approval"),
         "start_time": _start_time,
+        "hardware_available": hardware_available,
         "timestamp": datetime.now(timezone.utc).isoformat(),
     }
 

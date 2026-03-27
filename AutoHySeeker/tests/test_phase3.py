@@ -13,7 +13,7 @@ import pytest
 # ── helpers ────────────────────────────────────────────────────────────────────
 
 def run_async(coro: Any) -> Any:
-    return asyncio.get_event_loop().run_until_complete(coro)
+    return asyncio.run(coro)
 
 
 def _make_run_dir(tmp_path: Path, success: bool = False) -> Path:

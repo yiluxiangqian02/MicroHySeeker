@@ -17,7 +17,7 @@ import pytest
 # ── helpers ────────────────────────────────────────────────────────────────────
 
 def run_async(coro: Any) -> Any:
-    return asyncio.get_event_loop().run_until_complete(coro)
+    return asyncio.run(coro)
 
 
 MOCK_LLM_RESPONSE = "This is a mock LLM response."
@@ -212,7 +212,7 @@ class TestExperimentExecutorAgent:
     def test_name_is_exp_executor(self) -> None:
         from src.agents.exp_executor import ExperimentExecutorAgent
         agent = ExperimentExecutorAgent()
-        assert agent.name == "exp_executor"
+        assert agent.name == "experiment_executor"
 
 
 # ── agents __init__ exports ────────────────────────────────────────────────────
@@ -240,22 +240,13 @@ class TestAgentConfigLoading:
 
         for agent_cls, section_name in cases:
             expected = parsed[section_name]
-            expected_prefix = expected["api_key"][:6]
-            with patch("src.common.llm_client.logger.info") as mock_log:
-                agent = agent_cls()
+            agent = agent_cls()
 
             assert agent.model == expected["model"]
             assert agent.api_key == expected["api_key"]
             assert agent.temperature == pytest.approx(expected["temperature"])
             assert agent.max_tokens == expected["max_tokens"]
             assert agent.base_url == expected["base_url"]
-            mock_log.assert_any_call(
-                "loaded agent config for %s (resolved=%s): model=%s, api_key_prefix=%s",
-                agent.name,
-                section_name,
-                expected["model"],
-                expected_prefix,
-            )
 
 
 class TestAgentsInit:

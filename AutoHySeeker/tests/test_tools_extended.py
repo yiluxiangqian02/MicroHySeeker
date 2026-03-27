@@ -312,7 +312,7 @@ class TestToolRegistry:
 
         reg = ToolRegistry()
         reg.register("add", lambda a, b: a + b)
-        result = asyncio.get_event_loop().run_until_complete(reg.invoke("add", 3, 4))
+        result = asyncio.run(reg.invoke("add", 3, 4))
         assert result == 7
 
 

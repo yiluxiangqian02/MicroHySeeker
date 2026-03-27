@@ -136,12 +136,12 @@ class TestContextualizeExperimentSkill:
             assert "experiments" in result.data
 
     def test_execute_with_goal_only(self):
-        """Passing only goal (no query) should be accepted."""
+        """Passing only goal (no run_dir) should return failure (run_dir is required)."""
         from src.skills.contextualize_experiment import ContextualizeExperimentSkill
         skill = ContextualizeExperimentSkill()
-        result = asyncio.run(skill.execute(goal="screen OER catalysts"))
-        # Should not fail due to missing query
-        assert not (result.success is False and "required" in result.message.lower())
+        result = asyncio.run(skill.execute(run_dir="", goal="screen OER catalysts"))
+        # run_dir is required; missing it should fail
+        assert result.success is False
 
     def test_execute_with_techniques(self):
         """Techniques list should be accepted and incorporated into the query."""
@@ -176,17 +176,17 @@ class TestContextualizeExperimentSkill:
         skill = ContextualizeExperimentSkill()
         schema = skill.get_schema()
         assert schema["type"] == "object"
-        assert "query" in schema["properties"]
-        assert "goal" in schema["properties"]
-        assert "techniques" in schema["properties"]
-        assert "top_k" in schema["properties"]
+        assert "run_dir" in schema["properties"]
+        assert "history_dir" in schema["properties"]
+        assert "threshold_sigma" in schema["properties"]
+        assert "kb_query" in schema["properties"]
 
     def test_skill_metadata(self):
         """Skill should have correct name and description."""
         from src.skills.contextualize_experiment import ContextualizeExperimentSkill
         skill = ContextualizeExperimentSkill()
         assert skill.name == "contextualize_experiment"
-        assert "OpenViking" in skill.description or "知识库" in skill.description
+        assert "实验" in skill.description or "experiment" in skill.description.lower()
 
 
 # ── Integration: skills __init__ exports ──────────────────────────────────────

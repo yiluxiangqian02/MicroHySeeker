@@ -13,7 +13,7 @@ from typing import Any
 # ── helpers ────────────────────────────────────────────────────────────────────
 
 def run_async(coro: Any) -> Any:
-    return asyncio.get_event_loop().run_until_complete(coro)
+    return asyncio.run(coro)
 
 
 # ── VAL-CFG: 配置模块 ─────────────────────────────────────────────────────────
@@ -71,10 +71,10 @@ class TestCommonModules:
     """VAL-CMN-01..03 — src/common/ 校验"""
 
     def test_registry_list_tools_returns_dict(self) -> None:
-        """VAL-CMN-01: registry.list_tools() 返回 dict"""
+        """VAL-CMN-01: registry.list_tools() 返回 list[ToolDef]"""
         from src.common.tool_registry import registry
         tools = registry.list_tools()
-        assert isinstance(tools, dict)
+        assert isinstance(tools, list)
 
     def test_registry_tool_decorator_registers(self) -> None:
         """VAL-CMN-02: @registry.tool 注册后可通过 list_tools() 检索"""
@@ -85,7 +85,8 @@ class TestCommonModules:
             return x + 1
 
         tools = registry.list_tools()
-        assert "_val_test_fn" in tools
+        names = {t.name for t in tools}
+        assert "_val_test_fn" in names
 
     def test_knowledge_chunk_instantiable(self) -> None:
         """VAL-CMN-03a: KnowledgeChunk 可正常实例化"""

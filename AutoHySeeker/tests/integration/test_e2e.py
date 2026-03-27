@@ -129,16 +129,18 @@ class TestEndToEnd:
 
         c1_result = c1_resp["result"]
         assert c1_result is not None, "C1 result is None"
-        assert "comparison" in c1_result, f"C1 result missing 'comparison': {c1_result}"
-        assert "trend" in c1_result, f"C1 result missing 'trend': {c1_result}"
-        assert "anomalies" in c1_result, f"C1 result missing 'anomalies': {c1_result}"
-        assert isinstance(c1_result["anomalies"], list)
-        assert c1_result.get("n_history", -1) >= 0
+        # SkillResult wraps data inside "data" key
+        c1_data = c1_result.get("data", c1_result)
+        assert "comparison" in c1_data, f"C1 result missing 'comparison': {c1_result}"
+        assert "trend" in c1_data, f"C1 result missing 'trend': {c1_result}"
+        assert "anomalies" in c1_data, f"C1 result missing 'anomalies': {c1_result}"
+        assert isinstance(c1_data["anomalies"], list)
+        assert c1_data.get("n_history", -1) >= 0
 
         # 4. C2 suggest next experiment using C1 output as context
         c2_resp = await api_client.invoke_context(
             action="suggest",
-            context_data=c1_result,
+            context_data=c1_data,
             goal="optimize HER catalyst efficiency",
             name="next_run_optimized",
         )
@@ -147,17 +149,19 @@ class TestEndToEnd:
 
         c2_result = c2_resp["result"]
         assert c2_result is not None, "C2 result is None"
-        assert "intent" in c2_result, f"C2 result missing 'intent': {c2_result}"
-        assert "plan" in c2_result, f"C2 result missing 'plan': {c2_result}"
-        assert "rationale" in c2_result, f"C2 result missing 'rationale': {c2_result}"
+        # SkillResult wraps data inside "data" key
+        c2_data = c2_result.get("data", c2_result)
+        assert "intent" in c2_data, f"C2 result missing 'intent': {c2_result}"
+        assert "plan" in c2_data, f"C2 result missing 'plan': {c2_result}"
+        assert "rationale" in c2_data, f"C2 result missing 'rationale': {c2_result}"
 
-        plan = c2_result["plan"]
+        plan = c2_data["plan"]
         assert isinstance(plan, dict), f"C2 plan should be dict, got {type(plan)}"
         assert "steps" in plan, f"C2 plan missing 'steps': {plan}"
         assert isinstance(plan["steps"], list)
         assert len(plan["steps"]) > 0, "C2 plan steps list is empty"
-        assert isinstance(c2_result["rationale"], str)
-        assert len(c2_result["rationale"]) > 0
+        assert isinstance(c2_data["rationale"], str)
+        assert len(c2_data["rationale"]) > 0
 
     # ── test_device_failure_recovery ───────────────────────────────────────────
 
@@ -275,16 +279,17 @@ class TestEndToEnd:
         assert c2_resp["ok"] is True, f"C2 recovery suggestion failed: {c2_resp}"
         c2_result = c2_resp["result"]
         assert c2_result is not None
-        assert "intent" in c2_result
+        c2_data = c2_result.get("data", c2_result)
+        assert "intent" in c2_data
         # With anomalies in context, C2 should lean towards diagnostic_run
-        assert c2_result["intent"] in (
+        assert c2_data["intent"] in (
             "diagnostic_run",
             "stability_run",
             "optimisation_run",
             "generic",
         )
-        assert "plan" in c2_result
-        assert "rationale" in c2_result
+        assert "plan" in c2_data
+        assert "rationale" in c2_data
 
     # ── test_agent_coordination ────────────────────────────────────────────────
 
@@ -453,16 +458,17 @@ class TestEndToEnd:
         c1_result = c1_resp["result"]
         assert c1_result is not None
 
-        # Required output structure
-        assert "comparison" in c1_result, f"Missing 'comparison': {c1_result}"
-        assert "trend" in c1_result, f"Missing 'trend': {c1_result}"
-        assert "anomalies" in c1_result, f"Missing 'anomalies': {c1_result}"
-        assert isinstance(c1_result["comparison"], dict)
-        assert isinstance(c1_result["trend"], dict)
-        assert isinstance(c1_result["anomalies"], list)
+        # Required output structure — SkillResult wraps in "data"
+        c1_data = c1_result.get("data", c1_result)
+        assert "comparison" in c1_data, f"Missing 'comparison': {c1_result}"
+        assert "trend" in c1_data, f"Missing 'trend': {c1_result}"
+        assert "anomalies" in c1_data, f"Missing 'anomalies': {c1_result}"
+        assert isinstance(c1_data["comparison"], dict)
+        assert isinstance(c1_data["trend"], dict)
+        assert isinstance(c1_data["anomalies"], list)
 
         # n_history should reflect the 4 historical runs (capped by max_history=20)
-        n_history = c1_result.get("n_history", -1)
+        n_history = c1_data.get("n_history", -1)
         assert n_history >= 0, f"n_history should be >= 0, got {n_history}"
         assert n_history <= 4, f"n_history should be <= 4 (created 4 runs), got {n_history}"
 
@@ -470,7 +476,7 @@ class TestEndToEnd:
         plan_name = "optimized_her_run_002"
         c2_resp = await api_client.invoke_context(
             action="suggest",
-            context_data=c1_result,
+            context_data=c1_data,
             goal="maximize hydrogen evolution efficiency",
             name=plan_name,
         )
@@ -478,12 +484,13 @@ class TestEndToEnd:
         c2_result = c2_resp["result"]
         assert c2_result is not None
 
-        # 6. Structural validation of C2 output
-        assert "intent" in c2_result, f"Missing 'intent': {c2_result}"
-        assert "plan" in c2_result, f"Missing 'plan': {c2_result}"
-        assert "rationale" in c2_result, f"Missing 'rationale': {c2_result}"
+        # 6. Structural validation of C2 output — SkillResult wraps in "data"
+        c2_data = c2_result.get("data", c2_result)
+        assert "intent" in c2_data, f"Missing 'intent': {c2_result}"
+        assert "plan" in c2_data, f"Missing 'plan': {c2_result}"
+        assert "rationale" in c2_data, f"Missing 'rationale': {c2_result}"
 
-        plan = c2_result["plan"]
+        plan = c2_data["plan"]
         assert isinstance(plan, dict)
         assert "steps" in plan, f"Plan missing 'steps': {plan}"
         assert len(plan["steps"]) > 0, "Plan steps list is empty"
@@ -494,16 +501,16 @@ class TestEndToEnd:
         )
 
         # rationale is a non-empty string
-        assert isinstance(c2_result["rationale"], str)
-        assert len(c2_result["rationale"]) > 0
+        assert isinstance(c2_data["rationale"], str)
+        assert len(c2_data["rationale"]) > 0
 
         # intent is one of the known values
-        assert c2_result["intent"] in (
+        assert c2_data["intent"] in (
             "diagnostic_run",
             "stability_run",
             "optimisation_run",
             "generic",
-        ), f"Unknown intent: {c2_result['intent']!r}"
+        ), f"Unknown intent: {c2_data['intent']!r}"
 
         # 7. Data endpoint smoke test
         data_resp = await api_client.get_experiments(limit=5)

@@ -12,7 +12,19 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "http://127.0.0.1:8101",
+        target: "http://127.0.0.1:8200",
+        changeOrigin: true,
+      },
+      "/health": {
+        target: "http://127.0.0.1:8200",
+        changeOrigin: true,
+      },
+      "/control": {
+        target: "http://127.0.0.1:8200",
+        changeOrigin: true,
+      },
+      "/data": {
+        target: "http://127.0.0.1:8200",
         changeOrigin: true,
       },
     },

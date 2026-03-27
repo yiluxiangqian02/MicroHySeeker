@@ -1,144 +1,24 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { healthApi } from "@/api/health";
-import { dataApi } from "@/api/data";
 import { emergencyStop } from "@/api/dashboard";
 import { useSettingsStore } from "@/stores/settingsStore";
-import type {
-  AgentId,
-  AgentState,
-  AgentStatus,
-  DashboardSnapshot,
-  EchemDataPoint,
-  ExperimentLogEntry,
-  ExperimentProgressState,
-  LogLevel,
-} from "@/api/types";
-
-// ── Constants ─────────────────────────────────────────────────────────────────
-
-const CHART_MAX_POINTS = 60;
-const LOG_MAX_ENTRIES = 200;
-
-const AGENT_META: Record<AgentId, { name: string }> = {
-  orchestrator: { name: "Orchestrator" },
-  experiment_designer: { name: "Experiment Designer" },
-  experiment_executor: { name: "Experiment Executor" },
-  diagnostics_expert: { name: "Diagnostics Expert" },
-  chat: { name: "Chat Agent" },
-  heartbeat_inspector: { name: "Heartbeat Inspector" },
-};
-
-// ── Helpers ───────────────────────────────────────────────────────────────────
-
-function makeLogId(): string {
-  return `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
-}
-
-function generateEchemPoint(t: number, isRunning: boolean): EchemDataPoint {
-  if (!isRunning) return { t };
-  const v = 1.23 + 0.08 * Math.sin(t / 30) + (Math.random() - 0.5) * 0.015;
-  const c = 52 + 18 * Math.sin(t / 45 + 1.2) + (Math.random() - 0.5) * 1.5;
-  return {
-    t,
-    voltage: Math.round(v * 1000) / 1000,
-    current: Math.round(c * 10) / 10,
-    power: Math.round(v * c * 10) / 10,
-  };
-}
-
-function deriveAgentStates(isHealthy: boolean, isRunning: boolean): AgentState[] {
-  const statusMap: Record<AgentId, AgentStatus> = {
-    orchestrator: isRunning ? "working" : "idle",
-    experiment_designer: "idle",
-    experiment_executor: isRunning ? "working" : "idle",
-    diagnostics_expert: isHealthy ? "working" : "error",
-    chat: "idle",
-    heartbeat_inspector: isHealthy ? "idle" : "error",
-  };
-  if (!isHealthy) {
-    return (Object.keys(statusMap) as AgentId[]).map((id) => ({
-      id,
-      name: AGENT_META[id].name,
-      status: "error" as AgentStatus,
-    }));
-  }
-  return (Object.keys(statusMap) as AgentId[]).map((id) => ({
-    id,
-    name: AGENT_META[id].name,
-    status: statusMap[id],
-    currentTask: statusMap[id] === "working" ? `Processing cycle ${Math.floor(Math.random() * 100 + 1)}` : undefined,
-  }));
-}
-
-const RUNNING_MESSAGES: Array<{ agent: AgentId; template: (tick: number) => string }> = [
-  { agent: "diagnostics_expert", template: (t) => `System health nominal – tick ${t}: CPU 42%, Mem 58%` },
-  { agent: "orchestrator", template: (t) => `Contextualizing run data – iteration ${t}` },
-  { agent: "diagnostics_expert", template: () => "Electrochemical cell voltage within normal range" },
-  { agent: "orchestrator", template: () => "Trend analysis: efficiency stable ±0.3%" },
-  { agent: "experiment_designer", template: () => "Evaluating next-experiment suggestions" },
-];
-
-function generateLogEntry(tick: number, isHealthy: boolean, isRunning: boolean): ExperimentLogEntry {
-  let level: LogLevel = "info";
-  let message: string;
-  let agent: string | undefined;
-
-  if (!isHealthy) {
-    level = "error";
-    message = "API health check failed – backend unreachable";
-  } else if (isRunning) {
-    const entry = RUNNING_MESSAGES[tick % RUNNING_MESSAGES.length];
-    agent = entry.agent;
-    message = entry.template(tick);
-  } else {
-    level = "debug";
-    message = "System idle – waiting for next experiment to start";
-  }
-
-  return {
-    id: makeLogId(),
-    timestamp: new Date().toISOString(),
-    level,
-    agent,
-    message,
-  };
-}
 
 // ── Hook ──────────────────────────────────────────────────────────────────────
-
-interface PollState {
-  startTime: number;
-  tick: number;
-  chartData: EchemDataPoint[];
-  logs: ExperimentLogEntry[];
-  isHealthy: boolean;
-  isRunning: boolean;
-  latestName?: string;
-  latestRunDir?: string;
-}
-
-function buildInitialSnapshot(): DashboardSnapshot {
-  return {
-    experiment: { status: "idle", progressPercent: 0 },
-    agents: (Object.keys(AGENT_META) as AgentId[]).map((id) => ({
-      id,
-      name: AGENT_META[id].name,
-      status: "idle",
-    })),
-    chartData: [],
-    logs: [],
-    lastUpdated: new Date().toISOString(),
-  };
-}
+//
+// This hook is now a **lightweight health-check + emergency-stop controller**.
+// All experiment/agent/chart/log data is sourced from optimizationStore (real API).
+// No fake data is generated.
 
 export interface UseDashboardPollingResult {
-  snapshot: DashboardSnapshot;
+  /** Whether the backend API is reachable */
+  isHealthy: boolean;
   isLoading: boolean;
   pollError: Error | null;
   isStopping: boolean;
   stopError: Error | null;
   stopSuccess: boolean;
   pollingIntervalMs: number;
+  lastUpdated: string;
   refresh: () => void;
   requestEmergencyStop: () => Promise<void>;
 }
@@ -146,82 +26,24 @@ export interface UseDashboardPollingResult {
 export function useDashboardPolling(): UseDashboardPollingResult {
   const { pollingIntervalMs } = useSettingsStore();
 
-  const [snapshot, setSnapshot] = useState<DashboardSnapshot>(buildInitialSnapshot);
+  const [isHealthy, setIsHealthy] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [pollError, setPollError] = useState<Error | null>(null);
+  const [lastUpdated, setLastUpdated] = useState(new Date().toISOString());
   const [isStopping, setIsStopping] = useState(false);
   const [stopError, setStopError] = useState<Error | null>(null);
   const [stopSuccess, setStopSuccess] = useState(false);
 
-  const state = useRef<PollState>({
-    startTime: Date.now(),
-    tick: 0,
-    chartData: [],
-    logs: [],
-    isHealthy: false,
-    isRunning: false,
-  });
-
   const poll = useCallback(async () => {
-    const s = state.current;
-    let isHealthy = false;
-    let latestName: string | undefined;
-    let latestRunDir: string | undefined;
-
     try {
       const health = await healthApi.check();
-      isHealthy = health.status === "ok";
+      setIsHealthy(health.status === "ok");
       setPollError(null);
     } catch (e) {
-      isHealthy = false;
+      setIsHealthy(false);
       setPollError(e instanceof Error ? e : new Error("Health check failed"));
     }
-
-    try {
-      const latest = await dataApi.getLatestExperiment();
-      latestName = latest.latest.name;
-      latestRunDir = latest.latest.run_dir;
-    } catch {
-      // 404 is expected when no experiment exists yet
-    }
-
-    s.tick += 1;
-    s.isHealthy = isHealthy;
-    s.isRunning = isHealthy && !!latestName;
-    s.latestName = latestName;
-    s.latestRunDir = latestRunDir;
-
-    const t = Math.round((Date.now() - s.startTime) / 1000);
-
-    // Accumulate chart data
-    const point = generateEchemPoint(t, s.isRunning);
-    s.chartData = [...s.chartData, point];
-    if (s.chartData.length > CHART_MAX_POINTS) s.chartData = s.chartData.slice(-CHART_MAX_POINTS);
-
-    // Accumulate log entries (every 2 ticks + on errors)
-    if (s.tick % 2 === 0 || !isHealthy) {
-      const entry = generateLogEntry(s.tick, isHealthy, s.isRunning);
-      s.logs = [...s.logs, entry];
-      if (s.logs.length > LOG_MAX_ENTRIES) s.logs = s.logs.slice(-LOG_MAX_ENTRIES);
-    }
-
-    const experiment: ExperimentProgressState = {
-      runName: latestName,
-      runId: latestRunDir,
-      status: !isHealthy ? "failed" : s.isRunning ? "running" : "idle",
-      progressPercent: s.isRunning ? Math.min(95, Math.round((s.tick / 50) * 100)) : 0,
-      currentStep: s.isRunning ? `Data collection cycle ${s.tick}` : undefined,
-      elapsedSeconds: t,
-    };
-
-    setSnapshot({
-      experiment,
-      agents: deriveAgentStates(isHealthy, s.isRunning),
-      chartData: [...s.chartData],
-      logs: [...s.logs],
-      lastUpdated: new Date().toISOString(),
-    });
-
+    setLastUpdated(new Date().toISOString());
     setIsLoading(false);
   }, []);
 
@@ -238,18 +60,6 @@ export function useDashboardPolling(): UseDashboardPollingResult {
     try {
       await emergencyStop();
       setStopSuccess(true);
-      const entry: ExperimentLogEntry = {
-        id: makeLogId(),
-        timestamp: new Date().toISOString(),
-        level: "warning",
-        message: "⛔ Emergency stop requested by operator",
-      };
-      state.current.logs = [...state.current.logs, entry];
-      setSnapshot((prev) => ({
-        ...prev,
-        experiment: { ...prev.experiment, status: "failed" },
-        logs: [...prev.logs, entry],
-      }));
     } catch (e) {
       setStopError(e instanceof Error ? e : new Error("Emergency stop request failed"));
     } finally {
@@ -258,13 +68,14 @@ export function useDashboardPolling(): UseDashboardPollingResult {
   }, []);
 
   return {
-    snapshot,
+    isHealthy,
     isLoading,
     pollError,
     isStopping,
     stopError,
     stopSuccess,
     pollingIntervalMs,
+    lastUpdated,
     refresh: () => { void poll(); },
     requestEmergencyStop,
   };

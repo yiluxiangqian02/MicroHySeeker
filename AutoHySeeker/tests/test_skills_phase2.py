@@ -13,7 +13,7 @@ import pytest
 # ── helpers ────────────────────────────────────────────────────────────────────
 
 def run_async(coro: Any) -> Any:
-    return asyncio.get_event_loop().run_until_complete(coro)
+    return asyncio.run(coro)
 
 
 def _write_csv(path: Path, technique: str = "cv") -> None:

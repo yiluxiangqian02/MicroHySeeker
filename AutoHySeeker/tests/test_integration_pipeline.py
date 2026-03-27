@@ -91,6 +91,7 @@ class TestOrchestratorAnomalyDispatch(unittest.TestCase):
         from src.agents.orchestrator import OrchestratorAgent
 
         orch = OrchestratorAgent()
+        orch._work_mode = "full_auto"  # bypass human approval wrapping
         result = asyncio.run(orch.handle_anomaly(
             anomaly={"type": "pump_error", "severity": "high"},
             optimization={},

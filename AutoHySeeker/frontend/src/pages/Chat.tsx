@@ -4,7 +4,6 @@ import { useChatStore } from "@/stores/chatStore";
 import { ChatSidebar } from "@/components/chat/ChatSidebar";
 import { ChatMessage } from "@/components/chat/ChatMessage";
 import { ChatInput } from "@/components/chat/ChatInput";
-import { motion } from "framer-motion";
 import { Bot, RefreshCw, ChevronDown } from "lucide-react";
 
 const SCROLL_THRESHOLD = 100; // pixels from bottom to consider "at bottom"
@@ -112,13 +111,15 @@ export function Chat() {
                 </p>
               </div>
             ) : (
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
+              <div className="space-y-6">
                 {messages.map((msg) => (
                   <ChatMessage key={msg.id} message={msg} />
                 ))}
                 
-                {isWaitingForResponse && (
-                  <div className="flex gap-4 w-full flex-row">
+                <div
+                  className="flex gap-4 w-full flex-row transition-all duration-200"
+                  style={{ maxHeight: isWaitingForResponse ? 60 : 0, opacity: isWaitingForResponse ? 1 : 0, overflow: 'hidden' }}
+                >
                      <div className="shrink-0 h-8 w-8 rounded-full flex items-center justify-center border border-slate-200 bg-white text-slate-400 shadow-sm">
                         <RefreshCw className="h-4 w-4 animate-spin" />
                       </div>
@@ -127,10 +128,9 @@ export function Chat() {
                         <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
                         <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
                       </div>
-                  </div>
-                )}
+                </div>
                 <div ref={messagesEndRef} />
-              </motion.div>
+              </div>
             )}
           </div>
 

@@ -72,14 +72,6 @@ export function Templates() {
     );
   };
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: 0.05 },
-    },
-  };
-
   return (
     <div className="p-6 space-y-6">
       {/* Header */}
@@ -145,11 +137,8 @@ export function Templates() {
           <p className="text-gray-400 text-sm mt-2">{t('templates.createFirst')}</p>
         </div>
       ) : (
-        <motion.div
+        <div
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
         >
           {filteredTemplates.map((template) => (
             <TemplateCard
@@ -158,7 +147,7 @@ export function Templates() {
               onUpdate={fetchTemplates}
             />
           ))}
-        </motion.div>
+        </div>
       )}
 
       {/* Create Dialog */}
