@@ -102,6 +102,72 @@ gh pr create --base autohyseeker --head feat/A \
 
 ---
 
+## ⚠️ 关键：第一个 merge vs 第二个 merge（最常见的疑问）
+
+### 原理：三路合并
+
+当 feat/B 要 merge 时，autohyseeker 已经包含了 feat/A 的改动。Git 用"三路合并"来处理：
+
+```
+      A0 (common base - 两个分支的共同祖先)
+     /  \
+    /    \
+feat/A   feat/B
+(改动1)  (改动2)
+  ↓        ↓
+merge    merge
+  ↓        ↓
+autohyseeker (最终包含两个改动)
+```
+
+Git 的逻辑：
+1. **对比两个分支相对于 A0 的改动**
+2. 如果改的文件**不重叠** → ✅ 自动合并成功
+3. 如果改的文件**有重叠** → ⚠️ 冲突，需要手动解决
+
+### 例子 1：A 改 agents，B 改 frontend（不重叠）✅
+
+```
+A0: config/
+├── agents/
+├── frontend/
+
+你 (feat/A):     他 (feat/B):
+├── agents/ ← 改  ├── frontend/ ← 改
+├── frontend/     ├── agents/
+
+合并结果自动成功：
+✅ agents/(你改) + frontend/(他改)
+```
+
+### 例子 2：A 改 config.py，B 也改 config.py（重叠）⚠️
+
+```
+A0: 
+├── config.py (v1)
+
+你 (feat/A):
+├── config.py (v1 → v2 你的改动)
+
+他 (feat/B):
+├── config.py (v1 → v3 他的改动)
+
+合并时：
+Git 说："嘿，我看到 config.py 从 v1 分别变成了 v2 和 v3"
+Git 问："该保留哪个？"
+→ ⚠️ 冲突需要手动决定
+```
+
+### 关键答案：第二个 merge 不会基于第一个 merge，而是基于 A0
+
+```
+feat/B 永远基于 A0（初始状态）
+即使 feat/A 已经 merge 了
+feat/B merge 时用"三路合并"来理解 autohyseeker 的新内容
+```
+
+---
+
 ### 第4步：Code Review 和冲突处理
 
 **情况1：没有冲突 ✅**
@@ -111,26 +177,54 @@ gh pr create --base autohyseeker --head feat/A \
 ```
 
 **情况2：有冲突 ⚠️**
+
+#### 方法 A：网页上解决（简单冲突用）
 ```bash
-# GitHub 会显示冲突文件
-
-# 方法1：在网页上解决（只适合简单冲突）
-# - 点击 "Resolve conflicts"
-# - 手动编辑冲突标记
-# - 点 "Mark as resolved"
-
-# 方法2：本地解决（推荐，更安全）
-git fetch origin
-git checkout feat/A
-git merge origin/autohyseeker
-
-# Git 会标记冲突，你手动修改，然后
-git add <冲突文件>
-git commit -m "merge: 解决与 autohyseeker 的冲突"
-git push origin feat/A
-
-# GitHub 会自动检测冲突已解决，PR 可以继续 merge
+# GitHub PR 页面会显示 "This branch has conflicts..."
+# 点击 "Resolve conflicts" 按钮
+# 找到冲突标记：
+# <<<<<<<< feat/B (你的改动)
+# ...
+# ========
+# ...
+# >>>>>>>> autohyseeker (对方的改动)
+# 手动编辑，只保留需要的部分，删除 <<< === >>> 标记
+# 点 "Mark as resolved"
+# GitHub 自动检测无冲突，可以 merge
 ```
+
+#### 方法 B：本地解决（推荐，更安全）✅
+
+这是**最后一个人必须做**的步骤：
+
+```bash
+# 假设你是第二个 merge 的，你的分支是 feat/B
+git fetch origin
+
+# 同步最新的 autohyseeker（已经包含第一个人的 merge）
+git rebase origin/autohyseeker
+
+# Git 检查 feat/B 相对于 A0 的改动和 autohyseeker 相对于 A0 的改动
+# 如果有冲突，Git 会暂停并列出冲突文件
+
+# 手动编辑冲突文件
+# 打开文件，找到 <<<<<<<, =======, >>>>>>>
+# 根据实际需要保留内容，删除冲突标记
+
+git add <冲突文件>
+git rebase --continue  # 注意：rebase 不是 merge，所以是 --continue
+
+# 推送回去
+git push -f origin feat/B  # 注意：-f 是因为 rebase 改了历史
+
+# GitHub PR 页面自动刷新，显示"This branch can be automatically merged"
+# 现在点击 merge 即可
+```
+
+**本地解决 vs 网页解决的区别：**
+- 网页：快速，但看不到全貌
+- 本地：可以运行测试、看代码上下文、更安全
+
 
 ---
 
@@ -282,6 +376,116 @@ git rebase --continue
 git push -f origin feat/A  # 强制更新（因为 rebase 改了历史）
 ```
 
+**Q: 第一个人 merge 后，第二个人 merge 会不会冲突？**
+```bash
+# 答：可能会，取决于改的文件是否重叠
+
+# 场景 A：不重叠 ✅
+# 第一个人改 src/agents/
+# 第二个人改 frontend/src/
+# 结果：自动合并成功，不需要任何额外操作
+
+# 场景 B：有重叠 ⚠️
+# 第一个人改 src/config.py
+# 第二个人也改 src/config.py
+# 结果：第二个人的 PR 会显示冲突
+#       第二个人需要 rebase + 手动解决冲突 + push
+# 命令：
+git fetch origin
+git checkout feat/B
+git rebase origin/autohyseeker  # 同步最新的 autohyseeker
+# Git 会显示冲突，手动解决...
+git add src/config.py
+git rebase --continue
+git push -f origin feat/B
+# 现在 PR 页面显示"可合并"
+```
+
+**Q: 如果两个人改同一个文件不同部分，会冲突吗？**
+```bash
+# 答：通常不会。Git 很聪明，能识别不同的行。
+
+# 例子：config.py
+# 初始状态：
+#   line 1: name = "default"
+#   line 2: version = "1.0"
+
+# 第一个人改 line 1
+# 第二个人改 line 2
+
+# 结果：Git 自动合并，两个改动都保留 ✅
+
+# 但如果改的是同一行，就会冲突 ⚠️
+```
+
+**Q: Squash merge vs Merge commit，用哪个？**
+```bash
+# 推荐：Squash and merge
+# 原因：
+# - Squash：把 feat/A 的所有 commit 合并成 1 个
+#   好处：autohyseeker 历史简洁，容易回滚整个功能
+# - Merge commit：保留 feat/A 所有 commit，增加一个 merge commit
+#   好处：完整保留开发过程，但历史会变复杂
+
+# 你们的建议：用 Squash
+git checkout autohyseeker
+git pull origin autohyseeker
+git merge --squash feat/A
+git commit -m "feat: A部分完成"
+git push origin autohyseeker
+```
+
 ---
 
-**总结：用 feat/A + feat/B + PR 流程就是企业级标准了！**
+## 完整流程示例（两个人都 merge 的情况）
+
+### Day 1：你完成 A 并 merge
+
+```bash
+# 你
+git checkout feat/A
+echo "# A 模块初始化" > src/agents/a_module.py
+git add src/agents/a_module.py
+git commit -m "feat: A部分 - 初始框架"
+git push origin feat/A
+
+# 创建 PR → review → merge
+# 现在 autohyseeker 包含了 A 的改动
+```
+
+### Day 2：同事完成 B 并 merge
+
+```bash
+# 同事（在完成 B 代码后）
+git checkout feat/B
+
+# 重要：同步最新的 autohyseeker（已包含你的改动）
+git fetch origin
+git rebase origin/autohyseeker
+
+# 如果有冲突（因为两个人改了同一文件），现在解决
+# 打开、编辑冲突文件...
+git add <冲突文件>
+git rebase --continue
+
+# 推送更新后的分支（-f 是因为 rebase 改了历史）
+git push -f origin feat/B
+
+# 创建 PR → review → merge
+# 现在 autohyseeker = A 改动 + B 改动（冲突已解决）
+```
+
+### 结果
+
+```
+autohyseeker 最终包含：
+✅ A 部分的所有改动
+✅ B 部分的所有改动
+✅ 冲突已手动解决
+✅ 历史清晰（每个分支一个 squash commit）
+```
+
+---
+
+**总结：用 feat/A + feat/B + PR 流程 = 企业级标准！**
+**关键：最后 merge 的人记得 rebase + 解决冲突**
