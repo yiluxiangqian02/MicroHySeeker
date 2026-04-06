@@ -2,7 +2,10 @@
 
 from __future__ import annotations
 
+import json
+import logging
 from datetime import datetime, timezone
+from pathlib import Path
 from typing import Any
 
 import httpx
@@ -14,11 +17,44 @@ try:
 except ImportError:
     _PSUTIL_AVAILABLE = False
 
+logger = logging.getLogger(__name__)
+
 router = APIRouter(prefix="/api/system", tags=["system"])
 
 # In-memory activity log (ring buffer, 100 entries)
 _ACTIVITY_LOG: list[dict[str, Any]] = []
 _MAX_ACTIVITIES = 100
+
+# ---------------------------------------------------------------------------
+# System config (pumps, channels, calibration)
+# ---------------------------------------------------------------------------
+_PROJECT_ROOT = Path(__file__).resolve().parents[4]  # workspace root
+_LOCAL_CONFIG = _PROJECT_ROOT / "config" / "system.json"
+_SYSTEM_CONFIG: dict[str, Any] | None = None
+
+
+def _load_system_config() -> dict[str, Any]:
+    """Load system config: try MicroHySeeker API first, then local file."""
+    global _SYSTEM_CONFIG
+    if _SYSTEM_CONFIG is not None:
+        return _SYSTEM_CONFIG
+
+    # Try local file (always available)
+    if _LOCAL_CONFIG.exists():
+        try:
+            raw = json.loads(_LOCAL_CONFIG.read_text(encoding="utf-8"))
+            _SYSTEM_CONFIG = raw
+            logger.info("Loaded system config from %s", _LOCAL_CONFIG)
+            return _SYSTEM_CONFIG
+        except Exception:
+            logger.exception("Failed to load local config from %s", _LOCAL_CONFIG)
+
+    _SYSTEM_CONFIG = {}
+    return _SYSTEM_CONFIG
+
+
+# Load on module import
+_load_system_config()
 
 
 def record_activity(activity_type: str, description: str) -> None:
@@ -84,3 +120,35 @@ async def get_system_health() -> dict[str, Any]:
         "apiResponseTime": [50] * 24,
         "timestamps": [now] * 24,
     }
+
+
+@router.get("/config")
+async def get_system_config() -> dict[str, Any]:
+    """Return pump/channel/calibration configuration.
+
+    This endpoint powers the ExperimentCreateDialog pump selectors.
+    It tries to fetch live config from MicroHySeeker first, then falls
+    back to the local ``config/system.json``.
+    """
+    # Try live MicroHySeeker config
+    try:
+        async with httpx.AsyncClient(timeout=3.0) as client:
+            resp = await client.get("http://localhost:8100/api/template/config/system")
+            if resp.status_code == 200:
+                return resp.json()
+    except Exception:
+        pass
+
+    # Fallback to cached local config
+    cfg = _load_system_config()
+    return cfg
+
+
+@router.post("/config/reload")
+async def reload_system_config() -> dict[str, Any]:
+    """Force reload system config from disk."""
+    global _SYSTEM_CONFIG
+    _SYSTEM_CONFIG = None
+    cfg = _load_system_config()
+    record_activity("system", "系统配置已重新加载")
+    return {"status": "ok", "keys": list(cfg.keys())}

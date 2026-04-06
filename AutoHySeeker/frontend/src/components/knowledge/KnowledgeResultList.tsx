@@ -7,11 +7,11 @@ interface KnowledgeResultListProps {
   results: Array<{ item: KnowledgeItem; score: number }>;
 }
 
-const PARTITION_ICONS: Record<string, ReactNode> = {
-  protocols: <FileText className="h-4 w-4" />,
-  experiments: <Beaker className="h-4 w-4" />,
-  faults: <AlertTriangle className="h-4 w-4" />,
-  methods: <Lightbulb className="h-4 w-4" />,
+const PARTITION_ICONS: Record<string, () => ReactNode> = {
+  protocols: () => <FileText className="h-4 w-4" />,
+  experiments: () => <Beaker className="h-4 w-4" />,
+  faults: () => <AlertTriangle className="h-4 w-4" />,
+  methods: () => <Lightbulb className="h-4 w-4" />,
 };
 
 export function KnowledgeResultList({ results }: KnowledgeResultListProps) {
@@ -49,7 +49,7 @@ export function KnowledgeResultList({ results }: KnowledgeResultListProps) {
 
           <div className="mb-3 flex items-center gap-3 text-xs">
             <span className="flex items-center gap-1.5 rounded bg-indigo-50 px-2 py-0.5 font-medium text-indigo-700">
-              {PARTITION_ICONS[item.partition] || <Database className="h-4 w-4" />}
+              {PARTITION_ICONS[item.partition]?.() ?? <Database className="h-4 w-4" />}
               {item.partition}
             </span>
             <span className="text-slate-400">•</span>

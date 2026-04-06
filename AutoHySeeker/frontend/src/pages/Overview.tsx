@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { motion } from 'framer-motion';
+
 import {
   Activity,
   BarChart,
@@ -67,7 +67,7 @@ interface ExperimentRecord {
 }
 
 function formatTime(value?: string) {
-  if (!value) return '—';
+  if (!value) return '--';
   return new Date(value).toLocaleString('zh-CN', {
     month: '2-digit',
     day: '2-digit',
@@ -84,18 +84,19 @@ function inferSource(exp: ExperimentRecord) {
 
 function summarizeCurrentStep(exp: ExperimentRecord) {
   const current = exp.steps?.[0];
-  if (!current) return '暂无步骤信息';
-  return `${current.step_type}${current.description ? ` · ${current.description}` : ''}`;
+  if (!current) return null;
+  const typeLabel: Record<string, string> = { prep_sol: '配液', transfer: '移液', flush: '冲洗', echem: '电化学', blank: '空白', evacuate: '排空' };
+  return `${typeLabel[current.step_type] ?? current.step_type}${current.description ? ` · ${current.description}` : ''}`;
 }
 
 export function Overview() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [systemStatus, setSystemStatus] = useState<SystemStatus>({
-    autohyseeker: true,
-    microhyseeker: true,
-    database: true,
-    agents: { running: 3, total: 5 },
+    autohyseeker: false,
+    microhyseeker: false,
+    database: false,
+    agents: { running: 0, total: 5 },
   });
   const [statistics, setStatistics] = useState<Statistics>({
     totalExperiments: 0,
@@ -177,9 +178,8 @@ export function Overview() {
     navigate(`/experiments/${experiment.exp_id}`);
   };
 
-  // Simple per-element fade-in — no staggerChildren
-  const fadeIn = { initial: { opacity: 0, y: 12 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.3 } } as const;
-
+  // Simple per-element fade-in
+  
   const getActivityColor = (type: string) => {
     switch (type) {
       case 'experiment':
@@ -202,29 +202,27 @@ export function Overview() {
 
   return (
     <div className="space-y-6 p-6">
-      <motion.section
-        {...fadeIn}
-        className="overflow-hidden rounded-2xl border border-slate-200 bg-gradient-to-r from-slate-900 via-blue-900 to-cyan-800 p-6 text-white shadow-sm"
+      <section className="overflow-hidden rounded-2xl border border-slate-200 bg-gradient-to-r from-slate-900 via-blue-900 to-cyan-800 p-6 text-white shadow-sm"
       >
         <div className="grid gap-6 lg:grid-cols-[1.5fr,1fr] lg:items-center">
           <div>
             <p className="text-sm font-medium uppercase tracking-[0.2em] text-blue-100">AI Experiment Steward</p>
-            <h1 className="mt-3 text-3xl font-bold">没有能不能，只有要不要，小氢挖最棒！</h1>
+            <h1 className="mt-3 text-3xl font-bold">{t('overview.heroTitle')}</h1>
             <p className="mt-3 max-w-3xl text-sm leading-6 text-blue-50/90">
-              主流程现在更清楚了：先按真实 step 编辑实验，再在运行中盯住当前步骤，最后从知识管理 / 知识库 Chat 和数据处理/分析助手拿到结论。
+              {t('overview.heroSubtitle')}
             </p>
             <div className="mt-5 flex flex-wrap gap-3">
               <button
                 onClick={() => setShowCreateDialog(true)}
                 className="rounded-lg bg-white px-4 py-2 text-sm font-medium text-slate-900 transition hover:bg-slate-100"
               >
-                开始一个新实验
+                {t('overview.startNewExperiment')}
               </button>
               <button
                 onClick={() => setShowKnowledgeChat(true)}
                 className="rounded-lg border border-white/30 px-4 py-2 text-sm font-medium text-white transition hover:bg-white/10"
               >
-                打开知识库 Chat
+                {t('overview.openKnowledgeChat')}
               </button>
             </div>
           </div>
@@ -233,18 +231,18 @@ export function Overview() {
             {[
               {
                 icon: FlaskConical,
-                title: '实验前',
-                desc: '按真实 steps 组装实验，不再把 technique 当作整个实验。',
+                title: t('overview.beforeExperiment'),
+                desc: t('overview.beforeExperimentDesc'),
               },
               {
                 icon: Microscope,
-                title: '实验中',
-                desc: '运行卡片直接告诉你实验名、当前步骤、状态、开始时间和来源。',
+                title: t('overview.duringExperiment'),
+                desc: t('overview.duringExperimentDesc'),
               },
               {
                 icon: Sparkles,
-                title: '实验后',
-                desc: '进入知识管理 / 知识库 Chat 或数据处理/分析助手继续追问。',
+                title: t('overview.afterExperiment'),
+                desc: t('overview.afterExperimentDesc'),
               },
             ].map((item) => {
               const Icon = item.icon;
@@ -260,26 +258,26 @@ export function Overview() {
             })}
           </div>
         </div>
-      </motion.section>
+      </section>
 
-      <motion.section {...fadeIn} className="grid gap-4 lg:grid-cols-3">
+      <section className="grid gap-4 lg:grid-cols-3">
         {[
           {
-            title: '1. 明确目标并编排步骤',
-            desc: '先说清目的，再进入真实 step editor，给每一步选 step_type。',
-            action: '新建实验',
+            title: t('overview.step1Title'),
+            desc: t('overview.step1Desc'),
+            action: t('overview.step1Action'),
             onClick: () => setShowCreateDialog(true),
           },
           {
-            title: '2. 盯住运行中的步骤',
-            desc: '重点看当前在跑哪个 step，而不是只看一个模糊的 running 状态。',
-            action: '查看运行中实验',
+            title: t('overview.step2Title'),
+            desc: t('overview.step2Desc'),
+            action: t('overview.step2Action'),
             onClick: () => navigate('/dashboard'),
           },
           {
-            title: '3. 问知识库 / 历史实验',
-            desc: '从知识管理 / 知识库 Chat 入口继续问方案、对比经验和历史记录。',
-            action: '打开知识库 Chat',
+            title: t('overview.step3Title'),
+            desc: t('overview.step3Desc'),
+            action: t('overview.step3Action'),
             onClick: () => setShowKnowledgeChat(true),
           },
         ].map((card) => (
@@ -294,24 +292,24 @@ export function Overview() {
             </button>
           </div>
         ))}
-      </motion.section>
+      </section>
 
-      <motion.section {...fadeIn} className="grid gap-6 xl:grid-cols-[1.2fr,0.8fr]">
+      <section className="grid gap-6 xl:grid-cols-[1.2fr,0.8fr]">
         <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
           <div className="flex items-center justify-between gap-3">
             <div>
-              <h2 className="text-lg font-semibold text-slate-900">运行中的实验</h2>
-              <p className="mt-1 text-sm text-slate-600">让人一眼看懂现在到底在跑什么。</p>
+              <h2 className="text-lg font-semibold text-slate-900">{t('overview.runningExperiments')}</h2>
+              <p className="mt-1 text-sm text-slate-600">{t('overview.runningExperimentsDesc')}</p>
             </div>
             <button onClick={() => navigate('/dashboard')} className="text-sm font-medium text-blue-600 hover:text-blue-700">
-              打开实时监控
+              {t('overview.openLiveMonitor')}
             </button>
           </div>
 
           <div className="mt-4 grid gap-4">
             {runningExperiments.length === 0 ? (
               <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50 px-5 py-8 text-sm text-slate-500">
-                暂无运行中的实验。创建实验后开始执行，这里会显示实验名、当前步骤、状态、开始时间和来源。
+                {t('overview.noRunningExperiments')}
               </div>
             ) : (
               runningExperiments.map((exp) => (
@@ -327,26 +325,26 @@ export function Overview() {
                         <PlayCircle className="h-5 w-5 text-blue-600" />
                         <h3 className="text-base font-semibold text-slate-900">{exp.name}</h3>
                       </div>
-                      <p className="mt-2 text-sm text-slate-600">{exp.description || '暂无补充描述。'}</p>
+                      <p className="mt-2 text-sm text-slate-600">{exp.description || t('overview.noExtraDesc')}</p>
                     </div>
                     <span className="rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700">{exp.status}</span>
                   </div>
 
                   <div className="mt-4 grid gap-3 md:grid-cols-4">
                     <div className="rounded-xl bg-white px-4 py-3">
-                      <p className="text-xs text-slate-500">当前步骤</p>
-                      <p className="mt-1 text-sm font-medium text-slate-900">{summarizeCurrentStep(exp)}</p>
+                      <p className="text-xs text-slate-500">{t('overview.currentStep')}</p>
+                      <p className="mt-1 text-sm font-medium text-slate-900">{summarizeCurrentStep(exp) || t('overview.noStepInfo')}</p>
                     </div>
                     <div className="rounded-xl bg-white px-4 py-3">
-                      <p className="text-xs text-slate-500">状态</p>
-                      <p className="mt-1 text-sm font-medium text-slate-900">运行中</p>
+                      <p className="text-xs text-slate-500">{t('overview.statusLabel')}</p>
+                      <p className="mt-1 text-sm font-medium text-slate-900">{t('overview.running')}</p>
                     </div>
                     <div className="rounded-xl bg-white px-4 py-3">
-                      <p className="text-xs text-slate-500">开始时间</p>
+                      <p className="text-xs text-slate-500">{t('overview.startTime')}</p>
                       <p className="mt-1 text-sm font-medium text-slate-900">{formatTime(exp.started_at || exp.created_at)}</p>
                     </div>
                     <div className="rounded-xl bg-white px-4 py-3">
-                      <p className="text-xs text-slate-500">来源</p>
+                      <p className="text-xs text-slate-500">{t('overview.source')}</p>
                       <p className="mt-1 text-sm font-medium text-slate-900">{inferSource(exp)}</p>
                     </div>
                   </div>
@@ -359,31 +357,31 @@ export function Overview() {
         <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
           <div className="flex items-center justify-between gap-3">
             <div>
-              <h2 className="text-lg font-semibold text-slate-900">知识管理 / 知识库 Chat</h2>
-              <p className="mt-1 text-sm text-slate-600">有明确入口、有上下文区，不再藏在抽象 agent 名字里。</p>
+              <h2 className="text-lg font-semibold text-slate-900">{t('overview.knowledgeManagement')}</h2>
+              <p className="mt-1 text-sm text-slate-600">{t('overview.knowledgeChatDesc')}</p>
             </div>
             <button onClick={() => setShowKnowledgeChat(true)} className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-slate-800">
-              打开 Chat
+              {t('overview.openChat')}
             </button>
           </div>
 
           <div className="mt-4 rounded-2xl border border-blue-100 bg-blue-50 p-4">
             <div className="flex items-center gap-2 text-sm font-semibold text-blue-900">
               <BookOpen className="h-4 w-4" />
-              当前上下文区
+              {t('overview.currentContext')}
             </div>
             <ul className="mt-3 space-y-2 text-sm text-blue-900">
-              <li>• 最近实验数：{recentExperiments.length}</li>
-              <li>• 运行中的实验：{runningExperiments.length}</li>
-              <li>• 当前可追问：方案设计、历史实验、参数经验、异常复盘</li>
+              <li>• {t('overview.recentExpCount')}：{recentExperiments.length}</li>
+              <li>• {t('overview.runningExpCount')}：{runningExperiments.length}</li>
+              <li>• {t('overview.canAskAbout')}</li>
             </ul>
           </div>
 
           <div className="mt-4 space-y-3">
             {[
-              '这个 echem 步骤为什么建议先用 CV 而不是 EIS？',
-              '结合最近实验，下一轮应该优先改哪个 step？',
-              '运行中的实验如果卡在 transfer，常见原因是什么？',
+              '电化学步骤应该先做 CV 还是 EIS？依据是什么？',
+              '根据近期实验数据，下一轮应优先调整哪个步骤？',
+              '移液步骤执行异常的常见原因有哪些？',
             ].map((prompt) => (
               <button
                 key={prompt}
@@ -396,10 +394,10 @@ export function Overview() {
             ))}
           </div>
         </div>
-      </motion.section>
+      </section>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <motion.div {...fadeIn} className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-200 hover:shadow-md">
+        <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-200 hover:shadow-md">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600">{t('overview.autohyseeker')}</p>
@@ -410,9 +408,9 @@ export function Overview() {
             </div>
             <Server className="h-8 w-8 text-blue-500" />
           </div>
-        </motion.div>
+        </div>
 
-        <motion.div {...fadeIn} className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-200 hover:shadow-md">
+        <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-200 hover:shadow-md">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600">{t('overview.microhyseeker')}</p>
@@ -423,9 +421,9 @@ export function Overview() {
             </div>
             <Activity className="h-8 w-8 text-green-500" />
           </div>
-        </motion.div>
+        </div>
 
-        <motion.div {...fadeIn} className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-200 hover:shadow-md">
+        <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-200 hover:shadow-md">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600">{t('overview.database')}</p>
@@ -436,9 +434,9 @@ export function Overview() {
             </div>
             <Database className="h-8 w-8 text-purple-500" />
           </div>
-        </motion.div>
+        </div>
 
-        <motion.div {...fadeIn} className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-200 hover:shadow-md">
+        <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-200 hover:shadow-md">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600">{t('overview.agents')}</p>
@@ -447,37 +445,37 @@ export function Overview() {
             </div>
             <Bot className="h-8 w-8 text-orange-500" />
           </div>
-        </motion.div>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <motion.div {...fadeIn} className="rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 p-6 text-white shadow-sm transition-all duration-200 hover:shadow-md">
+        <div className="rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 p-6 text-white shadow-sm transition-all duration-200 hover:shadow-md">
           <p className="text-sm opacity-90">{t('overview.totalExperiments')}</p>
           <p className="mt-2 text-3xl font-bold">{statistics.totalExperiments}</p>
-        </motion.div>
+        </div>
 
-        <motion.div {...fadeIn} className="rounded-xl bg-gradient-to-br from-green-500 to-green-600 p-6 text-white shadow-sm transition-all duration-200 hover:shadow-md">
+        <div className="rounded-xl bg-gradient-to-br from-green-500 to-green-600 p-6 text-white shadow-sm transition-all duration-200 hover:shadow-md">
           <p className="text-sm opacity-90">{t('overview.todayExperiments')}</p>
           <p className="mt-2 text-3xl font-bold">{statistics.todayExperiments}</p>
-        </motion.div>
+        </div>
 
-        <motion.div {...fadeIn} className="rounded-xl bg-gradient-to-br from-purple-500 to-purple-600 p-6 text-white shadow-sm transition-all duration-200 hover:shadow-md">
+        <div className="rounded-xl bg-gradient-to-br from-purple-500 to-purple-600 p-6 text-white shadow-sm transition-all duration-200 hover:shadow-md">
           <p className="text-sm opacity-90">{t('overview.successRate')}</p>
           <div className="mt-2 flex items-center">
             <p className="text-3xl font-bold">{statistics.successRate}%</p>
             {statistics.successTrend === 'up' && <TrendingUp className="ml-2 h-6 w-6" />}
             {statistics.successTrend === 'down' && <TrendingDown className="ml-2 h-6 w-6" />}
           </div>
-        </motion.div>
+        </div>
 
-        <motion.div {...fadeIn} className="rounded-xl bg-gradient-to-br from-orange-500 to-orange-600 p-6 text-white shadow-sm transition-all duration-200 hover:shadow-md">
+        <div className="rounded-xl bg-gradient-to-br from-orange-500 to-orange-600 p-6 text-white shadow-sm transition-all duration-200 hover:shadow-md">
           <p className="text-sm opacity-90">{t('overview.avgDuration')}</p>
-          <p className="mt-2 text-3xl font-bold">{statistics.avgDuration || '—'}</p>
-        </motion.div>
+          <p className="mt-2 text-3xl font-bold">{statistics.avgDuration || '--'}</p>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <motion.div {...fadeIn} className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-200 hover:shadow-md">
+        <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-200 hover:shadow-md">
           <h2 className="mb-4 flex items-center text-lg font-semibold">
             <Clock className="mr-2 h-5 w-5 text-blue-500" />
             {t('overview.recentActivities')}
@@ -502,45 +500,45 @@ export function Overview() {
               ))
             )}
           </div>
-        </motion.div>
+        </div>
 
-        <motion.div {...fadeIn} className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-200 hover:shadow-md">
-          <h2 className="mb-4 text-lg font-semibold">快速入口</h2>
+        <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-200 hover:shadow-md">
+          <h2 className="mb-4 text-lg font-semibold">{t('overview.quickEntry')}</h2>
           <div className="grid grid-cols-2 gap-4">
-            <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => setShowCreateDialog(true)} className="flex flex-col items-center justify-center rounded-xl bg-blue-50 p-6 transition-colors hover:bg-blue-100">
+            <button onClick={() => setShowCreateDialog(true)} className="flex flex-col items-center justify-center rounded-xl bg-blue-50 p-6 transition-all hover:bg-blue-100 active:scale-[0.98]">
               <Plus className="mb-2 h-8 w-8 text-blue-600" />
-              <span className="text-sm font-medium text-blue-600">真实 step editor</span>
-            </motion.button>
+              <span className="text-sm font-medium text-blue-600">{t('overview.stepEditor')}</span>
+            </button>
 
-            <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => setShowKnowledgeChat(true)} className="flex flex-col items-center justify-center rounded-xl bg-cyan-50 p-6 transition-colors hover:bg-cyan-100">
+            <button onClick={() => setShowKnowledgeChat(true)} className="flex flex-col items-center justify-center rounded-xl bg-cyan-50 p-6 transition-all hover:bg-cyan-100 active:scale-[0.98]">
               <MessageSquare className="mb-2 h-8 w-8 text-cyan-600" />
-              <span className="text-sm font-medium text-cyan-600">知识库 Chat</span>
-            </motion.button>
+              <span className="text-sm font-medium text-cyan-600">{t('overview.knowledgeChat')}</span>
+            </button>
 
-            <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={handleAnalyzeRecent} className="flex flex-col items-center justify-center rounded-xl bg-purple-50 p-6 transition-colors hover:bg-purple-100">
+            <button onClick={handleAnalyzeRecent} className="flex flex-col items-center justify-center rounded-xl bg-purple-50 p-6 transition-all hover:bg-purple-100 active:scale-[0.98]">
               <BarChart className="mb-2 h-8 w-8 text-purple-600" />
-              <span className="text-sm font-medium text-purple-600">数据处理/分析助手</span>
-            </motion.button>
+              <span className="text-sm font-medium text-purple-600">{t('overview.dataAnalysisAssistant')}</span>
+            </button>
 
-            <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={handleGetSuggestions} className="flex flex-col items-center justify-center rounded-xl bg-orange-50 p-6 transition-colors hover:bg-orange-100">
+            <button onClick={handleGetSuggestions} className="flex flex-col items-center justify-center rounded-xl bg-orange-50 p-6 transition-all hover:bg-orange-100 active:scale-[0.98]">
               <Lightbulb className="mb-2 h-8 w-8 text-orange-600" />
-              <span className="text-sm font-medium text-orange-600">方案设计助手</span>
-            </motion.button>
+              <span className="text-sm font-medium text-orange-600">{t('overview.schemeDesignAssistant')}</span>
+            </button>
 
-            <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => navigate('/dashboard')} className="col-span-2 flex flex-col items-center justify-center rounded-xl bg-green-50 p-6 transition-colors hover:bg-green-100">
+            <button onClick={() => navigate('/dashboard')} className="col-span-2 flex flex-col items-center justify-center rounded-xl bg-green-50 p-6 transition-all hover:bg-green-100 active:scale-[0.98]">
               <Microscope className="mb-2 h-8 w-8 text-green-600" />
-              <span className="text-sm font-medium text-green-600">运行监护助手 / 故障排查助手</span>
-            </motion.button>
+              <span className="text-sm font-medium text-green-600">{t('overview.monitorAssistant')}</span>
+            </button>
 
-            <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => setShowExperimentSelector(true)} className="col-span-2 flex flex-col items-center justify-center rounded-xl bg-slate-100 p-6 transition-colors hover:bg-slate-200">
+            <button onClick={() => setShowExperimentSelector(true)} className="col-span-2 flex flex-col items-center justify-center rounded-xl bg-slate-100 p-6 transition-all hover:bg-slate-200 active:scale-[0.98]">
               <FolderOpen className="mb-2 h-8 w-8 text-slate-700" />
-              <span className="text-sm font-medium text-slate-700">加载最近实验</span>
-            </motion.button>
+              <span className="text-sm font-medium text-slate-700">{t('overview.loadRecentExperiments')}</span>
+            </button>
           </div>
-        </motion.div>
+        </div>
       </div>
 
-      <motion.div {...fadeIn} className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-200 hover:shadow-md">
+      <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-200 hover:shadow-md">
         <h2 className="mb-4 flex items-center text-lg font-semibold">
           <BarChart className="mr-2 h-5 w-5 text-blue-500" />
           {t('overview.systemHealth')}
@@ -583,7 +581,7 @@ export function Overview() {
             </div>
           </div>
         </div>
-      </motion.div>
+      </div>
 
       {showCreateDialog && (
         <ExperimentCreateDialog

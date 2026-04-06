@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { motion } from 'framer-motion';
 import { Plus, Search } from 'lucide-react';
 import { TemplateCard } from '@/components/TemplateCard';
 import { TemplateDialog } from '@/components/TemplateDialog';
@@ -77,15 +76,13 @@ export function Templates() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">{t('templates.title')}</h1>
-        <motion.button
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
+        <button
           onClick={() => setIsCreateDialogOpen(true)}
-          className="btn-primary flex items-center space-x-2"
+          className="btn-primary flex items-center space-x-2 active:scale-95 transition-transform"
         >
           <Plus className="h-5 w-5" />
           <span>{t('templates.create')}</span>
-        </motion.button>
+        </button>
       </div>
 
       {/* Search and Filter */}

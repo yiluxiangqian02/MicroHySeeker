@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
-import { StepEditor } from './StepEditor';
+import { StepEditor, type RichStep } from './StepEditor';
 
 interface Template {
   id?: string;
@@ -23,7 +22,7 @@ export function TemplateDialog({ isOpen, onClose, onSuccess, template }: Templat
   const { t } = useTranslation();
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [steps, setSteps] = useState<any[]>([]);
+  const [steps, setSteps] = useState<RichStep[]>([]);
   const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState('');
   const [isSaving, setIsSaving] = useState(false);
@@ -84,13 +83,10 @@ export function TemplateDialog({ isOpen, onClose, onSuccess, template }: Templat
   };
 
   return (
-    <AnimatePresence>
+    <>
       {isOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.9 }}
+          <div
             className="bg-white rounded-xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col"
           >
             {/* Header */}
@@ -203,9 +199,9 @@ export function TemplateDialog({ isOpen, onClose, onSuccess, template }: Templat
                 {isSaving ? t('common.saving') : t('common.save')}
               </button>
             </div>
-          </motion.div>
+          </div>
         </div>
       )}
-    </AnimatePresence>
+    </>
   );
 }

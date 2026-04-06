@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   AlertCircle,
   ArrowDown,
@@ -9,6 +9,7 @@ import {
   ChevronRight,
   Droplets,
   FlaskConical,
+  Loader2,
   Plus,
   Trash2,
   Wind,
@@ -18,20 +19,65 @@ import {
 type StepType = 'prep_sol' | 'transfer' | 'flush' | 'echem' | 'blank' | 'evacuate';
 type EchemTechnique = 'CV' | 'LSV' | 'i-t' | 'EIS' | 'ADT';
 
+/* ---------- system config types ---------- */
+interface DilutionChannel {
+  channel_id: string;
+  solution_name: string;
+  stock_concentration: number;
+  pump_address: number;
+  direction: string;
+  default_rpm: number;
+  color?: string;
+  tube_diameter_mm?: number;
+  total_volume_ml?: number;
+  remaining_volume_ml?: number;
+}
+
+interface FlushChannelCfg {
+  channel_id: string;
+  pump_name: string;
+  pump_address: number;
+  direction: string;
+  rpm: number;
+  cycle_duration_s: number;
+  work_type: string; // Inlet / Transfer / Outlet
+  tube_diameter_mm?: number;
+  total_volume_ml?: number | null;
+}
+
+interface PumpCfg {
+  address: number;
+  name: string;
+  direction: string;
+  default_rpm: number;
+}
+
+interface SystemConfig {
+  pumps: PumpCfg[];
+  dilution_channels: DilutionChannel[];
+  flush_channels: FlushChannelCfg[];
+}
+
+/* ---------- experiment step ---------- */
 type ExperimentStep = {
   step_id: string;
   step_type: StepType;
   notes: string;
+  /* transfer / evacuate */
   pump_address?: number;
   pump_direction?: 'FWD' | 'REV';
   pump_rpm?: number;
   volume_ul?: number;
   transfer_duration?: number;
   transfer_duration_unit?: 'ms' | 's' | 'min' | 'hr' | 'cycle';
+  /* flush */
   flush_channel_id?: string;
   flush_rpm?: number;
   flush_cycle_duration_s?: number;
   flush_cycles?: number;
+  /* blank */
+  duration_s?: number;
+  /* prep_sol */
   prep_sol_params?: {
     total_volume_ul: number;
     selected_solutions: Record<string, boolean>;
@@ -40,6 +86,7 @@ type ExperimentStep = {
     injection_order_numbers: Record<string, number>;
     injection_order: string[];
   };
+  /* echem — all fields from MicroHySeeker ECSettings */
   ec_settings?: {
     technique: EchemTechnique;
     e0?: number;
@@ -48,13 +95,48 @@ type ExperimentStep = {
     ef?: number;
     scan_rate?: number;
     sample_interval_ms?: number;
+    sensitivity?: number;
+    autosensitivity?: boolean;
     quiet_time_s?: number;
-    seg_num?: number;
     run_time_s?: number;
+    seg_num?: number;
+    scan_dir?: string;
+    /* EIS */
     freq_low?: number;
     freq_high?: number;
     amplitude?: number;
+    bias_mode?: number;
+    /* dummy cell */
+    use_dummy_cell?: boolean;
+    /* ADT common */
+    adt_enabled?: boolean;
     adt_num_cycles?: number;
+    /* ADT CP */
+    adt_cathodic_current_mA?: number;
+    adt_cp_anodic_current_mA?: number;
+    adt_cp_e_high?: number;
+    adt_cp_e_low?: number;
+    adt_cp_high_e_hold_time?: number;
+    adt_cp_low_e_hold_time?: number;
+    adt_cathodic_duration_s?: number;
+    adt_cp_anodic_time_s?: number;
+    adt_cp_polarity?: string;
+    adt_cp_sample_interval?: number;
+    adt_cp_segments?: number;
+    adt_cp_priority?: string;
+    /* ADT CA */
+    adt_anodic_potential_V?: number;
+    adt_ca_e_high?: number;
+    adt_ca_e_low?: number;
+    adt_ca_polarity?: string;
+    adt_ca_steps?: number;
+    adt_anodic_duration_s?: number;
+    adt_ca_sample_interval?: number;
+    adt_ca_quiet_time?: number;
+    adt_ca_sensitivity?: number;
+    /* iR compensation */
+    ir_compensation_enabled?: boolean;
+    ir_compensation_ohm?: number;
   };
 };
 
@@ -63,85 +145,144 @@ interface ExperimentCreateDialogProps {
   onSubmit: (experiment: Record<string, unknown>) => void;
 }
 
-const STEP_META: Record<StepType, { label: string; description: string; icon: typeof FlaskConical; tone: string }> = {
+const STEP_META: Record<StepType, { label: string; description: string; icon: typeof FlaskConical; tone: string; leftBorder: string }> = {
   prep_sol: {
-    label: 'prep_sol · 配液/混液',
-    description: '为实验准备溶液配比、浓度和注液顺序。',
+    label: '配液',
+    description: '设置溶液配比、浓度和注液顺序。',
     icon: Beaker,
     tone: 'bg-violet-50 text-violet-700 border-violet-200',
+    leftBorder: 'border-l-violet-500',
   },
   transfer: {
-    label: 'transfer · 移液/转移',
-    description: '按体积或按时长驱动泵完成转移。',
+    label: '移液',
+    description: '通过泵按体积或时长完成液体转移。',
     icon: ArrowUp,
     tone: 'bg-sky-50 text-sky-700 border-sky-200',
+    leftBorder: 'border-l-sky-500',
   },
   flush: {
-    label: 'flush · 冲洗',
-    description: '围绕 flush channel 做循环冲洗。',
+    label: '冲洗',
+    description: '通过指定通道循环冲洗管路。',
     icon: Droplets,
     tone: 'bg-cyan-50 text-cyan-700 border-cyan-200',
+    leftBorder: 'border-l-cyan-500',
   },
   echem: {
-    label: 'echem · 电化学测试',
-    description: 'Technique 只是 echem 步骤内部的一个字段。',
+    label: '电化学',
+    description: '配置电化学测量参数（CV、LSV、i-t、EIS、ADT）。',
     icon: FlaskConical,
     tone: 'bg-blue-50 text-blue-700 border-blue-200',
+    leftBorder: 'border-l-blue-600',
   },
   blank: {
-    label: 'blank · 空白/等待',
-    description: '用于人工观察、占位、流程分段。',
+    label: '空白',
+    description: '用于等待、观察或流程分段。',
     icon: ChevronRight,
     tone: 'bg-slate-50 text-slate-700 border-slate-200',
+    leftBorder: 'border-l-slate-400',
   },
   evacuate: {
-    label: 'evacuate · 排空',
-    description: '独立表达排空动作，不和 flush/transfer 混写。',
+    label: '排空',
+    description: '排空管路或容器中的残留液体。',
     icon: Wind,
     tone: 'bg-amber-50 text-amber-700 border-amber-200',
+    leftBorder: 'border-l-amber-500',
   },
 };
 
-const DEFAULT_SOLUTIONS = ['Buffer', 'Analyte', 'Mediator', 'Solvent A'];
-const TECHNIQUE_FIELDS: Record<EchemTechnique, Array<{ key: string; label: string; unit?: string }>> = {
-  CV: [
-    { key: 'e0', label: '起始电位', unit: 'V' },
-    { key: 'eh', label: '高电位', unit: 'V' },
-    { key: 'el', label: '低电位', unit: 'V' },
-    { key: 'ef', label: '最终电位', unit: 'V' },
-    { key: 'scan_rate', label: '扫描速率', unit: 'V/s' },
-    { key: 'seg_num', label: '循环段数' },
-    { key: 'sample_interval_ms', label: '采样间隔', unit: 'ms' },
-    { key: 'quiet_time_s', label: '静置时间', unit: 's' },
-  ],
-  LSV: [
-    { key: 'e0', label: '起始电位', unit: 'V' },
-    { key: 'ef', label: '最终电位', unit: 'V' },
-    { key: 'scan_rate', label: '扫描速率', unit: 'V/s' },
-    { key: 'sample_interval_ms', label: '采样间隔', unit: 'ms' },
-    { key: 'quiet_time_s', label: '静置时间', unit: 's' },
-  ],
-  'i-t': [
-    { key: 'e0', label: '施加电位', unit: 'V' },
-    { key: 'run_time_s', label: '持续时间', unit: 's' },
-    { key: 'sample_interval_ms', label: '采样间隔', unit: 'ms' },
-    { key: 'quiet_time_s', label: '静置时间', unit: 's' },
-  ],
-  EIS: [
-    { key: 'freq_high', label: '最高频率', unit: 'Hz' },
-    { key: 'freq_low', label: '最低频率', unit: 'Hz' },
-    { key: 'amplitude', label: '交流振幅', unit: 'V' },
-    { key: 'sample_interval_ms', label: '采样间隔', unit: 'ms' },
-    { key: 'quiet_time_s', label: '静置时间', unit: 's' },
-  ],
-  ADT: [
-    { key: 'adt_num_cycles', label: 'ADT 循环数' },
-    { key: 'sample_interval_ms', label: '采样间隔', unit: 'ms' },
-    { key: 'quiet_time_s', label: '静置时间', unit: 's' },
-  ],
+/* ---------- technique field definitions (matches MicroHySeeker ECSettings) ---------- */
+type FieldDef = { key: string; label: string; unit?: string; type?: 'number' | 'select' | 'checkbox'; options?: { value: string; label: string }[] };
+
+const CV_FIELDS: FieldDef[] = [
+  { key: 'e0', label: '初始电位 E0', unit: 'V' },
+  { key: 'eh', label: '上限电位 Eh', unit: 'V' },
+  { key: 'el', label: '下限电位 El', unit: 'V' },
+  { key: 'ef', label: '终止电位 Ef', unit: 'V' },
+  { key: 'scan_rate', label: '扫描速率', unit: 'V/s' },
+  { key: 'seg_num', label: '扫描段数' },
+  { key: 'scan_dir', label: '扫描方向', type: 'select', options: [{ value: 'FWD', label: '正向 (FWD)' }, { value: 'REV', label: '反向 (REV)' }] },
+  { key: 'sample_interval_ms', label: '采样间隔', unit: 'ms' },
+  { key: 'quiet_time_s', label: '静置时间', unit: 's' },
+  { key: 'sensitivity', label: '灵敏度', unit: 'A/V' },
+  { key: 'autosensitivity', label: '自动灵敏度', type: 'checkbox' },
+];
+
+const LSV_FIELDS: FieldDef[] = [
+  { key: 'e0', label: '初始电位 E0', unit: 'V' },
+  { key: 'ef', label: '终止电位 Ef', unit: 'V' },
+  { key: 'scan_rate', label: '扫描速率', unit: 'V/s' },
+  { key: 'scan_dir', label: '扫描方向', type: 'select', options: [{ value: 'FWD', label: '正向 (FWD)' }, { value: 'REV', label: '反向 (REV)' }] },
+  { key: 'sample_interval_ms', label: '采样间隔', unit: 'ms' },
+  { key: 'quiet_time_s', label: '静置时间', unit: 's' },
+  { key: 'sensitivity', label: '灵敏度', unit: 'A/V' },
+  { key: 'autosensitivity', label: '自动灵敏度', type: 'checkbox' },
+];
+
+const IT_FIELDS: FieldDef[] = [
+  { key: 'e0', label: '恒电位 E0', unit: 'V' },
+  { key: 'run_time_s', label: '运行时间', unit: 's' },
+  { key: 'sample_interval_ms', label: '采样间隔', unit: 'ms' },
+  { key: 'quiet_time_s', label: '静置时间', unit: 's' },
+  { key: 'sensitivity', label: '灵敏度', unit: 'A/V' },
+  { key: 'autosensitivity', label: '自动灵敏度', type: 'checkbox' },
+];
+
+const EIS_FIELDS: FieldDef[] = [
+  { key: 'e0', label: '初始电位 E0', unit: 'V' },
+  { key: 'freq_high', label: '高频率', unit: 'Hz' },
+  { key: 'freq_low', label: '低频率', unit: 'Hz' },
+  { key: 'amplitude', label: '交流振幅', unit: 'V' },
+  { key: 'bias_mode', label: '偏置模式', type: 'select', options: [{ value: '0', label: 'vs Eref' }, { value: '1', label: 'vs Eoc' }] },
+  { key: 'quiet_time_s', label: '静置时间', unit: 's' },
+];
+
+const ADT_COMMON_FIELDS: FieldDef[] = [
+  { key: 'adt_num_cycles', label: 'ADT 循环轮数' },
+];
+
+const ADT_CP_FIELDS: FieldDef[] = [
+  { key: 'adt_cathodic_current_mA', label: '阴极电流 ic', unit: 'mA' },
+  { key: 'adt_cp_anodic_current_mA', label: '阳极电流 ia', unit: 'mA' },
+  { key: 'adt_cathodic_duration_s', label: '阴极时间 tc', unit: 's' },
+  { key: 'adt_cp_anodic_time_s', label: '阳极时间 ta', unit: 's' },
+  { key: 'adt_cp_e_high', label: 'CP 电位上限 eh', unit: 'V' },
+  { key: 'adt_cp_e_low', label: 'CP 电位下限 el', unit: 'V' },
+  { key: 'adt_cp_high_e_hold_time', label: '高电位保持时间', unit: 's' },
+  { key: 'adt_cp_low_e_hold_time', label: '低电位保持时间', unit: 's' },
+  { key: 'adt_cp_polarity', label: 'CP 首步极性', type: 'select', options: [{ value: 'n', label: '阴极先 (n)' }, { value: 'p', label: '阳极先 (p)' }] },
+  { key: 'adt_cp_sample_interval', label: 'CP 采样间隔', unit: 's' },
+  { key: 'adt_cp_segments', label: 'CP 段数' },
+  { key: 'adt_cp_priority', label: 'CP 优先级', type: 'select', options: [{ value: 'time', label: '时间优先' }, { value: 'potential', label: '电位优先' }] },
+];
+
+const ADT_CA_FIELDS: FieldDef[] = [
+  { key: 'adt_anodic_potential_V', label: 'CA 初始电位 ei', unit: 'V' },
+  { key: 'adt_ca_e_high', label: 'CA 高电位限 eh', unit: 'V' },
+  { key: 'adt_ca_e_low', label: 'CA 低电位限 el', unit: 'V' },
+  { key: 'adt_ca_polarity', label: 'CA 方向', type: 'select', options: [{ value: 'p', label: '正向 (p)' }, { value: 'n', label: '负向 (n)' }] },
+  { key: 'adt_ca_steps', label: 'CA 阶跃数' },
+  { key: 'adt_anodic_duration_s', label: 'CA 脉冲宽度', unit: 's' },
+  { key: 'adt_ca_sample_interval', label: 'CA 采样间隔', unit: 's' },
+  { key: 'adt_ca_quiet_time', label: 'CA 静置时间', unit: 's' },
+  { key: 'adt_ca_sensitivity', label: 'CA 灵敏度', unit: 'A/V' },
+];
+
+const TECHNIQUE_FIELDS: Record<EchemTechnique, FieldDef[]> = {
+  CV: CV_FIELDS,
+  LSV: LSV_FIELDS,
+  'i-t': IT_FIELDS,
+  EIS: EIS_FIELDS,
+  ADT: ADT_COMMON_FIELDS,
 };
 
-function createStep(type: StepType = 'prep_sol', index = 0): ExperimentStep {
+const IR_FIELDS: FieldDef[] = [
+  { key: 'ir_compensation_enabled', label: 'iR 补偿', type: 'checkbox' },
+  { key: 'ir_compensation_ohm', label: '补偿电阻', unit: 'Ω' },
+];
+
+const DUMMY_CELL_FIELD: FieldDef = { key: 'use_dummy_cell', label: 'Dummy Cell 测试模式', type: 'checkbox' };
+
+function createStep(type: StepType = 'prep_sol', index = 0, solutionNames: string[] = []): ExperimentStep {
   return {
     step_id: `step_${Date.now()}_${index}`,
     step_type: type,
@@ -152,33 +293,47 @@ function createStep(type: StepType = 'prep_sol', index = 0): ExperimentStep {
     volume_ul: 1000,
     transfer_duration: 30,
     transfer_duration_unit: 's',
-    flush_channel_id: 'flush-1',
+    flush_channel_id: '',
     flush_rpm: 100,
     flush_cycle_duration_s: 30,
     flush_cycles: 1,
+    duration_s: 60,
     prep_sol_params: {
       total_volume_ul: 100000,
-      selected_solutions: Object.fromEntries(DEFAULT_SOLUTIONS.map((name, idx) => [name, idx < 2])),
-      target_concentrations: Object.fromEntries(DEFAULT_SOLUTIONS.map((name, idx) => [name, idx === 0 ? 0 : 0.1])),
-      solvent_flags: Object.fromEntries(DEFAULT_SOLUTIONS.map((name, idx) => [name, idx === DEFAULT_SOLUTIONS.length - 1])),
-      injection_order_numbers: Object.fromEntries(DEFAULT_SOLUTIONS.map((name, idx) => [name, idx + 1])),
-      injection_order: DEFAULT_SOLUTIONS,
+      selected_solutions: Object.fromEntries(solutionNames.map((name, idx) => [name, idx < 2])),
+      target_concentrations: Object.fromEntries(solutionNames.map((name) => [name, 0])),
+      solvent_flags: Object.fromEntries(solutionNames.map((name, idx) => [name, idx === solutionNames.length - 1])),
+      injection_order_numbers: Object.fromEntries(solutionNames.map((name, idx) => [name, idx + 1])),
+      injection_order: solutionNames,
     },
     ec_settings: {
       technique: 'CV',
-      e0: 0,
-      eh: 0.8,
-      el: -0.2,
-      ef: 0,
-      scan_rate: 0.05,
-      sample_interval_ms: 100,
-      quiet_time_s: 2,
-      seg_num: 2,
+      e0: 0, eh: 0.8, el: -0.2, ef: 0,
+      scan_rate: 0.05, sample_interval_ms: 100,
+      sensitivity: undefined, autosensitivity: false,
+      quiet_time_s: 2, seg_num: 2, scan_dir: 'FWD',
       run_time_s: 60,
-      freq_low: 1,
-      freq_high: 100000,
-      amplitude: 0.005,
-      adt_num_cycles: 100,
+      /* EIS */
+      freq_low: 1, freq_high: 100000, amplitude: 0.005, bias_mode: 0,
+      /* dummy cell */
+      use_dummy_cell: false,
+      /* ADT common */
+      adt_enabled: false, adt_num_cycles: 100,
+      /* ADT CP */
+      adt_cathodic_current_mA: -250, adt_cp_anodic_current_mA: 250,
+      adt_cp_e_high: 2.0, adt_cp_e_low: -2.0,
+      adt_cp_high_e_hold_time: 0, adt_cp_low_e_hold_time: 0,
+      adt_cathodic_duration_s: 3.0, adt_cp_anodic_time_s: 3.0,
+      adt_cp_polarity: 'n', adt_cp_sample_interval: 0.01,
+      adt_cp_segments: 2, adt_cp_priority: 'time',
+      /* ADT CA */
+      adt_anodic_potential_V: 1.5,
+      adt_ca_e_high: 1.5, adt_ca_e_low: -0.5,
+      adt_ca_polarity: 'p', adt_ca_steps: 1,
+      adt_anodic_duration_s: 2.0, adt_ca_sample_interval: 0.01,
+      adt_ca_quiet_time: 0, adt_ca_sensitivity: 0.001,
+      /* iR compensation */
+      ir_compensation_enabled: false, ir_compensation_ohm: 0,
     },
   };
 }
@@ -193,13 +348,13 @@ function formatStepSummary(step: ExperimentStep) {
       return `${((prep?.total_volume_ul ?? 0) / 1000).toFixed(1)} mL · ${selected.length > 0 ? selected.join(' / ') : '未选溶液'}`;
     }
     case 'transfer':
-      return step.volume_ul ? `${step.volume_ul} μL · 泵 ${step.pump_address}` : `${step.transfer_duration ?? 0} ${step.transfer_duration_unit ?? 's'} · 泵 ${step.pump_address}`;
+      return step.volume_ul ? `${step.volume_ul} μL · 泵${step.pump_address}` : `${step.transfer_duration ?? 0} ${step.transfer_duration_unit ?? 's'} · 泵${step.pump_address}`;
     case 'flush':
-      return `${step.flush_channel_id ?? '未选通道'} · ${step.flush_cycles ?? 1} cycles`;
+      return `${step.flush_channel_id ?? '未选通道'} · ${step.flush_cycles ?? 1} 次循环`;
     case 'echem':
-      return `${step.ec_settings?.technique ?? 'CV'} · sample ${step.ec_settings?.sample_interval_ms ?? 100} ms`;
+      return `${step.ec_settings?.technique ?? 'CV'} · 采样间隔 ${step.ec_settings?.sample_interval_ms ?? 100} ms`;
     case 'blank':
-      return step.notes || '空白/等待占位';
+      return step.duration_s ? `等待 ${step.duration_s} s` : (step.notes || '空白等待');
     case 'evacuate':
       return `${step.volume_ul ? `${step.volume_ul} μL` : `${step.transfer_duration ?? 0} ${step.transfer_duration_unit ?? 's'}`} · 排空`;
     default:
@@ -242,11 +397,50 @@ export function ExperimentCreateDialog({ onClose, onSubmit }: ExperimentCreateDi
   const [description, setDescription] = useState('');
   const [operator, setOperator] = useState('');
   const [tags, setTags] = useState('');
-  const [steps, setSteps] = useState<ExperimentStep[]>([createStep('prep_sol', 0), createStep('echem', 1)]);
-  const [expandedStepId, setExpandedStepId] = useState<string | null>(steps[0].step_id);
+  const [category, setCategory] = useState<'test' | 'formal' | 'calibration'>('test');
   const [showJsonPreview, setShowJsonPreview] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
+
+  /* ---------- system config (loaded from backend on mount) ---------- */
+  const [sysCfg, setSysCfg] = useState<SystemConfig | null>(null);
+  const [cfgLoading, setCfgLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const resp = await fetch('/api/system/config');
+        if (resp.ok) {
+          const data = await resp.json();
+          if (!cancelled) setSysCfg(data);
+        }
+      } catch { /* fallback: empty config */ }
+      if (!cancelled) setCfgLoading(false);
+    })();
+    return () => { cancelled = true; };
+  }, []);
+
+  const solutionNames = useMemo(() => sysCfg?.dilution_channels?.map((ch) => ch.solution_name) ?? [], [sysCfg]);
+  const dilutionMap = useMemo(() => {
+    const m: Record<string, DilutionChannel> = {};
+    for (const ch of sysCfg?.dilution_channels ?? []) m[ch.solution_name] = ch;
+    return m;
+  }, [sysCfg]);
+  const flushChannels = useMemo(() => sysCfg?.flush_channels ?? [], [sysCfg]);
+  const pumps = useMemo(() => sysCfg?.pumps ?? [], [sysCfg]);
+
+  const [steps, setSteps] = useState<ExperimentStep[]>([]);
+  const [expandedStepId, setExpandedStepId] = useState<string | null>(null);
+
+  // Initialize steps once config is loaded
+  useEffect(() => {
+    if (!cfgLoading && steps.length === 0) {
+      const init = [createStep('prep_sol', 0, solutionNames), createStep('echem', 1, solutionNames)];
+      setSteps(init);
+      setExpandedStepId(init[0].step_id);
+    }
+  }, [cfgLoading, solutionNames, steps.length]);
 
   const activeIndex = Math.max(0, steps.findIndex((step) => step.step_id === expandedStepId));
   const activeStep = steps[activeIndex] ?? null;
@@ -256,7 +450,7 @@ export function ExperimentCreateDialog({ onClose, onSubmit }: ExperimentCreateDi
   };
 
   const addStep = (type: StepType = 'blank') => {
-    const next = createStep(type, steps.length);
+    const next = createStep(type, steps.length, solutionNames);
     setSteps((prev) => [...prev, next]);
     setExpandedStepId(next.step_id);
   };
@@ -302,12 +496,12 @@ export function ExperimentCreateDialog({ onClose, onSubmit }: ExperimentCreateDi
   const riskHints = useMemo(() => {
     const hints: string[] = [];
     if (!steps.length) hints.push('当前没有任何步骤，无法执行。');
-    if (!steps.some((step) => step.step_type === 'echem')) hints.push('当前方案没有 echem 步骤，无法产出电化学数据。');
+    if (!steps.some((step) => step.step_type === 'echem')) hints.push('当前方案无电化学步骤，将无法采集电化学数据。');
     if (steps.some((step) => step.step_type === 'transfer' && !step.volume_ul && !step.transfer_duration)) {
-      hints.push('存在 transfer 步骤但未设置体积或持续时间。');
+      hints.push('移液步骤未设置体积或持续时间。');
     }
     if (steps.some((step) => step.step_type === 'prep_sol' && !Object.values(step.prep_sol_params?.selected_solutions ?? {}).some(Boolean))) {
-      hints.push('存在 prep_sol 步骤但没有选中任何溶液。');
+      hints.push('配液步骤未选中任何溶液。');
     }
     return hints;
   }, [steps]);
@@ -329,6 +523,7 @@ export function ExperimentCreateDialog({ onClose, onSubmit }: ExperimentCreateDi
       const payload = {
         name: experimentDraft.exp_name,
         description: experimentDraft.description,
+        category,
         tags: [operator.trim() && `operator:${operator.trim()}`, ...experimentDraft.tags].filter(Boolean),
         steps: experimentDraft.steps.map((step) => ({
           step_type: step.step_type,
@@ -372,72 +567,87 @@ export function ExperimentCreateDialog({ onClose, onSubmit }: ExperimentCreateDi
               prep_sol_params: { ...prep, total_volume_ul: value },
             }))}
           />
-          <div className="rounded-2xl border border-slate-200">
-            <div className="grid grid-cols-[1.2fr,0.8fr,0.6fr,0.6fr] gap-3 border-b border-slate-200 bg-slate-50 px-4 py-3 text-xs font-semibold text-slate-500">
-              <span>溶液</span>
-              <span>目标浓度 (mol/L)</span>
-              <span>溶剂</span>
-              <span>注液顺序</span>
+          {solutionNames.length === 0 ? (
+            <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+              未检测到配液通道。请确认 MicroHySeeker 已配置 dilution_channels。
             </div>
-            <div className="divide-y divide-slate-100">
-              {prep.injection_order.map((solution) => (
-                <div key={solution} className="grid grid-cols-[1.2fr,0.8fr,0.6fr,0.6fr] gap-3 px-4 py-3 text-sm text-slate-700">
-                  <label className="flex items-center gap-2">
-                    <input
-                      type="checkbox"
-                      checked={prep.selected_solutions[solution] ?? false}
-                      onChange={(e) => updateStep(step.step_id, (current) => ({
-                        ...current,
-                        prep_sol_params: {
-                          ...prep,
-                          selected_solutions: { ...prep.selected_solutions, [solution]: e.target.checked },
-                        },
-                      }))}
-                    />
-                    <span>{solution}</span>
-                  </label>
-                  <input
-                    type="number"
-                    value={prep.target_concentrations[solution] ?? 0}
-                    onChange={(e) => updateStep(step.step_id, (current) => ({
-                      ...current,
-                      prep_sol_params: {
-                        ...prep,
-                        target_concentrations: { ...prep.target_concentrations, [solution]: Number(e.target.value) },
-                      },
-                    }))}
-                    className="rounded-lg border border-slate-300 px-3 py-2"
-                  />
-                  <label className="flex items-center gap-2">
-                    <input
-                      type="checkbox"
-                      checked={prep.solvent_flags[solution] ?? false}
-                      onChange={(e) => updateStep(step.step_id, (current) => ({
-                        ...current,
-                        prep_sol_params: {
-                          ...prep,
-                          solvent_flags: { ...prep.solvent_flags, [solution]: e.target.checked },
-                        },
-                      }))}
-                    />
-                    <span>是</span>
-                  </label>
-                  <input
-                    type="number"
-                    value={prep.injection_order_numbers[solution] ?? 1}
-                    onChange={(e) => updateStep(step.step_id, (current) => ({
-                      ...current,
-                      prep_sol_params: {
-                        ...prep,
-                        injection_order_numbers: { ...prep.injection_order_numbers, [solution]: Number(e.target.value) },
-                      },
-                    }))}
-                    className="rounded-lg border border-slate-300 px-3 py-2"
-                  />
-                </div>
-              ))}
+          ) : (
+            <div className="rounded-2xl border border-slate-200">
+              <div className="grid grid-cols-[1fr,0.7fr,0.5fr,0.7fr,0.5fr,0.5fr] gap-2 border-b border-slate-200 bg-slate-50 px-3 py-2.5 text-xs font-semibold text-slate-500">
+                <span>溶液名称</span>
+                <span>原浓度 (mol/L)</span>
+                <span>泵端口</span>
+                <span>目标浓度 (mol/L)</span>
+                <span>溶剂</span>
+                <span>注液顺序</span>
+              </div>
+              <div className="divide-y divide-slate-100">
+                {solutionNames.map((solution) => {
+                  const ch = dilutionMap[solution];
+                  return (
+                    <div key={solution} className="grid grid-cols-[1fr,0.7fr,0.5fr,0.7fr,0.5fr,0.5fr] gap-2 px-3 py-2.5 text-sm text-slate-700 items-center">
+                      <label className="flex items-center gap-2">
+                        <input
+                          type="checkbox"
+                          checked={prep.selected_solutions[solution] ?? false}
+                          onChange={(e) => updateStep(step.step_id, (current) => ({
+                            ...current,
+                            prep_sol_params: {
+                              ...prep,
+                              selected_solutions: { ...prep.selected_solutions, [solution]: e.target.checked },
+                            },
+                          }))}
+                        />
+                        <span className="font-medium">{solution}</span>
+                      </label>
+                      <span className="text-slate-500">{ch?.stock_concentration ?? '—'}</span>
+                      <span className="text-slate-500">{ch?.pump_address ?? '—'}</span>
+                      <input
+                        type="number"
+                        step="0.001"
+                        value={prep.target_concentrations[solution] ?? 0}
+                        onChange={(e) => updateStep(step.step_id, (current) => ({
+                          ...current,
+                          prep_sol_params: {
+                            ...prep,
+                            target_concentrations: { ...prep.target_concentrations, [solution]: Number(e.target.value) },
+                          },
+                        }))}
+                        className="rounded-lg border border-slate-300 px-2 py-1.5 text-sm"
+                      />
+                      <label className="flex items-center gap-1">
+                        <input
+                          type="checkbox"
+                          checked={prep.solvent_flags[solution] ?? false}
+                          onChange={(e) => updateStep(step.step_id, (current) => ({
+                            ...current,
+                            prep_sol_params: {
+                              ...prep,
+                              solvent_flags: { ...prep.solvent_flags, [solution]: e.target.checked },
+                            },
+                          }))}
+                        />
+                        <span className="text-xs">是</span>
+                      </label>
+                      <input
+                        type="number"
+                        min={1}
+                        value={prep.injection_order_numbers[solution] ?? 1}
+                        onChange={(e) => updateStep(step.step_id, (current) => ({
+                          ...current,
+                          prep_sol_params: {
+                            ...prep,
+                            injection_order_numbers: { ...prep.injection_order_numbers, [solution]: Number(e.target.value) },
+                          },
+                        }))}
+                        className="rounded-lg border border-slate-300 px-2 py-1.5 text-sm"
+                      />
+                    </div>
+                  );
+                })}
+              </div>
             </div>
-          </div>
+          )}
         </div>
       );
     }
@@ -445,9 +655,20 @@ export function ExperimentCreateDialog({ onClose, onSubmit }: ExperimentCreateDi
     if (step.step_type === 'transfer' || step.step_type === 'evacuate') {
       return (
         <div className="grid gap-4 md:grid-cols-2">
-          <NumberField label="泵地址" value={step.pump_address} min={1} onChange={(value) => updateStep(step.step_id, (current) => ({ ...current, pump_address: value }))} />
           <label>
-            <span className="mb-1 block text-sm font-medium text-slate-700">泵方向</span>
+            <span className="mb-1 block text-sm font-medium text-slate-700">泵地址</span>
+            <select
+              value={step.pump_address ?? 1}
+              onChange={(e) => updateStep(step.step_id, (current) => ({ ...current, pump_address: Number(e.target.value) }))}
+              className="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm"
+            >
+              {pumps.length > 0
+                ? pumps.map((p) => <option key={p.address} value={p.address}>{p.address} — {p.name}</option>)
+                : Array.from({ length: 12 }, (_, i) => <option key={i + 1} value={i + 1}>{i + 1}</option>)}
+            </select>
+          </label>
+          <label>
+            <span className="mb-1 block text-sm font-medium text-slate-700">方向</span>
             <select
               value={step.pump_direction}
               onChange={(e) => updateStep(step.step_id, (current) => ({ ...current, pump_direction: e.target.value as 'FWD' | 'REV' }))}
@@ -457,11 +678,11 @@ export function ExperimentCreateDialog({ onClose, onSubmit }: ExperimentCreateDi
               <option value="REV">REV</option>
             </select>
           </label>
-          <NumberField label="泵转速" value={step.pump_rpm} unit="rpm" min={0} onChange={(value) => updateStep(step.step_id, (current) => ({ ...current, pump_rpm: value }))} />
-          <NumberField label="体积模式" value={step.volume_ul} unit="μL" min={0} onChange={(value) => updateStep(step.step_id, (current) => ({ ...current, volume_ul: value }))} />
-          <NumberField label="时长模式" value={step.transfer_duration} min={0} onChange={(value) => updateStep(step.step_id, (current) => ({ ...current, transfer_duration: value }))} />
+          <NumberField label="转速" value={step.pump_rpm} unit="RPM" min={0} onChange={(value) => updateStep(step.step_id, (current) => ({ ...current, pump_rpm: value }))} />
+          <NumberField label="体积" value={step.volume_ul} unit="μL" min={0} onChange={(value) => updateStep(step.step_id, (current) => ({ ...current, volume_ul: value }))} />
+          <NumberField label="持续时间" value={step.transfer_duration} min={0} onChange={(value) => updateStep(step.step_id, (current) => ({ ...current, transfer_duration: value }))} />
           <label>
-            <span className="mb-1 block text-sm font-medium text-slate-700">时长单位</span>
+            <span className="mb-1 block text-sm font-medium text-slate-700">时间单位</span>
             <select
               value={step.transfer_duration_unit}
               onChange={(e) => updateStep(step.step_id, (current) => ({ ...current, transfer_duration_unit: e.target.value as ExperimentStep['transfer_duration_unit'] }))}
@@ -474,6 +695,9 @@ export function ExperimentCreateDialog({ onClose, onSubmit }: ExperimentCreateDi
               <option value="cycle">cycle</option>
             </select>
           </label>
+          {step.step_type === 'evacuate' && (
+            <NumberField label="排空次数" value={step.flush_cycles ?? 1} min={1} onChange={(value) => updateStep(step.step_id, (current) => ({ ...current, flush_cycles: value }))} />
+          )}
         </div>
       );
     }
@@ -482,16 +706,32 @@ export function ExperimentCreateDialog({ onClose, onSubmit }: ExperimentCreateDi
       return (
         <div className="grid gap-4 md:grid-cols-2">
           <label>
-            <span className="mb-1 block text-sm font-medium text-slate-700">Flush channel</span>
-            <input
-              type="text"
-              value={step.flush_channel_id ?? ''}
-              onChange={(e) => updateStep(step.step_id, (current) => ({ ...current, flush_channel_id: e.target.value }))}
-              className="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm"
-            />
+            <span className="mb-1 block text-sm font-medium text-slate-700">冲洗通道</span>
+            {flushChannels.length > 0 ? (
+              <select
+                value={step.flush_channel_id ?? ''}
+                onChange={(e) => updateStep(step.step_id, (current) => ({ ...current, flush_channel_id: e.target.value }))}
+                className="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm"
+              >
+                <option value="">请选择冲洗通道</option>
+                {flushChannels.map((ch) => (
+                  <option key={ch.channel_id} value={ch.channel_id}>
+                    {ch.pump_name} (泵{ch.pump_address}, {ch.work_type})
+                  </option>
+                ))}
+              </select>
+            ) : (
+              <input
+                type="text"
+                value={step.flush_channel_id ?? ''}
+                onChange={(e) => updateStep(step.step_id, (current) => ({ ...current, flush_channel_id: e.target.value }))}
+                className="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm"
+                placeholder="通道ID"
+              />
+            )}
           </label>
-          <NumberField label="冲洗转速" value={step.flush_rpm} unit="rpm" min={0} onChange={(value) => updateStep(step.step_id, (current) => ({ ...current, flush_rpm: value }))} />
-          <NumberField label="每轮时长" value={step.flush_cycle_duration_s} unit="s" min={0} onChange={(value) => updateStep(step.step_id, (current) => ({ ...current, flush_cycle_duration_s: value }))} />
+          <NumberField label="转速" value={step.flush_rpm} unit="RPM" min={0} onChange={(value) => updateStep(step.step_id, (current) => ({ ...current, flush_rpm: value }))} />
+          <NumberField label="单次时长" value={step.flush_cycle_duration_s} unit="s" min={0} onChange={(value) => updateStep(step.step_id, (current) => ({ ...current, flush_cycle_duration_s: value }))} />
           <NumberField label="循环次数" value={step.flush_cycles} min={1} onChange={(value) => updateStep(step.step_id, (current) => ({ ...current, flush_cycles: value }))} />
         </div>
       );
@@ -499,11 +739,11 @@ export function ExperimentCreateDialog({ onClose, onSubmit }: ExperimentCreateDi
 
     if (step.step_type === 'echem') {
       const ec = step.ec_settings!;
-      const fields = TECHNIQUE_FIELDS[ec.technique] ?? [];
+      const techFields = TECHNIQUE_FIELDS[ec.technique] ?? [];
       return (
         <div className="space-y-4">
           <label>
-            <span className="mb-1 block text-sm font-medium text-slate-700">Technique</span>
+            <span className="mb-1 block text-sm font-medium text-slate-700">测量技术</span>
             <select
               value={ec.technique}
               onChange={(e) => updateStep(step.step_id, (current) => ({
@@ -512,26 +752,52 @@ export function ExperimentCreateDialog({ onClose, onSubmit }: ExperimentCreateDi
               }))}
               className="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm"
             >
-              <option value="CV">CV</option>
-              <option value="LSV">LSV</option>
-              <option value="i-t">i-t</option>
-              <option value="EIS">EIS</option>
-              <option value="ADT">ADT</option>
+              <option value="CV">CV — 循环伏安</option>
+              <option value="LSV">LSV — 线性扫描</option>
+              <option value="i-t">i-t — 计时电流</option>
+              <option value="EIS">EIS — 交流阻抗</option>
+              <option value="ADT">ADT — 加速耐久</option>
             </select>
           </label>
-          <div className="grid gap-4 md:grid-cols-2">
-            {fields.map((field) => (
-              <NumberField
-                key={field.key}
-                label={field.label}
-                unit={field.unit}
-                value={ec[field.key as keyof typeof ec] as number | undefined}
-                onChange={(value) => updateStep(step.step_id, (current) => ({
-                  ...current,
-                  ec_settings: { ...ec, [field.key]: value },
-                }))}
-              />
-            ))}
+
+          {/* technique-specific fields */}
+          <div className="grid gap-3 md:grid-cols-2">
+            {techFields.map((fd) => renderEcField(fd, ec, step.step_id))}
+          </div>
+
+          {/* ADT: CP and CA sub-sections */}
+          {ec.technique === 'ADT' && (
+            <>
+              <div className="mt-2 rounded-xl border border-indigo-200 bg-indigo-50 p-4">
+                <h5 className="text-sm font-semibold text-indigo-800 mb-3">CP 计时电位法参数</h5>
+                <div className="grid gap-3 md:grid-cols-2">
+                  {ADT_CP_FIELDS.map((fd) => renderEcField(fd, ec, step.step_id))}
+                </div>
+              </div>
+              <div className="mt-2 rounded-xl border border-teal-200 bg-teal-50 p-4">
+                <h5 className="text-sm font-semibold text-teal-800 mb-3">CA 计时电流法参数</h5>
+                <div className="grid gap-3 md:grid-cols-2">
+                  {ADT_CA_FIELDS.map((fd) => renderEcField(fd, ec, step.step_id))}
+                </div>
+              </div>
+            </>
+          )}
+
+          {/* iR compensation + dummy cell */}
+          <div className="grid gap-3 md:grid-cols-2 mt-2">
+            {IR_FIELDS.map((fd) => renderEcField(fd, ec, step.step_id))}
+            {renderEcField(DUMMY_CELL_FIELD, ec, step.step_id)}
+          </div>
+        </div>
+      );
+    }
+
+    if (step.step_type === 'blank') {
+      return (
+        <div className="space-y-4">
+          <NumberField label="等待时间" value={step.duration_s} unit="s" min={0} onChange={(value) => updateStep(step.step_id, (current) => ({ ...current, duration_s: value }))} />
+          <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50 px-4 py-4 text-sm text-slate-600">
+            空白步骤用于等待、观察或流程分段，可在备注中记录说明。
           </div>
         </div>
       );
@@ -539,8 +805,54 @@ export function ExperimentCreateDialog({ onClose, onSubmit }: ExperimentCreateDi
 
     return (
       <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50 px-4 py-6 text-sm text-slate-600">
-        blank 步骤当前只保留备注与占位能力，后续可继续补 duration / confirmation gate。
+        排空步骤：排空管路或容器中的残留液体。
       </div>
+    );
+  };
+
+  /* helper: render a single ec_settings field */
+  const renderEcField = (fd: FieldDef, ec: NonNullable<ExperimentStep['ec_settings']>, stepId: string) => {
+    const val = ec[fd.key as keyof typeof ec];
+    if (fd.type === 'checkbox') {
+      return (
+        <label key={fd.key} className="flex items-center gap-2 text-sm text-slate-700">
+          <input
+            type="checkbox"
+            checked={!!val}
+            onChange={(e) => updateStep(stepId, (current) => ({
+              ...current,
+              ec_settings: { ...ec, [fd.key]: e.target.checked },
+            }))}
+          />
+          <span>{fd.label}</span>
+        </label>
+      );
+    }
+    if (fd.type === 'select') {
+      return (
+        <label key={fd.key} className="block">
+          <span className="mb-1 block text-sm font-medium text-slate-700">{fd.label}</span>
+          <select
+            value={String(val ?? fd.options?.[0]?.value ?? '')}
+            onChange={(e) => {
+              const v = fd.key === 'bias_mode' ? Number(e.target.value) : e.target.value;
+              updateStep(stepId, (current) => ({ ...current, ec_settings: { ...ec, [fd.key]: v } }));
+            }}
+            className="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm"
+          >
+            {fd.options?.map((opt) => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
+          </select>
+        </label>
+      );
+    }
+    return (
+      <NumberField
+        key={fd.key}
+        label={fd.label}
+        unit={fd.unit}
+        value={val as number | undefined}
+        onChange={(v) => updateStep(stepId, (current) => ({ ...current, ec_settings: { ...ec, [fd.key]: v } }))}
+      />
     );
   };
 
@@ -550,10 +862,10 @@ export function ExperimentCreateDialog({ onClose, onSubmit }: ExperimentCreateDi
         <div className="border-b border-slate-200 bg-white px-6 py-5">
           <div className="flex items-start justify-between gap-4">
             <div>
-              <p className="text-sm font-medium text-blue-600">Experiment step editor</p>
-              <h3 className="mt-1 text-2xl font-bold text-slate-900">创建真实 Experiment.steps[]，不是 technique 向导</h3>
+              <p className="text-sm font-medium text-blue-600">实验步骤编辑器</p>
+              <h3 className="mt-1 text-2xl font-bold text-slate-900">创建实验</h3>
               <p className="mt-2 max-w-4xl text-sm leading-6 text-slate-600">
-                先填实验级信息，再按 step_type 逐步编排步骤。当前已覆盖 prep_sol / transfer / flush / echem / blank / evacuate 六类步骤，并提供动态表单骨架。
+                填写实验基本信息，然后逐步编排操作步骤。支持配液、移液、冲洗、电化学、空白、排空六类步骤。
               </p>
             </div>
             <button onClick={onClose} className="rounded-xl p-2 text-slate-400 transition hover:bg-slate-100 hover:text-slate-600">
@@ -562,11 +874,18 @@ export function ExperimentCreateDialog({ onClose, onSubmit }: ExperimentCreateDi
           </div>
         </div>
 
-        <div className="grid gap-6 px-6 py-6 xl:grid-cols-[0.95fr,1.35fr,1fr]">
+        <div className="grid gap-6 px-6 py-6 lg:grid-cols-[0.95fr,1.35fr,1fr]">
+          {cfgLoading ? (
+            <div className="col-span-3 flex items-center justify-center py-12 text-slate-500">
+              <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+              正在加载系统配置...
+            </div>
+          ) : (
+          <>
           <section className="space-y-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
             <div>
-              <h4 className="text-lg font-semibold text-slate-900">实验级信息</h4>
-              <p className="mt-1 text-sm text-slate-600">名称、描述、tags、operator 在这里统一管理。</p>
+              <h4 className="text-lg font-semibold text-slate-900">基本信息</h4>
+              <p className="mt-1 text-sm text-slate-600">填写实验名称、描述、操作员和标签。</p>
             </div>
 
             {error && (
@@ -579,16 +898,24 @@ export function ExperimentCreateDialog({ onClose, onSubmit }: ExperimentCreateDi
             </label>
             <label className="block">
               <span className="mb-1 block text-sm font-medium text-slate-700">实验描述</span>
-              <textarea value={description} onChange={(e) => setDescription(e.target.value)} rows={4} placeholder="这轮实验想回答什么问题、如何判断成败、需要重点观察什么。" className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm" />
+              <textarea value={description} onChange={(e) => setDescription(e.target.value)} rows={4} placeholder="本次实验的目标、假设和观察重点。" className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm" />
             </label>
             <label className="block">
-              <span className="mb-1 block text-sm font-medium text-slate-700">Operator</span>
+              <span className="mb-1 block text-sm font-medium text-slate-700">操作员</span>
               <input value={operator} onChange={(e) => setOperator(e.target.value)} placeholder="例如：boss / auto-run / design-agent" className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm" />
             </label>
             <label className="block">
-              <span className="mb-1 block text-sm font-medium text-slate-700">Tags</span>
+              <span className="mb-1 block text-sm font-medium text-slate-700">标签</span>
               <input value={tags} onChange={(e) => setTags(e.target.value)} placeholder="逗号分隔，例如：Fe3+, screening, CV" className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm" />
             </label>
+            <div className="block">
+              <span className="mb-1 block text-sm font-medium text-slate-700">实验分类</span>
+              <div className="flex gap-3">
+                {([['test', '测试实验'], ['formal', '正式实验'], ['calibration', '标定实验']] as const).map(([val, label]) => (
+                  <button key={val} type="button" onClick={() => setCategory(val)} className={`rounded-lg border px-4 py-2 text-sm transition-colors ${category === val ? 'border-blue-500 bg-blue-50 text-blue-700 font-medium' : 'border-slate-300 bg-white text-slate-600 hover:bg-slate-50'}`}>{label}</button>
+                ))}
+              </div>
+            </div>
 
             <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
               <div className="flex items-start gap-2">
@@ -596,7 +923,7 @@ export function ExperimentCreateDialog({ onClose, onSubmit }: ExperimentCreateDi
                 <div>
                   <p className="font-semibold">执行前风险提示</p>
                   <ul className="mt-2 space-y-1">
-                    {riskHints.length > 0 ? riskHints.map((hint) => <li key={hint}>• {hint}</li>) : <li>• 当前骨架可提交；后续可继续补更严格的 schema 校验。</li>}
+                    {riskHints.length > 0 ? riskHints.map((hint) => <li key={hint}>• {hint}</li>) : <li>• 当前方案可提交，请确认各步骤参数。</li>}
                   </ul>
                 </div>
               </div>
@@ -606,13 +933,13 @@ export function ExperimentCreateDialog({ onClose, onSubmit }: ExperimentCreateDi
           <section className="space-y-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
             <div className="flex items-center justify-between gap-3">
               <div>
-                <h4 className="text-lg font-semibold text-slate-900">步骤编排区</h4>
-                <p className="mt-1 text-sm text-slate-600">支持添加、排序、复制、删除；右侧会显示当前步骤的动态表单。</p>
+                <h4 className="text-lg font-semibold text-slate-900">步骤列表</h4>
+                <p className="mt-1 text-sm text-slate-600">添加、排序、复制或删除步骤，选中后在右侧编辑参数。</p>
               </div>
               <div className="flex flex-wrap gap-2">
                 {(['prep_sol', 'transfer', 'flush', 'echem', 'blank', 'evacuate'] as StepType[]).map((type) => (
-                  <button key={type} type="button" onClick={() => addStep(type)} className="rounded-full border border-slate-200 px-3 py-1.5 text-xs font-medium text-slate-700 transition hover:bg-slate-50">
-                    + {type}
+                  <button key={type} type="button" onClick={() => addStep(type)} className={`rounded-full border px-3 py-1.5 text-xs font-medium transition hover:opacity-80 ${STEP_META[type].tone}`}>
+                    + {STEP_META[type].label}
                   </button>
                 ))}
               </div>
@@ -624,7 +951,7 @@ export function ExperimentCreateDialog({ onClose, onSubmit }: ExperimentCreateDi
                 const Icon = meta.icon;
                 const active = step.step_id === expandedStepId;
                 return (
-                  <div key={step.step_id} className={`rounded-2xl border p-4 transition ${active ? 'border-blue-400 bg-blue-50/40' : 'border-slate-200 bg-slate-50'}`}>
+                  <div key={step.step_id} className={`rounded-2xl border-l-4 border border-l-[3px] p-4 transition ${active ? `border-l-blue-500 border-blue-300 bg-blue-50/40` : `${meta.leftBorder} border-slate-200 bg-white`}`}>
                     <div className="flex items-start justify-between gap-3">
                       <button type="button" onClick={() => setExpandedStepId(step.step_id)} className="flex flex-1 items-start gap-3 text-left">
                         <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white shadow-sm">
@@ -633,7 +960,7 @@ export function ExperimentCreateDialog({ onClose, onSubmit }: ExperimentCreateDi
                         <div className="min-w-0 flex-1">
                           <div className="flex flex-wrap items-center gap-2">
                             <span className="text-sm font-semibold text-slate-900">Step {index + 1}</span>
-                            <span className={`rounded-full border px-2 py-0.5 text-xs font-medium ${meta.tone}`}>{step.step_type}</span>
+                            <span className={`rounded-full border px-2 py-0.5 text-xs font-medium ${meta.tone}`}>{meta.label}</span>
                           </div>
                           <p className="mt-1 text-sm font-medium text-slate-800">{meta.label}</p>
                           <p className="mt-1 text-xs leading-5 text-slate-500">{formatStepSummary(step)}</p>
@@ -654,29 +981,29 @@ export function ExperimentCreateDialog({ onClose, onSubmit }: ExperimentCreateDi
 
           <section className="space-y-4">
             <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-              <h4 className="text-lg font-semibold text-slate-900">步骤参数编辑区</h4>
+              <h4 className="text-lg font-semibold text-slate-900">参数编辑</h4>
               {activeStep ? (
                 <div className="mt-4 space-y-4">
                   <label>
-                    <span className="mb-1 block text-sm font-medium text-slate-700">Step type</span>
+                    <span className="mb-1 block text-sm font-medium text-slate-700">步骤类型</span>
                     <select
                       value={activeStep.step_type}
                       onChange={(e) => updateStep(activeStep.step_id, (current) => ({ ...current, step_type: e.target.value as StepType }))}
                       className="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm"
                     >
-                      {Object.keys(STEP_META).map((type) => (
-                        <option key={type} value={type}>{type}</option>
+                      {(Object.keys(STEP_META) as StepType[]).map((type) => (
+                        <option key={type} value={type}>{STEP_META[type].label}</option>
                       ))}
                     </select>
                   </label>
                   <label>
-                    <span className="mb-1 block text-sm font-medium text-slate-700">备注 / summary</span>
+                    <span className="mb-1 block text-sm font-medium text-slate-700">备注</span>
                     <textarea
                       value={activeStep.notes}
                       onChange={(e) => updateStep(activeStep.step_id, (current) => ({ ...current, notes: e.target.value }))}
                       rows={3}
                       className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm"
-                      placeholder="例如：先配 10 mL buffer，再转移到检测池做 CV。"
+                      placeholder="例如：配制 10 mL 缓冲液，转移至检测池进行 CV 扫描。"
                     />
                   </label>
                   {renderStepForm(activeStep)}
@@ -690,7 +1017,7 @@ export function ExperimentCreateDialog({ onClose, onSubmit }: ExperimentCreateDi
               <button type="button" onClick={() => setShowJsonPreview((prev) => !prev)} className="flex w-full items-center justify-between text-left">
                 <div>
                   <p className="text-sm font-medium text-blue-200">执行前预览</p>
-                  <h4 className="mt-1 text-lg font-semibold">Experiment JSON 草案</h4>
+                  <h4 className="mt-1 text-lg font-semibold">实验数据预览</h4>
                 </div>
                 {showJsonPreview ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
               </button>
@@ -699,10 +1026,12 @@ export function ExperimentCreateDialog({ onClose, onSubmit }: ExperimentCreateDi
               )}
             </div>
           </section>
+          </>
+          )}
         </div>
 
         <div className="flex flex-col gap-3 border-t border-slate-200 bg-white px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
-          <div className="text-sm text-slate-500">当前共 <span className="font-semibold text-slate-800">{steps.length}</span> 个步骤，已对齐真实 step_type 编排模型。</div>
+          <div className="text-sm text-slate-500">当前共 <span className="font-semibold text-slate-800">{steps.length}</span> 个步骤</div>
           <div className="flex gap-3">
             <button onClick={onClose} className="rounded-xl border border-slate-300 px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50">取消</button>
             <button onClick={handleSubmit} disabled={submitting} className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-blue-700 disabled:bg-blue-400">

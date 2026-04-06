@@ -1,7 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { useEffect } from "react";
 import { useOptimizationStore } from "@/stores/optimizationStore";
-import { motion } from "framer-motion";
 import { Play, Square, Settings as SettingsIcon, BrainCircuit, RefreshCw, Trophy, FlaskConical, Target, AlertCircle } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from "recharts";
 import toast from "react-hot-toast";
@@ -71,11 +70,7 @@ export function Optimization() {
 
   const isRunning = state.status === "running";
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="space-y-6"
-    >
+    <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold text-slate-900">{t('optimization.title')}</h2>
@@ -274,6 +269,6 @@ export function Optimization() {
           )}
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }

@@ -1,6 +1,14 @@
 import { ChatMessagePayload } from "@/api/chat";
 import { User, Info, BrainCircuit } from "lucide-react";
 import ReactMarkdown from "react-markdown";
+import type { Components } from "react-markdown";
+
+// Prevent ReactMarkdown from generating <p> tags that can cause invalid HTML
+// nesting (e.g. <p><div>...</div></p>) which leads to React insertBefore errors
+const markdownComponents: Components = {
+  // Replace <p> with <div> to avoid browser auto-closing <p> around block children
+  p: ({ children }) => <div className="mb-2 last:mb-0">{children}</div>,
+};
 
 interface ChatMessageProps {
   message: ChatMessagePayload;
@@ -48,7 +56,7 @@ export function ChatMessage({ message }: ChatMessageProps) {
             <div className="whitespace-pre-wrap">{message.content}</div>
           ) : (
             <div className="prose prose-sm prose-slate max-w-none">
-              <ReactMarkdown>{message.content}</ReactMarkdown>
+              <ReactMarkdown components={markdownComponents}>{message.content}</ReactMarkdown>
             </div>
           )}
         </div>

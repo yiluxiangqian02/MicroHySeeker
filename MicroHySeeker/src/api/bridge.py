@@ -27,33 +27,35 @@ def plan_to_experiment(plan: Dict[str, Any]) -> Dict[str, Any]:
     """将 AutoHySeeker ExperimentPlan 转换为 MicroHySeeker Experiment dict。
 
     AutoHySeeker step_type 映射规则：
-      cv / lsv / eis  →  echem（ec_settings.technique 对应设置）
-      prep_sol        →  prep_sol
-      flush           →  flush
-      transfer        →  transfer
-      blank           →  blank
-      evacuate        →  evacuate
+      echem / cv / lsv / eis  →  ECHEM（ec_settings.technique 对应设置）
+      prep_sol        →  PREP_SOL
+      flush           →  FLUSH
+      transfer        →  TRANSFER
+      blank           →  BLANK
+      evacuate        →  EVACUATE
+
+    AutoHySeeker 从 ExperimentCreateDialog 提交的 params 字段是整个
+    ExperimentStep 对象（包含 ec_settings / prep_sol_params 等嵌套字典），
+    此函数负责展平并正确映射。
     """
     from src.models import (
         Experiment, ProgStep, ProgramStepType,
-        ECSettings, ECTechnique,
+        ECSettings, ECTechnique, PrepSolStep,
     )
 
-    # step_type 映射表
+    # step_type 映射表 —— 兼容 "echem" 和具体 technique 名称
     _TYPE_MAP: Dict[str, ProgramStepType] = {
         "cv":        ProgramStepType.ECHEM,
         "lsv":       ProgramStepType.ECHEM,
         "eis":       ProgramStepType.ECHEM,
+        "i-t":       ProgramStepType.ECHEM,
+        "adt":       ProgramStepType.ECHEM,
+        "echem":     ProgramStepType.ECHEM,   # AutoHySeeker 统一用 "echem"
         "prep_sol":  ProgramStepType.PREP_SOL,
         "flush":     ProgramStepType.FLUSH,
         "transfer":  ProgramStepType.TRANSFER,
         "blank":     ProgramStepType.BLANK,
         "evacuate":  ProgramStepType.EVACUATE,
-    }
-    _ECHEM_TECHNIQUE_MAP: Dict[str, ECTechnique] = {
-        "cv":  ECTechnique.CV,
-        "lsv": ECTechnique.LSV,
-        "eis": ECTechnique.EIS,
     }
 
     exp_id = f"api_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{uuid.uuid4().hex[:6]}"
@@ -64,48 +66,59 @@ def plan_to_experiment(plan: Dict[str, Any]) -> Dict[str, Any]:
     for i, raw in enumerate(raw_steps):
         src_type = str(raw.get("step_type", "blank")).lower()
         step_type = _TYPE_MAP.get(src_type, ProgramStepType.BLANK)
+        # params 可能是整个 ExperimentStep 对象（AutoHySeeker 格式）
         params: Dict[str, Any] = raw.get("params", {})
 
         step_kwargs: Dict[str, Any] = {
             "step_id": f"step_{i:03d}",
             "step_type": step_type,
-            "notes": raw.get("description", ""),
+            "notes": raw.get("description", "") or params.get("notes", ""),
         }
 
-        # 通用参数映射
+        # 通用参数映射（params 顶层字段即为 ExperimentStep 字段）
         for key in ("pump_address", "pump_direction", "pump_rpm",
-                    "volume_ul", "duration_s"):
+                    "volume_ul", "duration_s", "transfer_duration",
+                    "transfer_duration_unit"):
             if key in params:
                 step_kwargs[key] = params[key]
 
-        # 电化学步骤：构建 ECSettings
+        # 电化学步骤：从嵌套 ec_settings 构建 ECSettings
         if step_type == ProgramStepType.ECHEM:
-            technique = _ECHEM_TECHNIQUE_MAP.get(src_type, ECTechnique.CV)
-            ec_kwargs: Dict[str, Any] = {"technique": technique}
-            # 常见 echem 参数透传
-            for ec_key in ("scan_rate", "start_potential", "end_potential",
-                           "high_potential", "low_potential", "num_cycles",
-                           "frequency", "amplitude", "dc_potential",
-                           "current_range", "sample_interval_ms"):
-                if ec_key in params:
-                    ec_kwargs[ec_key] = params[ec_key]
-            step_kwargs["ec_settings"] = ECSettings(**{
-                k: v for k, v in ec_kwargs.items()
-                if k in ECSettings.__dataclass_fields__
-            })
+            # AutoHySeeker 将电化学参数放在 params.ec_settings 嵌套字典中
+            ec_src: Dict[str, Any] = {}
+            if isinstance(params.get("ec_settings"), dict):
+                ec_src = params["ec_settings"].copy()
+            elif src_type in ("cv", "lsv", "eis", "i-t", "adt"):
+                # 旧格式：technique 即 src_type，参数在 params 顶层
+                ec_src = params.copy()
+                ec_src.setdefault("technique", src_type.upper())
 
-        # flush 步骤参数
+            # 确保 technique 正确
+            if not ec_src.get("technique"):
+                ec_src["technique"] = "CV"
+
+            try:
+                step_kwargs["ec_settings"] = ECSettings.from_dict(ec_src)
+            except Exception:
+                logger.warning("ECSettings.from_dict failed for step %d, using default CV", i)
+                step_kwargs["ec_settings"] = ECSettings(technique=ECTechnique.CV)
+
+        # 配液步骤：从嵌套 prep_sol_params 构建 PrepSolStep
+        if step_type == ProgramStepType.PREP_SOL:
+            if isinstance(params.get("prep_sol_params"), dict):
+                try:
+                    step_kwargs["prep_sol_params"] = PrepSolStep.from_dict(
+                        params["prep_sol_params"]
+                    )
+                except Exception:
+                    logger.warning("PrepSolStep.from_dict failed for step %d", i)
+
+        # flush 步骤参数（params 顶层）
         if step_type == ProgramStepType.FLUSH:
             for flush_key in ("flush_channel_id", "flush_rpm",
                               "flush_cycle_duration_s", "flush_cycles"):
                 if flush_key in params:
                     step_kwargs[flush_key] = params[flush_key]
-
-        # transfer 步骤：支持 transfer_duration
-        if step_type == ProgramStepType.TRANSFER:
-            for tr_key in ("transfer_duration", "transfer_duration_unit"):
-                if tr_key in params:
-                    step_kwargs[tr_key] = params[tr_key]
 
         steps.append(ProgStep(**{
             k: v for k, v in step_kwargs.items()

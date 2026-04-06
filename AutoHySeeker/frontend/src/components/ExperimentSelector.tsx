@@ -32,7 +32,7 @@ export default function ExperimentSelector({ isOpen, onClose, onSelect }: Experi
   const loadExperiments = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch('http://localhost:8200/api/experiments/recent?limit=20');
+      const response = await fetch('/api/experiments/recent?limit=20');
       const data = await response.json();
       setExperiments(data.experiments || []);
     } catch (error) {

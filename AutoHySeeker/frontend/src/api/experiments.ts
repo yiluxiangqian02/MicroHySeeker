@@ -4,8 +4,10 @@ export interface Experiment {
   exp_id: string;
   name: string;
   description: string;
-  status: 'created' | 'running' | 'completed' | 'failed';
+  status: 'created' | 'running' | 'completed' | 'failed' | 'stopped';
   tags: string[];
+  category?: string;
+  execution_mode?: 'hardware' | 'simulated';
   created_at: string;
   started_at?: string;
   completed_at?: string;

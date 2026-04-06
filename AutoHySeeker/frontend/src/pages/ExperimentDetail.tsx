@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { chatApi } from '../api/chat';
@@ -9,11 +9,16 @@ import {
   Beaker,
   Brain,
   CheckCircle,
+  ChevronDown,
+  ChevronUp,
   Clock,
   Droplets,
   FlaskConical,
   Lightbulb,
+  Loader2,
   Play,
+  ScrollText,
+  Square,
   Target,
   Wind,
 } from 'lucide-react';
@@ -27,75 +32,106 @@ interface ExperimentStep {
   params: Record<string, any>;
 }
 
+interface StepProgress {
+  status: 'running' | 'completed' | 'skipped' | 'stopped' | 'pending';
+  started_at?: string;
+  completed_at?: string;
+}
+
+interface ProgressData {
+  exp_id: string;
+  status: string;
+  total_steps: number;
+  current_step_index: number;
+  current_step: ExperimentStep | null;
+  next_step: ExperimentStep | null;
+  step_status: string;
+  step_started_at: string | null;
+  progress_percent: number;
+  elapsed_seconds: number;
+  cancelled: boolean;
+  step_progress?: StepProgress[];
+  logs: Array<{ ts: string; level: string; message: string }>;
+}
+
 interface Experiment {
   exp_id: string;
   name: string;
   description: string;
-  status: 'created' | 'running' | 'completed' | 'failed';
+  status: 'created' | 'running' | 'completed' | 'failed' | 'stopped';
   steps: ExperimentStep[];
   tags: string[];
   created_at: string;
   started_at?: string;
   completed_at?: string;
   data: Array<{ x: number; y: number }>;
+  step_progress?: StepProgress[];
+  logs?: Array<{ ts: string; level: string; message: string }>;
+  execution_source?: string;
 }
 
-const STATUS_CONFIG: Record<string, { icon: ReactNode; label: string; tone: string; summary: string }> = {
+const STATUS_CONFIG: Record<string, { icon: () => ReactNode; label: string; tone: string; summary: string }> = {
   created: {
-    icon: <Clock className="h-5 w-5" />,
+    icon: () => <Clock className="h-5 w-5" />,
     label: '待执行',
     tone: 'text-slate-700 bg-slate-100 border-slate-200',
     summary: '方案已准备好，下一步是确认设备状态后开始执行。',
   },
   running: {
-    icon: <Play className="h-5 w-5 animate-pulse" />,
+    icon: () => <Play className="h-5 w-5 animate-pulse" />,
     label: '运行中',
     tone: 'text-blue-700 bg-blue-100 border-blue-200',
-    summary: '实验正在执行，建议重点盯住当前步骤、曲线趋势和异常波动。',
+    summary: '实验正在执行，建议关注当前步骤进度、曲线趋势和异常波动。',
   },
   completed: {
-    icon: <CheckCircle className="h-5 w-5" />,
+    icon: () => <CheckCircle className="h-5 w-5" />,
     label: '已完成',
     tone: 'text-emerald-700 bg-emerald-100 border-emerald-200',
-    summary: '实验已完成，现在应该先看结果是否可解释，再决定是否扩参数或复现。',
+    summary: '实验已完成，建议先确认结果是否符合预期，再决定是否扩展参数或复现实验。',
   },
   failed: {
-    icon: <AlertCircle className="h-5 w-5" />,
+    icon: () => <AlertCircle className="h-5 w-5" />,
     label: '失败',
     tone: 'text-red-700 bg-red-100 border-red-200',
-    summary: '实验未成功完成，建议优先检查关键步骤、设备状态和实验前处理。',
+    summary: '实验未成功完成，建议优先检查关键步骤参数、设备状态和实验前处理。',
+  },
+  stopped: {
+    icon: () => <Square className="h-5 w-5" />,
+    label: '已停止',
+    tone: 'text-orange-700 bg-orange-100 border-orange-200',
+    summary: '实验被手动停止，可查看已完成步骤的数据。',
   },
 };
 
-const STEP_TYPE_META: Record<string, { label: string; icon: ReactNode; tone: string }> = {
+const STEP_TYPE_META: Record<string, { label: string; icon: () => ReactNode; tone: string }> = {
   prep_sol: {
-    label: '配液 / 混液',
-    icon: <Beaker className="h-4 w-4" />,
+    label: '配液',
+    icon: () => <Beaker className="h-4 w-4" />,
     tone: 'bg-violet-50 text-violet-700 border-violet-200',
   },
   transfer: {
-    label: '移液 / 转移',
-    icon: <FlaskConical className="h-4 w-4" />,
+    label: '移液',
+    icon: () => <FlaskConical className="h-4 w-4" />,
     tone: 'bg-sky-50 text-sky-700 border-sky-200',
   },
   flush: {
     label: '冲洗',
-    icon: <Droplets className="h-4 w-4" />,
+    icon: () => <Droplets className="h-4 w-4" />,
     tone: 'bg-cyan-50 text-cyan-700 border-cyan-200',
   },
   echem: {
-    label: '电化学测试',
-    icon: <FlaskConical className="h-4 w-4" />,
+    label: '电化学',
+    icon: () => <FlaskConical className="h-4 w-4" />,
     tone: 'bg-blue-50 text-blue-700 border-blue-200',
   },
   blank: {
-    label: '空白 / 等待',
-    icon: <Clock className="h-4 w-4" />,
+    label: '空白',
+    icon: () => <Clock className="h-4 w-4" />,
     tone: 'bg-slate-50 text-slate-700 border-slate-200',
   },
   evacuate: {
     label: '排空',
-    icon: <Wind className="h-4 w-4" />,
+    icon: () => <Wind className="h-4 w-4" />,
     tone: 'bg-amber-50 text-amber-700 border-amber-200',
   },
 };
@@ -103,6 +139,15 @@ const STEP_TYPE_META: Record<string, { label: string; icon: ReactNode; tone: str
 function formatDateTime(value?: string) {
   if (!value) return '—';
   return new Date(value).toLocaleString('zh-CN');
+}
+
+function formatElapsed(seconds: number): string {
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  const s = Math.floor(seconds % 60);
+  if (h > 0) return `${h}h ${m}m ${s}s`;
+  if (m > 0) return `${m}m ${s}s`;
+  return `${s}s`;
 }
 
 function formatValue(value: unknown) {
@@ -152,8 +197,8 @@ function buildNextActions(experiment: Experiment) {
   if (experiment.status === 'created') {
     return [
       '确认电极、样品和设备状态后开始执行。',
-      '检查 steps 顺序是否合理，避免把冲洗、配液、转移和 echem 排错。',
-      '执行后进入本页回看结果摘要和 AI 解读。',
+      '检查步骤顺序是否合理，确认冲洗、配液、移液和电化学的编排顺序。',
+      '执行后返回本页查看结果摘要和 AI 分析。',
     ];
   }
   if (experiment.status === 'running') {
@@ -165,7 +210,7 @@ function buildNextActions(experiment: Experiment) {
   }
   if (experiment.status === 'failed') {
     return [
-      '优先回看失败前一步的 step_type 和关键参数。',
+      '优先回查失败前一步的步骤类型和关键参数。',
       '检查设备连接、样品状态和实验前处理是否一致。',
       '建议补一个更保守的版本，用于确认问题来自设备还是方案本身。',
     ];
@@ -188,13 +233,13 @@ function summarizeStep(step: ExperimentStep) {
       return `${((prep.total_volume_ul ?? 0) / 1000).toFixed(1)} mL · ${selected.length ? selected.join(' / ') : '未选溶液'}`;
     }
     case 'transfer':
-      return params.volume_ul ? `${params.volume_ul} μL · pump ${params.pump_address ?? '—'}` : `${params.transfer_duration ?? '—'} ${params.transfer_duration_unit ?? 's'} · pump ${params.pump_address ?? '—'}`;
+      return params.volume_ul ? `${params.volume_ul} μL · 泵${params.pump_address ?? '—'}` : `${params.transfer_duration ?? '—'} ${params.transfer_duration_unit ?? 's'} · 泵${params.pump_address ?? '—'}`;
     case 'flush':
-      return `${params.flush_channel_id ?? '未选通道'} · ${params.flush_cycles ?? 1} cycles`;
+      return `${params.flush_channel_id ?? '未选通道'} · ${params.flush_cycles ?? 1} 次循环`;
     case 'echem':
-      return `${params.ec_settings?.technique ?? 'CV'} · sample ${params.ec_settings?.sample_interval_ms ?? 100} ms`;
+      return `${params.ec_settings?.technique ?? 'CV'} · 采样间隔 ${params.ec_settings?.sample_interval_ms ?? 100} ms`;
     case 'blank':
-      return step.description || params.notes || '空白 / 等待';
+      return step.description || params.notes || '空白等待';
     case 'evacuate':
       return params.volume_ul ? `${params.volume_ul} μL 排空` : `${params.transfer_duration ?? '—'} ${params.transfer_duration_unit ?? 's'} 排空`;
     default:
@@ -220,22 +265,22 @@ function getStepKeyFacts(step: ExperimentStep): Array<{ label: string; value: st
     case 'evacuate':
       return [
         { label: '泵地址', value: formatValue(params.pump_address) },
-        { label: '泵方向', value: formatValue(params.pump_direction) },
-        { label: '泵转速', value: `${formatValue(params.pump_rpm)} rpm` },
+        { label: '方向', value: formatValue(params.pump_direction) },
+        { label: '转速', value: `${formatValue(params.pump_rpm)} RPM` },
         { label: '体积', value: params.volume_ul ? `${formatValue(params.volume_ul)} μL` : '—' },
-        { label: '时长', value: params.transfer_duration ? `${formatValue(params.transfer_duration)} ${formatValue(params.transfer_duration_unit)}` : '—' },
+        { label: '持续时间', value: params.transfer_duration ? `${formatValue(params.transfer_duration)} ${formatValue(params.transfer_duration_unit)}` : '—' },
       ];
     case 'flush':
       return [
         { label: '冲洗通道', value: formatValue(params.flush_channel_id) },
-        { label: '冲洗转速', value: `${formatValue(params.flush_rpm)} rpm` },
-        { label: '单轮时长', value: `${formatValue(params.flush_cycle_duration_s)} s` },
+        { label: '转速', value: `${formatValue(params.flush_rpm)} RPM` },
+        { label: '单次时长', value: `${formatValue(params.flush_cycle_duration_s)} s` },
         { label: '循环次数', value: formatValue(params.flush_cycles) },
       ];
     case 'echem': {
       const ec = params.ec_settings ?? {};
       return [
-        { label: 'Technique', value: formatValue(ec.technique) },
+        { label: '测量技术', value: formatValue(ec.technique) },
         { label: '采样间隔', value: `${formatValue(ec.sample_interval_ms)} ms` },
         { label: '静置时间', value: `${formatValue(ec.quiet_time_s)} s` },
         { label: '关键参数', value: [ec.e0, ec.eh, ec.el, ec.ef].filter((item) => item !== undefined).map((item) => formatValue(item)).join(' / ') || '—' },
@@ -254,8 +299,12 @@ export function ExperimentDetail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [executing, setExecuting] = useState(false);
+  const [stopping, setStopping] = useState(false);
   const [analyzing, setAnalyzing] = useState(false);
   const [agentResponse, setAgentResponse] = useState<string | null>(null);
+  const [progress, setProgress] = useState<ProgressData | null>(null);
+  const [logsExpanded, setLogsExpanded] = useState(false);
+  const logsEndRef = useRef<HTMLDivElement>(null);
 
   const fetchExperiment = useCallback(async () => {
     try {
@@ -273,9 +322,47 @@ export function ExperimentDetail() {
     }
   }, [id, t]);
 
+  const fetchProgress = useCallback(async () => {
+    if (!id) return;
+    try {
+      const res = await fetch(`/api/experiments/detail/${id}/progress`);
+      if (!res.ok) return;
+      const data: ProgressData = await res.json();
+      setProgress(data);
+      // Sync status back to experiment
+      if (experiment && data.status !== experiment.status) {
+        setExperiment((prev) => prev ? { ...prev, status: data.status as Experiment['status'] } : prev);
+      }
+    } catch {
+      // ignore polling errors
+    }
+  }, [id, experiment]);
+
   useEffect(() => {
     if (id) fetchExperiment();
   }, [id, fetchExperiment]);
+
+  // Poll progress when experiment is running
+  useEffect(() => {
+    if (!experiment || experiment.status !== 'running') return;
+    fetchProgress(); // fetch immediately
+    const interval = setInterval(fetchProgress, 2000);
+    return () => clearInterval(interval);
+  }, [experiment?.status, fetchProgress]);
+
+  // Auto-refresh experiment data when status changes from running
+  useEffect(() => {
+    if (progress && progress.status !== 'running' && experiment?.status === 'running') {
+      fetchExperiment();
+    }
+  }, [progress?.status]);
+
+  // Auto scroll logs
+  useEffect(() => {
+    if (logsExpanded && logsEndRef.current) {
+      logsEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [progress?.logs?.length, logsExpanded]);
 
   const handleExecute = async () => {
     if (!experiment) return;
@@ -292,6 +379,24 @@ export function ExperimentDetail() {
       toast.error(errorMsg);
     } finally {
       setExecuting(false);
+    }
+  };
+
+  const handleStop = async () => {
+    if (!experiment) return;
+    setStopping(true);
+    try {
+      const res = await fetch(`/api/experiments/detail/${experiment.exp_id}/stop`, {
+        method: 'POST',
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      toast.success('正在停止实验...');
+      setTimeout(() => fetchExperiment(), 2000);
+    } catch (err) {
+      const errorMsg = err instanceof Error ? err.message : '停止失败';
+      toast.error(errorMsg);
+    } finally {
+      setStopping(false);
     }
   };
 
@@ -319,7 +424,11 @@ export function ExperimentDetail() {
     }
   };
 
-  const currentStep = useMemo(() => experiment?.steps?.[0] ?? null, [experiment]);
+  const currentStepIndex = progress?.current_step_index ?? 0;
+  const currentStep = useMemo(() => {
+    if (progress?.current_step) return progress.current_step;
+    return experiment?.steps?.[0] ?? null;
+  }, [experiment, progress]);
   const timelineItems = useMemo(() => {
     if (!experiment) return [];
     return [
@@ -328,6 +437,10 @@ export function ExperimentDetail() {
       { label: '完成/终止', value: formatDateTime(experiment.completed_at) },
     ];
   }, [experiment]);
+
+  const progressPercent = progress?.progress_percent ?? 0;
+  const elapsedSeconds = progress?.elapsed_seconds ?? 0;
+  const logs = progress?.logs ?? experiment?.logs ?? [];
 
   if (loading) {
     return (
@@ -376,7 +489,7 @@ export function ExperimentDetail() {
           </p>
           <div className="mt-3 flex flex-wrap items-center gap-2">
             <span className={`inline-flex items-center gap-2 rounded-full border px-3 py-1 text-sm font-medium ${statusConf.tone}`}>
-              {statusConf.icon}
+              {statusConf.icon()}
               {statusConf.label}
             </span>
             {experiment.tags.map((tag) => (
@@ -387,16 +500,28 @@ export function ExperimentDetail() {
           </div>
         </div>
 
-        {experiment.status === 'created' && (
-          <button
-            onClick={handleExecute}
-            disabled={executing}
-            className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-sm font-medium text-white transition hover:bg-blue-700 disabled:bg-blue-400"
-          >
-            <Play className="h-4 w-4" />
-            {executing ? t('experimentDetail.submitting') : t('experimentDetail.startExecuting')}
-          </button>
-        )}
+        <div className="flex gap-3">
+          {experiment.status === 'created' && (
+            <button
+              onClick={handleExecute}
+              disabled={executing}
+              className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-sm font-medium text-white transition hover:bg-blue-700 disabled:bg-blue-400"
+            >
+              <Play className="h-4 w-4" />
+              {executing ? t('experimentDetail.submitting') : t('experimentDetail.startExecuting')}
+            </button>
+          )}
+          {experiment.status === 'running' && (
+            <button
+              onClick={handleStop}
+              disabled={stopping}
+              className="inline-flex items-center gap-2 rounded-xl bg-red-600 px-5 py-3 text-sm font-medium text-white transition hover:bg-red-700 disabled:bg-red-400"
+            >
+              <Square className="h-4 w-4" />
+              {stopping ? '停止中...' : '停止实验'}
+            </button>
+          )}
+        </div>
       </div>
 
       <section className="grid gap-4 lg:grid-cols-[1.25fr,0.95fr]">
@@ -414,7 +539,7 @@ export function ExperimentDetail() {
         <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
           <p className="text-sm font-medium text-slate-500">{t('experimentDetail.executionStatus')}</p>
           <div className="mt-3 flex items-center gap-3">
-            <div className={`rounded-full border p-3 ${statusConf.tone}`}>{statusConf.icon}</div>
+            <div className={`rounded-full border p-3 ${statusConf.tone}`}>{statusConf.icon()}</div>
             <div>
               <p className="text-lg font-semibold text-slate-900">{statusConf.label}</p>
               <p className="text-sm text-slate-600">{statusConf.summary}</p>
@@ -429,6 +554,28 @@ export function ExperimentDetail() {
               </div>
             ))}
           </div>
+
+          {experiment.status === 'running' && (
+            <div className="mt-5">
+              <div className="mb-2 flex items-center justify-between text-xs text-slate-500">
+                <span>执行进度 · 步骤 {currentStepIndex + 1}/{experiment.steps.length}</span>
+                <span className="font-semibold text-slate-700">{progressPercent}%</span>
+              </div>
+              <div className="h-2.5 w-full overflow-hidden rounded-full bg-slate-100">
+                <div
+                  className="h-full rounded-full bg-blue-500 transition-all duration-500"
+                  style={{ width: `${progressPercent}%` }}
+                />
+              </div>
+              <div className="mt-2 flex items-center gap-2 text-xs text-slate-500">
+                <Clock className="h-3.5 w-3.5" />
+                <span>已运行 {formatElapsed(elapsedSeconds)}</span>
+                {progress?.next_step && (
+                  <span className="ml-auto">下一步: {STEP_TYPE_META[progress.next_step.step_type]?.label ?? progress.next_step.step_type}</span>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </section>
 
@@ -454,7 +601,7 @@ export function ExperimentDetail() {
             <div className="mt-5 rounded-2xl border border-slate-200 p-4">
               <div className="flex items-center gap-2">
                 <span className={`inline-flex items-center gap-2 rounded-full border px-2.5 py-1 text-xs font-medium ${STEP_TYPE_META[currentStep.step_type]?.tone ?? 'bg-slate-50 text-slate-700 border-slate-200'}`}>
-                  {STEP_TYPE_META[currentStep.step_type]?.icon}
+                  {STEP_TYPE_META[currentStep.step_type]?.icon()}
                   {STEP_TYPE_META[currentStep.step_type]?.label ?? currentStep.step_type}
                 </span>
               </div>
@@ -474,21 +621,52 @@ export function ExperimentDetail() {
             <div className="mt-5 border-t border-slate-100 pt-5">
               <p className="text-sm font-medium text-slate-700">{t('experimentDetail.stepChain')}</p>
               <div className="mt-3 space-y-3">
-                {experiment.steps.map((step, index) => (
-                  <div key={`${step.step_type}-${index}`} className="rounded-xl border border-slate-200 p-4">
-                    <div className="flex flex-wrap items-center gap-3">
-                      <span className="flex h-7 w-7 items-center justify-center rounded-full bg-blue-100 text-xs font-bold text-blue-700">
-                        {index + 1}
-                      </span>
-                      <span className={`inline-flex items-center gap-2 rounded-full border px-2.5 py-1 text-xs font-medium ${STEP_TYPE_META[step.step_type]?.tone ?? 'bg-slate-50 text-slate-700 border-slate-200'}`}>
-                        {STEP_TYPE_META[step.step_type]?.icon}
-                        {STEP_TYPE_META[step.step_type]?.label ?? step.step_type}
-                      </span>
-                      <span className="text-sm text-slate-700">{step.description || summarizeStep(step)}</span>
+                {experiment.steps.map((step, index) => {
+                  const stepProg = progress?.step_progress?.[index] ?? experiment.step_progress?.[index];
+                  const isCurrent = experiment.status === 'running' && index === currentStepIndex;
+                  const isCompleted = stepProg?.status === 'completed';
+                  const isSkipped = stepProg?.status === 'skipped';
+
+                  let stepBorder = 'border-slate-200';
+                  let stepBg = '';
+                  let numberStyle = 'bg-slate-100 text-slate-600';
+                  if (isCurrent) {
+                    stepBorder = 'border-blue-400';
+                    stepBg = 'bg-blue-50/40';
+                    numberStyle = 'bg-blue-600 text-white animate-pulse';
+                  } else if (isCompleted) {
+                    numberStyle = 'bg-emerald-500 text-white';
+                  } else if (isSkipped) {
+                    numberStyle = 'bg-orange-400 text-white';
+                  }
+
+                  return (
+                    <div key={`${step.step_type}-${index}`} className={`rounded-xl border ${stepBorder} ${stepBg} p-4`}>
+                      <div className="flex flex-wrap items-center gap-3">
+                        <span className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold ${numberStyle}`}>
+                          {isCompleted ? '✓' : isSkipped ? '–' : index + 1}
+                        </span>
+                        <span className={`inline-flex items-center gap-2 rounded-full border px-2.5 py-1 text-xs font-medium ${STEP_TYPE_META[step.step_type]?.tone ?? 'bg-slate-50 text-slate-700 border-slate-200'}`}>
+                          {STEP_TYPE_META[step.step_type]?.icon()}
+                          {STEP_TYPE_META[step.step_type]?.label ?? step.step_type}
+                        </span>
+                        <span className="text-sm text-slate-700">{step.description || summarizeStep(step)}</span>
+                        {isCurrent && (
+                          <span className="ml-auto inline-flex items-center gap-1 text-xs font-medium text-blue-600">
+                            <Loader2 className="h-3 w-3 animate-spin" /> 执行中
+                          </span>
+                        )}
+                        {isCompleted && (
+                          <span className="ml-auto text-xs text-emerald-600">✓ 完成</span>
+                        )}
+                        {isSkipped && (
+                          <span className="ml-auto text-xs text-orange-600">跳过</span>
+                        )}
+                      </div>
+                      <p className="mt-2 text-xs text-slate-500">{summarizeStep(step)}</p>
                     </div>
-                    <p className="mt-2 text-xs text-slate-500">{summarizeStep(step)}</p>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           )}
@@ -571,6 +749,43 @@ export function ExperimentDetail() {
           </ul>
         </div>
       </section>
+
+      {/* Execution Logs Panel */}
+      {logs.length > 0 && (
+        <section className="rounded-2xl border border-slate-200 bg-white shadow-sm">
+          <button
+            onClick={() => setLogsExpanded(!logsExpanded)}
+            className="flex w-full items-center justify-between p-5 text-left"
+          >
+            <div className="flex items-center gap-2">
+              <ScrollText className="h-5 w-5 text-slate-600" />
+              <h3 className="text-lg font-semibold text-slate-900">执行日志</h3>
+              <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600">{logs.length}</span>
+            </div>
+            {logsExpanded ? <ChevronUp className="h-5 w-5 text-slate-400" /> : <ChevronDown className="h-5 w-5 text-slate-400" />}
+          </button>
+          {logsExpanded && (
+            <div className="max-h-80 overflow-y-auto border-t border-slate-100 px-5 pb-4">
+              <div className="space-y-1 pt-3 font-mono text-xs">
+                {logs.map((log, i) => {
+                  const levelColor =
+                    log.level === 'error' ? 'text-red-600' :
+                    log.level === 'warn' ? 'text-orange-600' :
+                    'text-slate-600';
+                  return (
+                    <div key={i} className={`flex gap-3 ${levelColor}`}>
+                      <span className="shrink-0 text-slate-400">{new Date(log.ts).toLocaleTimeString('zh-CN')}</span>
+                      <span className="shrink-0 w-12 text-right font-semibold uppercase">{log.level}</span>
+                      <span className="break-all">{log.message}</span>
+                    </div>
+                  );
+                })}
+                <div ref={logsEndRef} />
+              </div>
+            </div>
+          )}
+        </section>
+      )}
     </div>
   );
 }

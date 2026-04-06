@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { AnimatePresence, motion } from 'framer-motion';
 import { FileText, Edit, Trash2, Play, Calendar } from 'lucide-react';
 import { TemplateDialog } from './TemplateDialog';
 import { useNavigate } from 'react-router-dom';
@@ -63,18 +62,9 @@ export function TemplateCard({ template, onUpdate }: TemplateCardProps) {
     }
   };
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 },
-  };
-
   return (
     <>
-      <motion.div
-        variants={itemVariants}
-        whileHover={{ y: -4 }}
-        className="card p-6 space-y-4"
-      >
+      <div className="card p-6 space-y-4 transition-transform hover:-translate-y-1">
         <div className="flex items-start justify-between">
           <div className="flex items-center space-x-3">
             <div className="p-2 bg-blue-50 rounded-lg">
@@ -110,35 +100,29 @@ export function TemplateCard({ template, onUpdate }: TemplateCardProps) {
         )}
 
         <div className="flex items-center space-x-2 pt-2 border-t border-slate-200">
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+          <button
             onClick={handleInstantiate}
-            className="flex-1 flex items-center justify-center space-x-2 bg-blue-600 text-white px-3 py-2 rounded-lg text-sm font-medium hover:bg-blue-700"
+            className="flex-1 flex items-center justify-center space-x-2 bg-blue-600 text-white px-3 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 active:scale-95 transition-transform"
           >
             <Play className="h-4 w-4" />
             <span>{t('templates.use')}</span>
-          </motion.button>
+          </button>
 
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+          <button
             onClick={() => setIsEditDialogOpen(true)}
-            className="p-2 bg-slate-100 hover:bg-slate-200 rounded-lg"
+            className="p-2 bg-slate-100 hover:bg-slate-200 rounded-lg active:scale-95 transition-transform"
           >
             <Edit className="h-4 w-4 text-slate-700" />
-          </motion.button>
+          </button>
 
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+          <button
             onClick={() => setIsDeleteDialogOpen(true)}
-            className="p-2 bg-red-50 hover:bg-red-100 rounded-lg"
+            className="p-2 bg-red-50 hover:bg-red-100 rounded-lg active:scale-95 transition-transform"
           >
             <Trash2 className="h-4 w-4 text-red-600" />
-          </motion.button>
+          </button>
         </div>
-      </motion.div>
+      </div>
 
       {/* Edit Dialog */}
       <TemplateDialog
@@ -149,16 +133,11 @@ export function TemplateCard({ template, onUpdate }: TemplateCardProps) {
       />
 
       {/* Delete Confirmation Dialog */}
-      <AnimatePresence>
-        {isDeleteDialogOpen && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <motion.div
-              key="delete-dialog"
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              className="bg-white rounded-xl p-6 max-w-md w-full mx-4"
-            >
+      {isDeleteDialogOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div
+            className="bg-white rounded-xl p-6 max-w-md w-full mx-4"
+          >
             <h3 className="text-lg font-semibold mb-2">{t('templates.deleteConfirm')}</h3>
             <p className="text-gray-600 mb-6">
               {t('templates.deleteWarning', { name: template.name })}
@@ -179,10 +158,9 @@ export function TemplateCard({ template, onUpdate }: TemplateCardProps) {
                 {isDeleting ? t('common.deleting') : t('common.delete')}
               </button>
             </div>
-            </motion.div>
           </div>
-        )}
-      </AnimatePresence>
+        </div>
+      )}
     </>
   );
 }

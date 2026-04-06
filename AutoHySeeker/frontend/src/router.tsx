@@ -1,5 +1,6 @@
 import { Navigate, createBrowserRouter } from "react-router-dom";
 import { AppShell } from "@/components/AppShell";
+import { RouteErrorPage } from "@/components/RouteErrorPage";
 import { Dashboard } from "@/pages/Dashboard";
 import { Experiments } from "@/pages/Experiments";
 import { ExperimentDetail } from "@/pages/ExperimentDetail";
@@ -16,18 +17,19 @@ export const router = createBrowserRouter([
   {
     path: "/",
     element: <AppShell />,
+    errorElement: <RouteErrorPage />,
     children: [
-      { index: true, element: <Overview /> },
-      { path: "dashboard", element: <Dashboard /> },
-      { path: "experiments", element: <Experiments /> },
-      { path: "optimization", element: <Optimization /> },
-      { path: "chat", element: <Chat /> },
-      { path: "diagnostics", element: <Diagnostics /> },
-      { path: "agents", element: <AgentControl /> },
-      { path: "knowledge", element: <KnowledgeHub /> },
-      { path: "templates", element: <Templates /> },
-      { path: "settings", element: <Settings /> },
-      { path: "experiments/:id", element: <ExperimentDetail /> },
+      { index: true, element: <Overview />, errorElement: <RouteErrorPage /> },
+      { path: "dashboard", element: <Dashboard />, errorElement: <RouteErrorPage /> },
+      { path: "experiments", element: <Experiments />, errorElement: <RouteErrorPage /> },
+      { path: "optimization", element: <Optimization />, errorElement: <RouteErrorPage /> },
+      { path: "chat", element: <Chat />, errorElement: <RouteErrorPage /> },
+      { path: "diagnostics", element: <Diagnostics />, errorElement: <RouteErrorPage /> },
+      { path: "agents", element: <AgentControl />, errorElement: <RouteErrorPage /> },
+      { path: "knowledge", element: <KnowledgeHub />, errorElement: <RouteErrorPage /> },
+      { path: "templates", element: <Templates />, errorElement: <RouteErrorPage /> },
+      { path: "settings", element: <Settings />, errorElement: <RouteErrorPage /> },
+      { path: "experiments/:id", element: <ExperimentDetail />, errorElement: <RouteErrorPage /> },
       { path: "*", element: <Navigate to="/" replace /> }
     ]
   }

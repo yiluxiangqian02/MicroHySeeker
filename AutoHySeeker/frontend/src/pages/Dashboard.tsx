@@ -1,6 +1,5 @@
 import { useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { motion } from "framer-motion";
 import { AgentStatusPanel } from "@/components/AgentStatusPanel";
 import { EmergencyStop } from "@/components/EmergencyStop";
 import { ExperimentLog } from "@/components/ExperimentLog";
@@ -179,9 +178,6 @@ export function Dashboard() {
     requestEmergencyStop,
   } = useDashboardPolling();
 
-  // Simple fade-in for each section — no staggerChildren to avoid
-  // framer-motion vs React reconciliation conflicts
-  const fadeIn = { initial: { opacity: 0, y: 8 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.3 } } as const;
 
   useEffect(() => {
     const refreshOptimization = () => {
@@ -306,26 +302,25 @@ export function Dashboard() {
   return (
     <div className="space-y-5">
       {/* ── Page header ───────────────────────────────────────────────────── */}
-      <motion.div {...fadeIn} className="flex flex-wrap items-center justify-between gap-3">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 className="text-xl font-bold text-slate-900">{t("dashboard.live_dashboard")}</h2>
           <div className="flex items-center gap-3 text-xs text-slate-500">
-            <span style={{ display: isLoading ? undefined : "none" }}>{t("dashboard.initializing")}</span>
-            <span style={{ display: isLoading ? "none" : undefined }}>
-              <LastUpdatedBadge iso={lastUpdated} />
-            </span>
-            {!isLoading && (
-              <>
-                <span>·</span>
-                <span>{t("dashboard.polling_every")} {pollingIntervalMs / 1000}s</span>
+            {isLoading ? (
+              <span>{t("dashboard.initializing")}</span>
+            ) : (
+              <span>
+                <LastUpdatedBadge iso={lastUpdated} />
+                <span className="mx-1">·</span>
+                {t("dashboard.polling_every")} {pollingIntervalMs / 1000}s
                 <button
                   type="button"
                   onClick={refresh}
-                  className="font-medium text-blue-600 hover:text-blue-700 transition-colors"
+                  className="ml-2 font-medium text-blue-600 hover:text-blue-700 transition-colors"
                 >
                   {t("dashboard.refresh_now")}
                 </button>
-              </>
+              </span>
             )}
           </div>
         </div>
@@ -343,7 +338,7 @@ export function Dashboard() {
             stopError={stopError}
           />
         </div>
-      </motion.div>
+      </div>
 
       {/* ── Poll error banner ─────────────────────────────────────────────── */}
       <div
@@ -373,7 +368,7 @@ export function Dashboard() {
       </div>
 
       {/* ── Top row 1: Optimization Status + Recent Experiments ───────────── */}
-      <motion.div {...fadeIn} className="grid gap-4 lg:grid-cols-5">
+      <div className="grid gap-4 lg:grid-cols-5">
         <div className="lg:col-span-3">
           <OptimizationStatusCard
             {...optimizationStatus}
@@ -385,32 +380,32 @@ export function Dashboard() {
         <div className="lg:col-span-2">
           <RecentExperimentsCard experiments={recentExperiments} />
         </div>
-      </motion.div>
+      </div>
 
       {/* ── Top row 2: Progress + Agents ──────────────────────────────────── */}
-      <motion.div {...fadeIn} className="grid gap-4 lg:grid-cols-5">
+      <div className="grid gap-4 lg:grid-cols-5">
         <div className="lg:col-span-3">
           <ExperimentProgress experiment={experimentProgress} />
         </div>
         <div className="lg:col-span-2">
           <AgentStatusPanel agents={agentStates} />
         </div>
-      </motion.div>
+      </div>
 
       {/* ── Realtime chart + Notifications ────────────────────────────────── */}
-      <motion.div {...fadeIn} className="grid gap-4 lg:grid-cols-4">
+      <div className="grid gap-4 lg:grid-cols-4">
         <div className="lg:col-span-3">
           <RealtimeChart data={chartData} />
         </div>
         <div className="lg:col-span-1">
           <SystemNotificationsCard notifications={systemNotifications} />
         </div>
-      </motion.div>
+      </div>
 
       {/* ── Log panel ─────────────────────────────────────────────────────── */}
-      <motion.div {...fadeIn}>
+      <div>
         <ExperimentLog logs={logs} />
-      </motion.div>
+      </div>
     </div>
   );
 }

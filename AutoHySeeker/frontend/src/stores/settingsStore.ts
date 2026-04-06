@@ -10,7 +10,7 @@ export interface AppSettings {
 }
 
 export const DEFAULT_SETTINGS: AppSettings = {
-  apiBaseUrl: "http://localhost:8100",
+  apiBaseUrl: "",
   defaultDiagnosticsDataDir: "",
   defaultContextHistoryDir: "",
   pollingIntervalMs: 5000,
@@ -31,13 +31,25 @@ export const useSettingsStore = create<SettingsStore>()(
     }),
     {
       name: "autohyseeker-settings",
+      version: 1,
       partialize: (state) => ({
         apiBaseUrl: state.apiBaseUrl,
         defaultDiagnosticsDataDir: state.defaultDiagnosticsDataDir,
         defaultContextHistoryDir: state.defaultContextHistoryDir,
         pollingIntervalMs: state.pollingIntervalMs,
         requestTimeoutMs: state.requestTimeoutMs
-      })
+      }),
+      migrate: (persisted: unknown, version: number) => {
+        const state = persisted as Record<string, unknown>;
+        if (version === 0) {
+          // Clear stale hardcoded API URL from previous versions
+          const url = state.apiBaseUrl as string | undefined;
+          if (url && url.includes("localhost:8100")) {
+            state.apiBaseUrl = "";
+          }
+        }
+        return state as unknown as AppSettings;
+      }
     }
   )
 );

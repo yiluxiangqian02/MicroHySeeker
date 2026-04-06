@@ -1,5 +1,5 @@
 import { Search, Loader2 } from "lucide-react";
-import { useState, FormEvent, useEffect } from "react";
+import { useState, FormEvent, useEffect, useRef } from "react";
 import { useDebounce } from "@/hooks/useDebounce";
 
 interface KnowledgeSearchBarProps {
@@ -10,9 +10,14 @@ interface KnowledgeSearchBarProps {
 export function KnowledgeSearchBar({ onSearch, isLoading }: KnowledgeSearchBarProps) {
   const [query, setQuery] = useState("");
   const debouncedQuery = useDebounce(query, 500);
+  const isMounted = useRef(false);
 
-  // Trigger search when debounced query changes
+  // Trigger search when debounced query changes, but skip the initial mount
   useEffect(() => {
+    if (!isMounted.current) {
+      isMounted.current = true;
+      return;
+    }
     if (debouncedQuery.trim()) {
       onSearch(debouncedQuery);
     } else {

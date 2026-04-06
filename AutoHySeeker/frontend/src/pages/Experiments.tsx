@@ -8,30 +8,36 @@ import {
   Filter,
   Play,
   Search,
+  Square,
 } from 'lucide-react';
 import { useExperimentsListQuery } from '../hooks/useExperimentsListQuery';
 import type { Experiment } from '../api/experiments';
 
-const STATUS_CONFIG: Record<string, { icon: React.ReactNode; label: string; tone: string }> = {
+const STATUS_CONFIG: Record<string, { icon: () => React.ReactNode; label: string; tone: string }> = {
   created: {
-    icon: <Clock className="h-4 w-4" />,
+    icon: () => <Clock className="h-4 w-4" />,
     label: '待执行',
     tone: 'bg-slate-100 text-slate-700',
   },
   running: {
-    icon: <Play className="h-4 w-4 animate-pulse" />,
+    icon: () => <Play className="h-4 w-4 animate-pulse" />,
     label: '运行中',
     tone: 'bg-blue-100 text-blue-700',
   },
   completed: {
-    icon: <CheckCircle className="h-4 w-4" />,
+    icon: () => <CheckCircle className="h-4 w-4" />,
     label: '已完成',
     tone: 'bg-emerald-100 text-emerald-700',
   },
   failed: {
-    icon: <AlertCircle className="h-4 w-4" />,
+    icon: () => <AlertCircle className="h-4 w-4" />,
     label: '失败',
     tone: 'bg-red-100 text-red-700',
+  },
+  stopped: {
+    icon: () => <Square className="h-4 w-4" />,
+    label: '已停止',
+    tone: 'bg-amber-100 text-amber-700',
   },
 };
 
@@ -42,6 +48,7 @@ export function Experiments() {
 
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [categoryFilter, setCategoryFilter] = useState<string>('all');
 
   const filteredExperiments = useMemo(() => {
     return experiments.filter((exp) => {
@@ -50,9 +57,10 @@ export function Experiments() {
         exp.description.toLowerCase().includes(search.toLowerCase()) ||
         exp.tags.some((tag) => tag.toLowerCase().includes(search.toLowerCase()));
       const matchStatus = statusFilter === 'all' || exp.status === statusFilter;
-      return matchSearch && matchStatus;
+      const matchCategory = categoryFilter === 'all' || (exp.category ?? 'test') === categoryFilter;
+      return matchSearch && matchStatus && matchCategory;
     });
-  }, [experiments, search, statusFilter]);
+  }, [experiments, search, statusFilter, categoryFilter]);
 
   function formatTime(value?: string) {
     if (!value) return '—';
@@ -67,7 +75,8 @@ export function Experiments() {
   function summarizeCurrentStep(exp: Experiment) {
     const current = exp.steps?.[0];
     if (!current) return t('experiments.noStepInfo');
-    return `${current.step_type}${current.description ? ` · ${current.description}` : ''}`;
+    const typeLabel: Record<string, string> = { prep_sol: '配液', transfer: '移液', flush: '冲洗', echem: '电化学', blank: '空白', evacuate: '排空' };
+    return `${typeLabel[current.step_type] ?? current.step_type}${current.description ? ` · ${current.description}` : ''}`;
   }
 
   return (
@@ -116,6 +125,18 @@ export function Experiments() {
                 <option value="failed">{t('experiments.statusFailed')}</option>
               </select>
             </div>
+            <div className="relative sm:w-44">
+              <select
+                value={categoryFilter}
+                onChange={(e) => setCategoryFilter(e.target.value)}
+                className="w-full appearance-none rounded-xl border border-slate-200 bg-white py-2 pl-4 pr-8 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              >
+                <option value="all">{t('experiments.categoryAll')}</option>
+                <option value="test">{t('experiments.categoryTest')}</option>
+                <option value="formal">{t('experiments.categoryFormal')}</option>
+                <option value="calibration">{t('experiments.categoryCalibration')}</option>
+              </select>
+            </div>
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 select-none">
@@ -128,12 +149,29 @@ export function Experiments() {
                   className="group relative flex cursor-pointer flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:border-blue-300 hover:shadow-md"
                 >
                   <div className="flex items-center justify-between">
-                    <span
-                      className={`inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium ${status.tone}`}
-                    >
-                      {status.icon}
-                      {status.label}
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <span
+                        className={`inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium ${status.tone}`}
+                      >
+                        {status.icon()}
+                        {status.label}
+                      </span>
+                      {(exp.category ?? 'test') !== 'formal' && (
+                        <span className="rounded-md bg-amber-50 px-2 py-0.5 text-xs font-medium text-amber-600">
+                          {t(`experiments.category${(exp.category ?? 'test').charAt(0).toUpperCase() + (exp.category ?? 'test').slice(1)}`)}
+                        </span>
+                      )}
+                      {exp.category === 'formal' && (
+                        <span className="rounded-md bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-600">
+                          {t('experiments.categoryFormal')}
+                        </span>
+                      )}
+                      {exp.execution_mode === 'simulated' && (
+                        <span className="rounded-md bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-500">
+                          {t('experiments.simulated')}
+                        </span>
+                      )}
+                    </div>
                     <span className="text-xs text-slate-400">{formatTime(exp.created_at)}</span>
                   </div>
 
