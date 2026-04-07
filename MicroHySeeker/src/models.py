@@ -382,9 +382,10 @@ class Experiment:
 @dataclass
 class SystemConfig:
     """系统全局配置"""
-    rs485_port: str = "COM1"
-    rs485_baudrate: int = 9600
-    mock_mode: bool = True  # Mock模式，默认开启
+    rs485_port: str = "COM3"
+    rs485_baudrate: int = 38400
+    mock_mode: bool = False  # Mock模式，默认关闭（真实硬件）
+    auto_connect: bool = True  # 启动时自动连接RS485
     
     pumps: List[PumpConfig] = field(default_factory=list)
     dilution_channels: List[DilutionChannel] = field(default_factory=list)
@@ -411,6 +412,7 @@ class SystemConfig:
             'rs485_port': self.rs485_port,
             'rs485_baudrate': self.rs485_baudrate,
             'mock_mode': self.mock_mode,
+            'auto_connect': self.auto_connect,
             'pumps': [p.to_dict() for p in self.pumps],
             'dilution_channels': [c.to_dict() for c in self.dilution_channels],
             'flush_channels': [c.to_dict() for c in self.flush_channels],
@@ -433,9 +435,10 @@ class SystemConfig:
                 calibration_data[k] = v
         
         config = SystemConfig(
-            rs485_port=data.get('rs485_port', 'COM1'),
-            rs485_baudrate=data.get('rs485_baudrate', 9600),
-            mock_mode=data.get('mock_mode', True),
+            rs485_port=data.get('rs485_port', 'COM3'),
+            rs485_baudrate=data.get('rs485_baudrate', 38400),
+            mock_mode=data.get('mock_mode', False),
+            auto_connect=data.get('auto_connect', True),
             calibration_data=calibration_data,
             data_dir=data.get('data_dir', './data'),
         )

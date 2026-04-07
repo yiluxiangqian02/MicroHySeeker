@@ -1491,6 +1491,7 @@ def get_rs485_instance(force_reload: bool = False) -> RS485Wrapper:
         _rs485_instance = RS485Wrapper()
         
         # 读取系统配置确定模式
+        auto_connect = True
         try:
             import json
             from pathlib import Path
@@ -1502,6 +1503,7 @@ def get_rs485_instance(force_reload: bool = False) -> RS485Wrapper:
                 mock_mode = config.get('mock_mode', True)
                 rs485_port = config.get('rs485_port', 'COM3')
                 baudrate = config.get('rs485_baudrate', 38400)
+                auto_connect = config.get('auto_connect', True)
             else:
                 mock_mode = True
                 rs485_port = 'COM3'
@@ -1515,7 +1517,18 @@ def get_rs485_instance(force_reload: bool = False) -> RS485Wrapper:
         
         _rs485_instance.set_mock_mode(mock_mode)
         
-        # 不再自动连接，等待手动连接
-        print(f"✅ RS485Wrapper: 实例已创建 (Mock模式: {mock_mode})，请手动连接")
+        # 根据配置决定是否自动连接
+        if auto_connect:
+            try:
+                ok = _rs485_instance.open_port(rs485_port, baudrate)
+                if ok:
+                    mode_str = "Mock" if mock_mode else "真实硬件"
+                    print(f"✅ RS485Wrapper: 自动连接成功 {rs485_port}@{baudrate} ({mode_str})")
+                else:
+                    print(f"⚠️ RS485Wrapper: 自动连接失败 {rs485_port}@{baudrate}，等待手动连接")
+            except Exception as e:
+                print(f"⚠️ RS485Wrapper: 自动连接异常: {e}，等待手动连接")
+        else:
+            print(f"✅ RS485Wrapper: 实例已创建 (Mock模式: {mock_mode})，auto_connect=False，等待手动连接")
     
     return _rs485_instance

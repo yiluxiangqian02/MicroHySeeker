@@ -76,7 +76,8 @@ async def start_experiment(
 
     if body.plan is not None:
         try:
-            exp_dict = plan_to_experiment(body.plan.model_dump())
+            flush_channels = bridge.config_get_flush_channels()
+            exp_dict = plan_to_experiment(body.plan.model_dump(), flush_channels=flush_channels)
         except Exception as exc:
             logger.exception("plan_to_experiment failed")
             raise HTTPException(400, f"计划转换失败: {exc}") from exc

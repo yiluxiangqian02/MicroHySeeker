@@ -23,7 +23,7 @@ logger = logging.getLogger("microhyseeker.api.bridge")
 # ExperimentPlan → Experiment 转换
 # ─────────────────────────────────────────────────────────────────────────────
 
-def plan_to_experiment(plan: Dict[str, Any]) -> Dict[str, Any]:
+def plan_to_experiment(plan: Dict[str, Any], flush_channels: Optional[List[Dict[str, Any]]] = None) -> Dict[str, Any]:
     """将 AutoHySeeker ExperimentPlan 转换为 MicroHySeeker Experiment dict。
 
     AutoHySeeker step_type 映射规则：
@@ -119,6 +119,36 @@ def plan_to_experiment(plan: Dict[str, Any]) -> Dict[str, Any]:
                               "flush_cycle_duration_s", "flush_cycles"):
                 if flush_key in params:
                     step_kwargs[flush_key] = params[flush_key]
+            # 从 flush_channels 配置解析 pump_address，供预检查使用
+            if "flush_channel_id" in params and not step_kwargs.get("pump_address"):
+                ch_id = str(params["flush_channel_id"])
+                for fch in (flush_channels or []):
+                    if str(fch.get("channel_id")) == ch_id:
+                        step_kwargs.setdefault("pump_address", fch.get("pump_address"))
+                        step_kwargs.setdefault("pump_rpm", fch.get("rpm", 100))
+                        break
+            # 从 cycle_duration × cycles 计算 volume_ul（rpm时间模式近似）
+            if not step_kwargs.get("volume_ul"):
+                dur = float(params.get("flush_cycle_duration_s", 0) or 0)
+                cycles = int(params.get("flush_cycles", 1) or 1)
+                rpm = step_kwargs.get("pump_rpm") or params.get("flush_rpm") or 100
+                # 粗估：calibration 通常 0.5 µL/s at 120 RPM → 按比例
+                ul_per_s = 0.5 * rpm / 120.0
+                step_kwargs["volume_ul"] = max(0.1, dur * cycles * ul_per_s)
+
+        # transfer / evacuate 步骤参数（params 顶层）
+        if step_type in (ProgramStepType.TRANSFER, ProgramStepType.EVACUATE):
+            for key in ("pump_address", "pump_direction", "pump_rpm", "volume_ul",
+                        "transfer_duration", "transfer_duration_unit"):
+                if key in params:
+                    step_kwargs[key] = params[key]
+            # 若只给了 volume_ul，确保它存在；若只给了 duration，估算 volume
+            if not step_kwargs.get("volume_ul"):
+                dur = float(params.get("duration_s") or params.get("transfer_duration") or 0)
+                rpm = step_kwargs.get("pump_rpm") or 100
+                ul_per_s = 0.5 * rpm / 120.0
+                if dur > 0:
+                    step_kwargs["volume_ul"] = max(0.1, dur * ul_per_s)
 
         steps.append(ProgStep(**{
             k: v for k, v in step_kwargs.items()
@@ -272,6 +302,7 @@ class APIBridge(QObject):
             "is_paused":   is_paused,
             "total_steps": total_steps,
             "current_step": current_step,
+            "last_finished_success": self._last_finished_success,
         }
 
     def get_data_dir(self) -> str:

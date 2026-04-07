@@ -165,6 +165,64 @@ _STEP_DURATION_ESTIMATES: Dict[str, float] = {
 }
 
 
+async def _ensure_mhs_ready(rs: "_RunState") -> bool:
+    """检查 MicroHySeeker 是否在线且 RS485 已连接，未连接时尝试自动连接。
+
+    Returns:
+        True  — MHS 在线且 RS485 已连接（或成功自动连接）
+        False — MHS 离线或连接失败
+    """
+    try:
+        async with httpx.AsyncClient(timeout=5.0, transport=_MHS_TRANSPORT) as client:
+            # 1) 查询连接状态
+            resp = await client.get("http://127.0.0.1:8100/api/device/connection")
+            if resp.status_code != 200:
+                rs.log("warn", f"MHS /api/device/connection 返回 {resp.status_code}")
+                return False
+
+            info = resp.json()
+            connected = info.get("connected", False)
+            mock_mode = info.get("mock_mode", True)
+            mode_str = "Mock" if mock_mode else "真实硬件"
+
+            if connected:
+                rs.log("info", f"MHS 预检查通过: RS485 已连接 ({mode_str})")
+                return True
+
+            # 2) 未连接 → 列出可用串口
+            rs.log("info", "MHS RS485 未连接，尝试自动连接...")
+            ports_resp = await client.get("http://127.0.0.1:8100/api/device/ports")
+            if ports_resp.status_code != 200:
+                rs.log("warn", "MHS 无法列出串口")
+                return False
+
+            ports = ports_resp.json().get("ports", [])
+            if not ports:
+                rs.log("warn", "MHS 没有可用串口")
+                return False
+
+            # 3) 尝试连接第一个可用串口
+            target_port = ports[0]
+            rs.log("info", f"尝试连接 {target_port}...")
+            conn_resp = await client.post(
+                "http://127.0.0.1:8100/api/device/connect",
+                json={"port": target_port, "baudrate": 38400},
+            )
+            if conn_resp.status_code == 200:
+                rs.log("info", f"MHS RS485 自动连接成功: {target_port} ({mode_str})")
+                return True
+            else:
+                rs.log("warn", f"MHS RS485 连接 {target_port} 失败: {conn_resp.text}")
+                return False
+
+    except (httpx.ConnectError, httpx.TimeoutException, OSError):
+        rs.log("warn", "MHS 离线，无法进行预检查")
+        return False
+    except Exception as exc:
+        rs.log("warn", f"MHS 预检查异常: {exc}")
+        return False
+
+
 async def _execute_local(exp_id: str) -> None:
     """Execute an experiment locally (non-echem steps simulated)."""
     exp = _EXP_STORE.get(exp_id)
@@ -176,6 +234,11 @@ async def _execute_local(exp_id: str) -> None:
     _RUNNING[exp_id] = rs
     any_forwarded = False
     rs.log("info", f"实验 '{exp.get('name', '')}' 开始本地执行 ({len(steps)} 步)")
+
+    # ── MHS 预检查：确保 RS485 已连接 ──
+    mhs_ready = await _ensure_mhs_ready(rs)
+    if not mhs_ready:
+        rs.log("warn", "MHS 预检查未通过，实验将以本地模拟模式执行")
 
     try:
         for i, step in enumerate(steps):
@@ -200,13 +263,20 @@ async def _execute_local(exp_id: str) -> None:
             _save_store()
 
             if step_type == "echem":
-                forwarded = await _forward_step_to_mhs(exp_id, step, i, rs)
-                if not forwarded:
+                mhs_result = await _forward_step_to_mhs(exp_id, step, i, rs)
+                if mhs_result == "offline":
                     rs.log("warn", f"步骤 {i + 1} 为电化学步骤，MicroHySeeker 离线，跳过")
                     rs.step_status = "skipped"
                     if exp["step_progress"][i]:
                         exp["step_progress"][i]["status"] = "skipped"
                     continue
+                elif mhs_result == "failed":
+                    rs.log("error", f"步骤 {i + 1} MHS 硬件执行失败")
+                    rs.step_status = "failed"
+                    if exp["step_progress"][i]:
+                        exp["step_progress"][i]["status"] = "failed"
+                    exp["status"] = "failed"
+                    break
                 else:
                     any_forwarded = True
             else:
@@ -220,8 +290,8 @@ async def _execute_local(exp_id: str) -> None:
                 else:
                     total_dur = float(duration) if duration else _STEP_DURATION_ESTIMATES.get(step_type, 2.0)
 
-                forwarded = await _forward_step_to_mhs(exp_id, step, i, rs)
-                if not forwarded:
+                mhs_result = await _forward_step_to_mhs(exp_id, step, i, rs)
+                if mhs_result == "offline":
                     rs.log("info", f"  本地模拟执行 {total_dur:.1f}s ...")
                     elapsed = 0.0
                     while elapsed < total_dur:
@@ -229,6 +299,13 @@ async def _execute_local(exp_id: str) -> None:
                             break
                         await asyncio.sleep(min(0.5, total_dur - elapsed))
                         elapsed += 0.5
+                elif mhs_result == "failed":
+                    rs.log("error", f"步骤 {i + 1} MHS 硬件执行失败")
+                    rs.step_status = "failed"
+                    if exp["step_progress"][i]:
+                        exp["step_progress"][i]["status"] = "failed"
+                    exp["status"] = "failed"
+                    break
                 else:
                     any_forwarded = True
 
@@ -273,8 +350,14 @@ async def _execute_local(exp_id: str) -> None:
 
 async def _forward_step_to_mhs(
     exp_id: str, step: dict, step_idx: int, rs: _RunState
-) -> bool:
-    """Try to forward a single step to MicroHySeeker. Returns True if successful."""
+) -> str:
+    """Try to forward a single step to MicroHySeeker.
+
+    Returns:
+        "success"  — 转发成功且 MHS 执行完成
+        "failed"   — 转发成功但 MHS 报告执行失败/被停止
+        "offline"  — MHS 离线，未转发
+    """
     try:
         async with httpx.AsyncClient(timeout=10.0, transport=_MHS_TRANSPORT) as client:
             resp = await client.post(
@@ -288,6 +371,7 @@ async def _forward_step_to_mhs(
             )
             if resp.status_code == 200:
                 rs.log("info", "  步骤已转发到 MicroHySeeker")
+                mhs_result = "success"
                 for _ in range(300):
                     if rs.cancelled:
                         try:
@@ -298,7 +382,7 @@ async def _forward_step_to_mhs(
                                 )
                         except Exception:
                             pass
-                        return True
+                        return "success"
                     await asyncio.sleep(1)
                     try:
                         async with httpx.AsyncClient(timeout=5.0, transport=_MHS_TRANSPORT) as poll_c:
@@ -308,16 +392,28 @@ async def _forward_step_to_mhs(
                             if status_resp.status_code == 200:
                                 data = status_resp.json()
                                 if data.get("state") in ("idle", "completed", "stopped"):
-                                    rs.log("info", "  MicroHySeeker 步骤执行完成")
+                                    finished_ok = data.get("last_finished_success")
+                                    if finished_ok is False:
+                                        rs.log("warn", "  MicroHySeeker 步骤执行失败（硬件报告 success=False）")
+                                        mhs_result = "failed"
+                                    elif data.get("state") == "stopped":
+                                        rs.log("warn", "  MicroHySeeker 步骤被停止")
+                                        mhs_result = "failed"
+                                    elif finished_ok is None:
+                                        # experiment_finished 未触发（预检查直接拒绝，未执行）
+                                        rs.log("warn", "  MicroHySeeker 步骤未执行（可能预检查失败）")
+                                        mhs_result = "failed"
+                                    else:
+                                        rs.log("info", "  MicroHySeeker 步骤执行完成")
                                     break
                     except Exception:
                         break
-                return True
+                return mhs_result
     except (httpx.ConnectError, httpx.TimeoutException, OSError):
-        return False
+        return "offline"
     except Exception as exc:
         rs.log("warn", f"  MHS 转发失败: {exc}")
-        return False
+        return "offline"
 
 
 # ---------------------------------------------------------------------------

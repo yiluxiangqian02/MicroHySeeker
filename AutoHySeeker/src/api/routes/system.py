@@ -130,10 +130,11 @@ async def get_system_config() -> dict[str, Any]:
     It tries to fetch live config from MicroHySeeker first, then falls
     back to the local ``config/system.json``.
     """
-    # Try live MicroHySeeker config
+    # Try live MicroHySeeker config (强制 IPv4，避免 Windows localhost → IPv6 失败)
     try:
-        async with httpx.AsyncClient(timeout=3.0) as client:
-            resp = await client.get("http://localhost:8100/api/template/config/system")
+        transport = httpx.AsyncHTTPTransport(local_address="0.0.0.0")
+        async with httpx.AsyncClient(timeout=3.0, transport=transport) as client:
+            resp = await client.get("http://127.0.0.1:8100/api/template/config/system")
             if resp.status_code == 200:
                 return resp.json()
     except Exception:

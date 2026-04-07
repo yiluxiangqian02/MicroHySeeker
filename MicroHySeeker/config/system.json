@@ -2,6 +2,7 @@
   "rs485_port": "COM3",
   "rs485_baudrate": 38400,
   "mock_mode": false,
+  "auto_connect": true,
   "pumps": [
     {
       "address": 1,
