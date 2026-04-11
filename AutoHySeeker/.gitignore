@@ -69,3 +69,16 @@ dmypy.json
 Thumbs.db
 ehthumbs.db
 Desktop.ini
+
+# ── Temporary directories (permission-denied, cause git scan loop) ──────────
+tmp*/
+temp*/
+.tmp*/
+
+# ── Embedded Go toolchain ───────────────────────────────────────────────────
+.tools/
+
+# ── Agent worktrees ─────────────────────────────────────────────────────────
+agent_cluster/worktrees/
+agent_worktrees/
+

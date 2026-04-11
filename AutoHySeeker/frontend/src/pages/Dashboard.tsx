@@ -11,6 +11,7 @@ import { SystemNotificationsCard } from "@/components/dashboard/SystemNotificati
 import { HardwareStatusBadge } from "@/components/dashboard/HardwareStatusBadge";
 import { useDashboardPolling } from "@/hooks/useDashboardPolling";
 import { useOptimizationStore } from "@/stores/optimizationStore";
+import { useSystemConfigStore } from "@/stores/systemConfigStore";
 import type { AgentId, AgentState, AgentStatus, ExperimentProgressState, ExperimentLogEntry } from "@/api/types";
 
 // ── Agent metadata ────────────────────────────────────────────────────────────
@@ -177,6 +178,7 @@ export function Dashboard() {
     refresh,
     requestEmergencyStop,
   } = useDashboardPolling();
+  const mhsStatus = useSystemConfigStore((s) => s.mhsStatus);
 
 
   useEffect(() => {
@@ -329,7 +331,7 @@ export function Dashboard() {
           <HardwareStatusBadge
             isHealthy={isHealthy}
             isLoading={isLoading}
-            hardwareAvailable={optimizationState?.hardwareAvailable}
+            hardwareAvailable={mhsStatus.online && mhsStatus.connected}
           />
           <EmergencyStop
             onStop={requestEmergencyStop}

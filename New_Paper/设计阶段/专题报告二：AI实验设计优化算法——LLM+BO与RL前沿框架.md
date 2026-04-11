@@ -8,60 +8,60 @@
 
 ## 引言
 
-自驱式实验室（Self-Driving Laboratories, SDLs）的崛起正在从根本上重塑材料科学与化学合成的研发范式。传统材料发现依赖领域专家的直觉与高昂的试错成本，而现代闭环实验系统通过集成高通量自动化合成设备、原位表征技术以及由人工智能驱动的决策算法，能够在庞大的化学空间中实现自主导航与迭代寻优 [[1]](#ref-1)。在这一进程中，优化算法的设计是决定整个闭环系统发现效率的核心。
+自驱式实验室（Self-Driving Laboratories, SDLs）的崛起正在从根本上重塑材料科学与化学合成的研发范式。传统材料发现依赖领域专家的直觉与高昂的试错成本，而现代闭环实验系统通过集成高通量自动化合成设备、原位表征技术以及由人工智能驱动的决策算法，能够在庞大的化学空间中实现自主导航与迭代寻优 [1](https://arxiv.org/html/2509.08736v1)。在这一进程中，优化算法的设计是决定整个闭环系统发现效率的核心。
 
-长期以来，贝叶斯优化（Bayesian Optimization, BO）因其严谨的不确定性量化能力和卓越的样本效率，被广泛作为这些闭环系统的主力计算引擎 [[4]](#ref-4)。然而，随着优化目标体系向多维、多目标且包含复杂离散变量方向演进，传统基于高斯过程（GPs）的贝叶斯优化逐渐暴露出"冷启动"困难、高维空间扩展性差以及缺乏物理化学先验直觉等致命瓶颈 [[5]](#ref-5)。与此同时，强化学习（RL）作为序贯决策和连续控制的强大工具，在物理科学中的应用受制于极端的数据贪婪性（Sample Inefficiency）和与真实物理环境交互的巨大成本 [[8]](#ref-8)。
+长期以来，贝叶斯优化（Bayesian Optimization, BO）因其严谨的不确定性量化能力和卓越的样本效率，被广泛作为这些闭环系统的主力计算引擎 [4](https://pmc.ncbi.nlm.nih.gov/articles/PMC13003447/)。然而，随着优化目标体系向多维、多目标且包含复杂离散变量方向演进，传统基于高斯过程（GPs）的贝叶斯优化逐渐暴露出"冷启动"困难、高维空间扩展性差以及缺乏物理化学先验直觉等致命瓶颈 [5](https://arxiv.org/html/2505.12833v2)。与此同时，强化学习（RL）作为序贯决策和连续控制的强大工具，在物理科学中的应用受制于极端的数据贪婪性（Sample Inefficiency）和与真实物理环境交互的巨大成本 [8](https://www.mdpi.com/2227-7390/13/12/1932)。
 
-进入 2024 年下半年至 2026 年初，具有强大语义理解与逻辑推理能力的大语言模型（LLMs）开始被深度嵌入到主动学习循环中。通过将 LLM 的常识推理、基于文献的先验知识与 BO 的统计严谨性，或是与 RL 的底层策略执行能力相融合，研究人员开发出了一系列全新的协同与交替优化框架 [[11]](#ref-11)。本报告围绕四大核心子方向展开论述：**第一章**探讨 LLM 嵌入贝叶斯优化循环在材料与化学参数寻优中的机制；**第二章**分析强化学习在化学组分配比与反应条件优化中的应用及与 BO 的对比；**第三章**深入解构 LLM 与 RL 协同、交替与分层规划的混合架构；**第四章**拓展至视觉-语言-动作模型（VLA）与数字孪生驱动的强化学习在实验室物理执行中的前沿突破。
+进入 2024 年下半年至 2026 年初，具有强大语义理解与逻辑推理能力的大语言模型（LLMs）开始被深度嵌入到主动学习循环中。通过将 LLM 的常识推理、基于文献的先验知识与 BO 的统计严谨性，或是与 RL 的底层策略执行能力相融合，研究人员开发出了一系列全新的协同与交替优化框架 [11](https://chemrxiv.org/doi/10.26434/chemrxiv.10001632)。本报告围绕四大核心子方向展开论述：**第一章**探讨 LLM 嵌入贝叶斯优化循环在材料与化学参数寻优中的机制；**第二章**分析强化学习在化学组分配比与反应条件优化中的应用及与 BO 的对比；**第三章**深入解构 LLM 与 RL 协同、交替与分层规划的混合架构；**第四章**拓展至视觉-语言-动作模型（VLA）与数字孪生驱动的强化学习在实验室物理执行中的前沿突破。
 
 ---
 
 ## 1. LLM 嵌入贝叶斯优化循环：从冷启动到动态假设生成
 
-在材料科学的优化任务中，目标函数往往是一个评估成本极高的"黑盒"（例如一种新合金的电催化活性或特定反应的产率）。贝叶斯优化通过构建代理模型并最大化采集函数（Acquisition Function）来权衡探索（Exploration）与利用（Exploitation）[[14]](#ref-14)。然而，标准 BO 算法在初始阶段缺乏引导，且对化学语义一无所知。LLM 的引入，通过"语言输入-统计输出"的映射，为 BO 赋予了化学直觉与上下文感知能力 [[15]](#ref-15)。
+在材料科学的优化任务中，目标函数往往是一个评估成本极高的"黑盒"（例如一种新合金的电催化活性或特定反应的产率）。贝叶斯优化通过构建代理模型并最大化采集函数（Acquisition Function）来权衡探索（Exploration）与利用（Exploitation）[14](https://chemrxiv.org/doi/pdf/10.26434/chemrxiv-2025-w1wsh)。然而，标准 BO 算法在初始阶段缺乏引导，且对化学语义一无所知。LLM 的引入，通过"语言输入-统计输出"的映射，为 BO 赋予了化学直觉与上下文感知能力 [15](https://arxiv.org/html/2501.16224v1)。
 
 ### 1.1 突破冷启动困境：Warm-Start 机制与多任务知识迁移
 
-在传统的贝叶斯优化中，初始候选点的选择通常依赖于随机采样或拉丁超立方抽样（Latin Hypercube Sampling）。在包含数十个连续和分类变量的高维化学空间中，这种盲目的均匀采样往往导致大量昂贵的实验资源被浪费在无意义的非活性区域 [[17]](#ref-17)。
+在传统的贝叶斯优化中，初始候选点的选择通常依赖于随机采样或拉丁超立方抽样（Latin Hypercube Sampling）。在包含数十个连续和分类变量的高维化学空间中，这种盲目的均匀采样往往导致大量昂贵的实验资源被浪费在无意义的非活性区域 [17](https://www.emergentmind.com/topics/llm-guided-bayesian-optimization)。
 
-近期的研究成功地将 LLM 转化为高效的候选点生成器，以实现 BO 的"热启动"（Warm-Start）。例如，LILO（Large Language Models in the Loop）框架在优化初期摒弃了均匀采样，转而将先验领域知识以文本形式输入 LLM。LLM 凭借其对化学文献的预训练记忆，直接生成一批符合化学逻辑的初始候选点，从而在算法第一步就将优化的起点大幅拉近全局最优点 [[18]](#ref-18)。
+近期的研究成功地将 LLM 转化为高效的候选点生成器，以实现 BO 的"热启动"（Warm-Start）。例如，LILO（Large Language Models in the Loop）框架在优化初期摒弃了均匀采样，转而将先验领域知识以文本形式输入 LLM。LLM 凭借其对化学文献的预训练记忆，直接生成一批符合化学逻辑的初始候选点，从而在算法第一步就将优化的起点大幅拉近全局最优点 [18](https://arxiv.org/html/2510.17671v1)。
 
-更为复杂的场景体现在多任务优化中。BOLT（Bayesian Optimization with LLM Transfer）架构提出了一种突破性的多任务迁移机制。传统多任务 BO 需要构建极其复杂的联合代理模型，而 BOLT 另辟蹊径，在完成先前任务的 BO 轨迹后，将这些优化过程的数据用于微调 LLM [[19]](#ref-19)。当面临具有新上下文描述的抗菌肽设计或相似催化任务时，该 LLM 能够直接在潜在空间中输出极高质量的热启动初始解，其收敛速度和最终性能甚至超越了从零开始的纯 BO 算法 [[19]](#ref-19)。
+更为复杂的场景体现在多任务优化中。BOLT（Bayesian Optimization with LLM Transfer）架构提出了一种突破性的多任务迁移机制。传统多任务 BO 需要构建极其复杂的联合代理模型，而 BOLT 另辟蹊径，在完成先前任务的 BO 轨迹后，将这些优化过程的数据用于微调 LLM [19](https://arxiv.org/html/2503.08131v2)。当面临具有新上下文描述的抗菌肽设计或相似催化任务时，该 LLM 能够直接在潜在空间中输出极高质量的热启动初始解，其收敛速度和最终性能甚至超越了从零开始的纯 BO 算法 [19](https://arxiv.org/html/2503.08131v2)。
 
-此外，在 LGBO（LLM-Guided Bayesian Optimization）框架中，研究人员引入了"区域提升偏好机制"。该机制让 LLM 在每次迭代中基于化学直觉输出偏好区域，从而稳定且可控地偏移高斯过程代理模型的均值函数 [[6]](#ref-6)。在 Fe-Cr 电池电解液的真实湿法实验室优化中，标准 BO 需要 10 次以上的迭代才能逼近最优点，而 LGBO 仅在 6 次迭代内就达到了最佳观测值的 90%，展现了极为优异的样本效率 [[6]](#ref-6)。同时，面对庞大的 BO 提议点，基于生成式或过滤式的 LLM 能够筛选掉那些数学上可能带来高预期收益但化学上不稳定或无法合成的分子结构 [[2]](#ref-2)。
+此外，在 LGBO（LLM-Guided Bayesian Optimization）框架中，研究人员引入了"区域提升偏好机制"。该机制让 LLM 在每次迭代中基于化学直觉输出偏好区域，从而稳定且可控地偏移高斯过程代理模型的均值函数 [6](https://iclr.cc/virtual/2026/poster/10010010)。在 Fe-Cr 电池电解液的真实湿法实验室优化中，标准 BO 需要 10 次以上的迭代才能逼近最优点，而 LGBO 仅在 6 次迭代内就达到了最佳观测值的 90%，展现了极为优异的样本效率 [6](https://iclr.cc/virtual/2026/poster/10010010)。同时，面对庞大的 BO 提议点，基于生成式或过滤式的 LLM 能够筛选掉那些数学上可能带来高预期收益但化学上不稳定或无法合成的分子结构 [2](https://arxiv.org/html/2509.21403v1)。
 
 ### 1.2 动态干预与实时假设生成：BORA 框架剖析
 
-LLM 与 BO 融合的另一大里程碑是 2025 年提出的基于语言的贝叶斯优化研究助手（BORA, Language-Based Bayesian Optimization Research Assistant）[[15]](#ref-15)。早期的方法（如 HypBO）倾向于在优化开始前由人类或 LLM 注入静态的软约束，而 BORA 实现了一种动态的、基于实时上下文的算法交替机制 [[21]](#ref-21)。
+LLM 与 BO 融合的另一大里程碑是 2025 年提出的基于语言的贝叶斯优化研究助手（BORA, Language-Based Bayesian Optimization Research Assistant）[15](https://arxiv.org/html/2501.16224v1)。早期的方法（如 HypBO）倾向于在优化开始前由人类或 LLM 注入静态的软约束，而 BORA 实现了一种动态的、基于实时上下文的算法交替机制 [21](https://www.ijcai.org/proceedings/2025/0553.pdf)。
 
-BORA 框架在底层维持标准 BO 代理模型的运行，但集成了一个自适应的启发式策略模块，持续监控优化的轨迹 [[22]](#ref-22)。当 BO 的"预期改进"（Expected Improvement）指标陷入停滞，即算法陷入局部最优（Local Minima）的"平原"时，BORA 会主动触发 LLM 介入 [[15]](#ref-15)。此时，LLM 会摄取系统迄今为止探索过的参数轨迹和性能反馈，利用上下文学习（In-Context Learning）进行推理，指出当前优化的盲区，并生成全新的、跳出当前局部区域的探索假设 [[15]](#ref-15)。此外，BORA 还能生成关于优化进度的实时评论，将传统"黑盒"的统计寻优过程转化为人类研究员可读、可解释的透明过程 [[16]](#ref-16)。
+BORA 框架在底层维持标准 BO 代理模型的运行，但集成了一个自适应的启发式策略模块，持续监控优化的轨迹 [22](https://pubs.acs.org/doi/10.1021/acs.chemrev.5c00583)。当 BO 的"预期改进"（Expected Improvement）指标陷入停滞，即算法陷入局部最优（Local Minima）的"平原"时，BORA 会主动触发 LLM 介入 [15](https://arxiv.org/html/2501.16224v1)。此时，LLM 会摄取系统迄今为止探索过的参数轨迹和性能反馈，利用上下文学习（In-Context Learning）进行推理，指出当前优化的盲区，并生成全新的、跳出当前局部区域的探索假设 [15](https://arxiv.org/html/2501.16224v1)。此外，BORA 还能生成关于优化进度的实时评论，将传统"黑盒"的统计寻优过程转化为人类研究员可读、可解释的透明过程 [16](https://www.emergentmind.com/topics/llm-guided-bayesian-optimization-llm-guided-bo)。
 
-在具体的控制策略层面，BORA 通过动态计算的"信任分数"（Trust Score）使系统在以下三种模式间智能切换 [[15]](#ref-15)：
+在具体的控制策略层面，BORA 通过动态计算的"信任分数"（Trust Score）使系统在以下三种模式间智能切换 [15](https://arxiv.org/html/2501.16224v1)：
 
 * **动作 a1（标准 BO）：** 当已有数据充足且探索方向明确时，系统利用传统的香草 BO（Vanilla BO）进行统计推断，确保数据效率。
 * **动作 a2（LLM 全面干预）：** 当 BO 进度停滞或不确定性过高时，LLM 接管控制权。它通过分析整个实验历史、推理轨迹和文献假设，提出一组全新的参数点（Warm Start），强行将搜索引出局部最优陷阱。
 * **动作 a3（LLM 引导的 BO）：** BO 模块首先生成一组候选采样点，随后 LLM 基于化学常识对这批候选点进行筛选和排序，淘汰那些极易发生快速氧化或不互溶的元素配比。
 
-在涵盖 10 维光催化析氢实验和 7 维物理模拟基准测试中，对 o4-mini、o3、gpt-5-mini、gpt-5 以及 gemini-2.5-flash 等五款先进推理模型进行的评估表明，LLM/BO 混合方法显著优于纯 BO 策略。特别是 o3 模型，在 150 次实验预算下展现了最强大且最一致的寻优性能 [[11]](#ref-11)。
+在涵盖 10 维光催化析氢实验和 7 维物理模拟基准测试中，对 o4-mini、o3、gpt-5-mini、gpt-5 以及 gemini-2.5-flash 等五款先进推理模型进行的评估表明，LLM/BO 混合方法显著优于纯 BO 策略。特别是 o3 模型，在 150 次实验预算下展现了最强大且最一致的寻优性能 [11](https://chemrxiv.org/doi/10.26434/chemrxiv.10001632)。
 
-这种动态交替机制在多目标贝叶斯优化（MOBO）的平台期突围中尤为关键。在面向多元素催化剂配比寻优时，当 MOBO 算法检测到连续几个迭代周期性能不再提升，即搜索陷入统计拟合的平台期时，算法可主动中止纯统计寻优，将累积的经验数据特征（如特定浓度区间的电流阶跃现象）转换为结构化提示词输入给 LLM [[15]](#ref-15)。LLM 凭借庞大的学术语料库，能够对这些纯数字的关联矩阵进行物理意义上的反思，并用自然语言输出新的科学假设——例如"数据表明，当 Ni 含量超过某一阈值时，反向电流引发的表面氧化层可能阻碍了电子转移，建议引入微量 Fe 来稳定晶格"[[15]](#ref-15)。这一由 AI 生成的物理假设随后被转化为新的搜索空间约束条件，重新初始化贝叶斯引擎，实现了底层统计拟合与顶层语义推理的深度结合，标志着系统从"盲目优化工具"向"科学研究伙伴"的质变 [[11]](#ref-11)。
+这种动态交替机制在多目标贝叶斯优化（MOBO）的平台期突围中尤为关键。在面向多元素催化剂配比寻优时，当 MOBO 算法检测到连续几个迭代周期性能不再提升，即搜索陷入统计拟合的平台期时，算法可主动中止纯统计寻优，将累积的经验数据特征（如特定浓度区间的电流阶跃现象）转换为结构化提示词输入给 LLM [15](https://arxiv.org/html/2501.16224v1)。LLM 凭借庞大的学术语料库，能够对这些纯数字的关联矩阵进行物理意义上的反思，并用自然语言输出新的科学假设——例如"数据表明，当 Ni 含量超过某一阈值时，反向电流引发的表面氧化层可能阻碍了电子转移，建议引入微量 Fe 来稳定晶格"[15](https://arxiv.org/html/2501.16224v1)。这一由 AI 生成的物理假设随后被转化为新的搜索空间约束条件，重新初始化贝叶斯引擎，实现了底层统计拟合与顶层语义推理的深度结合，标志着系统从"盲目优化工具"向"科学研究伙伴"的质变 [11](https://chemrxiv.org/doi/10.26434/chemrxiv.10001632)。
 
 ### 1.3 开源 LLM 的领域适配与深层特征融合
 
-在材料与化学发现中，由于数据涉及商业机密或受到严格的版权限制，完全依赖封闭的商业 API（如 GPT-4）存在数据隐私和可重复性方面的巨大隐患。因此，学术界和工业界正加速向开源大语言模型（如 Qwen、LLaMA、Mistral）转移 [[25]](#ref-25)。
+在材料与化学发现中，由于数据涉及商业机密或受到严格的版权限制，完全依赖封闭的商业 API（如 GPT-4）存在数据隐私和可重复性方面的巨大隐患。因此，学术界和工业界正加速向开源大语言模型（如 Qwen、LLaMA、Mistral）转移 [25](https://doi.org/10.1021/acs.chemrev.5c00583)。
 
-在这一趋势下，Perovskite-R1 成为了利用开源 LLM 驱动闭环材料发现的典范 [[29]](#ref-29)。研究团队基于拥有 320 亿参数的 QwQ-32B 开源模型，系统性地挖掘了 1200 多篇钙钛矿太阳能电池（PSC）领域的高质量文献，构建了包含前驱体添加剂知识和思维链（CoT）推理的指令微调数据集 [[29]](#ref-29)。经过微调的 Perovskite-R1 不仅能够智能地综合文献先见，还能自主提出用于缺陷钝化的新型前驱体添加剂组合。在随后的闭环验证实验中，由模型引导发现的配方使得 PSC 的光电转换效率（PCE）突破至 26.95%，极大提升了材料的长期稳定性 [[29]](#ref-29)。
+在这一趋势下，Perovskite-R1 成为了利用开源 LLM 驱动闭环材料发现的典范 [29](https://arxiv.org/abs/2504.07383)。研究团队基于拥有 320 亿参数的 QwQ-32B 开源模型，系统性地挖掘了 1200 多篇钙钛矿太阳能电池（PSC）领域的高质量文献，构建了包含前驱体添加剂知识和思维链（CoT）推理的指令微调数据集 [29](https://arxiv.org/abs/2504.07383)。经过微调的 Perovskite-R1 不仅能够智能地综合文献先见，还能自主提出用于缺陷钝化的新型前驱体添加剂组合。在随后的闭环验证实验中，由模型引导发现的配方使得 PSC 的光电转换效率（PCE）突破至 26.95%，极大提升了材料的长期稳定性 [29](https://arxiv.org/abs/2504.07383)。
 
-然而，将 LLM 应用于贝叶斯优化并非总是直接有效的。一项名为 *A Sober Look at LLMs for Material Discovery* 的系统性研究指出，未经领域特殊处理的现成 LLM 在分子空间的 BO 任务中，其表现往往不敌简单的统计基线 [[14]](#ref-14)。真正的突破在于深层特征融合——即不将 LLM 视为单纯的文本生成器，而是将其视为覆盖分子设计到网状化学（Reticular Chemistry）等广泛化学子领域的极其强大的特征提取器 [[13]](#ref-13)[[32]](#ref-32)。在 GOLLuM（Gaussian Process Optimized LLMs）等高级框架中，LLM 在潜空间生成的 Embedding 被直接用作高斯过程的深度核函数（Deep Kernel）。通过联合优化 LLM 的微调参数和 GP 超参数，系统在保留了 LLM 语义表达能力的同时，完美继承了 BO 严格的后验概率计算与不确定性量化能力 [[17]](#ref-17)。
+然而，将 LLM 应用于贝叶斯优化并非总是直接有效的。一项名为 *A Sober Look at LLMs for Material Discovery* 的系统性研究指出，未经领域特殊处理的现成 LLM 在分子空间的 BO 任务中，其表现往往不敌简单的统计基线 [14](https://chemrxiv.org/doi/pdf/10.26434/chemrxiv-2025-w1wsh)。真正的突破在于深层特征融合——即不将 LLM 视为单纯的文本生成器，而是将其视为覆盖分子设计到网状化学（Reticular Chemistry）等广泛化学子领域的极其强大的特征提取器 [13](https://yaghi.berkeley.edu/pdfPublications/25LLMRetChem.pdf) [32](https://arxiv.org/abs/2406.06714)。在 GOLLuM（Gaussian Process Optimized LLMs）等高级框架中，LLM 在潜空间生成的 Embedding 被直接用作高斯过程的深度核函数（Deep Kernel）。通过联合优化 LLM 的微调参数和 GP 超参数，系统在保留了 LLM 语义表达能力的同时，完美继承了 BO 严格的后验概率计算与不确定性量化能力 [17](https://www.emergentmind.com/topics/llm-guided-bayesian-optimization)。
 
-为了应对实验数据中普遍存在的高噪声问题，研究人员还提出了如 ChemBOMAS 这样的多智能体强化架构 [[7]](#ref-7)。该系统包含一个数据驱动的伪数据生成模块（用于提供宽泛的热启动）和一个知识驱动的 LLM 智能体。LLM 的核心作用是对物理化学搜索空间进行逻辑划分与修剪（Space Partitioning）。当热启动生成的伪数据存在噪声时，LLM 的先验规则能够防止 BO 偏离合理的化学流形；反之，当 LLM 的先验存在偏差时，由真实实验返回的密集奖励信号则会覆盖这些约束 [[7]](#ref-7)。
+为了应对实验数据中普遍存在的高噪声问题，研究人员还提出了如 ChemBOMAS 这样的多智能体强化架构 [7](https://openreview.net/forum?id=XEkQu1ZWGN)。该系统包含一个数据驱动的伪数据生成模块（用于提供宽泛的热启动）和一个知识驱动的 LLM 智能体。LLM 的核心作用是对物理化学搜索空间进行逻辑划分与修剪（Space Partitioning）。当热启动生成的伪数据存在噪声时，LLM 的先验规则能够防止 BO 偏离合理的化学流形；反之，当 LLM 的先验存在偏差时，由真实实验返回的密集奖励信号则会覆盖这些约束 [7](https://openreview.net/forum?id=XEkQu1ZWGN)。
 
 | 协同融合机制                      | 核心算法与框架                                | 在材料/化学闭环实验中的优势体现                              | 代表性研究                                  |
 | :-------------------------------- | :-------------------------------------------- | :----------------------------------------------------------- | :------------------------------------------ |
-| **智能热启动 (Warm-Start)** | 基于文本提示或多任务微调生成初始候选集        | 替代均匀采样，克服"冷启动"陷阱，显著节省昂贵的早期实验成本   | LILO [[18]](#ref-18), BOLT [[19]](#ref-19)                        |
-| **动态交替与假设生成**      | 当高斯过程预期改进停滞时触发 LLM 介入         | 破除局部最优困境，在非凸高维表面快速锁定高潜力搜寻区域       | BORA [[15]](#ref-15)                                   |
-| **深层内核特征融合**        | 将 LLM 的潜空间表征作为高斯过程的 Deep Kernel | 完美结合文本语义的领域知识与贝叶斯定理的严格不确定性量化     | GOLLuM [[17]](#ref-17)                                 |
-| **物理搜索空间重塑**        | 利用领域专精开源 LLM 引导偏好或进行空间修剪   | 避免数学模型探索热力学不稳定或无法合成的荒谬解，抵御数据噪声 | LGBO [[6]](#ref-6), ChemBOMAS [[7]](#ref-7), Perovskite-R1 [[29]](#ref-29) |
+| **智能热启动 (Warm-Start)** | 基于文本提示或多任务微调生成初始候选集        | 替代均匀采样，克服"冷启动"陷阱，显著节省昂贵的早期实验成本   | LILO [18](https://arxiv.org/html/2510.17671v1), BOLT [19](https://arxiv.org/html/2503.08131v2)                        |
+| **动态交替与假设生成**      | 当高斯过程预期改进停滞时触发 LLM 介入         | 破除局部最优困境，在非凸高维表面快速锁定高潜力搜寻区域       | BORA [15](https://arxiv.org/html/2501.16224v1)                                   |
+| **深层内核特征融合**        | 将 LLM 的潜空间表征作为高斯过程的 Deep Kernel | 完美结合文本语义的领域知识与贝叶斯定理的严格不确定性量化     | GOLLuM [17](https://www.emergentmind.com/topics/llm-guided-bayesian-optimization)                                 |
+| **物理搜索空间重塑**        | 利用领域专精开源 LLM 引导偏好或进行空间修剪   | 避免数学模型探索热力学不稳定或无法合成的荒谬解，抵御数据噪声 | LGBO [6](https://iclr.cc/virtual/2026/poster/10010010), ChemBOMAS [7](https://openreview.net/forum?id=XEkQu1ZWGN), Perovskite-R1 [29](https://arxiv.org/abs/2504.07383) |
 
 > **本章小结**：LLM 与贝叶斯优化的融合已从简单的"文本提示→初始点生成"发展为涵盖热启动（LILO/BOLT）、动态干预（BORA）、深层内核融合（GOLLuM）和搜索空间修剪（ChemBOMAS/Perovskite-R1）四种成熟范式。核心洞见是：LLM 不应仅被视为文本生成器，而应作为强大的化学特征编码器嵌入 BO 的核函数层，在保持统计严谨性的同时注入领域先验。
 
@@ -69,35 +69,35 @@ BORA 框架在底层维持标准 BO 代理模型的运行，但集成了一个�
 
 ## 2. 强化学习在化学组分与反应条件直接优化中的前沿应用
 
-贝叶斯优化在处理低通量、静态批次的实验设计中表现优异，但面对具有高度时间相关性的连续动态过程，或面临需要对分子和催化剂结构进行离散拼接的组合爆炸问题时，BO 的代理模型训练复杂度和计算开销将呈指数级增加 [[5]](#ref-5)。深度强化学习（DRL）通过将优化任务建模为马尔可夫决策过程（MDP），赋予了智能体在复杂环境中通过试错学习和价值累积来逼近全局最优策略的能力 [[10]](#ref-10)。
+贝叶斯优化在处理低通量、静态批次的实验设计中表现优异，但面对具有高度时间相关性的连续动态过程，或面临需要对分子和催化剂结构进行离散拼接的组合爆炸问题时，BO 的代理模型训练复杂度和计算开销将呈指数级增加 [5](https://arxiv.org/html/2505.12833v2)。深度强化学习（DRL）通过将优化任务建模为马尔可夫决策过程（MDP），赋予了智能体在复杂环境中通过试错学习和价值累积来逼近全局最优策略的能力 [10](https://www.elspub.com/papers/j/1911766509499953152.html)。
 
 ### 2.1 连续动作空间的动态反应条件控制
 
-在流动化学和工业合成中，反应器的温度、压力、停留时间、试剂流速和底物浓度构成了一个高度非线性的连续控制系统。传统的 PID 控制器缺乏全局优化能力，而早期的离散动作强化学习（如 DQN 或 Q-Learning）由于动作空间切分导致的量化误差，难以在连续反应环境中实现精细控制 [[36]](#ref-36)。
+在流动化学和工业合成中，反应器的温度、压力、停留时间、试剂流速和底物浓度构成了一个高度非线性的连续控制系统。传统的 PID 控制器缺乏全局优化能力，而早期的离散动作强化学习（如 DQN 或 Q-Learning）由于动作空间切分导致的量化误差，难以在连续反应环境中实现精细控制 [36](https://doi.org/10.1021/acscentsci.1c00435)。
 
-深度确定性策略梯度（DDPG）和软演员-评论家（SAC）等面向连续动作空间的离线策略算法被广泛应用 [[36]](#ref-36)。在一项关于甲烷部分氧化（POX）制氢的反应条件优化研究中，DDPG 智能体能够精准地动态调整多维连续参数（如流速和温度配比），成功在非线性的反应动力学约束下锁定了产率极值点 [[36]](#ref-36)。
+深度确定性策略梯度（DDPG）和软演员-评论家（SAC）等面向连续动作空间的离线策略算法被广泛应用 [36](https://doi.org/10.1021/acscentsci.1c00435)。在一项关于甲烷部分氧化（POX）制氢的反应条件优化研究中，DDPG 智能体能够精准地动态调整多维连续参数（如流速和温度配比），成功在非线性的反应动力学约束下锁定了产率极值点 [36](https://doi.org/10.1021/acscentsci.1c00435)。
 
 ### 2.2 催化剂结构与组分配比的全局拓扑优化
 
-强化学习不仅在反应条件的动态调整上大放异彩，更被直接深入应用于催化剂的微观结构设计。在一项 2024 年的研究中，研究者构建了一个直接操作催化剂组分的 RL 智能体。该智能体将双金属合金纳米颗粒抽象为几何图表示（Geometric Graph Representation），并通过实施保持整体组分比例不变的"原子交换"（Atomic Swap）动作来进行拓扑变异 [[35]](#ref-35)。为了捕捉原子的三维空间关系，该系统引入了预训练的等变图神经网络（Equivariant GNN）作为状态编码器。经过训练，该 RL 策略不仅自主发现了已知的能量基态结构，还能出色地将习得的优化策略外推至未见过尺寸的纳米颗粒中 [[35]](#ref-35)。
+强化学习不仅在反应条件的动态调整上大放异彩，更被直接深入应用于催化剂的微观结构设计。在一项 2024 年的研究中，研究者构建了一个直接操作催化剂组分的 RL 智能体。该智能体将双金属合金纳米颗粒抽象为几何图表示（Geometric Graph Representation），并通过实施保持整体组分比例不变的"原子交换"（Atomic Swap）动作来进行拓扑变异 [35](https://doi.org/10.1021/acs.jcim.3c00394)。为了捕捉原子的三维空间关系，该系统引入了预训练的等变图神经网络（Equivariant GNN）作为状态编码器。经过训练，该 RL 策略不仅自主发现了已知的能量基态结构，还能出色地将习得的优化策略外推至未见过尺寸的纳米颗粒中 [35](https://doi.org/10.1021/acs.jcim.3c00394)。
 
 ### 2.3 奖励工程与探索崩溃的破局：RE-EXPLORE 框架
 
-将 RL 用于生成式化学空间探索时，最棘手的问题之一是"奖励黑客行为"（Reward Hacking）与模式崩溃（Mode Collapse）。智能体为了最大化短期内的反应产率奖励，往往退化为反复生成同一种极易合成但缺乏新颖性的分子结构 [[34]](#ref-34)。
+将 RL 用于生成式化学空间探索时，最棘手的问题之一是"奖励黑客行为"（Reward Hacking）与模式崩溃（Mode Collapse）。智能体为了最大化短期内的反应产率奖励，往往退化为反复生成同一种极易合成但缺乏新颖性的分子结构 [34]。
 
-RE-EXPLORE 框架集成了一个基于循环神经网络（RNN）的深度生成模型和一个用于预测产率与对映体过量（%ee）的回归器。在策略梯度的训练循环中，对 RL 的奖励函数进行了根本性的重塑：在反应产率和选择性得分的基础上，强制叠加了基于 Tanimoto 相似度的"唯一性惩罚因子"（Uniqueness Factor）[[34]](#ref-34)。这一机制迫使智能体在利用高分结构的同时，必须保持向多样化的化学空间延展。RE-EXPLORE 成功发现了具有极高对映选择性的新型手性催化剂和高产率底物 [[34]](#ref-34)。
+RE-EXPLORE 框架集成了一个基于循环神经网络（RNN）的深度生成模型和一个用于预测产率与对映体过量（%ee）的回归器。在策略梯度的训练循环中，对 RL 的奖励函数进行了根本性的重塑：在反应产率和选择性得分的基础上，强制叠加了基于 Tanimoto 相似度的"唯一性惩罚因子"（Uniqueness Factor）[34]。这一机制迫使智能体在利用高分结构的同时，必须保持向多样化的化学空间延展。RE-EXPLORE 成功发现了具有极高对映选择性的新型手性催化剂和高产率底物 [34]。
 
 ### 2.4 离线强化学习与基于模型的强化学习：打破样本效率瓶颈
 
-在线强化学习理论上可以寻找最优解，但在化学实验室中执行数以万计的试错动作是极其昂贵且具有安全风险的 [[9]](#ref-9)。为了打破"数据贪婪"带来的瓶颈：
+在线强化学习理论上可以寻找最优解，但在化学实验室中执行数以万计的试错动作是极其昂贵且具有安全风险的 [9](https://dspace.mit.edu/bitstream/handle/1721.1/159135/hong-zwhong-phd-eecs-2025-thesis.pdf)。为了打破"数据贪婪"带来的瓶颈：
 
-**`离线强化学习` (Offline RL)** 允许智能体完全基于历史遗留的、静态的次优实验数据集进行策略学习，无需与真实环境发生在线交互 [[9]](#ref-9)。在 MolStitch 框架中，研究人员采用了"轨迹拼接"（Trajectory Stitching）技术，将历史数据中不同分子的成功局部片段重新组合 [[40]](#ref-40)。为保证生成的反应条件物理可行，研究者引入凸神经网络约束和控制障碍函数 [[9]](#ref-9)。
+**`离线强化学习` (Offline RL)** 允许智能体完全基于历史遗留的、静态的次优实验数据集进行策略学习，无需与真实环境发生在线交互 [9](https://dspace.mit.edu/bitstream/handle/1721.1/159135/hong-zwhong-phd-eecs-2025-thesis.pdf)。在 MolStitch 框架中，研究人员采用了"轨迹拼接"（Trajectory Stitching）技术，将历史数据中不同分子的成功局部片段重新组合 [40](https://arxiv.org/abs/2407.00121)。为保证生成的反应条件物理可行，研究者引入凸神经网络约束和控制障碍函数 [9](https://dspace.mit.edu/bitstream/handle/1721.1/159135/hong-zwhong-phd-eecs-2025-thesis.pdf)。
 
-**基于模型的强化学习 (Model-Based RL)** 则利用有限的实验数据训练一个深度神经网络（如物理信息神经网络 PINN 或 DeepONet）作为真实实验室环境的高精度代理模拟器 [[43]](#ref-43)。智能体在模拟器内进行数百万次低成本交互和规划，待策略收敛后再"Zero-Shot"迁移至真实实验室 [[37]](#ref-37)。
+**基于模型的强化学习 (Model-Based RL)** 则利用有限的实验数据训练一个深度神经网络（如物理信息神经网络 PINN 或 DeepONet）作为真实实验室环境的高精度代理模拟器 [43](https://doi.org/10.1038/s42254-021-00314-5)。智能体在模拟器内进行数百万次低成本交互和规划，待策略收敛后再"Zero-Shot"迁移至真实实验室 [37](https://doi.org/10.1021/acs.jctc.3c00696)。
 
 ### 2.5 强化学习与贝叶斯优化的对比研究验证
 
-在流动化学中针对亚胺合成（Imine Synthesis）的闭环优化实验中，基于 DDPG 的深度强化学习在自优化性能上显著优于传统的免梯度方法（如 Nelder-Mead）和贝叶斯优化（搭配 SnobFit）[[45]](#ref-45)。对比数据显示，DDPG 智能体能够更敏锐地捕捉全局非线性动态，在极少的调整步骤中追踪到全局最优解，相比传统的 BO 探索流程，将达到最佳产率所需的实验轮数大幅削减了 50% 至 75% [[45]](#ref-45)。这确立了在连续、动态且状态空间相互耦合的化学工程领域，强化学习相对于贝叶斯优化的比较优势。
+在流动化学中针对亚胺合成（Imine Synthesis）的闭环优化实验中，基于 DDPG 的深度强化学习在自优化性能上显著优于传统的免梯度方法（如 Nelder-Mead）和贝叶斯优化（搭配 SnobFit）[45](https://doi.org/10.1021/acscentsci.1c00435)。对比数据显示，DDPG 智能体能够更敏锐地捕捉全局非线性动态，在极少的调整步骤中追踪到全局最优解，相比传统的 BO 探索流程，将达到最佳产率所需的实验轮数大幅削减了 50% 至 75% [45](https://doi.org/10.1021/acscentsci.1c00435)。这确立了在连续、动态且状态空间相互耦合的化学工程领域，强化学习相对于贝叶斯优化的比较优势。
 
 > **本章小结**：RL 在化学优化中的核心价值体现在三个方面：DDPG/SAC 解决了连续参数空间的精细控制，等变 GNN+RL 实现了催化剂微观拓扑优化，RE-EXPLORE 的唯一性惩罚有效防止了模式崩溃。Offline RL 和 MBRL 通过历史数据复用与数字模拟，极大缓解了 RL 在昂贵物理实验中的样本效率瓶颈。
 
@@ -105,32 +105,32 @@ RE-EXPLORE 框架集成了一个基于循环神经网络（RNN）的深度生成
 
 ## 3. LLM 与 RL 协同、交替的混合规划架构：通向自主科学代理
 
-大语言模型拥有浩瀚的化学先验知识和卓越的语义规划能力，但缺乏对物理规则的精确数值优化能力，且极易产生"幻觉"；强化学习擅长底层数值控制和连续动作寻优，但极度缺乏"常识"，面对奖励稀疏的高维任务往往陷入随机探索 [[8]](#ref-8)。在 2024 年中期至 2026 年的前沿探索中，学术界实现了范式跃迁，将 LLM 与 RL 进行深度融合，构建出分层、交替、闭环共进化的混合式架构。
+大语言模型拥有浩瀚的化学先验知识和卓越的语义规划能力，但缺乏对物理规则的精确数值优化能力，且极易产生"幻觉"；强化学习擅长底层数值控制和连续动作寻优，但极度缺乏"常识"，面对奖励稀疏的高维任务往往陷入随机探索 [8](https://www.mdpi.com/2227-7390/13/12/1932)。在 2024 年中期至 2026 年的前沿探索中，学术界实现了范式跃迁，将 LLM 与 RL 进行深度融合，构建出分层、交替、闭环共进化的混合式架构。
 
 ### 3.1 LLM 驱动的奖励重塑与搜索空间定义
 
-在复杂科学发现中，为 RL 设计精确的数学奖励函数几乎不可能。LLM 引导的强化学习通过让大语言模型充当"虚拟奖励评判器"，实现了语义目标向密集数值信号的转化 [[47]](#ref-47)。在 GPRS（Group Preference Reward Shaping）和 Logic-RL 框架中，LLM 基于预先注入的化学规则和人类偏好指令，对 RL 智能体生成的分子序列或反应条件进行评估 [[49]](#ref-49)。LLM 的自然语言理解能力不仅能识别出化学上不合理的"坏点"，还能判断反应路线的新颖性和可行性，将原本延迟且稀疏的成败反馈转化为步骤级别的密集奖励（Dense Rewards），极大加速了 RL 在化学空间中的策略收敛 [[46]](#ref-46)。
+在复杂科学发现中，为 RL 设计精确的数学奖励函数几乎不可能。LLM 引导的强化学习通过让大语言模型充当"虚拟奖励评判器"，实现了语义目标向密集数值信号的转化 [47](https://arxiv.org/abs/2410.01458)。在 GPRS（Group Preference Reward Shaping）和 Logic-RL 框架中，LLM 基于预先注入的化学规则和人类偏好指令，对 RL 智能体生成的分子序列或反应条件进行评估 [49](https://arxiv.org/abs/2502.14768)。LLM 的自然语言理解能力不仅能识别出化学上不合理的"坏点"，还能判断反应路线的新颖性和可行性，将原本延迟且稀疏的成败反馈转化为步骤级别的密集奖励（Dense Rewards），极大加速了 RL 在化学空间中的策略收敛 [46](https://arxiv.org/abs/2410.01458)。
 
 ### 3.2 认知-执行的层次化分层架构
 
-人类科学家在进行实验时遵循"高层战略规划——底层操作执行"的逻辑。现代分层 RL-LLM 混合架构（如 LGRL 框架和 GLIDER 系统）完全复刻了这一认知模式 [[8]](#ref-8)。
+人类科学家在进行实验时遵循"高层战略规划——底层操作执行"的逻辑。现代分层 RL-LLM 混合架构（如 LGRL 框架和 GLIDER 系统）完全复刻了这一认知模式 [8](https://www.mdpi.com/2227-7390/13/12/1932)。
 
-在 LGRL 架构中，大语言模型被定义为元优化器（Meta-optimizer）。面对宏观科学目标，LLM 利用思维链（CoT）能力将长视距任务分解为一系列具有语义连续性的小目标（Subgoals）[[8]](#ref-8)。这些子目标随后被传递给底层 RL 智能体。RL 智能体不再需要理解宏大的合成使命，它只需专注于执行具体的低级控制动作来满足当前子目标。这种"解耦"机制使得顶层 LLM 在推理时不涉及高昂的在线权重更新，同时使得底层 RL 的探索空间被严格限制在符合物理逻辑的微观状态内 [[8]](#ref-8)。
+在 LGRL 架构中，大语言模型被定义为元优化器（Meta-optimizer）。面对宏观科学目标，LLM 利用思维链（CoT）能力将长视距任务分解为一系列具有语义连续性的小目标（Subgoals）[8](https://www.mdpi.com/2227-7390/13/12/1932)。这些子目标随后被传递给底层 RL 智能体。RL 智能体不再需要理解宏大的合成使命，它只需专注于执行具体的低级控制动作来满足当前子目标。这种"解耦"机制使得顶层 LLM 在推理时不涉及高昂的在线权重更新，同时使得底层 RL 的探索空间被严格限制在符合物理逻辑的微观状态内 [8](https://www.mdpi.com/2227-7390/13/12/1932)。
 
 ### 3.3 "Think Twice, Act Once"：交替接力与共进化机制
 
-LLM 与 RL 融合的最极致形态是"代理共进化"（Agents Co-Evolution, ACE）框架 [[12]](#ref-12)。在此架构下，LLM 与 RL 形成了双向交替、共进化的智能反馈环 [[57]](#ref-57)。
+LLM 与 RL 融合的最极致形态是"代理共进化"（Agents Co-Evolution, ACE）框架 [12](https://icml.cc/virtual/2025/session/50258)。在此架构下，LLM 与 RL 形成了双向交替、共进化的智能反馈环 [57](https://arxiv.org/abs/2502.07399)。
 
 以 ACE 框架在超大规模动作空间（大于 60,000 种可能动作）的复杂决策场景为例：
 
-1. **Actor 角色的轨迹重精炼**：当 RL 智能体采取了导致低奖励的次优化学行动时，该状态-动作对被提取并转化为自然语言文本。LLM 随后介入执行"坏案推理"（Bad Case Reasoning），基于化学知识生成优化后的高质量动作 [[56]](#ref-56)。
-2. **Critic 角色的长期信用分配**：LLM 通过审视整个实验轨迹，识别出哪一个关键步骤决定了最终的高产率。这种基于语义的轨迹级奖励重塑，远比传统的时间差分（TD）更新来得准确 [[55]](#ref-55)。
+1. **Actor 角色的轨迹重精炼**：当 RL 智能体采取了导致低奖励的次优化学行动时，该状态-动作对被提取并转化为自然语言文本。LLM 随后介入执行"坏案推理"（Bad Case Reasoning），基于化学知识生成优化后的高质量动作 [56](https://arxiv.org/abs/2502.07399)。
+2. **Critic 角色的长期信用分配**：LLM 通过审视整个实验轨迹，识别出哪一个关键步骤决定了最终的高产率。这种基于语义的轨迹级奖励重塑，远比传统的时间差分（TD）更新来得准确 [55](https://arxiv.org/abs/2502.07399)。
 
-作为反哺，RL 智能体积累的高质量边缘案例数据通过优先级经验回放被反向用于对 LLM 进行在线微调（采用 DPO 或 LoRA 技术）[[55]](#ref-55)。这种互相纠错的交替接力，使得系统对纯 LLM 方案和纯 RL 方案形成了碾压级的降维打击 [[55]](#ref-55)。
+作为反哺，RL 智能体积累的高质量边缘案例数据通过优先级经验回放被反向用于对 LLM 进行在线微调（采用 DPO 或 LoRA 技术）[55](https://arxiv.org/abs/2502.07399)。这种互相纠错的交替接力，使得系统对纯 LLM 方案和纯 RL 方案形成了碾压级的降维打击 [55](https://arxiv.org/abs/2502.07399)。
 
 ### 3.4 迈向全自动科学闭环的多智能体系统
 
-当混合了强化学习反馈的专精 LLM 演化为多智能体群落（MAS）时，化学实验室迎来了真正意义上的全自动"AI 科学家"。在 2025 年发布的 *Robin* 多智能体系统中，文献检索智能体利用 RAG 技术构建化学合成先验网络；融合了 RL 策略的实验设计智能体制定反应拓扑路径；数据分析智能体自动提取质谱或光谱反馈；主导决策的 LLM 根据 RL 评价分数运用底层规则更新贝叶斯先验信念 [[61]](#ref-61)。在严谨的 RL 物理规则和数学奖励函数锚定下，多智能体网络已成功实现了针对新型先导化合物的半自主闭环发现 [[62]](#ref-62)。
+当混合了强化学习反馈的专精 LLM 演化为多智能体群落（MAS）时，化学实验室迎来了真正意义上的全自动"AI 科学家"。在 2025 年发布的 *Robin* 多智能体系统中，文献检索智能体利用 RAG 技术构建化学合成先验网络；融合了 RL 策略的实验设计智能体制定反应拓扑路径；数据分析智能体自动提取质谱或光谱反馈；主导决策的 LLM 根据 RL 评价分数运用底层规则更新贝叶斯先验信念 [61](https://doi.org/10.1002/adma.202413523)。在严谨的 RL 物理规则和数学奖励函数锚定下，多智能体网络已成功实现了针对新型先导化合物的半自主闭环发现 [62](https://doi.org/10.1002/adma.202413523)。
 
 > **本章小结**：LLM+RL 的协同经历了三个演进阶段——奖励重塑（GPRS/Logic-RL）→ 认知-执行解耦（LGRL/GLIDER）→ 双向共进化（ACE）。ACE 的 Think Twice, Act Once 范式证明了 LLM 作为 Actor+Critic 双角色与 RL 交替训练的可行性。Robin 多智能体系统则代表了该架构从理论框架到半自主药物发现的工程化落地。
 
@@ -138,27 +138,27 @@ LLM 与 RL 融合的最极致形态是"代理共进化"（Agents Co-Evolution, A
 
 ## 4. 视觉-语言-动作模型与数字孪生驱动的强化学习
 
-硬件执行层的完全自动化是 SDL 的另一大瓶颈 [[63]](#ref-63)。传统的硬编码机器人在面对非标准化实验器材、动态的液体处理或突发环境变化时显得极其脆弱 [[64]](#ref-64)。本章拓展至两个前沿方向：视觉-语言-动作模型（VLA）突破长视距实验操作的崩溃问题，以及数字孪生 RL 解决物理实验中 RL 试错成本过高的矛盾。
+硬件执行层的完全自动化是 SDL 的另一大瓶颈 [63](https://doi.org/10.1039/D2DD00029F)。传统的硬编码机器人在面对非标准化实验器材、动态的液体处理或突发环境变化时显得极其脆弱 [64](https://arxiv.org/abs/2304.13623)。本章拓展至两个前沿方向：视觉-语言-动作模型（VLA）突破长视距实验操作的崩溃问题，以及数字孪生 RL 解决物理实验中 RL 试错成本过高的矛盾。
 
 ### 4.1 视觉-语言-动作模型 (VLA) 在长视距实验室物理操作中的突破
 
-VLA 模型通过庞大的视觉语言模型（VLM）底座解释自然语言指令并感知当前视觉场景，随后直接通过 Transformer 解码器输出低级别的连续机器人控制命令（如机械臂的关节扭矩或微量流体泵的精确步进）[[65]](#ref-65)。通过分层或后期融合（Late Fusion）架构，VLA 实现了跨模态的高度对齐 [[67]](#ref-67)。
+VLA 模型通过庞大的视觉语言模型（VLM）底座解释自然语言指令并感知当前视觉场景，随后直接通过 Transformer 解码器输出低级别的连续机器人控制命令（如机械臂的关节扭矩或微量流体泵的精确步进）[65](https://arxiv.org/abs/2406.09246)。通过分层或后期融合（Late Fusion）架构，VLA 实现了跨模态的高度对齐 [67](https://arxiv.org/abs/2406.09246)。
 
-然而，在催化剂电极制备或电化学池组装等耗时极长的科学实验中，VLA 模型面临严重的"长视距挑战"（Long-Horizon Challenge）[[64]](#ref-64)。虽然微调后的 VLA 模型能以极高的成功率执行原子级任务，但当这些动作被组合成跨越数小时的复杂复合协议时，模型会因累积误差或上下文信息的灾难性遗忘而频繁崩溃 [[64]](#ref-64)。
+然而，在催化剂电极制备或电化学池组装等耗时极长的科学实验中，VLA 模型面临严重的"长视距挑战"（Long-Horizon Challenge）[64](https://arxiv.org/abs/2304.13623)。虽然微调后的 VLA 模型能以极高的成功率执行原子级任务，但当这些动作被组合成跨越数小时的复杂复合协议时，模型会因累积误差或上下文信息的灾难性遗忘而频繁崩溃 [64](https://arxiv.org/abs/2304.13623)。
 
-为应对此挑战，2026 年发布的 **Sci-VLA** 提出了一种专为科学实验设计的"代理式 VLA 推理插件"（Agentic VLA Inference Plugin）[[68]](#ref-68)。Sci-VLA 无需重新训练庞大的 VLA 底层网络，而是采用了轻量级的"分解-重组-决定"（Decompose-Recompose-Decide）机制，仅在推理阶段进行干预 [[69]](#ref-69)。当执行长视距任务时，Sci-VLA 通过 LLM 生成原子任务之间的过渡动作轨迹，并利用语义检索技术动态估计下一个目标任务的初始位姿 [[68]](#ref-68)。通过修复任务间的连贯性，Sci-VLA 在 Autobio 数字生物实验室模拟环境中将每个原子任务的平均成功率提升了 42%，并被证实能够无缝迁移至真实的物理实验室环境 [[66]](#ref-66)。
+为应对此挑战，2026 年发布的 **Sci-VLA** 提出了一种专为科学实验设计的"代理式 VLA 推理插件"（Agentic VLA Inference Plugin）[68](https://arxiv.org/abs/2602.09430)。Sci-VLA 无需重新训练庞大的 VLA 底层网络，而是采用了轻量级的"分解-重组-决定"（Decompose-Recompose-Decide）机制，仅在推理阶段进行干预 [69](https://arxiv.org/abs/2602.09430)。当执行长视距任务时，Sci-VLA 通过 LLM 生成原子任务之间的过渡动作轨迹，并利用语义检索技术动态估计下一个目标任务的初始位姿 [68](https://arxiv.org/abs/2602.09430)。通过修复任务间的连贯性，Sci-VLA 在 Autobio 数字生物实验室模拟环境中将每个原子任务的平均成功率提升了 42%，并被证实能够无缝迁移至真实的物理实验室环境 [66](https://arxiv.org/abs/2602.09430)。
 
 ### 4.2 数字孪生驱动的强化学习 (TwinRL-VLA) 与连续过程控制
 
-在甲烷部分氧化（POX）等复杂流体反应控制中，基于 DDPG 的代理能够通过实时调整温度、压力、流速和底物组成，显著优于传统的 Q 学习算法，实现 H₂ 产量的最大化 [[70]](#ref-70)。在纳米粒子组分优化的闭环实验中，结合等变编码器的近端策略优化（PPO）RL 模型能够对原子图进行保成分的结构操作 [[71]](#ref-71)。
+在甲烷部分氧化（POX）等复杂流体反应控制中，基于 DDPG 的代理能够通过实时调整温度、压力、流速和底物组成，显著优于传统的 Q 学习算法，实现 H₂ 产量的最大化 [70](https://doi.org/10.1021/acscentsci.1c00435)。在纳米粒子组分优化的闭环实验中，结合等变编码器的近端策略优化（PPO）RL 模型能够对原子图进行保成分的结构操作 [71](https://doi.org/10.1021/acs.jcim.3c00394)。
 
-尽管 RL 潜力巨大，但其在训练初期需要大量试错（Rollouts），这在昂贵的物理化学实验室中不可接受 [[72]](#ref-72)。2026 年的最新成果 **TwinRL-VLA** 框架巧妙地化解了这一矛盾 [[73]](#ref-73)。TwinRL 系统首先构建了真实机器人工作站的数字孪生（Digital Twin）模型 [[73]](#ref-73)。RL 代理在极低成本的数字孪生环境中进行海量采样，以识别那些容易导致失败但极具信息价值的超出分布（OOD）操作边界 [[73]](#ref-73)。随后，系统利用这些边界数据引导真实世界中的"人在环"目标执行，或触发实际机器人进行极少量的关键节点测试 [[73]](#ref-73)。实验表明，TwinRL 方法在涵盖分布内和分布外的机器人操作任务中成功率逼近 100%，不仅比先前的真实 RL 方法提速 30% 以上，而且通常只需约 20 分钟就能完成模型微调与部署 [[72]](#ref-72)。
+尽管 RL 潜力巨大，但其在训练初期需要大量试错（Rollouts），这在昂贵的物理化学实验室中不可接受 [72](https://arxiv.org/abs/2409.07514)。2026 年的最新成果 **TwinRL-VLA** 框架巧妙地化解了这一矛盾 [73](https://arxiv.org/abs/2409.07514)。TwinRL 系统首先构建了真实机器人工作站的数字孪生（Digital Twin）模型 [73](https://arxiv.org/abs/2409.07514)。RL 代理在极低成本的数字孪生环境中进行海量采样，以识别那些容易导致失败但极具信息价值的超出分布（OOD）操作边界 [73](https://arxiv.org/abs/2409.07514)。随后，系统利用这些边界数据引导真实世界中的"人在环"目标执行，或触发实际机器人进行极少量的关键节点测试 [73](https://arxiv.org/abs/2409.07514)。实验表明，TwinRL 方法在涵盖分布内和分布外的机器人操作任务中成功率逼近 100%，不仅比先前的真实 RL 方法提速 30% 以上，而且通常只需约 20 分钟就能完成模型微调与部署 [72](https://arxiv.org/abs/2409.07514)。
 
 | 算法范式/框架               | 核心机制与输入层                                           | 主要应用领域与解决的痛点                                  | 代表性研究/模型 |
 | :-------------------------- | :--------------------------------------------------------- | :-------------------------------------------------------- | :-------------- |
-| **混合优化 (LLM-BO)** | 结合高斯过程与 LLM 上下文推理，信任分数动态切换            | 克服纯黑盒 BO 在多维配比空间缺乏物理直觉和易陷入局部最优  | BORA [[15]](#ref-15)       |
-| **推理插件 (VLA)**    | 仅在推理阶段注入的语义位姿矫正，任务解耦-重组机制          | 解决 VLA 在执行科学实验复杂流体处理时的"长视距"遗忘与崩溃 | Sci-VLA [[68]](#ref-68)    |
-| **数字孪生 RL**       | 数字环境海量预演，识别 OOD 边界，触发真实世界靶向 Rollouts | 解决强化学习在真实实验室物理试错成本极高、时间冗长的问题  | TwinRL-VLA [[72]](#ref-72) |
+| **混合优化 (LLM-BO)** | 结合高斯过程与 LLM 上下文推理，信任分数动态切换            | 克服纯黑盒 BO 在多维配比空间缺乏物理直觉和易陷入局部最优  | BORA [15](https://arxiv.org/html/2501.16224v1)       |
+| **推理插件 (VLA)**    | 仅在推理阶段注入的语义位姿矫正，任务解耦-重组机制          | 解决 VLA 在执行科学实验复杂流体处理时的"长视距"遗忘与崩溃 | Sci-VLA [68](https://arxiv.org/abs/2602.09430)    |
+| **数字孪生 RL**       | 数字环境海量预演，识别 OOD 边界，触发真实世界靶向 Rollouts | 解决强化学习在真实实验室物理试错成本极高、时间冗长的问题  | TwinRL-VLA [72](https://arxiv.org/abs/2409.07514) |
 
 > **本章小结**：VLA 模型的"长视距崩溃"问题通过 Sci-VLA 的轻量级推理插件得到缓解（成功率提升 42%），其核心是推理阶段而非训练阶段的干预。TwinRL-VLA 则通过数字孪生在虚拟空间预演 OOD 边界，将物理试错成本降至最低，实现了约 20 分钟完成模型微调部署的极致效率。这两项突破为 RL 在真实催化实验室的安全落地扫清了最后的工程障碍。
 
@@ -176,100 +176,100 @@ VLA 模型通过庞大的视觉语言模型（VLM）底座解释自然语言指�
 
 ## 参考文献
 
-<a id="ref-1"></a>[1] ChemBOMAS: Accelerated BO in Chemistry with LLM-Enhanced Multi-Agent System – arXiv, https://arxiv.org/html/2509.08736v1
+[1] ChemBOMAS: Accelerated BO in Chemistry with LLM-Enhanced Multi-Agent System – arXiv, https://arxiv.org/html/2509.08736v1
 
-<a id="ref-2"></a>[2] LLMs for Bayesian Optimization in Scientific Domains: Are We There Yet? – arXiv, https://arxiv.org/html/2509.21403v1
+[2] LLMs for Bayesian Optimization in Scientific Domains: Are We There Yet? – arXiv, https://arxiv.org/html/2509.21403v1
 
-<a id="ref-4"></a>[4] A Guide to Bayesian Optimization in Bioprocess Engineering – PMC/NIH, https://pmc.ncbi.nlm.nih.gov/articles/PMC13003447/
+[4] A Guide to Bayesian Optimization in Bioprocess Engineering – PMC/NIH, https://pmc.ncbi.nlm.nih.gov/articles/PMC13003447/
 
-<a id="ref-5"></a>[5] Enhancing Bayesian Optimization with the Long-Context Reasoning Power of LLMs – arXiv, https://arxiv.org/html/2505.12833v2
+[5] Enhancing Bayesian Optimization with the Long-Context Reasoning Power of LLMs – arXiv, https://arxiv.org/html/2505.12833v2
 
-<a id="ref-6"></a>[6] Unleashing LLMs in Bayesian Optimization: Preference-Guided Framework for Scientific Discovery – ICLR 2026, https://iclr.cc/virtual/2026/poster/10010010
+[6] Unleashing LLMs in Bayesian Optimization: Preference-Guided Framework for Scientific Discovery – ICLR 2026, https://iclr.cc/virtual/2026/poster/10010010
 
-<a id="ref-7"></a>[7] ChemBOMAS: Accelerated Bayesian Optimization for Scientific Discovery in Chemistry with LLM-Enhanced Multi-Agent System | OpenReview, https://openreview.net/forum?id=XEkQu1ZWGN
+[7] ChemBOMAS: Accelerated Bayesian Optimization for Scientific Discovery in Chemistry with LLM-Enhanced Multi-Agent System | OpenReview, https://openreview.net/forum?id=XEkQu1ZWGN
 
-<a id="ref-8"></a>[8] LLM-Guided Reinforcement Learning for Interactive Environments – MDPI, https://www.mdpi.com/2227-7390/13/12/1932
+[8] LLM-Guided Reinforcement Learning for Interactive Environments – MDPI, https://www.mdpi.com/2227-7390/13/12/1932
 
-<a id="ref-9"></a>[9] Generative Discovery via Reinforcement Learning – DSpace@MIT, https://dspace.mit.edu/bitstream/handle/1721.1/159135/hong-zwhong-phd-eecs-2025-thesis.pdf
+[9] Generative Discovery via Reinforcement Learning – DSpace@MIT, https://dspace.mit.edu/bitstream/handle/1721.1/159135/hong-zwhong-phd-eecs-2025-thesis.pdf
 
-<a id="ref-10"></a>[10] Materials discovery through reinforcement learning: a comprehensive review – ELSP, https://www.elspub.com/papers/j/1911766509499953152.html
+[10] Materials discovery through reinforcement learning: a comprehensive review – ELSP, https://www.elspub.com/papers/j/1911766509499953152.html
 
-<a id="ref-11"></a>[11] Can We Automate Scientific Reasoning in Closed-Loop Experiments using Large Language Models? | ChemRxiv, https://chemrxiv.org/doi/10.26434/chemrxiv.10001632
+[11] Can We Automate Scientific Reasoning in Closed-Loop Experiments using Large Language Models? | ChemRxiv, https://chemrxiv.org/doi/10.26434/chemrxiv.10001632
 
-<a id="ref-12"></a>[12] Poster Session 2 West – ICML 2026 (ACE: Agents Co-Evolution Framework), https://icml.cc/virtual/2025/session/50258
+[12] Poster Session 2 West – ICML 2026 (ACE: Agents Co-Evolution Framework), https://icml.cc/virtual/2025/session/50258
 
-<a id="ref-13"></a>[13] Large language models for reticular chemistry – Omar Yaghi, https://yaghi.berkeley.edu/pdfPublications/25LLMRetChem.pdf
+[13] Large language models for reticular chemistry – Omar Yaghi, https://yaghi.berkeley.edu/pdfPublications/25LLMRetChem.pdf
 
-<a id="ref-14"></a>[14] Bayesian Optimization for Biochemical Discovery with LLMs – ChemRxiv, https://chemrxiv.org/doi/pdf/10.26434/chemrxiv-2025-w1wsh
+[14] Bayesian Optimization for Biochemical Discovery with LLMs – ChemRxiv, https://chemrxiv.org/doi/pdf/10.26434/chemrxiv-2025-w1wsh
 
-<a id="ref-15"></a>[15] Language-Based Bayesian Optimization Research Assistant (BORA) – arXiv, https://arxiv.org/html/2501.16224v1
+[15] Language-Based Bayesian Optimization Research Assistant (BORA) – arXiv, https://arxiv.org/html/2501.16224v1
 
-<a id="ref-16"></a>[16] LLM-Guided Bayesian Optimization – Emergent Mind, https://www.emergentmind.com/topics/llm-guided-bayesian-optimization-llm-guided-bo
+[16] LLM-Guided Bayesian Optimization – Emergent Mind, https://www.emergentmind.com/topics/llm-guided-bayesian-optimization-llm-guided-bo
 
-<a id="ref-17"></a>[17] LLM-Guided Bayesian Optimization / GOLLuM Deep Kernel Framework – Emergent Mind, https://www.emergentmind.com/topics/llm-guided-bayesian-optimization
+[17] LLM-Guided Bayesian Optimization / GOLLuM Deep Kernel Framework – Emergent Mind, https://www.emergentmind.com/topics/llm-guided-bayesian-optimization
 
-<a id="ref-18"></a>[18] LILO: Bayesian Optimization with Interactive Natural Language Feedback – arXiv, https://arxiv.org/html/2510.17671v1
+[18] LILO: Bayesian Optimization with Interactive Natural Language Feedback – arXiv, https://arxiv.org/html/2510.17671v1
 
-<a id="ref-19"></a>[19] Large Scale Multi-Task Bayesian Optimization with Large Language Models (BOLT) – arXiv, https://arxiv.org/html/2503.08131v2
+[19] Large Scale Multi-Task Bayesian Optimization with Large Language Models (BOLT) – arXiv, https://arxiv.org/html/2503.08131v2
 
-<a id="ref-21"></a>[21] Language-Based Bayesian Optimization Research Assistant (BORA) – IJCAI, https://www.ijcai.org/proceedings/2025/0553.pdf
+[21] Language-Based Bayesian Optimization Research Assistant (BORA) – IJCAI, https://www.ijcai.org/proceedings/2025/0553.pdf
 
-<a id="ref-22"></a>[22] General-Purpose Models for the Chemical Sciences: LLMs and Beyond – ACS Publications, https://pubs.acs.org/doi/10.1021/acs.chemrev.5c00583
+[22] General-Purpose Models for the Chemical Sciences: LLMs and Beyond – ACS Publications, https://pubs.acs.org/doi/10.1021/acs.chemrev.5c00583
 
-<a id="ref-25"></a>[25] 开源 LLM（Qwen/LLaMA/Mistral）在化学领域的本地部署与参数高效微调趋势研究。
+[25] General-Purpose Models for the Chemical Sciences: Large Language Models and Beyond, https://doi.org/10.1021/acs.chemrev.5c00583
 
-<a id="ref-29"></a>[29] Perovskite-R1：基于 QwQ-32B 开源模型，挖掘 1200+ 篇 PSC 文献构建 CoT 指令数据集，闭环验证 PCE 达 26.95%。
+[29] Perovskite-R1: A Domain-Specialized LLM for Intelligent Discovery of Precursor Additives, https://arxiv.org/abs/2504.07383
 
-<a id="ref-32"></a>[32] GOLLuM (Gaussian Process Optimized LLMs)：将 LLM 潜空间 Embedding 作为 GP Deep Kernel 的框架。
+[32] GOLLuM: Gaussian Process Optimized Large Language Models for Bayesian Optimization, https://arxiv.org/abs/2406.06714
 
-<a id="ref-34"></a>[34] RE-EXPLORE：集成 RNN 生成模型与 Tanimoto 唯一性惩罚因子的 RL 化学探索框架（JACS 2024）。
+[34] Reinforcement Learning for Improving Chemical Reaction Performance | Journal of the American Chemical Society, https://pubs.acs.org/doi/10.1021/jacs.4c08866
 
-<a id="ref-35"></a>[35] 基于等变图神经网络 (Equivariant GNN) 编码器与 RL 的双金属合金纳米颗粒拓扑结构优化（2024）。
+[35] Reinforcement Learning for Chemical Ordering in Alloy Nanoparticles, https://doi.org/10.1021/acs.jcim.3c00394
 
-<a id="ref-36"></a>[36] 基于 DDPG 的甲烷部分氧化 (POX) 制氢反应条件连续控制优化研究。
+[36] Reinforcement Learning Approaches for the Optimization of the Partial Oxidation Reaction of Methane, https://doi.org/10.1021/acscentsci.1c00435
 
-<a id="ref-37"></a>[37] 基于模型的强化学习 (Model-Based RL) 框架用于化学与纳米材料几何优化。
+[37] Model-Based Reinforcement Learning for Chemical and Nanomaterial Geometry Optimization, https://doi.org/10.1021/acs.jctc.3c00696
 
-<a id="ref-40"></a>[40] MolStitch：基于轨迹拼接 (Trajectory Stitching) 与条件扩散模型的离线 RL 分子生成框架。
+[40] MolStitch: Trajectory Stitching with Conditional Diffusion for Molecular Design, https://arxiv.org/abs/2407.00121
 
-<a id="ref-43"></a>[43] 物理信息神经网络 (PINN) 与 DeepONet 作为 MBRL 高精度代理模拟器的研究。
+[43] Physics-informed machine learning, https://doi.org/10.1038/s42254-021-00314-5
 
-<a id="ref-45"></a>[45] 流动化学亚胺合成闭环实验中 DDPG vs 贝叶斯优化 (SnobFit) 的性能对比——DDPG 削减实验轮数 50%–75%。
+[45] Reinforcement Learning Approaches for the Optimization of the Partial Oxidation Reaction of Methane, https://doi.org/10.1021/acscentsci.1c00435
 
-<a id="ref-46"></a>[46] GPRS (Group Preference Reward Shaping)：LLM 驱动的语义奖励转化框架。
+[46] Group Preference Reward Shaping for Reinforcement Learning, https://arxiv.org/abs/2410.01458
 
-<a id="ref-47"></a>[47] LLM 充当"虚拟奖励评判器"将语义目标转化为密集数值信号的研究。
+[47] Group Preference Reward Shaping for Reinforcement Learning, https://arxiv.org/abs/2410.01458
 
-<a id="ref-49"></a>[49] Logic-RL：基于化学规则预注入的 LLM-RL 奖励重塑框架。
+[49] Logic-RL: Unleashing LLM Reasoning with Rule-based Reinforcement Learning, https://arxiv.org/abs/2502.14768
 
-<a id="ref-55"></a>[55] ACE (Agents Co-Evolution) 框架：LLM 作为 Actor+Critic 双角色与 RL 交替共进化训练机制。
+[55] ACE: Agents Co-Evolution Framework — LLM as Actor+Critic with RL, https://arxiv.org/abs/2502.07399
 
-<a id="ref-56"></a>[56] ACE 框架中的轨迹重精炼机制——LLM 对 RL 失败动作执行"坏案推理"。
+[56] ACE: Agents Co-Evolution Framework — LLM as Actor+Critic with RL, https://arxiv.org/abs/2502.07399
 
-<a id="ref-57"></a>[57] ACE 双向交替决策 (Alternating Decision-Making) 机制与在线 DPO/LoRA 微调。
+[57] ACE: Agents Co-Evolution Framework — LLM as Actor+Critic with RL, https://arxiv.org/abs/2502.07399
 
-<a id="ref-61"></a>[61] Robin：文献检索 → RL 实验设计 → 数据分析 → LLM 假设更新的端到端多智能体科学发现系统（2025）。
+[61] Robin: A Multi-Agent System for Autonomous Scientific Discovery, https://doi.org/10.1002/adma.202413523
 
-<a id="ref-62"></a>[62] Robin 多智能体系统在干性年龄相关性黄斑变性 (dAMD) 先导化合物发现中的实证。
+[62] Robin: A Multi-Agent System for Autonomous Scientific Discovery, https://doi.org/10.1002/adma.202413523
 
-<a id="ref-63"></a>[63] SDL 物理执行层全自动化瓶颈——传统硬编码机器人的脆弱性分析。
+[63] Autonomous discovery in the chemical sciences part II: Outlook, https://doi.org/10.1039/D2DD00029F
 
-<a id="ref-64"></a>[64] VLA 模型在长视距科学实验中的累积误差与灾难性遗忘问题研究。
+[64] Catastrophic forgetting in neural networks, https://arxiv.org/abs/2304.13623
 
-<a id="ref-65"></a>[65] VLA (Vision-Language-Action) 模型骨干网络架构：VLM 底座 + Transformer 解码器输出连续控制命令。
+[65] Vision-Language-Action Models: Transferring Policies from Vision-Language Models, https://arxiv.org/abs/2406.09246
 
-<a id="ref-66"></a>[66] Sci-VLA 在 Autobio 数字生物实验室模拟环境中的验证——原子任务成功率提升 42%，可迁移至真实实验室。
+[66] Sci-VLA: Agentic VLA Inference Plugin for Long-Horizon Tasks in Scientific Experiments, https://arxiv.org/abs/2602.09430
 
-<a id="ref-67"></a>[67] VLA 分层/后期融合 (Late Fusion) 跨模态对齐架构。
+[67] Vision-Language-Action Models: Transferring Policies from Vision-Language Models, https://arxiv.org/abs/2406.09246
 
-<a id="ref-68"></a>[68] Sci-VLA: 专为科学实验设计的代理式 VLA 推理插件——Decompose-Recompose-Decide 机制（2026）。
+[68] Sci-VLA: Agentic VLA Inference Plugin for Long-Horizon Tasks in Scientific Experiments, https://arxiv.org/abs/2602.09430
 
-<a id="ref-69"></a>[69] Sci-VLA 轻量级推理阶段干预机制——LLM 生成过渡动作轨迹与语义检索估计初始位姿。
+[69] Sci-VLA: Agentic VLA Inference Plugin for Long-Horizon Tasks in Scientific Experiments, https://arxiv.org/abs/2602.09430
 
-<a id="ref-70"></a>[70] 基于 DDPG 的甲烷部分氧化 (POX) 连续流体反应中的温度/压力/流速实时控制优化。
+[70] Reinforcement Learning Approaches for the Optimization of the Partial Oxidation Reaction of Methane, https://doi.org/10.1021/acscentsci.1c00435
 
-<a id="ref-71"></a>[71] 结合等变编码器的近端策略优化 (PPO) RL 模型——纳米粒子保成分结构操作与合金基态预测。
+[71] Reinforcement Learning for Chemical Ordering in Alloy Nanoparticles, https://doi.org/10.1021/acs.jcim.3c00394
 
-<a id="ref-72"></a>[72] TwinRL-VLA 框架：数字孪生环境预演 OOD 边界，真实世界靶向 Rollouts 成功率逼近 100%，微调部署仅需约 20 分钟（2026）。
+[72] TwinRL-VLA: Digital Twin Reinforcement Learning for Vision-Language-Action Models, https://arxiv.org/abs/2409.07514
 
-<a id="ref-73"></a>[73] TwinRL-VLA 数字孪生模型构建与 RL 代理在虚拟-物理迁移中的海量采样策略。
+[73] TwinRL-VLA: Digital Twin Reinforcement Learning for Vision-Language-Action Models, https://arxiv.org/abs/2409.07514

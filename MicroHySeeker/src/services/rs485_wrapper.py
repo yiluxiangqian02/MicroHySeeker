@@ -549,7 +549,7 @@ class RS485Wrapper:
 
     def wait_pump_position_done(self, address: int, timeout_s: float = 60.0,
                                  poll_interval_s: float = 0.3,
-                                 decel_timeout_s: float = 10.0) -> bool:
+                                 decel_timeout_s: float = 30.0) -> bool:
         """等待泵位置运动完成
         
         轮询运行状态直到泵停止或超时。适用于需要确认fire_and_forget泵
@@ -567,6 +567,8 @@ class RS485Wrapper:
         import time as _time
         start = _time.time()
         decel_start = None
+        last_enc_pos = None
+        enc_stable_start = None
         while (_time.time() - start) < timeout_s:
             status = self.read_run_status(address)
             if status == 1:  # 停止
@@ -579,8 +581,24 @@ class RS485Wrapper:
                     self.stop_pump(address)
                     _time.sleep(0.2)
                     return True
+                # 减速中超过 1s 时，用编码器确认是否已物理停止
+                # (某些泵控制器状态寄存器不会从 3→1 正确转换)
+                if _time.time() - decel_start > 1.0:
+                    enc_pos = self.read_encoder_position(address)
+                    if enc_pos is not None:
+                        if last_enc_pos is not None and abs(enc_pos - last_enc_pos) < 100:
+                            if enc_stable_start is None:
+                                enc_stable_start = _time.time()
+                            elif _time.time() - enc_stable_start > 0.5:
+                                print(f"ℹ️ RS485Wrapper: 泵 {address} 控制器报减速但编码器已稳定，判定完成")
+                                return True
+                        else:
+                            enc_stable_start = None
+                        last_enc_pos = enc_pos
             else:
                 decel_start = None
+                last_enc_pos = None
+                enc_stable_start = None
             _time.sleep(poll_interval_s)
         print(f"⚠️ RS485Wrapper: 泵 {address} 等待位置完成超时 ({timeout_s}s)")
         return False

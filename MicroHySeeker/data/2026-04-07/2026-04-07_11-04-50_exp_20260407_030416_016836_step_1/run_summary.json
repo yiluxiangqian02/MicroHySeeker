@@ -1,0 +1,120 @@
+{
+  "run_id": "run_20260407_110450",
+  "exp_id": "api_20260407_110450_4281ee",
+  "exp_name": "exp_20260407_030416_016836_step_1",
+  "started_at": "2026-04-07T11:04:50.600917",
+  "finished_at": "2026-04-07T11:05:03.350799",
+  "elapsed_seconds": 12.7,
+  "success": true,
+  "operator": "",
+  "step_results": [
+    {
+      "step_index": 0,
+      "step_id": "step_000",
+      "step_type": "flush",
+      "started_at": "2026-04-07T11:04:50.603918",
+      "finished_at": "2026-04-07T11:05:03.250146",
+      "success": true,
+      "details": "冲洗通道2 2次×5s"
+    }
+  ],
+  "system_snapshot": {
+    "rs485_port": "COM3",
+    "rs485_baudrate": 38400,
+    "mock_mode": false,
+    "data_dir": "./data",
+    "chi_exe_path": "",
+    "pumps_summary": [
+      {
+        "address": 1,
+        "name": "Pump_1",
+        "direction": "FWD",
+        "default_rpm": 120,
+        "ul_per_sec": 0.5
+      },
+      {
+        "address": 2,
+        "name": "Pump_2",
+        "direction": "FWD",
+        "default_rpm": 120,
+        "ul_per_sec": 0.5
+      },
+      {
+        "address": 3,
+        "name": "Pump_3",
+        "direction": "FWD",
+        "default_rpm": 120,
+        "ul_per_sec": 0.5
+      },
+      {
+        "address": 4,
+        "name": "Pump_4",
+        "direction": "FWD",
+        "default_rpm": 120,
+        "ul_per_sec": 0.5
+      },
+      {
+        "address": 5,
+        "name": "Pump_5",
+        "direction": "FWD",
+        "default_rpm": 120,
+        "ul_per_sec": 0.5
+      },
+      {
+        "address": 6,
+        "name": "Pump_6",
+        "direction": "FWD",
+        "default_rpm": 120,
+        "ul_per_sec": 0.5
+      },
+      {
+        "address": 7,
+        "name": "Pump_7",
+        "direction": "FWD",
+        "default_rpm": 120,
+        "ul_per_sec": 0.5
+      },
+      {
+        "address": 8,
+        "name": "Pump_8",
+        "direction": "FWD",
+        "default_rpm": 120,
+        "ul_per_sec": 0.5
+      },
+      {
+        "address": 9,
+        "name": "Pump_9",
+        "direction": "FWD",
+        "default_rpm": 120,
+        "ul_per_sec": 0.5
+      },
+      {
+        "address": 10,
+        "name": "Pump_10",
+        "direction": "FWD",
+        "default_rpm": 120,
+        "ul_per_sec": 0.5
+      },
+      {
+        "address": 11,
+        "name": "Pump_11",
+        "direction": "FWD",
+        "default_rpm": 120,
+        "ul_per_sec": 0.5
+      },
+      {
+        "address": 12,
+        "name": "Pump_12",
+        "direction": "FWD",
+        "default_rpm": 120,
+        "ul_per_sec": 0.5
+      }
+    ],
+    "dilution_channels_count": 4,
+    "flush_channels_count": 3
+  },
+  "errors": [],
+  "warnings": [
+    "  ⚠ 冲洗 泵9 停止后仍在运行，重试 1/3"
+  ]
+}

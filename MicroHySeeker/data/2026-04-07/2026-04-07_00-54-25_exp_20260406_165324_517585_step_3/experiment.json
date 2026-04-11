@@ -1,0 +1,32 @@
+{
+  "_protocol_version": "2.0",
+  "_created_at": "2026-04-07T00:54:25.297812",
+  "_modified_at": "2026-04-07T00:54:25.299821",
+  "_software_version": "1.0.0",
+  "exp_id": "api_20260407_005425_80e219",
+  "exp_name": "exp_20260406_165324_517585_step_3",
+  "description": "",
+  "tags": [],
+  "operator": "",
+  "steps": [
+    {
+      "step_id": "step_000",
+      "step_type": "blank",
+      "pump_address": null,
+      "pump_direction": null,
+      "pump_rpm": null,
+      "volume_ul": null,
+      "duration_s": 2,
+      "transfer_duration": null,
+      "transfer_duration_unit": "s",
+      "prep_sol_params": null,
+      "flush_channel_id": null,
+      "flush_rpm": null,
+      "flush_cycle_duration_s": null,
+      "flush_cycles": 1,
+      "ec_settings": null,
+      "notes": "空白等待 2秒"
+    }
+  ],
+  "notes": ""
+}

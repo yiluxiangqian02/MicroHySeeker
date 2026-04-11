@@ -1,0 +1,23 @@
+{
+  "step_index": 0,
+  "timestamp": "2026-04-07T10:55:41.292892",
+  "total_volume_ul": 10.0,
+  "injection_order": [
+    "Ni(OH)2",
+    "Fe(OH)2"
+  ],
+  "solutions": {
+    "Ni(OH)2": {
+      "volume_ul": 0.05,
+      "target_concentration_M": 0.01,
+      "is_solvent": false,
+      "volume_fraction": 0.005
+    },
+    "Fe(OH)2": {
+      "volume_ul": 9.95,
+      "target_concentration_M": null,
+      "is_solvent": true,
+      "volume_fraction": 0.995
+    }
+  }
+}

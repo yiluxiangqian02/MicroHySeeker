@@ -1,0 +1,111 @@
+{
+  "run_id": "run_20260407_004002",
+  "exp_id": "api_20260407_004002_b1fd7d",
+  "exp_name": "exp_20260406_164000_697747_step_1",
+  "started_at": "2026-04-07T00:40:02.655944",
+  "finished_at": "2026-04-07T00:40:02.659950",
+  "elapsed_seconds": 0.0,
+  "success": false,
+  "operator": "",
+  "step_results": [],
+  "system_snapshot": {
+    "rs485_port": "COM3",
+    "rs485_baudrate": 38400,
+    "mock_mode": false,
+    "data_dir": "./data",
+    "chi_exe_path": "",
+    "pumps_summary": [
+      {
+        "address": 1,
+        "name": "Pump_1",
+        "direction": "FWD",
+        "default_rpm": 120,
+        "ul_per_sec": 0.5
+      },
+      {
+        "address": 2,
+        "name": "Pump_2",
+        "direction": "FWD",
+        "default_rpm": 120,
+        "ul_per_sec": 0.5
+      },
+      {
+        "address": 3,
+        "name": "Pump_3",
+        "direction": "FWD",
+        "default_rpm": 120,
+        "ul_per_sec": 0.5
+      },
+      {
+        "address": 4,
+        "name": "Pump_4",
+        "direction": "FWD",
+        "default_rpm": 120,
+        "ul_per_sec": 0.5
+      },
+      {
+        "address": 5,
+        "name": "Pump_5",
+        "direction": "FWD",
+        "default_rpm": 120,
+        "ul_per_sec": 0.5
+      },
+      {
+        "address": 6,
+        "name": "Pump_6",
+        "direction": "FWD",
+        "default_rpm": 120,
+        "ul_per_sec": 0.5
+      },
+      {
+        "address": 7,
+        "name": "Pump_7",
+        "direction": "FWD",
+        "default_rpm": 120,
+        "ul_per_sec": 0.5
+      },
+      {
+        "address": 8,
+        "name": "Pump_8",
+        "direction": "FWD",
+        "default_rpm": 120,
+        "ul_per_sec": 0.5
+      },
+      {
+        "address": 9,
+        "name": "Pump_9",
+        "direction": "FWD",
+        "default_rpm": 120,
+        "ul_per_sec": 0.5
+      },
+      {
+        "address": 10,
+        "name": "Pump_10",
+        "direction": "FWD",
+        "default_rpm": 120,
+        "ul_per_sec": 0.5
+      },
+      {
+        "address": 11,
+        "name": "Pump_11",
+        "direction": "FWD",
+        "default_rpm": 120,
+        "ul_per_sec": 0.5
+      },
+      {
+        "address": 12,
+        "name": "Pump_12",
+        "direction": "FWD",
+        "default_rpm": 120,
+        "ul_per_sec": 0.5
+      }
+    ],
+    "dilution_channels_count": 4,
+    "flush_channels_count": 3
+  },
+  "errors": [
+    "[预检查失败] RS485 端口未连接。请先在配置中打开串口连接，或切换到 Mock 模式",
+    "[实验] 预检查发现 1 个错误，实验无法启动"
+  ],
+  "warnings": []
+}

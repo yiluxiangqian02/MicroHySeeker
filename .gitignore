@@ -180,3 +180,31 @@ cython_debug/
 .cursorignore
 .cursorindexingignore
 AutoHySeeker/agent_cluster/worktrees/
+
+# ── Temporary / permission-denied directories ──────────────────────────────
+AutoHySeeker/tmp*/
+tmp*/
+
+# ── Large data / experiment output ─────────────────────────────────────────
+data/
+logs/
+*.csv
+*.h5
+*.hdf5
+*.parquet
+*.feather
+*.pkl
+*.pickle
+
+# ── Embedded toolchain (Go SDK, very large) ────────────────────────────────
+AutoHySeeker/.tools/
+
+# ── Hardware SDK binaries ───────────────────────────────────────────────────
+eChemSDL/
+
+# ── VS Code workspace settings (generated per-machine) ─────────────────────
+.vscode/
+
+# ── Agent worktrees ─────────────────────────────────────────────────────────
+agent_worktrees/
+

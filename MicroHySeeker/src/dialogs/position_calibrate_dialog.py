@@ -770,7 +770,7 @@ class PositionCalibrateDialog(QDialog):
         
         # 持久化到文件
         try:
-            self.config.save_to_file(str(Path("./config/system.json")))
+            self.config.save()
         except Exception as e:
             print(f"[Calibrate] 保存配置失败: {e}")
         

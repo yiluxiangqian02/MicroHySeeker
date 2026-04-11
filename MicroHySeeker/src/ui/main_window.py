@@ -6,11 +6,9 @@
 - 右上角组合实验进程指示
 - 日志和步骤进度不同操作类型显示不同颜色
 - 字体统一放大
-- 内嵌 FastAPI HTTP 控制服务（端口 8100，供 AutoHySeeker 远程控制）
 """
 import html
 import json
-import threading
 from PySide6.QtWidgets import (
     QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QSplitter,
     QListWidget, QListWidgetItem, QTextEdit, QPushButton, QLabel, QToolBar, QStatusBar,
@@ -130,9 +128,14 @@ class PumpDiagramWidget(QFrame):
         return ""
     
     def _get_pump_volume_info(self, pump_id: int) -> str:
-        """获取泵的溶液体积信息（剩余量/总量ml），仅配液通道且配置了总量时显示"""
+        """获取泵的溶液体积信息（剩余量/总量ml），配液通道及Inlet泵配置了总量时显示"""
         for ch in self.config.dilution_channels:
             if ch.pump_address == pump_id and ch.total_volume_ml > 0:
+                return f"{ch.remaining_volume_ml:.1f}/{ch.total_volume_ml:.1f}ml"
+        # Inlet 泵也显示体积（Transfer/Outlet 不显示）
+        for ch in self.config.flush_channels:
+            if (ch.pump_address == pump_id and ch.work_type == "Inlet"
+                    and ch.total_volume_ml not in (0, float('inf'))):
                 return f"{ch.remaining_volume_ml:.1f}/{ch.total_volume_ml:.1f}ml"
         return ""
     
@@ -164,10 +167,20 @@ class PumpDiagramWidget(QFrame):
         
         # 查找该泵是否是配液通道且配置了总量
         target_ch = None
+        ch_label = None
         for ch in self.config.dilution_channels:
             if ch.pump_address == pump_id and ch.total_volume_ml > 0:
                 target_ch = ch
+                ch_label = ch.solution_name
                 break
+        # 也检查 Inlet 泵
+        if not target_ch:
+            for ch in self.config.flush_channels:
+                if (ch.pump_address == pump_id and ch.work_type == "Inlet"
+                        and ch.total_volume_ml not in (0, float('inf'))):
+                    target_ch = ch
+                    ch_label = "H2O (Inlet)"
+                    break
         
         if not target_ch:
             return
@@ -184,7 +197,7 @@ class PumpDiagramWidget(QFrame):
         
         menu.addSeparator()
         info_action = menu.addAction(
-            f"📊 {target_ch.solution_name}: "
+            f"📊 {ch_label}: "
             f"{target_ch.remaining_volume_ml:.1f}/{target_ch.total_volume_ml:.1f} mL"
         )
         info_action.setEnabled(False)
@@ -196,7 +209,7 @@ class PumpDiagramWidget(QFrame):
         elif action == custom_action:
             val, ok = QInputDialog.getDouble(
                 self, "添加溶液",
-                f"为 {target_ch.solution_name} 添加的体积 (mL):",
+                f"为 {ch_label} 添加的体积 (mL):",
                 target_ch.total_volume_ml, 0.1, 10000.0, 1
             )
             if ok:
@@ -209,12 +222,7 @@ class PumpDiagramWidget(QFrame):
     def _save_config_and_refresh(self):
         """保存配置并刷新显示"""
         try:
-            import os
-            config_path = os.path.join(
-                os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-                "config.json"
-            )
-            self.config.save_to_file(config_path)
+            self.config.save()
         except Exception:
             pass
         self.update()
@@ -1114,17 +1122,17 @@ class MainWindow(QMainWindow):
         self.runner.volume_updated.connect(self._on_volume_updated)
         self.runner.liquid_level_update.connect(self._on_liquid_level_update)
         self._start_cooldown = False
-
-        # ── HTTP API 服务（供 AutoHySeeker 远程控制，端口 8100） ──────────
-        self._api_bridge = None
-        self._api_thread = None
-        self._start_api_server(port=8100)
         self.hardware_log_message.connect(self._on_log_message)
         self._pump_fault_tracker = PumpFaultTracker()
         # 电化学实时截图定时器 (测量期间捕获CHI660F窗口)
         self._echem_capture_timer = QTimer(self)
         self._echem_capture_timer.timeout.connect(self._capture_chi_window)
         self._echem_capturing = False
+        
+        # 实验计时器 (每秒更新已用时间)
+        self._exp_start_time = 0.0
+        self._exp_elapsed_timer = QTimer(self)
+        self._exp_elapsed_timer.timeout.connect(self._update_elapsed_time)
         
         self._create_menu_bar()
         self._create_toolbar()
@@ -1325,14 +1333,6 @@ class MainWindow(QMainWindow):
         step_layout.addWidget(self.step_list)
         right_layout.addWidget(step_group)
         
-        # AutoHySeeker Agent Dashboard
-        try:
-            from src.ui.widgets.agent_dashboard import AgentDashboardWidget
-            self.agent_dashboard = AgentDashboardWidget()
-            right_layout.addWidget(self.agent_dashboard)
-        except Exception:
-            self.agent_dashboard = None
-        
         # 运行日志 / 通信日志 - 白色背景，可切换
         log_group = QGroupBox(tr("run_log"))
         log_group.setFont(FONT_TITLE)
@@ -1483,8 +1483,31 @@ class MainWindow(QMainWindow):
         self.status_bar.addWidget(QLabel(" | "))
         self.status_bar.addWidget(self.status_chi)
         self.status_bar.addWidget(QLabel(" | "))
+        self.status_elapsed = QLabel("")
+        self.status_bar.addWidget(self.status_elapsed)
         self.status_bar.addPermanentWidget(self.status_exp)
     
+    # === 实验计时 ===
+
+    def _start_elapsed_timer(self):
+        """启动实验计时"""
+        import time as _t
+        self._exp_start_time = _t.time()
+        self.status_elapsed.setText("本次实验已运行 0:00:00")
+        self._exp_elapsed_timer.start(1000)
+
+    def _stop_elapsed_timer(self):
+        """停止实验计时"""
+        self._exp_elapsed_timer.stop()
+
+    def _update_elapsed_time(self):
+        """每秒更新已用时间"""
+        import time as _t
+        elapsed = int(_t.time() - self._exp_start_time)
+        h, rem = divmod(elapsed, 3600)
+        m, s = divmod(rem, 60)
+        self.status_elapsed.setText(f"本次实验已运行 {h}:{m:02d}:{s:02d}")
+
     # === 菜单事件 ===
     
     def _switch_language(self, lang: str):
@@ -1701,11 +1724,21 @@ class MainWindow(QMainWindow):
     def _can_start_experiment(self) -> bool:
         """启动门禁：防止停止中/运行中重入启动"""
         if self._start_cooldown:
-            self.log_message("正在停止上一轮实验，请稍候再开始", "warning")
+            self.log_message(
+                f"正在停止上一轮实验，请稍候再开始 "
+                f"(cooldown={self._start_cooldown}, busy={self.runner.is_busy}, "
+                f"running={self.runner.is_running}, stopping={self.runner.is_stopping})",
+                "warning"
+            )
             self._update_control_buttons()
             return False
         if self.runner.is_busy:
-            self.log_message("实验仍在运行或停止中，无法重复启动", "warning")
+            self.log_message(
+                f"实验仍在运行或停止中，无法重复启动 "
+                f"(running={self.runner.is_running}, stopping={self.runner.is_stopping}, "
+                f"thread={bool(self.runner._thread and self.runner._thread.isRunning())})",
+                "warning"
+            )
             self._update_control_buttons()
             return False
         return True
@@ -1748,6 +1781,10 @@ class MainWindow(QMainWindow):
             return
         self.status_exp.setText(tr("status_running"))
         self.log_message("开始运行单次实验...", "info")
+        self._start_elapsed_timer()
+        # 清除上一轮电化学图表
+        self.process_widget._echem_pixmap = None
+        self.process_widget.update()
         self._update_control_buttons()
     
     def _on_run_combo(self):
@@ -1825,6 +1862,11 @@ class MainWindow(QMainWindow):
             self._update_control_buttons()
             return
         self.status_exp.setText(f"状态: 运行中 (组合 {combo_index + 1}/{self.total_combo_count})")
+        if combo_index == 0:
+            self._start_elapsed_timer()
+            # 清除上一轮电化学图表
+            self.process_widget._echem_pixmap = None
+            self.process_widget.update()
         self._update_control_buttons()
     
     def _apply_param_to_step(self, step, param_name: str, param_value: float):
@@ -1890,6 +1932,7 @@ class MainWindow(QMainWindow):
             self.log_message(f"停止泵异常: {e}", "error")
         
         self.status_exp.setText("状态: 正在停止...")
+        self._stop_elapsed_timer()
         self.log_message("实验已停止", "warning")
         
         # 重置泵状态
@@ -2339,6 +2382,9 @@ class MainWindow(QMainWindow):
     @Slot(bool)
     def _on_experiment_finished(self, success: bool):
         """实验完成"""
+        # 停止计时
+        self._stop_elapsed_timer()
+        
         # 确保停止 CHI 截图
         self._stop_echem_capture()
         self._start_cooldown = False
@@ -2390,6 +2436,11 @@ class MainWindow(QMainWindow):
             if pixmap and not pixmap.isNull():
                 self.process_widget._echem_pixmap = pixmap
                 self.process_widget.update()
+            else:
+                # CHI 窗口未找到或截图失败 → 清除过期截图
+                if self.process_widget._echem_pixmap is not None:
+                    self.process_widget._echem_pixmap = None
+                    self.process_widget.update()
         except Exception as e:
             # 捕获失败时静默处理，不影响测量
             pass
@@ -2454,43 +2505,48 @@ class MainWindow(QMainWindow):
             except Exception as e:
                 print(f"⚠️ 加载上次实验失败: {e}")
     
-    def _start_api_server(self, port: int = 8100) -> None:
-        """在 Qt 主线程中初始化 APIBridge，然后在 daemon 线程中启动 uvicorn。"""
-        try:
-            from src.api.bridge import APIBridge
-            from src.api.server import start_api_server
-
-            self._api_bridge = APIBridge(self.runner, self.config)
-            self._api_thread = threading.Thread(
-                target=start_api_server,
-                args=(self._api_bridge,),
-                kwargs={"port": port},
-                daemon=True,
-                name="MicroHySeeker-API",
-            )
-            self._api_thread.start()
-            _logger.info("API server thread started on port %d", port)
-        except Exception as exc:
-            _logger.warning("Failed to start API server: %s", exc)
-
     def closeEvent(self, event):
         """关闭窗口时自动断开RS485连接并保存实验"""
-        # 停止轮询定时器
-        if hasattr(self, '_chi_status_timer'):
-            self._chi_status_timer.stop()
-        
-        # 保存当前实验
+        import threading
+
+        # 1. 停止所有定时器，防止回调访问已销毁对象
+        for timer_attr in ('_chi_status_timer', '_echem_capture_timer',
+                           '_exp_elapsed_timer', 'anim_timer'):
+            timer = getattr(self, timer_attr, None)
+            if timer is not None:
+                timer.stop()
+
+        # 2. 如果实验正在运行，先请求停止
+        if hasattr(self, 'runner') and self.runner.is_busy:
+            self.runner.stop()
+            # 给 worker 线程一点时间响应停止信号
+            if self.runner._thread and self.runner._thread.isRunning():
+                self.runner._thread.quit()
+                self.runner._thread.wait(2000)  # 最多等 2s
+
+        # 3. 保存当前实验
         self._save_last_experiment()
-        
-        try:
-            from src.services.rs485_wrapper import get_rs485_instance
-            rs485 = get_rs485_instance()
-            rs485.stop_monitoring()
-            if rs485.is_connected():
-                rs485.close_port()
-                print("✅ 已自动断开RS485连接")
-        except Exception as e:
-            print(f"⚠️ 关闭RS485时出错: {e}")
+
+        # 4. RS485 + 日志清理放在后台线程，避免阻塞 UI 导致 Windows "无响应"
+        def _cleanup():
+            try:
+                from src.services.rs485_wrapper import get_rs485_instance
+                rs485 = get_rs485_instance()
+                if rs485.is_connected():
+                    rs485.close_port()
+                    print("✅ 已自动断开RS485连接")
+            except Exception as e:
+                print(f"⚠️ 关闭RS485时出错: {e}")
+            try:
+                from src.services.app_logger import shutdown_logging
+                shutdown_logging()
+            except Exception:
+                pass
+
+        t = threading.Thread(target=_cleanup, daemon=True)
+        t.start()
+        t.join(timeout=3.0)  # 最多等 3s，超时则放弃(daemon 线程进程退出时自动终止)
+
         super().closeEvent(event)
     
     def update_rs485_status(self):

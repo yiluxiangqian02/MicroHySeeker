@@ -3,7 +3,8 @@
 from __future__ import annotations
 
 import logging
-from logging.handlers import RotatingFileHandler
+from datetime import datetime
+from pathlib import Path
 
 from src.common.config import LOG_ROOT
 
@@ -26,10 +27,15 @@ def configure_logging(level: int | str = logging.INFO) -> logging.Logger:
     stream_handler = logging.StreamHandler()
     stream_handler.setFormatter(formatter)
 
-    file_handler = RotatingFileHandler(
-        LOG_ROOT / "autohyseeker.log",
-        maxBytes=2_000_000,
-        backupCount=5,
+    # 按日期文件夹 + web 标识
+    now = datetime.now()
+    date_dir = LOG_ROOT / now.strftime("%Y-%m-%d")
+    date_dir.mkdir(parents=True, exist_ok=True)
+    time_str = now.strftime("%H-%M-%S")
+    log_file = date_dir / f"web_ahs_{time_str}.log"
+
+    file_handler = logging.FileHandler(
+        str(log_file),
         encoding="utf-8",
     )
     file_handler.setFormatter(formatter)

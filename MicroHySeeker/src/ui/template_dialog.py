@@ -337,11 +337,15 @@ class TemplateLibraryDialog(QDialog):
             return
 
         for tpl in templates:
+            tpl_id = tpl.get("id") or tpl.get("template_id", "")
+            tpl_name = tpl.get("name", "（未命名）")
+            if not tpl_id:
+                continue
             tags_str = "  #" + "  #".join(tpl.get("tags", [])) if tpl.get("tags") else ""
             steps_count = len(tpl.get("steps", []))
-            display = f"[{steps_count}步] {tpl['name']}{tags_str}"
+            display = f"[{steps_count}步] {tpl_name}{tags_str}"
             item = QListWidgetItem(display)
-            item.setData(Qt.UserRole, tpl["id"])
+            item.setData(Qt.UserRole, tpl_id)
             item.setFont(_FONT_NORMAL)
             self._list.addItem(item)
 

@@ -1,0 +1,123 @@
+{
+  "run_id": "run_20260409_223236",
+  "exp_id": "",
+  "exp_name": "",
+  "started_at": "2026-04-09T22:32:36.873069",
+  "finished_at": "2026-04-09T22:32:47.656550",
+  "elapsed_seconds": 10.8,
+  "success": false,
+  "operator": "",
+  "step_results": [
+    {
+      "step_index": 0,
+      "step_id": "step_25",
+      "step_type": "prep_sol",
+      "started_at": "2026-04-09T22:32:37.008543",
+      "finished_at": "2026-04-09T22:32:45.322285",
+      "success": false,
+      "details": "prep_sol 执行失败"
+    }
+  ],
+  "system_snapshot": {
+    "rs485_port": "COM3",
+    "rs485_baudrate": 38400,
+    "mock_mode": false,
+    "data_dir": "./data",
+    "chi_exe_path": "",
+    "pumps_summary": [
+      {
+        "address": 1,
+        "name": "Pump_1",
+        "direction": "FWD",
+        "default_rpm": 120,
+        "ul_per_sec": 0.5
+      },
+      {
+        "address": 2,
+        "name": "Pump_2",
+        "direction": "FWD",
+        "default_rpm": 120,
+        "ul_per_sec": 0.5
+      },
+      {
+        "address": 3,
+        "name": "Pump_3",
+        "direction": "FWD",
+        "default_rpm": 120,
+        "ul_per_sec": 0.5
+      },
+      {
+        "address": 4,
+        "name": "Pump_4",
+        "direction": "FWD",
+        "default_rpm": 120,
+        "ul_per_sec": 0.5
+      },
+      {
+        "address": 5,
+        "name": "Pump_5",
+        "direction": "FWD",
+        "default_rpm": 120,
+        "ul_per_sec": 0.5
+      },
+      {
+        "address": 6,
+        "name": "Pump_6",
+        "direction": "FWD",
+        "default_rpm": 120,
+        "ul_per_sec": 0.5
+      },
+      {
+        "address": 7,
+        "name": "Pump_7",
+        "direction": "FWD",
+        "default_rpm": 120,
+        "ul_per_sec": 0.5
+      },
+      {
+        "address": 8,
+        "name": "Pump_8",
+        "direction": "FWD",
+        "default_rpm": 120,
+        "ul_per_sec": 0.5
+      },
+      {
+        "address": 9,
+        "name": "Pump_9",
+        "direction": "FWD",
+        "default_rpm": 120,
+        "ul_per_sec": 0.5
+      },
+      {
+        "address": 10,
+        "name": "Pump_10",
+        "direction": "FWD",
+        "default_rpm": 120,
+        "ul_per_sec": 0.5
+      },
+      {
+        "address": 11,
+        "name": "Pump_11",
+        "direction": "FWD",
+        "default_rpm": 120,
+        "ul_per_sec": 0.5
+      },
+      {
+        "address": 12,
+        "name": "Pump_12",
+        "direction": "FWD",
+        "default_rpm": 120,
+        "ul_per_sec": 0.5
+      }
+    ],
+    "dilution_channels_count": 7,
+    "flush_channels_count": 3
+  },
+  "errors": [
+    "步骤0 [prep_sol] 失败: prep_sol 执行失败",
+    "[步骤0] 执行失败"
+  ],
+  "warnings": [
+    "    ⚠️ 溶剂 H2O 分配体积为 0 (溶质已占满总体积)，该泵不会运行"
+  ]
+}

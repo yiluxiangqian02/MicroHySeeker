@@ -1,0 +1,3 @@
+timestamp,pump_addr,operation,direction,rpm,volume_ul,duration_s,mode,encoder_counts
+2026-04-07T10:55:08.670600,1,prep_sol_inject,FWD,120,0.05,2.1,speed_fallback,0
+2026-04-07T10:55:14.458944,2,prep_sol_inject,FWD,120,9.95,21.9,speed_fallback,0

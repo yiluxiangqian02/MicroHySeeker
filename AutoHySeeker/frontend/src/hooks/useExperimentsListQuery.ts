@@ -5,5 +5,6 @@ export function useExperimentsListQuery() {
   return useQuery({
     queryKey: ['experiments', 'list'],
     queryFn: () => experimentsApi.list(),
+    staleTime: 30_000,
   });
 }

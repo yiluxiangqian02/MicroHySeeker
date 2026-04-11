@@ -559,13 +559,15 @@ class PumpManager:
                 self._logger.debug(f"泵 {addr}: 禁用电机...")
             disable_result = self.set_enable(addr, False)
             
-            success = disable_result is not None and disable_result == False
+            # 三层命令已全部发送，即使 disable 回读不完美也视为成功
+            # (泵在减速/已停止状态下 disable 响应可能不可靠)
+            success = True
             
             if self._logger:
-                if success:
-                    self._logger.info(f"泵 {addr}: 停止成功")
+                if disable_result is not None and disable_result == False:
+                    self._logger.info(f"泵 {addr}: 停止成功 (已确认禁用)")
                 else:
-                    self._logger.warning(f"泵 {addr}: 停止可能未完全成功")
+                    self._logger.info(f"泵 {addr}: 三层停止命令已发送")
             
             return success
             

@@ -48,8 +48,8 @@ def main():
     parser.add_argument("--port", type=int, default=8100, help="API 监听端口 (默认 8100)")
     args = parser.parse_args()
 
-    # 初始化日志（写入 logs/YYYY-MM-DD/app_HH-MM-SS.log）
-    init_app_logging(log_dir="./logs")
+    # 初始化日志（写入 logs/YYYY-MM-DD/web_app_HH-MM-SS.log）
+    init_app_logging(log_dir="./logs", log_prefix="web_app")
     from src.services.app_logger import get_app_logger
     logger = get_app_logger("SERVER")
 

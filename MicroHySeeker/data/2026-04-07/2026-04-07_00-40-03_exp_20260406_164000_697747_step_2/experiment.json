@@ -1,0 +1,32 @@
+{
+  "_protocol_version": "2.0",
+  "_created_at": "2026-04-07T00:40:03.673994",
+  "_modified_at": "2026-04-07T00:40:03.674994",
+  "_software_version": "1.0.0",
+  "exp_id": "api_20260407_004003_26d6f5",
+  "exp_name": "exp_20260406_164000_697747_step_2",
+  "description": "",
+  "tags": [],
+  "operator": "",
+  "steps": [
+    {
+      "step_id": "step_000",
+      "step_type": "flush",
+      "pump_address": 5,
+      "pump_direction": "REV",
+      "pump_rpm": 100,
+      "volume_ul": 1000,
+      "duration_s": null,
+      "transfer_duration": null,
+      "transfer_duration_unit": "s",
+      "prep_sol_params": null,
+      "flush_channel_id": "Inlet",
+      "flush_rpm": 100,
+      "flush_cycle_duration_s": 5,
+      "flush_cycles": 1,
+      "ec_settings": null,
+      "notes": "冲洗进液管路 (泵5/Inlet, 100RPM, 1mL)"
+    }
+  ],
+  "notes": ""
+}

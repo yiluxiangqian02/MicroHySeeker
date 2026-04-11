@@ -64,24 +64,54 @@ def _enum_all_visible_windows() -> List[Tuple[int, str]]:
     return windows
 
 
+def _get_window_process_name(hwnd: int) -> str:
+    """获取窗口所属进程的可执行文件名 (小写)"""
+    import ctypes
+    _kernel32 = ctypes.windll.kernel32
+    pid = wintypes.DWORD()
+    _user32.GetWindowThreadProcessId(hwnd, ctypes.byref(pid))
+    if not pid.value:
+        return ""
+    PROCESS_QUERY_LIMITED_INFORMATION = 0x1000
+    hproc = _kernel32.OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, False, pid.value)
+    if not hproc:
+        return ""
+    try:
+        buf = ctypes.create_unicode_buffer(260)
+        size = wintypes.DWORD(260)
+        if _kernel32.QueryFullProcessImageNameW(hproc, 0, buf, ctypes.byref(size)):
+            import os
+            return os.path.basename(buf.value).lower()
+        return ""
+    finally:
+        _kernel32.CloseHandle(hproc)
+
+
 def find_chi_window() -> Optional[int]:
     """查找 CHI660F 主窗口句柄
     
     搜索策略 (宽松匹配):
     - 标题包含 'CHI660' 或 'CHI 660' 或 'chi660' 或 'CHI1140'
+    - 排除 explorer.exe（文件资源管理器打开 CHI660F 文件夹时的误匹配）
     """
     windows = _enum_all_visible_windows()
     
-    # 优先精确匹配
+    # 优先精确匹配（排除 explorer.exe）
     for hwnd, title in windows:
         upper = title.upper()
         if 'CHI660' in upper or 'CHI 660' in upper or 'CHI1140' in upper:
+            proc = _get_window_process_name(hwnd)
+            if proc and proc == "explorer.exe":
+                continue
             return hwnd
     
-    # 备选: 匹配含 'CHI' 和数字的标题
+    # 备选: 匹配含 'CHI' 和数字的标题（排除 explorer.exe）
     for hwnd, title in windows:
         upper = title.upper()
         if 'CHI' in upper and any(c.isdigit() for c in title):
+            proc = _get_window_process_name(hwnd)
+            if proc and proc == "explorer.exe":
+                continue
             return hwnd
     
     return None

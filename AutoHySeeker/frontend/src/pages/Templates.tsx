@@ -54,7 +54,8 @@ export function Templates() {
       const res = await fetch('/api/templates');
       if (res.ok) {
         const data = await res.json();
-        setTemplates(data);
+        // backend returns template_id, frontend uses id
+        setTemplates(data.map((t: any) => ({ ...t, id: t.template_id ?? t.id })));
       }
     } catch (error) {
       console.error('Failed to fetch templates:', error);

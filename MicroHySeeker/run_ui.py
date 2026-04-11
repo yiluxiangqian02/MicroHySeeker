@@ -48,6 +48,30 @@ def main():
     # 初始化日志系统（应用级，按天轮换到 logs/ 目录，永久保留）
     init_app_logging(log_dir="./logs")
 
+    # 全局异常处理：防止未捕获异常导致程序静默退出
+    import traceback
+    import threading
+    from src.services.app_logger import get_app_logger
+    _crash_logger = get_app_logger("CRASH")
+
+    def _global_excepthook(exc_type, exc_value, exc_tb):
+        """捕获主线程未处理异常，记录到日志后再退出"""
+        msg = "".join(traceback.format_exception(exc_type, exc_value, exc_tb))
+        _crash_logger.critical(f"未捕获异常:\n{msg}")
+        try:
+            shutdown_logging()
+        except Exception:
+            pass
+        sys.__excepthook__(exc_type, exc_value, exc_tb)
+
+    def _thread_excepthook(args):
+        """捕获子线程未处理异常"""
+        msg = "".join(traceback.format_exception(args.exc_type, args.exc_value, args.exc_traceback))
+        _crash_logger.critical(f"线程 {args.thread} 未捕获异常:\n{msg}")
+
+    sys.excepthook = _global_excepthook
+    threading.excepthook = _thread_excepthook
+
     app = QApplication(sys.argv)
     main_window = MainWindow()
     main_window.show()

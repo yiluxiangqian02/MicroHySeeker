@@ -1,0 +1,32 @@
+{
+  "_protocol_version": "2.0",
+  "_created_at": "2026-04-07T00:40:02.654948",
+  "_modified_at": "2026-04-07T00:40:02.655944",
+  "_software_version": "1.0.0",
+  "exp_id": "api_20260407_004002_b1fd7d",
+  "exp_name": "exp_20260406_164000_697747_step_1",
+  "description": "",
+  "tags": [],
+  "operator": "",
+  "steps": [
+    {
+      "step_id": "step_000",
+      "step_type": "transfer",
+      "pump_address": 4,
+      "pump_direction": "FWD",
+      "pump_rpm": 80,
+      "volume_ul": 2000,
+      "duration_s": null,
+      "transfer_duration": null,
+      "transfer_duration_unit": "s",
+      "prep_sol_params": null,
+      "flush_channel_id": null,
+      "flush_rpm": null,
+      "flush_cycle_duration_s": null,
+      "flush_cycles": 1,
+      "ec_settings": null,
+      "notes": "移液到反应杯 (泵4, 80RPM, 2mL)"
+    }
+  ],
+  "notes": ""
+}

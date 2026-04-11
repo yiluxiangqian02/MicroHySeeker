@@ -1,0 +1,32 @@
+{
+  "_protocol_version": "2.0",
+  "_created_at": "2026-04-07T11:05:03.694187",
+  "_modified_at": "2026-04-07T11:05:03.698188",
+  "_software_version": "1.0.0",
+  "exp_id": "api_20260407_110503_6ba2f8",
+  "exp_name": "exp_20260407_030416_016836_step_2",
+  "description": "",
+  "tags": [],
+  "operator": "",
+  "steps": [
+    {
+      "step_id": "step_000",
+      "step_type": "transfer",
+      "pump_address": 9,
+      "pump_direction": "FWD",
+      "pump_rpm": 100,
+      "volume_ul": 10.0,
+      "duration_s": null,
+      "transfer_duration": null,
+      "transfer_duration_unit": "s",
+      "prep_sol_params": null,
+      "flush_channel_id": null,
+      "flush_rpm": null,
+      "flush_cycle_duration_s": null,
+      "flush_cycles": 1,
+      "ec_settings": null,
+      "notes": "移液 pump9 10µL"
+    }
+  ],
+  "notes": ""
+}

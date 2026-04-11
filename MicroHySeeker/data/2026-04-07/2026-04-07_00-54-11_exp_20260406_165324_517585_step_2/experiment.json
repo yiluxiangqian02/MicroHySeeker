@@ -1,0 +1,32 @@
+{
+  "_protocol_version": "2.0",
+  "_created_at": "2026-04-07T00:54:11.118268",
+  "_modified_at": "2026-04-07T00:54:11.119268",
+  "_software_version": "1.0.0",
+  "exp_id": "api_20260407_005411_e68735",
+  "exp_name": "exp_20260406_165324_517585_step_2",
+  "description": "",
+  "tags": [],
+  "operator": "",
+  "steps": [
+    {
+      "step_id": "step_000",
+      "step_type": "flush",
+      "pump_address": 9,
+      "pump_direction": "FWD",
+      "pump_rpm": 100,
+      "volume_ul": 5,
+      "duration_s": null,
+      "transfer_duration": null,
+      "transfer_duration_unit": "s",
+      "prep_sol_params": null,
+      "flush_channel_id": "Inlet",
+      "flush_rpm": 100,
+      "flush_cycle_duration_s": 5,
+      "flush_cycles": 1,
+      "ec_settings": null,
+      "notes": "快速冲洗 (泵9/Inlet, 100RPM, 5uL)"
+    }
+  ],
+  "notes": ""
+}

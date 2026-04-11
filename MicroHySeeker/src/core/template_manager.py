@@ -54,6 +54,7 @@ class TemplateManager:
         Returns:
             保存的完整模板字典。
         """
+        import re
         now = datetime.now().isoformat()
 
         if template_id and self.exists(template_id):
@@ -73,7 +74,25 @@ class TemplateManager:
             "updated_at": now,
         }
 
-        file_path = self.templates_dir / f"{template_id}.json"
+        # 使用模板名称作为文件名（安全化），同时保留 UUID 作为内部 ID
+        safe_name = re.sub(r'[<>:"/\\|?*\x00-\x1f]', '_', name.strip())
+        if not safe_name:
+            safe_name = template_id
+        file_name = safe_name
+
+        # 避免文件名冲突：如果同名文件存在但 ID 不同，追加 ID 后缀
+        target = self.templates_dir / f"{file_name}.json"
+        if target.exists():
+            try:
+                with open(target, "r", encoding="utf-8") as f:
+                    existing_data = json.load(f)
+                existing_id = existing_data.get("id") or existing_data.get("template_id", "")
+                if existing_id and existing_id != template_id:
+                    file_name = f"{safe_name}_{template_id[:8]}"
+            except (json.JSONDecodeError, IOError):
+                file_name = f"{safe_name}_{template_id[:8]}"
+
+        file_path = self.templates_dir / f"{file_name}.json"
         with open(file_path, "w", encoding="utf-8") as f:
             json.dump(template, f, indent=2, ensure_ascii=False)
 
@@ -82,21 +101,35 @@ class TemplateManager:
     def load(self, template_id: str) -> Optional[Dict[str, Any]]:
         """按 ID 加载模板。
 
+        先尝试按文件名 {id}.json 查找，找不到则遍历所有文件匹配 id 字段。
+
         Args:
             template_id: 模板 UUID。
 
         Returns:
             模板字典；未找到则返回 ``None``。
         """
+        # 优先尝试按 ID 直接查找文件
         file_path = self.templates_dir / f"{template_id}.json"
-        if not file_path.exists():
-            return None
+        if file_path.exists():
+            try:
+                with open(file_path, "r", encoding="utf-8") as f:
+                    return json.load(f)
+            except (json.JSONDecodeError, IOError):
+                pass
 
-        try:
-            with open(file_path, "r", encoding="utf-8") as f:
-                return json.load(f)
-        except (json.JSONDecodeError, IOError):
-            return None
+        # 遍历所有文件查找匹配 ID
+        for path in self.templates_dir.glob("*.json"):
+            try:
+                with open(path, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                found_id = data.get("id") or data.get("template_id", "")
+                if found_id == template_id:
+                    return data
+            except (json.JSONDecodeError, IOError):
+                continue
+
+        return None
 
     def list_templates(self) -> List[Dict[str, Any]]:
         """列出所有模板，按 updated_at 倒序排列。
@@ -109,6 +142,9 @@ class TemplateManager:
             try:
                 with open(path, "r", encoding="utf-8") as f:
                     data = json.load(f)
+                # 兼容旧格式：template_id → id
+                if "id" not in data and "template_id" in data:
+                    data["id"] = data["template_id"]
                 templates.append(data)
             except (json.JSONDecodeError, IOError):
                 continue
@@ -125,16 +161,42 @@ class TemplateManager:
         Returns:
             成功删除返回 ``True``；文件不存在返回 ``False``。
         """
+        # 先尝试按 ID 直接查找文件
         file_path = self.templates_dir / f"{template_id}.json"
-        if not file_path.exists():
-            return False
+        if file_path.exists():
+            file_path.unlink()
+            return True
 
-        file_path.unlink()
-        return True
+        # 遍历所有文件查找匹配 ID
+        for path in self.templates_dir.glob("*.json"):
+            try:
+                with open(path, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                found_id = data.get("id") or data.get("template_id", "")
+                if found_id == template_id:
+                    path.unlink()
+                    return True
+            except (json.JSONDecodeError, IOError):
+                continue
+
+        return False
 
     def exists(self, template_id: str) -> bool:
         """检查模板文件是否存在。"""
-        return (self.templates_dir / f"{template_id}.json").exists()
+        # 先按 ID 文件名查找
+        if (self.templates_dir / f"{template_id}.json").exists():
+            return True
+        # 遍历查找
+        for path in self.templates_dir.glob("*.json"):
+            try:
+                with open(path, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                found_id = data.get("id") or data.get("template_id", "")
+                if found_id == template_id:
+                    return True
+            except (json.JSONDecodeError, IOError):
+                continue
+        return False
 
 
 # ---------------------------------------------------------------------------

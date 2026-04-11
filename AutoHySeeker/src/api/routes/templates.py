@@ -6,6 +6,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import List, Optional
 
+import httpx
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 
@@ -13,7 +14,11 @@ from src.common.config import DATA_ROOT
 from src.common.logger import get_logger
 
 logger = get_logger(__name__)
-router = APIRouter()
+router = APIRouter(prefix="/api")
+
+# MHS IPv4 transport factory（transport 不可跨 AsyncClient 复用）
+def _mhs_transport() -> httpx.AsyncHTTPTransport:
+    return httpx.AsyncHTTPTransport(local_address="0.0.0.0")
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -107,6 +112,57 @@ def _delete_template_file(template_id: str) -> None:
 
 
 # ─────────────────────────────────────────────────────────────────────────────
+# MHS 模板同步
+# ─────────────────────────────────────────────────────────────────────────────
+
+async def _fetch_mhs_templates() -> List[ExperimentTemplate]:
+    """从 MicroHySeeker 拉取模板列表（如果 MHS 在线）。"""
+    try:
+        async with httpx.AsyncClient(timeout=5.0, transport=_mhs_transport()) as client:
+            resp = await client.get("http://127.0.0.1:8100/api/template/list")
+            if resp.status_code != 200:
+                return []
+            data = resp.json()
+            summaries = data.get("templates", [])
+            templates: List[ExperimentTemplate] = []
+            for s in summaries:
+                tid = s.get("id", "")
+                if not tid:
+                    continue
+                # 拉取完整模板
+                detail_resp = await client.get(f"http://127.0.0.1:8100/api/template/{tid}")
+                if detail_resp.status_code != 200:
+                    continue
+                tpl = detail_resp.json()
+                # MHS 模板格式转换为 AHS ExperimentTemplate 格式
+                mhs_steps = tpl.get("steps", [])
+                ahs_steps: list = []
+                for step in mhs_steps:
+                    st = step.get("step_type", "blank")
+                    # MHS ProgStep → AHS StepTemplate {step_type, description, params}
+                    ahs_steps.append(StepTemplate(
+                        step_type=st,
+                        description=step.get("notes", "") or st,
+                        params=step,  # 完整的 ProgStep dict 作为 params
+                    ))
+                templates.append(ExperimentTemplate(
+                    template_id=f"mhs_{tid}",
+                    name=tpl.get("name", tid),
+                    description=tpl.get("description", ""),
+                    steps=ahs_steps,
+                    tags=[*(tpl.get("tags", [])), "mhs"],
+                    created_at=tpl.get("created_at", datetime.now().isoformat()),
+                    updated_at=tpl.get("updated_at", datetime.now().isoformat()),
+                ))
+            return templates
+    except (httpx.ConnectError, httpx.TimeoutException, OSError):
+        return []
+    except Exception as exc:
+        logger.warning("MHS template sync failed: %s", exc)
+        return []
+
+
+# ─────────────────────────────────────────────────────────────────────────────
 # API 路由
 # ─────────────────────────────────────────────────────────────────────────────
 
@@ -115,7 +171,7 @@ async def list_templates(
     tag: Optional[str] = None,
     limit: int = 100
 ) -> List[ExperimentTemplate]:
-    """列出所有模板
+    """列出所有模板（本地 + MHS 远程）。
     
     Args:
         tag: 按标签过滤（可选）
@@ -123,11 +179,31 @@ async def list_templates(
     """
     templates_dir = _get_templates_dir()
     templates = []
+    seen_ids: set = set()
     
     for template_file in templates_dir.glob("*.json"):
         try:
             with open(template_file, "r", encoding="utf-8") as f:
                 data = json.load(f)
+            # 兼容 MHS 格式 (id → template_id)
+            if "template_id" not in data and "id" in data:
+                data["template_id"] = data.pop("id")
+            if "template_id" not in data:
+                data["template_id"] = template_file.stem
+            # 兼容 MHS ProgStep 格式 → AHS StepTemplate
+            if data.get("steps") and isinstance(data["steps"], list):
+                converted: list = []
+                for s in data["steps"]:
+                    if "params" not in s:
+                        # MHS flat step → wrap in StepTemplate
+                        converted.append({
+                            "step_type": s.get("step_type", "blank"),
+                            "description": s.get("notes", "") or s.get("step_type", ""),
+                            "params": s,
+                        })
+                    else:
+                        converted.append(s)
+                data["steps"] = converted
             template = ExperimentTemplate(**data)
             
             # 标签过滤
@@ -135,9 +211,22 @@ async def list_templates(
                 continue
             
             templates.append(template)
+            seen_ids.add(template.template_id)
+            # 将 mhs_ 前缀版本也加入去重集合，避免重复显示 MHS 同名模板
+            seen_ids.add(f"mhs_{template.template_id}")
         except Exception as e:
             logger.warning("Failed to load template %s: %s", template_file, e)
             continue
+    
+    # 合并 MHS 模板（去重）
+    mhs_templates = await _fetch_mhs_templates()
+    for mhs_tpl in mhs_templates:
+        if mhs_tpl.template_id in seen_ids:
+            continue
+        if tag and tag not in mhs_tpl.tags:
+            continue
+        templates.append(mhs_tpl)
+        seen_ids.add(mhs_tpl.template_id)
     
     # 按更新时间倒序排序
     templates.sort(key=lambda t: t.updated_at, reverse=True)
@@ -222,38 +311,46 @@ async def instantiate_template(
     exp_name: Optional[str] = None,
     params_override: Optional[dict] = None
 ) -> dict:
-    """从模板实例化实验
-    
+    """从模板实例化实验 — 在实验存储中创建并返回实验。
+
     Args:
         template_id: 模板ID
         exp_name: 实验名称（可选，默认使用模板名称）
         params_override: 参数覆盖（可选）
-    
+
     Returns:
-        实验计划 (ExperimentPlan 格式)
+        包含 experiment_id 和完整实验记录的 dict
     """
     # 加载模板
     template = _load_template(template_id)
-    
-    # 生成实验ID
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    exp_id = f"exp_{timestamp}"
-    
-    # 构建实验计划
-    plan = {
+
+    # 构建步骤列表
+    steps_raw = [step.model_dump() for step in template.steps]
+    if params_override:
+        for i, step in enumerate(steps_raw):
+            if str(i) in params_override:
+                step["params"].update(params_override[str(i)])
+
+    # 通过实验路由创建实验（复用实验存储逻辑）
+    from src.api.routes.experiments import _EXP_STORE, _save_store
+
+    exp_id = f"exp_{datetime.now().strftime('%Y%m%d_%H%M%S_%f')}"
+    record = {
         "exp_id": exp_id,
         "name": exp_name or template.name,
         "description": template.description,
-        "steps": [step.model_dump() for step in template.steps],
+        "steps": steps_raw,
         "tags": template.tags,
+        "category": "test",
+        "status": "created",
+        "created_at": datetime.now().isoformat(),
+        "data": [],
+        "logs": [],
+        "step_progress": [],
         "source_template": template_id,
     }
-    
-    # 应用参数覆盖
-    if params_override:
-        for i, step in enumerate(plan["steps"]):
-            if str(i) in params_override:
-                step["params"].update(params_override[str(i)])
-    
+    _EXP_STORE[exp_id] = record
+    _save_store()
+
     logger.info("Instantiated experiment %s from template %s", exp_id, template_id)
-    return plan
+    return {"experiment_id": exp_id, **record}

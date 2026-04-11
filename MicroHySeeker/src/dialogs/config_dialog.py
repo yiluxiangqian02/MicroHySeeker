@@ -10,10 +10,10 @@ from PySide6.QtWidgets import (
     QDialog, QVBoxLayout, QHBoxLayout, QLabel, QComboBox, QPushButton,
     QTableWidget, QTableWidgetItem, QTabWidget, QWidget, QColorDialog,
     QMessageBox, QSpinBox, QDoubleSpinBox, QHeaderView, QLineEdit,
-    QGroupBox, QFormLayout, QCheckBox
+    QGroupBox, QFormLayout, QCheckBox, QApplication
 )
 from PySide6.QtCore import Qt, Signal
-from PySide6.QtGui import QColor, QFont
+from PySide6.QtGui import QColor, QFont, QCursor
 
 from src.models import SystemConfig, DilutionChannel, FlushChannel
 from src.services.rs485_wrapper import get_rs485_instance
@@ -73,12 +73,18 @@ class ConfigDialog(QDialog):
         conn_layout.addWidget(QLabel("端口:"))
         self.port_combo = QComboBox()
         
-        # 加载实际检测到的串口
-        available_ports = self.rs485.list_available_ports()
+        # 加载实际检测到的串口（带超时保护，避免USB异常时卡死）
+        try:
+            import concurrent.futures
+            with concurrent.futures.ThreadPoolExecutor(max_workers=1) as pool:
+                future = pool.submit(self.rs485.list_available_ports)
+                available_ports = future.result(timeout=3)
+        except Exception:
+            available_ports = []
         if available_ports:
             self.port_combo.addItems(available_ports)
         else:
-            # 如果检测失败，提供默认选项
+            # 如果检测失败/超时，提供默认选项
             self.port_combo.addItems(['COM1', 'COM2', 'COM3', 'COM4', 'COM5'])
         
         conn_layout.addWidget(self.port_combo)
@@ -238,6 +244,7 @@ class ConfigDialog(QDialog):
         self.dilution_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.dilution_table.setFont(FONT_NORMAL)
         self.dilution_table.setMinimumHeight(200)  # 预留约5行通道高度
+        self.dilution_table.itemChanged.connect(self._on_dilution_item_changed)
         layout.addWidget(self.dilution_table, 1)  # stretch=1 让表格占据剩余空间
         
         return widget
@@ -321,9 +328,10 @@ class ConfigDialog(QDialog):
         self.port_combo.setCurrentText(self.config.rs485_port)
         self.baud_combo.setCurrentText(str(self.config.rs485_baudrate))
         
-        # 加载Mock模式状态
+        # 加载Mock模式状态 - 阻止signal触发避免重复操作导致卡顿
+        self.mock_checkbox.blockSignals(True)
         self.mock_checkbox.setChecked(self.config.mock_mode)
-        self.rs485.set_mock_mode(self.config.mock_mode)
+        self.mock_checkbox.blockSignals(False)
         
         self._refresh_dilution_table()
         self._refresh_flush_table()
@@ -338,6 +346,7 @@ class ConfigDialog(QDialog):
     
     def _refresh_dilution_table(self):
         """刷新配液通道表格 - 参数可编辑"""
+        self.dilution_table.blockSignals(True)
         self.dilution_table.setRowCount(len(self.config.dilution_channels))
         
         for row, channel in enumerate(self.config.dilution_channels):
@@ -405,6 +414,15 @@ class ConfigDialog(QDialog):
             color_btn.setStyleSheet(f"background-color: {channel.color}; border: none;")
             color_btn.setFixedSize(60, 25)
             self.dilution_table.setCellWidget(row, 8, color_btn)
+        
+        self.dilution_table.blockSignals(False)
+    
+    def _on_dilution_item_changed(self, item: QTableWidgetItem):
+        """配液通道表格单元格编辑回调 - 用于溶液名称列"""
+        if item.column() == 1:  # 溶液名称列
+            row = item.row()
+            if 0 <= row < len(self.config.dilution_channels):
+                self.config.dilution_channels[row].solution_name = item.text()
     
     def _on_dilution_param_changed(self, row: int, field: str, value):
         """配液通道参数变更"""
@@ -579,22 +597,32 @@ class ConfigDialog(QDialog):
     def _on_flush_volume_changed(self, row: int, line_edit: QLineEdit):
         """冲洗通道原液总量变更 — 支持 inf"""
         if 0 <= row < len(self.config.flush_channels):
+            ch = self.config.flush_channels[row]
             text = line_edit.text().strip().lower()
             if text in ('inf', '∞', ''):
-                self.config.flush_channels[row].total_volume_ml = float('inf')
+                ch.total_volume_ml = float('inf')
+                ch.remaining_volume_ml = 0.0
                 line_edit.setText("inf")
             else:
                 try:
                     val = float(text)
                     if val < 0:
                         QMessageBox.warning(self, "警告", "原液总量不能为负数")
-                        old = self.config.flush_channels[row].total_volume_ml
+                        old = ch.total_volume_ml
                         line_edit.setText("inf" if old == float('inf') else f"{old:.2f}")
                         return
-                    self.config.flush_channels[row].total_volume_ml = val
+                    old_total = ch.total_volume_ml
+                    ch.total_volume_ml = val
+                    # 同步 remaining_volume_ml（首次设置或增大容量时自动补齐）
+                    if old_total in (0, float('inf')) or ch.remaining_volume_ml <= 0:
+                        ch.remaining_volume_ml = val
+                    elif val > old_total:
+                        ch.remaining_volume_ml += (val - old_total)
+                    elif val < ch.remaining_volume_ml:
+                        ch.remaining_volume_ml = val
                 except ValueError:
                     QMessageBox.warning(self, "警告", "请输入有效数字或 inf")
-                    old = self.config.flush_channels[row].total_volume_ml
+                    old = ch.total_volume_ml
                     line_edit.setText("inf" if old == float('inf') else f"{old:.2f}")
     
     def _get_used_pump_addresses(self) -> set:
@@ -707,7 +735,14 @@ class ConfigDialog(QDialog):
         current_port = self.port_combo.currentText()
         self.port_combo.clear()
         
-        available_ports = self.rs485.list_available_ports()
+        try:
+            import concurrent.futures
+            with concurrent.futures.ThreadPoolExecutor(max_workers=1) as pool:
+                future = pool.submit(self.rs485.list_available_ports)
+                available_ports = future.result(timeout=3)
+        except Exception:
+            available_ports = []
+        
         if available_ports:
             self.port_combo.addItems(available_ports)
             # 尝试恢复之前选择的端口
@@ -721,19 +756,25 @@ class ConfigDialog(QDialog):
     
     def _on_connect(self):
         """连接/断开 RS485 - 后端接口调用点"""
-        if self.rs485.is_connected():
-            self.rs485.close_port()
-            self.connect_btn.setText("连接")
-            self.scan_btn.setEnabled(False)
-        else:
-            port = self.port_combo.currentText()
-            baud = int(self.baud_combo.currentText())
-            if self.rs485.open_port(port, baud):
-                self.connect_btn.setText("断开")
-                self.scan_btn.setEnabled(True)
-                QMessageBox.information(self, "成功", f"已连接到 {port}")
+        QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
+        try:
+            if self.rs485.is_connected():
+                self.rs485.close_port()
+                self.connect_btn.setText("连接")
+                self.scan_btn.setEnabled(False)
             else:
-                QMessageBox.critical(self, "错误", f"无法连接到 {port}")
+                port = self.port_combo.currentText()
+                baud = int(self.baud_combo.currentText())
+                if self.rs485.open_port(port, baud):
+                    self.connect_btn.setText("断开")
+                    self.scan_btn.setEnabled(True)
+                    QMessageBox.information(self, "成功", f"已连接到 {port}")
+                else:
+                    QMessageBox.critical(self, "错误", f"无法连接到 {port}")
+        except Exception as e:
+            QMessageBox.critical(self, "错误", f"RS485 操作异常: {e}")
+        finally:
+            QApplication.restoreOverrideCursor()
     
     def _on_scan(self):
         """扫描泵 - 后端接口调用点"""
@@ -741,8 +782,14 @@ class ConfigDialog(QDialog):
             QMessageBox.warning(self, "警告", "串口未连接")
             return
         
-        available = self.rs485.scan_pumps()
-        msg = f"扫描完成，找到泵地址: {available}" if available else "未找到任何泵"
+        QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
+        try:
+            available = self.rs485.scan_pumps()
+            msg = f"扫描完成，找到泵地址: {available}" if available else "未找到任何泵"
+        except Exception as e:
+            msg = f"扫描异常: {e}"
+        finally:
+            QApplication.restoreOverrideCursor()
         QMessageBox.information(self, "扫描结果", msg)
     
     def _on_mock_mode_changed(self, state):
@@ -754,21 +801,34 @@ class ConfigDialog(QDialog):
         port = self.port_combo.currentText()
         baud = int(self.baud_combo.currentText())
         
-        # 设置新模式（这会关闭现有连接）
-        self.rs485.set_mock_mode(is_mock)
-        
-        # 如果之前已连接，需要用新模式重新连接
-        if was_connected:
-            if self.rs485.open_port(port, baud):
-                mode_str = "Mock模式 (模拟)" if is_mock else "真实硬件模式"
-                print(f"✅ 已切换到 {mode_str}")
-                self.connect_btn.setText("断开")
-                self.scan_btn.setEnabled(True)
-            else:
-                self.connect_btn.setText("连接")
-                self.scan_btn.setEnabled(False)
-                mode_str = "Mock模式 (模拟)" if is_mock else "真实硬件模式"
-                QMessageBox.warning(self, "警告", f"切换到{mode_str}后重连失败")
+        QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
+        try:
+            # 先断开旧连接（避免在set_mock_mode内部触发）
+            if was_connected:
+                try:
+                    self.rs485.close_port()
+                except Exception:
+                    pass
+            
+            # 设置新模式
+            self.rs485.set_mock_mode(is_mock)
+            
+            # 如果之前已连接，需要用新模式重新连接
+            if was_connected:
+                if self.rs485.open_port(port, baud):
+                    mode_str = "Mock模式 (模拟)" if is_mock else "真实硬件模式"
+                    print(f"✅ 已切换到 {mode_str}")
+                    self.connect_btn.setText("断开")
+                    self.scan_btn.setEnabled(True)
+                else:
+                    self.connect_btn.setText("连接")
+                    self.scan_btn.setEnabled(False)
+                    mode_str = "Mock模式 (模拟)" if is_mock else "真实硬件模式"
+                    QMessageBox.warning(self, "警告", f"切换到{mode_str}后重连失败")
+        except Exception as e:
+            print(f"❌ Mock模式切换异常: {e}")
+        finally:
+            QApplication.restoreOverrideCursor()
     
     def _on_save(self):
         """保存配置"""
@@ -803,7 +863,7 @@ class ConfigDialog(QDialog):
             all_addrs[addr] = label
         
         # 保存到文件
-        self.config.save_to_file("./config/system.json")
+        self.config.save()
         
         # 保存语言设置
         new_lang = self.lang_combo.currentData()

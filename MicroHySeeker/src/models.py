@@ -94,6 +94,7 @@ class FlushChannel:
     work_type: str = "Transfer"  # Inlet, Transfer, Outlet
     tube_diameter_mm: float = 1.0  # 管道内径 (mm)，用于计算位移和体积
     total_volume_ml: float = float('inf')  # 原液总量 (mL), inf=不限量
+    remaining_volume_ml: float = 0.0  # 剩余量 (mL)，Inlet泵运行时递减
 
     def to_dict(self) -> Dict[str, Any]:
         d = asdict(self)
@@ -104,13 +105,15 @@ class FlushChannel:
 
     @staticmethod
     def from_dict(data: Dict[str, Any]) -> 'FlushChannel':
-        # 向后兼容: 旧配置可能没有tube_diameter_mm / total_volume_ml
+        # 向后兼容: 旧配置可能没有tube_diameter_mm / total_volume_ml / remaining_volume_ml
         data = data.copy()
         if 'tube_diameter_mm' not in data:
             data['tube_diameter_mm'] = 1.0
         # total_volume_ml: None / 缺失 → inf
         if 'total_volume_ml' not in data or data['total_volume_ml'] is None:
             data['total_volume_ml'] = float('inf')
+        if 'remaining_volume_ml' not in data:
+            data['remaining_volume_ml'] = 0.0
         return FlushChannel(**data)
 
 
@@ -458,10 +461,19 @@ class SystemConfig:
         with open(file_path, 'w', encoding='utf-8') as f:
             f.write(self.to_json_str())
 
+    def save(self):
+        """保存配置到加载时的源文件（需先通过 load_from_file 加载）"""
+        if hasattr(self, '_source_path') and self._source_path:
+            self.save_to_file(self._source_path)
+
     @staticmethod
     def load_from_file(file_path: str) -> 'SystemConfig':
         """从 JSON 文件加载配置"""
         if not Path(file_path).exists():
-            return SystemConfig()
+            cfg = SystemConfig()
+            cfg._source_path = str(Path(file_path).resolve())
+            return cfg
         with open(file_path, 'r', encoding='utf-8') as f:
-            return SystemConfig.from_json_str(f.read())
+            cfg = SystemConfig.from_json_str(f.read())
+        cfg._source_path = str(Path(file_path).resolve())
+        return cfg

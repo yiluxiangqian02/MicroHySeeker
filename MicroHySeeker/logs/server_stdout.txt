@@ -1,0 +1,110 @@
+[2026-04-07 11:03:39.582] [INFO   ] [MicroHySeeker] 日志系统已初始化 → logs\2026-04-07\app_11-03-39.log（永久保留，无大小限制）
+[2026-04-07 11:03:39.583] [INFO   ] [MicroHySeeker] 通信日志已初始化 → logs\2026-04-07\comm_11-03-39.log
+[2026-04-07 11:03:44.074] [INFO   ] [MicroHySeeker.SERVER] 配置加载完成: mock_mode=False, auto_connect=True
+🔧 RS485Wrapper: Mock模式 关闭
+✅ LibContext: 创建 PumpManager (mock_mode=False)
+[RS485 INFO] Read loop started
+[RS485 INFO] Opened RS485 port: COM3 @ 38400 bps
+🛡️ RS485Wrapper: 执行连接后安全停泵序列...
+✅ RS485Wrapper: 安全停泵序列完成
+✅ RS485Wrapper: 连接成功 COM3@38400 (Mock=False)
+✅ RS485Wrapper: 自动连接成功 COM3@38400 (真实硬件)
+[2026-04-07 11:03:45.303] [INFO   ] [MicroHySeeker.SERVER] ExperimentRunner 已创建
+[2026-04-07 11:03:45.307] [INFO   ] [MicroHySeeker.SERVER] API 服务已启动: http://0.0.0.0:8100
+✅ MicroHySeeker 无头服务已启动: http://0.0.0.0:8100
+   日志保存位置: logs/ 目录
+   按 Ctrl+C 退出
+[2026-04-07 11:04:16.088] [INFO   ] [MicroHySeeker.RUNNER] [实验] 预检查通过，开始执行 1 个步骤
+[2026-04-07 11:04:16.089] [INFO   ] [MicroHySeeker.RUNNER] [步骤0] 开始执行: prep_sol
+[2026-04-07 11:04:16.089] [INFO   ] [MicroHySeeker.RUNNER]   配液: Ni(OH)2:0.010M, Fe(OH)2(溶剂), 注液顺序['Ni(OH)2', 'Fe(OH)2'], 总体积10.00uL
+[2026-04-07 11:04:16.089] [INFO   ] [MicroHySeeker.RUNNER]     ⚠ 泵 1 (Ni(OH)2) 无位置校准，回退 RPM 时间模式 (0.1s @ 120RPM)
+[2026-04-07 11:04:16.090] [INFO   ] [MicroHySeeker.RUNNER]     ⚠ 泵 2 (Fe(OH)2) 无位置校准，回退 RPM 时间模式 (19.9s @ 120RPM)
+[2026-04-07 11:04:16.090] [INFO   ] [MicroHySeeker.RUNNER]     批次 1: Ni(OH)2 (同时注入)
+[2026-04-07 11:04:16.090] [INFO   ] [MicroHySeeker.RUNNER]     批次 2: Fe(OH)2 (同时注入)
+[2026-04-07 11:04:16.090] [INFO   ] [MicroHySeeker.RUNNER]     注入 Ni(OH)2: 0.05uL, 泵1 RPM时间模式, 120RPM, 预计2.1s
+✅ RS485Wrapper: 泵 1 启动成功 FWD 120RPM
+📊 RS485Wrapper: 泵 1 运行状态 = 加速中
+📊 RS485Wrapper: 泵 1 编码器位置 = -18583753 (-1134.262圈)
+📊 RS485Wrapper: 泵 1 编码器位置 = -18574423 (-1133.693圈)
+[2026-04-07 11:04:17.127] [INFO   ] [MicroHySeeker.RUNNER]     等待批次 1 完成... (2.1s)
+📊 RS485Wrapper: 泵 1 运行状态 = 全速运行
+✅ RS485Wrapper: 泵 1 停止成功
+📊 RS485Wrapper: 泵 1 运行状态 = 减速中
+[2026-04-07 11:04:19.803] [WARNING] [MicroHySeeker.RUNNER]   ⚠ prep_sol Ni(OH)2 泵1 停止后仍在运行，重试 1/3
+✅ RS485Wrapper: 泵 1 停止成功
+📊 RS485Wrapper: 泵 1 运行状态 = 减速中
+[2026-04-07 11:04:20.393] [WARNING] [MicroHySeeker.RUNNER]   ⚠ prep_sol Ni(OH)2 泵1 停止后仍在运行，重试 2/3
+❌ RS485Wrapper: 泵 1 停止失败
+📊 RS485Wrapper: 泵 1 运行状态 = 停止
+📊 RS485Wrapper: 泵 1 编码器位置 = -18474547 (-1127.597圈)
+📊 RS485Wrapper: 泵 1 编码器位置 = -18474548 (-1127.597圈)
+[2026-04-07 11:04:21.338] [INFO   ] [MicroHySeeker.RUNNER]     ✓ Ni(OH)2 注入完成 (0.05uL)
+[2026-04-07 11:04:21.839] [INFO   ] [MicroHySeeker.RUNNER]     注入 Fe(OH)2(溶剂): 9.95uL, 泵2 RPM时间模式, 120RPM, 预计21.9s
+✅ RS485Wrapper: 泵 2 启动成功 FWD 120RPM
+📊 RS485Wrapper: 泵 2 运行状态 = 加速中
+📊 RS485Wrapper: 泵 2 编码器位置 = -11225791 (-685.168圈)
+📊 RS485Wrapper: 泵 2 编码器位置 = -11216476 (-684.599圈)
+[2026-04-07 11:04:22.879] [INFO   ] [MicroHySeeker.RUNNER]     等待批次 2 完成... (21.9s)
+📊 RS485Wrapper: 泵 2 运行状态 = 全速运行
+📊 RS485Wrapper: 泵 2 运行状态 = 全速运行
+📊 RS485Wrapper: 泵 2 运行状态 = 全速运行
+📊 RS485Wrapper: 泵 2 运行状态 = 全速运行
+📊 RS485Wrapper: 泵 2 运行状态 = 全速运行
+📊 RS485Wrapper: 泵 2 运行状态 = 全速运行
+📊 RS485Wrapper: 泵 2 运行状态 = 全速运行
+📊 RS485Wrapper: 泵 2 运行状态 = 全速运行
+📊 RS485Wrapper: 泵 2 运行状态 = 全速运行
+📊 RS485Wrapper: 泵 2 运行状态 = 全速运行
+📊 RS485Wrapper: 泵 2 运行状态 = 全速运行
+📊 RS485Wrapper: 泵 2 运行状态 = 全速运行
+📊 RS485Wrapper: 泵 2 运行状态 = 全速运行
+📊 RS485Wrapper: 泵 2 运行状态 = 全速运行
+✅ RS485Wrapper: 泵 2 停止成功
+📊 RS485Wrapper: 泵 2 运行状态 = 减速中
+[2026-04-07 11:04:47.721] [WARNING] [MicroHySeeker.RUNNER]   ⚠ prep_sol Fe(OH)2 泵2 停止后仍在运行，重试 1/3
+✅ RS485Wrapper: 泵 2 停止成功
+📊 RS485Wrapper: 泵 2 运行状态 = 减速中
+[2026-04-07 11:04:48.309] [WARNING] [MicroHySeeker.RUNNER]   ⚠ prep_sol Fe(OH)2 泵2 停止后仍在运行，重试 2/3
+❌ RS485Wrapper: 泵 2 停止失败
+📊 RS485Wrapper: 泵 2 运行状态 = 停止
+📊 RS485Wrapper: 泵 2 编码器位置 = -10385980 (-633.910圈)
+📊 RS485Wrapper: 泵 2 编码器位置 = -10385981 (-633.910圈)
+[2026-04-07 11:04:49.255] [INFO   ] [MicroHySeeker.RUNNER]     ✓ Fe(OH)2 注入完成 (9.95uL)
+[2026-04-07 11:04:49.757] [INFO   ] [MicroHySeeker.RUNNER]   配液完成
+[2026-04-07 11:04:49.878] [INFO   ] [MicroHySeeker.RUNNER] [实验] 成功完成
+[2026-04-07 11:04:50.602] [INFO   ] [MicroHySeeker.RUNNER] [实验] 预检查通过，开始执行 1 个步骤
+[2026-04-07 11:04:50.603] [INFO   ] [MicroHySeeker.RUNNER] [步骤0] 开始执行: flush
+[2026-04-07 11:04:50.603] [INFO   ] [MicroHySeeker.RUNNER]   冲洗: 泵9 RPM时间模式(无位置校准), 4.17μL (0.00mL), 100RPM, 预计10.3s
+✅ RS485Wrapper: 泵 9 堵转检查通过 (状态正常)
+✅ RS485Wrapper: 泵 9 启动成功 FWD 100RPM
+📊 RS485Wrapper: 泵 9 运行状态 = 加速中
+📊 RS485Wrapper: 泵 9 编码器位置 = 14715535 (898.165圈)
+📊 RS485Wrapper: 泵 9 编码器位置 = 14724538 (898.714圈)
+[2026-04-07 11:04:51.716] [INFO   ] [MicroHySeeker.RUNNER]   ✓ 泵9 物理运转已确认(编码器+状态)
+✅ RS485Wrapper: 泵 9 停止成功
+📊 RS485Wrapper: 泵 9 运行状态 = 减速中
+[2026-04-07 11:05:02.457] [WARNING] [MicroHySeeker.RUNNER]   ⚠ 冲洗 泵9 停止后仍在运行，重试 1/3
+✅ RS485Wrapper: 泵 9 停止成功
+📊 RS485Wrapper: 泵 9 运行状态 = 停止
+📊 RS485Wrapper: 泵 9 编码器位置 = 15026963 (917.173圈)
+📊 RS485Wrapper: 泵 9 编码器位置 = 15026918 (917.170圈)
+[2026-04-07 11:05:03.249] [INFO   ] [MicroHySeeker.RUNNER]   ✓ 冲洗 完成 (0.00mL)
+[2026-04-07 11:05:03.358] [INFO   ] [MicroHySeeker.RUNNER] [实验] 成功完成
+[2026-04-07 11:05:03.701] [INFO   ] [MicroHySeeker.RUNNER] [实验] 预检查通过，开始执行 1 个步骤
+[2026-04-07 11:05:03.702] [INFO   ] [MicroHySeeker.RUNNER] [步骤0] 开始执行: transfer
+[2026-04-07 11:05:03.702] [INFO   ] [MicroHySeeker.RUNNER]   移液: 泵9 RPM时间模式(无位置校准), 10.00μL (0.01mL), 100RPM, 预计22.0s
+✅ RS485Wrapper: 泵 9 堵转检查通过 (状态正常)
+✅ RS485Wrapper: 泵 9 启动成功 FWD 100RPM
+📊 RS485Wrapper: 泵 9 运行状态 = 加速中
+📊 RS485Wrapper: 泵 9 编码器位置 = 15032974 (917.540圈)
+📊 RS485Wrapper: 泵 9 编码器位置 = 15042059 (918.094圈)
+[2026-04-07 11:05:04.818] [INFO   ] [MicroHySeeker.RUNNER]   ✓ 泵9 物理运转已确认(编码器+状态)
+✅ RS485Wrapper: 泵 9 停止成功
+📊 RS485Wrapper: 泵 9 运行状态 = 减速中
+[2026-04-07 11:05:27.234] [WARNING] [MicroHySeeker.RUNNER]   ⚠ 移液 泵9 停止后仍在运行，重试 1/3
+✅ RS485Wrapper: 泵 9 停止成功
+📊 RS485Wrapper: 泵 9 运行状态 = 停止
+📊 RS485Wrapper: 泵 9 编码器位置 = 15665487 (956.145圈)
+📊 RS485Wrapper: 泵 9 编码器位置 = 15665393 (956.140圈)
+[2026-04-07 11:05:28.028] [INFO   ] [MicroHySeeker.RUNNER]   ✓ 移液 完成 (0.01mL)
+[2026-04-07 11:05:28.140] [INFO   ] [MicroHySeeker.RUNNER] [实验] 成功完成

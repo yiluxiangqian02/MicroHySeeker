@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSystemConfigStore } from '@/stores/systemConfigStore';
 
 import {
   Activity,
@@ -116,6 +117,7 @@ export function Overview() {
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [showExperimentSelector, setShowExperimentSelector] = useState(false);
   const [showKnowledgeChat, setShowKnowledgeChat] = useState(false);
+  const mhsStatus = useSystemConfigStore((s) => s.mhsStatus);
 
   useEffect(() => {
     fetchOverviewData();
@@ -415,9 +417,15 @@ export function Overview() {
             <div>
               <p className="text-sm text-gray-600">{t('overview.microhyseeker')}</p>
               <div className="mt-2 flex items-center">
-                <div className={`h-3 w-3 rounded-full ${systemStatus.microhyseeker ? 'bg-green-500' : 'bg-red-500'}`} />
-                <span className="ml-2 text-sm font-medium">{systemStatus.microhyseeker ? t('overview.connected') : t('overview.disconnected')}</span>
+                <div className={`h-3 w-3 rounded-full ${mhsStatus.online ? 'bg-green-500' : 'bg-red-500'}`} />
+                <span className="ml-2 text-sm font-medium">{mhsStatus.online ? t('overview.connected') : t('overview.disconnected')}</span>
               </div>
+              {mhsStatus.online && (
+                <div className="mt-1 flex items-center gap-2 text-xs text-slate-500">
+                  <span>RS485: {mhsStatus.connected ? '✓' : '✗'}</span>
+                  {mhsStatus.mock_mode && <span className="rounded bg-amber-100 px-1 text-amber-700">Mock</span>}
+                </div>
+              )}
             </div>
             <Activity className="h-8 w-8 text-green-500" />
           </div>

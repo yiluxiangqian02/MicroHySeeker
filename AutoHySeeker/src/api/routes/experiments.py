@@ -15,7 +15,9 @@ from fastapi import APIRouter, HTTPException, Path as PathParam
 from pydantic import BaseModel, Field
 
 # MicroHySeeker uvicorn 在 Windows 上使用 anyio IPv6 可能不兼容，此 transport 强制 IPv4
-_MHS_TRANSPORT = httpx.AsyncHTTPTransport(local_address="0.0.0.0")
+# transport 不可跨 AsyncClient 复用，每次调用创建新实例
+def _mhs_transport() -> httpx.AsyncHTTPTransport:
+    return httpx.AsyncHTTPTransport(local_address="0.0.0.0")
 
 logger = logging.getLogger(__name__)
 
@@ -173,7 +175,7 @@ async def _ensure_mhs_ready(rs: "_RunState") -> bool:
         False — MHS 离线或连接失败
     """
     try:
-        async with httpx.AsyncClient(timeout=5.0, transport=_MHS_TRANSPORT) as client:
+        async with httpx.AsyncClient(timeout=5.0, transport=_mhs_transport()) as client:
             # 1) 查询连接状态
             resp = await client.get("http://127.0.0.1:8100/api/device/connection")
             if resp.status_code != 200:
@@ -359,7 +361,7 @@ async def _forward_step_to_mhs(
         "offline"  — MHS 离线，未转发
     """
     try:
-        async with httpx.AsyncClient(timeout=10.0, transport=_MHS_TRANSPORT) as client:
+        async with httpx.AsyncClient(timeout=10.0, transport=_mhs_transport()) as client:
             resp = await client.post(
                 "http://127.0.0.1:8100/api/experiment/start",
                 json={
@@ -375,7 +377,7 @@ async def _forward_step_to_mhs(
                 for _ in range(300):
                     if rs.cancelled:
                         try:
-                            async with httpx.AsyncClient(timeout=5.0, transport=_MHS_TRANSPORT) as stop_c:
+                            async with httpx.AsyncClient(timeout=5.0, transport=_mhs_transport()) as stop_c:
                                 await stop_c.post(
                                     "http://127.0.0.1:8100/api/experiment/stop",
                                     json={},
@@ -385,7 +387,7 @@ async def _forward_step_to_mhs(
                         return "success"
                     await asyncio.sleep(1)
                     try:
-                        async with httpx.AsyncClient(timeout=5.0, transport=_MHS_TRANSPORT) as poll_c:
+                        async with httpx.AsyncClient(timeout=5.0, transport=_mhs_transport()) as poll_c:
                             status_resp = await poll_c.get(
                                 "http://127.0.0.1:8100/api/experiment/status"
                             )
@@ -601,7 +603,7 @@ async def execute_experiment(
     # 本地模拟。这样可以正确追踪每步状态和完成情况。
     exp["execution_source"] = "local"
     _save_store()
-    asyncio.get_event_loop().create_task(_execute_local(exp_id))
+    asyncio.create_task(_execute_local(exp_id))
 
     return {
         "status": "started",
@@ -628,7 +630,7 @@ async def stop_experiment(
         rs.log("warn", "收到停止指令")
 
     try:
-        async with httpx.AsyncClient(timeout=5.0, transport=_MHS_TRANSPORT) as client:
+        async with httpx.AsyncClient(timeout=5.0, transport=_mhs_transport()) as client:
             await client.post(
                 "http://127.0.0.1:8100/api/experiment/stop",
                 json={"exp_id": exp_id},

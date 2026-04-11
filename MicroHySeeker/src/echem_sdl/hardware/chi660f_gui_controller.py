@@ -1298,6 +1298,11 @@ class CHI660FController:
             time.sleep(1.0)
             elapsed = time.time() - start
             
+            # 检查外部停止请求 (stop_experiment() 会设置 _is_running = False)
+            if not self._is_running:
+                logger.info(f"实验已被外部停止，退出等待 ({elapsed:.1f}s)")
+                return False
+            
             # 检查错误对话框 (包括 Link failed 检测)
             if self._dismiss_error_dialogs(capture_link_failed=True):
                 logger.error("实验执行时检测到 Link failed - 仪器未连接")

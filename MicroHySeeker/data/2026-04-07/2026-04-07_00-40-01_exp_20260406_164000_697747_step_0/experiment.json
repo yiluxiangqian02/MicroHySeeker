@@ -1,0 +1,56 @@
+{
+  "_protocol_version": "2.0",
+  "_created_at": "2026-04-07T00:40:01.573334",
+  "_modified_at": "2026-04-07T00:40:01.621332",
+  "_software_version": "1.0.0",
+  "exp_id": "api_20260407_004001_cdeb1b",
+  "exp_name": "exp_20260406_164000_697747_step_0",
+  "description": "",
+  "tags": [],
+  "operator": "",
+  "steps": [
+    {
+      "step_id": "step_000",
+      "step_type": "prep_sol",
+      "pump_address": null,
+      "pump_direction": null,
+      "pump_rpm": null,
+      "volume_ul": null,
+      "duration_s": null,
+      "transfer_duration": null,
+      "transfer_duration_unit": "s",
+      "prep_sol_params": {
+        "target_concentration": 0.0,
+        "is_solvent": false,
+        "injection_order": [
+          "fe",
+          "h2o"
+        ],
+        "total_volume_ul": 2000,
+        "target_concentrations": {
+          "fe": 0.1,
+          "h2o": 0
+        },
+        "solvent_flags": {
+          "fe": false,
+          "h2o": true
+        },
+        "selected_solutions": {
+          "fe": true,
+          "h2o": true
+        },
+        "injection_order_numbers": {
+          "fe": 1,
+          "h2o": 2
+        }
+      },
+      "flush_channel_id": null,
+      "flush_rpm": null,
+      "flush_cycle_duration_s": null,
+      "flush_cycles": 1,
+      "ec_settings": null,
+      "notes": "配液: fe(0.1M) + h2o(溶剂), 2mL"
+    }
+  ],
+  "notes": ""
+}

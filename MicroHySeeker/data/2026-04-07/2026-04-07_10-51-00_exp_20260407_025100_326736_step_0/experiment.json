@@ -1,0 +1,56 @@
+{
+  "_protocol_version": "2.0",
+  "_created_at": "2026-04-07T10:51:00.513515",
+  "_modified_at": "2026-04-07T10:51:00.619342",
+  "_software_version": "1.0.0",
+  "exp_id": "api_20260407_105100_add3fb",
+  "exp_name": "exp_20260407_025100_326736_step_0",
+  "description": "",
+  "tags": [],
+  "operator": "",
+  "steps": [
+    {
+      "step_id": "step_000",
+      "step_type": "prep_sol",
+      "pump_address": null,
+      "pump_direction": null,
+      "pump_rpm": null,
+      "volume_ul": null,
+      "duration_s": null,
+      "transfer_duration": null,
+      "transfer_duration_unit": "s",
+      "prep_sol_params": {
+        "target_concentration": 0.0,
+        "is_solvent": false,
+        "injection_order": [
+          "fe",
+          "H2O"
+        ],
+        "total_volume_ul": 10.0,
+        "target_concentrations": {
+          "H2O": 0.0,
+          "fe": 0.01
+        },
+        "solvent_flags": {
+          "H2O": true,
+          "fe": false
+        },
+        "selected_solutions": {
+          "H2O": true,
+          "fe": true
+        },
+        "injection_order_numbers": {
+          "H2O": 2,
+          "fe": 1
+        }
+      },
+      "flush_channel_id": null,
+      "flush_rpm": null,
+      "flush_cycle_duration_s": null,
+      "flush_cycles": 1,
+      "ec_settings": null,
+      "notes": "配液 fe 10µL"
+    }
+  ],
+  "notes": ""
+}

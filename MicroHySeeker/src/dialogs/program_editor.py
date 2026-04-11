@@ -39,6 +39,16 @@ STEP_TYPE_NAMES = {
     ProgramStepType.EVACUATE: "排空",
 }
 
+# 步骤类型颜色映射 - 与主窗口一致
+STEP_TYPE_COLORS = {
+    ProgramStepType.TRANSFER: "#2196F3",   # 蓝色 - 移液
+    ProgramStepType.PREP_SOL: "#4CAF50",   # 绿色 - 配液
+    ProgramStepType.FLUSH: "#FF9800",      # 橙色 - 冲洗
+    ProgramStepType.ECHEM: "#9C27B0",      # 紫色 - 电化学
+    ProgramStepType.BLANK: "#607D8B",      # 灰色 - 空白
+    ProgramStepType.EVACUATE: "#795548",   # 棕色 - 排空
+}
+
 
 class ProgramEditorDialog(QDialog):
     """
@@ -105,6 +115,15 @@ class ProgramEditorDialog(QDialog):
         down_btn = QPushButton("下移")
         down_btn.clicked.connect(self._on_move_down)
         btn_layout.addWidget(down_btn)
+        
+        top_btn = QPushButton("置顶")
+        top_btn.clicked.connect(self._on_move_to_top)
+        btn_layout.addWidget(top_btn)
+        
+        del_all_btn = QPushButton("全删")
+        del_all_btn.setStyleSheet("color: #f44336;")
+        del_all_btn.clicked.connect(self._on_delete_all_steps)
+        btn_layout.addWidget(del_all_btn)
         
         left_layout.addLayout(btn_layout)
         left_widget.setFixedWidth(300)
@@ -290,13 +309,13 @@ class ProgramEditorDialog(QDialog):
         
         self.tf_rpm_spin = QSpinBox()
         self.tf_rpm_spin.setRange(1, 300)
-        self.tf_rpm_spin.setValue(100)
+        self.tf_rpm_spin.setValue(200)
         layout.addRow("转速(RPM):", self.tf_rpm_spin)
         
         self.tf_vol_spin = QDoubleSpinBox()
         self.tf_vol_spin.setRange(0, 10000)
         self.tf_vol_spin.setDecimals(2)
-        self.tf_vol_spin.setValue(5.00)
+        self.tf_vol_spin.setValue(100.00)
         self.tf_vol_spin.setSuffix(" mL")
         layout.addRow("体积(mL):", self.tf_vol_spin)
         
@@ -333,7 +352,7 @@ class ProgramEditorDialog(QDialog):
         self.ps_vol_spin = QDoubleSpinBox()
         self.ps_vol_spin.setRange(0, 1000)
         self.ps_vol_spin.setDecimals(2)
-        self.ps_vol_spin.setValue(100.00)  # 默认100mL
+        self.ps_vol_spin.setValue(80.00)  # 默认80mL
         param_layout.addRow("总体积(mL):", self.ps_vol_spin)
         
         layout.addWidget(param_group)
@@ -504,13 +523,13 @@ class ProgramEditorDialog(QDialog):
         
         self.fl_rpm_spin = QSpinBox()
         self.fl_rpm_spin.setRange(1, 300)
-        self.fl_rpm_spin.setValue(100)
+        self.fl_rpm_spin.setValue(200)
         layout.addRow("转速(RPM):", self.fl_rpm_spin)
         
         self.fl_vol_spin = QDoubleSpinBox()
         self.fl_vol_spin.setRange(0, 10000)
         self.fl_vol_spin.setDecimals(2)
-        self.fl_vol_spin.setValue(10.00)
+        self.fl_vol_spin.setValue(90.00)
         self.fl_vol_spin.setSuffix(" mL")
         layout.addRow("体积(mL):", self.fl_vol_spin)
         
@@ -603,9 +622,11 @@ class ProgramEditorDialog(QDialog):
         self.ec_segments_spin = QSpinBox(); self.ec_segments_spin.setRange(1,100); self.ec_segments_spin.setValue(2)
         cv_lay.addWidget(self.ec_segments_spin, 3, 1)
         cv_lay.addWidget(QLabel("灵敏度(A/V):"), 3, 2)
-        self.ec_sensitivity_edit = QLineEdit("1e-1")
-        self.ec_sensitivity_edit.setToolTip("科学计数法，如 1e-1, 1e-3, 1e-6")
-        self.ec_sensitivity_edit.setPlaceholderText("如 1e-1")
+        self.ec_sensitivity_edit = QComboBox()
+        self.ec_sensitivity_edit.setEditable(True)
+        self.ec_sensitivity_edit.addItems(["1e-1", "1e-2", "1e-3", "1e-4", "1e-5", "1e-6", "1e-7", "1e-8", "1e-9"])
+        self.ec_sensitivity_edit.setCurrentText("1e-3")
+        self.ec_sensitivity_edit.setToolTip("CHI 灵敏度档位，也可手动输入")
         cv_lay.addWidget(self.ec_sensitivity_edit, 3, 3)
         cv_lay.addWidget(QLabel("记录间隔(mV):"), 4, 0)
         self.ec_interval_spin = QDoubleSpinBox(); self.ec_interval_spin.setRange(0.1,100); self.ec_interval_spin.setDecimals(2); self.ec_interval_spin.setValue(1.0)
@@ -628,8 +649,10 @@ class ProgramEditorDialog(QDialog):
         self._lsv_scanrate = QDoubleSpinBox(); self._lsv_scanrate.setRange(0.0001,10); self._lsv_scanrate.setDecimals(4); self._lsv_scanrate.setValue(0.05)
         lsv_lay.addWidget(self._lsv_scanrate, 1, 1)
         lsv_lay.addWidget(QLabel("灵敏度(A/V):"), 1, 2)
-        self._lsv_sensitivity = QLineEdit("1e-1")
-        self._lsv_sensitivity.setPlaceholderText("如 1e-1")
+        self._lsv_sensitivity = QComboBox()
+        self._lsv_sensitivity.setEditable(True)
+        self._lsv_sensitivity.addItems(["1e-1", "1e-2", "1e-3", "1e-4", "1e-5", "1e-6", "1e-7", "1e-8", "1e-9"])
+        self._lsv_sensitivity.setCurrentText("1e-3")
         lsv_lay.addWidget(self._lsv_sensitivity, 1, 3)
         lsv_lay.addWidget(QLabel("记录间隔(mV):"), 2, 0)
         self._lsv_interval = QDoubleSpinBox(); self._lsv_interval.setRange(0.1,100); self._lsv_interval.setDecimals(2); self._lsv_interval.setValue(1.0)
@@ -652,8 +675,10 @@ class ProgramEditorDialog(QDialog):
         self._it_interval = QDoubleSpinBox(); self._it_interval.setRange(0.1,10000); self._it_interval.setDecimals(2); self._it_interval.setValue(100.0)
         it_lay.addWidget(self._it_interval, 1, 1)
         it_lay.addWidget(QLabel("灵敏度(A/V):"), 1, 2)
-        self._it_sensitivity = QLineEdit("1e-4")
-        self._it_sensitivity.setPlaceholderText("如 1e-4")
+        self._it_sensitivity = QComboBox()
+        self._it_sensitivity.setEditable(True)
+        self._it_sensitivity.addItems(["1e-1", "1e-2", "1e-3", "1e-4", "1e-5", "1e-6", "1e-7", "1e-8", "1e-9"])
+        self._it_sensitivity.setCurrentText("1e-4")
         it_lay.addWidget(self._it_sensitivity, 1, 3)
         it_lay.addWidget(QLabel("静置时间(s):"), 2, 0)
         self._it_quiettime = QDoubleSpinBox(); self._it_quiettime.setRange(0,1000); self._it_quiettime.setDecimals(2); self._it_quiettime.setValue(2.0)
@@ -679,8 +704,10 @@ class ProgramEditorDialog(QDialog):
         self.ec_bias_combo = QComboBox(); self.ec_bias_combo.addItem("vs Eref",0); self.ec_bias_combo.addItem("vs Eoc",1)
         eis_lay.addWidget(self.ec_bias_combo, 2, 1)
         eis_lay.addWidget(QLabel("灵敏度(A/V):"), 2, 2)
-        self._eis_sensitivity = QLineEdit("1e-3")
-        self._eis_sensitivity.setPlaceholderText("如 1e-3")
+        self._eis_sensitivity = QComboBox()
+        self._eis_sensitivity.setEditable(True)
+        self._eis_sensitivity.addItems(["1e-1", "1e-2", "1e-3", "1e-4", "1e-5", "1e-6", "1e-7", "1e-8", "1e-9"])
+        self._eis_sensitivity.setCurrentText("1e-3")
         eis_lay.addWidget(self._eis_sensitivity, 2, 3)
         eis_lay.addWidget(QLabel("静置时间(s):"), 3, 0)
         self._eis_quiettime = QDoubleSpinBox(); self._eis_quiettime.setRange(0,1000); self._eis_quiettime.setDecimals(2); self._eis_quiettime.setValue(2.0)
@@ -777,8 +804,10 @@ class ProgramEditorDialog(QDialog):
         self._adt_quiettime = QDoubleSpinBox(); self._adt_quiettime.setRange(0, 100000); self._adt_quiettime.setDecimals(2); self._adt_quiettime.setValue(0.0)
         ca_grid.addWidget(self._adt_quiettime, 3, 3)
         ca_grid.addWidget(QLabel("灵敏度(A/V):"), 4, 0)
-        self._adt_sensitivity = QLineEdit("1e-3")
-        self._adt_sensitivity.setPlaceholderText("如 1e-3, 0=自动")
+        self._adt_sensitivity = QComboBox()
+        self._adt_sensitivity.setEditable(True)
+        self._adt_sensitivity.addItems(["1e-1", "1e-2", "1e-3", "1e-4", "1e-5", "1e-6", "1e-7", "1e-8", "1e-9"])
+        self._adt_sensitivity.setCurrentText("1e-3")
         self._adt_sensitivity.setToolTip("灵敏度, 0 = 自动灵敏度")
         ca_grid.addWidget(self._adt_sensitivity, 4, 1)
         adt_main.addWidget(ca_box)
@@ -886,13 +915,13 @@ class ProgramEditorDialog(QDialog):
         
         self.ev_rpm_spin = QSpinBox()
         self.ev_rpm_spin.setRange(1, 300)
-        self.ev_rpm_spin.setValue(100)
+        self.ev_rpm_spin.setValue(200)
         layout.addRow("转速(RPM):", self.ev_rpm_spin)
         
         self.ev_vol_spin = QDoubleSpinBox()
         self.ev_vol_spin.setRange(0, 10000)
         self.ev_vol_spin.setDecimals(2)
-        self.ev_vol_spin.setValue(10.00)
+        self.ev_vol_spin.setValue(100.00)
         self.ev_vol_spin.setSuffix(" mL")
         layout.addRow("体积(mL):", self.ev_vol_spin)
         
@@ -901,15 +930,18 @@ class ProgramEditorDialog(QDialog):
     # === 事件处理 ===
     
     def _refresh_step_list(self):
-        """刷新步骤列表 - 显示详细参数"""
+        """刷新步骤列表 - 显示详细参数，带颜色"""
         self.step_list.clear()
         for i, step in enumerate(self.experiment.steps):
             type_name = STEP_TYPE_NAMES.get(step.step_type, str(step.step_type))
+            color = STEP_TYPE_COLORS.get(step.step_type, "#000000")
             detail = self._get_step_detail(step)
             if detail:
                 item = QListWidgetItem(f"[{i+1}] {type_name}: {detail}")
             else:
                 item = QListWidgetItem(f"[{i+1}] {type_name}")
+            item.setForeground(QColor(color))
+            item.setToolTip(item.text())
             self.step_list.addItem(item)
     
     def _get_step_detail(self, step: ProgStep) -> str:
@@ -1043,9 +1075,9 @@ class ProgramEditorDialog(QDialog):
         # 从配置加载Transfer泵信息（只读）
         self._apply_pump_defaults_for_type(ProgramStepType.TRANSFER)
         # 加载可配置参数
-        self.tf_rpm_spin.setValue(step.pump_rpm or 100)
+        self.tf_rpm_spin.setValue(step.pump_rpm or 200)
         # 体积: 优先从 volume_ul 加载，兼容旧版 transfer_duration
-        vol_ml = (step.volume_ul / 1000.0) if step.volume_ul else 5.0
+        vol_ml = (step.volume_ul / 1000.0) if step.volume_ul else 100.0
         self.tf_vol_spin.setValue(round(vol_ml, 2))
     
     def _load_prep_sol(self, step: ProgStep):
@@ -1105,15 +1137,15 @@ class ProgramEditorDialog(QDialog):
                         target_spin.setValue(0.0)
         else:
             # 没有配液参数时使用默认值
-            self.ps_vol_spin.setValue(100.00)
+            self.ps_vol_spin.setValue(80.00)
     
     def _load_flush(self, step: ProgStep):
         # 从配置加载Inlet泵信息（只读）
         self._apply_pump_defaults_for_type(ProgramStepType.FLUSH)
         # 加载可配置参数
-        self.fl_rpm_spin.setValue(step.flush_rpm or step.pump_rpm or 100)
+        self.fl_rpm_spin.setValue(step.flush_rpm or step.pump_rpm or 200)
         # 体积: 优先从 volume_ul 加载
-        vol_ml = (step.volume_ul / 1000.0) if step.volume_ul else 10.0
+        vol_ml = (step.volume_ul / 1000.0) if step.volume_ul else 90.0
         self.fl_vol_spin.setValue(round(vol_ml, 2))
     
     def _load_echem(self, step: ProgStep):
@@ -1137,7 +1169,7 @@ class ProgramEditorDialog(QDialog):
                 self.ec_scanrate_spin.setValue(ec.scan_rate or 0.05)
                 self.ec_segments_spin.setValue(ec.seg_num)
                 if ec.sensitivity is not None:
-                    self.ec_sensitivity_edit.setText(str(ec.sensitivity))
+                    self.ec_sensitivity_edit.setCurrentText(str(ec.sensitivity))
                 self.ec_interval_spin.setValue(ec.sample_interval_ms if ec.sample_interval_ms else 1.0)
                 self.ec_quiettime_spin.setValue(round(ec.quiet_time_s, 2))
                 
@@ -1146,7 +1178,7 @@ class ProgramEditorDialog(QDialog):
                 self._lsv_ef.setValue(round(ec.ef or 1.0, 3))
                 self._lsv_scanrate.setValue(ec.scan_rate or 0.05)
                 if ec.sensitivity is not None:
-                    self._lsv_sensitivity.setText(str(ec.sensitivity))
+                    self._lsv_sensitivity.setCurrentText(str(ec.sensitivity))
                 self._lsv_interval.setValue(ec.sample_interval_ms if ec.sample_interval_ms else 1.0)
                 self._lsv_quiettime.setValue(round(ec.quiet_time_s, 2))
                 
@@ -1155,7 +1187,7 @@ class ProgramEditorDialog(QDialog):
                 self.ec_runtime_spin.setValue(round(ec.run_time_s or 60, 2))
                 self._it_interval.setValue(ec.sample_interval_ms if ec.sample_interval_ms else 100.0)
                 if ec.sensitivity is not None:
-                    self._it_sensitivity.setText(str(ec.sensitivity))
+                    self._it_sensitivity.setCurrentText(str(ec.sensitivity))
                 self._it_quiettime.setValue(round(ec.quiet_time_s, 2))
                 
             elif tech == ECTechnique.EIS:
@@ -1166,7 +1198,7 @@ class ProgramEditorDialog(QDialog):
                 bias_idx = {0: 0, 1: 1}.get(ec.bias_mode, 0)
                 self.ec_bias_combo.setCurrentIndex(bias_idx)
                 if ec.sensitivity is not None:
-                    self._eis_sensitivity.setText(str(ec.sensitivity))
+                    self._eis_sensitivity.setCurrentText(str(ec.sensitivity))
                 self._eis_quiettime.setValue(round(ec.quiet_time_s, 2))
                 
             elif tech == ECTechnique.ADT:
@@ -1203,9 +1235,9 @@ class ProgramEditorDialog(QDialog):
                 self._adt_ca_si.setValue(getattr(ec, 'adt_ca_sample_interval', 0.01))
                 self._adt_quiettime.setValue(getattr(ec, 'adt_ca_quiet_time', 0.0))
                 if getattr(ec, 'adt_ca_sensitivity', None) is not None:
-                    self._adt_sensitivity.setText(str(ec.adt_ca_sensitivity))
+                    self._adt_sensitivity.setCurrentText(str(ec.adt_ca_sensitivity))
                 elif getattr(ec, 'sensitivity', None) is not None:
-                    self._adt_sensitivity.setText(str(ec.sensitivity))
+                    self._adt_sensitivity.setCurrentText(str(ec.sensitivity))
             
             # iR 补偿 (通用)
             self._ir_enabled_check.setChecked(getattr(ec, 'ir_compensation_enabled', False))
@@ -1224,9 +1256,9 @@ class ProgramEditorDialog(QDialog):
         # 从配置加载Outlet泵信息（只读）
         self._apply_pump_defaults_for_type(ProgramStepType.EVACUATE)
         # 加载可配置参数
-        self.ev_rpm_spin.setValue(step.pump_rpm or 100)
+        self.ev_rpm_spin.setValue(step.pump_rpm or 200)
         # 体积: 优先从 volume_ul 加载
-        vol_ml = (step.volume_ul / 1000.0) if step.volume_ul else 10.0
+        vol_ml = (step.volume_ul / 1000.0) if step.volume_ul else 100.0
         self.ev_vol_spin.setValue(round(vol_ml, 2))
     
     def _save_current_step(self):
@@ -1336,9 +1368,9 @@ class ProgramEditorDialog(QDialog):
                 ec.quiet_time_s = round(self.ec_quiettime_spin.value(), 2)
                 ec.sample_interval_ms = int(self.ec_interval_spin.value())
                 try:
-                    ec.sensitivity = float(self.ec_sensitivity_edit.text())
+                    ec.sensitivity = float(self.ec_sensitivity_edit.currentText())
                 except ValueError:
-                    ec.sensitivity = 0.1
+                    ec.sensitivity = 0.001
                     
             elif tech == ECTechnique.LSV:
                 ec.e0 = round(self._lsv_e0.value(), 3)
@@ -1347,9 +1379,9 @@ class ProgramEditorDialog(QDialog):
                 ec.quiet_time_s = round(self._lsv_quiettime.value(), 2)
                 ec.sample_interval_ms = int(self._lsv_interval.value())
                 try:
-                    ec.sensitivity = float(self._lsv_sensitivity.text())
+                    ec.sensitivity = float(self._lsv_sensitivity.currentText())
                 except ValueError:
-                    ec.sensitivity = 0.1
+                    ec.sensitivity = 0.001
                     
             elif tech == ECTechnique.I_T:
                 ec.e0 = round(self._it_e0.value(), 3)
@@ -1357,7 +1389,7 @@ class ProgramEditorDialog(QDialog):
                 ec.sample_interval_ms = int(self._it_interval.value())
                 ec.quiet_time_s = round(self._it_quiettime.value(), 2)
                 try:
-                    ec.sensitivity = float(self._it_sensitivity.text())
+                    ec.sensitivity = float(self._it_sensitivity.currentText())
                 except ValueError:
                     ec.sensitivity = 1e-4
                     
@@ -1369,7 +1401,7 @@ class ProgramEditorDialog(QDialog):
                 ec.bias_mode = self.ec_bias_combo.currentData() or 0
                 ec.quiet_time_s = round(self._eis_quiettime.value(), 2)
                 try:
-                    ec.sensitivity = float(self._eis_sensitivity.text())
+                    ec.sensitivity = float(self._eis_sensitivity.currentText())
                 except ValueError:
                     ec.sensitivity = 1e-3
                     
@@ -1398,7 +1430,7 @@ class ProgramEditorDialog(QDialog):
                 ec.adt_ca_sample_interval = round(self._adt_ca_si.value(), 6)
                 ec.adt_ca_quiet_time = round(self._adt_quiettime.value(), 2)
                 try:
-                    ec.adt_ca_sensitivity = float(self._adt_sensitivity.text())
+                    ec.adt_ca_sensitivity = float(self._adt_sensitivity.currentText())
                     ec.sensitivity = ec.adt_ca_sensitivity  # 兼容旧字段
                 except ValueError:
                     ec.adt_ca_sensitivity = 1e-3
@@ -1559,19 +1591,19 @@ class ProgramEditorDialog(QDialog):
             new_step.pump_address = pump_info["address"]
             new_step.pump_direction = pump_info["direction"]
             new_step.pump_rpm = pump_info["rpm"]
-            new_step.volume_ul = 5000.0  # 默认 5 mL
+            new_step.volume_ul = 100000.0  # 默认 100 mL
         elif selected_type == ProgramStepType.FLUSH:
             pump_info = self._get_pump_info_for_type("Inlet")
             new_step.pump_address = pump_info["address"]
             new_step.pump_direction = pump_info["direction"]
             new_step.flush_rpm = pump_info["rpm"]
-            new_step.volume_ul = 10000.0  # 默认 10 mL
+            new_step.volume_ul = 90000.0  # 默认 90 mL
         elif selected_type == ProgramStepType.EVACUATE:
             pump_info = self._get_pump_info_for_type("Outlet")
             new_step.pump_address = pump_info["address"]
             new_step.pump_direction = pump_info["direction"]
             new_step.pump_rpm = pump_info["rpm"]
-            new_step.volume_ul = 10000.0  # 默认 10 mL
+            new_step.volume_ul = 100000.0  # 默认 100 mL
         elif selected_type == ProgramStepType.ECHEM:
             new_step.ec_settings = ECSettings()
         elif selected_type == ProgramStepType.BLANK:
@@ -1616,6 +1648,29 @@ class ProgramEditorDialog(QDialog):
                 self.experiment.steps[index + 1], self.experiment.steps[index]
             self._refresh_step_list()
             self.step_list.setCurrentRow(index + 1)
+    
+    def _on_move_to_top(self):
+        """置顶步骤"""
+        index = self.step_list.currentRow()
+        if index > 0:
+            step = self.experiment.steps.pop(index)
+            self.experiment.steps.insert(0, step)
+            self._refresh_step_list()
+            self.step_list.setCurrentRow(0)
+    
+    def _on_delete_all_steps(self):
+        """删除所有步骤"""
+        if not self.experiment.steps:
+            return
+        reply = QMessageBox.question(
+            self, "确认", f"确定要删除全部 {len(self.experiment.steps)} 个步骤吗？",
+            QMessageBox.Yes | QMessageBox.No, QMessageBox.No
+        )
+        if reply == QMessageBox.Yes:
+            self.experiment.steps.clear()
+            self.current_step = None
+            self.current_step_index = -1
+            self._refresh_step_list()
     
     def _on_save_program(self):
         """保存程序 - 所有步骤在添加时已最终确定"""

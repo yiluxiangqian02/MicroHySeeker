@@ -1,4 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
+import { useSystemConfigStore } from '@/stores/systemConfigStore';
+import type { SystemConfig, DilutionChannel, FlushChannelCfg, PumpCfg } from '@/stores/systemConfigStore';
 import {
   AlertCircle,
   ArrowDown,
@@ -18,45 +20,6 @@ import {
 
 type StepType = 'prep_sol' | 'transfer' | 'flush' | 'echem' | 'blank' | 'evacuate';
 type EchemTechnique = 'CV' | 'LSV' | 'i-t' | 'EIS' | 'ADT';
-
-/* ---------- system config types ---------- */
-interface DilutionChannel {
-  channel_id: string;
-  solution_name: string;
-  stock_concentration: number;
-  pump_address: number;
-  direction: string;
-  default_rpm: number;
-  color?: string;
-  tube_diameter_mm?: number;
-  total_volume_ml?: number;
-  remaining_volume_ml?: number;
-}
-
-interface FlushChannelCfg {
-  channel_id: string;
-  pump_name: string;
-  pump_address: number;
-  direction: string;
-  rpm: number;
-  cycle_duration_s: number;
-  work_type: string; // Inlet / Transfer / Outlet
-  tube_diameter_mm?: number;
-  total_volume_ml?: number | null;
-}
-
-interface PumpCfg {
-  address: number;
-  name: string;
-  direction: string;
-  default_rpm: number;
-}
-
-interface SystemConfig {
-  pumps: PumpCfg[];
-  dilution_channels: DilutionChannel[];
-  flush_channels: FlushChannelCfg[];
-}
 
 /* ---------- experiment step ---------- */
 type ExperimentStep = {
@@ -402,24 +365,16 @@ export function ExperimentCreateDialog({ onClose, onSubmit }: ExperimentCreateDi
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
 
-  /* ---------- system config (loaded from backend on mount) ---------- */
-  const [sysCfg, setSysCfg] = useState<SystemConfig | null>(null);
-  const [cfgLoading, setCfgLoading] = useState(true);
+  /* ---------- system config (from global store, preloaded on app start) ---------- */
+  const storeConfig = useSystemConfigStore((s) => s.config);
+  const storeLoading = useSystemConfigStore((s) => s.loading);
+  const fetchConfig = useSystemConfigStore((s) => s.fetchConfig);
 
-  useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      try {
-        const resp = await fetch('/api/system/config');
-        if (resp.ok) {
-          const data = await resp.json();
-          if (!cancelled) setSysCfg(data);
-        }
-      } catch { /* fallback: empty config */ }
-      if (!cancelled) setCfgLoading(false);
-    })();
-    return () => { cancelled = true; };
-  }, []);
+  // 如果 store 还没加载过，触发一次
+  useEffect(() => { if (!storeConfig && !storeLoading) fetchConfig(); }, [storeConfig, storeLoading, fetchConfig]);
+
+  const sysCfg = storeConfig;
+  const cfgLoading = storeLoading && !storeConfig;
 
   const solutionNames = useMemo(() => sysCfg?.dilution_channels?.map((ch) => ch.solution_name) ?? [], [sysCfg]);
   const dilutionMap = useMemo(() => {
@@ -429,6 +384,30 @@ export function ExperimentCreateDialog({ onClose, onSubmit }: ExperimentCreateDi
   }, [sysCfg]);
   const flushChannels = useMemo(() => sysCfg?.flush_channels ?? [], [sysCfg]);
   const pumps = useMemo(() => sysCfg?.pumps ?? [], [sysCfg]);
+
+  /* ---------- templates (preloaded on dialog open) ---------- */
+  const [templates, setTemplates] = useState<Array<{ template_id: string; name: string; description: string; steps: any[]; tags: string[] }>>([]);
+  useEffect(() => {
+    (async () => {
+      try {
+        const resp = await fetch('/api/templates');
+        if (resp.ok) setTemplates(await resp.json());
+      } catch { /* ignore */ }
+    })();
+  }, []);
+
+  const loadTemplate = (tpl: typeof templates[0]) => {
+    if (!tpl.steps?.length) return;
+    const mapped: ExperimentStep[] = tpl.steps.map((s: any, idx: number) => {
+      const params = s.params ?? s;
+      const base = createStep((s.step_type ?? 'blank') as StepType, idx, solutionNames);
+      return { ...base, ...params, step_id: `tpl_${Date.now()}_${idx}` };
+    });
+    setSteps(mapped);
+    if (!name) setName(tpl.name);
+    if (!description) setDescription(tpl.description ?? '');
+    setExpandedStepId(mapped[0]?.step_id ?? null);
+  };
 
   const [steps, setSteps] = useState<ExperimentStep[]>([]);
   const [expandedStepId, setExpandedStepId] = useState<string | null>(null);
@@ -944,6 +923,30 @@ export function ExperimentCreateDialog({ onClose, onSubmit }: ExperimentCreateDi
                 ))}
               </div>
             </div>
+
+            {templates.length > 0 && (
+              <div className="rounded-xl border border-indigo-200 bg-indigo-50/50 p-3">
+                <span className="mb-1.5 block text-xs font-medium text-indigo-700">从模板加载步骤</span>
+                <div className="flex gap-2">
+                  <select
+                    defaultValue=""
+                    onChange={(e) => {
+                      const tpl = templates.find((t) => t.template_id === e.target.value);
+                      if (tpl) loadTemplate(tpl);
+                      e.target.value = '';
+                    }}
+                    className="flex-1 rounded-lg border border-indigo-300 bg-white px-3 py-2 text-sm text-slate-700"
+                  >
+                    <option value="" disabled>选择模板…</option>
+                    {templates.map((t) => (
+                      <option key={t.template_id} value={t.template_id}>
+                        {t.name}{t.tags?.includes('mhs') ? ' (MHS)' : ''}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            )}
 
             <div className="space-y-3">
               {steps.map((step, index) => {

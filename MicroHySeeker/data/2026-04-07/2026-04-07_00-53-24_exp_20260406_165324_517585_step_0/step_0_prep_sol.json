@@ -1,0 +1,23 @@
+{
+  "step_index": 0,
+  "timestamp": "2026-04-07T00:53:55.845696",
+  "total_volume_ul": 10,
+  "injection_order": [
+    "Ni(OH)2",
+    "H2O"
+  ],
+  "solutions": {
+    "Ni(OH)2": {
+      "volume_ul": 0.25,
+      "target_concentration_M": 0.05,
+      "is_solvent": false,
+      "volume_fraction": 0.025
+    },
+    "H2O": {
+      "volume_ul": 9.75,
+      "target_concentration_M": null,
+      "is_solvent": true,
+      "volume_fraction": 0.975
+    }
+  }
+}

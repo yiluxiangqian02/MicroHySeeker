@@ -284,6 +284,18 @@ class ExperimentWorker(QObject):
                             f"需要 {needed_ml:.2f} mL，剩余 {ch.remaining_volume_ml:.1f} mL。"
                             f"请加液后在泵状态区右键重置剩余量"
                         )
+            # 也检查 Inlet 泵 (H2O溶剂) 的剩余量
+            if "H2O" in total_needed_ul:
+                for ch in self.config.flush_channels:
+                    if ch.work_type == "Inlet" and ch.total_volume_ml not in (0, float('inf')):
+                        needed_ml = total_needed_ul["H2O"] / 1000.0
+                        if needed_ml > ch.remaining_volume_ml:
+                            errors.append(
+                                f"溶剂 'H2O'(Inlet) 液量不足: "
+                                f"需要 {needed_ml:.2f} mL，剩余 {ch.remaining_volume_ml:.1f} mL。"
+                                f"请加液后在泵状态区右键重置剩余量"
+                            )
+                        break
         
         return errors
     
@@ -351,6 +363,144 @@ class ExperimentWorker(QObject):
             snapshot["flush_channels_count"] = len(flush)
         return snapshot
 
+    # ----------------------------------------------------------
+    # 时长预估
+    # ----------------------------------------------------------
+
+    def _estimate_pump_duration(self, pump_addr: int, volume_ul: float, rpm: int) -> float:
+        """估算单泵运行时间（秒），基于校准数据或保守估算"""
+        if volume_ul <= 0:
+            return 0.0
+        pos_cal = self._position_calibration.get(pump_addr)
+        if pos_cal and pos_cal.get("slope_k", 0) > 0:
+            revolutions = (volume_ul - pos_cal.get("intercept_b", 0.0)) / pos_cal["slope_k"]
+            if revolutions < 0:
+                revolutions = 0
+            return abs(revolutions) / (rpm / 60.0) + 2.0
+        ul_per_sec = self._pump_calibration.get(pump_addr, 0)
+        if ul_per_sec > 0:
+            return volume_ul / ul_per_sec + 2.0
+        return volume_ul / self.DEFAULT_UL_PER_SEC_AT_100RPM * (100.0 / max(rpm, 1)) + 2.0
+
+    def _estimate_step_duration(self, step) -> float:
+        """估算单步骤执行时间（秒）"""
+        st = step.step_type
+
+        # BLANK
+        if st == ProgramStepType.BLANK:
+            return step.duration_s or 5.0
+
+        # TRANSFER / EVACUATE
+        if st in (ProgramStepType.TRANSFER, ProgramStepType.EVACUATE):
+            vol = step.volume_ul or 0
+            rpm = step.pump_rpm or 100
+            addr = step.pump_address or 0
+            return self._estimate_pump_duration(addr, vol, rpm) if vol > 0 else 5.0
+
+        # FLUSH
+        if st == ProgramStepType.FLUSH:
+            vol = step.volume_ul or 0
+            rpm = step.flush_rpm or step.pump_rpm or 100
+            addr = step.pump_address or 0
+            cycles = max(step.flush_cycles, 1) if step.flush_cycles else 1
+            per_cycle = self._estimate_pump_duration(addr, vol, rpm) if vol > 0 else (step.flush_cycle_duration_s or 30.0)
+            return per_cycle * cycles
+
+        # PREP_SOL
+        if st == ProgramStepType.PREP_SOL and step.prep_sol_params:
+            return self._estimate_prep_sol_duration(step.prep_sol_params)
+
+        # ECHEM
+        if st == ProgramStepType.ECHEM and step.ec_settings:
+            return self._estimate_echem_duration(step.ec_settings)
+
+        return 10.0  # 未知步骤保守估计
+
+    def _estimate_prep_sol_duration(self, params) -> float:
+        """估算配液步骤总时长（考虑批次并行）"""
+        total_volume_ul = params.total_volume_ul
+        if total_volume_ul <= 0:
+            return 0.0
+
+        # 计算各溶液体积（简化版两遍扫描）
+        remaining = total_volume_ul
+        solvent_names = []
+        tasks = {}  # {sol_name: (vol_ul, order_num)}
+
+        for sol_name in params.injection_order:
+            if not params.selected_solutions.get(sol_name, False):
+                continue
+            if params.solvent_flags.get(sol_name, False):
+                solvent_names.append(sol_name)
+                continue
+            tc = params.target_concentrations.get(sol_name, 0.0)
+            if tc <= 0:
+                continue
+            ch = self._dilution_channels.get(sol_name)
+            sc = ch["stock_concentration"] if ch else 1.0
+            vol = (tc / sc) * total_volume_ul if sc > 0 else 0
+            remaining -= vol
+            order_num = params.injection_order_numbers.get(sol_name, 1)
+            pump_addr = ch["pump_address"] if ch else 0
+            rpm = ch.get("default_rpm", 100) if ch else 100
+            tasks[sol_name] = (vol, order_num, pump_addr, rpm)
+
+        # 分配溶剂
+        if remaining > 0 and solvent_names:
+            per_solvent = remaining / len(solvent_names)
+            for sn in solvent_names:
+                order_num = params.injection_order_numbers.get(sn, 1)
+                ch = self._dilution_channels.get(sn)
+                pump_addr = ch["pump_address"] if ch else 0
+                rpm = ch.get("default_rpm", 100) if ch else 100
+                tasks[sn] = (per_solvent, order_num, pump_addr, rpm)
+
+        # 按批次分组，每批取 max
+        from collections import defaultdict
+        batches = defaultdict(list)
+        for sol_name, (vol, order_num, pump_addr, rpm) in tasks.items():
+            est = self._estimate_pump_duration(pump_addr, vol, rpm)
+            batches[order_num].append(est)
+
+        return sum(max(durations) for durations in batches.values()) if batches else 0.0
+
+    def _estimate_echem_duration(self, ec) -> float:
+        """估算电化学步骤时长"""
+        tech = ec.technique.value if hasattr(ec.technique, 'value') else str(ec.technique)
+
+        if tech == "ADT":
+            cyc = ec.adt_num_cycles or 100
+            tc = ec.adt_cathodic_duration_s or 3.0
+            ta = ec.adt_cp_anodic_time_s or 3.0
+            return cyc * (tc + ta)
+
+        if tech == "i-t" and ec.run_time_s:
+            return ec.run_time_s + (ec.quiet_time_s or 0)
+
+        scan_rate = ec.scan_rate or 0.1
+        if tech == "CV":
+            eh = ec.eh or 0.8
+            el = ec.el or -0.2
+            seg = ec.seg_num or 2
+            return abs(eh - el) * seg / scan_rate + (ec.quiet_time_s or 0)
+
+        if tech == "LSV":
+            e0 = ec.e0 or 0.0
+            ef = ec.ef or 0.8
+            return abs(ef - e0) / scan_rate + (ec.quiet_time_s or 0)
+
+        if tech == "EIS":
+            return 60.0  # EIS duration hard to predict
+
+        return 30.0  # fallback
+
+    def _estimate_total_duration(self, experiment) -> float:
+        """估算整个实验的总时长（秒）"""
+        total = 0.0
+        for step in experiment.steps:
+            total += self._estimate_step_duration(step)
+        return total
+
     def run(self):
         """执行实验步骤"""
         if not self.experiment:
@@ -387,77 +537,107 @@ class ExperimentWorker(QObject):
         
         self._emit_log(f"[实验] 预检查通过，开始执行 {len(self.experiment.steps)} 个步骤")
         
-        all_success = True
-        for i, step in enumerate(self.experiment.steps):
-            if self._stop_flag:
-                self._emit_log(f"[实验] 实验已停止", "WARNING")
-                all_success = False
-                break
-            
-            step_type_str = step.step_type.value if hasattr(step.step_type, 'value') else str(step.step_type)
-            
-            self.step_started.emit(i, step.step_id)
-            self._emit_log(f"[步骤{i}] 开始执行: {step_type_str}")
-            
-            # 数据管理：步骤开始
-            if self.dm:
-                self.dm.step_started(i, step.step_id, step_type_str,
-                                     details=step.notes or "")
-            
-            success = False
-            step_error_msg = ""
-            try:
-                if step.step_type == ProgramStepType.TRANSFER:
-                    success = self._execute_transfer(step)
-                elif step.step_type == ProgramStepType.PREP_SOL:
-                    success = self._execute_prep_sol(step, step_index=i)
-                elif step.step_type == ProgramStepType.FLUSH:
-                    success = self._execute_flush(step)
-                elif step.step_type == ProgramStepType.ECHEM:
-                    success = self._execute_echem(step, step_index=i)
-                elif step.step_type == ProgramStepType.BLANK:
-                    success = self._execute_blank(step)
-                elif step.step_type == ProgramStepType.EVACUATE:
-                    success = self._execute_evacuate(step)
-            except Exception as e:
-                step_error_msg = str(e)
-                self._emit_log(f"[错误] {step_error_msg}", "ERROR")
-                success = False
-            
-            # 数据管理：步骤结束（跳过已在内部调用过 step_finished 的步骤）
-            if self.dm and i not in self._steps_already_finished:
-                if success:
-                    self.dm.step_finished(i, True)
+        # ---- 预估总时长 ----
+        try:
+            est_total = self._estimate_total_duration(self.experiment)
+            if est_total > 0:
+                h, rem = divmod(int(est_total), 3600)
+                m, s = divmod(rem, 60)
+                if h > 0:
+                    est_str = f"{h}h{m:02d}m{s:02d}s"
+                elif m > 0:
+                    est_str = f"{m}m{s:02d}s"
                 else:
-                    error_detail = step_error_msg or f"{step_type_str} 执行失败"
-                    self.dm.step_finished(i, False, details=error_detail)
-                    self.dm.log_error(f"步骤{i} [{step_type_str}] 失败: {error_detail}")
+                    est_str = f"{s}s"
+                self._emit_log(f"[实验] 预估总时长: {est_str}")
+        except Exception:
+            pass
+        
+        all_success = True
+        try:
+            for i, step in enumerate(self.experiment.steps):
+                if self._stop_flag:
+                    self._emit_log(f"[实验] 实验已停止", "WARNING")
+                    all_success = False
+                    break
+                
+                step_type_str = step.step_type.value if hasattr(step.step_type, 'value') else str(step.step_type)
+                
+                self.step_started.emit(i, step.step_id)
+                self._emit_log(f"[步骤{i}] 开始执行: {step_type_str}")
+                
+                # 数据管理：步骤开始
+                if self.dm:
+                    self.dm.step_started(i, step.step_id, step_type_str,
+                                         details=step.notes or "")
+                
+                success = False
+                step_error_msg = ""
+                try:
+                    if step.step_type == ProgramStepType.TRANSFER:
+                        success = self._execute_transfer(step)
+                    elif step.step_type == ProgramStepType.PREP_SOL:
+                        success = self._execute_prep_sol(step, step_index=i)
+                    elif step.step_type == ProgramStepType.FLUSH:
+                        success = self._execute_flush(step)
+                    elif step.step_type == ProgramStepType.ECHEM:
+                        success = self._execute_echem(step, step_index=i)
+                    elif step.step_type == ProgramStepType.BLANK:
+                        success = self._execute_blank(step)
+                    elif step.step_type == ProgramStepType.EVACUATE:
+                        success = self._execute_evacuate(step)
+                except Exception as e:
+                    step_error_msg = str(e)
+                    self._emit_log(f"[错误] {step_error_msg}", "ERROR")
+                    success = False
+                
+                # 数据管理：步骤结束（跳过已在内部调用过 step_finished 的步骤）
+                if self.dm and i not in self._steps_already_finished:
+                    if success:
+                        self.dm.step_finished(i, True)
+                    else:
+                        error_detail = step_error_msg or f"{step_type_str} 执行失败"
+                        self.dm.step_finished(i, False, details=error_detail)
+                        self.dm.log_error(f"步骤{i} [{step_type_str}] 失败: {error_detail}")
+                
+                self.step_finished.emit(i, step.step_id, success)
+                
+                if not success:
+                    self._emit_log(f"[步骤{i}] 执行失败", "ERROR")
+                    all_success = False
+                    break
+                
+                time.sleep(0.1)
+        except Exception as e:
+            self._emit_log(f"[实验] 未预期的异常: {e}", "ERROR")
+            import traceback
+            self._emit_log(f"[实验] 堆栈: {traceback.format_exc()}", "DEBUG")
+            all_success = False
+        finally:
+            # 安全清理: 每步独立 try 保护，确保后续步骤不被前面的异常阻断
+            try:
+                if not all_success:
+                    self._emergency_stop_all_pumps()
+            except Exception as e:
+                self._emit_log(f"[安全] 停泵异常: {e}", "ERROR")
+
+            try:
+                self._cleanup_chi_bridge()
+            except Exception as e:
+                self._emit_log(f"[安全] CHI清理异常: {e}", "ERROR")
+
+            # 数据管理：结束运行 — 必须在信号之前，保证日志落盘
+            try:
+                if self.dm:
+                    self.dm.end_run(success=all_success)
+            except Exception as e:
+                self._emit_log(f"[安全] 数据保存异常: {e}", "ERROR")
             
-            self.step_finished.emit(i, step.step_id, success)
+            status_text = "成功完成" if all_success else "执行失败"
+            self._emit_log(f"[实验] {status_text}")
             
-            if not success:
-                self._emit_log(f"[步骤{i}] 执行失败", "ERROR")
-                all_success = False
-                break
-            
-            time.sleep(0.1)
-        
-        # 安全清理: 实验结束/中断时 **先** 停止所有泵，再发信号
-        if not all_success:
-            self._emergency_stop_all_pumps()
-        
-        # 清理 CHI Bridge (实验级别生命周期 — 所有 echem 步骤共用后统一关闭)
-        self._cleanup_chi_bridge()
-        
-        # 数据管理：结束运行
-        if self.dm:
-            self.dm.end_run(success=all_success)
-        
-        status_text = "成功完成" if all_success else "执行失败"
-        self._emit_log(f"[实验] {status_text}")
-        
-        # 信号放在最后：确保泵已停止、数据已保存后 UI 才更新
-        self.experiment_finished.emit(all_success)
+            # 信号放在最后：确保泵已停止、数据已保存后 UI 才更新
+            self.experiment_finished.emit(all_success)
     
     def _execute_transfer(self, step: ProgStep) -> bool:
         """执行移液 - 位移模式(编码器闭环) + RPM时间模式回退
@@ -640,8 +820,9 @@ class ExperimentWorker(QObject):
     def _verify_pump_stopped(self, pump_addr: int, settle_s: float = 0.25) -> bool:
         """验证泵是否已停止 — 双重校验
 
-        第 1 层: 控制器状态 == 1 (停止)
+        第 1 层: 控制器状态 == 1 (停止)。若为 3 (减速中)，等待最多 3s。
         第 2 层: 编码器位置稳定 (两次读数差 < 阈值)
+        若控制器状态异常但编码器确认物理停止，仍判定为已停止。
         """
         time.sleep(settle_s)
 
@@ -653,8 +834,34 @@ class ExperimentWorker(QObject):
         # 通信失败视为已停止(安全侧)
         if status is None:
             return True
-        if status != 1:
-            # 控制器还报运行 — 直接判定未停止
+        # 减速中(3) → 额外等待最多 3s 让泵完全停止
+        if status == 3:
+            for _ in range(6):
+                time.sleep(0.5)
+                status = self.rs485.read_run_status(pump_addr)
+                if status is None or status == 1:
+                    break
+        if status is None or status == 1:
+            pass  # 控制器确认已停止，继续做编码器校验
+        else:
+            # 控制器仍报非停止状态，但可能是寄存器刷新延迟，
+            # 回退到编码器物理稳定性判断
+            pos1 = self.rs485.read_encoder_position(pump_addr)
+            if pos1 is None:
+                return True  # 读不到编码器 → 安全侧
+            time.sleep(0.3)
+            pos2 = self.rs485.read_encoder_position(pump_addr)
+            if pos2 is None:
+                return True
+            delta = abs(pos2 - pos1)
+            if delta < self._ENCODER_MIN_DELTA:
+                self._emit_log(
+                    f"  ⚠ 泵{pump_addr} 控制器状态={status}(非停止)但编码器已稳定(Δ={delta})，"
+                    f"判定为物理停止",
+                    "WARNING"
+                )
+                return True
+            # 编码器也确认仍在运动
             return False
 
         # Layer 2: 编码器位置稳定性验证
@@ -788,7 +995,7 @@ class ExperimentWorker(QObject):
                 time.sleep(0.1)
 
             result = self.rs485.run_position_rel(
-                pump_addr, encoder_counts, rpm, acceleration=2
+                pump_addr, encoder_counts, rpm, acceleration=5
             )
             if not result:
                 self._emit_log(f"  ❌ 泵{pump_addr} 位置命令发送失败", "ERROR")
@@ -893,7 +1100,7 @@ class ExperimentWorker(QObject):
         Returns True on success.
         """
         ENCODER_DIVISIONS_PER_REV = 16384
-        DECEL_TIMEOUT_S = 10.0
+        DECEL_TIMEOUT_S = 30.0
         
         pos_cal = self._position_calibration.get(pump_addr)
         use_position_mode = pos_cal and pos_cal.get("slope_k", 0) > 0
@@ -1023,10 +1230,12 @@ class ExperimentWorker(QObject):
             f"注液顺序{params.injection_order}, 总体积{vol_formatted}"
         )
         
-        # 计算各溶液需要的体积
+        # 计算各溶液需要的体积 (两遍扫描：先算溶质，再分配溶剂)
         volumes_to_inject = {}  # {溶液名: 体积(uL)}
         remaining_volume = total_volume_ul
+        solvent_names = []  # 溶剂列表
         
+        # 第一遍：计算所有溶质体积
         for sol_name in params.injection_order:
             if self._stop_flag:
                 return False
@@ -1037,26 +1246,61 @@ class ExperimentWorker(QObject):
             is_solvent = params.solvent_flags.get(sol_name, False)
             
             if is_solvent:
-                # 溶剂：剩余体积
+                solvent_names.append(sol_name)
+                continue
+            
+            # 计算稀释体积: C1*V1 = C2*V2 => V1 = C2*V2/C1
+            target_conc = params.target_concentrations.get(sol_name, 0.0)
+            if target_conc <= 0:
+                continue
+            
+            # 获取母液浓度
+            channel_info = self._dilution_channels.get(sol_name, {})
+            stock_conc = channel_info.get("stock_concentration", target_conc)
+            
+            if stock_conc <= 0:
+                self._emit_log(f"    警告: {sol_name} 母液浓度为0，跳过", "WARNING")
+                continue
+            
+            # 计算需要的体积
+            vol_needed = (target_conc * total_volume_ul) / stock_conc
+            volumes_to_inject[sol_name] = vol_needed
+            remaining_volume -= vol_needed
+        
+        # 第二遍：分配溶剂体积（剩余体积均分给所有溶剂）
+        if remaining_volume < 0:
+            self._emit_log(
+                f"    ⚠️ 溶质体积之和 ({(total_volume_ul - remaining_volume)/1000:.2f}mL) "
+                f"超过总体积 ({total_volume_ul/1000:.2f}mL)，"
+                f"已截断为0，请检查浓度参数",
+                "WARNING"
+            )
+            remaining_volume = 0
+        
+        # 详细的体积分配日志
+        vol_lines = []
+        for sol_name, vol in volumes_to_inject.items():
+            vol_lines.append(f"{sol_name}={vol/1000:.2f}mL")
+        sol_total_ml = sum(v for v in volumes_to_inject.values()) / 1000.0
+        self._emit_log(
+            f"    溶质分配: {', '.join(vol_lines)}，"
+            f"合计 {sol_total_ml:.2f}/{total_volume_ul/1000:.2f}mL，"
+            f"溶剂可用 {remaining_volume/1000:.2f}mL"
+        )
+        
+        for sol_name in solvent_names:
+            if len(solvent_names) == 1:
                 volumes_to_inject[sol_name] = remaining_volume
             else:
-                # 计算稀释体积: C1*V1 = C2*V2 => V1 = C2*V2/C1
-                target_conc = params.target_concentrations.get(sol_name, 0.0)
-                if target_conc <= 0:
-                    continue
-                
-                # 获取母液浓度
-                channel_info = self._dilution_channels.get(sol_name, {})
-                stock_conc = channel_info.get("stock_concentration", target_conc)
-                
-                if stock_conc <= 0:
-                    self._emit_log(f"    警告: {sol_name} 母液浓度为0，跳过", "WARNING")
-                    continue
-                
-                # 计算需要的体积
-                vol_needed = (target_conc * total_volume_ul) / stock_conc
-                volumes_to_inject[sol_name] = vol_needed
-                remaining_volume -= vol_needed
+                volumes_to_inject[sol_name] = remaining_volume / len(solvent_names)
+            
+            if volumes_to_inject[sol_name] <= 0:
+                self._emit_log(
+                    f"    ⚠️ 溶剂 {sol_name} 分配体积为 0 "
+                    f"(溶质已占满总体积)，该泵不会运行。"
+                    f"建议：降低目标浓度或增大总体积",
+                    "WARNING"
+                )
         
         # 编码器常量
         ENCODER_DIVISIONS_PER_REV = 16384
@@ -1212,7 +1456,7 @@ class ExperimentWorker(QObject):
                         task["pump_addr"],
                         task["encoder_counts"],
                         task["rpm"],
-                        acceleration=2
+                        acceleration=5
                     )
                     if not result:
                         # 失败时停止本批次中已启动的泵
@@ -1244,7 +1488,7 @@ class ExperimentWorker(QObject):
                             task["pump_addr"],
                             task["encoder_counts"],
                             task["rpm"],
-                            acceleration=2
+                            acceleration=5
                         )
                         if not self._verify_pump_running(task["pump_addr"]):
                             for prev in started_in_batch:
@@ -1354,29 +1598,66 @@ class ExperimentWorker(QObject):
                         initial_positions[task["pump_addr"]] = pos
                     time.sleep(0.15)
             
+            # ---- 泵全部启动后立即扣减剩余量（提前反映消耗） ----
+            batch_deducted = False
+            if self.config:
+                for task in batch:
+                    sol_name = task["sol_name"]
+                    vol_ml = task["vol"] / 1000.0
+                    found = False
+                    for ch in self.config.dilution_channels:
+                        if ch.solution_name == sol_name and ch.total_volume_ml > 0:
+                            ch.remaining_volume_ml = max(0.0, ch.remaining_volume_ml - vol_ml)
+                            batch_deducted = True
+                            found = True
+                            break
+                    if not found:
+                        for ch in self.config.flush_channels:
+                            if ch.work_type == "Inlet" and ch.total_volume_ml not in (0, float('inf')):
+                                ch.remaining_volume_ml = max(0.0, ch.remaining_volume_ml - vol_ml)
+                                batch_deducted = True
+                                break
+                if batch_deducted:
+                    try:
+                        self.config.save()
+                    except Exception:
+                        pass
+                    self.volume_updated.emit()
+            
             # ---- 等待本批次中最长的泵完成 ----
-            DECEL_TIMEOUT_S = 10.0   # 减速状态持续超时(秒)
+            DECEL_TIMEOUT_S = 30.0   # 减速状态持续超时(秒)
             STALL_MAX_RETRIES = 2    # 堵转最大重试次数
             HARD_MAX_WAIT_S = 300.0  # 硬性最大等待(秒)，防止无限延长
             
             stall_failures = {}       # {addr: failed_vol_ul} 堵转失败的泵
             stall_retry_counts = {}   # {addr: int} 已重试次数
             decel_start_time = {}     # {addr: float} 首次检测到减速的时间戳
+            decel_last_pos = {}       # {addr: int} 减速时上次编码器位置
             
             if max_wait > 0:
                 self._emit_log(f"    等待批次 {order_num} 完成... ({max_wait:.1f}s)")
-                waited = 0.0
                 still_running = set(t["pump_addr"] for t in batch)
                 poll_counter = 0
+                last_volume_emit = time.time()
+                wall_start = time.time()
                 
-                while waited < max_wait and waited < HARD_MAX_WAIT_S:
+                while (time.time() - wall_start) < (max_wait + 10) and (time.time() - wall_start) < HARD_MAX_WAIT_S:
                     if self._stop_flag:
                         for t in batch:
                             self.rs485.stop_pump(t["pump_addr"])
+                        # 中断时已提前扣减，直接返回
                         return False
-                    step_wait = min(0.5, max_wait - waited)
-                    time.sleep(step_wait)
-                    waited += step_wait
+                    # 所有泵已完成 → 立即退出等待
+                    if not still_running:
+                        self._emit_log(f"    ✓ 批次 {order_num} 全部泵已完成")
+                        break
+                    time.sleep(0.5)
+                    
+                    # 每 ~10s 发送一次 volume_updated 信号刷新 UI 显示
+                    now = time.time()
+                    if now - last_volume_emit >= 10.0:
+                        self.volume_updated.emit()
+                        last_volume_emit = now
                     
                     # 每 ~1.5s 轮询一次各泵运行状态
                     poll_counter += 1
@@ -1436,13 +1717,13 @@ class ExperimentWorker(QObject):
                                             sign = 1 if task_info["encoder_counts"] > 0 else -1
                                             retry_ok = self.rs485.run_position_rel(
                                                 addr, sign * remaining_counts,
-                                                task_info["rpm"], acceleration=2
+                                                task_info["rpm"], acceleration=5
                                             )
                                         else:
                                             # 无法计算剩余量，重发原始命令
                                             retry_ok = self.rs485.run_position_rel(
                                                 addr, task_info["encoder_counts"],
-                                                task_info["rpm"], acceleration=2
+                                                task_info["rpm"], acceleration=5
                                             )
                                         
                                         # 验证泵是否真正恢复运行
@@ -1487,17 +1768,46 @@ class ExperimentWorker(QObject):
                                 # ---- 减速中：检测是否卡在减速状态 ----
                                 if addr not in decel_start_time:
                                     decel_start_time[addr] = time.time()
-                                elif time.time() - decel_start_time[addr] > DECEL_TIMEOUT_S:
-                                    self._emit_log(
-                                        f"    ⚠ 泵 {addr} ({sol}) 持续减速 "
-                                        f"{DECEL_TIMEOUT_S:.0f}s，强制停止",
-                                        "WARNING"
-                                    )
-                                    self.rs485.stop_pump(addr)
-                                    time.sleep(0.15)
-                                    newly_done.append(addr)
-                                    still_running.discard(addr)
-                                    decel_start_time.pop(addr, None)
+                                    # 记录进入减速时的编码器位置
+                                    try:
+                                        decel_last_pos[addr] = self.rs485.read_encoder_position(addr)
+                                    except Exception:
+                                        decel_last_pos[addr] = None
+                                else:
+                                    decel_elapsed = time.time() - decel_start_time[addr]
+                                    # 每 5s 检查编码器位置，若不再变化则提前判完成
+                                    if decel_elapsed > 5.0 and addr in decel_last_pos:
+                                        try:
+                                            cur_pos = self.rs485.read_encoder_position(addr)
+                                            if (cur_pos is not None and decel_last_pos[addr] is not None
+                                                    and abs(cur_pos - decel_last_pos[addr]) < 100):
+                                                # 位置不再变化，泵已实际完成
+                                                self._emit_log(
+                                                    f"    ✓ 泵 {addr} ({sol}) 减速中但位置已稳定 "
+                                                    f"({decel_elapsed:.0f}s)，视为完成",
+                                                )
+                                                self.rs485.stop_pump(addr)
+                                                time.sleep(0.15)
+                                                newly_done.append(addr)
+                                                still_running.discard(addr)
+                                                decel_start_time.pop(addr, None)
+                                                decel_last_pos.pop(addr, None)
+                                                continue
+                                            decel_last_pos[addr] = cur_pos
+                                        except Exception:
+                                            pass
+                                    if decel_elapsed > DECEL_TIMEOUT_S:
+                                        self._emit_log(
+                                            f"    ⚠ 泵 {addr} ({sol}) 持续减速 "
+                                            f"{DECEL_TIMEOUT_S:.0f}s，强制停止",
+                                            "WARNING"
+                                        )
+                                        self.rs485.stop_pump(addr)
+                                        time.sleep(0.15)
+                                        newly_done.append(addr)
+                                        still_running.discard(addr)
+                                        decel_start_time.pop(addr, None)
+                                        decel_last_pos.pop(addr, None)
                             else:
                                 # 正常运行(2=加速, 4=全速)
                                 decel_start_time.pop(addr, None)
@@ -1544,9 +1854,12 @@ class ExperimentWorker(QObject):
                 time.sleep(0.15)
             
             # 校验位置模式泵是否真正完成（编码器闭环验证）
+            # 仅校验还在 still_running 中的泵（已在轮询循环中确认完成的跳过）
             position_tasks = [t for t in batch if t.get("use_position_mode")]
             for t in position_tasks:
                 addr = t["pump_addr"]
+                if addr not in still_running:
+                    continue  # 轮询循环中已确认完成
                 if addr in stall_failures:
                     continue  # 已标记堵转失败的跳过
                 if not self.rs485.wait_pump_position_done(
@@ -1575,6 +1888,55 @@ class ExperimentWorker(QObject):
                         f"    ✓ {task['sol_name']} 注入完成 ({task['vol']:,.2f}uL)"
                     )
             
+            # ---- 批次完成：报告结果，堵转失败的退回已扣减的体积 ----
+            if self.config and stall_failures:
+                refund_changed = False
+                for task in batch:
+                    if task["pump_addr"] in stall_failures:
+                        sol_name = task["sol_name"]
+                        vol_ml = task["vol"] / 1000.0
+                        # 退回之前提前扣减的体积
+                        found = False
+                        for ch in self.config.dilution_channels:
+                            if ch.solution_name == sol_name and ch.total_volume_ml > 0:
+                                ch.remaining_volume_ml = min(ch.total_volume_ml, ch.remaining_volume_ml + vol_ml)
+                                self._emit_log(
+                                    f"    📊 {sol_name} 堵转退回 {vol_ml:.2f}mL，"
+                                    f"剩余 {ch.remaining_volume_ml:.1f}/{ch.total_volume_ml:.1f}mL"
+                                )
+                                refund_changed = True
+                                found = True
+                                break
+                        if not found:
+                            for ch in self.config.flush_channels:
+                                if ch.work_type == "Inlet" and ch.total_volume_ml not in (0, float('inf')):
+                                    ch.remaining_volume_ml = min(ch.total_volume_ml, ch.remaining_volume_ml + vol_ml)
+                                    self._emit_log(
+                                        f"    📊 {sol_name}(Inlet) 堵转退回 {vol_ml:.2f}mL，"
+                                        f"剩余 {ch.remaining_volume_ml:.1f}/{ch.total_volume_ml:.1f}mL"
+                                    )
+                                    refund_changed = True
+                                    break
+                if refund_changed:
+                    try:
+                        self.config.save()
+                    except Exception:
+                        pass
+                    self.volume_updated.emit()
+            else:
+                # 无堵转：打印最终消耗日志
+                if self.config:
+                    for task in batch:
+                        sol_name = task["sol_name"]
+                        vol_ml = task["vol"] / 1000.0
+                        for ch in self.config.dilution_channels:
+                            if ch.solution_name == sol_name and ch.total_volume_ml > 0:
+                                self._emit_log(
+                                    f"    📊 {sol_name} 消耗 {vol_ml:.2f}mL，"
+                                    f"剩余 {ch.remaining_volume_ml:.1f}/{ch.total_volume_ml:.1f}mL"
+                                )
+                                break
+            
             # 批次间间隔
             time.sleep(0.5)
         
@@ -1591,33 +1953,6 @@ class ExperimentWorker(QObject):
         self._emit_tank_levels()
         
         self._emit_log(f"  配液完成")
-        
-        # 扣减溶液剩余量并持久化
-        if self.config:
-            volume_changed = False
-            for task in inject_tasks:
-                sol_name = task["sol_name"]
-                vol_ul = task["vol"]
-                vol_ml = vol_ul / 1000.0
-                for ch in self.config.dilution_channels:
-                    if ch.solution_name == sol_name and ch.total_volume_ml > 0:
-                        ch.remaining_volume_ml = max(0.0, ch.remaining_volume_ml - vol_ml)
-                        self._emit_log(
-                            f"    📊 {sol_name} 消耗 {vol_ml:.2f}mL，"
-                            f"剩余 {ch.remaining_volume_ml:.1f}/{ch.total_volume_ml:.1f}mL"
-                        )
-                        volume_changed = True
-                        break
-            if volume_changed:
-                # 持久化配置（保存剩余量到文件）
-                try:
-                    import os
-                    config_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "config.json")
-                    self.config.save_to_file(config_path)
-                except Exception as e:
-                    self._emit_log(f"    ⚠ 保存溶液剩余量失败: {e}", "WARNING")
-                # 通知 UI 刷新体积显示
-                self.volume_updated.emit()
         
         # 保存配液结果
         if self.dm and step_index >= 0:
@@ -1702,6 +2037,15 @@ class ExperimentWorker(QObject):
         # 动态同步 dummy cell 模式
         if hasattr(ec, 'use_dummy_cell'):
             self._chi_bridge._config.use_dummy_cell = ec.use_dummy_cell
+
+        # 动态调整超时: 至少 run_time + 120s，确保长时间实验不会被误判超时
+        run_time = getattr(ec, 'run_time_s', 0) or 0
+        if run_time > 0:
+            needed_timeout = run_time + 120
+            if self._chi_bridge._controller and hasattr(self._chi_bridge._controller, '_config'):
+                if self._chi_bridge._controller._config.timeout < needed_timeout:
+                    self._chi_bridge._controller._config.timeout = needed_timeout
+                    self._emit_log(f"    调整 CHI 超时: {needed_timeout:.0f}s")
 
         return True
 

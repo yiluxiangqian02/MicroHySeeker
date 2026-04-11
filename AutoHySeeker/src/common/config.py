@@ -358,7 +358,7 @@ OPENAI_UNAVAILABLE_COOLDOWN_SECONDS = float(
     os.getenv("OPENAI_UNAVAILABLE_COOLDOWN_SECONDS", "60"),
 )
 DATA_ROOT = _resolve_path(os.getenv("DATA_ROOT", "../data"), PROJECT_ROOT)
-LOG_ROOT = _resolve_path(os.getenv("LOG_ROOT", "./logs"), PROJECT_ROOT)
+LOG_ROOT = _resolve_path(os.getenv("LOG_ROOT", "../logs"), PROJECT_ROOT)
 API_HOST = os.getenv("API_HOST", "0.0.0.0")
 API_PORT = int(os.getenv("API_PORT", "8200"))
 OPENAI_TIMEOUT_SECONDS = float(os.getenv("OPENAI_TIMEOUT_SECONDS", "60"))

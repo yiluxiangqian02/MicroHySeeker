@@ -1,0 +1,2 @@
+timestamp,pump_addr,operation,direction,rpm,volume_ul,duration_s,mode,encoder_counts
+2026-04-07T11:04:51.716781,9,冲洗,FWD,100,4.17,10.33,speed_fallback,0

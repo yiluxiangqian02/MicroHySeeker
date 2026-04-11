@@ -18,7 +18,7 @@
 
 ### 1.1 核心科学问题
 
-碱性水电解（AWE）系统在间歇性可再生能源供电下面临逆向电流（Reverse-Current, RC）挑战——电极经历频繁的正向电位漂移，导致非贵金属 HER 催化剂发生不可逆的阳极溶解和结构坍塌 [A-1]。在 Fe、Co、Ni、Mo、W 等 6 种候选掺杂元素构成的高维成分空间中，寻找兼具 **高 HER 催化活性** 与 **优异抗 RC 稳定性** 的最优配比，是本课题的核心科学问题。
+碱性水电解（AWE）系统在间歇性可再生能源供电下面临逆向电流（Reverse-Current, RC）挑战——电极经历频繁的正向电位漂移，导致非贵金属 HER 催化剂发生不可逆的阳极溶解和结构坍塌 [A-1](https://yonsei.elsevierpure.com/en/publications/reverse-current-tolerance-for-hydrogen-evolution-reaction-activit/)。在 Fe、Co、Ni、Mo、W 等 6 种候选掺杂元素构成的高维成分空间中，寻找兼具 **高 HER 催化活性** 与 **优异抗 RC 稳定性** 的最优配比，是本课题的核心科学问题。
 
 ### 1.2 课题组已有条件
 
@@ -26,7 +26,7 @@
 | :-------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------- | :------------------------- |
 | **硬件层（MicroHySeeker）** | RS485 蠕动泵阵列 + CHI 电化学工作站 + 液路系统，已搭建完成                                                                              | 不再做硬件创新 [A-12] [B-7] |
 | **决策层（AutoHySeeker）**  | LangGraph 多智能体框架，4+3 Agent 架构（核心：Orchestrator / ExperimentDesigner / ExperimentExecutor / DiagnosticsExpert；辅助：DataAnalyst / Chat / KnowledgeManager），当前 LLM 引擎为 Claude Sonnet/Opus（经 API 网关调用），优化引擎为 Optuna TPE 贝叶斯优化，已完成约 20-50 轮闭环实验（16 个实验日期批次，2026-02 至 2026-04） | [A-12]                     |
-| **材料方向**                | 6 种掺杂元素已选定，反向电流耐受方向已完成调研                                                                                          | [A-1]                      |
+| **材料方向**                | 6 种掺杂元素已选定，反向电流耐受方向已完成调研                                                                                          | [A-1](https://yonsei.elsevierpure.com/en/publications/reverse-current-tolerance-for-hydrogen-evolution-reaction-activit/)                      |
 | **排除项**                  | 不使用 DFT 第一性原理计算；不使用 Diffusion 生成式结构模型；不做 MoE；不做基于摄像头的视觉诊断（无设备）；不做知识图谱                  |                            |
 
 ### 1.3 论文定位：两篇论文的逻辑链条
@@ -38,17 +38,17 @@
 - 主角是 **系统架构 + AI 实验设计方法论**，而非某一个配比；
 - 论文需展示从文献挖掘 → 假设生成 → 实验设计 → 自动执行 → 数据解析 → 迭代优化的完整闭环；
 - 所有技术模块（检索、优化、微调、诊断等）共同服务于一个核心命题：**AI 如何设计实验**；
-- 传统材料论文的主角是"某种催化剂"，而 SDL 系统论文的主角是"发现催化剂的系统" [B-1] [报告一-3]——核心图表应包含系统架构图 + 优化轨迹 + Agent 推理链，而非仅展示电镜/XRD + 极化曲线。
+- 传统材料论文的主角是"某种催化剂"，而 SDL 系统论文的主角是"发现催化剂的系统" [B-1](https://pmc.ncbi.nlm.nih.gov/articles/PMC12368842/) [报告一-3]——核心图表应包含系统架构图 + 优化轨迹 + Agent 推理链，而非仅展示电镜/XRD + 极化曲线。
 
 #### 第二篇论文 = VLA 端到端 + 深度 RL 集成
 
-第一篇论文用 BORA + 多 Agent 完成大量实验并积累数据；第二篇论文用这些数据训练 VLA-like 端到端模型并与 BORA 对比性能，同时引入深度 RL 策略学习实现多步序列决策优化 [A-45] [A-52]。两篇论文形成清晰的递进关系：**系统构建 → 数据积累 → 模型进化**。
+第一篇论文用 BORA + 多 Agent 完成大量实验并积累数据；第二篇论文用这些数据训练 VLA-like 端到端模型并与 BORA 对比性能，同时引入深度 RL 策略学习实现多步序列决策优化 [A-45](https://arxiv.org/abs/2602.09430) [A-52](https://arxiv.org/abs/2409.07514)。两篇论文形成清晰的递进关系：**系统构建 → 数据积累 → 模型进化**。
 
 ---
 
 ## 第二章 总体架构概览
 
-> **本章对应本篇论文 Section 2：System Architecture**。详细的多智能体协同机制参见专题报告一 [报告一-3] [报告一-7]；对标系统的深入分析参见专题报告一第 1 章 [报告一-14] [报告一-22]。
+> **本章对应本篇论文 Section 2：System Architecture**。详细的多智能体协同机制参见专题报告一 [报告一-3] [报告一-7](https://pubs.acs.org/doi/abs/10.1021/jacs.4c17738)；对标系统的深入分析参见专题报告一第 1 章 [报告一-14](https://doi.org/10.26434/chemrxiv-2024-9lpb9) [报告一-22](https://doi.org/10.26434/chemrxiv-2023-tnz1x-v4)。
 
 ### 2.1 系统全景
 
@@ -88,25 +88,25 @@
 
 一个完整的实验迭代遵循如下数据流 [A-12] [B-7]：
 
-1. **检索 → 假设**：统一检索系统从学术文献 + 本地实验历史中提取领域知识，生成初始假设与参数边界 [B-41] [B-46]；
-2. **假设 → 参数**：优化引擎（BORA/MOBO）结合 LLM 推理，在成分空间中生成下一批参数点 [A-17] [A-37]；
-3. **参数 → 执行**：ExperimentExecutor 将参数编译为 RS485 泵送指令 + CHI 测试序列 [B-7] [B-20]；
-4. **执行 → 数据**：CHI 工作站输出完整的 CV/LSV/i-t 曲线（CSV 格式原始数据）[B-8]；
-5. **数据 → 评价**：DiagnosticsExpert 从原始曲线中提取 KPI（过电位、Tafel 斜率、RC 循环后衰减率），并检测异常 [A-29] [B-39]；
-6. **评价 → 迭代**：KPI 回传 ExperimentDesigner，更新代理模型，进入下一轮迭代 [B-8]。
+1. **检索 → 假设**：统一检索系统从学术文献 + 本地实验历史中提取领域知识，生成初始假设与参数边界 [B-41](https://pubs.acs.org/doi/10.1021/acs.jcim.5c01941) [B-46](https://medium.com/@bravekjh/beyond-basic-rag-exploring-advanced-retrieval-augmented-generation-rag-in-2025-08dbb3df5ca3)；
+2. **假设 → 参数**：优化引擎（BORA/MOBO）结合 LLM 推理，在成分空间中生成下一批参数点 [A-17](https://pubs.rsc.org/en/content/articlehtml/2026/dd/d5dd00520e) [A-37](https://arxiv.org/abs/2501.16224)；
+3. **参数 → 执行**：ExperimentExecutor 将参数编译为 RS485 泵送指令 + CHI 测试序列 [B-7] [B-20](https://pubs.acs.org/doi/10.1021/acs.analchem.2c04862)；
+4. **执行 → 数据**：CHI 工作站输出完整的 CV/LSV/i-t 曲线（CSV 格式原始数据）[B-8](https://www.pnnl.gov/main/publications/external/technical_reports/PNNL-38463.pdf)；
+5. **数据 → 评价**：DiagnosticsExpert 从原始曲线中提取 KPI（过电位、Tafel 斜率、RC 循环后衰减率），并检测异常 [A-29](https://mediatum.ub.tum.de/doc/1534565/1534565.pdf) [B-39](https://aclanthology.org/2025.findings-emnlp.235/)；
+6. **评价 → 迭代**：KPI 回传 ExperimentDesigner，更新代理模型，进入下一轮迭代 [B-8](https://www.pnnl.gov/main/publications/external/technical_reports/PNNL-38463.pdf)。
 
 ### 2.3 与前沿系统的对标
 
-以下对标分析综合了专题报告一和报告二中对各系统的深入评估 [报告一-11] [报告一-14] [报告一-22] [报告二-15] [报告二-29]：
+以下对标分析综合了专题报告一和报告二中对各系统的深入评估 [报告一-11](https://www.researchgate.net/publication/398434848) [报告一-14](https://doi.org/10.26434/chemrxiv-2024-9lpb9) [报告一-22](https://doi.org/10.26434/chemrxiv-2023-tnz1x-v4) [报告二-15](https://arxiv.org/abs/2501.16224) [报告二-29](https://arxiv.org/abs/2504.07383)：
 
 | 对标系统                                                        | 核心特点                                                               | 我们的对应/差距                                  | 来源              |
 | :-------------------------------------------------------------- | :--------------------------------------------------------------------- | :----------------------------------------------- | :---------------- |
-| **DigCat**                                                | 云端部署，40 万+实验数据，5 步自主工作流，全球多节点联动               | 我们是单节点本地系统，但闭环完整度与自主性可对齐 | [A-14] [A-15] [报告一-14]      |
-| **CRESt（MIT, Nature 2025）**                             | 多模态机器人平台，VLM 视觉诊断，3 月内 3500 次测试，发现八元高熵催化剂 | 我们无视觉模块，但电信号驱动的纯数据闭环同样有效 | [A-23] [A-24] [报告一-22]      |
-| **BORA（Liverpool, IJCAI-25 → Digital Discovery 2026）** | LLM+BO 混合优化，5 款推理模型对比，150 次实验预算下 o3 表现最优        | 我们的优化引擎计划采用 BORA 架构                 | [A-17] [A-37] [C-1](https://doi.org/10.1039/D5DD00520E) [报告二-15] |
-| **FastCat**                                               | 全自主多元素 LDH 催化剂发现，每天 75 种组合，数据飞轮驱动              | 同为纯经验数据驱动的闭环，结构高度类似           | [B-19] [B-29] [报告一-11]      |
-| **ChemAgents（JACS）**                                    | 多 Agent 机器人化学家，按需自主化学研究                                | 4 Agent 架构对齐                                 | [B-14] [报告一-7]            |
-| **Perovskite-R1**                                         | QwQ-32B 驱动的闭环钙钛矿材料发现，PCE 达 26.95%                       | 开源 LLM + 闭环实验验证的范式与我们高度一致      | [报告二-29]                  |
+| **DigCat**                                                | 云端部署，40 万+实验数据，5 步自主工作流，全球多节点联动               | 我们是单节点本地系统，但闭环完整度与自主性可对齐 | [A-14](https://chemrxiv.org/doi/full/10.26434/chemrxiv-2024-jsqqn) [A-15](https://www.oaepublish.com/articles/aiagent.2025.02) [报告一-14](https://doi.org/10.26434/chemrxiv-2024-9lpb9)      |
+| **CRESt（MIT, Nature 2025）**                             | 多模态机器人平台，VLM 视觉诊断，3 月内 3500 次测试，发现八元高熵催化剂 | 我们无视觉模块，但电信号驱动的纯数据闭环同样有效 | [A-23](https://news.mit.edu/2025/ai-system-learns-many-types-scientific-information-and-runs-experiments-discovering-new-materials-0925) [A-24](https://pubmed.ncbi.nlm.nih.gov/40987343/) [报告一-22](https://doi.org/10.26434/chemrxiv-2023-tnz1x-v4)      |
+| **BORA（Liverpool, IJCAI-25 → Digital Discovery 2026）** | LLM+BO 混合优化，5 款推理模型对比，150 次实验预算下 o3 表现最优        | 我们的优化引擎计划采用 BORA 架构                 | [A-17](https://pubs.rsc.org/en/content/articlehtml/2026/dd/d5dd00520e) [A-37](https://arxiv.org/abs/2501.16224) [C-1](https://doi.org/10.1039/D5DD00520E) [报告二-15](https://arxiv.org/abs/2501.16224) |
+| **FastCat**                                               | 全自主多元素 LDH 催化剂发现，每天 75 种组合，数据飞轮驱动              | 同为纯经验数据驱动的闭环，结构高度类似           | [B-19](https://doi.org/10.1021/acscatal.3c04170) [B-29](https://doi.org/10.1021/acscatal.3c04170) [报告一-11](https://www.researchgate.net/publication/398434848)      |
+| **ChemAgents（JACS）**                                    | 多 Agent 机器人化学家，按需自主化学研究                                | 4 Agent 架构对齐                                 | [B-14](https://pubs.acs.org/doi/abs/10.1021/jacs.4c17738) [报告一-7](https://pubs.acs.org/doi/abs/10.1021/jacs.4c17738)            |
+| **Perovskite-R1**                                         | QwQ-32B 驱动的闭环钙钛矿材料发现，PCE 达 26.95%                       | 开源 LLM + 闭环实验验证的范式与我们高度一致      | [报告二-29](https://arxiv.org/abs/2504.07383)                  |
 
 ---
 
@@ -114,13 +114,13 @@
 
 > **⚙️ 实现状态（2026-04）**：OpenViking 向量数据库已接入并配置 5 个知识分区（LITERATURE/EXPERIMENTS/OPERATIONS/ANALYSIS/PROJECTS），bge-m3 嵌入可用，BM25 稀疏检索就绪，Cross-Encoder 重排序模块已存在于 `rerank.py`。**差距**：各检索组件独立运行，尚未集成为本章描述的 MDSK-RAG 统一融合管线（预计 2 周工作量即可完成集成）。
 
-> **本章对应本篇论文 Section 3：Unified Knowledge Retrieval**。MDSK-RAG 双源架构的详细机制参见专题报告一第 4 章 [报告一-26]；BM25 + Cross-Encoder 多级检索的技术细节参见专题报告一第 4.2 节 [报告一-26] [报告一-19]；文献挖掘与参数提取工具参见专题报告三 [报告三-33] [报告三-34]。
+> **本章对应本篇论文 Section 3：Unified Knowledge Retrieval**。MDSK-RAG 双源架构的详细机制参见专题报告一第 4 章 [报告一-26](https://arxiv.org/abs/2312.10997)；BM25 + Cross-Encoder 多级检索的技术细节参见专题报告一第 4.2 节 [报告一-26](https://arxiv.org/abs/2312.10997) [报告一-19](https://arxiv.org/abs/2602.18479)；文献挖掘与参数提取工具参见专题报告三 [报告三-33](https://doi.org/10.26434/chemrxiv-2025-t110q) [报告三-34](https://doi.org/10.26434/chemrxiv-2025-t110q)。
 
 ### 3.1 问题：为什么基础 RAG 不够用
 
-基础 RAG 流程（文档切片 → 向量化 → 余弦相似度 → Top-K 拼入 Prompt）在面对电催化文献时存在三个核心缺陷 [B-9]：
+基础 RAG 流程（文档切片 → 向量化 → 余弦相似度 → Top-K 拼入 Prompt）在面对电催化文献时存在三个核心缺陷 [B-9](https://pubs.acs.org/doi/10.1021/acs.jcim.5c01897)：
 
-1. **化学式硬匹配失败**：纯密集向量检索容易丢失对 "NiFeCo" "Fe₂O₃" 等分子式/合金缩写的精确匹配 [B-46]；
+1. **化学式硬匹配失败**：纯密集向量检索容易丢失对 "NiFeCo" "Fe₂O₃" 等分子式/合金缩写的精确匹配 [B-46](https://medium.com/@bravekjh/beyond-basic-rag-exploring-advanced-retrieval-augmented-generation-rag-in-2025-08dbb3df5ca3)；
 2. **上下文截断**：单次检索的 Top-K 片段无法覆盖跨文献的多跳推理链条；
 3. **本地经验丢失**：学术文献中几乎不会记录"某批次泵送出错导致数据异常"这类本地实验室特有信息。
 
@@ -135,25 +135,25 @@
 | **学术文献库** | PDF → 段落切片 → bge-m3 向量化              | PageIndex 全文解析 + OpenViking 存储 | 查询 "Co 掺杂对 HER 过电位影响"            |
 | **本地实验库** | CSV/JSON 实验日志 → 模板转自然语言 → 向量化 | 每轮实验结束后自动入库               | 查询 "上次 Fe:Co=3:1 配比的 RC 循环衰减率" |
 
-材料研发知识本质上分为两类 [B-41]：被广泛认可的理论规律（学术期刊）与本地实验室特有的实践约束（仪器日志和失败记录）。MDSK-RAG [B-41] [B-48] [报告一-26] 通过严格的区域划分，使两类知识在嵌入空间中融合映射，从而使 AI 生成的参数既具备科学合理性，又符合当前硬件的物理极限。
+材料研发知识本质上分为两类 [B-41](https://pubs.acs.org/doi/10.1021/acs.jcim.5c01941)：被广泛认可的理论规律（学术期刊）与本地实验室特有的实践约束（仪器日志和失败记录）。MDSK-RAG [B-41](https://pubs.acs.org/doi/10.1021/acs.jcim.5c01941) [B-48](https://chemrxiv.org/doi/10.26434/chemrxiv-2025-bjq11) [报告一-26](https://arxiv.org/abs/2312.10997) 通过严格的区域划分，使两类知识在嵌入空间中融合映射，从而使 AI 生成的参数既具备科学合理性，又符合当前硬件的物理极限。
 
-此外，文献知识入库还可借鉴 **ReactionSeek** [报告三-33] 和 **SynChat** [报告三-34] 的思路——前者通过 LLM + 多模态管线实现百年文献的自动参数提取（精准率 > 95%），后者提供自然语言到化学反应数据的映射与引文溯源能力，两者配合可大幅提升学术文献库的入库效率和数据质量。
+此外，文献知识入库还可借鉴 **ReactionSeek** [报告三-33](https://doi.org/10.26434/chemrxiv-2025-t110q) 和 **SynChat** [报告三-34](https://doi.org/10.26434/chemrxiv-2025-t110q) 的思路——前者通过 LLM + 多模态管线实现百年文献的自动参数提取（精准率 > 95%），后者提供自然语言到化学反应数据的映射与引文溯源能力，两者配合可大幅提升学术文献库的入库效率和数据质量。
 
 #### 3.2.2 多级混合检索与重排序
 
-检索流程分三级 [B-46]：
+检索流程分三级 [B-46](https://medium.com/@bravekjh/beyond-basic-rag-exploring-advanced-retrieval-augmented-generation-rag-in-2025-08dbb3df5ca3)：
 
 1. **稀疏检索（BM25）**：精确匹配化学式、合金缩写、仪器型号等关键词——这一步解决化学式硬匹配问题；
 2. **密集检索（bge-m3 向量）**：语义相似度检索，捕获"抗腐蚀" ≈ "耐溶解" 等同义表达；
-3. **交叉编码器重排序（Cross-Encoder）**：将 BM25 + 向量检索结果合并后，用在科学文献上训练过的 Cross-Encoder 模型根据与当前优化目标的逻辑关联度重新打分 [B-46]。
+3. **交叉编码器重排序（Cross-Encoder）**：将 BM25 + 向量检索结果合并后，用在科学文献上训练过的 Cross-Encoder 模型根据与当前优化目标的逻辑关联度重新打分 [B-46](https://medium.com/@bravekjh/beyond-basic-rag-exploring-advanced-retrieval-augmented-generation-rag-in-2025-08dbb3df5ca3)。
 
-**为什么不做知识图谱**：知识图谱（如 AgentCAT 构建的依赖感知反应网络 [A-20]）虽然能实现多跳推理，但构建和维护成本极高，且我们的材料体系相对聚焦（6 种掺杂元素的 HER + RC），用多级混合检索 + 交叉编码器重排序已能满足关联发现的需求，投入产出比更优。
+**为什么不做知识图谱**：知识图谱（如 AgentCAT 构建的依赖感知反应网络 [A-20](https://arxiv.org/abs/2602.18479)）虽然能实现多跳推理，但构建和维护成本极高，且我们的材料体系相对聚焦（6 种掺杂元素的 HER + RC），用多级混合检索 + 交叉编码器重排序已能满足关联发现的需求，投入产出比更优。
 
 ### 3.3 检索系统与实验闭环的集成
 
 - **ExperimentDesigner 调用检索**：每次生成新参数前，自动检索（a）近 5 轮本地实验中与待探索区域最相关的结果，（b）学术文献中关于该元素组合的已知规律；
 - **DiagnosticsExpert 调用检索**：当检测到异常数据时，检索本地历史中类似异常的处理记录，以及文献中关于该失效模式的机理解释；
-- **Learning Advance 触发检索**：当优化停滞时，BORA 系统会将停滞特征转化为查询，检索文献中关于类似化学体系突破瓶颈的策略 [B-52]。
+- **Learning Advance 触发检索**：当优化停滞时，BORA 系统会将停滞特征转化为查询，检索文献中关于类似化学体系突破瓶颈的策略 [B-52](https://doi.org/10.26434/chemrxiv-2025-n1b4l)。
 
 ### 3.4 可行性评估
 
@@ -169,7 +169,7 @@
 
 > **⚙️ 实现状态（2026-04）**：当前优化引擎基于 Optuna TPE 贝叶斯优化（含单目标 `BayesianOptimizer` 和多目标 `MultiObjectiveBayesianOptimizer`），ExperimentDesigner 采用顺序三阶段策略（Stage 0 文献引导 → Stage 1 LLM 引导 → Stage 2 ML 混合：<10 点用 RandomForest，>30 点用 GP-RBF）。**差距**：本章核心设计——BORA 信任分数动态切换（a1/a2/a3 三模式）和 Learning Advance 停滞突破机制均未实现。这是最高优先级的开发任务（P0，预计 3-4 周）。
 
-> **本章对应本篇论文 Section 4：Experiment Design Optimization Engine（论文核心技术贡献）**。BORA 架构的完整技术分析参见专题报告二第 1 章 [报告二-15] [报告二-6]；MOBO 多目标优化的详细机制参见专题报告四第 3 章 [报告四-60] [报告四-64]；Learning Advance 范式参见专题报告二第 1.2 节 [报告二-11] [报告二-29]。
+> **本章对应本篇论文 Section 4：Experiment Design Optimization Engine（论文核心技术贡献）**。BORA 架构的完整技术分析参见专题报告二第 1 章 [报告二-15](https://arxiv.org/abs/2501.16224) [报告二-6](https://iclr.cc/virtual/2026/poster/10010010)；MOBO 多目标优化的详细机制参见专题报告四第 3 章 [报告四-60](https://pubs.rsc.org/en/content/articlehtml/2024/dd/d3dd00234a) [报告四-64](https://doi.org/10.1021/acscatal.0c04170)；Learning Advance 范式参见专题报告二第 1.2 节 [报告二-11](https://chemrxiv.org/doi/10.26434/chemrxiv.10001632) [报告二-29](https://arxiv.org/abs/2504.07383)。
 
 这是整篇论文的核心技术贡献。**AI 如何设计实验** = 给定当前所有已知信息（文献知识 + 历史实验数据），系统如何选择下一批实验参数？以下对比四种方案。
 
@@ -177,12 +177,12 @@
 
 #### 核心机制
 
-BORA（Language-Based Bayesian Optimization Research Assistant）[A-37] [C-1](https://doi.org/10.1039/D5DD00520E) [C-4] [报告二-15] 是 2025-2026 年由 Liverpool 大学 Cooper 团队提出的混合优化框架。其核心思想是用 LLM 的上下文推理能力弥补纯 BO 缺乏化学语义理解的缺陷。
+BORA（Language-Based Bayesian Optimization Research Assistant）[A-37](https://arxiv.org/abs/2501.16224) [C-1](https://doi.org/10.1039/D5DD00520E) [C-4](https://doi.org/10.24963/ijcai.2025/553) [报告二-15](https://arxiv.org/abs/2501.16224) 是 2025-2026 年由 Liverpool 大学 Cooper 团队提出的混合优化框架。其核心思想是用 LLM 的上下文推理能力弥补纯 BO 缺乏化学语义理解的缺陷。
 
-BORA 依赖动态计算的"信任分数"（Trust Score），在三种模式间自动切换 [A-17]：
+BORA 依赖动态计算的"信任分数"（Trust Score），在三种模式间自动切换 [A-17](https://pubs.rsc.org/en/content/articlehtml/2026/dd/d5dd00520e)：
 
 - **动作 a1（标准 BO）**：已有数据充足且方向明确时，用高斯过程代理模型 + 采集函数进行统计推断；
-- **动作 a2（LLM 全面干预）**：当 BO 进度停滞或不确定性过高时，LLM 接管控制——分析实验历史 + 检索文献假设 → 提出全新参数点（Warm Start），强行将搜索引出局部最优 [A-17]；
+- **动作 a2（LLM 全面干预）**：当 BO 进度停滞或不确定性过高时，LLM 接管控制——分析实验历史 + 检索文献假设 → 提出全新参数点（Warm Start），强行将搜索引出局部最优 [A-17](https://pubs.rsc.org/en/content/articlehtml/2026/dd/d5dd00520e)；
 - **动作 a3（LLM 引导的 BO）**：BO 生成候选点 → LLM 基于化学常识筛选排序，淘汰荒谬配比。
 
 #### 最新实证（Digital Discovery 2026）
@@ -196,23 +196,23 @@ BORA 依赖动态计算的"信任分数"（Trust Score），在三种模式间�
   - LLM-only 优化（无 BO 组件）在 batch size=1 时表现最佳，甚至可超越混合方案（均值 27.0）
   - 注入人类假设（即使是"坏假设"）后，LLM 能在 19/20 次运行中通过数据推理自我纠正
   - 添加先验实验数据可将成功率提升至 100%（20/20 次找到最优值）
-- **对我们的启示**：采用 BORA 架构 + 本地部署的 Qwen3 替代 OpenAI 模型，结合 OpenViking 检索替代 Google 搜索工具。值得注意的是，LILO [报告二-18] 通过交互式自然语言反馈实现 BO 热启动破冷启困境的思路，与 BORA a2 模式互补；BOLT [报告二-19] 的大规模多任务 BO + LLM 框架则为批量并行实验提供了参考
+- **对我们的启示**：采用 BORA 架构 + 本地部署的 Qwen3 替代 OpenAI 模型，结合 OpenViking 检索替代 Google 搜索工具。值得注意的是，LILO [报告二-18](https://arxiv.org/abs/2510.17671) 通过交互式自然语言反馈实现 BO 热启动破冷启困境的思路，与 BORA a2 模式互补；BOLT [报告二-19](https://arxiv.org/abs/2503.08131) 的大规模多任务 BO + LLM 框架则为批量并行实验提供了参考
 
 #### 适配我们系统的设计
 
 1. **ExperimentDesigner 内嵌 BORA 逻辑**：将 Qwen3-Max 作为 LLM 引擎，BO 使用 botorch/GPyTorch 本地高斯过程
 2. **信任分数计算**：基于连续 N 轮实验的 HER 增益变化率——若增益低于阈值 → 触发 a2 → LLM 检索 OpenViking + 分析实验历史 → 输出新假设
-3. **多目标扩展（MOBO）**：将 HER 过电位（活性）和 RC 循环后衰减率（稳定性）同时作为目标，采集函数使用 EHVI（Expected Hypervolume Improvement）[A-33] [A-34] [B-5] [报告四-60] [报告四-64]——专题报告四中对 Co–Mn–Sb–Sn–Ti 氧化物体系的 MOO 平台分析 [报告四-64] 证实多目标优化可将活性-稳定性权衡的发现效率提升 17 倍
+3. **多目标扩展（MOBO）**：将 HER 过电位（活性）和 RC 循环后衰减率（稳定性）同时作为目标，采集函数使用 EHVI（Expected Hypervolume Improvement）[A-33](https://www.oaepublish.com/articles/jmi.2024.108) [A-34](https://pubs.rsc.org/en/content/articlelanding/2024/ta/d3ta06651g) [B-5](https://doi.org/10.1021/acscatal.0c04170) [报告四-60](https://pubs.rsc.org/en/content/articlehtml/2024/dd/d3dd00234a) [报告四-64](https://doi.org/10.1021/acscatal.0c04170)——专题报告四中对 Co–Mn–Sb–Sn–Ti 氧化物体系的 MOO 平台分析 [报告四-64](https://doi.org/10.1021/acscatal.0c04170) 证实多目标优化可将活性-稳定性权衡的发现效率提升 17 倍
 
 ### 4.2 方案 B：ML 代理模型 + LLM 选择
 
-此方案将传统 ML（随机森林/XGBoost/轻量 GP）作为代理模型预测性能，LLM 负责解释预测结果并选择下一批参数 [B-5] [B-8]。
+此方案将传统 ML（随机森林/XGBoost/轻量 GP）作为代理模型预测性能，LLM 负责解释预测结果并选择下一批参数 [B-5](https://doi.org/10.1021/acscatal.0c04170) [B-8](https://www.pnnl.gov/main/publications/external/technical_reports/PNNL-38463.pdf)。
 
-**需要明确的是**：RAG 知识检索和模型微调并非方案 A（BORA）的专属能力，而是 **所有方案共享的基础设施**。在任何方案中，LLM 都会通过统一检索系统获取文献知识 + 本地实验历史 [B-41]，且每轮实验结束后数据自动入库——LLM 在下一轮推理时天然可见全部历史数据 [B-7]。CPT/SFT 微调同样对所有方案中的 LLM 组件生效。因此，方案之间的核心差异不在于"是否使用 RAG"，而在于 **参数选择的决策中枢是统计模型还是 LLM 推理**。
+**需要明确的是**：RAG 知识检索和模型微调并非方案 A（BORA）的专属能力，而是 **所有方案共享的基础设施**。在任何方案中，LLM 都会通过统一检索系统获取文献知识 + 本地实验历史 [B-41](https://pubs.acs.org/doi/10.1021/acs.jcim.5c01941)，且每轮实验结束后数据自动入库——LLM 在下一轮推理时天然可见全部历史数据 [B-7]。CPT/SFT 微调同样对所有方案中的 LLM 组件生效。因此，方案之间的核心差异不在于"是否使用 RAG"，而在于 **参数选择的决策中枢是统计模型还是 LLM 推理**。
 
-- **核心机制**：ML 代理模型（如 RF/XGBoost）对累积的实验数据进行拟合，预测未测配比的性能 → LLM 通过 RAG 检索文献 + 阅读 ML 预测结果 → 综合判断最终参数 [B-5]
-- **优势**：当数据量充足（>100 点）后，ML 模型的插值预测稳定可靠 [A-33]；LLM 负责高层推理而非数值拟合，分工清晰
-- **劣势**：**冷启动严重**——前 30 次实验无法拟合有效 ML 模型，此时退化为 LLM-Only（方案 C）[B-52]；ML 模型对化学空间的外推能力弱于 GP
+- **核心机制**：ML 代理模型（如 RF/XGBoost）对累积的实验数据进行拟合，预测未测配比的性能 → LLM 通过 RAG 检索文献 + 阅读 ML 预测结果 → 综合判断最终参数 [B-5](https://doi.org/10.1021/acscatal.0c04170)
+- **优势**：当数据量充足（>100 点）后，ML 模型的插值预测稳定可靠 [A-33](https://www.oaepublish.com/articles/jmi.2024.108)；LLM 负责高层推理而非数值拟合，分工清晰
+- **劣势**：**冷启动严重**——前 30 次实验无法拟合有效 ML 模型，此时退化为 LLM-Only（方案 C）[B-52](https://doi.org/10.26434/chemrxiv-2025-n1b4l)；ML 模型对化学空间的外推能力弱于 GP
 - **与 BORA 的关系**：可作为 BORA 后期的 **自然演进**——当实验数据积累到 100+ 点后，用训练好的 ML 代理模型替代 GP，获得更高的预测吞吐量
 - **可行性**：**中等，中期方案**。需要先用 BORA 跑出种子数据
 
@@ -220,12 +220,12 @@ BORA 依赖动态计算的"信任分数"（Trust Score），在三种模式间�
 
 直接让 LLM（配合 RAG 检索 + 实验数据库）根据完整的实验历史生成下一组参数，不使用任何传统优化器 [C-1](https://doi.org/10.1039/D5DD00520E)。
 
-**同样**，此方案中 LLM 并非"裸奔"：它同样接入统一检索系统（学术文献 + 本地实验数据库），同样受益于 CPT/SFT 微调 [B-41] [B-54]。每次实验完成后，新数据自动入库并在下一次 Prompt 中可见。方案 C 与方案 A 的本质区别是：**用 LLM 自身的上下文推理完全替代高斯过程/采集函数的统计决策**。
+**同样**，此方案中 LLM 并非"裸奔"：它同样接入统一检索系统（学术文献 + 本地实验数据库），同样受益于 CPT/SFT 微调 [B-41](https://pubs.acs.org/doi/10.1021/acs.jcim.5c01941) [B-54](https://developer.ibm.com/articles/fine-tuned-slm-llm-doc-validation/)。每次实验完成后，新数据自动入库并在下一次 Prompt 中可见。方案 C 与方案 A 的本质区别是：**用 LLM 自身的上下文推理完全替代高斯过程/采集函数的统计决策**。
 
 - **核心机制**：LLM 直接阅读全部实验历史（或通过 RAG 检索最相关子集）→ 分析变量间相关性、生成假设 → 输出下一组参数 [C-1](https://doi.org/10.1039/D5DD00520E)
 - **优势**：BORA 2026 扩展论文 [C-1](https://doi.org/10.1039/D5DD00520E) 已有大规模实证——o3 模型在 batch size=1 时的 LLM-only 优化可达均值 27.0 µmol/h，甚至超越混合方案；LLM 能自主进行变量相关性分析、假设生成与验证；添加先验实验数据后成功率提升至 100%（20/20 次）[C-1](https://doi.org/10.1039/D5DD00520E)
-- **劣势**：极度依赖 LLM 推理质量，存在随机性（624 次运行中仍有 outlier runs）[C-1](https://doi.org/10.1039/D5DD00520E)；本地 Qwen3 的推理能力可能不及闭源的 o3/gpt-5 [A-17]
-- **与 BORA 的关系**：方案 C 实质上是 BORA 系统中 **a2 动作的常态化版本**——当信任分数全程触发 a2 时，即等效于 LLM-only 运行 [A-37]
+- **劣势**：极度依赖 LLM 推理质量，存在随机性（624 次运行中仍有 outlier runs）[C-1](https://doi.org/10.1039/D5DD00520E)；本地 Qwen3 的推理能力可能不及闭源的 o3/gpt-5 [A-17](https://pubs.rsc.org/en/content/articlehtml/2026/dd/d5dd00520e)
+- **与 BORA 的关系**：方案 C 实质上是 BORA 系统中 **a2 动作的常态化版本**——当信任分数全程触发 a2 时，即等效于 LLM-only 运行 [A-37](https://arxiv.org/abs/2501.16224)
 - **可行性**：**高，但风险也高**。推荐作为 BORA 的对比基线（Ablation），而非独立方案
 
 ### 4.4 方案 D：VLA-like 端到端模型
@@ -233,23 +233,23 @@ BORA 依赖动态计算的"信任分数"（Trust Score），在三种模式间�
 用类似 VLA（Vision-Language-Action）的端到端模型：输入 = 实验观测（电化学曲线 + 历史参数），输出 = 下一组实验参数。
 
 - **优势**：理论上最优——模型直接从原始数据到动作，无信息瓶颈
-- **劣势**：需要大量训练数据（数千到数万条实验记录）；当前在化学实验设计领域无现成模型；Sci-VLA [A-45] [A-46] 主要面向机器人物理操作而非参数选择
+- **劣势**：需要大量训练数据（数千到数万条实验记录）；当前在化学实验设计领域无现成模型；Sci-VLA [A-45](https://arxiv.org/abs/2602.09430) [A-46](https://arxiv.org/abs/2409.07514) 主要面向机器人物理操作而非参数选择
 - **可行性**：**远期研究方向，不适合第一篇论文**。但可在第二篇论文中以积累的实验数据训练，详见 VLA 章节。
 
 ### 4.5 共享基础设施声明
 
-> **关键澄清**：RAG 知识检索（统一检索系统，见第三章）和模型微调（CPT/SFT/DPO，见第六章）是 **所有四种方案共享的基础设施层**，不作为方案间的区分维度 [B-41]。每轮实验的数据自动存入本地实验库后，任何方案中的 LLM 组件均可在下一轮即时调用 [B-7]。四种方案的核心差异在于 **参数选择的决策中枢**（统计模型 / LLM 推理 / 端到端模型）。
+> **关键澄清**：RAG 知识检索（统一检索系统，见第三章）和模型微调（CPT/SFT/DPO，见第六章）是 **所有四种方案共享的基础设施层**，不作为方案间的区分维度 [B-41](https://pubs.acs.org/doi/10.1021/acs.jcim.5c01941)。每轮实验的数据自动存入本地实验库后，任何方案中的 LLM 组件均可在下一轮即时调用 [B-7]。四种方案的核心差异在于 **参数选择的决策中枢**（统计模型 / LLM 推理 / 端到端模型）。
 
 ### 4.6 四方案对比总结
 
 | 方案 | 决策中枢 | 冷启动能力 | 数据效率 | 可解释性 | 推荐定位 |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **A. BORA（BO+LLM）** | GP 代理 + LLM 信任分数切换 [A-37] | 强（LLM warm-start） | 高（BO 统计 + LLM 推理） | 高（假设可追踪） | **第一篇核心方案** |
-| B. ML+LLM | ML 代理模型 + LLM 筛选 [B-5] | 弱（需 100+ 种子数据） | 高（ML 插值稳定） | 中 | 后期演进方案 |
+| **A. BORA（BO+LLM）** | GP 代理 + LLM 信任分数切换 [A-37](https://arxiv.org/abs/2501.16224) | 强（LLM warm-start） | 高（BO 统计 + LLM 推理） | 高（假设可追踪） | **第一篇核心方案** |
+| B. ML+LLM | ML 代理模型 + LLM 筛选 [B-5](https://doi.org/10.1021/acscatal.0c04170) | 弱（需 100+ 种子数据） | 高（ML 插值稳定） | 中 | 后期演进方案 |
 | C. LLM-Only（+RAG+数据库） | LLM 上下文推理 [C-1](https://doi.org/10.1039/D5DD00520E) | 强 | 中（依赖模型质量） | 高 | BORA 消融基线 / a2 常态化 |
-| D. VLA-like E2E | 端到端神经网络 [A-45] | 弱（需 500+ 数据） | 理论最高 | 低（黑盒） | **第二篇论文方向** |
+| D. VLA-like E2E | 端到端神经网络 [A-45](https://arxiv.org/abs/2602.09430) | 弱（需 500+ 数据） | 理论最高 | 低（黑盒） | **第二篇论文方向** |
 
-> **注**：上表中所有含 LLM 组件的方案（A/B/C）均共享统一检索系统 + 自动化数据入库 + 微调增益；D 方案（VLA）在训练阶段可通过 RAG 增强训练语料质量 [A-45] [A-46]。
+> **注**：上表中所有含 LLM 组件的方案（A/B/C）均共享统一检索系统 + 自动化数据入库 + 微调增益；D 方案（VLA）在训练阶段可通过 RAG 增强训练语料质量 [A-45](https://arxiv.org/abs/2602.09430) [A-46](https://arxiv.org/abs/2409.07514)。
 
 ---
 
@@ -257,11 +257,11 @@ BORA 依赖动态计算的"信任分数"（Trust Score），在三种模式间�
 
 > **⚙️ 实现状态（2026-04）**：当前 DiagnosticsExpert 仅执行标量 KPI 提取（过电位、Tafel 斜率、RC 衰减率），小波变换 + TCN 的 EC-Seq Encoder 尚未开始开发。RAG 方向（方向二）的曲线模板化描述也未实现。此模块定位为中期任务（P2）。
 
-> **本章对应本篇论文 Section 5：Deep Utilization of Electrochemical Sequence Data**。EC-Seq Encoder 架构的完整技术分析参见专题报告四第 2 章 [报告四-62]；EchemNet 1D-CNN 分类方案参见专题报告四第 1 章 [报告四-4]；PSO-TCN-Transformer 混合架构参见专题报告四 [报告四-8]。
+> **本章对应本篇论文 Section 5：Deep Utilization of Electrochemical Sequence Data**。EC-Seq Encoder 架构的完整技术分析参见专题报告四第 2 章 [报告四-62](https://www.preprints.org/manuscript/202510.1977)；EchemNet 1D-CNN 分类方案参见专题报告四第 1 章 [报告四-4](https://pubs.acs.org/doi/10.1021/acselectrochem.4c00014)；PSO-TCN-Transformer 混合架构参见专题报告四 [报告四-8](https://www.techscience.com/energy/v123n4/66739/html)。
 
 ### 5.1 问题：标量提取 vs 全曲线利用
 
-当前系统从 CHI 工作站导出 CV/LSV 曲线后，仅提取过电位（η@10 mA/cm²）、Tafel 斜率等标量值 [A-29]。这种做法丢弃了曲线中蕴含的大量动力学信息，特别是：
+当前系统从 CHI 工作站导出 CV/LSV 曲线后，仅提取过电位（η@10 mA/cm²）、Tafel 斜率等标量值 [A-29](https://mediatum.ub.tum.de/doc/1534565/1534565.pdf)。这种做法丢弃了曲线中蕴含的大量动力学信息，特别是：
 
 - RC 循环后曲线形状的微妙变化（指示表面结构退化的早期信号）
 - CV 曲线中的氧化还原峰位移（指示表面化学态变化）
@@ -269,28 +269,28 @@ BORA 依赖动态计算的"信任分数"（Trust Score），在三种模式间�
 
 ### 5.2 方向一：作为优化引擎的丰富特征（EC-Seq Encoder 思路）
 
-ChemST-LLM [A-31] [报告四-62] 提出的 EC-Seq Encoder 架构为全曲线利用提供了技术路径：
+ChemST-LLM [A-31](https://www.preprints.org/manuscript/202510.1977) [报告四-62](https://www.preprints.org/manuscript/202510.1977) 提出的 EC-Seq Encoder 架构为全曲线利用提供了技术路径：
 
-1. **多分辨率小波变换**：将 CV/LSV 原始信号分解为近似系数（长期热力学趋势，如极化规律）和细节系数（瞬态事件，如 RC 冲击下的局部钝化/微小电流波动）[A-31] [报告四-62]
-2. **时间卷积网络（TCN）**：对各频域尺度特征进行深度提取，输出固定维度的曲线嵌入向量——专题报告四中 PSO-TCN-Transformer 混合架构 [报告四-8] 在 SOC 估算中达到 RMSE < 0.6%、R² = 99.99%，证明 TCN 在电化学时序数据上的有效性
-3. **送入 MOBO**：将曲线嵌入（而非标量 KPI）作为优化器的输入特征，实现更精细的双目标评价——既评估 HER 活性（LSV 曲线形状），也评估 RC 稳定性（多次 RC 循环后曲线高频细节系数的平滑度）[A-31] [A-33]
+1. **多分辨率小波变换**：将 CV/LSV 原始信号分解为近似系数（长期热力学趋势，如极化规律）和细节系数（瞬态事件，如 RC 冲击下的局部钝化/微小电流波动）[A-31](https://www.preprints.org/manuscript/202510.1977) [报告四-62](https://www.preprints.org/manuscript/202510.1977)
+2. **时间卷积网络（TCN）**：对各频域尺度特征进行深度提取，输出固定维度的曲线嵌入向量——专题报告四中 PSO-TCN-Transformer 混合架构 [报告四-8](https://www.techscience.com/energy/v123n4/66739/html) 在 SOC 估算中达到 RMSE < 0.6%、R² = 99.99%，证明 TCN 在电化学时序数据上的有效性
+3. **送入 MOBO**：将曲线嵌入（而非标量 KPI）作为优化器的输入特征，实现更精细的双目标评价——既评估 HER 活性（LSV 曲线形状），也评估 RC 稳定性（多次 RC 循环后曲线高频细节系数的平滑度）[A-31](https://www.preprints.org/manuscript/202510.1977) [A-33](https://www.oaepublish.com/articles/jmi.2024.108)
 
-**补充技术路径**：EchemNet [报告四-4] 以纯 1D-CNN 对 CV 曲线进行机制分类（准确率 97.2%、事件检测 96%），可作为 EC-Seq Encoder 之前的预处理步骤——先分类再编码，减少下游 MOBO 的噪声输入。此外，CIGNN [报告四-13] 对伏安曲线进行法拉第与非法拉第分量精准分离的能力，可辅助提取更纯净的 HER 动力学特征。
+**补充技术路径**：EchemNet [报告四-4](https://pubs.acs.org/doi/10.1021/acselectrochem.4c00014) 以纯 1D-CNN 对 CV 曲线进行机制分类（准确率 97.2%、事件检测 96%），可作为 EC-Seq Encoder 之前的预处理步骤——先分类再编码，减少下游 MOBO 的噪声输入。此外，CIGNN [报告四-13](https://pubs.acs.org/doi/10.1021/jacs.5c05393) 对伏安曲线进行法拉第与非法拉第分量精准分离的能力，可辅助提取更纯净的 HER 动力学特征。
 
 **可行性**：**中等**。小波变换和 TCN 均有成熟开源实现（PyWavelets, PyTorch），但需要一定量的标注数据来训练 TCN。可先用无监督的小波特征提取作为起步，后期再引入 TCN。
 
 ### 5.3 方向二：作为 RAG 信息源
 
-将完整的电化学曲线数据转化为结构化文本描述后，存入本地实验知识库（即双源 RAG 的本地源）[B-41]：
+将完整的电化学曲线数据转化为结构化文本描述后，存入本地实验知识库（即双源 RAG 的本地源）[B-41](https://pubs.acs.org/doi/10.1021/acs.jcim.5c01941)：
 
 - 每条实验记录不仅包含标量 KPI，还包含曲线特征的自然语言描述（如"LSV 曲线在 -0.3V 处出现肩峰，RC 10 次循环后该峰消失"）[B-7]
-- 当 ExperimentDesigner 查询"为什么上批 Fe:Co=2:1 的稳定性差"时，检索系统能返回曲线级细节 [B-46]
+- 当 ExperimentDesigner 查询"为什么上批 Fe:Co=2:1 的稳定性差"时，检索系统能返回曲线级细节 [B-46](https://medium.com/@bravekjh/beyond-basic-rag-exploring-advanced-retrieval-augmented-generation-rag-in-2025-08dbb3df5ca3)
 
-**可行性**：**高**。仅需在 DiagnosticsExpert 中增加模板化的曲线描述生成逻辑 [B-39]。
+**可行性**：**高**。仅需在 DiagnosticsExpert 中增加模板化的曲线描述生成逻辑 [B-39](https://aclanthology.org/2025.findings-emnlp.235/)。
 
 ### 5.4 方向三：作为 VLA 模型的观测输入（远期，第二篇论文）
 
-在未来训练 VLA-like 端到端模型时，完整的曲线序列是最天然的"观测"——类比机器人 VLA 中的视觉帧序列 [A-41] [A-44]。详见第八章 VLA 架构。
+在未来训练 VLA-like 端到端模型时，完整的曲线序列是最天然的"观测"——类比机器人 VLA 中的视觉帧序列 [A-41](https://arxiv.org/abs/2602.09430) [A-44](https://arxiv.org/abs/2602.09430)。详见第八章 VLA 架构。
 
 ---
 
@@ -298,7 +298,7 @@ ChemST-LLM [A-31] [报告四-62] 提出的 EC-Seq Encoder 架构为全曲线利�
 
 > **⚙️ 实现状态（2026-04）**：当前 LLM 引擎为 Claude Sonnet/Opus（通过 `api.mcxhm.cn` API 网关调用），**未部署本地 Qwen3 模型**。CPT/SFT/DPO 三阶段微调路线**零实现**。微调路线的前提是先完成 Qwen3 本地部署（P0，预计 1 周），然后才能启动 CPT 语料收集和训练。
 
-> **本章对应本篇论文 Section 6：LLM Domain Adaptation**。CPT 的完整技术路线和 200M tokens 临界质量分析参见专题报告三第 2 章 [报告三-5] [报告三-8] [报告三-11]；SFT/LoRA 的模块化策略参见专题报告三第 3 章 [报告三-27] [报告三-29]；材料感知实体掩码课程学习参见 MELT [报告三-13]。
+> **本章对应本篇论文 Section 6：LLM Domain Adaptation**。CPT 的完整技术路线和 200M tokens 临界质量分析参见专题报告三第 2 章 [报告三-5](https://arxiv.org/abs/2507.18671) [报告三-8](https://proceedings.iclr.cc/paper_files/paper/2025/file/8cb240de90aa20207db944c6c88a7cc0-Paper-Conference.pdf) [报告三-11](https://arxiv.org/abs/2310.06083)；SFT/LoRA 的模块化策略参见专题报告三第 3 章 [报告三-27](https://doi.org/10.1016/j.mtcomm.2025.112260) [报告三-29](https://arxiv.org/abs/2410.01432)；材料感知实体掩码课程学习参见 MELT [报告三-13](https://doi.org/10.18653/v1/2024.findings-emnlp.627)。
 
 ### 6.1 为什么需要微调
 
@@ -307,34 +307,34 @@ ChemST-LLM [A-31] [报告四-62] 提出的 EC-Seq Encoder 架构为全曲线利�
 1. **领域专业度不足**：Qwen3 在电化学术语、仪器参数格式、合金命名规范等方面缺乏精确理解
 2. **长上下文推理遗忘**：随着实验轮次增加，Prompt 长度膨胀，早期实验信息被稀释
 
-微调的目标不是让模型记住所有化学方程式，而是让它掌握 **"电化学实验的直觉"**——在解析极化曲线斜率变化时，能稳定判断这是析氢副反应还是电极表面钝化 [B-54]。
+微调的目标不是让模型记住所有化学方程式，而是让它掌握 **"电化学实验的直觉"**——在解析极化曲线斜率变化时，能稳定判断这是析氢副反应还是电极表面钝化 [B-54](https://developer.ibm.com/articles/fine-tuned-slm-llm-doc-validation/)。
 
 ### 6.2 CPT（Continual Pre-Training）——当前可行
 
 CPT 是在已有预训练模型的基础上，继续用领域专有语料进行预训练，使模型"浸泡"在电化学知识中。
 
-**基准参考：ChemDFM [C-2] 及更多 CPT 成功案例**
+**基准参考：ChemDFM [C-2](https://doi.org/10.1016/j.xcrp.2025.102523) 及更多 CPT 成功案例**
 
-ChemDFM（发表于 Cell Reports Physical Science, 2025）[C-2] 是 CPT 在化学领域的成功案例：
+ChemDFM（发表于 Cell Reports Physical Science, 2025）[C-2](https://doi.org/10.1016/j.xcrp.2025.102523) 是 CPT 在化学领域的成功案例：
 
 - 基于 LLaMA 架构，用 34B tokens 化学文献进行 CPT
 - 再用 2.7M 条指令进行 SFT
 - 在化学 QA、分子理解、反应预测等多项任务上显著超越通用模型
 
-专题报告三梳理了更多 CPT 基准 [报告三-5] [报告三-8] [报告三-11]：
+专题报告三梳理了更多 CPT 基准 [报告三-5](https://arxiv.org/abs/2507.18671) [报告三-8](https://proceedings.iclr.cc/paper_files/paper/2025/file/8cb240de90aa20207db944c6c88a7cc0-Paper-Conference.pdf) [报告三-11](https://arxiv.org/abs/2310.06083)：
 
-- **SciLitLLM** [报告三-8]：基于 Qwen2.5 的 CPT+SFT 路线，SciAssess 提升 4.0%、SciRIFF 提升 10.1%，证明中等规模语料的 CPT 即可带来可测量的性能增益
-- **LLaMA3 化学适配** [报告三-11]：词表扩容 + 16.37B tokens CPT，合成匹配从 2 提升到 2507、FPS 从 0.44 提升到 0.84，展示了词表扩容对化学式硬匹配的关键作用
-- **MELT** [报告三-13]：材料感知实体掩码 + 课程学习，150K 文献训练，槽位填充 95.7、分类准确率提升 25%——其课程学习策略（先掌握通用化学术语，再细化到电催化子领域）可直接借鉴
+- **SciLitLLM** [报告三-8](https://proceedings.iclr.cc/paper_files/paper/2025/file/8cb240de90aa20207db944c6c88a7cc0-Paper-Conference.pdf)：基于 Qwen2.5 的 CPT+SFT 路线，SciAssess 提升 4.0%、SciRIFF 提升 10.1%，证明中等规模语料的 CPT 即可带来可测量的性能增益
+- **LLaMA3 化学适配** [报告三-11](https://arxiv.org/abs/2310.06083)：词表扩容 + 16.37B tokens CPT，合成匹配从 2 提升到 2507、FPS 从 0.44 提升到 0.84，展示了词表扩容对化学式硬匹配的关键作用
+- **MELT** [报告三-13](https://doi.org/10.18653/v1/2024.findings-emnlp.627)：材料感知实体掩码 + 课程学习，150K 文献训练，槽位填充 95.7、分类准确率提升 25%——其课程学习策略（先掌握通用化学术语，再细化到电催化子领域）可直接借鉴
 
-> **CPT 临界质量警示**：专题报告三指出 [报告三-11]，当 CPT 语料低于 ~200M tokens 时可能出现"稀疏表征干扰"，即模型在小众子领域（如 RC 耐受性评价）的表征反而被泛化语料稀释。建议我们的 CPT 语料收集以 200M tokens 为最低目标，而非原先估计的 50-100M。
+> **CPT 临界质量警示**：专题报告三指出 [报告三-11](https://arxiv.org/abs/2310.06083)，当 CPT 语料低于 ~200M tokens 时可能出现"稀疏表征干扰"，即模型在小众子领域（如 RC 耐受性评价）的表征反而被泛化语料稀释。建议我们的 CPT 语料收集以 200M tokens 为最低目标，而非原先估计的 50-100M。
 
 **我们的 CPT 方案**：
 
 | 维度     | 设计                                                                                                                                             |
 | :------- | :----------------------------------------------------------------------------------------------------------------------------------------------- |
 | 基座模型 | Qwen3-7B 或 Qwen3-14B（本地可部署）                                                                                                              |
-| 训练语料 | (1) 电催化 HER 相关论文全文（约 500-1000 篇 PDF → 清洗后目标 ≥ 200M tokens [报告三-11]）；(2) 电化学仪器操作手册（CHI 系列）；(3) AutoHySeeker 已有实验日志 |
+| 训练语料 | (1) 电催化 HER 相关论文全文（约 500-1000 篇 PDF → 清洗后目标 ≥ 200M tokens [报告三-11](https://arxiv.org/abs/2310.06083)）；(2) 电化学仪器操作手册（CHI 系列）；(3) AutoHySeeker 已有实验日志 |
 | 训练方式 | 在 A100/A800 上进行 CPT，约 1-3 天                                                                                                               |
 | 预期效果 | 模型熟悉电化学术语、合金命名、曲线特征描述风格                                                                                                   |
 
@@ -349,10 +349,10 @@ SFT 需要高质量的问答/指令对，如：
 
 **问题**：目前不具备足够的高质量标注数据。
 
-**方案**：在 CPT 完成后，利用前期实验（预计 50-100 轮闭环）的 数据-决策 对进行 LoRA 微调 [B-56]。LoRA 是参数高效微调（PEFT）的首选——仅训练低秩适配器（约 0.1%-1% 参数量），冻结主体权重。专题报告三中的实践案例表明：
-- **ChatHEA** [报告三-27]：LLaMA-3-8B + LoRA 微调后实现 ORR 催化剂 FeCoCuPtIr 超越 Pt/C 的发现，证明 LoRA 在催化剂领域的有效性
-- **LoRA-Chem** [报告三-29]：仅用 0.05-0.09% 参数的模块化多任务 LoRA，在 SHC-oAK 任务中 R² 提升 0.03
-- **PeiYang** [报告三-25]：Yi-1.5-6B + rsLoRA + MRL RAG 架构，以 2.3B tokens 训练达 76.81 分，超越 Qwen72B（65.45 分），展示了 LoRA + RAG 协同的巨大潜力
+**方案**：在 CPT 完成后，利用前期实验（预计 50-100 轮闭环）的 数据-决策 对进行 LoRA 微调 [B-56](https://www.mdpi.com/2079-9292/14/10/1961)。LoRA 是参数高效微调（PEFT）的首选——仅训练低秩适配器（约 0.1%-1% 参数量），冻结主体权重。专题报告三中的实践案例表明：
+- **ChatHEA** [报告三-27](https://doi.org/10.1016/j.mtcomm.2025.112260)：LLaMA-3-8B + LoRA 微调后实现 ORR 催化剂 FeCoCuPtIr 超越 Pt/C 的发现，证明 LoRA 在催化剂领域的有效性
+- **LoRA-Chem** [报告三-29](https://arxiv.org/abs/2410.01432)：仅用 0.05-0.09% 参数的模块化多任务 LoRA，在 SHC-oAK 任务中 R² 提升 0.03
+- **PeiYang** [报告三-25](https://arxiv.org/abs/2404.16130)：Yi-1.5-6B + rsLoRA + MRL RAG 架构，以 2.3B tokens 训练达 76.81 分，超越 Qwen72B（65.45 分），展示了 LoRA + RAG 协同的巨大潜力
 
 **可行性**：**中期**，需先积累实验数据。预计在完成约 100 轮闭环实验后可启动。
 
@@ -369,8 +369,8 @@ DPO 需要 "好回答 vs 坏回答" 配对数据。在我们的场景中：
 
 | 阶段           | 方法       | 数据需求                          | 时间点            | 效果预期                   | 参考                       |
 | :------------- | :--------- | :-------------------------------- | :---------------- | :------------------------- | :------------------------- |
-| **近期** | CPT        | 领域文献 + 手册（≥200M tokens）  | 现在可启动        | 提升术语理解与领域感知     | [C-2] [报告三-8] [报告三-11] |
-| **中期** | SFT (LoRA) | 100+ 轮实验的数据-决策对          | 完成 100 轮实验后 | 提升实验推理与参数生成质量 | [B-56] [报告三-27] [报告三-29] |
+| **近期** | CPT        | 领域文献 + 手册（≥200M tokens）  | 现在可启动        | 提升术语理解与领域感知     | [C-2](https://doi.org/10.1016/j.xcrp.2025.102523) [报告三-8](https://proceedings.iclr.cc/paper_files/paper/2025/file/8cb240de90aa20207db944c6c88a7cc0-Paper-Conference.pdf) [报告三-11](https://arxiv.org/abs/2310.06083) |
+| **中期** | SFT (LoRA) | 100+ 轮实验的数据-决策对          | 完成 100 轮实验后 | 提升实验推理与参数生成质量 | [B-56](https://www.mdpi.com/2079-9292/14/10/1961) [报告三-27](https://doi.org/10.1016/j.mtcomm.2025.112260) [报告三-29](https://arxiv.org/abs/2410.01432) |
 | **远期** | DPO        | 数百条偏好数据对                  | 系统运行 6 个月后 | 对齐人类实验偏好           | —                          |
 
 ---
@@ -379,28 +379,28 @@ DPO 需要 "好回答 vs 坏回答" 配对数据。在我们的场景中：
 
 > **⚙️ 实现状态（2026-04）**：已实现 L1 代码级规则监控 + L2 Agent 心跳检测，定义了 8 种已知故障类型（泵超时、通信丢失、电极断连等），具备基本自动恢复能力。**差距**：Reflexion + CoT 自反思推理链、FSM 状态机驱动的智能诊断、RAG 检索相似异常记录均未实现（P3，预计 2 周）。
 
-> **本章对应本篇论文 Section 7：Fault Diagnosis and Self-Healing**。Reflexion 自反思框架参见专题报告一第 5 章 [报告一-30] 和专题报告三第 4-5 章 [报告三-44] [报告三-37]；BioProAgent 的 FSM+Reflexion+符号接地机制 [报告三-44] 提供了最完整的恢复率基准（0% → 88.7%）。
+> **本章对应本篇论文 Section 7：Fault Diagnosis and Self-Healing**。Reflexion 自反思框架参见专题报告一第 5 章 [报告一-30](https://arxiv.org/abs/2303.11366) 和专题报告三第 4-5 章 [报告三-44](https://arxiv.org/abs/2503.12593) [报告三-37](https://doi.org/10.21203/rs.3.rs-6148048/v1)；BioProAgent 的 FSM+Reflexion+符号接地机制 [报告三-44](https://arxiv.org/abs/2503.12593) 提供了最完整的恢复率基准（0% → 88.7%）。
 
 ### 7.1 当前诊断能力
 
 DiagnosticsExpert 目前依赖：
 
 - **代码级规则监控（L1）**：硬件通信超时、泵送完成确认码缺失等→触发紧急停止 [B-7]
-- **Agent 级心跳（L2）**：防止多 Agent 陷入无限推理循环 [B-7] [B-32]
+- **Agent 级心跳（L2）**：防止多 Agent 陷入无限推理循环 [B-7] [B-32](https://galileo.ai/blog/multi-agent-coordination-strategies)
 
 ### 7.2 需要增加的能力
 
 #### 7.2.1 数据级异常检测（中期）
 
-利用上一章描述的小波变换特征，检测电化学曲线中的异常模式 [A-31]：
+利用上一章描述的小波变换特征，检测电化学曲线中的异常模式 [A-31](https://www.preprints.org/manuscript/202510.1977)：
 
-- CV 噪声异常增大 → 可能是气泡积聚或电极接触不良 [A-23]
-- LSV 曲线出现非预期的双峰 → 可能是试剂交叉污染 [B-34]
-- RC 循环后电流骤降幅度异常 → 可能是催化剂涂层大面积脱落 [A-1] [A-28]
+- CV 噪声异常增大 → 可能是气泡积聚或电极接触不良 [A-23](https://news.mit.edu/2025/ai-system-learns-many-types-scientific-information-and-runs-experiments-discovering-new-materials-0925)
+- LSV 曲线出现非预期的双峰 → 可能是试剂交叉污染 [B-34](https://github.com/chuanyaoliu/Electrochemical-Workstation-Automation-Using-Scripts)
+- RC 循环后电流骤降幅度异常 → 可能是催化剂涂层大面积脱落 [A-1](https://yonsei.elsevierpure.com/en/publications/reverse-current-tolerance-for-hydrogen-evolution-reaction-activit/) [A-28](https://pubs.aip.org/aip/jcp/article/163/4/040902/3356298/)
 
 #### 7.2.2 Reflexion 自反思框架
 
-当检测到非致命异常时，DiagnosticsExpert 不是简单重试，而是 [B-7] [B-23] [报告一-30]：
+当检测到非致命异常时，DiagnosticsExpert 不是简单重试，而是 [B-7] [B-23](https://arxiv.org/abs/2510.09901) [报告一-30](https://arxiv.org/abs/2303.11366)：
 
 1. 将异常数据 + 历史类似异常记录（通过 RAG 检索）送入 LLM
 2. LLM 通过 CoT（链式思考）生成多步归因假设
@@ -409,16 +409,16 @@ DiagnosticsExpert 目前依赖：
 
 **前沿基准与集成借鉴**：
 
-- **BioProAgent** [报告三-44]：FSM（有限状态机）+ Reflexion + 符号接地的三层架构将实验恢复率从 0% 提升至 88.7%，合规率 95.6%，Token 消耗降低 6 倍——其 FSM 驱动的状态转移逻辑可直接移植到我们的 DiagnosticsExpert 中，替代当前纯规则的异常判断
-- **LIRA** [报告三-37]：VLM 驱动的物理异常检测纠正，成功率 97.5%、操控时间降低 34-36%——虽然我们无视觉模块，但其"检测-诊断-纠正"三阶段流程可映射为"波形异常检测-LLM 归因-自动恢复动作"
-- **MIS（互信息惊喜度）** [报告三-43]：将异常不是视为错误而是视为"探索分支信号"——当 DiagnosticsExpert 检测到意外的电化学行为时，可将其反馈给 ExperimentDesigner 作为新假设的种子，而非简单丢弃
-- **A-Lab** [报告三-48]：伯克利无人实验室连续运行 17 天（400+ 小时），合成 41 种化合物——其长周期无人值守的鲁棒性正是我们系统的目标标杆
+- **BioProAgent** [报告三-44](https://arxiv.org/abs/2503.12593)：FSM（有限状态机）+ Reflexion + 符号接地的三层架构将实验恢复率从 0% 提升至 88.7%，合规率 95.6%，Token 消耗降低 6 倍——其 FSM 驱动的状态转移逻辑可直接移植到我们的 DiagnosticsExpert 中，替代当前纯规则的异常判断
+- **LIRA** [报告三-37](https://doi.org/10.21203/rs.3.rs-6148048/v1)：VLM 驱动的物理异常检测纠正，成功率 97.5%、操控时间降低 34-36%——虽然我们无视觉模块，但其"检测-诊断-纠正"三阶段流程可映射为"波形异常检测-LLM 归因-自动恢复动作"
+- **MIS（互信息惊喜度）** [报告三-43](https://arxiv.org/abs/2508.17403)：将异常不是视为错误而是视为"探索分支信号"——当 DiagnosticsExpert 检测到意外的电化学行为时，可将其反馈给 ExperimentDesigner 作为新假设的种子，而非简单丢弃
+- **A-Lab** [报告三-48](https://doi.org/10.1038/s41586-023-06734-w)：伯克利无人实验室连续运行 17 天（400+ 小时），合成 41 种化合物——其长周期无人值守的鲁棒性正是我们系统的目标标杆
 
-**可行性**：**高**。Reflexion 框架是纯软件逻辑，不需要额外硬件。关键是设计好异常模式库和归因模板。BioProAgent 的 FSM 状态机方案 [报告三-44] 提供了可直接参考的工程实现路径。
+**可行性**：**高**。Reflexion 框架是纯软件逻辑，不需要额外硬件。关键是设计好异常模式库和归因模板。BioProAgent 的 FSM 状态机方案 [报告三-44](https://arxiv.org/abs/2503.12593) 提供了可直接参考的工程实现路径。
 
 ### 7.3 对论文的价值
 
-高水平 SDL 论文会专门开辟章节论述系统的容错能力 [B-32] [报告一-30]。详细记录系统如何自主从异常中恢复，是证明系统具备 "科研级鲁棒性" 的关键加分项，也是自主性等级从 Level 2 跃迁到 Level 3-4 的标志 [B-1] [报告一-3]。
+高水平 SDL 论文会专门开辟章节论述系统的容错能力 [B-32](https://galileo.ai/blog/multi-agent-coordination-strategies) [报告一-30](https://arxiv.org/abs/2303.11366)。详细记录系统如何自主从异常中恢复，是证明系统具备 "科研级鲁棒性" 的关键加分项，也是自主性等级从 Level 2 跃迁到 Level 3-4 的标志 [B-1](https://pmc.ncbi.nlm.nih.gov/articles/PMC12368842/) [报告一-3]。
 
 ---
 
@@ -516,14 +516,14 @@ DiagnosticsExpert 目前依赖：
 
 ## 第八章 VLA 架构与实验参数空间（远期，第二篇论文主方向）
 
-> **本章对应第二篇论文核心**。Sci-VLA 的"分解-重组-决定"机制参见专题报告二 [报告二-68]；TwinRL-VLA 的数字孪生驱动 RL 策略参见专题报告二 [报告二-72]；CRESt 多模态 VLA 闭环参见专题报告一 [报告一-22] [报告一-21]。
+> **本章对应第二篇论文核心**。Sci-VLA 的"分解-重组-决定"机制参见专题报告二 [报告二-68](https://arxiv.org/abs/2602.09430)；TwinRL-VLA 的数字孪生驱动 RL 策略参见专题报告二 [报告二-72](https://arxiv.org/abs/2409.07514)；CRESt 多模态 VLA 闭环参见专题报告一 [报告一-22](https://doi.org/10.26434/chemrxiv-2023-tnz1x-v4) [报告一-21](https://doi.org/10.26434/chemrxiv-2023-tnz1x-v4)。
 
 ### 8.1 VLA 在科学实验中的前沿进展
 
-传统 VLA 模型（如 RT-2, Octo 等）面向机器人物理操作：输入 = 视觉帧 + 语言指令，输出 = 关节扭矩/末端执行器位移。Sci-VLA [A-45] [A-46] [报告二-68]（2026 年 2 月）首次将 VLA 范式扩展到科学实验场景：
+传统 VLA 模型（如 RT-2, Octo 等）面向机器人物理操作：输入 = 视觉帧 + 语言指令，输出 = 关节扭矩/末端执行器位移。Sci-VLA [A-45](https://arxiv.org/abs/2602.09430) [A-46](https://arxiv.org/abs/2409.07514) [报告二-68](https://arxiv.org/abs/2602.09430)（2026 年 2 月）首次将 VLA 范式扩展到科学实验场景：
 
-- **"分解-重组-决定" 机制**：将长视距任务分解为原子任务，LLM 生成任务间过渡轨迹 [A-45]
-- **成绩**：在 Autobio 数字生物实验室模拟中，每个原子任务成功率提升 42%，且可迁移至真实实验室 [A-43]
+- **"分解-重组-决定" 机制**：将长视距任务分解为原子任务，LLM 生成任务间过渡轨迹 [A-45](https://arxiv.org/abs/2602.09430)
+- **成绩**：在 Autobio 数字生物实验室模拟中，每个原子任务成功率提升 42%，且可迁移至真实实验室 [A-43](https://arxiv.org/abs/2602.09430)
 - **核心创新**：无需重训 VLA 底层网络，仅通过推理阶段的 Agentic Plugin 进行干预
 
 ### 8.2 我们的 VLA 动作空间定义
@@ -546,44 +546,44 @@ DiagnosticsExpert 目前依赖：
 
 ### 8.3 为什么是第二篇论文
 
-训练一个 VLA-like 端到端模型需要 [A-45] [C-3](https://arxiv.org/abs/2602.09430) [报告二-68]：
+训练一个 VLA-like 端到端模型需要 [A-45](https://arxiv.org/abs/2602.09430) [C-3](https://arxiv.org/abs/2602.09430) [报告二-68](https://arxiv.org/abs/2602.09430)：
 
 1. 足够多的实验数据（预计 500+ 轮闭环）——第一篇论文的实验过程就是数据积累 [A-12]
-2. 明确定义的观测-动作空间（本章已完成初步定义）[A-41]
-3. 合适的基座模型（可基于 CPT 后的 Qwen3 + 动作解码头）[A-44] [C-2] [报告三-5]
+2. 明确定义的观测-动作空间（本章已完成初步定义）[A-41](https://arxiv.org/abs/2602.09430)
+3. 合适的基座模型（可基于 CPT 后的 Qwen3 + 动作解码头）[A-44](https://arxiv.org/abs/2602.09430) [C-2](https://doi.org/10.1016/j.xcrp.2025.102523) [报告三-5](https://arxiv.org/abs/2507.18671)
 
-第一篇论文用 BORA + 多 Agent 跑完数据，第二篇论文用这些数据训练 VLA 模型并对比性能，形成清晰的两篇论文逻辑链条。同时，VLA 的观测空间可直接复用第一篇论文中 EC-Seq Encoder [报告四-62] 输出的曲线嵌入向量——这使得两篇论文的技术栈环环相扣，而非独立并行。
+第一篇论文用 BORA + 多 Agent 跑完数据，第二篇论文用这些数据训练 VLA 模型并对比性能，形成清晰的两篇论文逻辑链条。同时，VLA 的观测空间可直接复用第一篇论文中 EC-Seq Encoder [报告四-62](https://www.preprints.org/manuscript/202510.1977) 输出的曲线嵌入向量——这使得两篇论文的技术栈环环相扣，而非独立并行。
 
 ---
 
 ## 第九章 强化学习集成路径（中期-远期）
 
-> **本章对应第二篇论文的 RL 增强模块**。SDL 中 RL 的详细技术分析参见专题报告二第 2 章 [报告二-8] [报告二-35] [报告二-34] [报告二-40]；ACE 框架的 LLM+RL 双向共进化参见 [报告二-12]；Robin 多智能体闭环发现系统参见 [报告二-61]。
+> **本章对应第二篇论文的 RL 增强模块**。SDL 中 RL 的详细技术分析参见专题报告二第 2 章 [报告二-8](https://www.mdpi.com/2227-7390/13/12/1932) [报告二-35](https://doi.org/10.1021/acs.jcim.3c00394) [报告二-34](https://pubs.acs.org/doi/10.1021/jacs.4c08866) [报告二-40](https://arxiv.org/abs/2407.00121)；ACE 框架的 LLM+RL 双向共进化参见 [报告二-12](https://icml.cc/virtual/2025/session/50258)；Robin 多智能体闭环发现系统参见 [报告二-61](https://doi.org/10.1002/adma.202413523)。
 
 ### 9.1 为什么需要 RL
 
-贝叶斯优化和 LLM 推理本质上都是 "单步决策"——每次独立选择下一个参数点 [A-8] [B-5]。但材料实验往往具有 **序列依赖性**：
+贝叶斯优化和 LLM 推理本质上都是 "单步决策"——每次独立选择下一个参数点 [A-8](https://pubs.rsc.org/en/content/articlehtml/2024/dd/d3dd00234a) [B-5](https://doi.org/10.1021/acscatal.0c04170)。但材料实验往往具有 **序列依赖性**：
 
-- 第 N 轮的电极表面状态受第 N-1 轮 RC 测试的影响 [A-1] [A-28]
-- 催化剂在连续多轮加速寿命测试中的退化是一个马尔可夫过程 [A-29]
-- 最优的实验 **策略**（而非单个参数点）可能涉及"先粗筛 → 再精调 → 最后验证"的多阶段规划 [B-14]
+- 第 N 轮的电极表面状态受第 N-1 轮 RC 测试的影响 [A-1](https://yonsei.elsevierpure.com/en/publications/reverse-current-tolerance-for-hydrogen-evolution-reaction-activit/) [A-28](https://pubs.aip.org/aip/jcp/article/163/4/040902/3356298/)
+- 催化剂在连续多轮加速寿命测试中的退化是一个马尔可夫过程 [A-29](https://mediatum.ub.tum.de/doc/1534565/1534565.pdf)
+- 最优的实验 **策略**（而非单个参数点）可能涉及"先粗筛 → 再精调 → 最后验证"的多阶段规划 [B-14](https://pubs.acs.org/doi/abs/10.1021/jacs.4c17738)
 
-RL 天然适合这类序列决策问题 [A-50]。
+RL 天然适合这类序列决策问题 [A-50](https://pubs.acs.org/doi/10.1021/acs.iecr.1c04622)。
 
 ### 9.2 路径一：先训模型，再用 RL 微调（远期）
 
-1. 先用 BORA/LLM-only 积累大量实验数据 [A-37] [C-1](https://doi.org/10.1039/D5DD00520E)
-2. 训练一个代理模型（GP / VLA-like）作为环境模拟器 [A-51]
-3. 在模拟环境中用 PPO/DDPG 训练 RL 策略 [A-50]
-4. 将 RL 策略部署到真实系统中微调 [A-53]
+1. 先用 BORA/LLM-only 积累大量实验数据 [A-37](https://arxiv.org/abs/2501.16224) [C-1](https://doi.org/10.1039/D5DD00520E)
+2. 训练一个代理模型（GP / VLA-like）作为环境模拟器 [A-51](https://arxiv.org/abs/2511.12260)
+3. 在模拟环境中用 PPO/DDPG 训练 RL 策略 [A-50](https://pubs.acs.org/doi/10.1021/acs.iecr.1c04622)
+4. 将 RL 策略部署到真实系统中微调 [A-53](https://arxiv.org/abs/2409.07514)
 
-**参考**：TwinRL-VLA [A-52] [A-53] [报告二-72] 正是这个思路——先在数字孪生中用 RL 海量采样，识别 OOD 操作边界，再在真实系统中靶向验证。TwinRL 报告成功率逼近 100%，只需约 20 分钟完成微调部署。
+**参考**：TwinRL-VLA [A-52](https://arxiv.org/abs/2409.07514) [A-53](https://arxiv.org/abs/2409.07514) [报告二-72](https://arxiv.org/abs/2409.07514) 正是这个思路——先在数字孪生中用 RL 海量采样，识别 OOD 操作边界，再在真实系统中靶向验证。TwinRL 报告成功率逼近 100%，只需约 20 分钟完成微调部署。
 
 **可行性**：**远期**。需要先积累足够数据构建可靠的环境模拟器。
 
 ### 9.3 路径二：LLM → RL → LLM 交替接力优化（中期）
 
-此路径的核心思想是 **模仿 BORA 的信任分数切换机制，但在 LLM 和 RL 之间建立阶段性接力**——类似于接力赛跑，每个阶段由最擅长当前任务的"选手"主导 [A-17] [B-52]。
+此路径的核心思想是 **模仿 BORA 的信任分数切换机制，但在 LLM 和 RL 之间建立阶段性接力**——类似于接力赛跑，每个阶段由最擅长当前任务的"选手"主导 [A-17](https://pubs.rsc.org/en/content/articlehtml/2026/dd/d5dd00520e) [B-52](https://doi.org/10.26434/chemrxiv-2025-n1b4l)。
 
 #### 三阶段循环机制
 
@@ -603,33 +603,33 @@ RL 天然适合这类序列决策问题 [A-50]。
 
 1. **阶段 1：LLM 主导冷启动**（~前 30 轮）
    - 数据稀疏，无法训练有效 RL 策略
-   - LLM 通过 RAG 检索文献 + 化学常识推理，生成实验参数 [B-52] [C-1](https://doi.org/10.1039/D5DD00520E)
+   - LLM 通过 RAG 检索文献 + 化学常识推理，生成实验参数 [B-52](https://doi.org/10.26434/chemrxiv-2025-n1b4l) [C-1](https://doi.org/10.1039/D5DD00520E)
    - 本质上等同于 BORA 的 a2 模式或方案 C（LLM-Only）
    - **目标**：快速积累种子数据，覆盖参数空间的关键区域
 
 2. **阶段 2：RL 接管策略搜索**（数据充足后）
-   - 当累积实验数据达到 RL 训练阈值（如 50-100 点），启动 RL 策略学习 [A-50] [A-51]
-   - RL agent 在 GP/ML 代理模型构建的虚拟环境中进行策略搜索 [A-53]
+   - 当累积实验数据达到 RL 训练阈值（如 50-100 点），启动 RL 策略学习 [A-50](https://pubs.acs.org/doi/10.1021/acs.iecr.1c04622) [A-51](https://arxiv.org/abs/2511.12260)
+   - RL agent 在 GP/ML 代理模型构建的虚拟环境中进行策略搜索 [A-53](https://arxiv.org/abs/2409.07514)
    - **关键优势**：RL 能发现序列决策中的最优策略（如"先粗筛大区域 → 再精调邻域 → 最后验证"的多步规划），这是单步 BO/LLM 推理做不到的
    - 回报信号 = 实际实验的 HER 改进幅度 + RC 稳定性加权
 
 3. **阶段 3：LLM 介入打破 RL 停滞**（RL 平台期触发）
-   - 当 RL 连续 N 轮策略更新后性能增益低于阈值 → 判定 RL 陷入局部最优 [B-52]
+   - 当 RL 连续 N 轮策略更新后性能增益低于阈值 → 判定 RL 陷入局部最优 [B-52](https://doi.org/10.26434/chemrxiv-2025-n1b4l)
    - LLM 接管：分析 RL 的探索轨迹 + RAG 检索文献中关于类似化学体系的突破策略 [C-5](https://doi.org/10.26434/chemrxiv-2025-n1b4l)
    - LLM 输出新的科学假设（如"当前 Co 含量已饱和，建议引入 W 调控电子结构"）→ 重新定义 RL 的搜索空间边界 → RL 在新空间内重启策略学习
    - **循环回到阶段 2**
 
 #### 与 BORA 架构的融合
 
-此路径并非替代 BORA，而是 BORA 的 **时间维度扩展**。BORA 的 a1/a2/a3 切换发生在每一步决策中（微观切换），而 LLM→RL→LLM 接力发生在实验阶段之间（宏观切换）[A-17]。两者可以嵌套：在阶段 2 中，RL 策略搜索内部仍可使用 BORA 的 a3（LLM 校验）来过滤 RL 提出的荒谬参数 [A-37]。
+此路径并非替代 BORA，而是 BORA 的 **时间维度扩展**。BORA 的 a1/a2/a3 切换发生在每一步决策中（微观切换），而 LLM→RL→LLM 接力发生在实验阶段之间（宏观切换）[A-17](https://pubs.rsc.org/en/content/articlehtml/2026/dd/d5dd00520e)。两者可以嵌套：在阶段 2 中，RL 策略搜索内部仍可使用 BORA 的 a3（LLM 校验）来过滤 RL 提出的荒谬参数 [A-37](https://arxiv.org/abs/2501.16224)。
 
 **可行性**：**中期**。阶段 1 即为当前的 BORA/LLM-Only 运行模式；阶段 2 需要在积累足够数据后实现，技术上基于 botorch + Stable Baselines3 等成熟框架；阶段 3 的 LLM 假设生成已被 Learning Advance 范式验证 [C-5](https://doi.org/10.26434/chemrxiv-2025-n1b4l)。
 
 **补充参考**：
-- **ACE（Agents Co-Evolution）** [报告二-12]：提出 LLM + RL 双向交替共进化框架（"Think Twice, Act Once"），与我们的 LLM→RL→LLM 接力思路高度一致，但 ACE 在每一步内部即实现 LLM-RL 协同，而非阶段性切换
-- **Robin** [报告二-61]：多智能体闭环发现系统，完整实现"文献检索 → RL 设计 → 数据分析 → LLM 假设更新"循环，可作为第二篇论文的工程实现参考
-- **RE-EXPLORE** [报告二-34]：唯一性惩罚 RL 策略，通过 Tanimoto 相似度防止模式崩溃——可防止 RL 阶段反复探索已知的高性能区域而忽略未知区域
-- **MolStitch** [报告二-40]：轨迹拼接离线 RL + 凸约束，允许从历史实验数据中重组 RL 训练轨迹——解决了"真实实验数据不足以直接训练 RL"的冷启动问题
+- **ACE（Agents Co-Evolution）** [报告二-12](https://icml.cc/virtual/2025/session/50258)：提出 LLM + RL 双向交替共进化框架（"Think Twice, Act Once"），与我们的 LLM→RL→LLM 接力思路高度一致，但 ACE 在每一步内部即实现 LLM-RL 协同，而非阶段性切换
+- **Robin** [报告二-61](https://doi.org/10.1002/adma.202413523)：多智能体闭环发现系统，完整实现"文献检索 → RL 设计 → 数据分析 → LLM 假设更新"循环，可作为第二篇论文的工程实现参考
+- **RE-EXPLORE** [报告二-34](https://pubs.acs.org/doi/10.1021/jacs.4c08866)：唯一性惩罚 RL 策略，通过 Tanimoto 相似度防止模式崩溃——可防止 RL 阶段反复探索已知的高性能区域而忽略未知区域
+- **MolStitch** [报告二-40](https://arxiv.org/abs/2407.00121)：轨迹拼接离线 RL + 凸约束，允许从历史实验数据中重组 RL 训练轨迹——解决了"真实实验数据不足以直接训练 RL"的冷启动问题
 
 ### 9.4 路径三：Agent 级别的 RL（远期探索）
 
@@ -647,8 +647,8 @@ RL 天然适合这类序列决策问题 [A-50]。
 
 | 路径        | 核心思想                       | 数据需求         | 技术难度 | 定位         |
 | :---------- | :----------------------------- | :--------------- | :------- | :----------- |
-| 先训后 RL   | 数字孪生 + RL 策略学习 [A-53]  | 500+ 轮数据      | 高       | 第二篇论文   |
-| LLM→RL→LLM 接力 | 三阶段循环：冷启动→RL策略→LLM假设重启 [B-52] [C-5](https://doi.org/10.26434/chemrxiv-2025-n1b4l) | 50+ 轮启动 RL | 中 | **中期核心增强** |
+| 先训后 RL   | 数字孪生 + RL 策略学习 [A-53](https://arxiv.org/abs/2409.07514)  | 500+ 轮数据      | 高       | 第二篇论文   |
+| LLM→RL→LLM 接力 | 三阶段循环：冷启动→RL策略→LLM假设重启 [B-52](https://doi.org/10.26434/chemrxiv-2025-n1b4l) [C-5](https://doi.org/10.26434/chemrxiv-2025-n1b4l) | 50+ 轮启动 RL | 中 | **中期核心增强** |
 | Agent 级 RL | Meta-RL 优化 Agent 协作        | 大规模运行日志   | 很高     | 纯前沿展望   |
 
 ---
@@ -659,7 +659,7 @@ RL 天然适合这类序列决策问题 [A-50]。
 
 ### 10.1 闭环实验室论文的独特叙事结构
 
-传统材料论文的主角是"某种催化剂"，闭环 SDL 论文的主角是"发现催化剂的系统" [B-1] [报告一-3]。结构对比：
+传统材料论文的主角是"某种催化剂"，闭环 SDL 论文的主角是"发现催化剂的系统" [B-1](https://pmc.ncbi.nlm.nih.gov/articles/PMC12368842/) [报告一-3]。结构对比：
 
 | 传统材料论文                                 | SDL 系统论文                                                 |
 | :------------------------------------------- | :----------------------------------------------------------- |
@@ -668,15 +668,15 @@ RL 天然适合这类序列决策问题 [A-50]。
 
 ### 10.2 关键结构要素
 
-1. **系统架构与层级解耦**：展示硬件层 / Agent 层 / 知识层的清晰边界 [B-22]
-2. **自主性等级声明**：明确标注系统达到哪个自主等级，以及人机边界在哪里 [B-1] [B-21]
-3. **Progressive Validation**（阶梯式验证）[B-14]：
+1. **系统架构与层级解耦**：展示硬件层 / Agent 层 / 知识层的清晰边界 [B-22](https://www.labmanager.com/closed-loop-autonomous-materials-discovery-system-advances-lab-innovation-34949)
+2. **自主性等级声明**：明确标注系统达到哪个自主等级，以及人机边界在哪里 [B-1](https://pmc.ncbi.nlm.nih.gov/articles/PMC12368842/) [B-21](https://pubs.rsc.org/en/content/articlehtml/2024/dd/d4dd00040d)
+3. **Progressive Validation**（阶梯式验证）[B-14](https://pubs.acs.org/doi/abs/10.1021/jacs.4c17738)：
    - Level 1：基础指令执行——证明系统能正确配液 + CV 测试
    - Level 2：参数空间探索——证明 BORA 能有效跳出局部最优
    - Level 3：多目标 Pareto 前沿——证明系统在活性/稳定性矛盾中找到最优权衡
    - Level 4：新知识生成——证明系统发现了人类未曾预料的元素协同效应
-4. **异常处理与容错**：专门章节展示 Reflexion 自愈案例 [B-32]
-5. **消融实验**：对统一检索、BORA 各模式、CPT 等模块的贡献进行消融分析 [C-1](https://doi.org/10.1039/D5DD00520E) [B-5]
+4. **异常处理与容错**：专门章节展示 Reflexion 自愈案例 [B-32](https://galileo.ai/blog/multi-agent-coordination-strategies)
+5. **消融实验**：对统一检索、BORA 各模式、CPT 等模块的贡献进行消融分析 [C-1](https://doi.org/10.1039/D5DD00520E) [B-5](https://doi.org/10.1021/acscatal.0c04170)
 
 ### 10.3 参考文献要求
 
@@ -697,12 +697,12 @@ RL 天然适合这类序列决策问题 [A-50]。
 | 阶段 | 技术模块 | 具体工作 | 当前状态 | 对本篇论文的作用 | 关键参考 |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | **P0 近期（1-2 周）** | Qwen3 本地部署 | 部署 Qwen3-7B/14B（vLLM/SGLang），替换 Claude API 调用，修改 `config.py` | ❌ 未开始 | 微调路线前提 + 论文一致性 | — |
-| **P0 近期（3-6 周）** | BORA 优化引擎 | 在现有 Optuna 之上封装 BORA 层：信任分数计算 + a1/a2/a3 模式路由 + Learning Advance 停滞突破 | ❌ 未开始（当前为 Optuna TPE 三阶段策略） | 论文核心算法贡献 | [A-37] [C-1](https://doi.org/10.1039/D5DD00520E) [C-4] [报告二-15] |
-| **P1 近期（2-4 周）** | MDSK-RAG 统一管线 | 在现有 OpenViking + BM25 + Cross-Encoder 基础上实现统一融合层 | ⚠️ 组件就绪，缺融合层 | 为 BORA a2 模式提供知识基础 | [B-41] [B-46] [报告一-26] |
-| **P2 中期（3-4 周）** | CPT 训练 | 收集语料（≥200M tokens）+ Qwen3-7B CPT 训练 | ❌ 未开始（依赖 Qwen3 部署） | 提升系统整体推理质量 | [C-2] [报告三-8] [报告三-11] |
-| **P2 中期（3-4 周）** | EC-Seq 曲线编码 | 小波特征提取（起步）→ TCN 编码 → 嵌入送入 MOBO | ❌ 未开始 | 论文数据利用创新点 | [A-31] [A-33] [报告四-62] [报告四-4] |
-| **P3 中期（2 周）** | 诊断增强 | 在现有 L1/L2 基础上增加 Reflexion/CoT 推理归因 + FSM 状态机 | ⚠️ 基础容错已有 | 论文容错章节 | [A-31] [B-32] [报告三-44] |
-| **P3 中后期（2-3 周）** | SFT (LoRA) | 利用前期实验数据微调（需积累 100+ 轮数据） | ❌ 未开始（依赖 CPT + 数据积累） | 系统持续提升 | [B-56] [报告三-27] [报告三-29] |
+| **P0 近期（3-6 周）** | BORA 优化引擎 | 在现有 Optuna 之上封装 BORA 层：信任分数计算 + a1/a2/a3 模式路由 + Learning Advance 停滞突破 | ❌ 未开始（当前为 Optuna TPE 三阶段策略） | 论文核心算法贡献 | [A-37](https://arxiv.org/abs/2501.16224) [C-1](https://doi.org/10.1039/D5DD00520E) [C-4](https://doi.org/10.24963/ijcai.2025/553) [报告二-15](https://arxiv.org/abs/2501.16224) |
+| **P1 近期（2-4 周）** | MDSK-RAG 统一管线 | 在现有 OpenViking + BM25 + Cross-Encoder 基础上实现统一融合层 | ⚠️ 组件就绪，缺融合层 | 为 BORA a2 模式提供知识基础 | [B-41](https://pubs.acs.org/doi/10.1021/acs.jcim.5c01941) [B-46](https://medium.com/@bravekjh/beyond-basic-rag-exploring-advanced-retrieval-augmented-generation-rag-in-2025-08dbb3df5ca3) [报告一-26](https://arxiv.org/abs/2312.10997) |
+| **P2 中期（3-4 周）** | CPT 训练 | 收集语料（≥200M tokens）+ Qwen3-7B CPT 训练 | ❌ 未开始（依赖 Qwen3 部署） | 提升系统整体推理质量 | [C-2](https://doi.org/10.1016/j.xcrp.2025.102523) [报告三-8](https://proceedings.iclr.cc/paper_files/paper/2025/file/8cb240de90aa20207db944c6c88a7cc0-Paper-Conference.pdf) [报告三-11](https://arxiv.org/abs/2310.06083) |
+| **P2 中期（3-4 周）** | EC-Seq 曲线编码 | 小波特征提取（起步）→ TCN 编码 → 嵌入送入 MOBO | ❌ 未开始 | 论文数据利用创新点 | [A-31](https://www.preprints.org/manuscript/202510.1977) [A-33](https://www.oaepublish.com/articles/jmi.2024.108) [报告四-62](https://www.preprints.org/manuscript/202510.1977) [报告四-4](https://pubs.acs.org/doi/10.1021/acselectrochem.4c00014) |
+| **P3 中期（2 周）** | 诊断增强 | 在现有 L1/L2 基础上增加 Reflexion/CoT 推理归因 + FSM 状态机 | ⚠️ 基础容错已有 | 论文容错章节 | [A-31](https://www.preprints.org/manuscript/202510.1977) [B-32](https://galileo.ai/blog/multi-agent-coordination-strategies) [报告三-44](https://arxiv.org/abs/2503.12593) |
+| **P3 中后期（2-3 周）** | SFT (LoRA) | 利用前期实验数据微调（需积累 100+ 轮数据） | ❌ 未开始（依赖 CPT + 数据积累） | 系统持续提升 | [B-56](https://www.mdpi.com/2079-9292/14/10/1961) [报告三-27](https://doi.org/10.1016/j.mtcomm.2025.112260) [报告三-29](https://arxiv.org/abs/2410.01432) |
 | — | 多智能体框架 | 4 核心 + 3 辅助 Agent 的 LangGraph 状态图 | ✅ 已完成 | 论文架构章节 | [A-12] |
 | — | 硬件控制 | RS485 泵控 + CHI 全套电化学测试 + 溶液配制/冲洗 | ✅ 已完成 | 论文硬件章节 | [B-7] |
 | — | 前端 Dashboard | React + TS + Vite，11 个页面 | ⚠️ 大部分完成（P0 Bug 待修） | 系统展示 | — |
@@ -712,9 +712,9 @@ RL 天然适合这类序列决策问题 [A-50]。
 
 | 阶段                     | 技术模块        | 具体工作                                           | 对第二篇论文的作用             | 关键参考 |
 | :----------------------- | :-------------- | :------------------------------------------------- | :----------------------------- | :------- |
-| **中期（4-6 月）** | LLM→RL→LLM 接力 | 阶段性强化学习策略优化                             | 序列决策能力提升               | [A-50] [B-52] [C-5](https://doi.org/10.26434/chemrxiv-2025-n1b4l) [报告二-12] [报告二-34] |
-| **远期**           | VLA 模型        | 定义动作/观测空间 + 训练 + 对比 BORA               | 第二篇论文核心                 | [A-45] [C-3](https://arxiv.org/abs/2602.09430) [报告二-68] |
-| **远期**           | RL 集成（数字孪生） | TwinRL 模型 + 线下-线上迁移                    | 第二篇论文增强                 | [A-52] [A-53] [报告二-72] |
+| **中期（4-6 月）** | LLM→RL→LLM 接力 | 阶段性强化学习策略优化                             | 序列决策能力提升               | [A-50](https://pubs.acs.org/doi/10.1021/acs.iecr.1c04622) [B-52](https://doi.org/10.26434/chemrxiv-2025-n1b4l) [C-5](https://doi.org/10.26434/chemrxiv-2025-n1b4l) [报告二-12](https://icml.cc/virtual/2025/session/50258) [报告二-34](https://pubs.acs.org/doi/10.1021/jacs.4c08866) |
+| **远期**           | VLA 模型        | 定义动作/观测空间 + 训练 + 对比 BORA               | 第二篇论文核心                 | [A-45](https://arxiv.org/abs/2602.09430) [C-3](https://arxiv.org/abs/2602.09430) [报告二-68](https://arxiv.org/abs/2602.09430) |
+| **远期**           | RL 集成（数字孪生） | TwinRL 模型 + 线下-线上迁移                    | 第二篇论文增强                 | [A-52](https://arxiv.org/abs/2409.07514) [A-53](https://arxiv.org/abs/2409.07514) [报告二-72](https://arxiv.org/abs/2409.07514) |
 | **远期**           | DPO             | 偏好数据收集 + 对齐训练                            | 持续改进                       | — |
 
 ### 11.3 关键路径与依赖关系
@@ -769,7 +769,7 @@ Cissé A., Cooper M. E., Zhu M., Evangelopoulos X., Cooper A. I. "Can we automat
 - 发表于 RSC Digital Discovery（IF 6.2）
 - 624 次优化运行的大规模基准测试
 - 5 款前沿推理模型对比（o4-mini, o3, gpt-5-mini, gpt-5, gemini-2.5-flash）
-- 扩展了 IJCAI-25 的原始 BORA 论文 [A-37]
+- 扩展了 IJCAI-25 的原始 BORA 论文 [A-37](https://arxiv.org/abs/2501.16224)
 
 ### [C-2] ChemDFM
 

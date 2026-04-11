@@ -1,0 +1,56 @@
+{
+  "_protocol_version": "2.0",
+  "_created_at": "2026-04-07T00:53:24.540329",
+  "_modified_at": "2026-04-07T00:53:24.543332",
+  "_software_version": "1.0.0",
+  "exp_id": "api_20260407_005324_3c1ba4",
+  "exp_name": "exp_20260406_165324_517585_step_0",
+  "description": "",
+  "tags": [],
+  "operator": "",
+  "steps": [
+    {
+      "step_id": "step_000",
+      "step_type": "prep_sol",
+      "pump_address": null,
+      "pump_direction": null,
+      "pump_rpm": null,
+      "volume_ul": null,
+      "duration_s": null,
+      "transfer_duration": null,
+      "transfer_duration_unit": "s",
+      "prep_sol_params": {
+        "target_concentration": 0.0,
+        "is_solvent": false,
+        "injection_order": [
+          "Ni(OH)2",
+          "H2O"
+        ],
+        "total_volume_ul": 10,
+        "target_concentrations": {
+          "H2O": 0,
+          "Ni(OH)2": 0.05
+        },
+        "solvent_flags": {
+          "H2O": true,
+          "Ni(OH)2": false
+        },
+        "selected_solutions": {
+          "H2O": true,
+          "Ni(OH)2": true
+        },
+        "injection_order_numbers": {
+          "H2O": 2,
+          "Ni(OH)2": 1
+        }
+      },
+      "flush_channel_id": null,
+      "flush_rpm": null,
+      "flush_cycle_duration_s": null,
+      "flush_cycles": 1,
+      "ec_settings": null,
+      "notes": "快速配液: Ni(OH)2(0.05M)+H2O, 10uL"
+    }
+  ],
+  "notes": ""
+}

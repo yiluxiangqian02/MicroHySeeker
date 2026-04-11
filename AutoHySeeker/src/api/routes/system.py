@@ -21,6 +21,11 @@ logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api/system", tags=["system"])
 
+# MHS IPv4 transport factory (Windows localhost → IPv6 回退问题)
+# transport 不能跨 AsyncClient 复用，所以每次创建新的
+def _mhs_transport() -> httpx.AsyncHTTPTransport:
+    return httpx.AsyncHTTPTransport(local_address="0.0.0.0")
+
 # In-memory activity log (ring buffer, 100 entries)
 _ACTIVITY_LOG: list[dict[str, Any]] = []
 _MAX_ACTIVITIES = 100
@@ -74,13 +79,19 @@ def record_activity(activity_type: str, description: str) -> None:
 @router.get("/status")
 async def get_system_status() -> dict[str, Any]:
     """Return current system status."""
-    microhyseeker_ok = False
+    mhs_info: dict[str, Any] = {"online": False, "rs485_connected": False, "mock_mode": True}
     try:
-        async with httpx.AsyncClient() as client:
-            resp = await client.get(
-                "http://localhost:8100/health", timeout=2.0
-            )
-            microhyseeker_ok = resp.status_code == 200
+        async with httpx.AsyncClient(timeout=3.0, transport=_mhs_transport()) as client:
+            # 健康检查
+            resp = await client.get("http://127.0.0.1:8100/api/system/health")
+            if resp.status_code == 200:
+                mhs_info["online"] = True
+            # RS485 连接状态
+            conn_resp = await client.get("http://127.0.0.1:8100/api/device/connection")
+            if conn_resp.status_code == 200:
+                conn = conn_resp.json()
+                mhs_info["rs485_connected"] = conn.get("connected", False)
+                mhs_info["mock_mode"] = conn.get("mock_mode", True)
     except Exception:
         pass
 
@@ -91,7 +102,8 @@ async def get_system_status() -> dict[str, Any]:
 
     return {
         "autohyseeker": True,
-        "microhyseeker": microhyseeker_ok,
+        "microhyseeker": mhs_info["online"],
+        "mhs": mhs_info,
         "database": True,
         "agents": {"running": running, "total": len(agents)},
     }
@@ -132,8 +144,7 @@ async def get_system_config() -> dict[str, Any]:
     """
     # Try live MicroHySeeker config (强制 IPv4，避免 Windows localhost → IPv6 失败)
     try:
-        transport = httpx.AsyncHTTPTransport(local_address="0.0.0.0")
-        async with httpx.AsyncClient(timeout=3.0, transport=transport) as client:
+        async with httpx.AsyncClient(timeout=3.0, transport=_mhs_transport()) as client:
             resp = await client.get("http://127.0.0.1:8100/api/template/config/system")
             if resp.status_code == 200:
                 return resp.json()

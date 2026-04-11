@@ -33,9 +33,20 @@ _comm_log_file: Optional[Path] = None
 _initialized: bool = False
 
 
+class _ExcludeRunnerFilter(logging.Filter):
+    """过滤掉 MicroHySeeker.RUNNER 的日志记录。
+    
+    RUNNER 日志已通过 ExperimentDataManager 写入 data/ 下的 run_log.log，
+    logs/ 下的 app_*.log 不再重复记录，只保留底层驱动/RS485/CHI 等调试日志。
+    """
+    def filter(self, record: logging.LogRecord) -> bool:
+        return not record.name.startswith("MicroHySeeker.RUNNER")
+
+
 def init_app_logging(log_dir: str = "./logs",
                      console_level: int = logging.INFO,
-                     file_level: int = logging.DEBUG):
+                     file_level: int = logging.DEBUG,
+                     log_prefix: str = "app"):
     """初始化应用日志系统（应在 main 入口处调用一次）
     
     日志永久保留，无任何文件大小限制。
@@ -46,7 +57,8 @@ def init_app_logging(log_dir: str = "./logs",
     
         logs/
         ├── 2026-02-13/
-        │   ├── app_14-30-25.log      # 运行日志
+        │   ├── app_14-30-25.log      # GUI启动的运行日志
+        │   ├── web_app_14-30-25.log  # Web(run_server.py)启动的运行日志
         │   ├── comm_14-30-25.log     # 通信日志 (RS485 TX/RX)
         │   └── app_16-45-10.log
         └── 2026-02-14/
@@ -56,6 +68,7 @@ def init_app_logging(log_dir: str = "./logs",
         log_dir: 日志根目录
         console_level: 控制台日志级别
         file_level: 文件日志级别
+        log_prefix: 日志文件名前缀，默认 "app"，web模式传 "web_app"
     """
     global _root_logger, _comm_logger, _log_dir, _log_file, _comm_log_file, _initialized
     if _initialized:
@@ -70,8 +83,9 @@ def init_app_logging(log_dir: str = "./logs",
     
     # 每次启动使用时间戳命名，确保唯一
     time_str = now.strftime("%H-%M-%S")
-    _log_file = date_dir / f"app_{time_str}.log"
-    _comm_log_file = date_dir / f"comm_{time_str}.log"
+    _log_file = date_dir / f"{log_prefix}_{time_str}.log"
+    comm_prefix = "web_comm" if log_prefix.startswith("web") else "comm"
+    _comm_log_file = date_dir / f"{comm_prefix}_{time_str}.log"
 
     # ── 根 logger (运行日志) ──
     _root_logger = logging.getLogger("MicroHySeeker")
@@ -85,6 +99,8 @@ def init_app_logging(log_dir: str = "./logs",
     _root_logger.addHandler(console_handler)
 
     # ── 文件 Handler (无大小限制，追加模式) ──
+    # 过滤掉 RUNNER 日志（RUNNER 日志已写入 data/ 下的 run_log.log，
+    # logs/ 下的 app_*.log 只保留底层驱动/通信/CHI 等调试日志）
     file_handler = logging.FileHandler(
         str(_log_file),
         mode="a",
@@ -92,6 +108,7 @@ def init_app_logging(log_dir: str = "./logs",
     )
     file_handler.setLevel(file_level)
     file_handler.setFormatter(logging.Formatter(_LOG_FMT, _DATE_FMT))
+    file_handler.addFilter(_ExcludeRunnerFilter())
     _root_logger.addHandler(file_handler)
 
     # ── 通信日志 logger (独立文件，不传播到根logger) ──
