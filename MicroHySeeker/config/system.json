@@ -124,7 +124,7 @@
       "color": "#00FF00",
       "tube_diameter_mm": 1.0,
       "total_volume_ml": 500.0,
-      "remaining_volume_ml": 52.0
+      "remaining_volume_ml": 4.0
     },
     {
       "channel_id": "2",
@@ -136,7 +136,7 @@
       "color": "#00FF00",
       "tube_diameter_mm": 1.0,
       "total_volume_ml": 500.0,
-      "remaining_volume_ml": 284.0
+      "remaining_volume_ml": 260.0
     },
     {
       "channel_id": "3",
@@ -148,7 +148,7 @@
       "color": "#00FF00",
       "tube_diameter_mm": 1.0,
       "total_volume_ml": 500.0,
-      "remaining_volume_ml": 268.0
+      "remaining_volume_ml": 244.0
     },
     {
       "channel_id": "4",
@@ -222,7 +222,7 @@
       "work_type": "Inlet",
       "tube_diameter_mm": 1.0,
       "total_volume_ml": 5000.0,
-      "remaining_volume_ml": 3752.0
+      "remaining_volume_ml": 3608.0
     },
     {
       "channel_id": "2",

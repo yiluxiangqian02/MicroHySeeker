@@ -35,6 +35,54 @@ if not exist "%AHS_DIR%frontend\node_modules" (
     cd /d "%AHS_DIR%"
 )
 
+REM --- Check MHS port and code version ---
+netstat -ano | findstr "LISTENING" | findstr ":%MHS_PORT% " >nul 2>&1
+if not errorlevel 1 (
+    echo [INFO]  MHS is running on port %MHS_PORT%. Checking if code was updated...
+    python -c "
+import subprocess, os, sys
+runner = os.path.join(os.path.dirname(os.path.abspath('%~dpf0')), '..', 'MicroHySeeker', 'src', 'engine', 'runner.py')
+runner = os.path.normpath(runner)
+if not os.path.exists(runner):
+    sys.exit(0)
+runner_mtime = os.path.getmtime(runner)
+try:
+    r = __import__('urllib.request', fromlist=['urlopen']).urlopen('http://127.0.0.1:8100/api/system/health', timeout=2)
+    import json
+    d = json.loads(r.read())
+    uptime = d.get('uptime_seconds', 0)
+    import time
+    proc_start = time.time() - uptime
+    if runner_mtime > proc_start:
+        print('OUTDATED')
+    else:
+        print('OK')
+except Exception:
+    print('OK')
+" 2>nul | findstr /c:"OUTDATED" >nul 2>&1
+    if not errorlevel 1 (
+        echo [WARN]  MHS runner.py has been updated but MHS is running old code!
+        echo         Recommend: restart MHS to apply fixes.
+        echo.
+        choice /c YN /t 10 /d N /m "Restart MHS now? [Y=Yes, N=Skip, auto-N in 10s]"
+        if errorlevel 2 (
+            echo         Skipping MHS restart.
+        ) else (
+            echo         Stopping old MHS...
+            for /f "tokens=5" %%p in ('netstat -ano ^| findstr "LISTENING" ^| findstr ":%MHS_PORT% "') do (
+                taskkill /PID %%p /F >nul 2>&1
+            )
+            echo         Starting new MHS...
+            start "MHS-Server [:8100]" cmd /k "cd /d %MHS_DIR% && C:\Users\25922\miniforge3\python.exe run_server.py --port %MHS_PORT%"
+            timeout /t 5 /nobreak >nul
+            echo         MHS restarted with updated code.
+        )
+    ) else (
+        echo [INFO]  MHS code is up to date.
+    )
+    echo.
+)
+
 REM --- Check backend port ---
 set "SKIP_BACKEND=0"
 netstat -ano | findstr "LISTENING" | findstr ":%BACKEND_PORT% " >nul 2>&1

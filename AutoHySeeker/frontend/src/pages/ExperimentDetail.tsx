@@ -39,6 +39,14 @@ interface StepProgress {
   completed_at?: string;
 }
 
+interface PumpBatchStatus {
+  active: boolean;
+  batch_id: number | null;
+  running: Array<{ name: string; pump_addr: number }>;
+  waiting: Array<{ name: string }>;
+  completed: Array<{ name: string; pump_addr?: number }>;
+}
+
 interface ProgressData {
   exp_id: string;
   status: string;
@@ -53,6 +61,7 @@ interface ProgressData {
   cancelled: boolean;
   step_progress?: StepProgress[];
   error_detail?: string | null;
+  pump_batch?: PumpBatchStatus;
   logs: Array<{ ts: string; level: string; message: string }>;
 }
 
@@ -659,6 +668,45 @@ export function ExperimentDetail() {
                   </div>
                 ))}
               </div>
+
+              {/* 泵批次状态指示灯（prep_sol 步骤执行时） */}
+              {progress?.pump_batch?.active && (
+                <div className="mt-4 rounded-xl border border-blue-100 bg-blue-50 p-3">
+                  <p className="mb-2 text-xs font-medium text-blue-700">
+                    泵状态 — 批次 {progress.pump_batch.batch_id}
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {progress.pump_batch.running.map((p) => (
+                      <span
+                        key={p.name}
+                        className="inline-flex items-center gap-1.5 rounded-full bg-green-100 px-2.5 py-1 text-xs font-medium text-green-800 border border-green-200"
+                        title={`泵 ${p.pump_addr} 运行中`}
+                      >
+                        <span className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
+                        {p.name}
+                      </span>
+                    ))}
+                    {progress.pump_batch.waiting.map((p) => (
+                      <span
+                        key={p.name}
+                        className="inline-flex items-center gap-1.5 rounded-full bg-yellow-100 px-2.5 py-1 text-xs font-medium text-yellow-800 border border-yellow-200"
+                      >
+                        <span className="h-2 w-2 rounded-full bg-yellow-400" />
+                        {p.name}
+                      </span>
+                    ))}
+                    {progress.pump_batch.completed.map((p) => (
+                      <span
+                        key={p.name}
+                        className="inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-500 border border-slate-200"
+                      >
+                        <span className="h-2 w-2 rounded-full bg-slate-400" />
+                        {p.name} ✓
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           )}
 

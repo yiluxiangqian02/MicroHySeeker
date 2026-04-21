@@ -666,6 +666,47 @@ async def analyze_recent() -> Dict[str, Any]:
     }
 
 
+def _get_volume_warnings(steps: List[Dict[str, Any]]) -> List[Dict[str, str]]:
+    """检查 prep_sol 步骤使用的溶液剩余量，返回低量警告列表。"""
+    warnings: List[Dict[str, str]] = []
+    try:
+        from src.api.routes.system import _load_system_config
+        cfg = _load_system_config()
+        channels = {ch["solution_name"]: ch for ch in cfg.get("dilution_channels", [])}
+        # 收集本实验用到的溶液
+        used: set[str] = set()
+        for step in steps:
+            if step.get("step_type") == "prep_sol":
+                params = step.get("prep_sol_params") or {}
+                for sol, selected in params.get("selected_solutions", {}).items():
+                    if selected and params.get("solvent_flags", {}).get(sol) is not True:
+                        used.add(sol)
+        # 检查剩余量
+        LOW_ML = 50.0      # 警告阈值
+        CRITICAL_ML = 20.0  # 严重阈值
+        for sol in used:
+            ch = channels.get(sol)
+            if not ch:
+                continue
+            remaining = ch.get("remaining_volume_ml", 0.0)
+            total = ch.get("total_volume_ml", 0.0)
+            if total > 0 and remaining <= CRITICAL_ML:
+                warnings.append({
+                    "level": "critical",
+                    "solution": sol,
+                    "message": f"{sol} 溶液严重不足：剩余 {remaining:.0f}mL，建议立即补充",
+                })
+            elif total > 0 and remaining <= LOW_ML:
+                warnings.append({
+                    "level": "warning",
+                    "solution": sol,
+                    "message": f"{sol} 溶液偏低：剩余 {remaining:.0f}mL（阈值 {LOW_ML:.0f}mL）",
+                })
+    except Exception:
+        pass
+    return warnings
+
+
 @router.post("/create")
 async def create_experiment(exp: ExperimentCreate) -> Dict[str, Any]:
     """Create a new experiment."""
@@ -787,11 +828,14 @@ async def execute_experiment(
 
     asyncio.create_task(_safe_execute(exp_id))
 
+    volume_warnings = _get_volume_warnings(steps)
+
     return {
         "status": "started",
         "exp_id": exp_id,
         "source": "local",
         "total_steps": len(steps),
+        "warnings": volume_warnings,
     }
 
 
@@ -836,6 +880,59 @@ async def stop_experiment(
     return {"status": "stopping", "exp_id": exp_id}
 
 
+def _parse_pump_batch_status(logs: list) -> Dict[str, Any]:
+    """从最近日志中解析泵批次状态（用于前端指示灯）。
+
+    扫描最近日志，提取当前批次中正在运行、等待和已完成的泵/溶液信息。
+    """
+    result: Dict[str, Any] = {
+        "active": False,
+        "batch_id": None,
+        "running": [],    # [{"name": str, "pump_addr": int, "volume_ul": float}]
+        "waiting": [],    # [{"name": str}]
+        "completed": [],  # [{"name": str}]
+    }
+    import re
+    # 扫描最近 60 条日志
+    recent = [lg.get("message", "") for lg in (logs[-60:] if logs else [])]
+    batch_start = False
+    batch_done = False
+    running_set: set = set()
+    done_set: set = set()
+    for msg in recent:
+        # 检测批次开始（等待批次 N 完成）
+        m = re.search(r"等待批次 (\d+) 完成", msg)
+        if m:
+            batch_start = True
+            batch_done = False
+            result["batch_id"] = int(m.group(1))
+            running_set.clear()
+            done_set.clear()
+        # 检测批次完成
+        if "全部泵已完成" in msg or "批次" in msg and "全部泵已完成" in msg:
+            batch_done = True
+        # 检测泵注入开始（注入 Ni: 16,000.00uL）
+        m = re.search(r"注入 ([^:：]+)[：:] ([\d,.]+)uL.*泵(\d+)", msg)
+        if m:
+            sol = m.group(1).strip()
+            pump_addr = int(m.group(3))
+            running_set.add((sol, pump_addr))
+        # 检测注入完成（✓ Ni 注入完成）
+        m = re.search(r"✓ (.+?) 注入完成", msg)
+        if m:
+            sol = m.group(1).strip()
+            done_set.add(sol)
+    # 组合结果
+    if batch_start and not batch_done:
+        result["active"] = True
+        for sol, addr in running_set:
+            if sol not in done_set:
+                result["running"].append({"name": sol, "pump_addr": addr})
+            else:
+                result["completed"].append({"name": sol, "pump_addr": addr})
+    return result
+
+
 @router.get("/detail/{exp_id}/progress")
 async def get_experiment_progress(
     exp_id: str = PathParam(..., pattern="^exp_.*"),
@@ -848,10 +945,12 @@ async def get_experiment_progress(
     rs = _RUNNING.get(exp_id)
 
     if rs:
+        logs = rs.logs[-50:]
         return {
             **rs.to_dict(),
             "error_detail": exp.get("error_detail"),
-            "logs": rs.logs[-50:],
+            "logs": logs,
+            "pump_batch": _parse_pump_batch_status(logs),
         }
 
     steps = exp.get("steps", [])

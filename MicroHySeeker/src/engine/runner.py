@@ -1811,6 +1811,7 @@ class ExperimentWorker(QObject):
             stall_retry_counts = {}   # {addr: int} 已重试次数
             decel_start_time = {}     # {addr: float} 首次检测到减速的时间戳
             decel_last_pos = {}       # {addr: int} 减速时上次编码器位置
+            overdue_enc_pos = {}      # {addr: int} 超时后编码器位置（用于静止检测）
             
             if max_wait > 0:
                 self._emit_log(f"    等待批次 {order_num} 完成... ({max_wait:.1f}s)")
@@ -1922,7 +1923,8 @@ class ExperimentWorker(QObject):
                                             )
                                             # 延长等待时间
                                             extra = task_info.get("estimated_seconds", 30)
-                                            max_wait = max(max_wait, waited + extra)
+                                            elapsed_now = time.time() - wall_start
+                                            max_wait = max(max_wait, elapsed_now + extra)
                                             continue  # 继续监控
                                     
                                     # 重试失败或次数耗尽
@@ -1989,6 +1991,37 @@ class ExperimentWorker(QObject):
                             else:
                                 # 正常运行(2=加速, 4=全速)
                                 decel_start_time.pop(addr, None)
+                                # ---- 超时编码器静止检测 ----
+                                # 泵超过预计运行时间但状态仍报"运行中"，
+                                # 通过编码器位置稳定性判断是否实际已完成
+                                task_info2 = next(
+                                    (t for t in batch if t["pump_addr"] == addr), None
+                                )
+                                if task_info2:
+                                    elapsed_for_pump = time.time() - pump_start_time.get(addr, wall_start)
+                                    over_time = elapsed_for_pump - task_info2["estimated_seconds"]
+                                    if over_time > 3.0:  # 超过预计时间3秒才启动检测
+                                        try:
+                                            cur_pos = self.rs485.read_encoder_position(addr)
+                                            time.sleep(0.15)
+                                            if cur_pos is not None:
+                                                last_pos = overdue_enc_pos.get(addr)
+                                                if (last_pos is not None
+                                                        and abs(cur_pos - last_pos) < 200):
+                                                    # 编码器位置稳定→泵已完成但状态寄存器未更新
+                                                    self._emit_log(
+                                                        f"    ✓ 泵 {addr} ({sol}) 超时后编码器已稳定"
+                                                        f"(超出预计 {over_time:.0f}s)，视为完成"
+                                                    )
+                                                    self.rs485.stop_pump(addr)
+                                                    time.sleep(0.15)
+                                                    newly_done.append(addr)
+                                                    still_running.discard(addr)
+                                                    overdue_enc_pos.pop(addr, None)
+                                                else:
+                                                    overdue_enc_pos[addr] = cur_pos
+                                        except Exception:
+                                            pass
                         
                         if newly_done:
                             # 更新已完成泵的交付量
