@@ -179,6 +179,14 @@ class RS485Wrapper:
             print(f"❌ RS485Wrapper: 连接异常 {e}")
             import traceback
             traceback.print_exc()
+            # 重置 LibContext 单例，避免后续重试复用损坏的 PumpManager
+            try:
+                LibContext.reset()
+            except Exception:
+                pass
+            self._pump_manager = None
+            self._connected = False
+            self._current_port = ""
             return False
 
     def _apply_startup_safety_stop(self):

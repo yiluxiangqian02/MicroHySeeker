@@ -28,6 +28,8 @@ router = APIRouter(prefix="/api/experiments", tags=["experiments"])
 # ---------------------------------------------------------------------------
 _DATA_DIR = Path(__file__).resolve().parents[3] / "data"
 _EXPERIMENTS_FILE = _DATA_DIR / "experiments.json"
+# 共享数据目录（与 MHS 相同的 data/ 根），用于保存实验运行日志
+_SHARED_DATA_DIR = Path(__file__).resolve().parents[4] / "data"
 
 _EXP_STORE: Dict[str, Dict[str, Any]] = {}
 
@@ -38,7 +40,7 @@ _RUNNING: Dict[str, "_RunState"] = {}
 class _RunState:
     """Tracks a running experiment's progress and logs."""
 
-    def __init__(self, exp_id: str, total_steps: int) -> None:
+    def __init__(self, exp_id: str, total_steps: int, exp_name: str = "") -> None:
         self.exp_id = exp_id
         self.total_steps = total_steps
         self.current_step = 0
@@ -47,6 +49,26 @@ class _RunState:
         self.cancelled = False
         self.logs: list[dict[str, Any]] = []
         self._start_ts = time.monotonic()
+        self._start_dt = datetime.now()  # 本地时间
+        # 创建运行数据文件夹: data/{date}/{date}_{time}_{name}_AHS/
+        self.run_dir = self._create_run_dir(exp_name)
+        self._log_file: Optional[Path] = None
+        if self.run_dir:
+            self._log_file = self.run_dir / "run_log.log"
+
+    def _create_run_dir(self, exp_name: str) -> Optional[Path]:
+        try:
+            dt = self._start_dt
+            date_str = dt.strftime("%Y-%m-%d")
+            time_str = dt.strftime("%H-%M-%S")
+            safe_name = (exp_name or "unnamed").replace("/", "_").replace("\\", "_")[:60]
+            folder_name = f"{date_str}_{time_str}_{safe_name}_AHS"
+            run_dir = _SHARED_DATA_DIR / date_str / folder_name
+            run_dir.mkdir(parents=True, exist_ok=True)
+            return run_dir
+        except Exception:
+            logger.exception("Failed to create AHS run directory")
+            return None
 
     @property
     def elapsed_seconds(self) -> float:
@@ -59,8 +81,9 @@ class _RunState:
         return min(100, int(self.current_step / self.total_steps * 100))
 
     def log(self, level: str, message: str) -> None:
+        now = datetime.now()
         entry = {
-            "ts": datetime.now(timezone.utc).isoformat(),
+            "ts": now.isoformat(),
             "level": level,
             "message": message,
         }
@@ -69,6 +92,15 @@ class _RunState:
             logger.error("[%s] %s", self.exp_id, message)
         else:
             logger.info("[%s] %s", self.exp_id, message)
+        # 同步写入日志文件
+        if self._log_file:
+            try:
+                ts_str = now.strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
+                lvl = level.upper().ljust(7)
+                with open(self._log_file, "a", encoding="utf-8") as f:
+                    f.write(f"[{ts_str}] [{lvl}] {message}\n")
+            except Exception:
+                pass
 
     def to_dict(self) -> dict[str, Any]:
         exp = _EXP_STORE.get(self.exp_id, {})
@@ -108,7 +140,7 @@ def _load_store() -> None:
                     if rec.get("status") == "running":
                         rec["status"] = "failed"
                         rec.setdefault("logs", []).append({
-                            "ts": datetime.now(timezone.utc).isoformat(),
+                            "ts": datetime.now().isoformat(),
                             "level": "warn",
                             "message": "实验因服务重启被标记为失败",
                         })
@@ -170,6 +202,8 @@ _STEP_DURATION_ESTIMATES: Dict[str, float] = {
 async def _ensure_mhs_ready(rs: "_RunState") -> bool:
     """检查 MicroHySeeker 是否在线且 RS485 已连接，未连接时尝试自动连接。
 
+    优先使用 system.json 中配置的 rs485_port，而不是盲目连接第一个可用串口。
+
     Returns:
         True  — MHS 在线且 RS485 已连接（或成功自动连接）
         False — MHS 离线或连接失败
@@ -203,12 +237,23 @@ async def _ensure_mhs_ready(rs: "_RunState") -> bool:
                 rs.log("warn", "MHS 没有可用串口")
                 return False
 
-            # 3) 尝试连接第一个可用串口
-            target_port = ports[0]
-            rs.log("info", f"尝试连接 {target_port}...")
+            # 3) 从系统配置读取首选端口
+            from src.api.routes.system import _load_system_config
+            sys_cfg = _load_system_config()
+            preferred_port = sys_cfg.get("rs485_port", "")
+            baudrate = sys_cfg.get("rs485_baudrate", 38400)
+
+            if preferred_port and preferred_port in ports:
+                target_port = preferred_port
+            else:
+                if preferred_port:
+                    rs.log("warn", f"配置的端口 {preferred_port} 不可用，使用第一个可用端口")
+                target_port = ports[0]
+
+            rs.log("info", f"尝试连接 {target_port} (波特率 {baudrate})...")
             conn_resp = await client.post(
                 "http://127.0.0.1:8100/api/device/connect",
-                json={"port": target_port, "baudrate": 38400},
+                json={"port": target_port, "baudrate": baudrate},
             )
             if conn_resp.status_code == 200:
                 rs.log("info", f"MHS RS485 自动连接成功: {target_port} ({mode_str})")
@@ -225,6 +270,31 @@ async def _ensure_mhs_ready(rs: "_RunState") -> bool:
         return False
 
 
+def _save_run_summary(rs: "_RunState", exp: dict, steps: list) -> None:
+    """Save run_summary.json to the AHS run directory."""
+    if not rs.run_dir:
+        return
+    try:
+        summary = {
+            "run_id": f"ahs_{rs._start_dt.strftime('%Y%m%d_%H%M%S')}",
+            "exp_id": rs.exp_id,
+            "exp_name": exp.get("name", ""),
+            "started_at": rs._start_dt.isoformat(),
+            "finished_at": datetime.now().isoformat(),
+            "elapsed_seconds": rs.elapsed_seconds,
+            "success": exp.get("status") == "completed",
+            "status": exp.get("status", "unknown"),
+            "total_steps": len(steps),
+            "step_progress": exp.get("step_progress", []),
+            "source": "AutoHySeeker",
+        }
+        (rs.run_dir / "run_summary.json").write_text(
+            json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8"
+        )
+    except Exception:
+        logger.exception("Failed to save AHS run_summary.json")
+
+
 async def _execute_local(exp_id: str) -> None:
     """Execute an experiment locally (non-echem steps simulated)."""
     exp = _EXP_STORE.get(exp_id)
@@ -232,15 +302,34 @@ async def _execute_local(exp_id: str) -> None:
         return
 
     steps = exp.get("steps", [])
-    rs = _RunState(exp_id, len(steps))
+    rs = _RunState(exp_id, len(steps), exp.get("name", ""))
     _RUNNING[exp_id] = rs
-    any_forwarded = False
     rs.log("info", f"实验 '{exp.get('name', '')}' 开始本地执行 ({len(steps)} 步)")
+    if rs.run_dir:
+        rs.log("info", f"运行数据目录: {rs.run_dir}")
+        # 保存实验定义快照
+        try:
+            (rs.run_dir / "experiment.json").write_text(
+                json.dumps(exp, ensure_ascii=False, indent=2), encoding="utf-8"
+            )
+        except Exception:
+            pass
 
     # ── MHS 预检查：确保 RS485 已连接 ──
     mhs_ready = await _ensure_mhs_ready(rs)
     if not mhs_ready:
-        rs.log("warn", "MHS 预检查未通过，实验将以本地模拟模式执行")
+        rs.log("error", "MHS 预检查未通过，无法执行实验（MicroHySeeker 离线或 RS485 未连接）")
+        exp["status"] = "failed"
+        exp["logs"] = rs.logs
+        if rs.run_dir:
+            exp["run_dir"] = str(rs.run_dir)
+        _save_store()
+        _save_run_summary(rs, exp, steps)
+        from src.api.routes.system import record_activity
+        record_activity("experiment", f"实验 '{exp.get('name', '')}' 失败：MHS 离线")
+        await asyncio.sleep(10)
+        _RUNNING.pop(exp_id, None)
+        return
 
     try:
         for i, step in enumerate(steps):
@@ -251,7 +340,7 @@ async def _execute_local(exp_id: str) -> None:
 
             rs.current_step = i
             rs.step_status = "running"
-            rs.step_started_at = datetime.now(timezone.utc).isoformat()
+            rs.step_started_at = datetime.now().isoformat()
             step_type = step.get("step_type", "blank")
             step_desc = step.get("description", "") or step_type
             rs.log("info", f"步骤 {i + 1}/{len(steps)}: [{step_type}] {step_desc}")
@@ -264,52 +353,26 @@ async def _execute_local(exp_id: str) -> None:
             }
             _save_store()
 
-            if step_type == "echem":
-                mhs_result = await _forward_step_to_mhs(exp_id, step, i, rs)
-                if mhs_result == "offline":
-                    rs.log("warn", f"步骤 {i + 1} 为电化学步骤，MicroHySeeker 离线，跳过")
-                    rs.step_status = "skipped"
-                    if exp["step_progress"][i]:
-                        exp["step_progress"][i]["status"] = "skipped"
-                    continue
-                elif mhs_result == "failed":
-                    rs.log("error", f"步骤 {i + 1} MHS 硬件执行失败")
-                    rs.step_status = "failed"
-                    if exp["step_progress"][i]:
-                        exp["step_progress"][i]["status"] = "failed"
-                    exp["status"] = "failed"
-                    break
-                else:
-                    any_forwarded = True
-            else:
-                params = step.get("params", {})
-                duration = params.get("duration_s") or params.get(
-                    "flush_cycle_duration_s", 0
-                )
-                cycles = params.get("flush_cycles", 1)
-                if step_type == "flush" and duration and cycles:
-                    total_dur = float(duration) * int(cycles)
-                else:
-                    total_dur = float(duration) if duration else _STEP_DURATION_ESTIMATES.get(step_type, 2.0)
-
-                mhs_result = await _forward_step_to_mhs(exp_id, step, i, rs)
-                if mhs_result == "offline":
-                    rs.log("info", f"  本地模拟执行 {total_dur:.1f}s ...")
-                    elapsed = 0.0
-                    while elapsed < total_dur:
-                        if rs.cancelled:
-                            break
-                        await asyncio.sleep(min(0.5, total_dur - elapsed))
-                        elapsed += 0.5
-                elif mhs_result == "failed":
-                    rs.log("error", f"步骤 {i + 1} MHS 硬件执行失败")
-                    rs.step_status = "failed"
-                    if exp["step_progress"][i]:
-                        exp["step_progress"][i]["status"] = "failed"
-                    exp["status"] = "failed"
-                    break
-                else:
-                    any_forwarded = True
+            # 所有步骤统一转发 MHS
+            mhs_result = await _forward_step_to_mhs(exp_id, step, i, rs)
+            if mhs_result == "offline":
+                detail_msg = f"步骤 {i + 1} [{step_type}] MicroHySeeker 离线，无法执行"
+                rs.log("error", detail_msg)
+                rs.step_status = "failed"
+                if exp["step_progress"][i]:
+                    exp["step_progress"][i]["status"] = "failed"
+                exp["status"] = "failed"
+                exp["error_detail"] = detail_msg
+                break
+            elif mhs_result == "failed":
+                detail_msg = f"步骤 {i + 1} [{step_type}] MHS 硬件执行失败"
+                rs.log("error", detail_msg)
+                rs.step_status = "failed"
+                if exp["step_progress"][i]:
+                    exp["step_progress"][i]["status"] = "failed"
+                exp["status"] = "failed"
+                exp["error_detail"] = detail_msg
+                break
 
             if rs.cancelled:
                 rs.log("warn", "实验被用户停止")
@@ -319,29 +382,32 @@ async def _execute_local(exp_id: str) -> None:
                 break
 
             rs.step_status = "completed"
-            rs.log("info", f"步骤 {i + 1} 完成")
+            rs.log("info", f"步骤 {i + 1} 完成 ✓")
             if exp["step_progress"][i]:
                 exp["step_progress"][i]["status"] = "completed"
-                exp["step_progress"][i]["completed_at"] = datetime.now(timezone.utc).isoformat()
+                exp["step_progress"][i]["completed_at"] = datetime.now().isoformat()
             _save_store()
 
         if exp["status"] not in ("stopped", "failed"):
             exp["status"] = "completed"
-            exp["completed_at"] = datetime.now(timezone.utc).isoformat()
+            exp["completed_at"] = datetime.now().isoformat()
             rs.current_step = len(steps)
-            if any_forwarded:
-                exp["execution_mode"] = "hardware"
-                rs.log("info", "实验执行完成（硬件执行）")
-            else:
-                exp["execution_mode"] = "simulated"
-                rs.log("info", "实验执行完成（模拟执行，MicroHySeeker 未连接）")
+            exp["execution_mode"] = "hardware"
+            rs.log("info", f"实验执行完成 ✓ 共 {len(steps)} 步")
 
     except Exception as exc:
+        import traceback
+        tb = traceback.format_exc()
         exp["status"] = "failed"
-        rs.log("error", f"实验执行异常: {exc}")
+        exp["error_detail"] = f"{type(exc).__name__}: {exc}"
+        rs.log("error", f"实验执行异常: {type(exc).__name__}: {exc}")
+        rs.log("error", f"堆栈: {tb[-500:]}")
 
     exp["logs"] = rs.logs
+    if rs.run_dir:
+        exp["run_dir"] = str(rs.run_dir)
     _save_store()
+    _save_run_summary(rs, exp, steps)
 
     from src.api.routes.system import record_activity
     record_activity("experiment", f"实验 '{exp.get('name', '')}' {exp['status']}")
@@ -360,21 +426,47 @@ async def _forward_step_to_mhs(
         "failed"   — 转发成功但 MHS 报告执行失败/被停止
         "offline"  — MHS 离线，未转发
     """
+    # 构造符合 ProgStepPayload 格式的 step
+    mhs_step = {
+        "step_index": step_idx,
+        "step_type": step.get("step_type", "blank"),
+        "params": step.get("params", {}),
+        "description": step.get("description", ""),
+        "parallel_group": step.get("parallel_group", 0),
+    }
+    rs.log("info", f"  正在转发步骤到 MHS (step_type={mhs_step['step_type']})...")
     try:
-        async with httpx.AsyncClient(timeout=10.0, transport=_mhs_transport()) as client:
+        async with httpx.AsyncClient(timeout=15.0, transport=_mhs_transport()) as client:
             resp = await client.post(
                 "http://127.0.0.1:8100/api/experiment/start",
                 json={
                     "plan": {
                         "name": f"{exp_id}_step_{step_idx}",
-                        "steps": [step],
+                        "steps": [mhs_step],
                     }
                 },
             )
             if resp.status_code == 200:
-                rs.log("info", "  步骤已转发到 MicroHySeeker")
+                rs.log("info", "  步骤已转发到 MicroHySeeker，等待执行...")
                 mhs_result = "success"
-                for _ in range(300):
+                # 快照 MHS 已有日志，避免拉取历史日志
+                _seen_log_hashes: set[str] = set()
+                try:
+                    async with httpx.AsyncClient(timeout=3.0, transport=_mhs_transport()) as snap_c:
+                        snap_resp = await snap_c.get(
+                            "http://127.0.0.1:8100/api/experiment/logs?n=500"
+                        )
+                        if snap_resp.status_code == 200:
+                            for lg in snap_resp.json().get("logs", []):
+                                _seen_log_hashes.add(str(lg))
+                except Exception:
+                    pass
+                # 等待 Qt 信号处理 + 实验启动
+                await asyncio.sleep(2)
+                idle_none_count = 0
+                ever_seen_running = False
+                poll_error_count = 0
+                for tick in range(600):  # 最多等待 600 秒
                     if rs.cancelled:
                         try:
                             async with httpx.AsyncClient(timeout=5.0, transport=_mhs_transport()) as stop_c:
@@ -391,30 +483,95 @@ async def _forward_step_to_mhs(
                             status_resp = await poll_c.get(
                                 "http://127.0.0.1:8100/api/experiment/status"
                             )
-                            if status_resp.status_code == 200:
-                                data = status_resp.json()
-                                if data.get("state") in ("idle", "completed", "stopped"):
-                                    finished_ok = data.get("last_finished_success")
-                                    if finished_ok is False:
-                                        rs.log("warn", "  MicroHySeeker 步骤执行失败（硬件报告 success=False）")
-                                        mhs_result = "failed"
-                                    elif data.get("state") == "stopped":
-                                        rs.log("warn", "  MicroHySeeker 步骤被停止")
-                                        mhs_result = "failed"
-                                    elif finished_ok is None:
-                                        # experiment_finished 未触发（预检查直接拒绝，未执行）
-                                        rs.log("warn", "  MicroHySeeker 步骤未执行（可能预检查失败）")
-                                        mhs_result = "failed"
+                            if status_resp.status_code != 200:
+                                poll_error_count += 1
+                                if poll_error_count > 5:
+                                    rs.log("error", f"  MHS 状态查询连续失败 {poll_error_count} 次")
+                                continue
+                            poll_error_count = 0
+                            data = status_resp.json()
+                            state = data.get("state", "idle")
+
+                            # 每 5 秒拉取 MHS runner 日志
+                            if tick % 5 == 0:
+                                try:
+                                    log_resp = await poll_c.get(
+                                        "http://127.0.0.1:8100/api/experiment/logs?n=500"
+                                    )
+                                    if log_resp.status_code == 200:
+                                        all_logs = log_resp.json().get("logs", [])
+                                        for lg in all_logs:
+                                            lg_hash = str(lg)
+                                            if lg_hash not in _seen_log_hashes:
+                                                _seen_log_hashes.add(lg_hash)
+                                                rs.log("info", f"  [MHS] {lg}")
+                                except Exception:
+                                    pass
+
+                            if state == "running":
+                                idle_none_count = 0
+                                ever_seen_running = True
+                                continue
+                            if state in ("idle", "completed", "stopped"):
+                                finished_ok = data.get("last_finished_success")
+                                # Qt 信号尚未处理或实验未启动，多等几秒
+                                if finished_ok is None and idle_none_count < 10:
+                                    idle_none_count += 1
+                                    continue
+                                if finished_ok is False:
+                                    rs.log("warn", "  MHS 步骤执行失败（硬件报告 success=False）")
+                                    mhs_result = "failed"
+                                elif state == "stopped":
+                                    rs.log("warn", "  MHS 步骤被用户停止")
+                                    mhs_result = "failed"
+                                elif finished_ok is None:
+                                    if ever_seen_running:
+                                        rs.log("warn", "  MHS 步骤状态异常：曾运行但未获得完成信号")
                                     else:
-                                        rs.log("info", "  MicroHySeeker 步骤执行完成")
-                                    break
-                    except Exception:
+                                        rs.log("warn", "  MHS 步骤未执行（可能预检查失败或参数转换出错）")
+                                    mhs_result = "failed"
+                                else:
+                                    rs.log("info", "  MHS 步骤执行完成 ✓")
+                                # 拉取最终日志
+                                try:
+                                    final_log_resp = await poll_c.get(
+                                        "http://127.0.0.1:8100/api/experiment/logs?n=500"
+                                    )
+                                    if final_log_resp.status_code == 200:
+                                        all_logs = final_log_resp.json().get("logs", [])
+                                        for lg in all_logs:
+                                            lg_hash = str(lg)
+                                            if lg_hash not in _seen_log_hashes:
+                                                _seen_log_hashes.add(lg_hash)
+                                                rs.log("info", f"  [MHS] {lg}")
+                                except Exception:
+                                    pass
+                                break
+                    except (httpx.ConnectError, httpx.TimeoutException, OSError) as poll_exc:
+                        poll_error_count += 1
+                        if poll_error_count >= 3:
+                            rs.log("error", f"  MHS 轮询连接失败: {poll_exc}")
+                            mhs_result = "failed"
+                            break
+                    except Exception as poll_exc:
+                        rs.log("error", f"  MHS 轮询异常: {poll_exc}")
+                        mhs_result = "failed"
                         break
+                else:
+                    # for-else: 600 秒超时
+                    rs.log("error", "  MHS 步骤执行超时（600 秒）")
+                    mhs_result = "failed"
                 return mhs_result
-    except (httpx.ConnectError, httpx.TimeoutException, OSError):
+            else:
+                # MHS 返回错误（如 400 转换失败、500 内部错误）
+                error_text = resp.text[:500]
+                rs.log("error", f"  MHS 拒绝执行 (HTTP {resp.status_code}): {error_text}")
+                return "failed"
+    except (httpx.ConnectError, httpx.TimeoutException, OSError) as exc:
+        rs.log("error", f"  无法连接 MHS (127.0.0.1:8100): {type(exc).__name__}: {exc}")
         return "offline"
     except Exception as exc:
-        rs.log("warn", f"  MHS 转发失败: {exc}")
+        rs.log("error", f"  MHS 转发异常: {type(exc).__name__}: {exc}")
         return "offline"
 
 
@@ -427,7 +584,7 @@ async def _forward_step_to_mhs(
 async def get_statistics() -> Dict[str, Any]:
     """Return aggregate experiment statistics."""
     total = len(_EXP_STORE)
-    today = datetime.now(timezone.utc).date().isoformat()
+    today = datetime.now().date().isoformat()
     today_count = sum(
         1
         for e in _EXP_STORE.values()
@@ -490,7 +647,7 @@ async def get_suggestions() -> Dict[str, Any]:
             "suggestion": "开始第一个实验，建立基线数据",
             "confidence": 1.0,
         })
-    return {"suggestions": suggestions, "generated_at": datetime.now(timezone.utc).isoformat()}
+    return {"suggestions": suggestions, "generated_at": datetime.now().isoformat()}
 
 
 @router.post("/analyze-recent")
@@ -512,7 +669,7 @@ async def analyze_recent() -> Dict[str, Any]:
 @router.post("/create")
 async def create_experiment(exp: ExperimentCreate) -> Dict[str, Any]:
     """Create a new experiment."""
-    exp_id = f"exp_{datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S_%f')}"
+    exp_id = f"exp_{datetime.now().strftime('%Y%m%d_%H%M%S_%f')}"
     record: Dict[str, Any] = {
         "exp_id": exp_id,
         "name": exp.name,
@@ -521,7 +678,7 @@ async def create_experiment(exp: ExperimentCreate) -> Dict[str, Any]:
         "tags": exp.tags,
         "category": exp.category,
         "status": "created",
-        "created_at": datetime.now(timezone.utc).isoformat(),
+        "created_at": datetime.now().isoformat(),
         "data": [],
         "logs": [],
         "step_progress": [],
@@ -584,31 +741,57 @@ async def execute_experiment(
 ) -> Dict[str, Any]:
     """Start experiment execution with full step-by-step tracking."""
     if exp_id not in _EXP_STORE:
-        raise HTTPException(status_code=404, detail=f"experiment not found: {exp_id}")
+        raise HTTPException(status_code=404, detail=f"实验不存在: {exp_id}")
 
     exp = _EXP_STORE[exp_id]
-    if exp["status"] == "running":
-        raise HTTPException(status_code=409, detail="experiment already running")
 
+    # 仅阻止「正在运行」的实验，其他状态均可重新执行
+    if exp["status"] == "running":
+        raise HTTPException(status_code=409, detail="实验正在运行中，请先停止后重试")
+
+    steps = exp.get("steps", [])
+    if not steps:
+        raise HTTPException(status_code=422, detail="实验没有步骤，无法执行。请先添加至少一个步骤。")
+
+    # 重置状态（支持重新执行已失败/已完成的实验）
     exp["status"] = "running"
-    exp["started_at"] = datetime.now(timezone.utc).isoformat()
+    exp["started_at"] = datetime.now().isoformat()
+    exp.pop("completed_at", None)
     exp["logs"] = []
-    exp["step_progress"] = [None] * len(exp.get("steps", []))
+    exp["step_progress"] = [None] * len(steps)
+    exp["error_detail"] = None
     _save_store()
 
     from src.api.routes.system import record_activity
     record_activity("experiment", f"实验 '{exp['name']}' 开始执行")
 
-    # 始终使用 _execute_local 逐步执行：echem 步骤转发 MicroHySeeker，非 echem 步骤
-    # 本地模拟。这样可以正确追踪每步状态和完成情况。
     exp["execution_source"] = "local"
     _save_store()
-    asyncio.create_task(_execute_local(exp_id))
+
+    # 用安全包装启动后台任务，确保异常不会静默丢失
+    async def _safe_execute(eid: str) -> None:
+        try:
+            await _execute_local(eid)
+        except Exception as exc:
+            logger.exception("[%s] _execute_local 未捕获异常", eid)
+            e = _EXP_STORE.get(eid)
+            if e and e.get("status") == "running":
+                e["status"] = "failed"
+                e["error_detail"] = f"执行器内部错误: {exc}"
+                e.setdefault("logs", []).append({
+                    "ts": datetime.now().isoformat(),
+                    "level": "error",
+                    "message": f"执行器崩溃: {exc}",
+                })
+                _save_store()
+
+    asyncio.create_task(_safe_execute(exp_id))
 
     return {
         "status": "started",
         "exp_id": exp_id,
         "source": "local",
+        "total_steps": len(steps),
     }
 
 
@@ -640,9 +823,9 @@ async def stop_experiment(
 
     if not rs:
         exp["status"] = "stopped"
-        exp["completed_at"] = datetime.now(timezone.utc).isoformat()
+        exp["completed_at"] = datetime.now().isoformat()
         exp.setdefault("logs", []).append({
-            "ts": datetime.now(timezone.utc).isoformat(),
+            "ts": datetime.now().isoformat(),
             "level": "warn",
             "message": "实验已停止",
         })
@@ -667,6 +850,7 @@ async def get_experiment_progress(
     if rs:
         return {
             **rs.to_dict(),
+            "error_detail": exp.get("error_detail"),
             "logs": rs.logs[-50:],
         }
 
@@ -684,6 +868,7 @@ async def get_experiment_progress(
         "elapsed_seconds": 0,
         "cancelled": False,
         "step_progress": exp.get("step_progress", []),
+        "error_detail": exp.get("error_detail"),
         "logs": exp.get("logs", [])[-50:],
     }
 
@@ -702,6 +887,28 @@ async def get_experiment_logs(
     return {"exp_id": exp_id, "logs": logs[-limit:], "total": len(logs)}
 
 
+@router.get("/active-progress")
+async def get_active_experiment_progress() -> Dict[str, Any]:
+    """Return the currently running experiment's progress + logs (for Dashboard).
+
+    If no experiment is running, returns ``{"active": false}``.
+    """
+    if not _RUNNING:
+        return {"active": False}
+
+    # Pick the first (and usually only) running experiment
+    exp_id, rs = next(iter(_RUNNING.items()))
+    exp = _EXP_STORE.get(exp_id, {})
+    return {
+        "active": True,
+        "exp_id": exp_id,
+        "exp_name": exp.get("name", exp_id),
+        **rs.to_dict(),
+        "step_progress": exp.get("step_progress", []),
+        "logs": rs.logs[-30:],
+    }
+
+
 @router.post("/detail/{exp_id}/complete")
 async def complete_experiment(
     exp_id: str = PathParam(..., pattern="^exp_.*"),
@@ -712,7 +919,7 @@ async def complete_experiment(
 
     exp = _EXP_STORE[exp_id]
     exp["status"] = "completed"
-    exp["completed_at"] = datetime.now(timezone.utc).isoformat()
+    exp["completed_at"] = datetime.now().isoformat()
     _save_store()
 
     from src.api.routes.system import record_activity

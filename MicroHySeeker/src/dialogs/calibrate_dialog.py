@@ -174,9 +174,13 @@ class CalibrateDialog(QDialog):
             return
         
         addr = self._get_pump_address()
-        self.config.calibration_data[addr] = {
+        # 合并更新，保留已有的位置标定数据 (slope_k/intercept_b/ul_per_encoder_count)
+        existing = self.config.calibration_data.get(addr, {})
+        existing.update({
             "ul_per_sec": self._ul_per_sec,
-            "ul_per_rpm": self._ul_per_rpm
-        }
+            "ul_per_rpm": self._ul_per_rpm,
+        })
+        self.config.calibration_data[addr] = existing
+        self.config.save()
         
-        QMessageBox.information(self, "成功", f"泵 {addr} 的标定因子已保存")
+        QMessageBox.information(self, "成功", f"泵 {addr} 的标定因子已保存并写入配置文件")

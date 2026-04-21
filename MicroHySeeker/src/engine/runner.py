@@ -555,57 +555,35 @@ class ExperimentWorker(QObject):
         
         all_success = True
         try:
-            for i, step in enumerate(self.experiment.steps):
+            # 将步骤按并行组分段: 连续的 parallel_group=0 各自独立执行,
+            # 连续的相同 parallel_group>0 步骤合并为一个并行段
+            execution_segments = self._build_execution_segments(self.experiment.steps)
+            
+            for segment in execution_segments:
                 if self._stop_flag:
                     self._emit_log(f"[实验] 实验已停止", "WARNING")
                     all_success = False
                     break
                 
-                step_type_str = step.step_type.value if hasattr(step.step_type, 'value') else str(step.step_type)
-                
-                self.step_started.emit(i, step.step_id)
-                self._emit_log(f"[步骤{i}] 开始执行: {step_type_str}")
-                
-                # 数据管理：步骤开始
-                if self.dm:
-                    self.dm.step_started(i, step.step_id, step_type_str,
-                                         details=step.notes or "")
-                
-                success = False
-                step_error_msg = ""
-                try:
-                    if step.step_type == ProgramStepType.TRANSFER:
-                        success = self._execute_transfer(step)
-                    elif step.step_type == ProgramStepType.PREP_SOL:
-                        success = self._execute_prep_sol(step, step_index=i)
-                    elif step.step_type == ProgramStepType.FLUSH:
-                        success = self._execute_flush(step)
-                    elif step.step_type == ProgramStepType.ECHEM:
-                        success = self._execute_echem(step, step_index=i)
-                    elif step.step_type == ProgramStepType.BLANK:
-                        success = self._execute_blank(step)
-                    elif step.step_type == ProgramStepType.EVACUATE:
-                        success = self._execute_evacuate(step)
-                except Exception as e:
-                    step_error_msg = str(e)
-                    self._emit_log(f"[错误] {step_error_msg}", "ERROR")
-                    success = False
-                
-                # 数据管理：步骤结束（跳过已在内部调用过 step_finished 的步骤）
-                if self.dm and i not in self._steps_already_finished:
-                    if success:
-                        self.dm.step_finished(i, True)
-                    else:
-                        error_detail = step_error_msg or f"{step_type_str} 执行失败"
-                        self.dm.step_finished(i, False, details=error_detail)
-                        self.dm.log_error(f"步骤{i} [{step_type_str}] 失败: {error_detail}")
-                
-                self.step_finished.emit(i, step.step_id, success)
-                
-                if not success:
-                    self._emit_log(f"[步骤{i}] 执行失败", "ERROR")
-                    all_success = False
-                    break
+                if len(segment) == 1:
+                    # 单步串行执行（兼容原流程）
+                    i, step = segment[0]
+                    success = self._execute_single_step(i, step)
+                    if not success:
+                        all_success = False
+                        break
+                else:
+                    # 并行组执行
+                    group_id = segment[0][1].parallel_group
+                    step_indices = [s[0] for s in segment]
+                    self._emit_log(
+                        f"[并行组{group_id}] 同时执行步骤 "
+                        f"{', '.join(str(idx+1) for idx in step_indices)}"
+                    )
+                    success = self._execute_parallel_segment(segment)
+                    if not success:
+                        all_success = False
+                        break
                 
                 time.sleep(0.1)
         except Exception as e:
@@ -638,6 +616,170 @@ class ExperimentWorker(QObject):
             
             # 信号放在最后：确保泵已停止、数据已保存后 UI 才更新
             self.experiment_finished.emit(all_success)
+
+    # ── 并行执行基础设施 ──────────────────────────────────
+
+    @staticmethod
+    def _build_execution_segments(steps: list) -> list:
+        """将步骤列表按并行组分段。
+        
+        - parallel_group == 0 的步骤各自独立成段（串行）
+        - 连续的相同 parallel_group > 0 步骤合并为一段（并行）
+        
+        Returns:
+            list of segments, 每段是 [(index, step), ...] 的列表
+        """
+        segments = []
+        current_group = None
+        current_segment = []
+
+        for i, step in enumerate(steps):
+            pg = getattr(step, 'parallel_group', 0) or 0
+            if pg == 0:
+                # 串行步骤：先保存之前未完成的并行段
+                if current_segment:
+                    segments.append(current_segment)
+                    current_segment = []
+                    current_group = None
+                segments.append([(i, step)])
+            elif pg == current_group:
+                # 继续当前并行组
+                current_segment.append((i, step))
+            else:
+                # 新的并行组或第一个并行步骤
+                if current_segment:
+                    segments.append(current_segment)
+                current_group = pg
+                current_segment = [(i, step)]
+
+        if current_segment:
+            segments.append(current_segment)
+
+        return segments
+
+    def _execute_single_step(self, i: int, step) -> bool:
+        """执行单个步骤（串行模式，兼容原逻辑）"""
+        step_type_str = step.step_type.value if hasattr(step.step_type, 'value') else str(step.step_type)
+
+        self.step_started.emit(i, step.step_id)
+        self._emit_log(f"[步骤{i}] 开始执行: {step_type_str}")
+
+        if self.dm:
+            self.dm.step_started(i, step.step_id, step_type_str,
+                                 details=step.notes or "")
+
+        success = False
+        step_error_msg = ""
+        try:
+            success = self._dispatch_step(step, step_index=i)
+        except Exception as e:
+            step_error_msg = str(e)
+            self._emit_log(f"[错误] {step_error_msg}", "ERROR")
+            success = False
+
+        if self.dm and i not in self._steps_already_finished:
+            if success:
+                self.dm.step_finished(i, True)
+            else:
+                error_detail = step_error_msg or f"{step_type_str} 执行失败"
+                self.dm.step_finished(i, False, details=error_detail)
+                self.dm.log_error(f"步骤{i} [{step_type_str}] 失败: {error_detail}")
+
+        self.step_finished.emit(i, step.step_id, success)
+
+        if not success:
+            self._emit_log(f"[步骤{i}] 执行失败", "ERROR")
+        return success
+
+    def _dispatch_step(self, step, step_index: int = -1) -> bool:
+        """根据步骤类型分派执行"""
+        if step.step_type == ProgramStepType.TRANSFER:
+            return self._execute_transfer(step)
+        elif step.step_type == ProgramStepType.PREP_SOL:
+            return self._execute_prep_sol(step, step_index=step_index)
+        elif step.step_type == ProgramStepType.FLUSH:
+            return self._execute_flush(step)
+        elif step.step_type == ProgramStepType.ECHEM:
+            return self._execute_echem(step, step_index=step_index)
+        elif step.step_type == ProgramStepType.BLANK:
+            return self._execute_blank(step)
+        elif step.step_type == ProgramStepType.EVACUATE:
+            return self._execute_evacuate(step)
+        return False
+
+    def _execute_parallel_segment(self, segment: list) -> bool:
+        """并行执行一组步骤。
+        
+        每个步骤在独立的 threading.Thread 中运行。
+        任一步骤失败 → 设置 _stop_flag 停止其余步骤。
+        全部完成后汇总结果。
+        
+        Args:
+            segment: [(index, step), ...] — 要并行执行的步骤列表
+        """
+        import threading
+
+        # 先发出所有步骤的开始信号
+        for i, step in segment:
+            step_type_str = step.step_type.value if hasattr(step.step_type, 'value') else str(step.step_type)
+            self.step_started.emit(i, step.step_id)
+            self._emit_log(f"[步骤{i}] 开始执行: {step_type_str} (并行)")
+            if self.dm:
+                self.dm.step_started(i, step.step_id, step_type_str,
+                                     details=step.notes or "")
+
+        results = {}  # index → (success, error_msg)
+        lock = threading.Lock()
+
+        def _run_step(idx: int, step_obj):
+            success = False
+            error_msg = ""
+            try:
+                success = self._dispatch_step(step_obj, step_index=idx)
+            except Exception as e:
+                error_msg = str(e)
+                self._emit_log(f"[错误] 步骤{idx} 异常: {error_msg}", "ERROR")
+            with lock:
+                results[idx] = (success, error_msg)
+
+        threads = []
+        for i, step in segment:
+            t = threading.Thread(
+                target=_run_step,
+                args=(i, step),
+                name=f"ParallelStep-{i}",
+                daemon=True,
+            )
+            threads.append(t)
+            t.start()
+
+        # 等待所有线程完成
+        for t in threads:
+            t.join()
+
+        # 汇总结果并发出完成信号
+        all_ok = True
+        for i, step in segment:
+            success, error_msg = results.get(i, (False, "未执行"))
+            step_type_str = step.step_type.value if hasattr(step.step_type, 'value') else str(step.step_type)
+
+            if self.dm and i not in self._steps_already_finished:
+                if success:
+                    self.dm.step_finished(i, True)
+                else:
+                    detail = error_msg or f"{step_type_str} 执行失败"
+                    self.dm.step_finished(i, False, details=detail)
+                    self.dm.log_error(f"步骤{i} [{step_type_str}] 失败: {detail}")
+
+            self.step_finished.emit(i, step.step_id, success)
+
+            if not success:
+                self._emit_log(f"[步骤{i}] 执行失败", "ERROR")
+                all_ok = False
+
+        return all_ok
+
+    # ── 步骤执行方法 ──────────────────────────────────
     
     def _execute_transfer(self, step: ProgStep) -> bool:
         """执行移液 - 位移模式(编码器闭环) + RPM时间模式回退
@@ -1452,6 +1594,12 @@ class ExperimentWorker(QObject):
                         f"{task['rpm']}RPM, 预计{task['estimated_seconds']:.1f}s"
                     )
                     
+                    # ★ 预处理：清除残留故障锁存 + 确保电机使能
+                    self.rs485.clear_pump_stall(task["pump_addr"])
+                    time.sleep(0.1)
+                    self.rs485.enable_motor(task["pump_addr"], True)
+                    time.sleep(0.1)
+                    
                     result = self.rs485.run_position_rel(
                         task["pump_addr"],
                         task["encoder_counts"],
@@ -1459,13 +1607,43 @@ class ExperimentWorker(QObject):
                         acceleration=5
                     )
                     if not result:
-                        # 失败时停止本批次中已启动的泵
-                        for prev in started_in_batch:
-                            self.rs485.stop_pump(prev)
+                        # 首次失败 → 重使能后重试
                         self._emit_log(
-                            f"    ❌ 泵 {task['pump_addr']} ({task['sol_name']}) 位置命令发送失败"
+                            f"    ⚠ 泵 {task['pump_addr']} ({task['sol_name']}) "
+                            f"位置命令首次发送失败，尝试重使能后重试",
+                            "WARNING"
                         )
-                        return False
+                        fault = self.rs485.read_pump_fault(task["pump_addr"])
+                        if fault and fault != 0:
+                            self._emit_log(
+                                f"    ⚠ 泵{task['pump_addr']} 故障码 0x{fault:02X}，清除中",
+                                "WARNING"
+                            )
+                            self.rs485.clear_pump_stall(task["pump_addr"])
+                            time.sleep(0.2)
+                        self.rs485.enable_motor(task["pump_addr"], False)
+                        time.sleep(0.15)
+                        self.rs485.enable_motor(task["pump_addr"], True)
+                        time.sleep(0.3)
+                        result = self.rs485.run_position_rel(
+                            task["pump_addr"],
+                            task["encoder_counts"],
+                            task["rpm"],
+                            acceleration=5
+                        )
+                        if not result:
+                            for prev in started_in_batch:
+                                self.rs485.stop_pump(prev)
+                            self._emit_log(
+                                f"    ❌ 泵 {task['pump_addr']} ({task['sol_name']}) "
+                                f"位置命令重试后仍发送失败",
+                                "ERROR"
+                            )
+                            return False
+                        self._emit_log(
+                            f"    ✓ 泵 {task['pump_addr']} ({task['sol_name']}) "
+                            f"重使能后位置命令发送成功"
+                        )
                     
                     # 验证泵实际开始运动（控制器状态+编码器Δ）
                     if not self._verify_pump_running(task["pump_addr"]):
@@ -2414,7 +2592,7 @@ class ExperimentRunner(QObject):
         """
         # 防重入: 运行中/停止中不允许再次启动
         if self.is_busy:
-            self.log_message.emit("实验仍在运行或停止中，请稍后再启动")
+            self.log_message.emit("实验仍在运行或停止中，请稍后再启动", "WARNING", "RUNNER")
             return False
         
         self.experiment = experiment

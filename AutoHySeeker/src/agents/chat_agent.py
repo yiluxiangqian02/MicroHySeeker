@@ -251,10 +251,68 @@ class ChatAgent(BaseAgent):
 
         partitions = ["literature"] if any(keyword in text for keyword in ("文献", "tafel", "催化剂")) else None
         items = await self._knowledge_skill.search(query=text, partitions=partitions, top_k=5)
+
+        # ── RAG: if we have retrieved docs, call LLM to generate a grounded answer ──
+        if items:
+            rag_reply = await self._generate_rag_answer(text, items)
+            if rag_reply:
+                return {"reply": rag_reply, "items": items}
+
         return {
             "reply": self._format_search_reply(text, items),
             "items": items,
         }
+
+    async def _generate_rag_answer(self, question: str, items: list[dict[str, Any]]) -> str:
+        """Use LLM to answer the question grounded in retrieved knowledge items."""
+        context_parts: list[str] = []
+        for i, item in enumerate(items[:5], 1):
+            partition = item.get("partition", "unknown")
+            payload = item.get("payload", {})
+            score = item.get("score", 0.0)
+
+            if partition == "literature":
+                title = payload.get("title", "未知标题")
+                content = (payload.get("content") or payload.get("abstract") or "")[:800]
+                context_parts.append(f"[文献 {i}] 《{title}》（相关度 {score:.2f}）\n{content}")
+            elif partition == "experiments":
+                run_id = payload.get("run_id", "unknown")
+                params = payload.get("params", {})
+                metrics = payload.get("metrics", {})
+                interp = payload.get("interpretation", "")[:400]
+                context_parts.append(
+                    f"[实验 {i}] {run_id}（相关度 {score:.2f}）\n参数: {params}\n指标: {metrics}"
+                    + (f"\n解释: {interp}" if interp else "")
+                )
+            elif partition == "operations":
+                event_type = payload.get("event_type", "")
+                message = payload.get("message", "")[:400]
+                context_parts.append(f"[运维 {i}] {event_type}（相关度 {score:.2f}）\n{message}")
+            else:
+                content = json.dumps(payload, ensure_ascii=False)[:400]
+                context_parts.append(f"[知识 {i}] partition={partition}（相关度 {score:.2f}）\n{content}")
+
+        context_text = "\n\n".join(context_parts)
+        rag_system_prompt = (
+            "你是 AutoHySeeker 知识库助手。请基于以下检索到的知识库文档，"
+            "准确、简洁地回答用户问题。如果文档中没有足够信息，请明确说明。"
+            "不要编造信息，直接引用文档中的数据和结论。用中文回答。\n\n"
+            f"=== 检索到的知识文档 ===\n{context_text}\n=== 文档结束 ==="
+        )
+
+        try:
+            result = await self.invoke(
+                task={"question": question},
+                context={"rag_context": context_text},
+                messages=[{"role": "system", "content": rag_system_prompt}],
+            )
+            answer = str(result.get("content", "")).strip()
+            if answer:
+                return answer
+        except Exception:
+            pass
+
+        return ""
 
     def _extract_threshold_filter(self, message: str) -> tuple[str, float] | None:
         pattern = re.compile(

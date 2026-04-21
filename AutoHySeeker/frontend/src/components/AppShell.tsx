@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Sidebar } from "@/components/Sidebar";
 import { Topbar } from "@/components/Topbar";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
@@ -11,6 +12,7 @@ export function AppShell() {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { pathname } = useLocation();
+  const { t } = useTranslation();
 
   return (
     <div className="min-h-screen bg-transparent md:flex">
@@ -48,8 +50,8 @@ export function AppShell() {
         className={`fixed right-4 bottom-4 w-14 h-14 bg-blue-500 text-white rounded-full shadow-lg hover:bg-blue-600 transition-all flex items-center justify-center z-40 ${
           isChatOpen ? "scale-0 opacity-0 pointer-events-none" : "scale-100 opacity-100"
         }`}
-        title="Open Chat"
-        aria-label="Open Chat"
+        title={t("common.openChat")}
+        aria-label={t("common.openChat")}
       >
         <MessageSquare className="w-6 h-6" />
       </button>

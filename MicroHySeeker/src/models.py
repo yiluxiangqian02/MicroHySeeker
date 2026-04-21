@@ -248,6 +248,25 @@ class PrepSolStep:
             data['selected_solutions'] = {}
         if 'injection_order_numbers' not in data:
             data['injection_order_numbers'] = {}
+        # injection_order 为空时，从 injection_order_numbers + selected_solutions 派生
+        io = data.get('injection_order')
+        if not io or (isinstance(io, str)):
+            ion = data.get('injection_order_numbers', {})
+            sel = data.get('selected_solutions', {})
+            sf  = data.get('solvent_flags', {})
+            # 已选中且有顺序号的溶液，按顺序号排列
+            ordered = sorted(
+                [k for k in ion if sel.get(k, True)],
+                key=lambda x: ion[x],
+            )
+            # 追加已选中但无顺序号的溶液（如溶剂 H2O）
+            for name, is_sel in sel.items():
+                if is_sel and name not in ordered:
+                    ordered.append(name)
+            if ordered:
+                data['injection_order'] = ordered
+            elif isinstance(io, str) and io:
+                data['injection_order'] = [io]
         return PrepSolStep(**data)
     
     def get_summary(self) -> str:
@@ -304,6 +323,9 @@ class ProgStep:
     ec_settings: Optional[ECSettings] = None
     
     notes: str = ""
+
+    # 并行执行组: 0=串行(默认), 相同正整数=同时执行
+    parallel_group: int = 0
 
     def to_dict(self) -> Dict[str, Any]:
         d = asdict(self)

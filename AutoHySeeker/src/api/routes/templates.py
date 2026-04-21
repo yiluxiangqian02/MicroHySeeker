@@ -6,7 +6,6 @@ from datetime import datetime
 from pathlib import Path
 from typing import List, Optional
 
-import httpx
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 
@@ -15,10 +14,6 @@ from src.common.logger import get_logger
 
 logger = get_logger(__name__)
 router = APIRouter(prefix="/api")
-
-# MHS IPv4 transport factory（transport 不可跨 AsyncClient 复用）
-def _mhs_transport() -> httpx.AsyncHTTPTransport:
-    return httpx.AsyncHTTPTransport(local_address="0.0.0.0")
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -76,11 +71,40 @@ def _load_template(template_id: str) -> ExperimentTemplate:
     template_file = templates_dir / f"{template_id}.json"
     
     if not template_file.exists():
-        raise HTTPException(status_code=404, detail=f"Template {template_id} not found")
+        # 文件名可能不是 template_id（如中文名），扫描目录找匹配的 id 字段
+        for candidate in templates_dir.glob("*.json"):
+            try:
+                with open(candidate, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                if data.get("id") == template_id or data.get("template_id") == template_id:
+                    template_file = candidate
+                    break
+            except Exception:
+                continue
+        else:
+            raise HTTPException(status_code=404, detail=f"Template {template_id} not found")
     
     try:
         with open(template_file, "r", encoding="utf-8") as f:
             data = json.load(f)
+        # 兼容 MHS 格式 (id → template_id)
+        if "template_id" not in data and "id" in data:
+            data["template_id"] = data.pop("id")
+        if "template_id" not in data:
+            data["template_id"] = template_file.stem
+        # 兼容 MHS ProgStep 格式 → AHS StepTemplate
+        if data.get("steps") and isinstance(data["steps"], list):
+            converted: list = []
+            for s in data["steps"]:
+                if "params" not in s:
+                    converted.append({
+                        "step_type": s.get("step_type", "blank"),
+                        "description": s.get("notes", "") or s.get("step_type", ""),
+                        "params": s,
+                    })
+                else:
+                    converted.append(s)
+            data["steps"] = converted
         return ExperimentTemplate(**data)
     except Exception as e:
         logger.exception("Failed to load template %s: %s", template_id, e)
@@ -109,57 +133,6 @@ def _delete_template_file(template_id: str) -> None:
     if template_file.exists():
         template_file.unlink()
         logger.info("Deleted template file %s", template_file)
-
-
-# ─────────────────────────────────────────────────────────────────────────────
-# MHS 模板同步
-# ─────────────────────────────────────────────────────────────────────────────
-
-async def _fetch_mhs_templates() -> List[ExperimentTemplate]:
-    """从 MicroHySeeker 拉取模板列表（如果 MHS 在线）。"""
-    try:
-        async with httpx.AsyncClient(timeout=5.0, transport=_mhs_transport()) as client:
-            resp = await client.get("http://127.0.0.1:8100/api/template/list")
-            if resp.status_code != 200:
-                return []
-            data = resp.json()
-            summaries = data.get("templates", [])
-            templates: List[ExperimentTemplate] = []
-            for s in summaries:
-                tid = s.get("id", "")
-                if not tid:
-                    continue
-                # 拉取完整模板
-                detail_resp = await client.get(f"http://127.0.0.1:8100/api/template/{tid}")
-                if detail_resp.status_code != 200:
-                    continue
-                tpl = detail_resp.json()
-                # MHS 模板格式转换为 AHS ExperimentTemplate 格式
-                mhs_steps = tpl.get("steps", [])
-                ahs_steps: list = []
-                for step in mhs_steps:
-                    st = step.get("step_type", "blank")
-                    # MHS ProgStep → AHS StepTemplate {step_type, description, params}
-                    ahs_steps.append(StepTemplate(
-                        step_type=st,
-                        description=step.get("notes", "") or st,
-                        params=step,  # 完整的 ProgStep dict 作为 params
-                    ))
-                templates.append(ExperimentTemplate(
-                    template_id=f"mhs_{tid}",
-                    name=tpl.get("name", tid),
-                    description=tpl.get("description", ""),
-                    steps=ahs_steps,
-                    tags=[*(tpl.get("tags", [])), "mhs"],
-                    created_at=tpl.get("created_at", datetime.now().isoformat()),
-                    updated_at=tpl.get("updated_at", datetime.now().isoformat()),
-                ))
-            return templates
-    except (httpx.ConnectError, httpx.TimeoutException, OSError):
-        return []
-    except Exception as exc:
-        logger.warning("MHS template sync failed: %s", exc)
-        return []
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -217,16 +190,6 @@ async def list_templates(
         except Exception as e:
             logger.warning("Failed to load template %s: %s", template_file, e)
             continue
-    
-    # 合并 MHS 模板（去重）
-    mhs_templates = await _fetch_mhs_templates()
-    for mhs_tpl in mhs_templates:
-        if mhs_tpl.template_id in seen_ids:
-            continue
-        if tag and tag not in mhs_tpl.tags:
-            continue
-        templates.append(mhs_tpl)
-        seen_ids.add(mhs_tpl.template_id)
     
     # 按更新时间倒序排序
     templates.sort(key=lambda t: t.updated_at, reverse=True)
@@ -329,7 +292,7 @@ async def instantiate_template(
     if params_override:
         for i, step in enumerate(steps_raw):
             if str(i) in params_override:
-                step["params"].update(params_override[str(i)])
+                step.setdefault("params", {}).update(params_override[str(i)])
 
     # 通过实验路由创建实验（复用实验存储逻辑）
     from src.api.routes.experiments import _EXP_STORE, _save_store

@@ -1,7 +1,7 @@
 {
   "_protocol_version": "1.0",
   "_created_at": "2026-02-14T16:17:20.118197",
-  "_modified_at": "2026-04-06T20:27:05.318323",
+  "_modified_at": "2026-04-17T16:48:06.269337",
   "_software_version": "1.0.0",
   "exp_id": "single_001",
   "exp_name": "单次实验",
@@ -69,7 +69,8 @@
         "ir_compensation_enabled": false,
         "ir_compensation_ohm": 0.0
       },
-      "notes": ""
+      "notes": "",
+      "parallel_group": 0
     },
     {
       "step_id": "step_4",
@@ -116,7 +117,8 @@
       "flush_cycle_duration_s": null,
       "flush_cycles": 1,
       "ec_settings": null,
-      "notes": ""
+      "notes": "",
+      "parallel_group": 0
     }
   ],
   "notes": ""

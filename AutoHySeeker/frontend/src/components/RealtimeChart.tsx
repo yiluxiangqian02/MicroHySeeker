@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import type { EchemDataPoint } from "@/api/types";
 
 interface Props {
@@ -56,11 +57,11 @@ type SeriesKey = "voltage" | "current" | "power";
 
 const SERIES_CONFIG: Record<
   SeriesKey,
-  { label: string; unit: string; color: string }
+  { labelKey: string; unit: string; color: string }
 > = {
-  voltage: { label: "Voltage", unit: "V", color: "#3b82f6" },
-  current: { label: "Current", unit: "mA", color: "#ef4444" },
-  power: { label: "Power", unit: "mW", color: "#10b981" },
+  voltage: { labelKey: "realtimeChart.voltage", unit: "V", color: "#3b82f6" },
+  current: { labelKey: "realtimeChart.current", unit: "mA", color: "#ef4444" },
+  power: { labelKey: "realtimeChart.power", unit: "mW", color: "#10b981" },
 };
 
 // ── Chart SVG renderer ────────────────────────────────────────────────────────
@@ -74,6 +75,7 @@ interface ChartProps {
 }
 
 function ChartSvg({ data, series, width, height, margin }: ChartProps) {
+  const { t } = useTranslation();
   const innerW = width - margin.left - margin.right;
   const innerH = height - margin.top - margin.bottom;
 
@@ -103,7 +105,7 @@ function ChartSvg({ data, series, width, height, margin }: ChartProps) {
       width={width}
       height={height}
       role="img"
-      aria-label="Electrochemical realtime chart"
+      aria-label={t("realtimeChart.ariaLabel")}
     >
       <g transform={`translate(${margin.left},${margin.top})`}>
         {/* Grid lines */}
@@ -175,7 +177,7 @@ function ChartSvg({ data, series, width, height, margin }: ChartProps) {
           fontSize={11}
           fill="#94a3b8"
         >
-          Time (s)
+          {t("realtimeChart.timeAxis")}
         </text>
 
         {/* Data lines */}
@@ -225,6 +227,7 @@ const MARGIN: Margin = { top: 12, right: 20, bottom: 40, left: 52 };
 const CHART_HEIGHT = 240;
 
 export function RealtimeChart({ data, series = ["voltage", "current", "power"] }: Props) {
+  const { t } = useTranslation();
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState(600);
 
@@ -253,7 +256,7 @@ export function RealtimeChart({ data, series = ["voltage", "current", "power"] }
       {/* Header */}
       <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
         <h3 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
-          Electrochemical Data (Live)
+          {t("realtimeChart.title")}
         </h3>
         <div className="flex flex-wrap gap-3">
           {series.map((key) => {
@@ -266,7 +269,7 @@ export function RealtimeChart({ data, series = ["voltage", "current", "power"] }
                   style={{ backgroundColor: cfg.color }}
                 />
                 <span className="text-xs text-slate-600">
-                  {cfg.label}
+                  {t(cfg.labelKey)}
                   {val !== undefined ? (
                     <span className="ml-1 font-semibold text-slate-900">
                       {val.toFixed(key === "current" || key === "power" ? 1 : 3)} {cfg.unit}
@@ -286,7 +289,7 @@ export function RealtimeChart({ data, series = ["voltage", "current", "power"] }
             className="flex items-center justify-center text-sm text-slate-400"
             style={{ height: CHART_HEIGHT }}
           >
-            Collecting data…
+            {t("realtimeChart.collectingData")}
           </div>
         ) : (
           <ChartSvg

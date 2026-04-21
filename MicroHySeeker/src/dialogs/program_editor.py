@@ -9,7 +9,7 @@
 - 所有小数保留两位
 """
 from PySide6.QtWidgets import (
-    QDialog, QVBoxLayout, QHBoxLayout, QListWidget, QListWidgetItem,
+    QDialog, QVBoxLayout, QHBoxLayout,
     QPushButton, QLabel, QComboBox, QSpinBox, QDoubleSpinBox,
     QCheckBox, QTextEdit, QMessageBox, QGroupBox, QFormLayout,
     QScrollArea, QWidget, QStackedWidget, QFrame, QTableWidget,
@@ -91,18 +91,45 @@ class ProgramEditorDialog(QDialog):
         title_label.setFont(FONT_TITLE)
         left_layout.addWidget(title_label)
         
-        self.step_list = QListWidget()
+        self.step_list = QTableWidget()
+        self.step_list.setColumnCount(2)
+        self.step_list.setHorizontalHeaderLabels(["步骤内容", "并行组"])
+        self.step_list.horizontalHeader().setSectionResizeMode(0, QHeaderView.Stretch)
+        self.step_list.horizontalHeader().setSectionResizeMode(1, QHeaderView.Fixed)
+        self.step_list.setColumnWidth(1, 50)
+        self.step_list.setSelectionBehavior(QTableWidget.SelectRows)
+        self.step_list.setSelectionMode(QTableWidget.SingleSelection)
+        self.step_list.setEditTriggers(QTableWidget.NoEditTriggers)
+        self.step_list.verticalHeader().setVisible(False)
         self.step_list.setFont(FONT_NORMAL)
         self.step_list.setWordWrap(True)
-        self.step_list.itemClicked.connect(self._on_step_selected)
+        self.step_list.cellClicked.connect(self._on_step_cell_clicked)
         left_layout.addWidget(self.step_list)
         
+        # 并行组设置
+        pg_layout = QHBoxLayout()
+        pg_layout.addWidget(QLabel("并行组号:"))
+        self.pg_spin = QSpinBox()
+        self.pg_spin.setRange(0, 99)
+        self.pg_spin.setValue(0)
+        self.pg_spin.setToolTip("0=串行执行；相同非零编号的步骤将同时执行")
+        self.pg_spin.setFont(FONT_NORMAL)
+        pg_layout.addWidget(self.pg_spin)
+        pg_layout.addStretch()
+        left_layout.addLayout(pg_layout)
+
         # 步骤管理按钮
         btn_layout = QHBoxLayout()
         
         add_btn = QPushButton("添加")
         add_btn.clicked.connect(self._on_add_step)
         btn_layout.addWidget(add_btn)
+        
+        update_btn = QPushButton("修改")
+        update_btn.setStyleSheet("color: #2196F3;")
+        update_btn.setToolTip("将右侧参数保存到选中的步骤")
+        update_btn.clicked.connect(self._on_update_step)
+        btn_layout.addWidget(update_btn)
         
         del_btn = QPushButton("删除")
         del_btn.clicked.connect(self._on_delete_step)
@@ -126,7 +153,7 @@ class ProgramEditorDialog(QDialog):
         btn_layout.addWidget(del_all_btn)
         
         left_layout.addLayout(btn_layout)
-        left_widget.setFixedWidth(300)
+        left_widget.setFixedWidth(380)
         main_layout.addWidget(left_widget)
         
         # === 右侧：步骤编辑区 ===
@@ -930,19 +957,35 @@ class ProgramEditorDialog(QDialog):
     # === 事件处理 ===
     
     def _refresh_step_list(self):
-        """刷新步骤列表 - 显示详细参数，带颜色"""
-        self.step_list.clear()
+        """刷新步骤列表 - 两列表格：步骤内容 + 并行组"""
+        self.step_list.setRowCount(0)
         for i, step in enumerate(self.experiment.steps):
             type_name = STEP_TYPE_NAMES.get(step.step_type, str(step.step_type))
             color = STEP_TYPE_COLORS.get(step.step_type, "#000000")
             detail = self._get_step_detail(step)
+            
             if detail:
-                item = QListWidgetItem(f"[{i+1}] {type_name}: {detail}")
+                text = f"[{i+1}] {type_name}: {detail}"
             else:
-                item = QListWidgetItem(f"[{i+1}] {type_name}")
-            item.setForeground(QColor(color))
-            item.setToolTip(item.text())
-            self.step_list.addItem(item)
+                text = f"[{i+1}] {type_name}"
+            
+            row = self.step_list.rowCount()
+            self.step_list.insertRow(row)
+            
+            # 列0: 步骤内容
+            item0 = QTableWidgetItem(text)
+            item0.setForeground(QColor(color))
+            item0.setToolTip(text)
+            self.step_list.setItem(row, 0, item0)
+            
+            # 列1: 并行组号
+            pg = getattr(step, 'parallel_group', 0) or 0
+            pg_text = str(pg) if pg > 0 else ""
+            item1 = QTableWidgetItem(pg_text)
+            item1.setTextAlignment(Qt.AlignCenter)
+            if pg > 0:
+                item1.setForeground(QColor("#E65100"))
+            self.step_list.setItem(row, 1, item1)
     
     def _get_step_detail(self, step: ProgStep) -> str:
         """获取步骤的详细描述"""
@@ -1013,18 +1056,13 @@ class ProgramEditorDialog(QDialog):
         
         return ""
     
-    def _on_step_selected(self, item: QListWidgetItem):
-        """选中步骤 - 在右侧面板查看参数（只读展示，不可修改回步骤）"""
-        index = self.step_list.row(item)
-        if 0 <= index < len(self.experiment.steps):
-            step = self.experiment.steps[index]
-            # 临时设置 current_step 以便 _load_step_to_ui 正常工作
+    def _on_step_cell_clicked(self, row: int, col: int):
+        """选中步骤 - 在右侧面板加载参数，可编辑后保存修改"""
+        if 0 <= row < len(self.experiment.steps):
+            step = self.experiment.steps[row]
             self.current_step = step
-            self.current_step_index = index
+            self.current_step_index = row
             self._load_step_to_ui()
-            # 立即清除，防止 UI 修改被保存回步骤
-            self.current_step = None
-            self.current_step_index = -1
     
     def _load_step_to_ui(self):
         """将步骤数据加载到 UI"""
@@ -1056,6 +1094,9 @@ class ProgramEditorDialog(QDialog):
         # 更新按钮选中状态
         self._select_type_button(step.step_type)
         self.params_stack.setCurrentIndex(type_index)
+        
+        # 加载并行组号
+        self.pg_spin.setValue(getattr(step, 'parallel_group', 0) or 0)
         
         # 加载参数
         if step.step_type == ProgramStepType.TRANSFER:
@@ -1455,6 +1496,9 @@ class ProgramEditorDialog(QDialog):
             step.pump_direction = pump_info["direction"]
             step.pump_rpm = self.ev_rpm_spin.value()
             step.volume_ul = round(self.ev_vol_spin.value() * 1000, 2)  # mL → μL
+        
+        # 通用: 并行组号
+        step.parallel_group = self.pg_spin.value()
     
     def _on_type_button_clicked(self, button: QPushButton):
         """操作类型按钮点击处理 - 仅切换参数面板"""
@@ -1622,6 +1666,29 @@ class ProgramEditorDialog(QDialog):
         self.current_step_index = -1
         self.step_list.clearSelection()
     
+    def _on_update_step(self):
+        """保存修改 - 将右侧面板的参数保存到当前选中的步骤"""
+        index = self.step_list.currentRow()
+        if index < 0 or index >= len(self.experiment.steps):
+            QMessageBox.warning(self, "提示", "请先选中要修改的步骤")
+            return
+        
+        step = self.experiment.steps[index]
+        self.current_step = step
+        self.current_step_index = index
+        
+        # 更新步骤类型（如果用户切换了类型按钮）
+        new_type = self._get_selected_step_type()
+        step.step_type = new_type
+        
+        self._save_current_step()
+        self._refresh_step_list()
+        self.step_list.selectRow(index)
+        
+        # 保持 current_step 可继续编辑
+        self.current_step = step
+        self.current_step_index = index
+    
     def _on_delete_step(self):
         """删除步骤"""
         index = self.step_list.currentRow()
@@ -1638,7 +1705,7 @@ class ProgramEditorDialog(QDialog):
             self.experiment.steps[index], self.experiment.steps[index - 1] = \
                 self.experiment.steps[index - 1], self.experiment.steps[index]
             self._refresh_step_list()
-            self.step_list.setCurrentRow(index - 1)
+            self.step_list.selectRow(index - 1)
     
     def _on_move_down(self):
         """下移步骤"""
@@ -1647,7 +1714,7 @@ class ProgramEditorDialog(QDialog):
             self.experiment.steps[index], self.experiment.steps[index + 1] = \
                 self.experiment.steps[index + 1], self.experiment.steps[index]
             self._refresh_step_list()
-            self.step_list.setCurrentRow(index + 1)
+            self.step_list.selectRow(index + 1)
     
     def _on_move_to_top(self):
         """置顶步骤"""
@@ -1656,7 +1723,7 @@ class ProgramEditorDialog(QDialog):
             step = self.experiment.steps.pop(index)
             self.experiment.steps.insert(0, step)
             self._refresh_step_list()
-            self.step_list.setCurrentRow(0)
+            self.step_list.selectRow(0)
     
     def _on_delete_all_steps(self):
         """删除所有步骤"""
@@ -1747,6 +1814,33 @@ class ProgramEditorDialog(QDialog):
             elif step.step_type == ProgramStepType.ECHEM:
                 if not step.ec_settings:
                     errors.append(f"步骤 {step_num} [电化学]: 缺少电化学参数")
+        
+        # ── 并行组校验 ──
+        parallel_groups = {}  # group_id → [(step_num, step)]
+        for i, step in enumerate(self.experiment.steps):
+            pg = getattr(step, 'parallel_group', 0) or 0
+            if pg > 0:
+                parallel_groups.setdefault(pg, []).append((i + 1, step))
+        
+        for gid, members in parallel_groups.items():
+            # 电化学不允许并行
+            for step_num, step in members:
+                if step.step_type == ProgramStepType.ECHEM:
+                    errors.append(
+                        f"步骤 {step_num} [电化学]: 电化学步骤不能放入并行组 (组{gid})")
+                if step.step_type == ProgramStepType.PREP_SOL:
+                    errors.append(
+                        f"步骤 {step_num} [配液]: 配液步骤不能放入并行组 (组{gid})")
+            # 同一泵地址不允许出现在同一并行组
+            pump_addrs = {}  # addr → step_num
+            for step_num, step in members:
+                addr = getattr(step, 'pump_address', None)
+                if addr and addr in pump_addrs:
+                    errors.append(
+                        f"并行组{gid}: 步骤 {pump_addrs[addr]} 和步骤 {step_num} "
+                        f"使用同一泵地址 {addr}，不能并行")
+                elif addr:
+                    pump_addrs[addr] = step_num
         
         # 有错误时显示汇总并阻止保存
         if errors:

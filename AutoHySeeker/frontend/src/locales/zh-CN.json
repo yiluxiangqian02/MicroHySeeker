@@ -21,7 +21,8 @@
     "deleting": "删除中...",
     "expand": "展开",
     "collapse": "折叠",
-    "retry": "重试"
+    "retry": "重试",
+    "openChat": "打开对话"
   },
   "nav": {
     "overview": "实验工作台",
@@ -33,7 +34,8 @@
     "knowledge": "知识库",
     "settings": "设置",
     "optimization": "优化循环",
-    "chat": "Agent 对话"
+    "chat": "Agent 对话",
+    "diagnostics": "诊断"
   },
   "overview": {
     "title": "系统总览",
@@ -173,7 +175,64 @@
     "best_yield": "最佳产率 (目标)",
     "active_experiment": "当前实验",
     "no_notifications": "暂无新通知。",
-    "mhsOfflineHint": "MicroHySeeker 后端未连接。请确认 MicroHySeeker 服务运行在 localhost:8100。"
+    "mhsOfflineHint": "MicroHySeeker 后端未连接。请确认 MicroHySeeker 服务运行在 localhost:8100。",
+    "agentNames": {
+      "orchestrator": "编排器",
+      "experimentDesigner": "实验设计师",
+      "experimentExecutor": "实验执行器",
+      "diagnosticsExpert": "诊断专家",
+      "chatAgent": "对话助手",
+      "heartbeatInspector": "心跳检测器"
+    },
+    "agentTasks": {
+      "optimizationRunning": "优化 {{status}}",
+      "designing": "正在设计下一轮实验",
+      "coordDesign": "协调设计阶段",
+      "executing": "正在执行实验",
+      "coordExecution": "协调执行阶段",
+      "analyzing": "正在分析结果",
+      "coordAnalysis": "协调分析阶段",
+      "initializing": "正在初始化优化循环"
+    },
+    "logMessages": {
+      "optStatus": "优化循环状态：{{status}}",
+      "currentRound": "当前轮次：{{round}}",
+      "approvalRequired": "需要人工审批 — 优化已暂停",
+      "systemIdle": "系统空闲 — 无优化循环运行中"
+    },
+    "systemMessages": {
+      "optPaused": "优化已暂停：{{reason}}",
+      "waitingApproval": "等待人工审批",
+      "backendOffline": "后端 API 无法连接",
+      "optStatusMsg": "优化状态：{{status}}",
+      "apiErrorHint": "请确认 AutoHySeeker API 服务正在运行于"
+    },
+    "viewAll": "查看全部",
+    "noRecentExperiments": "暂无近期实验。",
+    "optimizationLoop": "优化循环",
+    "mhsBanner": {
+      "online": "在线",
+      "offline": "离线",
+      "connected": "已连接",
+      "disconnected": "未连接",
+      "mockMode": "模拟模式"
+    },
+    "mhsPanel": {
+      "offlineHint": "MHS 服务未运行，点击启动无头模式服务",
+      "launch": "启动 MHS",
+      "launchSuccess": "MHS 服务已成功启动",
+      "launchFailed": "MHS 服务启动失败",
+      "selectPort": "COM 端口",
+      "noPorts": "无可用端口",
+      "configured": "配置",
+      "baudrate": "波特率",
+      "connect": "连接",
+      "connectSuccess": "RS485 已连接到 {{port}}",
+      "connectFailed": "RS485 连接 {{port}} 失败",
+      "disconnect": "断开",
+      "disconnected": "RS485 已断开",
+      "disconnectFailed": "RS485 断开失败"
+    }
   },
   "agents": {
     "title": "AI 助手分工",
@@ -354,7 +413,25 @@
     "predictedYield": "预测收率",
     "suggestedParams": "建议参数",
     "failed": "优化配置加载失败",
-    "cycles": "个周期"
+    "cycles": "个周期",
+    "completion": {
+      "title_completed": "优化已完成",
+      "title_stopped": "优化已停止",
+      "title_error": "优化出错",
+      "summary": "共执行 {{iterations}} 轮迭代，最佳收率 {{best}}%",
+      "whatNext": "请选择下一步操作：",
+      "executeBest": "执行最优实验",
+      "executeBestDesc": "使用最优参数在硬件上再次执行实验",
+      "executingBest": "正在启动最优实验...",
+      "executeFailed": "启动最优实验失败",
+      "noBestFound": "未找到有效的最优实验",
+      "newOptimization": "开始新一轮优化",
+      "newOptimizationDesc": "重置状态并启动新的优化循环",
+      "resetDone": "已重置，可以开始新的优化",
+      "exportResults": "导出优化结果",
+      "exportResultsDesc": "将优化历史和最优参数导出为 JSON 文件",
+      "exported": "优化结果已导出"
+    }
   },
   "chat": {
     "title": "Agent 对话",
@@ -397,7 +474,6 @@
   "knowledge": {
     "title": "知识管理 / 知识库",
     "openviking_integration": "OpenViking 知识集成",
-    "ingest": "录入新知识",
     "assistant": "知识库助手",
     "search_results": "搜索结果",
     "recent_popular": "近期与热门",
@@ -411,7 +487,33 @@
     "experimentMatchFailed": "加载相似实验失败",
     "faultHistoryFailed": "加载故障历史失败",
     "items": "条结果",
-    "emptyHint": "输入搜索关键词，或加载内置的实验/故障示例。"
+    "emptyHint": "输入搜索关键词，或加载内置的实验/故障示例。",
+    "ingest": {
+      "title": "从 MinerU 导入文献",
+      "desc": "将 MinerU 解析好的论文自动导入 OpenViking 向量知识库，完成后可直接对话问答。",
+      "button": "开始导入",
+      "pending": "队列中",
+      "running": "正在导入...",
+      "completed": "导入完成",
+      "failed": "导入失败",
+      "refresh": "刷新状态",
+      "docs": "篇文档",
+      "startFailed": "启动导入任务失败",
+      "errorPrefix": "错误：",
+      "successMsg": "文献已成功导入知识库，可在下方搜索或通过助手问答。"
+    },
+    "chat": {
+      "context": {
+        "search": "OpenViking 语义搜索",
+        "experiments": "相似实验匹配",
+        "faults": "故障历史"
+      },
+      "experimentName": "全局知识库问答",
+      "stage": "就绪",
+      "objective": "基于 OpenViking 检索结果，回答领域问题并汇总文献信息。",
+      "observation": "已连接 MinerU 导入通道，导入完成后可直接问答文献内容。",
+      "suggestion": "尝试询问「逆向电流对催化剂的影响」或「碱性海水电解析氢策略」等问题。"
+    }
   },
   "experimentDetail": {
     "title": "实验工作页",
@@ -439,5 +541,211 @@
     "goBack": "返回",
     "loading": "加载中...",
     "notFound": "实验不存在"
+  },
+  "emergencyStop": {
+    "confirmPrompt": "确认紧急停止？",
+    "stopping": "正在停止…",
+    "yesStop": "是，停止",
+    "cancel": "取消",
+    "ariaLabel": "紧急停止",
+    "stopped": "已停止",
+    "label": "紧急停止",
+    "failedMsg": "停止失败：{{msg}}",
+    "successMsg": "停止信号已成功发送。"
+  },
+  "agentStatus": {
+    "title": "Agent 状态",
+    "idle": "空闲",
+    "working": "工作中",
+    "error": "错误",
+    "activeCount": "{{count}} 活跃",
+    "errorCount": "{{count}} 错误",
+    "allIdle": "全部空闲"
+  },
+  "experimentLog": {
+    "title": "实验日志",
+    "entryCount": "{{count}} 条",
+    "waitingForEntries": "等待日志输出…",
+    "ariaLabel": "实验日志条目",
+    "savedTo": "日志已保存至 data/experiments.json"
+  },
+  "realtimeChart": {
+    "title": "电化学实时数据",
+    "voltage": "电压",
+    "current": "电流",
+    "power": "功率",
+    "timeAxis": "时间 (s)",
+    "collectingData": "采集数据中…",
+    "ariaLabel": "电化学实时图表"
+  },
+  "experimentProgress": {
+    "status": {
+      "idle": "待命",
+      "running": "运行中",
+      "completed": "已完成",
+      "failed": "异常 / 失败"
+    },
+    "summaries": {
+      "idle": "当前没有明确运行中的实验，建议先从 step editor 创建并启动。",
+      "running": "重点盯住当前 step、开始时间和是否长时间无进展。",
+      "completed": "这次运行已结束，下一步应该先看结果和 AI 分析入口。",
+      "failed": "这次运行出现异常，优先回看当前 step 和最近日志。"
+    },
+    "descriptions": {
+      "noContext": "暂无运行上下文。",
+      "noStepDesc": "当前未返回 step 描述。",
+      "cycling": "当前在连续采集 / 轮询阶段，建议同时看实时曲线和日志。",
+      "executing": "当前系统报告正在执行："
+    },
+    "card": {
+      "subtitle": "运行中的实验卡片",
+      "title": "现在到底在跑什么"
+    },
+    "noActive": "暂无活动实验",
+    "labels": {
+      "experimentName": "实验名",
+      "currentStep": "当前 step",
+      "status": "状态",
+      "startTime": "开始时间",
+      "sourceDescription": "来源 / 描述",
+      "executionProgress": "执行进度",
+      "elapsed": "已运行",
+      "nextSuggestion": "下一步建议："
+    },
+    "suggestions": {
+      "running": "盯住 step 是否超时",
+      "completed": "完成后进入详情页看分析入口"
+    }
+  },
+  "chat": {
+    "context": {
+      "experimentName": "当前实验上下文未接入",
+      "stage": "待补充当前 step / run 状态",
+      "objective": "这里后续会显示本轮实验目标、关键参数和约束条件。",
+      "latestObservation": "尚未收到实时实验摘要，当前用产品级占位信息承接。",
+      "nextSuggestion": "可以先围绕 technique、异常、历史实验和下一轮修改方向提问。"
+    },
+    "quickActions": {
+      "askExperiment": "问当前实验",
+      "askExperimentQ": "结合当前实验上下文，这一轮最值得优先关注哪个 step？",
+      "askKnowledge": "问知识库",
+      "askKnowledgeQ": "CV 实验的扫描速率通常怎么选？",
+      "askException": "问运行异常",
+      "askExceptionQ": "如果 transfer 步骤卡住，最常见的原因和排查顺序是什么？",
+      "askHistory": "问历史经验",
+      "askHistoryQ": "最近做过哪些和 EIS 相关的实验，结果大概怎样？"
+    },
+    "welcome": {
+      "line1": "这里是知识管理 / 知识库 Chat。",
+      "line2": "我不是普通闲聊框，而是围绕实验设计、知识库文档、历史实验和运行异常服务的实验助手入口。",
+      "line3": "你可以直接问：当前 step 为什么这么设计、某个 technique 怎么选、最近相似 run 有什么经验、下一轮优先改什么变量。"
+    },
+    "fallback": {
+      "header": "后端知识检索当前不可用，我先用 fallback knowledge flow 托住这次对话。",
+      "description": "我会把你的问题按\u201c知识库 / 历史实验 / 方法经验 / 实验上下文\u201d来组织回答。",
+      "footer": "真实 retrieval 接入后，这里会补上来源引用、相似实验和更明确的执行建议。",
+      "cv": {
+        "header": "fallback 结果：你问的是电化学 technique / 参数选择。",
+        "line1": "• 如果是首次摸底，建议先从 CV 开始，快速判断氧化还原行为和窗口范围。",
+        "line2": "• 如果你关心界面过程或电荷转移，再补 EIS。",
+        "line3": "• 扫描速率通常先从 50 mV/s 起步；若信号弱或想看细节，再降到 10–20 mV/s。",
+        "line4": "• 下一步最好补充样品类型、目标信号和最近一次成功实验。"
+      },
+      "transfer": {
+        "header": "fallback 结果：你问的是实验流程执行异常。",
+        "checkHeader": "建议优先检查：",
+        "check1": "1. 泵地址 / 方向 / 通道映射是否正确；",
+        "check2": "2. RPM、体积模式、时长模式是否和当前 step 一致；",
+        "check3": "3. 当前 run 是否被前一个 step 占住资源；",
+        "check4": "4. 最近日志里是否出现 timeout、busy、connection reset。",
+        "footer": "如果你愿意，下一条可以直接贴 step 参数，我按\u201c排查顺序\u201d继续拆。"
+      },
+      "nextRound": {
+        "header": "fallback 结果：你在问下一轮实验设计。",
+        "line1": "建议先只改一个变量，避免把结论搅浑。",
+        "priorityHeader": "推荐优先级：",
+        "priority1": "1. technique 核心参数（如扫描速率 / 电位范围）；",
+        "priority2": "2. transfer / flush 等执行条件；",
+        "priority3": "3. 配方或样品预处理。",
+        "footer": "如果后续接入真实 agent，这里会返回结构化建议卡和历史 run 对比。"
+      },
+      "history": {
+        "header": "fallback 结果：你在问历史实验经验。",
+        "line1": "当前前端先给出产品级占位：后续这里会展示相似实验列表、关键参数、结果摘要和失败原因。",
+        "line2": "现在建议你继续补充：目标 analyte、technique、异常现象、你最关心的判断维度。"
+      }
+    },
+    "props": {
+      "title": "知识管理 / 知识库 Chat",
+      "subtitle": "围绕实验上下文、知识库文档、历史实验和方案经验提问；即使后端暂时不可用，前端也保持可聊、可看、可演示。",
+      "contextItem0": "知识库 / 方法文档",
+      "contextItem1": "历史实验 / 相似 run",
+      "contextItem2": "方案设计建议 / 失败复盘"
+    },
+    "status": {
+      "connecting": "正在连接知识管理服务...",
+      "loading": "正在整理知识库、历史实验和实验上下文...",
+      "lastError": "最近一次错误："
+    },
+    "statusConfig": {
+      "connecting": "连接中",
+      "live": "后端在线",
+      "fallback": "Fallback 模式",
+      "error": "服务异常"
+    },
+    "statusMessages": {
+      "backendConnected": "已连接后端，历史消息已恢复。",
+      "backendNoHistory": "已连接后端，当前还没有历史消息。",
+      "fallbackWithLocal": "后端未响应，已切换到本地 fallback 会话。",
+      "fallbackNoLocal": "后端未响应，已进入本地 mock/fallback 模式。",
+      "processing": "正在整理知识库、历史实验和实验上下文...",
+      "sendFailed": "发送失败，已切换到本地 fallback 回复。",
+      "historyCleared": "聊天历史已清空，已恢复欢迎状态。",
+      "receivedReply": "已收到知识管理服务回复。",
+      "emptyReply": "后端返回为空，已自动切换 fallback 回复。",
+      "unknownError": "未知错误",
+      "quickStartQ": "结合当前实验上下文，帮我总结一下我现在最该问的问题。"
+    },
+    "agentLabels": {
+      "dataAnalyst": "📊 数据分析助手",
+      "experimentDesigner": "🧪 方案设计助手",
+      "knowledgeManager": "📚 知识管理 / 知识库 Chat",
+      "userQuestion": "👤 用户提问",
+      "assistantReply": "🤖 助手回复"
+    },
+    "buttons": {
+      "clearHistory": "清空历史",
+      "closeWindow": "关闭窗口",
+      "quickStart": "一键开始",
+      "send": "发送"
+    },
+    "contextDisplay": {
+      "title": "当前实验上下文",
+      "experiment": "实验：",
+      "stage": "阶段：",
+      "objective": "目标：",
+      "observation": "最新观察：",
+      "nextSuggestion": "下一步建议："
+    },
+    "retrievalScope": {
+      "title": "当前检索范围"
+    },
+    "recommendations": {
+      "title": "推荐追问方向",
+      "content": "step 设计、运行异常、参数经验、历史实验对比、下一轮修改策略。"
+    },
+    "messages": {
+      "emptyTitle": "当前还没有消息",
+      "emptyDescription": "先从 quick actions 开始，或者直接输入当前实验问题。"
+    },
+    "input": {
+      "placeholder": "输入你的实验问题，例如：结合当前 step，为什么建议先用 CV 而不是直接做 EIS？（Enter 发送，Shift + Enter 换行）"
+    },
+    "helpText": {
+      "fallback": "无后端结果时自动切换 fallback，保证入口不是空壳。"
+    },
+    "footer": {
+      "status": "欢迎语、quick actions、稳定消息流、状态提示、fallback mock flow 已就位。"
+    }
   }
 }

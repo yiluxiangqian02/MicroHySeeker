@@ -43,6 +43,7 @@ export type RichStep = {
   step_id: string;
   step_type: StepType;
   notes: string;
+  parallel_group?: number;
   pump_address?: number;
   pump_direction?: 'FWD' | 'REV';
   pump_rpm?: number;
@@ -172,6 +173,7 @@ function createRichStep(type: StepType = 'blank', idx = 0, solutions: string[] =
     step_id: `step_${Date.now()}_${idx}`,
     step_type: type,
     notes: '',
+    parallel_group: 0,
     pump_address: 1, pump_direction: 'FWD', pump_rpm: 120,
     volume_ul: 1000, transfer_duration: 30, transfer_duration_unit: 's',
     flush_channel_id: '', flush_rpm: 100, flush_cycle_duration_s: 30, flush_cycles: 1,
@@ -214,7 +216,7 @@ function toRichStep(raw: any, idx = 0): RichStep {
   if (raw && typeof raw.step_type === 'string') return raw as RichStep;
   const type: StepType = (raw?.step_type ?? raw?.type ?? 'blank') as StepType;
   const base = createRichStep(type, idx);
-  return { ...base, step_type: type, notes: raw?.description ?? raw?.notes ?? '', ...raw?.parameters };
+  return { ...base, step_type: type, notes: raw?.description ?? raw?.notes ?? '', parallel_group: raw?.parallel_group ?? 0, ...raw?.parameters };
 }
 
 // ─── NumField ────────────────────────────────────────────────────────────────
@@ -551,6 +553,11 @@ export function StepEditor({ steps: rawSteps, onChange }: StepEditorProps) {
                         <div className="flex flex-wrap items-center gap-1.5">
                           <span className="text-xs font-semibold text-slate-800">Step {idx + 1}</span>
                           <span className={`rounded-full border px-1.5 py-0.5 text-xs font-medium ${meta.tone}`}>{meta.label}</span>
+                          {(step.parallel_group ?? 0) > 0 && (
+                            <span className="rounded-full border border-orange-200 bg-orange-50 px-1.5 py-0.5 text-xs font-medium text-orange-700">
+                              ∥{step.parallel_group}
+                            </span>
+                          )}
                         </div>
                         {step.notes && <p className="mt-0.5 truncate text-xs text-slate-500">{step.notes}</p>}
                       </div>
@@ -601,6 +608,14 @@ export function StepEditor({ steps: rawSteps, onChange }: StepEditorProps) {
                 rows={2}
                 className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
                 placeholder="补充说明此步骤的目的或注意事项" />
+            </label>
+            <label className="block">
+              <span className="mb-1 block text-xs font-medium text-slate-600" title="0 = 串行执行；相同非零编号的步骤将同时执行">
+                并行组 <span className="text-slate-400 font-normal">(0=串行)</span>
+              </span>
+              <input type="number" min={0} max={99} value={activeStep.parallel_group ?? 0}
+                onChange={(e) => updateStep({ ...activeStep, parallel_group: Number(e.target.value) })}
+                className="w-24 rounded-lg border border-slate-300 px-2 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
             </label>
             <StepForm step={activeStep} onUpdate={updateStep} cfg={cfg} />
           </div>

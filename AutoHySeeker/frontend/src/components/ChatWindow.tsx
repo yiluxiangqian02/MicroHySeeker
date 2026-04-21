@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react'; // ChatWindow
+import { useTranslation } from 'react-i18next';
 import {
   AlertCircle,
   BookOpen,
@@ -51,29 +52,29 @@ type ConnectionState = 'connecting' | 'live' | 'fallback' | 'error';
 
 const STORAGE_KEY = 'autohyseeker.knowledge-chat.history';
 
-const defaultExperimentContext: ExperimentContextSummary = {
-  experimentName: '当前实验上下文未接入',
-  stage: '待补充当前 step / run 状态',
-  objective: '这里后续会显示本轮实验目标、关键参数和约束条件。',
-  latestObservation: '尚未收到实时实验摘要，当前用产品级占位信息承接。',
-  nextSuggestion: '可以先围绕 technique、异常、历史实验和下一轮修改方向提问。',
+const defaultContextKeys = {
+  experimentName: 'chat.context.experimentName',
+  stage: 'chat.context.stage',
+  objective: 'chat.context.objective',
+  latestObservation: 'chat.context.latestObservation',
+  nextSuggestion: 'chat.context.nextSuggestion',
 };
 
-const quickActions = [
-  { label: '问当前实验', question: '结合当前实验上下文，这一轮最值得优先关注哪个 step？' },
-  { label: '问知识库', question: 'CV 实验的扫描速率通常怎么选？' },
-  { label: '问运行异常', question: '如果 transfer 步骤卡住，最常见的原因和排查顺序是什么？' },
-  { label: '问历史经验', question: '最近做过哪些和 EIS 相关的实验，结果大概怎样？' },
+const quickActionKeys = [
+  { labelKey: 'chat.quickActions.askExperiment', questionKey: 'chat.quickActions.askExperimentQ' },
+  { labelKey: 'chat.quickActions.askKnowledge', questionKey: 'chat.quickActions.askKnowledgeQ' },
+  { labelKey: 'chat.quickActions.askException', questionKey: 'chat.quickActions.askExceptionQ' },
+  { labelKey: 'chat.quickActions.askHistory', questionKey: 'chat.quickActions.askHistoryQ' },
 ];
 
-function createWelcomeMessage(): ChatMessage {
+function createWelcomeMessage(t: (key: string) => string): ChatMessage {
   return {
     id: 'welcome_knowledge_chat',
     role: 'assistant',
     content: [
-      '这里是知识管理 / 知识库 Chat。',
-      '我不是普通闲聊框，而是围绕实验设计、知识库文档、历史实验和运行异常服务的实验助手入口。',
-      '你可以直接问：当前 step 为什么这么设计、某个 technique 怎么选、最近相似 run 有什么经验、下一轮优先改什么变量。',
+      t('chat.welcome.line1'),
+      t('chat.welcome.line2'),
+      t('chat.welcome.line3'),
     ].join('\n'),
     timestamp: new Date().toISOString(),
     agent_type: 'knowledge_manager',
@@ -102,47 +103,47 @@ function saveLocalMessages(messages: ChatMessage[]) {
   window.sessionStorage.setItem(STORAGE_KEY, JSON.stringify(messages.slice(-60)));
 }
 
-function buildFallbackAnswer(question: string): ChatMessage {
+function buildFallbackAnswer(question: string, t: (key: string) => string): ChatMessage {
   const lowered = question.toLowerCase();
   let content = [
-    '后端知识检索当前不可用，我先用 fallback knowledge flow 托住这次对话。',
-    '我会把你的问题按“知识库 / 历史实验 / 方法经验 / 实验上下文”来组织回答。',
-    '真实 retrieval 接入后，这里会补上来源引用、相似实验和更明确的执行建议。',
+    t('chat.fallback.header'),
+    t('chat.fallback.description'),
+    t('chat.fallback.footer'),
   ].join('\n');
 
   if (lowered.includes('cv') || lowered.includes('lsv') || lowered.includes('eis') || lowered.includes('dpv') || lowered.includes('扫描速率')) {
     content = [
-      'fallback 结果：你问的是电化学 technique / 参数选择。',
-      '• 如果是首次摸底，建议先从 CV 开始，快速判断氧化还原行为和窗口范围。',
-      '• 如果你关心界面过程或电荷转移，再补 EIS。',
-      '• 扫描速率通常先从 50 mV/s 起步；若信号弱或想看细节，再降到 10–20 mV/s。',
-      '• 下一步最好补充样品类型、目标信号和最近一次成功实验。',
+      t('chat.fallback.cv.header'),
+      t('chat.fallback.cv.line1'),
+      t('chat.fallback.cv.line2'),
+      t('chat.fallback.cv.line3'),
+      t('chat.fallback.cv.line4'),
     ].join('\n');
   } else if (lowered.includes('transfer') || lowered.includes('flush') || lowered.includes('evacuate') || lowered.includes('卡住')) {
     content = [
-      'fallback 结果：你问的是实验流程执行异常。',
-      '建议优先检查：',
-      '1. 泵地址 / 方向 / 通道映射是否正确；',
-      '2. RPM、体积模式、时长模式是否和当前 step 一致；',
-      '3. 当前 run 是否被前一个 step 占住资源；',
-      '4. 最近日志里是否出现 timeout、busy、connection reset。',
-      '如果你愿意，下一条可以直接贴 step 参数，我按“排查顺序”继续拆。',
+      t('chat.fallback.transfer.header'),
+      t('chat.fallback.transfer.checkHeader'),
+      t('chat.fallback.transfer.check1'),
+      t('chat.fallback.transfer.check2'),
+      t('chat.fallback.transfer.check3'),
+      t('chat.fallback.transfer.check4'),
+      t('chat.fallback.transfer.footer'),
     ].join('\n');
-  } else if (lowered.includes('下一轮') || lowered.includes('建议') || lowered.includes('优化') || lowered.includes('改哪个')) {
+  } else if (lowered.includes('下一轮') || lowered.includes('建议') || lowered.includes('优化') || lowered.includes('改哪里')) {
     content = [
-      'fallback 结果：你在问下一轮实验设计。',
-      '建议先只改一个变量，避免把结论搅浑。',
-      '推荐优先级：',
-      '1. technique 核心参数（如扫描速率 / 电位范围）；',
-      '2. transfer / flush 等执行条件；',
-      '3. 配方或样品预处理。',
-      '如果后续接入真实 agent，这里会返回结构化建议卡和历史 run 对比。',
+      t('chat.fallback.nextRound.header'),
+      t('chat.fallback.nextRound.line1'),
+      t('chat.fallback.nextRound.priorityHeader'),
+      t('chat.fallback.nextRound.priority1'),
+      t('chat.fallback.nextRound.priority2'),
+      t('chat.fallback.nextRound.priority3'),
+      t('chat.fallback.nextRound.footer'),
     ].join('\n');
   } else if (lowered.includes('历史') || lowered.includes('run') || lowered.includes('相似实验')) {
     content = [
-      'fallback 结果：你在问历史实验经验。',
-      '当前前端先给出产品级占位：后续这里会展示相似实验列表、关键参数、结果摘要和失败原因。',
-      '现在建议你继续补充：目标 analyte、technique、异常现象、你最关心的判断维度。',
+      t('chat.fallback.history.header'),
+      t('chat.fallback.history.line1'),
+      t('chat.fallback.history.line2'),
     ].join('\n');
   }
 
@@ -167,31 +168,43 @@ function normalizeMessages(messages: ChatMessage[]): ChatMessage[] {
   }));
 }
 
-function getAgentLabel(message: ChatMessage) {
-  if (message.agent_type === 'data_analyst') return '📊 数据分析助手';
-  if (message.agent_type === 'experiment_designer') return '🧪 方案设计助手';
-  if (message.agent_type === 'knowledge_manager') return '📚 知识管理 / 知识库 Chat';
-  return message.role === 'user' ? '👤 用户提问' : '🤖 助手回复';
+function getAgentLabel(message: ChatMessage, t: (key: string) => string) {
+  if (message.agent_type === 'data_analyst') return t('chat.agentLabels.dataAnalyst');
+  if (message.agent_type === 'experiment_designer') return t('chat.agentLabels.experimentDesigner');
+  if (message.agent_type === 'knowledge_manager') return t('chat.agentLabels.knowledgeManager');
+  return message.role === 'user' ? t('chat.agentLabels.userQuestion') : t('chat.agentLabels.assistantReply');
 }
 
 export default function ChatWindow({
   isOpen = true,
   onClose,
   mode = 'drawer',
-  title = '知识管理 / 知识库 Chat',
-  subtitle = '围绕实验上下文、知识库文档、历史实验和方案经验提问；即使后端暂时不可用，前端也保持可聊、可看、可演示。',
-  contextItems = ['知识库 / 方法文档', '历史实验 / 相似 run', '方案设计建议 / 失败复盘'],
+  title,
+  subtitle,
+  contextItems,
   experimentContext,
 }: ChatWindowProps) {
+  const { t } = useTranslation();
+  const resolvedTitle = title ?? t('chat.props.title');
+  const resolvedSubtitle = subtitle ?? t('chat.props.subtitle');
+  const resolvedContextItems = contextItems ?? [t('chat.props.contextItem0'), t('chat.props.contextItem1'), t('chat.props.contextItem2')];
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isBootstrapped, setIsBootstrapped] = useState(false);
   const [connectionState, setConnectionState] = useState<ConnectionState>('connecting');
-  const [statusText, setStatusText] = useState('正在连接知识管理服务...');
+  const [statusText, setStatusText] = useState('');
   const [lastError, setLastError] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const defaultExperimentContext: ExperimentContextSummary = {
+    experimentName: t(defaultContextKeys.experimentName),
+    stage: t(defaultContextKeys.stage),
+    objective: t(defaultContextKeys.objective),
+    latestObservation: t(defaultContextKeys.latestObservation),
+    nextSuggestion: t(defaultContextKeys.nextSuggestion),
+  };
 
   const mergedExperimentContext = {
     ...defaultExperimentContext,
@@ -224,7 +237,7 @@ export default function ChatWindow({
 
   const bootstrapHistory = async () => {
     setConnectionState('connecting');
-    setStatusText('正在连接知识管理服务...');
+    setStatusText(t('chat.status.connecting'));
     setLastError(null);
 
     const localMessages = readLocalMessages();
@@ -235,17 +248,17 @@ export default function ChatWindow({
 
       const data = await response.json();
       const remoteMessages = Array.isArray(data.messages) ? normalizeMessages(data.messages) : [];
-      const nextMessages = remoteMessages.length > 0 ? remoteMessages : localMessages.length > 0 ? localMessages : [createWelcomeMessage()];
+      const nextMessages = remoteMessages.length > 0 ? remoteMessages : localMessages.length > 0 ? localMessages : [createWelcomeMessage(t)];
 
       setMessages(nextMessages);
       setConnectionState('live');
-      setStatusText(remoteMessages.length > 0 ? '已连接后端，历史消息已恢复。' : '已连接后端，当前还没有历史消息。');
+      setStatusText(remoteMessages.length > 0 ? t('chat.statusMessages.backendConnected') : t('chat.statusMessages.backendNoHistory'));
       setIsBootstrapped(true);
     } catch (error) {
-      const message = error instanceof Error ? error.message : '未知错误';
-      setMessages(localMessages.length > 0 ? localMessages : [createWelcomeMessage()]);
+      const message = error instanceof Error ? error.message : t('chat.statusMessages.unknownError');
+      setMessages(localMessages.length > 0 ? localMessages : [createWelcomeMessage(t)]);
       setConnectionState(localMessages.length > 0 ? 'fallback' : 'error');
-      setStatusText(localMessages.length > 0 ? '后端未响应，已切换到本地 fallback 会话。' : '后端未响应，已进入本地 mock/fallback 模式。');
+      setStatusText(localMessages.length > 0 ? t('chat.statusMessages.fallbackWithLocal') : t('chat.statusMessages.fallbackNoLocal'));
       setLastError(message);
       setIsBootstrapped(true);
     }
@@ -266,7 +279,7 @@ export default function ChatWindow({
     setInput('');
     setIsLoading(true);
     setLastError(null);
-    setStatusText('正在整理知识库、历史实验和实验上下文...');
+    setStatusText(t('chat.statusMessages.processing'));
 
     try {
       const response = await fetch('/api/v1/chat/ask', {
@@ -293,16 +306,16 @@ export default function ChatWindow({
               statusLabel: 'live',
             },
           }
-        : buildFallbackAnswer(question);
+        : buildFallbackAnswer(question, t);
 
       setMessages((prev) => [...prev, assistantMessage]);
       setConnectionState(data?.message?.content ? 'live' : 'fallback');
-      setStatusText(data?.message?.content ? '已收到知识管理服务回复。' : '后端返回为空，已自动切换 fallback 回复。');
+      setStatusText(data?.message?.content ? t('chat.statusMessages.receivedReply') : t('chat.statusMessages.emptyReply'));
     } catch (error) {
-      const message = error instanceof Error ? error.message : '未知错误';
-      setMessages((prev) => [...prev, buildFallbackAnswer(question)]);
+      const message = error instanceof Error ? error.message : t('chat.statusMessages.unknownError');
+      setMessages((prev) => [...prev, buildFallbackAnswer(question, t)]);
       setConnectionState('fallback');
-      setStatusText('发送失败，已切换到本地 fallback 回复。');
+      setStatusText(t('chat.statusMessages.sendFailed'));
       setLastError(message);
     } finally {
       setIsLoading(false);
@@ -316,11 +329,11 @@ export default function ChatWindow({
       // ignore network failure and still clear local messages
     }
 
-    const welcome = createWelcomeMessage();
+    const welcome = createWelcomeMessage(t);
     setMessages([welcome]);
     saveLocalMessages([welcome]);
     setConnectionState('fallback');
-    setStatusText('聊天历史已清空，已恢复欢迎状态。');
+    setStatusText(t('chat.statusMessages.historyCleared'));
     setLastError(null);
   };
 
@@ -330,22 +343,22 @@ export default function ChatWindow({
     connecting: {
       icon: Loader2,
       tone: 'border-blue-200 bg-blue-50 text-blue-700',
-      label: '连接中',
+      label: t('chat.statusConfig.connecting'),
     },
     live: {
       icon: Wifi,
       tone: 'border-emerald-200 bg-emerald-50 text-emerald-700',
-      label: '后端在线',
+      label: t('chat.statusConfig.live'),
     },
     fallback: {
       icon: WifiOff,
       tone: 'border-amber-200 bg-amber-50 text-amber-700',
-      label: 'Fallback 模式',
+      label: t('chat.statusConfig.fallback'),
     },
     error: {
       icon: AlertCircle,
       tone: 'border-rose-200 bg-rose-50 text-rose-700',
-      label: '服务异常',
+      label: t('chat.statusConfig.error'),
     },
   };
 
@@ -359,16 +372,16 @@ export default function ChatWindow({
           <div>
             <div className="flex items-center gap-2">
               <MessageSquare className="h-5 w-5" />
-              <h3 className="font-semibold">{title}</h3>
+              <h3 className="font-semibold">{resolvedTitle}</h3>
             </div>
-            <p className="mt-2 text-xs leading-5 text-blue-50/90">{subtitle}</p>
+            <p className="mt-2 text-xs leading-5 text-blue-50/90">{resolvedSubtitle}</p>
           </div>
           <div className="flex items-center gap-2">
-            <button onClick={clearHistory} className="rounded p-1 transition-colors hover:bg-white/10" title="清空历史">
+            <button onClick={clearHistory} className="rounded p-1 transition-colors hover:bg-white/10" title={t('chat.buttons.clearHistory')}>
               <Trash2 className="h-4 w-4" />
             </button>
             {mode === 'drawer' && onClose && (
-              <button onClick={onClose} className="rounded p-1 transition-colors hover:bg-white/10" title="关闭窗口">
+              <button onClick={onClose} className="rounded p-1 transition-colors hover:bg-white/10" title={t('chat.buttons.closeWindow')}>
                 <X className="h-5 w-5" />
               </button>
             )}
@@ -389,7 +402,7 @@ export default function ChatWindow({
         </div>
         {lastError && (
           <div className="mt-3 rounded-xl border border-rose-200 bg-rose-50 px-3 py-2 text-xs leading-5 text-rose-700">
-            最近一次错误：{lastError}
+                        {t('chat.status.lastError')}{lastError}
           </div>
         )}
       </div>
@@ -398,24 +411,24 @@ export default function ChatWindow({
         <div className="grid gap-3 xl:grid-cols-[1.1fr,0.9fr]">
           <div className="rounded-2xl border border-blue-100 bg-blue-50 p-4">
             <div className="flex items-center gap-2 text-sm font-semibold text-blue-950">
-              <FlaskConical className="h-4 w-4" /> 当前实验上下文
+              <FlaskConical className="h-4 w-4" /> {t('chat.contextDisplay.title')}
             </div>
             <div className="mt-3 space-y-2 text-xs leading-5 text-blue-900">
-              <p><span className="font-semibold">实验：</span>{mergedExperimentContext.experimentName}</p>
-              <p><span className="font-semibold">阶段：</span>{mergedExperimentContext.stage}</p>
-              <p><span className="font-semibold">目标：</span>{mergedExperimentContext.objective}</p>
-              <p><span className="font-semibold">最新观察：</span>{mergedExperimentContext.latestObservation}</p>
-              <p><span className="font-semibold">下一步建议：</span>{mergedExperimentContext.nextSuggestion}</p>
+              <p><span className="font-semibold">{t('chat.contextDisplay.experiment')}</span>{mergedExperimentContext.experimentName}</p>
+              <p><span className="font-semibold">{t('chat.contextDisplay.stage')}</span>{mergedExperimentContext.stage}</p>
+              <p><span className="font-semibold">{t('chat.contextDisplay.objective')}</span>{mergedExperimentContext.objective}</p>
+              <p><span className="font-semibold">{t('chat.contextDisplay.observation')}</span>{mergedExperimentContext.latestObservation}</p>
+              <p><span className="font-semibold">{t('chat.contextDisplay.nextSuggestion')}</span>{mergedExperimentContext.nextSuggestion}</p>
             </div>
           </div>
 
           <div className="grid gap-3">
             <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
               <div className="flex items-center gap-2 text-xs font-semibold text-slate-700">
-                <BookOpen className="h-4 w-4" /> 当前检索范围
+                <BookOpen className="h-4 w-4" /> {t('chat.retrievalScope.title')}
               </div>
               <div className="mt-2 flex flex-wrap gap-2">
-                {contextItems.map((item) => (
+                {resolvedContextItems.map((item) => (
                   <span key={item} className="rounded-full bg-white px-2.5 py-1 text-xs text-slate-700 ring-1 ring-slate-200">
                     {item}
                   </span>
@@ -424,10 +437,10 @@ export default function ChatWindow({
             </div>
             <div className="rounded-2xl border border-violet-100 bg-violet-50 p-4">
               <div className="flex items-center gap-2 text-xs font-semibold text-violet-800">
-                <History className="h-4 w-4" /> 推荐追问方向
+                <History className="h-4 w-4" /> {t('chat.recommendations.title')}
               </div>
               <p className="mt-2 text-xs leading-5 text-violet-700">
-                step 设计、运行异常、参数经验、历史实验对比、下一轮修改策略。
+                {t('chat.recommendations.content')}
               </p>
             </div>
           </div>
@@ -439,9 +452,9 @@ export default function ChatWindow({
           {messages.length === 0 && (
             <div className="mt-8 rounded-2xl border border-dashed border-slate-200 bg-white p-6 text-center text-gray-500">
               <Database className="mx-auto mb-3 h-12 w-12 opacity-50" />
-              <p className="font-medium text-slate-700">当前还没有消息</p>
+              <p className="font-medium text-slate-700">{t('chat.messages.emptyTitle')}</p>
               <p className="mt-2 text-sm leading-6 text-slate-500">
-                先从 quick actions 开始，或者直接输入当前实验问题。
+                {t('chat.messages.emptyDescription')}
               </p>
             </div>
           )}
@@ -463,7 +476,7 @@ export default function ChatWindow({
                   <div className="whitespace-pre-wrap break-words text-sm leading-6">{msg.content}</div>
                   <div className="mt-3 flex flex-wrap items-center justify-between gap-2 text-[11px] opacity-80">
                     <div className="flex items-center gap-2">
-                      <span>{getAgentLabel(msg)}</span>
+                      <span>{getAgentLabel(msg, t)}</span>
                       {msg.role === 'assistant' && (
                         <span
                           className={`rounded-full px-2 py-0.5 ${
@@ -476,7 +489,7 @@ export default function ChatWindow({
                         </span>
                       )}
                     </div>
-                    <div>{new Date(msg.timestamp).toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' })}</div>
+                    <div>{new Date(msg.timestamp).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}</div>
                   </div>
                 </div>
               </div>
@@ -487,7 +500,7 @@ export default function ChatWindow({
             <div className="flex justify-start">
               <div className="flex max-w-[88%] items-center gap-2 rounded-2xl border border-slate-200 bg-white p-4 text-sm text-slate-600 shadow-sm">
                 <Loader2 className="h-4 w-4 animate-spin" />
-                正在整理知识库、历史实验和实验上下文...
+                                {t('chat.status.loading')}
               </div>
             </div>
           )}
@@ -498,21 +511,21 @@ export default function ChatWindow({
 
       <div className="border-t border-slate-200 bg-white px-4 py-4">
         <div className="mb-3 flex flex-wrap gap-2">
-          {quickActions.map((action) => (
+          {quickActionKeys.map((action) => (
             <button
-              key={action.label}
-              onClick={() => setInput(action.question)}
+              key={action.labelKey}
+              onClick={() => setInput(t(action.questionKey))}
               className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs text-slate-700 transition-colors hover:bg-slate-100"
             >
-              {action.label}
+              {t(action.labelKey)}
             </button>
           ))}
           <button
-            onClick={() => void sendMessage('结合当前实验上下文，帮我总结一下我现在最该问的问题。')}
+            onClick={() => void sendMessage(t('chat.statusMessages.quickStartQ'))}
             className="rounded-full border border-cyan-200 bg-cyan-50 px-3 py-1.5 text-xs text-cyan-700 transition-colors hover:bg-cyan-100"
             disabled={isLoading}
           >
-            一键开始
+                        {t('chat.buttons.quickStart')}
           </button>
         </div>
 
@@ -526,14 +539,14 @@ export default function ChatWindow({
                 void sendMessage();
               }
             }}
-            placeholder="输入你的实验问题，例如：结合当前 step，为什么建议先用 CV 而不是直接做 EIS？（Enter 发送，Shift + Enter 换行）"
+            placeholder={t('chat.input.placeholder')}
             className="min-h-[92px] w-full resize-none border-0 bg-transparent px-2 py-2 text-sm leading-6 text-slate-800 outline-none placeholder:text-slate-400"
             disabled={isLoading}
           />
           <div className="flex items-center justify-between gap-3 border-t border-slate-200 px-2 pt-2">
             <div className="flex items-center gap-2 text-xs text-slate-500">
               <Sparkles className="h-3.5 w-3.5" />
-              无后端结果时自动切换 fallback，保证入口不是空壳。
+                            {t('chat.helpText.fallback')}
             </div>
             <button
               onClick={() => void sendMessage()}
@@ -541,14 +554,14 @@ export default function ChatWindow({
               className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2 text-sm text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
             >
               <Send className="h-4 w-4" />
-              发送
+              {t('chat.buttons.send')}
             </button>
           </div>
         </div>
 
         <div className="mt-3 flex flex-wrap items-center gap-2 text-xs text-slate-500">
           <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
-          欢迎语、quick actions、稳定消息流、状态提示、fallback mock flow 已就位。
+                    {t('chat.footer.status')}
         </div>
       </div>
     </div>

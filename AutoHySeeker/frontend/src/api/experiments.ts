@@ -33,5 +33,22 @@ export const experimentsApi = {
   async execute(id: string): Promise<any> {
     const response = await apiClient.post(`/api/experiments/detail/${id}/execute`);
     return response.data;
-  }
+  },
+
+  async activeProgress(): Promise<{
+    active: boolean;
+    exp_id?: string;
+    exp_name?: string;
+    status?: string;
+    total_steps?: number;
+    current_step_index?: number;
+    current_step?: any;
+    progress_percent?: number;
+    elapsed_seconds?: number;
+    step_progress?: any[];
+    logs?: Array<{ ts: string; level: string; message: string }>;
+  }> {
+    const response = await apiClient.get("/api/experiments/active-progress");
+    return response.data;
+  },
 };

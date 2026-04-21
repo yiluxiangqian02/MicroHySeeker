@@ -46,6 +46,7 @@ interface MHSStatus {
   online: boolean;
   connected: boolean;
   mock_mode: boolean;
+  port: string;
 }
 
 interface SystemConfigStore {
@@ -66,11 +67,19 @@ interface SystemConfigStore {
   fetchMHSStatus: () => Promise<void>;
   /** 一次性初始化（配置 + 状态） */
   init: () => Promise<void>;
+  /** 列出可用 COM 口 */
+  fetchPorts: () => Promise<{ ports: string[]; preferred_port: string; baudrate: number }>;
+  /** 连接 RS485 */
+  connectRS485: (port: string, baudrate?: number) => Promise<boolean>;
+  /** 断开 RS485 */
+  disconnectRS485: () => Promise<boolean>;
+  /** 启动 MHS 服务 */
+  launchMHS: () => Promise<boolean>;
 }
 
 export const useSystemConfigStore = create<SystemConfigStore>()((set, get) => ({
   config: null,
-  mhsStatus: { online: false, connected: false, mock_mode: true },
+  mhsStatus: { online: false, connected: false, mock_mode: true, port: "" },
   loading: false,
   lastFetchedAt: null,
   error: null,
@@ -101,11 +110,12 @@ export const useSystemConfigStore = create<SystemConfigStore>()((set, get) => ({
             online: mhs.online ?? false,
             connected: mhs.rs485_connected ?? false,
             mock_mode: mhs.mock_mode ?? true,
+            port: mhs.port ?? "",
           },
         });
       }
     } catch {
-      set({ mhsStatus: { online: false, connected: false, mock_mode: true } });
+      set({ mhsStatus: { online: false, connected: false, mock_mode: true, port: "" } });
     }
   },
 
@@ -116,5 +126,58 @@ export const useSystemConfigStore = create<SystemConfigStore>()((set, get) => ({
       return;
     }
     await Promise.all([get().fetchConfig(), get().fetchMHSStatus()]);
+  },
+
+  fetchPorts: async () => {
+    try {
+      const resp = await fetch("/api/system/mhs/ports");
+      if (resp.ok) return await resp.json();
+    } catch { /* ignore */ }
+    return { ports: [], preferred_port: "", baudrate: 38400 };
+  },
+
+  connectRS485: async (port: string, baudrate = 38400) => {
+    try {
+      const resp = await fetch("/api/system/mhs/connect", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ port, baudrate }),
+      });
+      if (resp.ok) {
+        const data = await resp.json();
+        if (!data.error) {
+          await get().fetchMHSStatus();
+          return true;
+        }
+      }
+    } catch { /* ignore */ }
+    return false;
+  },
+
+  disconnectRS485: async () => {
+    try {
+      const resp = await fetch("/api/system/mhs/disconnect", { method: "POST" });
+      if (resp.ok) {
+        await get().fetchMHSStatus();
+        return true;
+      }
+    } catch { /* ignore */ }
+    return false;
+  },
+
+  launchMHS: async () => {
+    try {
+      const resp = await fetch("/api/system/mhs/launch", { method: "POST" });
+      if (resp.ok) {
+        const data = await resp.json();
+        if (!data.error) {
+          // wait a bit then refresh status
+          await new Promise((r) => setTimeout(r, 2000));
+          await get().fetchMHSStatus();
+          return true;
+        }
+      }
+    } catch { /* ignore */ }
+    return false;
   },
 }));

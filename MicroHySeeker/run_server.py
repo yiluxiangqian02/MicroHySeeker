@@ -29,12 +29,16 @@ if sys.stdout and hasattr(sys.stdout, 'reconfigure'):
         pass
 
 try:
+    # 日志必须在所有其他模块之前初始化——runner.py 等模块在 import 时
+    # 就会调用 get_app_logger()，若此时尚未 init 则会使用默认 prefix="app"
+    from src.services.app_logger import init_app_logging, shutdown_logging
+    init_app_logging(log_dir="./logs", log_prefix="web_app")
+
     from PySide6.QtCore import QCoreApplication, QTimer
     from src.models import SystemConfig
     from src.engine.runner import ExperimentRunner
     from src.api.bridge import APIBridge
     from src.api.server import start_api_server
-    from src.services.app_logger import init_app_logging, shutdown_logging
 except ImportError as e:
     print(f"❌ 导入失败: {e}")
     print("请确保已安装所有依赖:")
@@ -47,17 +51,14 @@ def main():
     parser = argparse.ArgumentParser(description="MicroHySeeker Headless Server")
     parser.add_argument("--port", type=int, default=8100, help="API 监听端口 (默认 8100)")
     args = parser.parse_args()
-
-    # 初始化日志（写入 logs/YYYY-MM-DD/web_app_HH-MM-SS.log）
-    init_app_logging(log_dir="./logs", log_prefix="web_app")
     from src.services.app_logger import get_app_logger
     logger = get_app_logger("SERVER")
 
     # Qt 无头事件循环
     app = QCoreApplication(sys.argv)
 
-    # 加载系统配置
-    config_file = Path("./config/system.json")
+    # 加载系统配置 — 使用绝对路径，避免 CWD 不同导致读错文件
+    config_file = project_root / "config" / "system.json"
     config = SystemConfig.load_from_file(str(config_file))
     config.initialize_default_pumps()
     logger.info("配置加载完成: mock_mode=%s, auto_connect=%s", config.mock_mode, config.auto_connect)

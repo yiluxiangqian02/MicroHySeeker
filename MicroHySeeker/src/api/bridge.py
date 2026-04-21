@@ -217,16 +217,28 @@ class APIBridge(QObject):
     @Slot(dict)
     def _slot_start_experiment(self, experiment_dict: dict) -> None:
         from src.models import Experiment
+        import traceback as _tb
         try:
             exp = Experiment.from_dict(experiment_dict)
             with self._lock:
                 self._current_run_id = experiment_dict.get("exp_id", "")
                 self._current_exp_name = exp.exp_name
                 self._last_finished_success = None
-            self._runner.run_experiment(exp)
-            logger.info("Experiment started via API: %s", exp.exp_name)
+            started = self._runner.run_experiment(exp)
+            if not started:
+                logger.warning("run_experiment returned False (runner busy?)")
+            else:
+                logger.info("Experiment started via API: %s", exp.exp_name)
         except Exception as exc:
             logger.exception("Failed to start experiment: %s", exc)
+            # 确保错误可见：写入文件
+            try:
+                import pathlib
+                pathlib.Path("./logs/bridge_error.log").write_text(
+                    f"{_tb.format_exc()}\n", encoding="utf-8"
+                )
+            except Exception:
+                pass
 
     @Slot()
     def _slot_stop(self) -> None:
@@ -249,12 +261,21 @@ class APIBridge(QObject):
             self._last_finished_success = success
         logger.info("Experiment finished (success=%s) via bridge event", success)
 
-    @Slot(str)
-    def _on_log_message(self, msg: str) -> None:
+    @Slot(str, str, str)
+    def _on_log_message(self, msg: str, level: str = "INFO", source: str = "RUNNER") -> None:
+        ts = datetime.now().strftime('%H:%M:%S')
+        entry = f"[{ts}] [{level}] {msg}"
         with self._lock:
-            self._recent_logs.append(f"[{datetime.now().strftime('%H:%M:%S')}] {msg}")
+            self._recent_logs.append(entry)
             if len(self._recent_logs) > 500:
                 self._recent_logs = self._recent_logs[-500:]
+            # 写入调试文件便于排查
+            try:
+                import pathlib
+                with pathlib.Path("./logs/bridge_runner_log.txt").open("a", encoding="utf-8") as f:
+                    f.write(f"{entry}\n")
+            except Exception:
+                pass
 
     # ── FastAPI 路由调用的公开方法（任意线程安全） ──────────────────────────
 
@@ -412,6 +433,7 @@ class APIBridge(QObject):
         return {
             "connected": rs485.is_connected(),
             "mock_mode": getattr(rs485, "_mock_mode", True),
+            "port": getattr(rs485, "_current_port", ""),
         }
 
     def device_list_ports(self) -> List[str]:

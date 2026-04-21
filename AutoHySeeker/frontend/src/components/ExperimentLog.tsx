@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import type { ExperimentLogEntry, LogLevel } from "@/api/types";
 
 interface Props {
@@ -22,6 +23,7 @@ function formatTimestamp(iso: string): string {
 }
 
 export function ExperimentLog({ logs }: Props) {
+  const { t } = useTranslation();
   const bottomRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -38,19 +40,24 @@ export function ExperimentLog({ logs }: Props) {
     <div className="rounded-xl border border-slate-200 bg-white shadow-sm">
       <div className="flex items-center justify-between border-b border-slate-100 px-4 py-3">
         <h3 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
-          Experiment Log
+          {t("experimentLog.title")}
         </h3>
-        <span className="text-xs text-slate-400">{logs.length} entries</span>
+        <div className="flex items-center gap-3">
+          <span className="text-[10px] text-slate-300 font-mono" title={t("experimentLog.savedTo")}>
+            💾 data/experiments.json
+          </span>
+          <span className="text-xs text-slate-400">{t("experimentLog.entryCount", { count: logs.length })}</span>
+        </div>
       </div>
 
       <div
         ref={containerRef}
         className="h-56 overflow-y-auto p-3 font-mono text-xs"
         aria-live="polite"
-        aria-label="Experiment log entries"
+        aria-label={t("experimentLog.ariaLabel")}
       >
         {logs.length === 0 ? (
-          <p className="text-slate-400">Waiting for log entries…</p>
+          <p className="text-slate-400">{t("experimentLog.waitingForEntries")}</p>
         ) : (
           logs.map((entry) => {
             const style = LEVEL_STYLE[entry.level];

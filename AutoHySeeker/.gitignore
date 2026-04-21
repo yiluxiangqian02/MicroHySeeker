@@ -34,6 +34,9 @@ coverage.xml
 .env
 .env.local
 .env.*.local
+MinerU/input/
+MinerU/output/
+MinerU/.cache/
 
 # Logs (runtime output only; fixture logs in tests/fixtures/ are committed)
 logs/

@@ -1,28 +1,29 @@
+import { useTranslation } from "react-i18next";
 import type { AgentState, AgentStatus } from "@/api/types";
 
 interface Props {
   agents: AgentState[];
 }
 
-const STATUS_STYLE: Record<AgentStatus, { dot: string; badge: string; label: string }> = {
-  idle: {
-    dot: "bg-slate-300",
-    badge: "bg-slate-100 text-slate-500",
-    label: "Idle",
-  },
-  working: {
-    dot: "bg-amber-400 animate-pulse",
-    badge: "bg-amber-50 text-amber-700",
-    label: "Working",
-  },
-  error: {
-    dot: "bg-red-500",
-    badge: "bg-red-50 text-red-700",
-    label: "Error",
-  },
-};
-
 function AgentCard({ agent }: { agent: AgentState }) {
+  const { t } = useTranslation();
+  const STATUS_STYLE: Record<AgentStatus, { dot: string; badge: string; label: string }> = {
+    idle: {
+      dot: "bg-slate-300",
+      badge: "bg-slate-100 text-slate-500",
+      label: t("agentStatus.idle"),
+    },
+    working: {
+      dot: "bg-amber-400 animate-pulse",
+      badge: "bg-amber-50 text-amber-700",
+      label: t("agentStatus.working"),
+    },
+    error: {
+      dot: "bg-red-500",
+      badge: "bg-red-50 text-red-700",
+      label: t("agentStatus.error"),
+    },
+  };
   const style = STATUS_STYLE[agent.status];
   return (
     <div className="flex items-start gap-3 rounded-lg border border-slate-100 bg-slate-50 p-3">
@@ -47,6 +48,7 @@ function AgentCard({ agent }: { agent: AgentState }) {
 }
 
 export function AgentStatusPanel({ agents }: Props) {
+  const { t } = useTranslation();
   const working = agents.filter((a) => a.status === "working").length;
   const errors = agents.filter((a) => a.status === "error").length;
 
@@ -54,22 +56,22 @@ export function AgentStatusPanel({ agents }: Props) {
     <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
       <div className="flex items-center justify-between">
         <h3 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
-          Agent Status
+          {t("agentStatus.title")}
         </h3>
         <div className="flex gap-2 text-xs">
           {working > 0 && (
             <span className="rounded-full bg-amber-100 px-2 py-0.5 font-medium text-amber-700">
-              {working} active
+              {t("agentStatus.activeCount", { count: working })}
             </span>
           )}
           {errors > 0 && (
             <span className="rounded-full bg-red-100 px-2 py-0.5 font-medium text-red-700">
-              {errors} error
+              {t("agentStatus.errorCount", { count: errors })}
             </span>
           )}
           {working === 0 && errors === 0 && (
             <span className="rounded-full bg-slate-100 px-2 py-0.5 font-medium text-slate-500">
-              all idle
+              {t("agentStatus.allIdle")}
             </span>
           )}
         </div>

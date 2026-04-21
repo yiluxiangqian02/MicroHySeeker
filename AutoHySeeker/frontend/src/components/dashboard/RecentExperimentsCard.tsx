@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { ArrowRight, Beaker, CheckCircle2, Clock, XCircle } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export interface RecentExperiment {
   id: string;
@@ -9,22 +10,23 @@ export interface RecentExperiment {
 }
 
 export function RecentExperimentsCard({ experiments }: { experiments: RecentExperiment[] }) {
+  const { t } = useTranslation();
   return (
     <div className="rounded-2xl border border-slate-200 bg-white shadow-sm flex flex-col">
       <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
-        <h3 className="font-semibold text-slate-900">Recent Experiments</h3>
+        <h3 className="font-semibold text-slate-900">{t("dashboard.recentExperiments")}</h3>
         <Link
           to="/experiments"
           className="flex items-center gap-1 text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors"
         >
-          View All <ArrowRight className="h-4 w-4" />
+          {t("dashboard.viewAll")} <ArrowRight className="h-4 w-4" />
         </Link>
       </div>
 
       <div className="flex-1 p-2">
         {experiments.length === 0 ? (
           <div className="flex h-full items-center justify-center p-4 text-sm text-slate-500">
-            No recent experiments.
+            {t("dashboard.noRecentExperiments")}
           </div>
         ) : (
           <ul className="space-y-1">

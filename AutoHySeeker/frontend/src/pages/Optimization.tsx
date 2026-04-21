@@ -1,13 +1,16 @@
 import { useTranslation } from "react-i18next";
-import { useEffect } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { useOptimizationStore } from "@/stores/optimizationStore";
-import { Play, Square, Settings as SettingsIcon, BrainCircuit, RefreshCw, Trophy, FlaskConical, Target, AlertCircle } from "lucide-react";
+import { experimentsApi } from "@/api/experiments";
+import { Play, Square, Settings as SettingsIcon, BrainCircuit, RefreshCw, Trophy, FlaskConical, Target, AlertCircle, CheckCircle2, RotateCcw, Download, X, Beaker } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from "recharts";
 import toast from "react-hot-toast";
 
 export function Optimization() {
   const { t } = useTranslation();
-  const { config, state, isLoading, fetchConfigAndState, startLoop, stopLoop } = useOptimizationStore();
+  const { config, state, isLoading, fetchConfigAndState, startLoop, stopLoop, resetLoop } = useOptimizationStore();
+  const [showCompletionDialog, setShowCompletionDialog] = useState(false);
+  const prevStatusRef = useRef<string | undefined>(undefined);
 
   useEffect(() => {
     const refreshStatus = () => {
@@ -21,6 +24,21 @@ export function Optimization() {
 
     return () => window.clearInterval(timer);
   }, [fetchConfigAndState]);
+
+  // Detect optimization completion / stop → show dialog
+  useEffect(() => {
+    const currentStatus = state?.status;
+    const prev = prevStatusRef.current;
+    if (
+      prev &&
+      prev !== currentStatus &&
+      (prev === "running" || prev === "executing" || prev === "designing" || prev === "analyzing" || prev === "evaluating") &&
+      (currentStatus === "completed" || currentStatus === "stopped" || currentStatus === "error")
+    ) {
+      setShowCompletionDialog(true);
+    }
+    prevStatusRef.current = currentStatus;
+  }, [state?.status]);
 
   const handleStartLoop = async () => {
     try {
@@ -44,6 +62,61 @@ export function Optimization() {
     fetchConfigAndState();
     toast.success(t('common.refresh'));
   };
+
+  // ── Post-optimization action handlers ───────────────────────────────────
+
+  const handleExecuteBest = useCallback(async () => {
+    setShowCompletionDialog(false);
+    // Find the best experiment from history and re-execute it
+    const bestExpId = state?.history.find(
+      (h) => h.yield === state.bestYield
+    )?.experiment_id;
+    if (bestExpId) {
+      try {
+        await experimentsApi.execute(bestExpId);
+        toast.success(t('optimization.completion.executingBest'));
+      } catch {
+        toast.error(t('optimization.completion.executeFailed'));
+      }
+    } else {
+      toast.error(t('optimization.completion.noBestFound'));
+    }
+  }, [state, t]);
+
+  const handleNewOptimization = useCallback(async () => {
+    setShowCompletionDialog(false);
+    try {
+      await resetLoop();
+      toast.success(t('optimization.completion.resetDone'));
+    } catch {
+      toast.error(t('optimization.failed'));
+    }
+  }, [resetLoop, t]);
+
+  const handleExportResults = useCallback(() => {
+    setShowCompletionDialog(false);
+    // Export optimization history as JSON
+    const exportData = {
+      goal: config?.goal,
+      best_yield: state?.bestYield,
+      best_params: state?.bestParams,
+      total_iterations: state?.currentIteration,
+      history: state?.history,
+      exported_at: new Date().toISOString(),
+    };
+    const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `optimization_results_${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast.success(t('optimization.completion.exported'));
+  }, [config, state, t]);
+
+  const handleDismissDialog = useCallback(() => {
+    setShowCompletionDialog(false);
+  }, []);
 
   if (isLoading && !config) {
     return (
@@ -269,6 +342,105 @@ export function Optimization() {
           )}
         </div>
       </div>
+
+      {/* ── Optimization Completion Dialog ────────────────────────────────── */}
+      {showCompletionDialog && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+          <div className="relative w-full max-w-lg mx-4 rounded-2xl border border-slate-200 bg-white shadow-2xl">
+            {/* Close button */}
+            <button
+              onClick={handleDismissDialog}
+              className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 transition"
+            >
+              <X className="h-5 w-5" />
+            </button>
+
+            {/* Header */}
+            <div className="px-6 pt-6 pb-4 border-b border-slate-100">
+              <div className="flex items-center gap-3">
+                <div className={`flex h-10 w-10 items-center justify-center rounded-full ${
+                  state?.status === "completed" ? "bg-green-100" : state?.status === "error" ? "bg-red-100" : "bg-amber-100"
+                }`}>
+                  {state?.status === "completed" ? (
+                    <CheckCircle2 className="h-5 w-5 text-green-600" />
+                  ) : state?.status === "error" ? (
+                    <AlertCircle className="h-5 w-5 text-red-600" />
+                  ) : (
+                    <Square className="h-5 w-5 text-amber-600" />
+                  )}
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-slate-900">
+                    {t(`optimization.completion.title_${state?.status === "completed" ? "completed" : state?.status === "error" ? "error" : "stopped"}`)}
+                  </h3>
+                  <p className="text-sm text-slate-500">
+                    {t('optimization.completion.summary', {
+                      iterations: state?.currentIteration ?? 0,
+                      best: state?.bestYield?.toFixed(2) ?? "N/A",
+                    })}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Best result summary */}
+            {state && state.bestYield > 0 && (
+              <div className="px-6 py-4 bg-green-50/50 border-b border-slate-100">
+                <div className="flex items-center gap-2 mb-2">
+                  <Trophy className="h-4 w-4 text-green-600" />
+                  <span className="text-sm font-semibold text-green-800">{t('optimization.globalBest')}</span>
+                  <span className="ml-auto text-lg font-bold text-green-600">{state.bestYield.toFixed(2)}%</span>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {Object.entries(state.bestParams).map(([k, v]) => (
+                    <span key={k} className="inline-flex items-center gap-1 rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
+                      {k}: {String(v)}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Action buttons */}
+            <div className="px-6 py-5 space-y-3">
+              <p className="text-sm font-medium text-slate-700 mb-3">{t('optimization.completion.whatNext')}</p>
+
+              <button
+                onClick={handleExecuteBest}
+                className="w-full flex items-center gap-3 rounded-xl border border-blue-200 bg-blue-50 px-4 py-3 text-left hover:bg-blue-100 transition group"
+              >
+                <Beaker className="h-5 w-5 text-blue-600 shrink-0" />
+                <div>
+                  <div className="text-sm font-semibold text-blue-900">{t('optimization.completion.executeBest')}</div>
+                  <div className="text-xs text-blue-600">{t('optimization.completion.executeBestDesc')}</div>
+                </div>
+              </button>
+
+              <button
+                onClick={handleNewOptimization}
+                className="w-full flex items-center gap-3 rounded-xl border border-purple-200 bg-purple-50 px-4 py-3 text-left hover:bg-purple-100 transition group"
+              >
+                <RotateCcw className="h-5 w-5 text-purple-600 shrink-0" />
+                <div>
+                  <div className="text-sm font-semibold text-purple-900">{t('optimization.completion.newOptimization')}</div>
+                  <div className="text-xs text-purple-600">{t('optimization.completion.newOptimizationDesc')}</div>
+                </div>
+              </button>
+
+              <button
+                onClick={handleExportResults}
+                className="w-full flex items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-left hover:bg-slate-100 transition group"
+              >
+                <Download className="h-5 w-5 text-slate-600 shrink-0" />
+                <div>
+                  <div className="text-sm font-semibold text-slate-900">{t('optimization.completion.exportResults')}</div>
+                  <div className="text-xs text-slate-500">{t('optimization.completion.exportResultsDesc')}</div>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

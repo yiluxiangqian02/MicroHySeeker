@@ -21,7 +21,8 @@
     "deleting": "Deleting...",
     "expand": "Expand",
     "collapse": "Collapse",
-    "retry": "Retry"
+    "retry": "Retry",
+    "openChat": "Open Chat"
   },
   "nav": {
     "overview": "Workbench",
@@ -33,7 +34,8 @@
     "knowledge": "Knowledge Hub",
     "settings": "Settings",
     "optimization": "Optimization Loop",
-    "chat": "Agent Chat"
+    "chat": "Agent Chat",
+    "diagnostics": "Diagnostics"
   },
   "overview": {
     "title": "System Overview",
@@ -173,7 +175,64 @@
     "best_yield": "Best Yield (Target)",
     "active_experiment": "Active Experiment",
     "no_notifications": "No new notifications.",
-    "mhsOfflineHint": "MicroHySeeker backend not connected. Please ensure MicroHySeeker is running on localhost:8100."
+    "mhsOfflineHint": "MicroHySeeker backend not connected. Please ensure MicroHySeeker is running on localhost:8100.",
+    "agentNames": {
+      "orchestrator": "Orchestrator",
+      "experimentDesigner": "Experiment Designer",
+      "experimentExecutor": "Experiment Executor",
+      "diagnosticsExpert": "Diagnostics Expert",
+      "chatAgent": "Chat Agent",
+      "heartbeatInspector": "Heartbeat Inspector"
+    },
+    "agentTasks": {
+      "optimizationRunning": "Optimization {{status}}",
+      "designing": "Designing next experiment",
+      "coordDesign": "Coordinating design phase",
+      "executing": "Executing experiment",
+      "coordExecution": "Coordinating execution",
+      "analyzing": "Analyzing results",
+      "coordAnalysis": "Coordinating analysis",
+      "initializing": "Initializing optimization loop"
+    },
+    "logMessages": {
+      "optStatus": "Optimization loop status: {{status}}",
+      "currentRound": "Current round: {{round}}",
+      "approvalRequired": "Human approval required \u2014 optimization paused",
+      "systemIdle": "System idle \u2014 no optimization running"
+    },
+    "systemMessages": {
+      "optPaused": "Optimization paused: {{reason}}",
+      "waitingApproval": "waiting for human approval",
+      "backendOffline": "Backend API unreachable",
+      "optStatusMsg": "Optimization status: {{status}}",
+      "apiErrorHint": "Make sure the AutoHySeeker API server is running at"
+    },
+    "viewAll": "View All",
+    "noRecentExperiments": "No recent experiments.",
+    "optimizationLoop": "Optimization Loop",
+    "mhsBanner": {
+      "online": "Online",
+      "offline": "Offline",
+      "connected": "Connected",
+      "disconnected": "Disconnected",
+      "mockMode": "Mock Mode"
+    },
+    "mhsPanel": {
+      "offlineHint": "MHS service is not running. Click to launch headless mode.",
+      "launch": "Launch MHS",
+      "launchSuccess": "MHS service launched successfully",
+      "launchFailed": "Failed to launch MHS service",
+      "selectPort": "COM Port",
+      "noPorts": "No ports available",
+      "configured": "configured",
+      "baudrate": "Baud Rate",
+      "connect": "Connect",
+      "connectSuccess": "RS485 connected to {{port}}",
+      "connectFailed": "RS485 failed to connect to {{port}}",
+      "disconnect": "Disconnect",
+      "disconnected": "RS485 disconnected",
+      "disconnectFailed": "Failed to disconnect RS485"
+    }
   },
   "agents": {
     "title": "AI Roles",
@@ -354,7 +413,25 @@
     "predictedYield": "Predicted Yield",
     "suggestedParams": "Suggested Params",
     "failed": "Failed to load optimization context.",
-    "cycles": "cycles"
+    "cycles": "cycles",
+    "completion": {
+      "title_completed": "Optimization Completed",
+      "title_stopped": "Optimization Stopped",
+      "title_error": "Optimization Error",
+      "summary": "Ran {{iterations}} iterations, best yield {{best}}%",
+      "whatNext": "What would you like to do next?",
+      "executeBest": "Execute Best Experiment",
+      "executeBestDesc": "Re-run the optimal parameters on hardware",
+      "executingBest": "Starting best experiment...",
+      "executeFailed": "Failed to start best experiment",
+      "noBestFound": "No valid best experiment found",
+      "newOptimization": "Start New Optimization",
+      "newOptimizationDesc": "Reset state and start a new optimization loop",
+      "resetDone": "Reset complete, ready for new optimization",
+      "exportResults": "Export Results",
+      "exportResultsDesc": "Download optimization history and best parameters as JSON",
+      "exported": "Results exported successfully"
+    }
   },
   "chat": {
     "title": "Agent Chat",
@@ -397,7 +474,6 @@
   "knowledge": {
     "title": "Knowledge Hub",
     "openviking_integration": "OpenViking Integration",
-    "ingest": "Ingest New Knowledge",
     "assistant": "Knowledge Assistant",
     "search_results": "Search Results",
     "recent_popular": "Recent & Popular",
@@ -411,7 +487,33 @@
     "experimentMatchFailed": "Failed to load experiment matches",
     "faultHistoryFailed": "Failed to load fault history",
     "items": "items",
-    "emptyHint": "Start with a search query, or load the built-in experiment/fault examples."
+    "emptyHint": "Start with a search query, or load the built-in experiment/fault examples.",
+    "ingest": {
+      "title": "Import from MinerU",
+      "desc": "Automatically import MinerU-parsed papers into OpenViking vector knowledge base for Q&A.",
+      "button": "Start Import",
+      "pending": "Queued",
+      "running": "Importing...",
+      "completed": "Import Complete",
+      "failed": "Import Failed",
+      "refresh": "Refresh Status",
+      "docs": "documents",
+      "startFailed": "Failed to start ingest task",
+      "errorPrefix": "Error: ",
+      "successMsg": "Literature successfully imported. You can now search or chat with the assistant."
+    },
+    "chat": {
+      "context": {
+        "search": "OpenViking Semantic Search",
+        "experiments": "Experiment Matches",
+        "faults": "Fault History"
+      },
+      "experimentName": "Global Knowledge Q&A",
+      "stage": "Ready",
+      "objective": "Answer domain questions and summarize literature based on OpenViking search results.",
+      "observation": "MinerU import channel connected. After import, ask questions about your papers directly.",
+      "suggestion": "Try asking about 'reverse current effects on catalysts' or 'alkaline seawater HER strategies'."
+    }
   },
   "experimentDetail": {
     "title": "Experiment Workspace",
@@ -439,5 +541,211 @@
     "goBack": "Back",
     "loading": "Loading...",
     "notFound": "Experiment not found"
+  },
+  "emergencyStop": {
+    "confirmPrompt": "Confirm emergency stop?",
+    "stopping": "Stopping\u2026",
+    "yesStop": "Yes, Stop",
+    "cancel": "Cancel",
+    "ariaLabel": "Emergency stop",
+    "stopped": "Stopped",
+    "label": "Emergency Stop",
+    "failedMsg": "Stop failed: {{msg}}",
+    "successMsg": "Stop signal sent successfully."
+  },
+  "agentStatus": {
+    "title": "Agent Status",
+    "idle": "Idle",
+    "working": "Working",
+    "error": "Error",
+    "activeCount": "{{count}} active",
+    "errorCount": "{{count}} error",
+    "allIdle": "all idle"
+  },
+  "experimentLog": {
+    "title": "Experiment Log",
+    "entryCount": "{{count}} entries",
+    "waitingForEntries": "Waiting for log entries\u2026",
+    "ariaLabel": "Experiment log entries",
+    "savedTo": "Logs saved to data/experiments.json"
+  },
+  "realtimeChart": {
+    "title": "Electrochemical Data (Live)",
+    "voltage": "Voltage",
+    "current": "Current",
+    "power": "Power",
+    "timeAxis": "Time (s)",
+    "collectingData": "Collecting data\u2026",
+    "ariaLabel": "Electrochemical realtime chart"
+  },
+  "experimentProgress": {
+    "status": {
+      "idle": "Idle",
+      "running": "Running",
+      "completed": "Completed",
+      "failed": "Error / Failed"
+    },
+    "summaries": {
+      "idle": "No experiment is actively running. Create and start one from the step editor.",
+      "running": "Focus on the current step, start time, and whether progress has stalled.",
+      "completed": "This run has finished. Check results and the AI analysis entry next.",
+      "failed": "An error occurred. Review the current step and recent logs first."
+    },
+    "descriptions": {
+      "noContext": "No run context available.",
+      "noStepDesc": "No step description returned.",
+      "cycling": "Currently in a continuous acquisition / polling phase. Monitor the real-time chart and logs.",
+      "executing": "System is currently executing: "
+    },
+    "card": {
+      "subtitle": "Active Experiment Card",
+      "title": "What\u2019s Running Now"
+    },
+    "noActive": "No active experiment",
+    "labels": {
+      "experimentName": "Experiment",
+      "currentStep": "Current Step",
+      "status": "Status",
+      "startTime": "Start Time",
+      "sourceDescription": "Source / Description",
+      "executionProgress": "Execution Progress",
+      "elapsed": "Elapsed",
+      "nextSuggestion": "Next suggestion: "
+    },
+    "suggestions": {
+      "running": "Watch for step timeout",
+      "completed": "Go to details page for analysis"
+    }
+  },
+  "chat": {
+    "context": {
+      "experimentName": "Experiment context not connected",
+      "stage": "Pending current step / run status",
+      "objective": "Experiment objectives, key parameters, and constraints will appear here.",
+      "latestObservation": "No real-time experiment summary received yet.",
+      "nextSuggestion": "You can ask about techniques, anomalies, historical experiments, and next-round strategies."
+    },
+    "quickActions": {
+      "askExperiment": "Ask about experiment",
+      "askExperimentQ": "Given the current experiment context, which step should I focus on first?",
+      "askKnowledge": "Ask knowledge base",
+      "askKnowledgeQ": "How should I choose the scan rate for a CV experiment?",
+      "askException": "Ask about errors",
+      "askExceptionQ": "If a transfer step gets stuck, what are the most common causes and debugging sequence?",
+      "askHistory": "Ask about history",
+      "askHistoryQ": "What EIS-related experiments have been run recently, and what were the results?"
+    },
+    "welcome": {
+      "line1": "Welcome to Knowledge Management / Knowledge Base Chat.",
+      "line2": "This is not a general chatbot \u2014 it serves as an experiment assistant for experiment design, knowledge base docs, historical experiments, and runtime anomalies.",
+      "line3": "You can ask: why is the current step designed this way, how to choose a technique, what experience exists from similar runs, what variable to change next."
+    },
+    "fallback": {
+      "header": "Backend knowledge retrieval is currently unavailable. Using fallback knowledge flow.",
+      "description": "I\u2019ll organize your question by: knowledge base / historical experiments / method experience / experiment context.",
+      "footer": "Once real retrieval is connected, source citations, similar experiments, and clearer execution suggestions will appear.",
+      "cv": {
+        "header": "Fallback result: you asked about electrochemical technique / parameter selection.",
+        "line1": "\u2022 For initial screening, start with CV to quickly assess redox behavior and potential window.",
+        "line2": "\u2022 If you care about interface processes or charge transfer, follow up with EIS.",
+        "line3": "\u2022 Start with a scan rate of 50 mV/s; lower to 10\u201320 mV/s for weak signals or more detail.",
+        "line4": "\u2022 Next, you should specify sample type, target signal, and last successful experiment."
+      },
+      "transfer": {
+        "header": "Fallback result: you asked about experiment execution errors.",
+        "checkHeader": "Prioritize checking:",
+        "check1": "1. Pump address / direction / channel mapping correctness;",
+        "check2": "2. RPM, volume mode, duration mode matching the current step;",
+        "check3": "3. Whether the current run is blocked by a previous step\u2019s resource lock;",
+        "check4": "4. Recent logs for timeout, busy, or connection reset errors.",
+        "footer": "If you\u2019d like, paste the step parameters next and I\u2019ll walk through the debugging sequence."
+      },
+      "nextRound": {
+        "header": "Fallback result: you asked about next-round experiment design.",
+        "line1": "Change only one variable at a time to keep conclusions clear.",
+        "priorityHeader": "Recommended priority:",
+        "priority1": "1. Core technique parameters (e.g., scan rate / potential range);",
+        "priority2": "2. Transfer / flush execution conditions;",
+        "priority3": "3. Solution recipe or sample pretreatment.",
+        "footer": "When real agents are connected, structured suggestion cards and historical run comparisons will appear."
+      },
+      "history": {
+        "header": "Fallback result: you asked about historical experiment experience.",
+        "line1": "Currently showing placeholder: similar experiment lists, key parameters, result summaries, and failure reasons will appear here.",
+        "line2": "Please specify: target analyte, technique, anomaly observed, and your key evaluation criteria."
+      }
+    },
+    "props": {
+      "title": "Knowledge Management Chat",
+      "subtitle": "Ask about experiment context, knowledge base docs, historical experiments, and method experience. The frontend stays functional even when the backend is temporarily unavailable.",
+      "contextItem0": "Knowledge Base / Methods",
+      "contextItem1": "Historical Experiments / Similar Runs",
+      "contextItem2": "Design Suggestions / Post-mortem"
+    },
+    "status": {
+      "connecting": "Connecting to knowledge management service...",
+      "loading": "Organizing knowledge base, historical experiments, and context...",
+      "lastError": "Last error: "
+    },
+    "statusConfig": {
+      "connecting": "Connecting",
+      "live": "Backend Online",
+      "fallback": "Fallback Mode",
+      "error": "Service Error"
+    },
+    "statusMessages": {
+      "backendConnected": "Connected to backend, chat history restored.",
+      "backendNoHistory": "Connected to backend, no chat history yet.",
+      "fallbackWithLocal": "Backend not responding, switched to local fallback session.",
+      "fallbackNoLocal": "Backend not responding, entered local mock/fallback mode.",
+      "processing": "Organizing knowledge base, historical experiments, and context...",
+      "sendFailed": "Send failed, switched to local fallback reply.",
+      "historyCleared": "Chat history cleared, welcome state restored.",
+      "receivedReply": "Received reply from knowledge management service.",
+      "emptyReply": "Backend returned empty, automatically switched to fallback.",
+      "unknownError": "Unknown error",
+      "quickStartQ": "Given the current experiment context, summarize the most important question I should ask right now."
+    },
+    "agentLabels": {
+      "dataAnalyst": "\ud83d\udcca Data Analysis Assistant",
+      "experimentDesigner": "\ud83e\uddea Experiment Design Assistant",
+      "knowledgeManager": "\ud83d\udcda Knowledge Management Chat",
+      "userQuestion": "\ud83d\udc64 User Question",
+      "assistantReply": "\ud83e\udd16 Assistant Reply"
+    },
+    "buttons": {
+      "clearHistory": "Clear History",
+      "closeWindow": "Close Window",
+      "quickStart": "Quick Start",
+      "send": "Send"
+    },
+    "contextDisplay": {
+      "title": "Current Experiment Context",
+      "experiment": "Experiment: ",
+      "stage": "Stage: ",
+      "objective": "Objective: ",
+      "observation": "Latest Observation: ",
+      "nextSuggestion": "Next Suggestion: "
+    },
+    "retrievalScope": {
+      "title": "Current Retrieval Scope"
+    },
+    "recommendations": {
+      "title": "Suggested Follow-up Directions",
+      "content": "Step design, runtime anomalies, parameter experience, historical experiment comparison, next-round strategy."
+    },
+    "messages": {
+      "emptyTitle": "No messages yet",
+      "emptyDescription": "Start from quick actions or type your experiment question directly."
+    },
+    "input": {
+      "placeholder": "Type your experiment question, e.g.: Given the current step, why use CV instead of EIS? (Enter to send, Shift+Enter for new line)"
+    },
+    "helpText": {
+      "fallback": "Automatically switches to fallback when no backend results, ensuring the interface stays functional."
+    },
+    "footer": {
+      "status": "Welcome message, quick actions, stable message flow, status indicators, and fallback mock flow are ready."
+    }
   }
 }

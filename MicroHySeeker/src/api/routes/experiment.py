@@ -169,3 +169,17 @@ async def get_status(bridge=Depends(_get_bridge)) -> Dict[str, Any]:
         **status,
         "timestamp": datetime.now(timezone.utc).isoformat(),
     }
+
+
+@router.get("/logs")
+async def get_experiment_logs(
+    n: int = 200,
+    bridge=Depends(_get_bridge),
+) -> Dict[str, Any]:
+    """获取最近的实验执行日志（含通信细节）。"""
+    logs = bridge.get_recent_logs(min(n, 500))
+    return {
+        "logs": logs,
+        "count": len(logs),
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+    }

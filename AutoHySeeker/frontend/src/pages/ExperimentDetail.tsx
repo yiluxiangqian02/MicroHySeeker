@@ -30,6 +30,7 @@ interface ExperimentStep {
   step_type: string;
   description: string;
   params: Record<string, any>;
+  parallel_group?: number;
 }
 
 interface StepProgress {
@@ -51,6 +52,7 @@ interface ProgressData {
   elapsed_seconds: number;
   cancelled: boolean;
   step_progress?: StepProgress[];
+  error_detail?: string | null;
   logs: Array<{ ts: string; level: string; message: string }>;
 }
 
@@ -344,16 +346,27 @@ export function ExperimentDetail() {
 
   // Poll progress when experiment is running
   useEffect(() => {
-    if (!experiment || experiment.status !== 'running') return;
-    fetchProgress(); // fetch immediately
-    const interval = setInterval(fetchProgress, 2000);
-    return () => clearInterval(interval);
+    if (!experiment) return;
+    // 运行中：实时轮询；刚完成/失败/停止：拉取一次最终状态
+    if (experiment.status === 'running') {
+      fetchProgress();
+      const interval = setInterval(fetchProgress, 2000);
+      return () => clearInterval(interval);
+    }
+    // 非 running 时也拉一次 progress 以获取 error_detail 和最终日志
+    if (['completed', 'failed', 'stopped'].includes(experiment.status)) {
+      fetchProgress();
+    }
   }, [experiment?.status, fetchProgress]);
 
   // Auto-refresh experiment data when status changes from running
   useEffect(() => {
     if (progress && progress.status !== 'running' && experiment?.status === 'running') {
       fetchExperiment();
+      // 失败时自动展开日志
+      if (progress.status === 'failed') {
+        setLogsExpanded(true);
+      }
     }
   }, [progress?.status]);
 
@@ -371,12 +384,20 @@ export function ExperimentDetail() {
       const res = await fetch(`/api/experiments/detail/${experiment.exp_id}/execute`, {
         method: 'POST',
       });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      if (!res.ok) {
+        // 解析服务端结构化错误信息
+        let detail = `HTTP ${res.status}`;
+        try {
+          const body = await res.json();
+          detail = body.detail || detail;
+        } catch { /* ignore */ }
+        throw new Error(detail);
+      }
       await fetchExperiment();
-      toast.success(t('experimentDetail.startExecuting') + ' - 建议留在本页持续关注进展');
+      toast.success('实验已开始执行，请留在本页关注进展');
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : '执行失败';
-      toast.error(errorMsg);
+      toast.error(`启动失败: ${errorMsg}`, { duration: 6000 });
     } finally {
       setExecuting(false);
     }
@@ -501,14 +522,16 @@ export function ExperimentDetail() {
         </div>
 
         <div className="flex gap-3">
-          {experiment.status === 'created' && (
+          {(experiment.status === 'created' || experiment.status === 'failed' || experiment.status === 'stopped') && (
             <button
               onClick={handleExecute}
               disabled={executing}
               className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-sm font-medium text-white transition hover:bg-blue-700 disabled:bg-blue-400"
             >
               <Play className="h-4 w-4" />
-              {executing ? t('experimentDetail.submitting') : t('experimentDetail.startExecuting')}
+              {executing ? t('experimentDetail.submitting') : (
+                experiment.status === 'created' ? t('experimentDetail.startExecuting') : '重新执行'
+              )}
             </button>
           )}
           {experiment.status === 'running' && (
@@ -576,6 +599,28 @@ export function ExperimentDetail() {
               </div>
             </div>
           )}
+
+          {/* 失败/停止时显示错误详情横幅 */}
+          {(experiment.status === 'failed' || experiment.status === 'stopped') && (
+            <div className={`mt-5 rounded-xl border p-4 ${
+              experiment.status === 'failed'
+                ? 'border-red-200 bg-red-50 text-red-800'
+                : 'border-orange-200 bg-orange-50 text-orange-800'
+            }`}>
+              <div className="flex items-start gap-2">
+                <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
+                <div className="text-sm">
+                  <p className="font-medium">
+                    {experiment.status === 'failed' ? '实验执行失败' : '实验已被停止'}
+                  </p>
+                  {progress?.error_detail && (
+                    <p className="mt-1 text-xs opacity-80">{progress.error_detail}</p>
+                  )}
+                  <p className="mt-2 text-xs opacity-70">可点击「重新执行」按钮再次运行，或展开日志查看详情。</p>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </section>
 
@@ -621,52 +666,101 @@ export function ExperimentDetail() {
             <div className="mt-5 border-t border-slate-100 pt-5">
               <p className="text-sm font-medium text-slate-700">{t('experimentDetail.stepChain')}</p>
               <div className="mt-3 space-y-3">
-                {experiment.steps.map((step, index) => {
-                  const stepProg = progress?.step_progress?.[index] ?? experiment.step_progress?.[index];
-                  const isCurrent = experiment.status === 'running' && index === currentStepIndex;
-                  const isCompleted = stepProg?.status === 'completed';
-                  const isSkipped = stepProg?.status === 'skipped';
+                {(() => {
+                  const rendered: React.ReactNode[] = [];
+                  let i = 0;
+                  while (i < experiment.steps.length) {
+                    const step = experiment.steps[i];
+                    const pg = step.parallel_group ?? step.params?.parallel_group ?? 0;
 
-                  let stepBorder = 'border-slate-200';
-                  let stepBg = '';
-                  let numberStyle = 'bg-slate-100 text-slate-600';
-                  if (isCurrent) {
-                    stepBorder = 'border-blue-400';
-                    stepBg = 'bg-blue-50/40';
-                    numberStyle = 'bg-blue-600 text-white animate-pulse';
-                  } else if (isCompleted) {
-                    numberStyle = 'bg-emerald-500 text-white';
-                  } else if (isSkipped) {
-                    numberStyle = 'bg-orange-400 text-white';
+                    // Collect consecutive steps with the same non-zero parallel_group
+                    if (pg > 0) {
+                      const groupSteps: { step: ExperimentStep; index: number }[] = [];
+                      while (i < experiment.steps.length && ((experiment.steps[i].parallel_group ?? experiment.steps[i].params?.parallel_group ?? 0) === pg)) {
+                        groupSteps.push({ step: experiment.steps[i], index: i });
+                        i++;
+                      }
+                      rendered.push(
+                        <div key={`pg-${pg}-${groupSteps[0].index}`} className="rounded-xl border-2 border-dashed border-indigo-300 bg-indigo-50/30 p-3">
+                          <div className="mb-2 flex items-center gap-2">
+                            <span className="inline-flex items-center gap-1 rounded-full bg-indigo-100 px-2 py-0.5 text-[10px] font-bold text-indigo-700">
+                              ∥{pg}
+                            </span>
+                            <span className="text-xs text-indigo-600 font-medium">并行组 · {groupSteps.length} 步同时执行</span>
+                          </div>
+                          <div className="space-y-2">
+                            {groupSteps.map(({ step: gs, index: gi }) => {
+                              const stepProg = progress?.step_progress?.[gi] ?? experiment.step_progress?.[gi];
+                              const isCurrent = experiment.status === 'running' && gi === currentStepIndex;
+                              const isCompleted = stepProg?.status === 'completed';
+                              const isSkipped = stepProg?.status === 'skipped';
+
+                              let stepBorder = 'border-slate-200';
+                              let stepBg = 'bg-white';
+                              let numberStyle = 'bg-slate-100 text-slate-600';
+                              if (isCurrent) { stepBorder = 'border-blue-400'; stepBg = 'bg-blue-50/40'; numberStyle = 'bg-blue-600 text-white animate-pulse'; }
+                              else if (isCompleted) { numberStyle = 'bg-emerald-500 text-white'; }
+                              else if (isSkipped) { numberStyle = 'bg-orange-400 text-white'; }
+
+                              return (
+                                <div key={`${gs.step_type}-${gi}`} className={`rounded-lg border ${stepBorder} ${stepBg} p-3`}>
+                                  <div className="flex flex-wrap items-center gap-3">
+                                    <span className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold ${numberStyle}`}>
+                                      {isCompleted ? '✓' : isSkipped ? '–' : gi + 1}
+                                    </span>
+                                    <span className={`inline-flex items-center gap-2 rounded-full border px-2.5 py-1 text-xs font-medium ${STEP_TYPE_META[gs.step_type]?.tone ?? 'bg-slate-50 text-slate-700 border-slate-200'}`}>
+                                      {STEP_TYPE_META[gs.step_type]?.icon()}
+                                      {STEP_TYPE_META[gs.step_type]?.label ?? gs.step_type}
+                                    </span>
+                                    <span className="text-sm text-slate-700">{gs.description || summarizeStep(gs)}</span>
+                                    {isCurrent && <span className="ml-auto inline-flex items-center gap-1 text-xs font-medium text-blue-600"><Loader2 className="h-3 w-3 animate-spin" /> 执行中</span>}
+                                    {isCompleted && <span className="ml-auto text-xs text-emerald-600">✓ 完成</span>}
+                                    {isSkipped && <span className="ml-auto text-xs text-orange-600">跳过</span>}
+                                  </div>
+                                  <p className="mt-1 text-xs text-slate-500">{summarizeStep(gs)}</p>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>,
+                      );
+                    } else {
+                      // Serial step (parallel_group === 0)
+                      const stepProg = progress?.step_progress?.[i] ?? experiment.step_progress?.[i];
+                      const isCurrent = experiment.status === 'running' && i === currentStepIndex;
+                      const isCompleted = stepProg?.status === 'completed';
+                      const isSkipped = stepProg?.status === 'skipped';
+
+                      let stepBorder = 'border-slate-200';
+                      let stepBg = '';
+                      let numberStyle = 'bg-slate-100 text-slate-600';
+                      if (isCurrent) { stepBorder = 'border-blue-400'; stepBg = 'bg-blue-50/40'; numberStyle = 'bg-blue-600 text-white animate-pulse'; }
+                      else if (isCompleted) { numberStyle = 'bg-emerald-500 text-white'; }
+                      else if (isSkipped) { numberStyle = 'bg-orange-400 text-white'; }
+
+                      rendered.push(
+                        <div key={`${step.step_type}-${i}`} className={`rounded-xl border ${stepBorder} ${stepBg} p-4`}>
+                          <div className="flex flex-wrap items-center gap-3">
+                            <span className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold ${numberStyle}`}>
+                              {isCompleted ? '✓' : isSkipped ? '–' : i + 1}
+                            </span>
+                            <span className={`inline-flex items-center gap-2 rounded-full border px-2.5 py-1 text-xs font-medium ${STEP_TYPE_META[step.step_type]?.tone ?? 'bg-slate-50 text-slate-700 border-slate-200'}`}>
+                              {STEP_TYPE_META[step.step_type]?.icon()}
+                              {STEP_TYPE_META[step.step_type]?.label ?? step.step_type}
+                            </span>
+                            <span className="text-sm text-slate-700">{step.description || summarizeStep(step)}</span>
+                            {isCurrent && <span className="ml-auto inline-flex items-center gap-1 text-xs font-medium text-blue-600"><Loader2 className="h-3 w-3 animate-spin" /> 执行中</span>}
+                            {isCompleted && <span className="ml-auto text-xs text-emerald-600">✓ 完成</span>}
+                            {isSkipped && <span className="ml-auto text-xs text-orange-600">跳过</span>}
+                          </div>
+                          <p className="mt-2 text-xs text-slate-500">{summarizeStep(step)}</p>
+                        </div>,
+                      );
+                      i++;
+                    }
                   }
-
-                  return (
-                    <div key={`${step.step_type}-${index}`} className={`rounded-xl border ${stepBorder} ${stepBg} p-4`}>
-                      <div className="flex flex-wrap items-center gap-3">
-                        <span className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold ${numberStyle}`}>
-                          {isCompleted ? '✓' : isSkipped ? '–' : index + 1}
-                        </span>
-                        <span className={`inline-flex items-center gap-2 rounded-full border px-2.5 py-1 text-xs font-medium ${STEP_TYPE_META[step.step_type]?.tone ?? 'bg-slate-50 text-slate-700 border-slate-200'}`}>
-                          {STEP_TYPE_META[step.step_type]?.icon()}
-                          {STEP_TYPE_META[step.step_type]?.label ?? step.step_type}
-                        </span>
-                        <span className="text-sm text-slate-700">{step.description || summarizeStep(step)}</span>
-                        {isCurrent && (
-                          <span className="ml-auto inline-flex items-center gap-1 text-xs font-medium text-blue-600">
-                            <Loader2 className="h-3 w-3 animate-spin" /> 执行中
-                          </span>
-                        )}
-                        {isCompleted && (
-                          <span className="ml-auto text-xs text-emerald-600">✓ 完成</span>
-                        )}
-                        {isSkipped && (
-                          <span className="ml-auto text-xs text-orange-600">跳过</span>
-                        )}
-                      </div>
-                      <p className="mt-2 text-xs text-slate-500">{summarizeStep(step)}</p>
-                    </div>
-                  );
-                })}
+                  return rendered;
+                })()}
               </div>
             </div>
           )}
@@ -761,6 +855,7 @@ export function ExperimentDetail() {
               <ScrollText className="h-5 w-5 text-slate-600" />
               <h3 className="text-lg font-semibold text-slate-900">执行日志</h3>
               <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600">{logs.length}</span>
+              <span className="text-[10px] text-slate-300 font-mono">💾 data/experiments.json</span>
             </div>
             {logsExpanded ? <ChevronUp className="h-5 w-5 text-slate-400" /> : <ChevronDown className="h-5 w-5 text-slate-400" />}
           </button>

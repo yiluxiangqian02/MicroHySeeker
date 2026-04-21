@@ -234,14 +234,14 @@ class TemplateLibraryDialog(QDialog):
         detail_form.setLabelAlignment(Qt.AlignRight)
         detail_form.setSpacing(6)
 
-        self._detail_name = QLabel("—")
+        self._detail_name = QLineEdit()
         self._detail_name.setFont(_FONT_NORMAL)
-        self._detail_name.setWordWrap(True)
+        self._detail_name.setPlaceholderText("模板名称")
         detail_form.addRow("名称：", self._detail_name)
 
-        self._detail_tags = QLabel("—")
+        self._detail_tags = QLineEdit()
         self._detail_tags.setFont(_FONT_SMALL)
-        self._detail_tags.setWordWrap(True)
+        self._detail_tags.setPlaceholderText("标签，逗号分隔")
         detail_form.addRow("标签：", self._detail_tags)
 
         self._detail_steps = QLabel("—")
@@ -258,10 +258,9 @@ class TemplateLibraryDialog(QDialog):
 
         right_layout.addWidget(detail_group)
 
-        # 描述文本
+        # 描述文本（可编辑）
         right_layout.addWidget(QLabel("描述："))
         self._detail_desc = QTextEdit()
-        self._detail_desc.setReadOnly(True)
         self._detail_desc.setFont(_FONT_NORMAL)
         self._detail_desc.setFixedHeight(100)
         right_layout.addWidget(self._detail_desc)
@@ -293,7 +292,19 @@ class TemplateLibraryDialog(QDialog):
         self._btn_delete.setEnabled(False)
         self._btn_delete.clicked.connect(self._on_delete)
 
+        self._btn_update = QPushButton("✏ 更新模板")
+        self._btn_update.setFont(_FONT_NORMAL)
+        self._btn_update.setStyleSheet(
+            "QPushButton { background-color: #1976D2; color: white; "
+            "border-radius: 4px; padding: 6px 12px; } "
+            "QPushButton:hover { background-color: #1565C0; } "
+            "QPushButton:disabled { background-color: #ccc; color: #888; }"
+        )
+        self._btn_update.setEnabled(False)
+        self._btn_update.clicked.connect(self._on_update)
+
         btn_row.addWidget(self._btn_delete)
+        btn_row.addWidget(self._btn_update)
         btn_row.addStretch()
 
         self._btn_close = QPushButton("关闭")
@@ -350,8 +361,8 @@ class TemplateLibraryDialog(QDialog):
             self._list.addItem(item)
 
     def _clear_details(self) -> None:
-        self._detail_name.setText("—")
-        self._detail_tags.setText("—")
+        self._detail_name.clear()
+        self._detail_tags.clear()
         self._detail_steps.setText("—")
         self._detail_created.setText("—")
         self._detail_updated.setText("—")
@@ -364,6 +375,7 @@ class TemplateLibraryDialog(QDialog):
             self._current_template = None
             self._btn_delete.setEnabled(False)
             self._btn_load.setEnabled(False)
+            self._btn_update.setEnabled(False)
             return
 
         template_id = current.data(Qt.UserRole)
@@ -376,10 +388,10 @@ class TemplateLibraryDialog(QDialog):
 
         self._current_template = tpl
 
-        # 填充详情
-        self._detail_name.setText(tpl.get("name", "—"))
+        # 填充可编辑详情
+        self._detail_name.setText(tpl.get("name", ""))
         tags = tpl.get("tags", [])
-        self._detail_tags.setText(", ".join(tags) if tags else "（无标签）")
+        self._detail_tags.setText(", ".join(tags) if tags else "")
         steps = tpl.get("steps", [])
         self._detail_steps.setText(str(len(steps)))
 
@@ -415,11 +427,18 @@ class TemplateLibraryDialog(QDialog):
 
         self._btn_delete.setEnabled(True)
         self._btn_load.setEnabled(True)
+        self._btn_update.setEnabled(True)
+
+    @staticmethod
+    def _get_tpl_id(tpl: dict) -> str:
+        """兼容旧格式：优先 'id'，回退 'template_id'。"""
+        return tpl.get("id") or tpl.get("template_id", "")
 
     def _on_delete(self) -> None:
         if self._current_template is None:
             return
 
+        tpl_id = self._get_tpl_id(self._current_template)
         name = self._current_template.get("name", "（未命名）")
         reply = QMessageBox.question(
             self,
@@ -432,7 +451,36 @@ class TemplateLibraryDialog(QDialog):
             return
 
         mgr = get_template_manager(self._templates_dir)
-        mgr.delete(self._current_template["id"])
+        mgr.delete(tpl_id)
+        self._refresh_list()
+
+    def _on_update(self) -> None:
+        """更新当前选中模板的名称、描述和标签。"""
+        if self._current_template is None:
+            return
+
+        new_name = self._detail_name.text().strip()
+        if not new_name:
+            QMessageBox.warning(self, "提示", "模板名称不能为空。")
+            self._detail_name.setFocus()
+            return
+
+        new_desc = self._detail_desc.toPlainText().strip()
+        raw_tags = self._detail_tags.text()
+        new_tags = [t.strip() for t in raw_tags.split(",") if t.strip()]
+
+        mgr = get_template_manager(self._templates_dir)
+        old_id = self._get_tpl_id(self._current_template)
+        mgr.delete(old_id)
+        mgr.save(
+            name=new_name,
+            description=new_desc,
+            tags=new_tags,
+            steps=self._current_template.get("steps", []),
+            template_id=old_id,
+        )
+
+        QMessageBox.information(self, "更新成功", f"模板「{new_name}」已更新。")
         self._refresh_list()
 
     def _on_load(self) -> None:

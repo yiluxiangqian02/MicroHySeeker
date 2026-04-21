@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { AgentStatusPanel } from "@/components/AgentStatusPanel";
 import { EmergencyStop } from "@/components/EmergencyStop";
@@ -9,20 +9,22 @@ import { OptimizationStatusCard } from "@/components/dashboard/OptimizationStatu
 import { RecentExperimentsCard } from "@/components/dashboard/RecentExperimentsCard";
 import { SystemNotificationsCard } from "@/components/dashboard/SystemNotificationsCard";
 import { HardwareStatusBadge } from "@/components/dashboard/HardwareStatusBadge";
+import { MHSConnectionPanel } from "@/components/dashboard/MHSConnectionPanel";
 import { useDashboardPolling } from "@/hooks/useDashboardPolling";
 import { useOptimizationStore } from "@/stores/optimizationStore";
 import { useSystemConfigStore } from "@/stores/systemConfigStore";
+import { experimentsApi } from "@/api/experiments";
 import type { AgentId, AgentState, AgentStatus, ExperimentProgressState, ExperimentLogEntry } from "@/api/types";
 
 // ── Agent metadata ────────────────────────────────────────────────────────────
 
-const AGENT_META: Record<AgentId, { name: string }> = {
-  orchestrator: { name: "Orchestrator" },
-  experiment_designer: { name: "Experiment Designer" },
-  experiment_executor: { name: "Experiment Executor" },
-  diagnostics_expert: { name: "Diagnostics Expert" },
-  chat: { name: "Chat Agent" },
-  heartbeat_inspector: { name: "Heartbeat Inspector" },
+const AGENT_META: Record<AgentId, { nameKey: string }> = {
+  orchestrator: { nameKey: "dashboard.agentNames.orchestrator" },
+  experiment_designer: { nameKey: "dashboard.agentNames.experimentDesigner" },
+  experiment_executor: { nameKey: "dashboard.agentNames.experimentExecutor" },
+  diagnostics_expert: { nameKey: "dashboard.agentNames.diagnosticsExpert" },
+  chat: { nameKey: "dashboard.agentNames.chatAgent" },
+  heartbeat_inspector: { nameKey: "dashboard.agentNames.heartbeatInspector" },
 };
 
 const ALL_AGENT_IDS = Object.keys(AGENT_META) as AgentId[];
@@ -32,11 +34,12 @@ const ALL_AGENT_IDS = Object.keys(AGENT_META) as AgentId[];
 function deriveAgentStatesFromOptimization(
   optimizationStatus: string | undefined,
   isHealthy: boolean,
+  t: (key: string, options?: any) => string,
 ): AgentState[] {
   if (!isHealthy) {
     return ALL_AGENT_IDS.map((id) => ({
       id,
-      name: AGENT_META[id].name,
+      name: t(AGENT_META[id].nameKey),
       status: "error" as AgentStatus,
     }));
   }
@@ -54,27 +57,27 @@ function deriveAgentStatesFromOptimization(
 
   // Map optimization phase to active agent
   if (status === "running" || status === "evaluating") {
-    agentActivity.orchestrator = { status: "working", task: `Optimization ${status}` };
+    agentActivity.orchestrator = { status: "working", task: t("dashboard.agentTasks.optimizationRunning", { status }) };
   }
   if (status === "designing") {
-    agentActivity.experiment_designer = { status: "working", task: "Designing next experiment" };
-    agentActivity.orchestrator = { status: "working", task: "Coordinating design phase" };
+    agentActivity.experiment_designer = { status: "working", task: t("dashboard.agentTasks.designing") };
+    agentActivity.orchestrator = { status: "working", task: t("dashboard.agentTasks.coordDesign") };
   }
   if (status === "executing") {
-    agentActivity.experiment_executor = { status: "working", task: "Executing experiment" };
-    agentActivity.orchestrator = { status: "working", task: "Coordinating execution" };
+    agentActivity.experiment_executor = { status: "working", task: t("dashboard.agentTasks.executing") };
+    agentActivity.orchestrator = { status: "working", task: t("dashboard.agentTasks.coordExecution") };
   }
   if (status === "analyzing") {
-    agentActivity.diagnostics_expert = { status: "working", task: "Analyzing results" };
-    agentActivity.orchestrator = { status: "working", task: "Coordinating analysis" };
+    agentActivity.diagnostics_expert = { status: "working", task: t("dashboard.agentTasks.analyzing") };
+    agentActivity.orchestrator = { status: "working", task: t("dashboard.agentTasks.coordAnalysis") };
   }
   if (status === "starting") {
-    agentActivity.orchestrator = { status: "working", task: "Initializing optimization loop" };
+    agentActivity.orchestrator = { status: "working", task: t("dashboard.agentTasks.initializing") };
   }
 
   return ALL_AGENT_IDS.map((id) => ({
     id,
-    name: AGENT_META[id].name,
+    name: t(AGENT_META[id].nameKey),
     status: agentActivity[id].status,
     currentTask: agentActivity[id].task,
   }));
@@ -87,6 +90,7 @@ function deriveLogsFromOptimization(
   errors: string[],
   currentIteration: number,
   pendingApproval: boolean,
+  t: (key: string, options?: any) => string,
 ): ExperimentLogEntry[] {
   const logs: ExperimentLogEntry[] = [];
   const now = new Date().toISOString();
@@ -98,7 +102,7 @@ function deriveLogsFromOptimization(
       timestamp: now,
       level: "info",
       agent: "orchestrator",
-      message: `Optimization loop status: ${optimizationStatus}`,
+      message: t("dashboard.logMessages.optStatus", { status: optimizationStatus }),
     });
   }
 
@@ -109,7 +113,7 @@ function deriveLogsFromOptimization(
       timestamp: now,
       level: "info",
       agent: "orchestrator",
-      message: `Current round: ${currentIteration}`,
+      message: t("dashboard.logMessages.currentRound", { round: currentIteration }),
     });
   }
 
@@ -120,7 +124,7 @@ function deriveLogsFromOptimization(
       timestamp: now,
       level: "warning",
       agent: "orchestrator",
-      message: "Human approval required — optimization paused",
+      message: t("dashboard.logMessages.approvalRequired"),
     });
   }
 
@@ -140,7 +144,7 @@ function deriveLogsFromOptimization(
       id: "idle",
       timestamp: now,
       level: "debug",
-      message: "System idle — no optimization running",
+      message: t("dashboard.logMessages.systemIdle"),
     });
   }
 
@@ -180,6 +184,30 @@ export function Dashboard() {
   } = useDashboardPolling();
   const mhsStatus = useSystemConfigStore((s) => s.mhsStatus);
 
+  // ── Active experiment progress polling ──────────────────────────────────
+  const [activeExp, setActiveExp] = useState<{
+    active: boolean;
+    exp_id?: string;
+    exp_name?: string;
+    status?: string;
+    total_steps?: number;
+    current_step_index?: number;
+    current_step?: any;
+    progress_percent?: number;
+    elapsed_seconds?: number;
+    step_progress?: any[];
+    logs?: Array<{ ts: string; level: string; message: string }>;
+  }>({ active: false });
+
+  const fetchActiveExp = useCallback(() => {
+    experimentsApi.activeProgress().then(setActiveExp).catch(() => undefined);
+  }, []);
+
+  useEffect(() => {
+    fetchActiveExp();
+    const timer = window.setInterval(fetchActiveExp, 3000);
+    return () => window.clearInterval(timer);
+  }, [fetchActiveExp]);
 
   useEffect(() => {
     const refreshOptimization = () => {
@@ -224,7 +252,9 @@ export function Dashboard() {
       items.push({
         id: "approval-pending",
         type: "warning" as const,
-        message: `Optimization paused: ${optimizationState.pauseReason || "waiting for human approval"}`,
+        message: t("dashboard.systemMessages.optPaused", {
+          reason: optimizationState.pauseReason || t("dashboard.systemMessages.waitingApproval"),
+        }),
         timeAgo: "now",
       });
     }
@@ -242,7 +272,7 @@ export function Dashboard() {
       items.push({
         id: "backend-offline",
         type: "error" as const,
-        message: "Backend API unreachable",
+        message: t("dashboard.systemMessages.backendOffline"),
         timeAgo: "now",
       });
     }
@@ -251,16 +281,29 @@ export function Dashboard() {
       items.push({
         id: "optimization-status",
         type: "info" as const,
-        message: `Optimization status: ${optimizationState.status}`,
+        message: t("dashboard.systemMessages.optStatusMsg", { status: optimizationState.status }),
         timeAgo: "live",
       });
     }
 
     return items;
-  }, [optimizationState, isHealthy, isLoading]);
+  }, [optimizationState, isHealthy, isLoading, t]);
 
-  // Derive experiment progress from real optimization state
+  // Derive experiment progress from real optimization state + active experiment
   const experimentProgress: ExperimentProgressState = useMemo(() => {
+    // Active experiment takes priority over optimization loop
+    if (activeExp.active && activeExp.status === "running") {
+      return {
+        status: "running" as const,
+        progressPercent: activeExp.progress_percent ?? 0,
+        currentStep: activeExp.current_step
+          ? `Step ${(activeExp.current_step_index ?? 0) + 1}/${activeExp.total_steps}: ${activeExp.current_step.step_type}`
+          : undefined,
+        runName: activeExp.exp_name,
+        elapsedSeconds: activeExp.elapsed_seconds,
+      };
+    }
+
     const status = optimizationState?.status;
     const isRunning = status === "running" || status === "designing" || status === "executing" || status === "analyzing" || status === "evaluating" || status === "starting";
 
@@ -273,23 +316,36 @@ export function Dashboard() {
       runName: optimizationConfig?.goal,
       elapsedSeconds: undefined,
     };
-  }, [optimizationState, optimizationConfig, isHealthy, isLoading]);
+  }, [optimizationState, optimizationConfig, isHealthy, isLoading, activeExp]);
 
   // Derive agent states from real optimization status
   const agentStates = useMemo(() =>
-    deriveAgentStatesFromOptimization(optimizationState?.status, isHealthy),
-    [optimizationState?.status, isHealthy],
+    deriveAgentStatesFromOptimization(optimizationState?.status, isHealthy, t),
+    [optimizationState?.status, isHealthy, t],
   );
 
-  // Derive logs from real optimization state
-  const logs = useMemo(() =>
-    deriveLogsFromOptimization(
+  // Derive logs from real optimization state + active experiment
+  const logs = useMemo(() => {
+    // If there's an active experiment with logs, show those first
+    if (activeExp.active && activeExp.logs && activeExp.logs.length > 0) {
+      return activeExp.logs.map((log, i) => ({
+        id: `exp-log-${i}`,
+        timestamp: log.ts,
+        level: (log.level === "error" ? "error" : log.level === "warning" ? "warning" : "info") as "error" | "warning" | "info" | "debug",
+        agent: "experiment_executor" as const,
+        message: log.message,
+      })) as ExperimentLogEntry[];
+    }
+
+    return deriveLogsFromOptimization(
       optimizationState?.status,
       optimizationState?.errors ?? [],
       optimizationState?.currentIteration ?? 0,
       !!optimizationState?.pendingApproval,
-    ),
-    [optimizationState],
+      t,
+    );
+  },
+    [optimizationState, t, activeExp],
   );
 
   // Empty chart data — no fake echem data; real data requires MicroHySeeker
@@ -353,10 +409,8 @@ export function Dashboard() {
               <span className="font-semibold">{t("dashboard.connection_error")}:</span> {pollError?.message}
             </p>
             <p className="mt-0.5 text-xs text-red-600">
-              Make sure the AutoHySeeker API server is running at{" "}
-              <code className="font-mono">{import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8200"}</code>.
-              Check <code className="font-mono">/health</code> and{" "}
-              <code className="font-mono">/api/experiments/status</code> endpoints.
+              {t("dashboard.systemMessages.apiErrorHint")}{" "}
+              <code className="font-mono">{import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8200"}</code>
             </p>
           </div>
           <button
@@ -368,6 +422,9 @@ export function Dashboard() {
           </button>
         </div>
       </div>
+
+      {/* ── MHS 硬件连接控制面板 ─────────────────────────────────────────── */}
+      <MHSConnectionPanel />
 
       {/* ── Top row 1: Optimization Status + Recent Experiments ───────────── */}
       <div className="grid gap-4 lg:grid-cols-5">

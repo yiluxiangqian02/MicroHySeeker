@@ -150,3 +150,48 @@ export const knowledgeApi = {
     return { results, total: res.data.count };
   },
 };
+
+// ── MinerU Ingest API ─────────────────────────────────────────────────────────
+
+export interface IngestRequest {
+  mineru_output_dir?: string;
+  target_uri?: string;
+  batch_name?: string;
+}
+
+export interface IngestTask {
+  task_id: string;
+  status: "pending" | "running" | "completed" | "failed" | "idle";
+  mineru_dir?: string;
+  target?: string;
+  created_at?: number;
+  started_at?: number;
+  finished_at?: number;
+  error?: string;
+  result?: Record<string, unknown>;
+}
+
+export interface DefaultDirInfo {
+  default_mineru_output: string;
+  exists: boolean;
+  document_count: number;
+}
+
+export const ingestApi = {
+  startIngest: async (req: IngestRequest = {}): Promise<IngestTask> => {
+    const res = await apiClient.post<IngestTask>("/api/knowledge/ingest-mineru", req);
+    return res.data;
+  },
+
+  getStatus: async (taskId?: string): Promise<{ latest?: IngestTask; tasks?: IngestTask[]; total?: number; status?: string }> => {
+    const res = await apiClient.get("/api/knowledge/ingest-status", {
+      params: taskId ? { task_id: taskId } : undefined,
+    });
+    return res.data;
+  },
+
+  getDefaultDir: async (): Promise<DefaultDirInfo> => {
+    const res = await apiClient.get<DefaultDirInfo>("/api/knowledge/ingest-default-dir");
+    return res.data;
+  },
+};

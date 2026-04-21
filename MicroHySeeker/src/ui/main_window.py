@@ -1099,8 +1099,9 @@ class MainWindow(QMainWindow):
         self.setGeometry(100, 100, 1550, 1000)
         self.setFont(FONT_NORMAL)
         
-        # 加载配置
-        self.config_file = Path("./config/system.json")
+        # 加载配置 — 使用绝对路径，避免 CWD 差异导致读错文件
+        _project_root = Path(__file__).resolve().parent.parent.parent
+        self.config_file = _project_root / "config" / "system.json"
         self.config = SystemConfig.load_from_file(str(self.config_file))
         self.config.initialize_default_pumps()
         
@@ -1149,7 +1150,28 @@ class MainWindow(QMainWindow):
         self._load_last_experiment()
         self._update_control_buttons()
         
+        # ── 启动 API 服务器（daemon 线程） ──
+        self._start_api_server()
+        
         self.log_message(tr("sys_started"), "info")
+    
+    def _start_api_server(self, port: int = 8100):
+        """在 daemon 线程中启动 FastAPI 服务器，复用当前 runner。"""
+        import threading
+        try:
+            from src.api.bridge import APIBridge
+            from src.api.server import start_api_server
+            self._api_bridge = APIBridge(self.runner, self.config)
+            t = threading.Thread(
+                target=start_api_server,
+                args=(self._api_bridge,),
+                kwargs={"port": port},
+                daemon=True,
+            )
+            t.start()
+            _logger.info("API server thread started on port %d", port)
+        except Exception as e:
+            _logger.warning("Failed to start API server: %s", e)
     
     def _create_menu_bar(self):
         """创建菜单栏"""
@@ -1327,6 +1349,18 @@ class MainWindow(QMainWindow):
         step_group = QGroupBox(tr("step_progress"))
         step_group.setFont(FONT_TITLE)
         step_layout = QVBoxLayout(step_group)
+
+        # 放大展示按钮行
+        step_btn_row = QHBoxLayout()
+        step_btn_row.addStretch()
+        self._btn_zoom_steps = QPushButton("🔍 放大展示")
+        self._btn_zoom_steps.setFont(FONT_SMALL)
+        self._btn_zoom_steps.setFixedWidth(90)
+        self._btn_zoom_steps.setToolTip("以大字体全屏展示步骤列表，便于远距离查看")
+        self._btn_zoom_steps.clicked.connect(self._on_zoom_steps)
+        step_btn_row.addWidget(self._btn_zoom_steps)
+        step_layout.addLayout(step_btn_row)
+
         self.step_list = QListWidget()
         self.step_list.setFont(FONT_NORMAL)
         self.step_list.setWordWrap(True)
@@ -2043,15 +2077,113 @@ class MainWindow(QMainWindow):
                 color = STEP_TYPE_COLORS.get(step.step_type, "#000000")
                 detail = self._get_step_detail(step)
                 
+                pg = getattr(step, 'parallel_group', 0) or 0
+                pg_tag = f" ⟹并行{pg}" if pg > 0 else ""
+                
                 if detail:
-                    text = f"[{i+1}] {type_name}: {detail}"
+                    text = f"[{i+1}] {type_name}: {detail}{pg_tag}"
                 else:
-                    text = f"[{i+1}] {type_name}"
+                    text = f"[{i+1}] {type_name}{pg_tag}"
                 
                 item = QListWidgetItem(text)
                 item.setForeground(QColor(color))
                 item.setToolTip(text)  # 鼠标悬停显示完整内容
                 self.step_list.addItem(item)
+
+    def _on_zoom_steps(self):
+        """以大字体全屏对话框展示步骤列表，运行时高亮当前步骤"""
+        from PySide6.QtWidgets import (QDialog, QVBoxLayout, QHBoxLayout,
+                                       QListWidget, QListWidgetItem, QPushButton,
+                                       QSlider, QLabel)
+        from PySide6.QtGui import QFont, QColor
+        from PySide6.QtCore import Qt
+
+        dlg = QDialog(self)
+        dlg.setWindowTitle("步骤流程展示")
+        dlg.setWindowFlags(dlg.windowFlags() | Qt.WindowMaximizeButtonHint)
+        dlg.resize(900, 700)
+
+        layout = QVBoxLayout(dlg)
+        layout.setContentsMargins(16, 16, 16, 16)
+
+        # 字体大小调节行
+        size_row = QHBoxLayout()
+        size_label = QLabel("字体大小：")
+        size_label.setFont(QFont("Microsoft YaHei", 11))
+        size_row.addWidget(size_label)
+
+        size_slider = QSlider(Qt.Horizontal)
+        size_slider.setRange(14, 40)
+        size_slider.setValue(22)
+        size_slider.setTickInterval(2)
+        size_slider.setFixedWidth(200)
+        size_row.addWidget(size_slider)
+
+        size_value_label = QLabel("22pt")
+        size_value_label.setFont(QFont("Microsoft YaHei", 11))
+        size_value_label.setFixedWidth(50)
+        size_row.addWidget(size_value_label)
+        size_row.addStretch()
+        layout.addLayout(size_row)
+
+        zoom_list = QListWidget()
+        zoom_list.setWordWrap(True)
+        zoom_list.setSpacing(6)
+        zoom_list.setStyleSheet(
+            "QListWidget { background: #FFFFFF; border: none; }"
+            "QListWidget::item { padding: 10px 16px; border-radius: 6px; margin: 2px 4px; }"
+        )
+
+        names = _step_type_names()
+        current_step_idx = getattr(self.runner, 'current_step_index', -1) if hasattr(self, 'runner') else -1
+
+        # 构建步骤数据列表，供刷新使用
+        step_data = []
+        if self.single_experiment:
+            for i, step in enumerate(self.single_experiment.steps):
+                type_name = names.get(step.step_type, str(step.step_type))
+                color = STEP_TYPE_COLORS.get(step.step_type, "#000000")
+                detail = self._get_step_detail(step)
+                pg = getattr(step, 'parallel_group', 0) or 0
+                pg_tag = f"  ⟹并行{pg}" if pg > 0 else ""
+                text = f"[{i+1}]  {type_name}: {detail}{pg_tag}" if detail else f"[{i+1}]  {type_name}{pg_tag}"
+                step_data.append((text, color, i))
+
+        def _populate(font_size):
+            zoom_list.clear()
+            base_font = QFont("Microsoft YaHei", font_size, QFont.Bold)
+            zoom_list.setFont(base_font)
+            for text, color, idx in step_data:
+                display_text = text
+                item = QListWidgetItem(display_text)
+                item.setForeground(QColor(color))
+                if idx == current_step_idx:
+                    item.setBackground(QColor("#DCEDC8"))
+                    highlight_font = QFont("Microsoft YaHei", font_size + 2, QFont.Bold)
+                    item.setFont(highlight_font)
+                    item.setText(f"▶  {display_text}")
+                elif current_step_idx >= 0 and idx < current_step_idx:
+                    item.setForeground(QColor(color).darker(150))
+                zoom_list.addItem(item)
+            if 0 <= current_step_idx < zoom_list.count():
+                zoom_list.scrollToItem(zoom_list.item(current_step_idx))
+
+        def _on_size_changed(val):
+            size_value_label.setText(f"{val}pt")
+            _populate(val)
+
+        size_slider.valueChanged.connect(_on_size_changed)
+        _populate(22)
+
+        layout.addWidget(zoom_list, stretch=1)
+
+        btn_close = QPushButton("关闭")
+        btn_close.setFont(QFont("Microsoft YaHei", 14))
+        btn_close.setFixedHeight(40)
+        btn_close.clicked.connect(dlg.close)
+        layout.addWidget(btn_close)
+
+        dlg.showMaximized()
     
     def _get_step_detail(self, step) -> str:
         """获取步骤详细描述"""
@@ -2214,8 +2346,10 @@ class MainWindow(QMainWindow):
                 else:
                     item.setBackground(QColor(Qt.transparent))
         
-        if self.single_experiment and index < len(self.single_experiment.steps):
-            step = self.single_experiment.steps[index]
+        # 优先使用 runner 当前正在执行的实验（兼容 API 和 UI 两种启动方式）
+        current_exp = getattr(self.runner, 'experiment', None) or self.single_experiment
+        if current_exp and index < len(current_exp.steps):
+            step = current_exp.steps[index]
             names = _step_type_names()
             type_name = names.get(step.step_type, str(step.step_type))
             detail = self._get_step_detail(step)
@@ -2237,8 +2371,8 @@ class MainWindow(QMainWindow):
             self._update_pump_indicators(step, running=True)
             
             # 下一步泵变黄色
-            if index + 1 < len(self.single_experiment.steps):
-                next_step = self.single_experiment.steps[index + 1]
+            if index + 1 < len(current_exp.steps):
+                next_step = current_exp.steps[index + 1]
                 self._set_next_step_pump_yellow(next_step)
     
     def _set_next_step_pump_yellow(self, step):
@@ -2318,8 +2452,10 @@ class MainWindow(QMainWindow):
         msg_type = "success" if success else "error"
         
         detail = ""
-        if self.single_experiment and index < len(self.single_experiment.steps):
-            step = self.single_experiment.steps[index]
+        # 优先使用 runner 当前执行的实验（兼容 API 和 UI 两种启动方式）
+        current_exp = getattr(self.runner, 'experiment', None) or self.single_experiment
+        if current_exp and index < len(current_exp.steps):
+            step = current_exp.steps[index]
             type_name = _step_type_names().get(step.step_type, str(step.step_type))
             detail = f" [{type_name}]"
             # 关闭当前步骤的指示灯

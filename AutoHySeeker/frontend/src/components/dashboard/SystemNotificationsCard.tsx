@@ -1,4 +1,5 @@
 import { AlertCircle, Clock, Info, AlertTriangle } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export type NotificationType = "info" | "warning" | "error";
 
@@ -16,16 +17,17 @@ const icons = {
 };
 
 export function SystemNotificationsCard({ notifications }: { notifications: SystemNotification[] }) {
+  const { t } = useTranslation();
   return (
     <div className="rounded-2xl border border-slate-200 bg-white shadow-sm flex flex-col h-full">
       <div className="border-b border-slate-100 px-5 py-4">
-        <h3 className="font-semibold text-slate-900">System Notifications</h3>
+        <h3 className="font-semibold text-slate-900">{t("dashboard.system_notif")}</h3>
       </div>
 
       <div className="max-h-64 overflow-y-auto p-2">
         {notifications.length === 0 ? (
           <div className="flex items-center justify-center p-4 text-sm text-slate-500">
-            No new notifications.
+            {t("dashboard.no_notifications")}
           </div>
         ) : (
           <ul className="space-y-1">

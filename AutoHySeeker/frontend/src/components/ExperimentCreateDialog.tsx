@@ -26,6 +26,7 @@ type ExperimentStep = {
   step_id: string;
   step_type: StepType;
   notes: string;
+  parallel_group?: number;
   /* transfer / evacuate */
   pump_address?: number;
   pump_direction?: 'FWD' | 'REV';
@@ -250,6 +251,7 @@ function createStep(type: StepType = 'prep_sol', index = 0, solutionNames: strin
     step_id: `step_${Date.now()}_${index}`,
     step_type: type,
     notes: '',
+    parallel_group: 0,
     pump_address: 1,
     pump_direction: 'FWD',
     pump_rpm: 120,
@@ -369,14 +371,23 @@ export function ExperimentCreateDialog({ onClose, onSubmit }: ExperimentCreateDi
   const storeConfig = useSystemConfigStore((s) => s.config);
   const storeLoading = useSystemConfigStore((s) => s.loading);
   const fetchConfig = useSystemConfigStore((s) => s.fetchConfig);
+  const mhsStatus = useSystemConfigStore((s) => s.mhsStatus);
+  const fetchMHSStatus = useSystemConfigStore((s) => s.fetchMHSStatus);
 
   // 如果 store 还没加载过，触发一次
   useEffect(() => { if (!storeConfig && !storeLoading) fetchConfig(); }, [storeConfig, storeLoading, fetchConfig]);
+  // 每次打开对话框时刷新 MHS 状态
+  useEffect(() => { fetchMHSStatus(); }, [fetchMHSStatus]);
 
   const sysCfg = storeConfig;
   const cfgLoading = storeLoading && !storeConfig;
 
-  const solutionNames = useMemo(() => sysCfg?.dilution_channels?.map((ch) => ch.solution_name) ?? [], [sysCfg]);
+  const solutionNames = useMemo(() => {
+    const names = sysCfg?.dilution_channels?.map((ch) => ch.solution_name) ?? [];
+    // H₂O 溶剂由 MHS Inlet flush channel 提供，始终追加
+    if (names.length > 0 && !names.includes('H2O')) names.push('H2O');
+    return names;
+  }, [sysCfg]);
   const dilutionMap = useMemo(() => {
     const m: Record<string, DilutionChannel> = {};
     for (const ch of sysCfg?.dilution_channels ?? []) m[ch.solution_name] = ch;
@@ -853,6 +864,39 @@ export function ExperimentCreateDialog({ onClose, onSubmit }: ExperimentCreateDi
           </div>
         </div>
 
+        {/* MHS 硬件连接状态横幅 */}
+        <div className={`mx-6 mt-4 flex items-center gap-3 rounded-xl border px-4 py-2.5 text-sm ${
+          mhsStatus.online
+            ? mhsStatus.connected
+              ? 'border-green-200 bg-green-50 text-green-800'
+              : 'border-amber-200 bg-amber-50 text-amber-800'
+            : 'border-red-200 bg-red-50 text-red-800'
+        }`}>
+          <span className={`inline-block h-2.5 w-2.5 rounded-full ${
+            mhsStatus.online ? (mhsStatus.connected ? 'bg-green-500' : 'bg-amber-500') : 'bg-red-500'
+          }`} />
+          <span className="font-medium">MHS</span>
+          <span>{mhsStatus.online ? '在线' : '离线'}</span>
+          {mhsStatus.online && (
+            <>
+              <span className="text-slate-300">|</span>
+              <span>RS485: {mhsStatus.connected ? '已连接' : '未连接'}</span>
+              {mhsStatus.port && (
+                <>
+                  <span className="text-slate-300">|</span>
+                  <span className="font-mono font-semibold">{mhsStatus.port}</span>
+                </>
+              )}
+              {mhsStatus.mock_mode && (
+                <>
+                  <span className="text-slate-300">|</span>
+                  <span className="rounded bg-amber-200 px-1.5 py-0.5 text-xs font-medium">模拟模式</span>
+                </>
+              )}
+            </>
+          )}
+        </div>
+
         <div className="grid gap-6 px-6 py-6 lg:grid-cols-[0.95fr,1.35fr,1fr]">
           {cfgLoading ? (
             <div className="col-span-3 flex items-center justify-center py-12 text-slate-500">
@@ -964,6 +1008,7 @@ export function ExperimentCreateDialog({ onClose, onSubmit }: ExperimentCreateDi
                           <div className="flex flex-wrap items-center gap-2">
                             <span className="text-sm font-semibold text-slate-900">Step {index + 1}</span>
                             <span className={`rounded-full border px-2 py-0.5 text-xs font-medium ${meta.tone}`}>{meta.label}</span>
+                            {(step.parallel_group ?? 0) > 0 && <span className="rounded-full bg-orange-100 border border-orange-300 px-2 py-0.5 text-xs font-semibold text-orange-700">∥{step.parallel_group}</span>}
                           </div>
                           <p className="mt-1 text-sm font-medium text-slate-800">{meta.label}</p>
                           <p className="mt-1 text-xs leading-5 text-slate-500">{formatStepSummary(step)}</p>
@@ -1008,6 +1053,19 @@ export function ExperimentCreateDialog({ onClose, onSubmit }: ExperimentCreateDi
                       className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm"
                       placeholder="例如：配制 10 mL 缓冲液，转移至检测池进行 CV 扫描。"
                     />
+                  </label>
+                  <label>
+                    <span className="mb-1 block text-sm font-medium text-slate-700">并行组</span>
+                    <input
+                      type="number"
+                      value={activeStep.parallel_group ?? 0}
+                      min={0}
+                      max={99}
+                      onChange={(e) => updateStep(activeStep.step_id, (current) => ({ ...current, parallel_group: Number(e.target.value) }))}
+                      className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm"
+                      title="0 = 串行执行；相同非零编号的步骤将同时执行"
+                    />
+                    <span className="mt-1 block text-xs text-slate-400">0 = 串行；相同非零编号 → 并行执行</span>
                   </label>
                   {renderStepForm(activeStep)}
                 </div>
