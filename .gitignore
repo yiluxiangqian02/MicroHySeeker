@@ -208,3 +208,10 @@ eChemSDL/
 # ── Agent worktrees ─────────────────────────────────────────────────────────
 agent_worktrees/
 
+# ── OpenViking runtime / build artifacts (do not commit binaries or local workspace) ──
+AutoHySeeker/OpenViking/.venv*/
+AutoHySeeker/OpenViking/openviking/bin/
+AutoHySeeker/OpenViking/openviking/storage/vectordb/
+AutoHySeeker/OpenViking/.local_workspace/
+AutoHySeeker/OpenViking/default/
+
