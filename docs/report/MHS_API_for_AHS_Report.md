@@ -218,149 +218,217 @@ next_params = optimize(history + [metrics])
 
 将以下 XML 粘贴到 [draw.io](https://draw.io) → **Extras → Edit Diagram** 即可还原。
 
+> 接口测试验证结果数据来自 **2026-05-09 01:44** 对运行中 MHS（PID 10628）的真实查询。
+
 ```xml
-<mxGraphModel dx="1422" dy="762" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+<mxGraphModel dx="2893" dy="1209" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
   <root>
-    <mxCell id="0"/>
-    <mxCell id="1" parent="0"/>
-
-    <!-- 标题 -->
-    <mxCell id="title" value="MicroHySeeker 为 AutoHySeeker 提供的控制接口" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontSize=16;fontStyle=1;" vertex="1" parent="1">
-      <mxGeometry x="150" y="20" width="869" height="30" as="geometry"/>
+    <mxCell id="0" />
+    <mxCell id="1" parent="0" />
+    <mxCell id="title" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontSize=16;fontStyle=1;" value="MicroHySeeker 控制接口说明与测试验证" vertex="1">
+      <mxGeometry height="30" width="1300" x="30" y="20" as="geometry" />
     </mxCell>
-
-    <!-- ====== AHS 区域 ====== -->
-    <mxCell id="ahs_bg" value="AutoHySeeker（智能决策层）" style="swimlane;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;fontStyle=1;startSize=28;" vertex="1" parent="1">
-      <mxGeometry x="30" y="70" width="320" height="680" as="geometry"/>
+    <mxCell id="ahs_bg" parent="1" style="swimlane;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;fontStyle=1;startSize=28;" value="AutoHySeeker（编排层 · 规划中）" vertex="1">
+      <mxGeometry height="680" width="380" x="-30" y="70" as="geometry" />
     </mxCell>
-
-    <mxCell id="ahs_goal" value="① 接收优化目标&#xa;（如：找最优 Fe:Co:Ni 配比）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="ahs_bg">
-      <mxGeometry x="20" y="40" width="280" height="50" as="geometry"/>
+    <mxCell id="uh21avQCfOiOk18pWu93-4" edge="1" parent="ahs_bg" source="ahs_goal" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="ahs_design">
+      <mxGeometry relative="1" as="geometry" />
     </mxCell>
-    <mxCell id="ahs_design" value="② 设计实验参数&#xa;（贝叶斯优化 / LLM 推理）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="ahs_bg">
-      <mxGeometry x="20" y="120" width="280" height="50" as="geometry"/>
+    <mxCell id="ahs_goal" parent="ahs_bg" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="① 接收优化目标&#xa;（如：找最优 Fe:Co:Ni 配比）" vertex="1">
+      <mxGeometry height="50" width="280" x="50" y="40" as="geometry" />
     </mxCell>
-    <mxCell id="ahs_exec" value="③ 调用 MHS API 执行实验&#xa;（本文档重点）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;" vertex="1" parent="ahs_bg">
-      <mxGeometry x="20" y="200" width="280" height="50" as="geometry"/>
+    <mxCell id="ahs_design" parent="ahs_bg" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="② 设计实验参数&#xa;（贝叶斯优化 / LLM 推理）" vertex="1">
+      <mxGeometry height="50" width="280" x="50" y="133" as="geometry" />
     </mxCell>
-    <mxCell id="ahs_monitor" value="④ 轮询状态 / 异常处理&#xa;GET /api/experiment/status" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="ahs_bg">
-      <mxGeometry x="20" y="280" width="280" height="50" as="geometry"/>
+    <mxCell id="uh21avQCfOiOk18pWu93-6" edge="1" parent="ahs_bg" source="ahs_exec" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="190.16666666666697" y="320" as="targetPoint" />
+      </mxGeometry>
     </mxCell>
-    <mxCell id="ahs_data" value="⑤ 获取实验数据&#xa;GET /api/data/runs/{id}/files" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="ahs_bg">
-      <mxGeometry x="20" y="360" width="280" height="50" as="geometry"/>
+    <mxCell id="ahs_exec" parent="ahs_bg" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;" value="③ 调用 MHS API 执行实验" vertex="1">
+      <mxGeometry height="50" width="280" x="50" y="227" as="geometry" />
     </mxCell>
-    <mxCell id="ahs_analyze" value="⑥ 分析数据 · 提取指标&#xa;（过电位 / Tafel 斜率等）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="ahs_bg">
-      <mxGeometry x="20" y="440" width="280" height="50" as="geometry"/>
+    <mxCell id="uh21avQCfOiOk18pWu93-7" edge="1" parent="ahs_bg" source="ahs_monitor" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="ahs_data">
+      <mxGeometry relative="1" as="geometry" />
     </mxCell>
-    <mxCell id="ahs_decide" value="⑦ 决策：继续优化 or 停止&#xa;→ 返回 ② 开始下一轮" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;" vertex="1" parent="ahs_bg">
-      <mxGeometry x="20" y="520" width="280" height="50" as="geometry"/>
+    <mxCell id="ahs_monitor" parent="ahs_bg" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="④ 轮询状态 / 异常处理&#xa;GET /api/experiment/status" vertex="1">
+      <mxGeometry height="50" width="280" x="50" y="320" as="geometry" />
     </mxCell>
-
-    <!-- 循环箭头 -->
-    <mxCell id="loop_arrow" value="循环迭代" style="edgeStyle=orthogonalEdgeStyle;dashed=1;strokeColor=#d6b656;fontColor=#d6b656;fontStyle=1;" edge="1" source="ahs_decide" target="ahs_design" parent="ahs_bg">
+    <mxCell id="ahs_data" parent="ahs_bg" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="⑤ 获取实验数据&#xa;GET /api/data/runs/{id}/files" vertex="1">
+      <mxGeometry height="50" width="280" x="50" y="413" as="geometry" />
+    </mxCell>
+    <mxCell id="uh21avQCfOiOk18pWu93-9" edge="1" parent="ahs_bg" source="ahs_analyze" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="ahs_decide">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="ahs_analyze" parent="ahs_bg" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="⑥ 分析数据 · 提取指标&#xa;（过电位 / Tafel 斜率等）" vertex="1">
+      <mxGeometry height="50" width="280" x="50" y="507" as="geometry" />
+    </mxCell>
+    <mxCell id="ahs_decide" parent="ahs_bg" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;" value="⑦ 决策：继续优化 or 停止&#xa;→ 返回 ② 开始下一轮" vertex="1">
+      <mxGeometry height="50" width="280" x="50" y="600" as="geometry" />
+    </mxCell>
+    <mxCell id="loop_arrow" edge="1" parent="ahs_bg" style="edgeStyle=orthogonalEdgeStyle;dashed=1;strokeColor=#d6b656;fontColor=#d6b656;fontStyle=1;" value="循环迭代">
       <mxGeometry relative="1" as="geometry">
         <Array as="points">
-          <mxPoint x="310" y="545"/>
-          <mxPoint x="310" y="145"/>
+          <mxPoint x="40" y="545" />
+          <mxPoint x="40" y="145" />
+        </Array>
+        <mxPoint x="50" y="545" as="sourcePoint" />
+        <mxPoint x="50" y="145" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="uh21avQCfOiOk18pWu93-5" edge="1" parent="ahs_bg" source="ahs_design" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="190" y="230" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="uh21avQCfOiOk18pWu93-8" edge="1" parent="ahs_bg" source="ahs_data" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="190" y="510" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="mhs_bg" parent="1" style="swimlane;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;fontStyle=1;startSize=28;" value="MicroHySeeker API 层（:8100）" vertex="1">
+      <mxGeometry height="680" width="380" x="430" y="70" as="geometry" />
+    </mxCell>
+    <mxCell id="grp_sys" parent="mhs_bg" style="swimlane;fillColor=#d5e8d4;strokeColor=#82b366;startSize=24;fontSize=11;fontStyle=1;" value="系统监控 /api/system/*" vertex="1">
+      <mxGeometry height="110" width="340" x="20" y="40" as="geometry" />
+    </mxCell>
+    <mxCell id="api_health" parent="grp_sys" style="text;html=1;align=left;" value="GET  /health   健康检查（引擎状态 / RS485）" vertex="1">
+      <mxGeometry height="20" width="310" x="10" y="28" as="geometry" />
+    </mxCell>
+    <mxCell id="api_logs" parent="grp_sys" style="text;html=1;align=left;" value="GET  /logs     运行日志（按级别过滤）" vertex="1">
+      <mxGeometry height="20" width="310" x="10" y="50" as="geometry" />
+    </mxCell>
+    <mxCell id="api_restart" parent="grp_sys" style="text;html=1;align=left;" value="POST /restart  重启 MHS 进程" vertex="1">
+      <mxGeometry height="20" width="310" x="10" y="72" as="geometry" />
+    </mxCell>
+    <mxCell id="grp_exp" parent="mhs_bg" style="swimlane;fillColor=#fff2cc;strokeColor=#d6b656;startSize=24;fontSize=11;fontStyle=1;" value="实验控制 /api/experiment/*" vertex="1">
+      <mxGeometry height="150" width="340" x="20" y="183" as="geometry" />
+    </mxCell>
+    <mxCell id="api_start" parent="grp_exp" style="text;html=1;align=left;" value="POST /start   启动实验" vertex="1">
+      <mxGeometry height="20" width="300" x="10" y="28" as="geometry" />
+    </mxCell>
+    <mxCell id="api_status" parent="grp_exp" style="text;html=1;align=left;" value="GET  /status  查询进度（step / state）" vertex="1">
+      <mxGeometry height="20" width="300" x="10" y="50" as="geometry" />
+    </mxCell>
+    <mxCell id="api_stop" parent="grp_exp" style="text;html=1;align=left;" value="POST /stop    停止实验" vertex="1">
+      <mxGeometry height="20" width="300" x="10" y="72" as="geometry" />
+    </mxCell>
+    <mxCell id="api_pause" parent="grp_exp" style="text;html=1;align=left;" value="POST /pause   暂停实验" vertex="1">
+      <mxGeometry height="20" width="300" x="10" y="94" as="geometry" />
+    </mxCell>
+    <mxCell id="api_resume" parent="grp_exp" style="text;html=1;align=left;" value="POST /resume  恢复实验" vertex="1">
+      <mxGeometry height="20" width="300" x="10" y="116" as="geometry" />
+    </mxCell>
+    <mxCell id="grp_data" parent="mhs_bg" style="swimlane;fillColor=#e1d5e7;strokeColor=#9673a6;startSize=24;fontSize=11;fontStyle=1;" value="数据查询 /api/data/*" vertex="1">
+      <mxGeometry height="110" width="340" x="20" y="367" as="geometry" />
+    </mxCell>
+    <mxCell id="api_runs" parent="grp_data" style="text;html=1;align=left;" value="GET  /runs               历史运行列表" vertex="1">
+      <mxGeometry height="20" width="310" x="10" y="28" as="geometry" />
+    </mxCell>
+    <mxCell id="api_run_id" parent="grp_data" style="text;html=1;align=left;" value="GET  /runs/{id}          单次运行详情" vertex="1">
+      <mxGeometry height="20" width="310" x="10" y="50" as="geometry" />
+    </mxCell>
+    <mxCell id="api_files" parent="grp_data" style="text;html=1;align=left;" value="GET  /runs/{id}/files     下载原始数据文件" vertex="1">
+      <mxGeometry height="20" width="310" x="10" y="72" as="geometry" />
+    </mxCell>
+    <mxCell id="grp_dev" parent="mhs_bg" style="swimlane;fillColor=#f8cecc;strokeColor=#b85450;startSize=24;fontSize=11;fontStyle=1;" value="硬件直控 /api/device/*（应急 / 诊断用）" vertex="1">
+      <mxGeometry height="130" width="340" x="20" y="520" as="geometry" />
+    </mxCell>
+    <mxCell id="api_pump_start" parent="grp_dev" style="text;html=1;align=left;" value="POST /pump/start        启动单个泵" vertex="1">
+      <mxGeometry height="20" width="310" x="10" y="28" as="geometry" />
+    </mxCell>
+    <mxCell id="api_pump_status" parent="grp_dev" style="text;html=1;align=left;" value="GET  /pump/status       所有泵实时状态" vertex="1">
+      <mxGeometry height="20" width="310" x="10" y="50" as="geometry" />
+    </mxCell>
+    <mxCell id="api_estop" parent="grp_dev" style="text;html=1;align=left;fontStyle=1;fontColor=#b85450;" value="POST /emergency-stop    全设备紧急停止" vertex="1">
+      <mxGeometry height="20" width="310" x="10" y="72" as="geometry" />
+    </mxCell>
+    <mxCell id="api_conn" parent="grp_dev" style="text;html=1;align=left;" value="GET  /connection        RS485 连接状态" vertex="1">
+      <mxGeometry height="20" width="310" x="10" y="94" as="geometry" />
+    </mxCell>
+    <mxCell id="hw_bg" parent="1" style="swimlane;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;fontSize=12;fontStyle=1;startSize=28;" value="MicroHySeeker 执行层" vertex="1">
+      <mxGeometry height="680" width="249" x="1340" y="70" as="geometry" />
+    </mxCell>
+    <mxCell id="hw_engine" parent="hw_bg" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;" value="实验执行引擎&#xa;步骤调度器" vertex="1">
+      <mxGeometry height="60" width="209" x="20" y="60" as="geometry" />
+    </mxCell>
+    <mxCell id="HoSgM7X_wwUFVYjlYAt--2" edge="1" parent="hw_bg" source="hw_pump" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="hw_echem" value="">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="hw_pump" parent="hw_bg" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;" value="蠕动泵驱动&#xa;RS485 / COM3&#xa;Pump 1~12" vertex="1">
+      <mxGeometry height="70" width="209" x="20" y="200" as="geometry" />
+    </mxCell>
+    <mxCell id="hw_echem" parent="hw_bg" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;" value="电化学工作站&#xa;CV / EIS / LSV&#xa;数据采集" vertex="1">
+      <mxGeometry height="70" width="209" x="20" y="360" as="geometry" />
+    </mxCell>
+    <mxCell id="hw_store" parent="hw_bg" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;" value="实验数据存储&#xa;data/{日期}/{run_id}/" vertex="1">
+      <mxGeometry height="60" width="209" x="20" y="520" as="geometry" />
+    </mxCell>
+    <mxCell id="e6" edge="1" parent="hw_bg" source="hw_engine" style="edgeStyle=orthogonalEdgeStyle;" target="hw_pump" value="">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="e7" edge="1" parent="hw_bg" source="hw_engine" style="edgeStyle=orthogonalEdgeStyle;" target="hw_echem" value="">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="e8" edge="1" parent="hw_bg" source="hw_echem" style="edgeStyle=orthogonalEdgeStyle;dashed=1;" target="hw_store" value="写入数据">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="e1" edge="1" parent="1" source="ahs_exec" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#b85450;strokeWidth=2;fontColor=#b85450;fontStyle=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="grp_exp" value="HTTP POST&#xa;提交实验方案">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="e2" edge="1" parent="1" source="ahs_monitor" style="edgeStyle=orthogonalEdgeStyle;dashed=1;strokeColor=#6c8ebf;entryX=0;entryY=0.75;entryDx=0;entryDy=0;" target="grp_exp" value="HTTP GET 轮询">
+      <mxGeometry relative="1" x="0.3004" as="geometry">
+        <mxPoint as="offset" />
+        <Array as="points">
+          <mxPoint x="160" y="366" />
         </Array>
       </mxGeometry>
     </mxCell>
-
-    <!-- ====== MHS API 区域 ====== -->
-    <mxCell id="mhs_bg" value="MicroHySeeker API 层（:8100）" style="swimlane;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;fontStyle=1;startSize=28;" vertex="1" parent="1">
-      <mxGeometry x="430" y="70" width="380" height="680" as="geometry"/>
+    <mxCell id="e3" edge="1" parent="1" source="ahs_data" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#9673a6;" target="grp_data" value="HTTP GET&#xa;下载数据">
+      <mxGeometry relative="1" x="0.0004" y="-5" as="geometry">
+        <mxPoint as="offset" />
+      </mxGeometry>
     </mxCell>
-
-    <!-- API 分组：实验控制 -->
-    <mxCell id="grp_exp" value="实验控制 /api/experiment/*" style="swimlane;fillColor=#fff2cc;strokeColor=#d6b656;startSize=24;fontSize=11;fontStyle=1;" vertex="1" parent="mhs_bg">
-      <mxGeometry x="20" y="40" width="340" height="150" as="geometry"/>
+    <mxCell id="e4" edge="1" parent="1" source="ahs_goal" style="edgeStyle=orthogonalEdgeStyle;dashed=1;strokeColor=#82b366;" target="grp_sys" value="预检查">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="620" y="135" />
+        </Array>
+      </mxGeometry>
     </mxCell>
-    <mxCell id="api_start"  value="POST /start   启动实验" style="text;html=1;align=left;" vertex="1" parent="grp_exp"><mxGeometry x="10" y="28" width="300" height="20" as="geometry"/></mxCell>
-    <mxCell id="api_status" value="GET  /status  查询进度（step / state）" style="text;html=1;align=left;" vertex="1" parent="grp_exp"><mxGeometry x="10" y="50" width="300" height="20" as="geometry"/></mxCell>
-    <mxCell id="api_stop"   value="POST /stop    停止实验" style="text;html=1;align=left;" vertex="1" parent="grp_exp"><mxGeometry x="10" y="72" width="300" height="20" as="geometry"/></mxCell>
-    <mxCell id="api_pause"  value="POST /pause   暂停实验" style="text;html=1;align=left;" vertex="1" parent="grp_exp"><mxGeometry x="10" y="94" width="300" height="20" as="geometry"/></mxCell>
-    <mxCell id="api_resume" value="POST /resume  恢复实验" style="text;html=1;align=left;" vertex="1" parent="grp_exp"><mxGeometry x="10" y="116" width="300" height="20" as="geometry"/></mxCell>
-
-    <!-- API 分组：系统监控 -->
-    <mxCell id="grp_sys" value="系统监控 /api/system/*" style="swimlane;fillColor=#d5e8d4;strokeColor=#82b366;startSize=24;fontSize=11;fontStyle=1;" vertex="1" parent="mhs_bg">
-      <mxGeometry x="20" y="210" width="340" height="110" as="geometry"/>
+    <mxCell id="e5" edge="1" parent="1" source="test_bg" style="edgeStyle=orthogonalEdgeStyle;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" target="hw_bg" value="">
+      <mxGeometry relative="1" as="geometry" />
     </mxCell>
-    <mxCell id="api_health"  value="GET  /health   健康检查（引擎状态 / RS485）" style="text;html=1;align=left;" vertex="1" parent="grp_sys"><mxGeometry x="10" y="28" width="310" height="20" as="geometry"/></mxCell>
-    <mxCell id="api_logs"    value="GET  /logs     运行日志（按级别过滤）" style="text;html=1;align=left;" vertex="1" parent="grp_sys"><mxGeometry x="10" y="50" width="310" height="20" as="geometry"/></mxCell>
-    <mxCell id="api_restart" value="POST /restart  重启 MHS 进程" style="text;html=1;align=left;" vertex="1" parent="grp_sys"><mxGeometry x="10" y="72" width="310" height="20" as="geometry"/></mxCell>
-
-    <!-- API 分组：数据查询 -->
-    <mxCell id="grp_data" value="数据查询 /api/data/*" style="swimlane;fillColor=#e1d5e7;strokeColor=#9673a6;startSize=24;fontSize=11;fontStyle=1;" vertex="1" parent="mhs_bg">
-      <mxGeometry x="20" y="340" width="340" height="110" as="geometry"/>
+    <mxCell id="e9" edge="1" parent="1" source="grp_data" style="edgeStyle=orthogonalEdgeStyle;dashed=1;strokeColor=#9673a6;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="hw_store" value="读取">
+      <mxGeometry relative="1" as="geometry" />
     </mxCell>
-    <mxCell id="api_runs"     value="GET  /runs               历史运行列表" style="text;html=1;align=left;" vertex="1" parent="grp_data"><mxGeometry x="10" y="28" width="310" height="20" as="geometry"/></mxCell>
-    <mxCell id="api_run_id"   value="GET  /runs/{id}          单次运行详情" style="text;html=1;align=left;" vertex="1" parent="grp_data"><mxGeometry x="10" y="50" width="310" height="20" as="geometry"/></mxCell>
-    <mxCell id="api_files"    value="GET  /runs/{id}/files     下载原始数据文件" style="text;html=1;align=left;" vertex="1" parent="grp_data"><mxGeometry x="10" y="72" width="310" height="20" as="geometry"/></mxCell>
-
-    <!-- API 分组：硬件直控 -->
-    <mxCell id="grp_dev" value="硬件直控 /api/device/*（应急 / 诊断用）" style="swimlane;fillColor=#f8cecc;strokeColor=#b85450;startSize=24;fontSize=11;fontStyle=1;" vertex="1" parent="mhs_bg">
-      <mxGeometry x="20" y="470" width="340" height="130" as="geometry"/>
+    <mxCell id="test_bg" parent="1" style="swimlane;fillColor=#e8f5e9;strokeColor=#388e3c;fontSize=12;fontStyle=1;startSize=28;" value="接口测试验证结果（实际返回）" vertex="1">
+      <mxGeometry height="680" width="390" x="860" y="70" as="geometry" />
     </mxCell>
-    <mxCell id="api_pump_start"  value="POST /pump/start        启动单个泵" style="text;html=1;align=left;" vertex="1" parent="grp_dev"><mxGeometry x="10" y="28" width="310" height="20" as="geometry"/></mxCell>
-    <mxCell id="api_pump_status" value="GET  /pump/status       所有泵实时状态" style="text;html=1;align=left;" vertex="1" parent="grp_dev"><mxGeometry x="10" y="50" width="310" height="20" as="geometry"/></mxCell>
-    <mxCell id="api_estop"       value="POST /emergency-stop    全设备紧急停止" style="text;html=1;align=left;fontStyle=1;fontColor=#b85450;" vertex="1" parent="grp_dev"><mxGeometry x="10" y="72" width="310" height="20" as="geometry"/></mxCell>
-    <mxCell id="api_conn"        value="GET  /connection        RS485 连接状态" style="text;html=1;align=left;" vertex="1" parent="grp_dev"><mxGeometry x="10" y="94" width="310" height="20" as="geometry"/></mxCell>
-
-    <!-- ====== MHS 执行层 ====== -->
-    <mxCell id="hw_bg" value="MicroHySeeker 执行层" style="swimlane;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;fontSize=12;fontStyle=1;startSize=28;" vertex="1" parent="1">
-      <mxGeometry x="890" y="70" width="249" height="680" as="geometry"/>
+    <mxCell id="test_sys" parent="test_bg" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f1f8e9;strokeColor=#7cb342;align=left;fontSize=10;spacingLeft=8;fontFamily=Courier New;" value="✓ GET /api/system/health  →  HTTP 200&#xa;─────────────────────────────&#xa;{&#xa;  &quot;status&quot;:        &quot;ok&quot;,&#xa;  &quot;engine_state&quot;:  &quot;idle&quot;,&#xa;  &quot;uptime_seconds&quot;: 10.6,&#xa;  &quot;pid&quot;:            10628,&#xa;  &quot;timestamp&quot;: &quot;2026-05-09T01:44:37Z&quot;&#xa;}" vertex="1">
+      <mxGeometry height="120" width="360" x="15" y="40" as="geometry" />
     </mxCell>
-    <mxCell id="hw_engine" value="实验执行引擎&#xa;步骤调度器" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;" vertex="1" parent="hw_bg">
-      <mxGeometry x="20" y="60" width="209" height="60" as="geometry"/>
+    <mxCell id="test_exp" parent="test_bg" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f1f8e9;strokeColor=#7cb342;align=left;fontSize=10;spacingLeft=8;fontFamily=Courier New;" value="✓ GET /api/experiment/status  →  HTTP 200&#xa;─────────────────────────────&#xa;{&#xa;  &quot;state&quot;:        &quot;idle&quot;,&#xa;  &quot;run_id&quot;:       null,&#xa;  &quot;is_running&quot;:   false,&#xa;  &quot;is_paused&quot;:    false,&#xa;  &quot;total_steps&quot;:  0,&#xa;  &quot;current_step&quot;: null&#xa;}&#xa;（历史最多完成 32 步闭环实验）" vertex="1">
+      <mxGeometry height="160" width="360" x="15" y="195" as="geometry" />
     </mxCell>
-    <mxCell id="hw_pump" value="蠕动泵驱动&#xa;RS485 / COM3&#xa;Pump 1~12" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;" vertex="1" parent="hw_bg">
-      <mxGeometry x="20" y="200" width="209" height="70" as="geometry"/>
+    <mxCell id="test_data_r" parent="test_bg" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f1f8e9;strokeColor=#7cb342;align=left;fontSize=10;spacingLeft=8;fontFamily=Courier New;" value="✓ GET /api/data/runs  →  HTTP 200&#xa;─────────────────────────────&#xa;{&#xa;  &quot;total&quot;: 50,&#xa;  &quot;runs&quot;: [{&#xa;    &quot;run_id&quot;: &quot;2026-04-21_21-43-16_...step_0&quot;,&#xa;    &quot;status&quot;: &quot;has_data&quot;,&#xa;    &quot;date&quot;:   &quot;2026-04-21&quot;&#xa;  }, ...（共50条历史记录）]&#xa;}" vertex="1">
+      <mxGeometry height="120" width="360" x="15" y="390" as="geometry" />
     </mxCell>
-    <mxCell id="hw_echem" value="电化学工作站&#xa;CV / EIS / LSV&#xa;数据采集" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;" vertex="1" parent="hw_bg">
-      <mxGeometry x="20" y="360" width="209" height="70" as="geometry"/>
+    <mxCell id="test_dev_r" parent="test_bg" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f1f8e9;strokeColor=#7cb342;align=left;fontSize=10;spacingLeft=8;fontFamily=Courier New;" value="✓ GET /api/device/pump/status  →  HTTP 200&#xa;{ &quot;pumps&quot;: [&#xa;  {&quot;address&quot;:1, &quot;online&quot;:true, &quot;speed&quot;:0, &quot;fault&quot;:null},&#xa;  ... (Pump 1~12 全部在线，无故障)&#xa;]}&#xa;─────────────────────────────&#xa;✓ GET /api/device/connection  →  HTTP 200&#xa;{ &quot;connected&quot;: true, &quot;mock_mode&quot;: false, &quot;port&quot;: &quot;COM3&quot; }" vertex="1">
+      <mxGeometry height="120" width="360" x="15" y="545" as="geometry" />
     </mxCell>
-    <mxCell id="hw_store" value="实验数据存储&#xa;data/{日期}/{run_id}/" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;" vertex="1" parent="hw_bg">
-      <mxGeometry x="20" y="520" width="209" height="60" as="geometry"/>
+    <mxCell id="te1" edge="1" parent="1" source="grp_sys" style="edgeStyle=orthogonalEdgeStyle;dashed=1;strokeColor=#388e3c;strokeWidth=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" target="test_sys" value="">
+      <mxGeometry relative="1" as="geometry" />
     </mxCell>
-
-    <!-- ====== 调用连线 ====== -->
-    <!-- AHS exec → MHS exp group -->
-    <mxCell id="e1" value="HTTP POST&#xa;提交实验方案" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#b85450;strokeWidth=2;fontColor=#b85450;fontStyle=1;" edge="1" source="ahs_exec" target="grp_exp" parent="1">
-      <mxGeometry relative="1" as="geometry"/>
+    <mxCell id="te2" edge="1" parent="1" source="grp_exp" style="edgeStyle=orthogonalEdgeStyle;dashed=1;strokeColor=#388e3c;strokeWidth=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" target="test_exp" value="">
+      <mxGeometry relative="1" as="geometry" />
     </mxCell>
-    <!-- AHS monitor → MHS status -->
-    <mxCell id="e2" value="HTTP GET 轮询" style="edgeStyle=orthogonalEdgeStyle;dashed=1;strokeColor=#6c8ebf;" edge="1" source="ahs_monitor" target="grp_exp" parent="1">
-      <mxGeometry relative="1" as="geometry"/>
+    <mxCell id="te3" edge="1" parent="1" source="grp_data" style="edgeStyle=orthogonalEdgeStyle;dashed=1;strokeColor=#388e3c;strokeWidth=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" target="test_data_r" value="">
+      <mxGeometry relative="1" as="geometry" />
     </mxCell>
-    <!-- AHS data → MHS data group -->
-    <mxCell id="e3" value="HTTP GET&#xa;下载数据" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#9673a6;" edge="1" source="ahs_data" target="grp_data" parent="1">
-      <mxGeometry relative="1" as="geometry"/>
+    <mxCell id="te4" edge="1" parent="1" source="grp_dev" style="edgeStyle=orthogonalEdgeStyle;dashed=1;strokeColor=#388e3c;strokeWidth=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" target="test_dev_r" value="">
+      <mxGeometry relative="1" as="geometry" />
     </mxCell>
-    <!-- AHS goal → MHS health (预检查) -->
-    <mxCell id="e4" value="预检查" style="edgeStyle=orthogonalEdgeStyle;dashed=1;strokeColor=#82b366;" edge="1" source="ahs_goal" target="grp_sys" parent="1">
-      <mxGeometry relative="1" as="geometry"/>
-    </mxCell>
-    <!-- MHS API → Engine -->
-    <mxCell id="e5" value="" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="grp_exp" target="hw_engine" parent="1">
-      <mxGeometry relative="1" as="geometry"/>
-    </mxCell>
-    <!-- Engine → Pump -->
-    <mxCell id="e6" value="" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="hw_engine" target="hw_pump" parent="1">
-      <mxGeometry relative="1" as="geometry"/>
-    </mxCell>
-    <!-- Engine → Echem -->
-    <mxCell id="e7" value="" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="hw_engine" target="hw_echem" parent="1">
-      <mxGeometry relative="1" as="geometry"/>
-    </mxCell>
-    <!-- Echem → Store -->
-    <mxCell id="e8" value="写入数据" style="edgeStyle=orthogonalEdgeStyle;dashed=1;" edge="1" source="hw_echem" target="hw_store" parent="1">
-      <mxGeometry relative="1" as="geometry"/>
-    </mxCell>
-    <!-- Data API → Store -->
-    <mxCell id="e9" value="读取" style="edgeStyle=orthogonalEdgeStyle;dashed=1;strokeColor=#9673a6;" edge="1" source="grp_data" target="hw_store" parent="1">
-      <mxGeometry relative="1" as="geometry"/>
-    </mxCell>
-
   </root>
 </mxGraphModel>
 ```

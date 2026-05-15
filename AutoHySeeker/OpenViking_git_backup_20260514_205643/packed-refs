@@ -1,0 +1,33 @@
+# pack-refs with: peeled fully-peeled sorted 
+b42ca3500b41c46e014522fa9c4cafc0ec0b51d2 refs/remotes/origin/dependabot/github_actions/docker/build-push-action-6
+dcb1f385b42b56545d6c4ca00860f8201b1e9642 refs/remotes/origin/docs/update_new
+37233b4f0a03816425fd8a421ce08f7c9969eda3 refs/remotes/origin/enable_rerank
+8c276707f0c3f29e324f6acf14cee83a125c99ef refs/remotes/origin/example/claude-code-hooks
+28ea6781ed43544b2e091f527dc31b34f36aa074 refs/remotes/origin/feat/eval
+2fabd8b2ede9bc7de44175d693d3179f4e146cda refs/remotes/origin/feat/memory-skill
+79c35c1cf06b8fbcf88abc8af1e058f449401c9e refs/remotes/origin/feat/multi_tenant_2
+f0cf78335b828b38b804e0d37851e1902e5d451d refs/remotes/origin/feat/openclaw-skill-commands
+5ace01a60eaec2e38ad88b2f80a2bddde6f075f7 refs/remotes/origin/feat/request-trace-metrics
+7729e89a8d96fe21d3fb8e53f1e2d0364213f91c refs/remotes/origin/feat/semantic-gateway-refactor
+d84be79cf859d9c6f538148c474e57e1d71e30b6 refs/remotes/origin/feat/server-mcp
+bba2683f2e0fea16980439163b620940153e8d58 refs/remotes/origin/feat/vikingbot
+f4a96c1275917900f2623546f81bdf1d705cb42d refs/remotes/origin/fix/observer-output
+ee4532c7456d860acb073773fe946fe3a0098b1e refs/remotes/origin/fix/skill-embedding-ranking
+4756a1ee02f4f7f8b13b9ff1d4e09143eafe4be5 refs/remotes/origin/fix_ci
+7ae7bfb5dd20878056d0bc902aebaceeb560649f refs/remotes/origin/main
+888a863b5806b2e3a8dbb26d2c709167a512e543 refs/remotes/origin/memory_bench
+e6bb24b46ddc9876910eda8ea5613dfd9ee4b6c0 refs/remotes/origin/pr-262
+e11dc211502988342f8277eb224beb4b773d6ca7 refs/remotes/origin/skill_tool_memory_support
+739dde85257023dafb0971e27a4e7f3ed6afc463 refs/tags/cli@0.1.0
+^10def8c56fd835ef0fc39058d6f524204698539a
+f95e3fc37f25f82d4558be6bdf6b9f2c0026b713 refs/tags/cli@0.2.0
+a11f118d6e1a519a3a53ac2df3e2d829bf1f133c refs/tags/v0.1.10
+a9b59cce87da2cf2a91fb03e88aec5017e8a3f71 refs/tags/v0.1.11
+73642e9508029815f2243f5ac0e56f291817e317 refs/tags/v0.1.12
+b18a94647ca0b03eaf553a19335334e7568ae26e refs/tags/v0.1.14
+51b3a349019b35cfc2e1459c44237f7dc6409093 refs/tags/v0.1.15
+621ebdff2d4756aa775ceb94ed9d56b21fa1ab9c refs/tags/v0.1.16
+1b42fec179af1ad2dcad4b445ebe1826832a94c6 refs/tags/v0.1.17
+3d2d05a37017d542b294e50c26f6faa6980dbcce refs/tags/v0.1.18
+f95e3fc37f25f82d4558be6bdf6b9f2c0026b713 refs/tags/v0.1.18.dev0
+221f629a5dbcdd247f34879c6d106726c733ade4 refs/tags/v0.1.9
