@@ -1,0 +1,45 @@
+{
+  "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+  "heading_uid": "HRAW-016-1aa55629",
+  "heading_dirname": "012-3-2-basic-behavior-of-the-electrolyzer-after-shutdown",
+  "heading_text": "3.2. Basic behavior of the electrolyzer after shutdown",
+  "heading_level": 1,
+  "doc_heading_order": 16,
+  "display_order": 12,
+  "is_title_page_heading": false,
+  "page_index": null,
+  "block_order": 1,
+  "paragraph_count": 7,
+  "paragraph_ids": [
+    "S01-P002",
+    "S03-P024",
+    "S03-P025",
+    "S03-P026",
+    "S03-P027",
+    "S03-P028",
+    "S01-P003"
+  ],
+  "paragraph_uids": [
+    "PRAW-000037",
+    "PRAW-000038",
+    "PRAW-000039",
+    "PRAW-000040",
+    "PRAW-000041",
+    "PRAW-000042",
+    "PRAW-000043"
+  ],
+  "paragraph_paths": [
+    "paragraphs/PRAW-000037.md",
+    "paragraphs/PRAW-000038.md",
+    "paragraphs/PRAW-000039.md",
+    "paragraphs/PRAW-000040.md",
+    "paragraphs/PRAW-000041.md",
+    "paragraphs/PRAW-000042.md",
+    "paragraphs/PRAW-000043.md"
+  ],
+  "linked_figures": [
+    "FIG003",
+    "FIG004"
+  ],
+  "linked_tables": []
+}

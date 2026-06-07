@@ -1,0 +1,3468 @@
+{
+  "paper_id": "2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7",
+  "generated_at": "2026-05-30T16:29:50",
+  "total_conflicts": 29,
+  "high_conflicts": 0,
+  "medium_conflicts": 14,
+  "low_conflicts": 15,
+  "items": [
+    {
+      "paper_id": "2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7",
+      "paragraph_uid": "PRAW-000004",
+      "paragraph_id": "S00-P001",
+      "heading_uid": "HRAW-002-2812cee1",
+      "heading_text": "1. Introduction",
+      "doc_heading_order": 2,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "direct_rule",
+        "assigned_section_id": "S02_introduction",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S03_methods_and_setup",
+        "top_score": 9,
+        "second_score": 8,
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 9,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "mechanism",
+                "weight": 1
+              },
+              {
+                "term": "insight",
+                "weight": 1
+              },
+              {
+                "term": "oxidation",
+                "weight": 1
+              },
+              {
+                "term": "reduction",
+                "weight": 1
+              },
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "degradation",
+                "weight": 1
+              },
+              {
+                "term": "redox",
+                "weight": 1
+              },
+              {
+                "term": "in situ",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S03_methods_and_setup",
+            "section_title": "Methods And Setup",
+            "score": 8,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "method",
+                "weight": 1
+              },
+              {
+                "term": "methods",
+                "weight": 1
+              },
+              {
+                "term": "experimental",
+                "weight": 1
+              },
+              {
+                "term": "characterization",
+                "weight": 1
+              },
+              {
+                "term": "material",
+                "weight": 1
+              },
+              {
+                "term": "materials",
+                "weight": 1
+              },
+              {
+                "term": "protocol",
+                "weight": 1
+              },
+              {
+                "term": "setup",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "medium",
+        "conflict_reasons": [
+          "paragraph_rerouted",
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S00_front_matter",
+        "secondary_section_id": "S02_introduction",
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S03_methods_and_setup",
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "G. Wang, F. Babbe, A. Tricker, R. Mukundan, X. Peng"
+    },
+    {
+      "paper_id": "2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7",
+      "paragraph_uid": "PRAW-000006",
+      "paragraph_id": "S00-P002",
+      "heading_uid": "HRAW-002-2812cee1",
+      "heading_text": "1. Introduction",
+      "doc_heading_order": 2,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "direct_rule",
+        "assigned_section_id": "S02_introduction",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S03_methods_and_setup",
+        "top_score": 9,
+        "second_score": 8,
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 9,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "mechanism",
+                "weight": 1
+              },
+              {
+                "term": "insight",
+                "weight": 1
+              },
+              {
+                "term": "oxidation",
+                "weight": 1
+              },
+              {
+                "term": "reduction",
+                "weight": 1
+              },
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "degradation",
+                "weight": 1
+              },
+              {
+                "term": "redox",
+                "weight": 1
+              },
+              {
+                "term": "in situ",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S03_methods_and_setup",
+            "section_title": "Methods And Setup",
+            "score": 8,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "method",
+                "weight": 1
+              },
+              {
+                "term": "methods",
+                "weight": 1
+              },
+              {
+                "term": "experimental",
+                "weight": 1
+              },
+              {
+                "term": "characterization",
+                "weight": 1
+              },
+              {
+                "term": "material",
+                "weight": 1
+              },
+              {
+                "term": "materials",
+                "weight": 1
+              },
+              {
+                "term": "protocol",
+                "weight": 1
+              },
+              {
+                "term": "setup",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "medium",
+        "conflict_reasons": [
+          "paragraph_rerouted",
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S00_front_matter",
+        "secondary_section_id": "S02_introduction",
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S03_methods_and_setup",
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "E-mail: rmukundan@lbl.gov; xiongp@lbl.gov"
+    },
+    {
+      "paper_id": "2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7",
+      "paragraph_uid": "PRAW-000007",
+      "paragraph_id": "S00-P003",
+      "heading_uid": "HRAW-002-2812cee1",
+      "heading_text": "1. Introduction",
+      "doc_heading_order": 2,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "direct_rule",
+        "assigned_section_id": "S02_introduction",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S03_methods_and_setup",
+        "top_score": 9,
+        "second_score": 8,
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 9,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "mechanism",
+                "weight": 1
+              },
+              {
+                "term": "insight",
+                "weight": 1
+              },
+              {
+                "term": "oxidation",
+                "weight": 1
+              },
+              {
+                "term": "reduction",
+                "weight": 1
+              },
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "degradation",
+                "weight": 1
+              },
+              {
+                "term": "redox",
+                "weight": 1
+              },
+              {
+                "term": "in situ",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S03_methods_and_setup",
+            "section_title": "Methods And Setup",
+            "score": 8,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "method",
+                "weight": 1
+              },
+              {
+                "term": "methods",
+                "weight": 1
+              },
+              {
+                "term": "experimental",
+                "weight": 1
+              },
+              {
+                "term": "characterization",
+                "weight": 1
+              },
+              {
+                "term": "material",
+                "weight": 1
+              },
+              {
+                "term": "materials",
+                "weight": 1
+              },
+              {
+                "term": "protocol",
+                "weight": 1
+              },
+              {
+                "term": "setup",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "medium",
+        "conflict_reasons": [
+          "paragraph_rerouted",
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S00_front_matter",
+        "secondary_section_id": "S02_introduction",
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S03_methods_and_setup",
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "The ORCID identification number(s) for the author(s) of this article can be found under https://doi.org/10.1002/aenm.202500886"
+    },
+    {
+      "paper_id": "2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7",
+      "paragraph_uid": "PRAW-000008",
+      "paragraph_id": "S00-P004",
+      "heading_uid": "HRAW-002-2812cee1",
+      "heading_text": "1. Introduction",
+      "doc_heading_order": 2,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "direct_rule",
+        "assigned_section_id": "S02_introduction",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S03_methods_and_setup",
+        "top_score": 9,
+        "second_score": 8,
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 9,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "mechanism",
+                "weight": 1
+              },
+              {
+                "term": "insight",
+                "weight": 1
+              },
+              {
+                "term": "oxidation",
+                "weight": 1
+              },
+              {
+                "term": "reduction",
+                "weight": 1
+              },
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "degradation",
+                "weight": 1
+              },
+              {
+                "term": "redox",
+                "weight": 1
+              },
+              {
+                "term": "in situ",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S03_methods_and_setup",
+            "section_title": "Methods And Setup",
+            "score": 8,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "method",
+                "weight": 1
+              },
+              {
+                "term": "methods",
+                "weight": 1
+              },
+              {
+                "term": "experimental",
+                "weight": 1
+              },
+              {
+                "term": "characterization",
+                "weight": 1
+              },
+              {
+                "term": "material",
+                "weight": 1
+              },
+              {
+                "term": "materials",
+                "weight": 1
+              },
+              {
+                "term": "protocol",
+                "weight": 1
+              },
+              {
+                "term": "setup",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "medium",
+        "conflict_reasons": [
+          "paragraph_rerouted",
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S00_front_matter",
+        "secondary_section_id": "S02_introduction",
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S03_methods_and_setup",
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "$\\circledcirc$ 2025 The Author(s). Advanced Energy Materials published by Wiley-VCH GmbH. This is an open access article under the terms of the Creative Commons Attribution License, which permits use, distribution and re"
+    },
+    {
+      "paper_id": "2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7",
+      "paragraph_uid": "PRAW-000040",
+      "paragraph_id": "S00-P005",
+      "heading_uid": "HRAW-001-df1ed5df",
+      "heading_text": "Probing Electrode Transformation under Dynamic Operation for Alkaline Water Electrolysis",
+      "doc_heading_order": 1,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "score_breakdown",
+        "assigned_section_id": "S05_discussion_mechanism",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S04_results",
+        "top_score": 10,
+        "second_score": 7,
+        "score_gap": 3,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 10,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "mechanism",
+                "weight": 1
+              },
+              {
+                "term": "insight",
+                "weight": 1
+              },
+              {
+                "term": "oxidation",
+                "weight": 1
+              },
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "degradation",
+                "weight": 1
+              },
+              {
+                "term": "redox",
+                "weight": 1
+              },
+              {
+                "term": "in situ",
+                "weight": 1
+              },
+              {
+                "term": "operando",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              },
+              {
+                "term": "sem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 7,
+            "heading_hits": [
+              {
+                "term": "water electrolysis",
+                "weight": 2
+              }
+            ],
+            "preview_hits": [
+              {
+                "term": "result",
+                "weight": 1
+              },
+              {
+                "term": "performance",
+                "weight": 1
+              },
+              {
+                "term": "activity",
+                "weight": 1
+              },
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "durability",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "medium",
+        "conflict_reasons": [
+          "paragraph_rerouted"
+        ],
+        "primary_section_id": "S00_front_matter",
+        "secondary_section_id": "S05_discussion_mechanism",
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S04_results",
+        "score_gap": 3,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "Guanzhi Wang, Haoyi Li, Finn Babbe, Andrew Tricker, Ethan J. Crumlin, Junko Yano, Rangachary Mukundan,* and Xiong Peng*"
+    },
+    {
+      "paper_id": "2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7",
+      "paragraph_uid": "PRAW-000041",
+      "paragraph_id": "S01-P001",
+      "heading_uid": "HRAW-001-df1ed5df",
+      "heading_text": "Probing Electrode Transformation under Dynamic Operation for Alkaline Water Electrolysis",
+      "doc_heading_order": 1,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "score_breakdown",
+        "assigned_section_id": "S05_discussion_mechanism",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S04_results",
+        "top_score": 10,
+        "second_score": 7,
+        "score_gap": 3,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 10,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "mechanism",
+                "weight": 1
+              },
+              {
+                "term": "insight",
+                "weight": 1
+              },
+              {
+                "term": "oxidation",
+                "weight": 1
+              },
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "degradation",
+                "weight": 1
+              },
+              {
+                "term": "redox",
+                "weight": 1
+              },
+              {
+                "term": "in situ",
+                "weight": 1
+              },
+              {
+                "term": "operando",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              },
+              {
+                "term": "sem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 7,
+            "heading_hits": [
+              {
+                "term": "water electrolysis",
+                "weight": 2
+              }
+            ],
+            "preview_hits": [
+              {
+                "term": "result",
+                "weight": 1
+              },
+              {
+                "term": "performance",
+                "weight": 1
+              },
+              {
+                "term": "activity",
+                "weight": 1
+              },
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "durability",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "medium",
+        "conflict_reasons": [
+          "paragraph_rerouted"
+        ],
+        "primary_section_id": "S01_abstract",
+        "secondary_section_id": "S05_discussion_mechanism",
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S04_results",
+        "score_gap": 3,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "Alkaline water electrolyzers (AWEs) play a pivotal role in the realm of large-scale hydrogen production. However, AWEs face significant challenges in electrode degradation particularly under dynamic operating conditions,"
+    },
+    {
+      "paper_id": "2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7",
+      "paragraph_uid": "PRAW-000051",
+      "paragraph_id": "S01-P002",
+      "heading_uid": "HRAW-005-ddea5b8b",
+      "heading_text": "2.2. Reverse Current Accelerated-Stress Testing (AST)",
+      "doc_heading_order": 5,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "score_breakdown",
+        "assigned_section_id": "S05_discussion_mechanism",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S04_results",
+        "top_score": 9,
+        "second_score": 7,
+        "score_gap": 2,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 9,
+            "heading_hits": [
+              {
+                "term": "reverse current",
+                "weight": 5
+              }
+            ],
+            "preview_hits": [
+              {
+                "term": "mechanism",
+                "weight": 1
+              },
+              {
+                "term": "reverse-current",
+                "weight": 1
+              },
+              {
+                "term": "degradation",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 7,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "result",
+                "weight": 1
+              },
+              {
+                "term": "performance",
+                "weight": 1
+              },
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "oer",
+                "weight": 1
+              },
+              {
+                "term": "cycling",
+                "weight": 1
+              },
+              {
+                "term": "overpotential",
+                "weight": 1
+              },
+              {
+                "term": "eis",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "medium",
+        "conflict_reasons": [
+          "paragraph_rerouted"
+        ],
+        "primary_section_id": "S01_abstract",
+        "secondary_section_id": "S05_discussion_mechanism",
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S04_results",
+        "score_gap": 2,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "To probe how frequent startup/shutdown could induce electrode degradation and mechanism behind, we propose an AST protocol for single-cell AWEs to simulate reverse current behaviors. As illustrated in a, the AST protocol"
+    },
+    {
+      "paper_id": "2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7",
+      "paragraph_uid": "PRAW-000067",
+      "paragraph_id": "S01-P003",
+      "heading_uid": "HRAW-007-0b75d58c",
+      "heading_text": "2.4. Unravel the Degradation Mechanism",
+      "doc_heading_order": 7,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "score_breakdown",
+        "assigned_section_id": "S05_discussion_mechanism",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S04_results",
+        "top_score": 16,
+        "second_score": 8,
+        "score_gap": 8,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 16,
+            "heading_hits": [
+              {
+                "term": "mechanism",
+                "weight": 5
+              },
+              {
+                "term": "degradation",
+                "weight": 2
+              }
+            ],
+            "preview_hits": [
+              {
+                "term": "oxidation",
+                "weight": 1
+              },
+              {
+                "term": "reduction",
+                "weight": 1
+              },
+              {
+                "term": "redox",
+                "weight": 1
+              },
+              {
+                "term": "in situ",
+                "weight": 1
+              },
+              {
+                "term": "xps",
+                "weight": 1
+              },
+              {
+                "term": "xrd",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              },
+              {
+                "term": "sem",
+                "weight": 1
+              },
+              {
+                "term": "raman",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 8,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "result",
+                "weight": 1
+              },
+              {
+                "term": "performance",
+                "weight": 1
+              },
+              {
+                "term": "activity",
+                "weight": 1
+              },
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "oer",
+                "weight": 1
+              },
+              {
+                "term": "cycling",
+                "weight": 1
+              },
+              {
+                "term": "overpotential",
+                "weight": 1
+              },
+              {
+                "term": "tafel",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "medium",
+        "conflict_reasons": [
+          "paragraph_rerouted"
+        ],
+        "primary_section_id": "S01_abstract",
+        "secondary_section_id": "S05_discussion_mechanism",
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S04_results",
+        "score_gap": 8,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "Therefore, we propose the following transformation processes occurring on anode during RC AST cycling (Figure 5g). At the beginning of AST operation, under normal operating conditions where anode potential is above 1.6 V"
+    },
+    {
+      "paper_id": "2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7",
+      "paragraph_uid": "PRAW-000072",
+      "paragraph_id": "S01-P004",
+      "heading_uid": "HRAW-007-0b75d58c",
+      "heading_text": "2.4. Unravel the Degradation Mechanism",
+      "doc_heading_order": 7,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "score_breakdown",
+        "assigned_section_id": "S05_discussion_mechanism",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S04_results",
+        "top_score": 16,
+        "second_score": 8,
+        "score_gap": 8,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 16,
+            "heading_hits": [
+              {
+                "term": "mechanism",
+                "weight": 5
+              },
+              {
+                "term": "degradation",
+                "weight": 2
+              }
+            ],
+            "preview_hits": [
+              {
+                "term": "oxidation",
+                "weight": 1
+              },
+              {
+                "term": "reduction",
+                "weight": 1
+              },
+              {
+                "term": "redox",
+                "weight": 1
+              },
+              {
+                "term": "in situ",
+                "weight": 1
+              },
+              {
+                "term": "xps",
+                "weight": 1
+              },
+              {
+                "term": "xrd",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              },
+              {
+                "term": "sem",
+                "weight": 1
+              },
+              {
+                "term": "raman",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 8,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "result",
+                "weight": 1
+              },
+              {
+                "term": "performance",
+                "weight": 1
+              },
+              {
+                "term": "activity",
+                "weight": 1
+              },
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "oer",
+                "weight": 1
+              },
+              {
+                "term": "cycling",
+                "weight": 1
+              },
+              {
+                "term": "overpotential",
+                "weight": 1
+              },
+              {
+                "term": "tafel",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "medium",
+        "conflict_reasons": [
+          "paragraph_rerouted"
+        ],
+        "primary_section_id": "S01_abstract",
+        "secondary_section_id": "S05_discussion_mechanism",
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S04_results",
+        "score_gap": 8,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "As a result, we propose electrode transformation process and degradation mechanism occurring on cathode during RC AST cycling as illustrated in Figure 6k. Under normal operation, with cathode potential being negative, Ni"
+    },
+    {
+      "paper_id": "2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7",
+      "paragraph_uid": "PRAW-000001",
+      "paragraph_id": "S02-P001",
+      "heading_uid": "HRAW-002-2812cee1",
+      "heading_text": "1. Introduction",
+      "doc_heading_order": 2,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "direct_rule",
+        "assigned_section_id": "S02_introduction",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S03_methods_and_setup",
+        "top_score": 9,
+        "second_score": 8,
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 9,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "mechanism",
+                "weight": 1
+              },
+              {
+                "term": "insight",
+                "weight": 1
+              },
+              {
+                "term": "oxidation",
+                "weight": 1
+              },
+              {
+                "term": "reduction",
+                "weight": 1
+              },
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "degradation",
+                "weight": 1
+              },
+              {
+                "term": "redox",
+                "weight": 1
+              },
+              {
+                "term": "in situ",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S03_methods_and_setup",
+            "section_title": "Methods And Setup",
+            "score": 8,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "method",
+                "weight": 1
+              },
+              {
+                "term": "methods",
+                "weight": 1
+              },
+              {
+                "term": "experimental",
+                "weight": 1
+              },
+              {
+                "term": "characterization",
+                "weight": 1
+              },
+              {
+                "term": "material",
+                "weight": 1
+              },
+              {
+                "term": "materials",
+                "weight": 1
+              },
+              {
+                "term": "protocol",
+                "weight": 1
+              },
+              {
+                "term": "setup",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "low",
+        "conflict_reasons": [
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S02_introduction",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S03_methods_and_setup",
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "Alkaline water electrolyzers are among one of the most wellestablished technologies for industrial $\\mathrm { H } _ { 2 }$ production, having"
+    },
+    {
+      "paper_id": "2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7",
+      "paragraph_uid": "PRAW-000002",
+      "paragraph_id": "S02-P002",
+      "heading_uid": "HRAW-002-2812cee1",
+      "heading_text": "1. Introduction",
+      "doc_heading_order": 2,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "direct_rule",
+        "assigned_section_id": "S02_introduction",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S03_methods_and_setup",
+        "top_score": 9,
+        "second_score": 8,
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 9,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "mechanism",
+                "weight": 1
+              },
+              {
+                "term": "insight",
+                "weight": 1
+              },
+              {
+                "term": "oxidation",
+                "weight": 1
+              },
+              {
+                "term": "reduction",
+                "weight": 1
+              },
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "degradation",
+                "weight": 1
+              },
+              {
+                "term": "redox",
+                "weight": 1
+              },
+              {
+                "term": "in situ",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S03_methods_and_setup",
+            "section_title": "Methods And Setup",
+            "score": 8,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "method",
+                "weight": 1
+              },
+              {
+                "term": "methods",
+                "weight": 1
+              },
+              {
+                "term": "experimental",
+                "weight": 1
+              },
+              {
+                "term": "characterization",
+                "weight": 1
+              },
+              {
+                "term": "material",
+                "weight": 1
+              },
+              {
+                "term": "materials",
+                "weight": 1
+              },
+              {
+                "term": "protocol",
+                "weight": 1
+              },
+              {
+                "term": "setup",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "low",
+        "conflict_reasons": [
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S02_introduction",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S03_methods_and_setup",
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "been deployed since the last century.[1] AWEs offer advantages such as costeffectiveness, longevity, and scalability.[2] However, AWEs are often not viewed as the most promising technology to achieve low-cost hydrogen pr"
+    },
+    {
+      "paper_id": "2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7",
+      "paragraph_uid": "PRAW-000003",
+      "paragraph_id": "S02-P003",
+      "heading_uid": "HRAW-002-2812cee1",
+      "heading_text": "1. Introduction",
+      "doc_heading_order": 2,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "direct_rule",
+        "assigned_section_id": "S02_introduction",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S03_methods_and_setup",
+        "top_score": 9,
+        "second_score": 8,
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 9,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "mechanism",
+                "weight": 1
+              },
+              {
+                "term": "insight",
+                "weight": 1
+              },
+              {
+                "term": "oxidation",
+                "weight": 1
+              },
+              {
+                "term": "reduction",
+                "weight": 1
+              },
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "degradation",
+                "weight": 1
+              },
+              {
+                "term": "redox",
+                "weight": 1
+              },
+              {
+                "term": "in situ",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S03_methods_and_setup",
+            "section_title": "Methods And Setup",
+            "score": 8,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "method",
+                "weight": 1
+              },
+              {
+                "term": "methods",
+                "weight": 1
+              },
+              {
+                "term": "experimental",
+                "weight": 1
+              },
+              {
+                "term": "characterization",
+                "weight": 1
+              },
+              {
+                "term": "material",
+                "weight": 1
+              },
+              {
+                "term": "materials",
+                "weight": 1
+              },
+              {
+                "term": "protocol",
+                "weight": 1
+              },
+              {
+                "term": "setup",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "low",
+        "conflict_reasons": [
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S02_introduction",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S03_methods_and_setup",
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "and shut down operations to ensure system safety, which imposes additional stress on electrodes/electrocatalysts, potentially shortening service lifetime of AWE system.[6,7] In particular, electrode degradation caused by"
+    },
+    {
+      "paper_id": "2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7",
+      "paragraph_uid": "PRAW-000005",
+      "paragraph_id": "S02-P004",
+      "heading_uid": "HRAW-002-2812cee1",
+      "heading_text": "1. Introduction",
+      "doc_heading_order": 2,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "direct_rule",
+        "assigned_section_id": "S02_introduction",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S03_methods_and_setup",
+        "top_score": 9,
+        "second_score": 8,
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 9,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "mechanism",
+                "weight": 1
+              },
+              {
+                "term": "insight",
+                "weight": 1
+              },
+              {
+                "term": "oxidation",
+                "weight": 1
+              },
+              {
+                "term": "reduction",
+                "weight": 1
+              },
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "degradation",
+                "weight": 1
+              },
+              {
+                "term": "redox",
+                "weight": 1
+              },
+              {
+                "term": "in situ",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S03_methods_and_setup",
+            "section_title": "Methods And Setup",
+            "score": 8,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "method",
+                "weight": 1
+              },
+              {
+                "term": "methods",
+                "weight": 1
+              },
+              {
+                "term": "experimental",
+                "weight": 1
+              },
+              {
+                "term": "characterization",
+                "weight": 1
+              },
+              {
+                "term": "material",
+                "weight": 1
+              },
+              {
+                "term": "materials",
+                "weight": 1
+              },
+              {
+                "term": "protocol",
+                "weight": 1
+              },
+              {
+                "term": "setup",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "low",
+        "conflict_reasons": [
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S02_introduction",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S03_methods_and_setup",
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "Energy Storage and Distributed Resources Division"
+    },
+    {
+      "paper_id": "2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7",
+      "paragraph_uid": "PRAW-000009",
+      "paragraph_id": "S02-P005",
+      "heading_uid": "HRAW-002-2812cee1",
+      "heading_text": "1. Introduction",
+      "doc_heading_order": 2,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "direct_rule",
+        "assigned_section_id": "S02_introduction",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S03_methods_and_setup",
+        "top_score": 9,
+        "second_score": 8,
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 9,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "mechanism",
+                "weight": 1
+              },
+              {
+                "term": "insight",
+                "weight": 1
+              },
+              {
+                "term": "oxidation",
+                "weight": 1
+              },
+              {
+                "term": "reduction",
+                "weight": 1
+              },
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "degradation",
+                "weight": 1
+              },
+              {
+                "term": "redox",
+                "weight": 1
+              },
+              {
+                "term": "in situ",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S03_methods_and_setup",
+            "section_title": "Methods And Setup",
+            "score": 8,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "method",
+                "weight": 1
+              },
+              {
+                "term": "methods",
+                "weight": 1
+              },
+              {
+                "term": "experimental",
+                "weight": 1
+              },
+              {
+                "term": "characterization",
+                "weight": 1
+              },
+              {
+                "term": "material",
+                "weight": 1
+              },
+              {
+                "term": "materials",
+                "weight": 1
+              },
+              {
+                "term": "protocol",
+                "weight": 1
+              },
+              {
+                "term": "setup",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "low",
+        "conflict_reasons": [
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S02_introduction",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S03_methods_and_setup",
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "Molecular Biophysics and Integrated Bioimaging Division"
+    },
+    {
+      "paper_id": "2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7",
+      "paragraph_uid": "PRAW-000010",
+      "paragraph_id": "S02-P006",
+      "heading_uid": "HRAW-002-2812cee1",
+      "heading_text": "1. Introduction",
+      "doc_heading_order": 2,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "direct_rule",
+        "assigned_section_id": "S02_introduction",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S03_methods_and_setup",
+        "top_score": 9,
+        "second_score": 8,
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 9,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "mechanism",
+                "weight": 1
+              },
+              {
+                "term": "insight",
+                "weight": 1
+              },
+              {
+                "term": "oxidation",
+                "weight": 1
+              },
+              {
+                "term": "reduction",
+                "weight": 1
+              },
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "degradation",
+                "weight": 1
+              },
+              {
+                "term": "redox",
+                "weight": 1
+              },
+              {
+                "term": "in situ",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S03_methods_and_setup",
+            "section_title": "Methods And Setup",
+            "score": 8,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "method",
+                "weight": 1
+              },
+              {
+                "term": "methods",
+                "weight": 1
+              },
+              {
+                "term": "experimental",
+                "weight": 1
+              },
+              {
+                "term": "characterization",
+                "weight": 1
+              },
+              {
+                "term": "material",
+                "weight": 1
+              },
+              {
+                "term": "materials",
+                "weight": 1
+              },
+              {
+                "term": "protocol",
+                "weight": 1
+              },
+              {
+                "term": "setup",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "low",
+        "conflict_reasons": [
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S02_introduction",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S03_methods_and_setup",
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "![](figures/FIG001/image_001.jpg) Figure 1. Schematic illustration of the current flow during normal and shutdown operation of AWEs. a) A typical bipolar-type multi-cell AWEs stack configuration. b) Operating process dur"
+    },
+    {
+      "paper_id": "2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7",
+      "paragraph_uid": "PRAW-000011",
+      "paragraph_id": "S02-P007",
+      "heading_uid": "HRAW-002-2812cee1",
+      "heading_text": "1. Introduction",
+      "doc_heading_order": 2,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "direct_rule",
+        "assigned_section_id": "S02_introduction",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S03_methods_and_setup",
+        "top_score": 9,
+        "second_score": 8,
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 9,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "mechanism",
+                "weight": 1
+              },
+              {
+                "term": "insight",
+                "weight": 1
+              },
+              {
+                "term": "oxidation",
+                "weight": 1
+              },
+              {
+                "term": "reduction",
+                "weight": 1
+              },
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "degradation",
+                "weight": 1
+              },
+              {
+                "term": "redox",
+                "weight": 1
+              },
+              {
+                "term": "in situ",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S03_methods_and_setup",
+            "section_title": "Methods And Setup",
+            "score": 8,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "method",
+                "weight": 1
+              },
+              {
+                "term": "methods",
+                "weight": 1
+              },
+              {
+                "term": "experimental",
+                "weight": 1
+              },
+              {
+                "term": "characterization",
+                "weight": 1
+              },
+              {
+                "term": "material",
+                "weight": 1
+              },
+              {
+                "term": "materials",
+                "weight": 1
+              },
+              {
+                "term": "protocol",
+                "weight": 1
+              },
+              {
+                "term": "setup",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "low",
+        "conflict_reasons": [
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S02_introduction",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S03_methods_and_setup",
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "phenomenon in AWE stack system is one of the most challenging issues.[6]"
+    },
+    {
+      "paper_id": "2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7",
+      "paragraph_uid": "PRAW-000012",
+      "paragraph_id": "S02-P008",
+      "heading_uid": "HRAW-002-2812cee1",
+      "heading_text": "1. Introduction",
+      "doc_heading_order": 2,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "direct_rule",
+        "assigned_section_id": "S02_introduction",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S03_methods_and_setup",
+        "top_score": 9,
+        "second_score": 8,
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 9,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "mechanism",
+                "weight": 1
+              },
+              {
+                "term": "insight",
+                "weight": 1
+              },
+              {
+                "term": "oxidation",
+                "weight": 1
+              },
+              {
+                "term": "reduction",
+                "weight": 1
+              },
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "degradation",
+                "weight": 1
+              },
+              {
+                "term": "redox",
+                "weight": 1
+              },
+              {
+                "term": "in situ",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S03_methods_and_setup",
+            "section_title": "Methods And Setup",
+            "score": 8,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "method",
+                "weight": 1
+              },
+              {
+                "term": "methods",
+                "weight": 1
+              },
+              {
+                "term": "experimental",
+                "weight": 1
+              },
+              {
+                "term": "characterization",
+                "weight": 1
+              },
+              {
+                "term": "material",
+                "weight": 1
+              },
+              {
+                "term": "materials",
+                "weight": 1
+              },
+              {
+                "term": "protocol",
+                "weight": 1
+              },
+              {
+                "term": "setup",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "low",
+        "conflict_reasons": [
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S02_introduction",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S03_methods_and_setup",
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "Most AWEs operate in a stack configuration consisting of multiple zero-gap cells and are of bipolar type, where anode and cathode are directly connected by a bipolar plate between each adjacent cell ( a). In a typical bi"
+    },
+    {
+      "paper_id": "2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7",
+      "paragraph_uid": "PRAW-000013",
+      "paragraph_id": "S02-P009",
+      "heading_uid": "HRAW-002-2812cee1",
+      "heading_text": "1. Introduction",
+      "doc_heading_order": 2,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "direct_rule",
+        "assigned_section_id": "S02_introduction",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S03_methods_and_setup",
+        "top_score": 9,
+        "second_score": 8,
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 9,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "mechanism",
+                "weight": 1
+              },
+              {
+                "term": "insight",
+                "weight": 1
+              },
+              {
+                "term": "oxidation",
+                "weight": 1
+              },
+              {
+                "term": "reduction",
+                "weight": 1
+              },
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "degradation",
+                "weight": 1
+              },
+              {
+                "term": "redox",
+                "weight": 1
+              },
+              {
+                "term": "in situ",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S03_methods_and_setup",
+            "section_title": "Methods And Setup",
+            "score": 8,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "method",
+                "weight": 1
+              },
+              {
+                "term": "methods",
+                "weight": 1
+              },
+              {
+                "term": "experimental",
+                "weight": 1
+              },
+              {
+                "term": "characterization",
+                "weight": 1
+              },
+              {
+                "term": "material",
+                "weight": 1
+              },
+              {
+                "term": "materials",
+                "weight": 1
+              },
+              {
+                "term": "protocol",
+                "weight": 1
+              },
+              {
+                "term": "setup",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "low",
+        "conflict_reasons": [
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S02_introduction",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S03_methods_and_setup",
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "shutdowns.[12] Although being effective, such engineering solutions can negatively impact balance of plants, leading to additional operating costs, as well as concerns of flammable gas mixing as illustrated before. There"
+    },
+    {
+      "paper_id": "2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7",
+      "paragraph_uid": "PRAW-000014",
+      "paragraph_id": "S02-P010",
+      "heading_uid": "HRAW-002-2812cee1",
+      "heading_text": "1. Introduction",
+      "doc_heading_order": 2,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "direct_rule",
+        "assigned_section_id": "S02_introduction",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S03_methods_and_setup",
+        "top_score": 9,
+        "second_score": 8,
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 9,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "mechanism",
+                "weight": 1
+              },
+              {
+                "term": "insight",
+                "weight": 1
+              },
+              {
+                "term": "oxidation",
+                "weight": 1
+              },
+              {
+                "term": "reduction",
+                "weight": 1
+              },
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "degradation",
+                "weight": 1
+              },
+              {
+                "term": "redox",
+                "weight": 1
+              },
+              {
+                "term": "in situ",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S03_methods_and_setup",
+            "section_title": "Methods And Setup",
+            "score": 8,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "method",
+                "weight": 1
+              },
+              {
+                "term": "methods",
+                "weight": 1
+              },
+              {
+                "term": "experimental",
+                "weight": 1
+              },
+              {
+                "term": "characterization",
+                "weight": 1
+              },
+              {
+                "term": "material",
+                "weight": 1
+              },
+              {
+                "term": "materials",
+                "weight": 1
+              },
+              {
+                "term": "protocol",
+                "weight": 1
+              },
+              {
+                "term": "setup",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "low",
+        "conflict_reasons": [
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S02_introduction",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S03_methods_and_setup",
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "Several studies have explored degradation mechanisms associated with RC phenomenon in AWEs. Mitsushima et al. examined the impact of operational and shutdown parameters on RC phenomenon in AWEs.[9,13,14] Kim et al. devel"
+    },
+    {
+      "paper_id": "2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7",
+      "paragraph_uid": "PRAW-000015",
+      "paragraph_id": "S02-P011",
+      "heading_uid": "HRAW-002-2812cee1",
+      "heading_text": "1. Introduction",
+      "doc_heading_order": 2,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "direct_rule",
+        "assigned_section_id": "S02_introduction",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S03_methods_and_setup",
+        "top_score": 9,
+        "second_score": 8,
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 9,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "mechanism",
+                "weight": 1
+              },
+              {
+                "term": "insight",
+                "weight": 1
+              },
+              {
+                "term": "oxidation",
+                "weight": 1
+              },
+              {
+                "term": "reduction",
+                "weight": 1
+              },
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "degradation",
+                "weight": 1
+              },
+              {
+                "term": "redox",
+                "weight": 1
+              },
+              {
+                "term": "in situ",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S03_methods_and_setup",
+            "section_title": "Methods And Setup",
+            "score": 8,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "method",
+                "weight": 1
+              },
+              {
+                "term": "methods",
+                "weight": 1
+              },
+              {
+                "term": "experimental",
+                "weight": 1
+              },
+              {
+                "term": "characterization",
+                "weight": 1
+              },
+              {
+                "term": "material",
+                "weight": 1
+              },
+              {
+                "term": "materials",
+                "weight": 1
+              },
+              {
+                "term": "protocol",
+                "weight": 1
+              },
+              {
+                "term": "setup",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "low",
+        "conflict_reasons": [
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S02_introduction",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S03_methods_and_setup",
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "Herein, we first utilize a custom-built three-electrode MEA setup, by incorporating a reference electrode that is ionically connected to the separator, to decouple electrochemical behaviors of anode and cathode during th"
+    },
+    {
+      "paper_id": "2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7",
+      "paragraph_uid": "PRAW-000075",
+      "paragraph_id": "S06-P001",
+      "heading_uid": "HRAW-008-2bff91de",
+      "heading_text": "3. Conclusion",
+      "doc_heading_order": 8,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "direct_rule",
+        "assigned_section_id": "S06_conclusion",
+        "top_section_id": "S04_results",
+        "second_section_id": "S05_discussion_mechanism",
+        "top_score": 8,
+        "second_score": 6,
+        "score_gap": 2,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 8,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "result",
+                "weight": 1
+              },
+              {
+                "term": "performance",
+                "weight": 1
+              },
+              {
+                "term": "activity",
+                "weight": 1
+              },
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "oer",
+                "weight": 1
+              },
+              {
+                "term": "water electrolysis",
+                "weight": 1
+              },
+              {
+                "term": "cycling",
+                "weight": 1
+              },
+              {
+                "term": "overpotential",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 6,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "mechanism",
+                "weight": 1
+              },
+              {
+                "term": "insight",
+                "weight": 1
+              },
+              {
+                "term": "degradation",
+                "weight": 1
+              },
+              {
+                "term": "redox",
+                "weight": 1
+              },
+              {
+                "term": "in situ",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "low",
+        "conflict_reasons": [
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S06_conclusion",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S04_results",
+        "second_candidate_section_id": "S05_discussion_mechanism",
+        "score_gap": 2,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "In summary, this work elaborates nickel electrode transformation and degradation mechanisms for alkaline water electrolysis under dynamic operating conditions, specifically during transient startup/shutdown operations. A"
+    },
+    {
+      "paper_id": "2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7",
+      "paragraph_uid": "PRAW-000077",
+      "paragraph_id": "S07-P002",
+      "heading_uid": "HRAW-011-e0fafa1d",
+      "heading_text": "Acknowledgements",
+      "doc_heading_order": 11,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "direct_rule",
+        "assigned_section_id": "S07_back_matter_or_supplementary",
+        "top_section_id": "S00_front_matter",
+        "second_section_id": "S07_back_matter_or_supplementary",
+        "top_score": 3,
+        "second_score": 2,
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S00_front_matter",
+            "section_title": "Front Matter",
+            "score": 3,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "author",
+                "weight": 1
+              },
+              {
+                "term": "authors",
+                "weight": 1
+              },
+              {
+                "term": "department",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S07_back_matter_or_supplementary",
+            "section_title": "Back Matter Or Supplementary",
+            "score": 2,
+            "heading_hits": [
+              {
+                "term": "acknowledgement",
+                "weight": 2
+              }
+            ],
+            "preview_hits": [],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "low",
+        "conflict_reasons": [
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S07_back_matter_or_supplementary",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S00_front_matter",
+        "second_candidate_section_id": "S07_back_matter_or_supplementary",
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "The authors acknowledge the Department of Energy-Office of Energy Efficiency and Renewable Energy-Hydrogen and Fuel Cell Technologies Office (DOE-EERE-HFTO) and the ${ \\sf H } _ { 2 }$ from Next-generation Electrolyzers"
+    },
+    {
+      "paper_id": "2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7",
+      "paragraph_uid": "PRAW-000078",
+      "paragraph_id": "S07-P003",
+      "heading_uid": "HRAW-011-e0fafa1d",
+      "heading_text": "Acknowledgements",
+      "doc_heading_order": 11,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "direct_rule",
+        "assigned_section_id": "S07_back_matter_or_supplementary",
+        "top_section_id": "S00_front_matter",
+        "second_section_id": "S07_back_matter_or_supplementary",
+        "top_score": 3,
+        "second_score": 2,
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S00_front_matter",
+            "section_title": "Front Matter",
+            "score": 3,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "author",
+                "weight": 1
+              },
+              {
+                "term": "authors",
+                "weight": 1
+              },
+              {
+                "term": "department",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S07_back_matter_or_supplementary",
+            "section_title": "Back Matter Or Supplementary",
+            "score": 2,
+            "heading_hits": [
+              {
+                "term": "acknowledgement",
+                "weight": 2
+              }
+            ],
+            "preview_hits": [],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "low",
+        "conflict_reasons": [
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S07_back_matter_or_supplementary",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S00_front_matter",
+        "second_candidate_section_id": "S07_back_matter_or_supplementary",
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "sources of the Advanced Light Source in Lawrence Berkeley National Laboratory, which is a DOE Office of Science User Facility under Contract No. DE-AC02-05CH11231. Use of the Stanford Synchrotron Radiation Light source,"
+    },
+    {
+      "paper_id": "2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7",
+      "paragraph_uid": "PRAW-000080",
+      "paragraph_id": "S07-P005",
+      "heading_uid": "HRAW-013-0204eb85",
+      "heading_text": "Author Contributions",
+      "doc_heading_order": 13,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "direct_rule",
+        "assigned_section_id": "S07_back_matter_or_supplementary",
+        "top_section_id": "S03_methods_and_setup",
+        "second_section_id": "S05_discussion_mechanism",
+        "top_score": 5,
+        "second_score": 4,
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S03_methods_and_setup",
+            "section_title": "Methods And Setup",
+            "score": 5,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "fabrication",
+                "weight": 1
+              },
+              {
+                "term": "characterization",
+                "weight": 1
+              },
+              {
+                "term": "measurement",
+                "weight": 1
+              },
+              {
+                "term": "cell assembly",
+                "weight": 1
+              },
+              {
+                "term": "setup",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 4,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "in situ",
+                "weight": 1
+              },
+              {
+                "term": "xps",
+                "weight": 1
+              },
+              {
+                "term": "sem",
+                "weight": 1
+              },
+              {
+                "term": "raman",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "low",
+        "conflict_reasons": [
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S07_back_matter_or_supplementary",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S03_methods_and_setup",
+        "second_candidate_section_id": "S05_discussion_mechanism",
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "G.W. performed most of the electrode fabrication, characterization, cell assembly, testing, and data analysis. A.W.T. designed the 3-electrode setup and helped with the cell testing and data analysis. H.L. performed in s"
+    },
+    {
+      "paper_id": "2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7",
+      "paragraph_uid": "PRAW-000021",
+      "paragraph_id": "S07-P007",
+      "heading_uid": "HRAW-009-7b936880",
+      "heading_text": "4. Experimental Section",
+      "doc_heading_order": 9,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "score_breakdown",
+        "assigned_section_id": "S03_methods_and_setup",
+        "top_section_id": "S03_methods_and_setup",
+        "second_section_id": "S04_results",
+        "top_score": 11,
+        "second_score": 8,
+        "score_gap": 3,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S03_methods_and_setup",
+            "section_title": "Methods And Setup",
+            "score": 11,
+            "heading_hits": [
+              {
+                "term": "experimental",
+                "weight": 2
+              },
+              {
+                "term": "experimental section",
+                "weight": 2
+              }
+            ],
+            "preview_hits": [
+              {
+                "term": "method",
+                "weight": 1
+              },
+              {
+                "term": "characterization",
+                "weight": 1
+              },
+              {
+                "term": "measurement",
+                "weight": 1
+              },
+              {
+                "term": "electrochemical measurement",
+                "weight": 1
+              },
+              {
+                "term": "material",
+                "weight": 1
+              },
+              {
+                "term": "materials",
+                "weight": 1
+              },
+              {
+                "term": "cell assembly",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 8,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "result",
+                "weight": 1
+              },
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "oer",
+                "weight": 1
+              },
+              {
+                "term": "cycling",
+                "weight": 1
+              },
+              {
+                "term": "current density",
+                "weight": 1
+              },
+              {
+                "term": "overpotential",
+                "weight": 1
+              },
+              {
+                "term": "tafel",
+                "weight": 1
+              },
+              {
+                "term": "eis",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "medium",
+        "conflict_reasons": [
+          "paragraph_rerouted"
+        ],
+        "primary_section_id": "S07_back_matter_or_supplementary",
+        "secondary_section_id": "S03_methods_and_setup",
+        "top_candidate_section_id": "S03_methods_and_setup",
+        "second_candidate_section_id": "S04_results",
+        "score_gap": 3,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "The OER, HER activities and electrochemical active specific area (ECSA) estimation in beaker tests were conducted in a three-electrode system in $0 . 5 ~ \\mathsf { ~ M ~ }$ KOH solution at room temperature, where the pri"
+    },
+    {
+      "paper_id": "2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7",
+      "paragraph_uid": "PRAW-000037",
+      "paragraph_id": "S07-P008",
+      "heading_uid": "HRAW-009-7b936880",
+      "heading_text": "4. Experimental Section",
+      "doc_heading_order": 9,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "score_breakdown",
+        "assigned_section_id": "S03_methods_and_setup",
+        "top_section_id": "S03_methods_and_setup",
+        "second_section_id": "S04_results",
+        "top_score": 11,
+        "second_score": 8,
+        "score_gap": 3,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S03_methods_and_setup",
+            "section_title": "Methods And Setup",
+            "score": 11,
+            "heading_hits": [
+              {
+                "term": "experimental",
+                "weight": 2
+              },
+              {
+                "term": "experimental section",
+                "weight": 2
+              }
+            ],
+            "preview_hits": [
+              {
+                "term": "method",
+                "weight": 1
+              },
+              {
+                "term": "characterization",
+                "weight": 1
+              },
+              {
+                "term": "measurement",
+                "weight": 1
+              },
+              {
+                "term": "electrochemical measurement",
+                "weight": 1
+              },
+              {
+                "term": "material",
+                "weight": 1
+              },
+              {
+                "term": "materials",
+                "weight": 1
+              },
+              {
+                "term": "cell assembly",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 8,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "result",
+                "weight": 1
+              },
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "oer",
+                "weight": 1
+              },
+              {
+                "term": "cycling",
+                "weight": 1
+              },
+              {
+                "term": "current density",
+                "weight": 1
+              },
+              {
+                "term": "overpotential",
+                "weight": 1
+              },
+              {
+                "term": "tafel",
+                "weight": 1
+              },
+              {
+                "term": "eis",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "medium",
+        "conflict_reasons": [
+          "paragraph_rerouted"
+        ],
+        "primary_section_id": "S07_back_matter_or_supplementary",
+        "secondary_section_id": "S03_methods_and_setup",
+        "top_candidate_section_id": "S03_methods_and_setup",
+        "second_candidate_section_id": "S04_results",
+        "score_gap": 3,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "stitched together with an overlap of ten percent on both sides. Each window was measured 6 to 12 times with an exposure time of 5 s each. The system was calibrated using the A1 mode of a silicon reference sample."
+    },
+    {
+      "paper_id": "2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7",
+      "paragraph_uid": "PRAW-000048",
+      "paragraph_id": "S07-P009",
+      "heading_uid": "HRAW-004-334fff58",
+      "heading_text": "2.1. Quantify Electrochemical Behaviors in Reverse Current Process",
+      "doc_heading_order": 4,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "score_breakdown",
+        "assigned_section_id": "S05_discussion_mechanism",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S04_results",
+        "top_score": 12,
+        "second_score": 8,
+        "score_gap": 4,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 12,
+            "heading_hits": [
+              {
+                "term": "reverse current",
+                "weight": 5
+              }
+            ],
+            "preview_hits": [
+              {
+                "term": "mechanism",
+                "weight": 1
+              },
+              {
+                "term": "oxidation",
+                "weight": 1
+              },
+              {
+                "term": "reduction",
+                "weight": 1
+              },
+              {
+                "term": "reverse-current",
+                "weight": 1
+              },
+              {
+                "term": "degradation",
+                "weight": 1
+              },
+              {
+                "term": "redox",
+                "weight": 1
+              },
+              {
+                "term": "sem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 8,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "result",
+                "weight": 1
+              },
+              {
+                "term": "performance",
+                "weight": 1
+              },
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "oer",
+                "weight": 1
+              },
+              {
+                "term": "current density",
+                "weight": 1
+              },
+              {
+                "term": "cell voltage",
+                "weight": 1
+              },
+              {
+                "term": "overpotential",
+                "weight": 1
+              },
+              {
+                "term": "eis",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "medium",
+        "conflict_reasons": [
+          "paragraph_rerouted"
+        ],
+        "primary_section_id": "S07_back_matter_or_supplementary",
+        "secondary_section_id": "S05_discussion_mechanism",
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S04_results",
+        "score_gap": 4,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "confirm a successful induction of reverse-current process in a single AWE cell (Figure S4, Supporting Information). Note that the induced reverse current in this single cell will be likely to be higher than actual revers"
+    },
+    {
+      "paper_id": "2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7",
+      "paragraph_uid": "PRAW-000060",
+      "paragraph_id": "S07-P010",
+      "heading_uid": "HRAW-006-537403c7",
+      "heading_text": "2.3. Electrochemical Behaviors of Anode and Cathode during Reverse Current AST",
+      "doc_heading_order": 6,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "score_breakdown",
+        "assigned_section_id": "S05_discussion_mechanism",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S04_results",
+        "top_score": 14,
+        "second_score": 8,
+        "score_gap": 6,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 14,
+            "heading_hits": [
+              {
+                "term": "reverse current",
+                "weight": 5
+              }
+            ],
+            "preview_hits": [
+              {
+                "term": "mechanism",
+                "weight": 1
+              },
+              {
+                "term": "reduction",
+                "weight": 1
+              },
+              {
+                "term": "degradation",
+                "weight": 1
+              },
+              {
+                "term": "in situ",
+                "weight": 1
+              },
+              {
+                "term": "xps",
+                "weight": 1
+              },
+              {
+                "term": "xrd",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              },
+              {
+                "term": "sem",
+                "weight": 1
+              },
+              {
+                "term": "raman",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 8,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "result",
+                "weight": 1
+              },
+              {
+                "term": "performance",
+                "weight": 1
+              },
+              {
+                "term": "activity",
+                "weight": 1
+              },
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "oer",
+                "weight": 1
+              },
+              {
+                "term": "cycling",
+                "weight": 1
+              },
+              {
+                "term": "overpotential",
+                "weight": 1
+              },
+              {
+                "term": "tafel",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "medium",
+        "conflict_reasons": [
+          "paragraph_rerouted"
+        ],
+        "primary_section_id": "S07_back_matter_or_supplementary",
+        "secondary_section_id": "S05_discussion_mechanism",
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S04_results",
+        "score_gap": 6,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "Figure S10 (Supporting Information), post-AST cathode shows deteriorated HER activity, with a significantly higher Tafel slope of $5 1 6 \\mathrm { m V } \\mathrm { d e c } ^ { - 1 }$ compared to $1 1 2 \\mathrm { m V } \\ma"
+    },
+    {
+      "paper_id": "2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7",
+      "paragraph_uid": "PRAW-000065",
+      "paragraph_id": "S07-P011",
+      "heading_uid": "HRAW-007-0b75d58c",
+      "heading_text": "2.4. Unravel the Degradation Mechanism",
+      "doc_heading_order": 7,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "score_breakdown",
+        "assigned_section_id": "S05_discussion_mechanism",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S04_results",
+        "top_score": 16,
+        "second_score": 8,
+        "score_gap": 8,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 16,
+            "heading_hits": [
+              {
+                "term": "mechanism",
+                "weight": 5
+              },
+              {
+                "term": "degradation",
+                "weight": 2
+              }
+            ],
+            "preview_hits": [
+              {
+                "term": "oxidation",
+                "weight": 1
+              },
+              {
+                "term": "reduction",
+                "weight": 1
+              },
+              {
+                "term": "redox",
+                "weight": 1
+              },
+              {
+                "term": "in situ",
+                "weight": 1
+              },
+              {
+                "term": "xps",
+                "weight": 1
+              },
+              {
+                "term": "xrd",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              },
+              {
+                "term": "sem",
+                "weight": 1
+              },
+              {
+                "term": "raman",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 8,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "result",
+                "weight": 1
+              },
+              {
+                "term": "performance",
+                "weight": 1
+              },
+              {
+                "term": "activity",
+                "weight": 1
+              },
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "oer",
+                "weight": 1
+              },
+              {
+                "term": "cycling",
+                "weight": 1
+              },
+              {
+                "term": "overpotential",
+                "weight": 1
+              },
+              {
+                "term": "tafel",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "medium",
+        "conflict_reasons": [
+          "paragraph_rerouted"
+        ],
+        "primary_section_id": "S07_back_matter_or_supplementary",
+        "secondary_section_id": "S05_discussion_mechanism",
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S04_results",
+        "score_gap": 8,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "Raman spectroscopy measurements were further performed to analyze surface elemental composition and detailed chemical environment. The strong Raman peaks observed at 483 and $5 6 0 \\mathrm { c m } ^ { - 1 }$ are assigned"
+    }
+  ]
+}

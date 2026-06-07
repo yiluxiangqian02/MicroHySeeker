@@ -1,0 +1,509 @@
+{
+  "paper_id": "2025_sha_10000h_stable_intermittent_alkaline_seawater_electrolysi_333f5c",
+  "generated_at": "2026-05-30T16:29:47",
+  "generated_files": [
+    "metadata.json",
+    "full_clean.md",
+    "document_tree.json",
+    "paragraph_index.json",
+    "evidence_links.json",
+    "image_manifest.json",
+    "table_manifest.json",
+    "sections_by_heading/"
+  ],
+  "section_count": 6,
+  "paragraph_count": 63,
+  "figure_count": 5,
+  "table_count": 0,
+  "evidence_count": 68,
+  "front_matter_count": 3,
+  "back_matter_count": 14,
+  "reference_paragraph_count": 0,
+  "conclusion_detected": false,
+  "sections_summary": [
+    {
+      "section_id": "S00_front_matter",
+      "section_title": "Front Matter",
+      "paragraph_count": 3
+    },
+    {
+      "section_id": "S01_abstract",
+      "section_title": "Abstract",
+      "paragraph_count": 4
+    },
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "paragraph_count": 16
+    },
+    {
+      "section_id": "S04_results",
+      "section_title": "Result",
+      "paragraph_count": 7
+    },
+    {
+      "section_id": "S05_discussion_mechanism",
+      "section_title": "Discussion Mechanism",
+      "paragraph_count": 19
+    },
+    {
+      "section_id": "S07_back_matter_or_supplementary",
+      "section_title": "Back Matter Or Supplementary",
+      "paragraph_count": 14
+    }
+  ],
+  "warnings": [],
+  "fact_layer_coverage": {
+    "total_paragraphs": 63,
+    "with_paragraph_uid": 63,
+    "paragraph_uid_coverage": 1.0,
+    "with_heading_uid": 63,
+    "heading_uid_coverage": 1.0,
+    "with_heading_text": 63,
+    "heading_text_coverage": 1.0,
+    "with_doc_heading_order": 63,
+    "doc_heading_order_coverage": 1.0,
+    "with_page_index": 0,
+    "page_index_coverage": 0.0,
+    "with_block_order": 63,
+    "block_order_coverage": 1.0
+  },
+  "tag_layer_coverage": {
+    "total_paragraphs": 63,
+    "with_macro_primary": 63,
+    "macro_primary_coverage": 1.0,
+    "with_macro_secondary": 12,
+    "macro_secondary_coverage": 0.1905,
+    "with_macro_confidence": 63,
+    "macro_confidence_coverage": 1.0,
+    "with_macro_reasons": 16,
+    "macro_reasons_coverage": 0.254,
+    "tag_conflict_count": 25,
+    "tag_conflict_ratio": 0.3968,
+    "tag_conflict_high": 16,
+    "tag_conflict_medium": 9,
+    "tag_conflict_low": 0
+  },
+  "removed_noise_summary": "Filtered: empty blocks, <40 chars, heading-only, page numbers, noise patterns",
+  "next_review_items": [
+    "Verify page number estimates against source PDF",
+    "Check figure-paragraph links (linked_figures in paragraph_index.json)",
+    "Review section title mappings in document_tree.json",
+    "Confirm no important paragraphs were filtered as noise"
+  ],
+  "missing_input_files": [],
+  "uncertainty_summary": {
+    "soft_uncertain_count": 0,
+    "needs_manual_review_count": 13,
+    "total_uncertain_count": 13
+  },
+  "soft_uncertain_items": [],
+  "needs_manual_review_items": [
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "original_heading": "Catalysts design strategy",
+      "assigned_section_id": "S03_methods_and_setup",
+      "top_section_id": "S04_results",
+      "top_score": 4,
+      "second_score": 3,
+      "score_gap": 1,
+      "uncertain_reasons": [
+        "low_score_gap"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "original_heading": "Discussion",
+      "assigned_section_id": "S03_methods_and_setup",
+      "top_section_id": "S05_discussion_mechanism",
+      "top_score": 4,
+      "second_score": 3,
+      "score_gap": 1,
+      "uncertain_reasons": [
+        "low_score_gap"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "original_heading": "Synthesis of NiCo–LDH",
+      "assigned_section_id": "S03_methods_and_setup",
+      "top_section_id": "S03_methods_and_setup",
+      "top_score": 3,
+      "second_score": 1,
+      "score_gap": 2,
+      "uncertain_reasons": [
+        "low_top_score"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "original_heading": "Synthesis of NiCoP",
+      "assigned_section_id": "S03_methods_and_setup",
+      "top_section_id": "S03_methods_and_setup",
+      "top_score": 2,
+      "second_score": 1,
+      "score_gap": 1,
+      "uncertain_reasons": [
+        "low_top_score",
+        "low_score_gap"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "original_heading": "Synthesis of NiCoP– $\\mathbf { { C r } _ { 2 } 0 } _ { 3 }$",
+      "assigned_section_id": "S03_methods_and_setup",
+      "top_section_id": "S03_methods_and_setup",
+      "top_score": 2,
+      "second_score": 1,
+      "score_gap": 1,
+      "uncertain_reasons": [
+        "low_top_score",
+        "low_score_gap"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "original_heading": "Synthesis of NiCoFeP",
+      "assigned_section_id": "S03_methods_and_setup",
+      "top_section_id": "S03_methods_and_setup",
+      "top_score": 3,
+      "second_score": 1,
+      "score_gap": 2,
+      "uncertain_reasons": [
+        "low_top_score"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "original_heading": "Synthesis of NiFeP",
+      "assigned_section_id": "S03_methods_and_setup",
+      "top_section_id": "S03_methods_and_setup",
+      "top_score": 3,
+      "second_score": 0,
+      "score_gap": 3,
+      "uncertain_reasons": [
+        "low_top_score"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "original_heading": "Synthesis of Ni $/ \\mathbf { N i O } / \\mathbf { C r } _ { 2 } \\mathbf { O } _ { 3 }$",
+      "assigned_section_id": "S03_methods_and_setup",
+      "top_section_id": "S03_methods_and_setup",
+      "top_score": 2,
+      "second_score": 1,
+      "score_gap": 1,
+      "uncertain_reasons": [
+        "low_top_score",
+        "low_score_gap"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "original_heading": "AEM electrolyser measurement",
+      "assigned_section_id": "S03_methods_and_setup",
+      "top_section_id": "S04_results",
+      "top_score": 3,
+      "second_score": 2,
+      "score_gap": 1,
+      "uncertain_reasons": [
+        "low_top_score",
+        "low_score_gap"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "original_heading": "Operando Raman characterization",
+      "assigned_section_id": "S03_methods_and_setup",
+      "top_section_id": "S05_discussion_mechanism",
+      "top_score": 4,
+      "second_score": 3,
+      "score_gap": 1,
+      "uncertain_reasons": [
+        "low_score_gap"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "original_heading": "Operando ATR-SEIRAS characterization",
+      "assigned_section_id": "S03_methods_and_setup",
+      "top_section_id": "S03_methods_and_setup",
+      "top_score": 3,
+      "second_score": 2,
+      "score_gap": 1,
+      "uncertain_reasons": [
+        "low_top_score",
+        "low_score_gap"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "original_heading": "HAADF-STEM characterization",
+      "assigned_section_id": "S03_methods_and_setup",
+      "top_section_id": "S05_discussion_mechanism",
+      "top_score": 3,
+      "second_score": 2,
+      "score_gap": 1,
+      "uncertain_reasons": [
+        "low_top_score",
+        "low_score_gap"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "original_heading": "TOF-SIMS measurement",
+      "assigned_section_id": "S03_methods_and_setup",
+      "top_section_id": "S03_methods_and_setup",
+      "top_score": 2,
+      "second_score": 1,
+      "score_gap": 1,
+      "uncertain_reasons": [
+        "low_top_score",
+        "low_score_gap"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    }
+  ],
+  "uncertain_items": [
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "original_heading": "Catalysts design strategy",
+      "assigned_section_id": "S03_methods_and_setup",
+      "top_section_id": "S04_results",
+      "top_score": 4,
+      "second_score": 3,
+      "score_gap": 1,
+      "uncertain_reasons": [
+        "low_score_gap"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "original_heading": "Discussion",
+      "assigned_section_id": "S03_methods_and_setup",
+      "top_section_id": "S05_discussion_mechanism",
+      "top_score": 4,
+      "second_score": 3,
+      "score_gap": 1,
+      "uncertain_reasons": [
+        "low_score_gap"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "original_heading": "Synthesis of NiCo–LDH",
+      "assigned_section_id": "S03_methods_and_setup",
+      "top_section_id": "S03_methods_and_setup",
+      "top_score": 3,
+      "second_score": 1,
+      "score_gap": 2,
+      "uncertain_reasons": [
+        "low_top_score"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "original_heading": "Synthesis of NiCoP",
+      "assigned_section_id": "S03_methods_and_setup",
+      "top_section_id": "S03_methods_and_setup",
+      "top_score": 2,
+      "second_score": 1,
+      "score_gap": 1,
+      "uncertain_reasons": [
+        "low_top_score",
+        "low_score_gap"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "original_heading": "Synthesis of NiCoP– $\\mathbf { { C r } _ { 2 } 0 } _ { 3 }$",
+      "assigned_section_id": "S03_methods_and_setup",
+      "top_section_id": "S03_methods_and_setup",
+      "top_score": 2,
+      "second_score": 1,
+      "score_gap": 1,
+      "uncertain_reasons": [
+        "low_top_score",
+        "low_score_gap"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "original_heading": "Synthesis of NiCoFeP",
+      "assigned_section_id": "S03_methods_and_setup",
+      "top_section_id": "S03_methods_and_setup",
+      "top_score": 3,
+      "second_score": 1,
+      "score_gap": 2,
+      "uncertain_reasons": [
+        "low_top_score"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "original_heading": "Synthesis of NiFeP",
+      "assigned_section_id": "S03_methods_and_setup",
+      "top_section_id": "S03_methods_and_setup",
+      "top_score": 3,
+      "second_score": 0,
+      "score_gap": 3,
+      "uncertain_reasons": [
+        "low_top_score"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "original_heading": "Synthesis of Ni $/ \\mathbf { N i O } / \\mathbf { C r } _ { 2 } \\mathbf { O } _ { 3 }$",
+      "assigned_section_id": "S03_methods_and_setup",
+      "top_section_id": "S03_methods_and_setup",
+      "top_score": 2,
+      "second_score": 1,
+      "score_gap": 1,
+      "uncertain_reasons": [
+        "low_top_score",
+        "low_score_gap"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "original_heading": "AEM electrolyser measurement",
+      "assigned_section_id": "S03_methods_and_setup",
+      "top_section_id": "S04_results",
+      "top_score": 3,
+      "second_score": 2,
+      "score_gap": 1,
+      "uncertain_reasons": [
+        "low_top_score",
+        "low_score_gap"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "original_heading": "Operando Raman characterization",
+      "assigned_section_id": "S03_methods_and_setup",
+      "top_section_id": "S05_discussion_mechanism",
+      "top_score": 4,
+      "second_score": 3,
+      "score_gap": 1,
+      "uncertain_reasons": [
+        "low_score_gap"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "original_heading": "Operando ATR-SEIRAS characterization",
+      "assigned_section_id": "S03_methods_and_setup",
+      "top_section_id": "S03_methods_and_setup",
+      "top_score": 3,
+      "second_score": 2,
+      "score_gap": 1,
+      "uncertain_reasons": [
+        "low_top_score",
+        "low_score_gap"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "original_heading": "HAADF-STEM characterization",
+      "assigned_section_id": "S03_methods_and_setup",
+      "top_section_id": "S05_discussion_mechanism",
+      "top_score": 3,
+      "second_score": 2,
+      "score_gap": 1,
+      "uncertain_reasons": [
+        "low_top_score",
+        "low_score_gap"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "original_heading": "TOF-SIMS measurement",
+      "assigned_section_id": "S03_methods_and_setup",
+      "top_section_id": "S03_methods_and_setup",
+      "top_score": 2,
+      "second_score": 1,
+      "score_gap": 1,
+      "uncertain_reasons": [
+        "low_top_score",
+        "low_score_gap"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    }
+  ]
+}

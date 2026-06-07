@@ -1,0 +1,8 @@
+---
+paper_id: "2025_sha_10000h_stable_intermittent_alkaline_seawater_electrolysi_333f5c"
+section_id: "S03_methods_and_setup"
+paragraph_id: "S03-P016"
+evidence_id: "EV-sha2025-333f5c-S03-P016"
+chunk_index: 0
+---
+All the spin polarized calculations were performed in the framework of the density functional theory (DFT) as implemented in the Vienna ab initio simulation package (VASP)26,27. The nuclei–core electron interactions were treated by the projector augmented wave potentials, and the exchange-correlation interactions were described by the Perdew–Burke–Ernzerhof functional28,29. In the structure optimization of NiCoP– $\mathbf { C r } _ { 2 } \mathbf { O } _ { 3 }$ , the plane-wave basis set with the energy cutoff at 400 eV was employed, and the Monkhorst–Pack k-point samplings were set as $3 \times 3 \times 3 .$ . The model consisted of four layers with a $3 \times 3 \times 1$ k-point grid and a 18 Å vacuum layer. To correct for the on-site Coulomb interaction of the 3d orbitals, the U-values for the transition metals Ni, Cr and Co were chosen as 6.4, 3.3 and 3.5, respectively. The calculation of oxygen migration procedure is based on the method of climbing image nudged elastic band (CI-NEB)30,31. The Perdew–Burke–Ernzerhof form of the generalized gradient approximation is chosen as the exchange correlation functionals32. The energy cut-off was 500 eV. The $5 \times 2 \times 1$ and $5 \times 4 \times 1 \mathrm { k }$ -points were used for amorphous $\mathsf { C o P O _ { 4 } / C o O }$ and NiCoP/ CoO, respectively. All interface structures were relaxed with energy and force relaxation criteria of $1 0 ^ { - 5 }$ eV and $0 . 0 2 \mathrm { e V } \mathring { \mathbf { A } } ^ { - 1 }$ .

@@ -214,4 +214,11 @@ AutoHySeeker/OpenViking/openviking/bin/
 AutoHySeeker/OpenViking/openviking/storage/vectordb/
 AutoHySeeker/OpenViking/.local_workspace/
 AutoHySeeker/OpenViking/default/
+AutoHySeeker/OpenViking/vectordb/
+AutoHySeeker/OpenViking/viking/
+AutoHySeeker/OpenViking/.agfs/
+AutoHySeeker/data/openviking/
+
+# ── OpenViking ov_index chunk files (auto-generated, too long for Windows paths) ──
+AutoHySeeker/LiteratureClean/*/ov_index/sections/*/*.chunk.md
 

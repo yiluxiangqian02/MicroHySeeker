@@ -1,0 +1,8 @@
+---
+paper_id: "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb"
+section_id: "S02_introduction"
+paragraph_id: "S02-P004"
+evidence_id: "EV-a2023-86a3bb-S02-P004"
+chunk_index: 0
+---
+During the operation time, the oxygen evolution reaction (OER) electrocatalysts (anodes) are highly oxidized, and the hydrogen evolution reaction (HER) electrocatalysts (cathodes) are in their reduced states. Given that the anode and cathode associated with each bipolar plate (BP) are electrically connected through the metallic structure of the BP and ionically connected through the electrolyte in the manifold, it is a closed circuit between the anode and cathode on either side of each BP. Therefore, during the shutdown time, due to the lack of sufficient RES, the BP acts as a charged battery whose electromotive force (emf) equals the potential difference between the associated anode and cathode. Accordingly, the reverse current flows in the closed circuit between the anode and the cathode of each BP until the emf reaches zero. Thus, reverse redox reactions occur on the electrocatalysts on both sides of each bipolar plate; the anode is reduced, and the cathode is oxidized [26, 27]. Repeated oxidation/reduction cycles stimulate the degradation of the electrocatalysts [24-30]. The performance degradation of electrocatalysts could be due to the partial detachment of the active material from the substrate [30]. Therefore, the development of electrocatalysts that have the ability of self-healing (self-repairing) is a promising approach to improve their robustness under dynamic conditions [34, 35].

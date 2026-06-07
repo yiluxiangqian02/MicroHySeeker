@@ -1,0 +1,8 @@
+---
+paper_id: "2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7"
+section_id: "S03_methods_and_setup"
+paragraph_id: "S03-P020"
+evidence_id: "EV-wang2025-0b96f7-S03-P020"
+chunk_index: 0
+---
+The X-ray diffraction (XRD) was collected via a Rigaku Smartlab X-ray diffractometer equipped with a HyPix-3000 high energy resolution 2D multidimensional semi-conductor detector. The electrodes were placed on the sample holder directly. The XRD measurements were performed by setting the same Rigaku SmartLab diffractometer to Bragg-Brentano mode at room temperature. High resolution transmission electron microscopy (HR-TEM) measurements were conducted using a $2 0 0 \kappa \up$ FEI monochromated F20 UT Tecnai. The surface compositions of sample were investigated by X-ray photoelectron spectroscopy (XPS, Kratos Axis Ultra DLD) at takeoff angles of $0 ^ { \circ }$ and $6 0 ^ { \circ }$ relative to the surface normal. The measurements were carried out under room temperature and ultrahigh vacuum of $7 . 5 \times 1 0 ^ { - 9 }$ Torr. A monochromatic Al K?? source $( \mathsf { h } \mathsf { v } = 7 4 8 6 . 6$ eV) was used to excite the core level electrons of the material. Spectral analysis was conducted using CasaXPS analysis software. Raman spectra were collected using a confocal microscope (Horiba LabRAM HR800) utilizing a $5 0 \times$ micro-objective. A $5 3 2 ~ \mathsf { n m }$ laser was used for excitation with an average excitation power of $6 \mathsf { m } \mathsf { W }$ at the sample position. Spectra were resolved using a 1800 line grating and detected using a 1024 pixel line detector. Spectral windows of $4 0 0 { - } 5 0 0 ~ \mathsf { c m } ^ { - 1 }$ were recorded in sequence and

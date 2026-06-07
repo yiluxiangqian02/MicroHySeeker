@@ -1,0 +1,23 @@
+{
+  "status": "extracted",
+  "table_count": 1,
+  "tables": [
+    {
+      "table_id": "TAB001",
+      "table_number": "1",
+      "title": "| Overpotential and degradation rate of tested samples.",
+      "caption": "TABLE 1 | Overpotential and degradation rate of tested samples.",
+      "evidence_id": "EV-center2025-2782d6-TAB001",
+      "table_dir": "tables/TAB001/",
+      "markdown_path": "tables/TAB001/table.md",
+      "caption_path": "tables/TAB001/caption.md",
+      "clean_image_paths": [
+        "tables/TAB001/image_001.jpg"
+      ],
+      "raw_images": [
+        "images/282147153b8bebe55743c79b9dfb85d214c805431042ac01473a3abdb7fdf3a0.jpg"
+      ],
+      "has_html": true
+    }
+  ]
+}

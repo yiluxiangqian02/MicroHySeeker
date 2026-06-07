@@ -1,0 +1,3 @@
+# Caption
+
+FIGURE 4 | Metal ion concentration in testing solution, elemental composition and electrode cross-section elemental distribution in different degradation stages. (a) Recorded appearance images and corresponding elemental concentration in working solution at different stages acquired from MS-ICP. Curve-fitted XPS results of (b) Ni 2p and (c) Ru 3p in precipitates for 10 000-, 20 000-, and 60 000-cycle sample. (d) The atomic percentage of precipitates at different stages acquired from XPS. (e) The atomic percentage within $5\mu \mathrm{m}$ of the electrode surface acquired from EDS. (f) The cross-section EDS results at different stages.

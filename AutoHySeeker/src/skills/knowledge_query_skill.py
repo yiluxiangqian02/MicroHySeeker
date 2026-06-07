@@ -7,7 +7,7 @@ from typing import Any
 
 from src.common.config import get_knowledge_config
 from src.knowledge.schema import KnowledgePartition
-from src.knowledge.viking_client import OpenVikingClient
+from src.knowledge.viking_client import OpenVikingClient, get_shared_openviking_client
 from src.skills.base import BaseSkill, SkillResult
 
 
@@ -23,7 +23,7 @@ class KnowledgeQuerySkill(BaseSkill):
         workspace_path = config.get("workspace_path")
         self._default_top_k = int(config.get("default_top_k", 5))
         self._read_level = str(config.get("read_level", "overview"))
-        self._client = client or OpenVikingClient(workspace_path=workspace_path)
+        self._client = client or get_shared_openviking_client(workspace_path=workspace_path)
 
     async def execute(self, **kwargs: Any) -> SkillResult:
         action = kwargs.get("action", "search")

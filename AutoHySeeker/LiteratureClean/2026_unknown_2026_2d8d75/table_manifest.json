@@ -1,0 +1,53 @@
+{
+  "status": "extracted",
+  "table_count": 3,
+  "tables": [
+    {
+      "table_id": "TAB001",
+      "table_number": "1",
+      "title": "Table 1",
+      "caption": "",
+      "evidence_id": "EV-unknown2026-2d8d75-TAB001",
+      "table_dir": "tables/TAB001/",
+      "markdown_path": "tables/TAB001/table.md",
+      "caption_path": "tables/TAB001/caption.md",
+      "clean_image_paths": [
+        "tables/TAB001/image_001.jpg"
+      ],
+      "raw_images": [
+        "images/5596ae359b4e192bab4226f033b4673def2904bc8b65bf08bed179d259031576.jpg"
+      ],
+      "has_html": true
+    },
+    {
+      "table_id": "TAB002",
+      "table_number": "2",
+      "title": "Table 2",
+      "caption": "",
+      "evidence_id": "EV-unknown2026-2d8d75-TAB002",
+      "table_dir": "tables/TAB002/",
+      "markdown_path": "tables/TAB002/table.md",
+      "caption_path": "tables/TAB002/caption.md",
+      "clean_image_paths": [
+        "tables/TAB002/image_001.jpg"
+      ],
+      "raw_images": [
+        "images/"
+      ],
+      "has_html": false
+    },
+    {
+      "table_id": "TAB003",
+      "table_number": "3",
+      "title": "",
+      "caption": "Table 3",
+      "evidence_id": "EV-unknown2026-2d8d75-TAB003",
+      "table_dir": "tables/TAB003/",
+      "markdown_path": "tables/TAB003/table.md",
+      "caption_path": "tables/TAB003/caption.md",
+      "clean_image_paths": [],
+      "raw_images": [],
+      "has_html": true
+    }
+  ]
+}

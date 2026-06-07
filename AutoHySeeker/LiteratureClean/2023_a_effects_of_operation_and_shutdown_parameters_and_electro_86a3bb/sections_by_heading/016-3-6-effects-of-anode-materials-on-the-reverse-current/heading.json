@@ -1,0 +1,43 @@
+{
+  "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+  "heading_uid": "HRAW-020-22111ab3",
+  "heading_dirname": "016-3-6-effects-of-anode-materials-on-the-reverse-current",
+  "heading_text": "3.6. Effects of anode materials on the reverse current phenomenon",
+  "heading_level": 1,
+  "doc_heading_order": 20,
+  "display_order": 16,
+  "is_title_page_heading": false,
+  "page_index": null,
+  "block_order": 1,
+  "paragraph_count": 6,
+  "paragraph_ids": [
+    "S03-P029",
+    "S03-P030",
+    "S03-P031",
+    "S03-P032",
+    "S03-P033",
+    "S03-P034"
+  ],
+  "paragraph_uids": [
+    "PRAW-000044",
+    "PRAW-000045",
+    "PRAW-000046",
+    "PRAW-000047",
+    "PRAW-000048",
+    "PRAW-000049"
+  ],
+  "paragraph_paths": [
+    "paragraphs/PRAW-000044.md",
+    "paragraphs/PRAW-000045.md",
+    "paragraphs/PRAW-000046.md",
+    "paragraphs/PRAW-000047.md",
+    "paragraphs/PRAW-000048.md",
+    "paragraphs/PRAW-000049.md"
+  ],
+  "linked_figures": [
+    "FIG006",
+    "FIG007",
+    "FIG008"
+  ],
+  "linked_tables": []
+}

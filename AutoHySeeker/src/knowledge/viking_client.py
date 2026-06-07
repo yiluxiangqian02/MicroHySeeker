@@ -24,6 +24,10 @@ _DEFAULT_WORKSPACE = str(Path(__file__).resolve().parents[2] / "OpenViking")
 _DEFAULT_OPENVIKING_SRC = Path(__file__).resolve().parents[2] / "OpenViking"
 _DEFAULT_PYAGFS_SRC = _DEFAULT_OPENVIKING_SRC / "third_party" / "agfs" / "agfs-sdk" / "python"
 _DEFAULT_OPENVIKING_CONFIG = _DEFAULT_OPENVIKING_SRC / ".local_dev" / "ov.conf"
+_OPENVIKING_MODULE: Any | None = None
+_OPENVIKING_AVAILABLE: bool | None = None
+_OPENVIKING_IMPORT_ERROR: str | None = None
+_SHARED_CLIENT: OpenVikingClient | None = None
 
 
 def _load_openviking_module() -> tuple[Any | None, bool, str | None]:
@@ -56,30 +60,43 @@ def _load_openviking_module() -> tuple[Any | None, bool, str | None]:
     return None, False, initial_error
 
 
-ov, _OPENVIKING_AVAILABLE, _OPENVIKING_IMPORT_ERROR = _load_openviking_module()
+def _get_openviking_module() -> tuple[Any | None, bool, str | None]:
+    """Import OpenViking only when the real backend is explicitly initialized."""
+    global _OPENVIKING_MODULE, _OPENVIKING_AVAILABLE, _OPENVIKING_IMPORT_ERROR
+    if _OPENVIKING_AVAILABLE is None:
+        _OPENVIKING_MODULE, _OPENVIKING_AVAILABLE, _OPENVIKING_IMPORT_ERROR = (
+            _load_openviking_module()
+        )
+    return _OPENVIKING_MODULE, bool(_OPENVIKING_AVAILABLE), _OPENVIKING_IMPORT_ERROR
 
 
 class OpenVikingClient:
     """OpenViking facade with partition-level helpers."""
 
-    def __init__(self, workspace_path: str | None = None) -> None:
+    def __init__(self, workspace_path: str | None = None, auto_initialize: bool = False) -> None:
         self._workspace = workspace_path or os.getenv("VIKING_WORKSPACE", _DEFAULT_WORKSPACE)
+        self._auto_initialize = auto_initialize
         self._client: Any = None
         self._available = False
-        self._init_error: str | None = None
+        self._init_error: str | None = "OpenViking not initialized"
         self._fallback_store: dict[str, list[dict[str, Any]]] = {
             partition.value: [] for partition in KnowledgePartition
         }
-        self.initialize()
+        if auto_initialize:
+            self.initialize()
 
     def initialize(self) -> bool:
         """Initialize OpenViking SDK; fallback to in-memory mode when unavailable."""
-        if not _OPENVIKING_AVAILABLE:
+        if self._available and self._client is not None:
+            return True
+
+        ov, openviking_available, openviking_import_error = _get_openviking_module()
+        if not openviking_available or ov is None:
             self._available = False
-            self._init_error = _OPENVIKING_IMPORT_ERROR
+            self._init_error = openviking_import_error
             logger.info(
                 "OpenViking SDK unavailable, using fallback store (%s)",
-                _OPENVIKING_IMPORT_ERROR or "import failed",
+                openviking_import_error or "import failed",
             )
             return False
 
@@ -109,12 +126,19 @@ class OpenVikingClient:
 
     @property
     def availability_reason(self) -> str | None:
-        return None if self._available else (self._init_error or _OPENVIKING_IMPORT_ERROR)
+        return None if self._available else self._init_error
 
     def get_partition_uri(self, partition: KnowledgePartition | str) -> str:
         """Return viking URI for a partition."""
         partition_enum = self._to_partition(partition)
         return PARTITION_URIS[partition_enum]
+
+    def _ensure_initialized(self) -> bool:
+        if self._available and self._client is not None:
+            return True
+        if self._auto_initialize:
+            return self.initialize()
+        return False
 
     def write_json(
         self,
@@ -126,6 +150,7 @@ class OpenVikingClient:
         partition_enum = self._to_partition(partition)
         name = resource_name or f"{partition_enum.value}_{uuid4().hex[:8]}.json"
         uri = f"{self.get_partition_uri(partition_enum)}{name}"
+        self._ensure_initialized()
 
         if not self._available or self._client is None:
             self._fallback_store[partition_enum.value].append(
@@ -192,9 +217,24 @@ class OpenVikingClient:
         if partition is not None:
             target_partition = self._to_partition(partition)
             target_uri = self.get_partition_uri(target_partition)
+        self._ensure_initialized()
 
         if not self._available or self._client is None:
-            return self._fallback_search(query=query, partition=target_partition, top_k=top_k)
+            fallback_hits = self._fallback_search(
+                query=query,
+                partition=target_partition,
+                top_k=top_k,
+            )
+            if fallback_hits:
+                return fallback_hits
+            workspace_hits = self._workspace_search(
+                query=query,
+                partition=target_partition,
+                top_k=top_k,
+            )
+            if workspace_hits:
+                return workspace_hits
+            return []
 
         try:
             result = self._client.find(query, target_uri=target_uri, limit=top_k)
@@ -216,6 +256,7 @@ class OpenVikingClient:
 
         level: "abstract" | "overview"
         """
+        self._ensure_initialized()
         if not self._available or self._client is None:
             for records in self._fallback_store.values():
                 for item in records:
@@ -392,3 +433,28 @@ def _to_plain_dict(value: Any) -> dict[str, Any]:
         if attr_value is not None:
             result[attr] = attr_value
     return result
+
+
+def get_shared_openviking_client(
+    workspace_path: str | None = None,
+    *,
+    initialize: bool = False,
+) -> OpenVikingClient:
+    """Return the process-wide OpenViking client used by AHS services."""
+    global _SHARED_CLIENT
+    if _SHARED_CLIENT is None:
+        _SHARED_CLIENT = OpenVikingClient(
+            workspace_path=workspace_path,
+            auto_initialize=False,
+        )
+    if initialize:
+        _SHARED_CLIENT.initialize()
+    return _SHARED_CLIENT
+
+
+def close_shared_openviking_client() -> None:
+    """Close the process-wide OpenViking client if it was created."""
+    global _SHARED_CLIENT
+    if _SHARED_CLIENT is not None:
+        _SHARED_CLIENT.close()
+        _SHARED_CLIENT = None

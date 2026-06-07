@@ -1,0 +1,27 @@
+{
+  "paper_id": "2026_unknown_2026_2d8d75",
+  "heading_uid": "HRAW-026-24c51e8a",
+  "heading_dirname": "024-2-6",
+  "heading_text": "2.6 实验手段",
+  "heading_level": 1,
+  "doc_heading_order": 26,
+  "display_order": 24,
+  "is_title_page_heading": false,
+  "page_index": null,
+  "block_order": 1,
+  "paragraph_count": 2,
+  "paragraph_ids": [
+    "S05-P016",
+    "S05-P017"
+  ],
+  "paragraph_uids": [
+    "PRAW-000067",
+    "PRAW-000068"
+  ],
+  "paragraph_paths": [
+    "paragraphs/PRAW-000067.md",
+    "paragraphs/PRAW-000068.md"
+  ],
+  "linked_figures": [],
+  "linked_tables": []
+}

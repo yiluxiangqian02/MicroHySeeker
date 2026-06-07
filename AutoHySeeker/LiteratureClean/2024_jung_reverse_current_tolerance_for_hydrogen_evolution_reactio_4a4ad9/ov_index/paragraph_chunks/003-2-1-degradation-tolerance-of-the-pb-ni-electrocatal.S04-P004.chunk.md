@@ -1,0 +1,8 @@
+---
+paper_id: "2024_jung_reverse_current_tolerance_for_hydrogen_evolution_reactio_4a4ad9"
+section_id: "S04_results"
+paragraph_id: "S04-P004"
+evidence_id: "EV-jung2024-4a4ad9-S04-P004"
+chunk_index: 0
+---
+We begin with a discussion on the electrochemical behaviors of bare Ni and the prepared catalysts (Sn/Ni, Zn/Ni, Al/Ni, and Pb/Ni) under repeated dynamic RC cycles in $1\mathrm{M}$ KOH, as previously reported.[7] All the potentials in this paper are discussed in reference to the reversible hydrogen electrode (RHE), calibrated by linear sweep voltammetry (LSV) on a Pt rotating disk electrode (RDE) under a hydrogen-saturated atmosphere, whereby the potential at zero current corresponds to $0\mathrm{V}$ versus RHE (Figure S1, Supporting Information).[10] An RC simulation in a three-electrode system comprises one cycle of LSV for the HER and chronopotentiometry (CP) for the RC flow. The LSV measurement for the HER was conducted from $0.1\mathrm{V}$ to $-0.5\mathrm{V}$ versus RHE. All LSV currents were normalized by geometric area and the potentials were iR-corrected. The RC was simulated by CP at a constant current of $0.1\mathrm{mA}\mathrm{cm}^{-2}$ until the potential of the working electrode reached $1.2\mathrm{V}$ versus RHE, at which point the irreversible formation of Ni hydroxide or oxide phases (such as $\beta \text{-Ni(OH)}_2$ and NiO) occurred sufficiently in $1\mathrm{M}$ KOH.[6-7,11] As shown in Figure 2a, the bare Ni catalyst exhibited a $278~\mathrm{mV}$

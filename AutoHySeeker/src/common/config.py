@@ -107,9 +107,14 @@ def _load_section(filename: str, section: str) -> dict[str, Any]:
 
 def _normalise_openviking_config(raw: dict[str, Any]) -> dict[str, Any]:
     cfg: dict[str, Any] = dict(raw)
+    cfg["enabled"] = bool(cfg.get("enabled", True))
+    cfg["default_top_k"] = int(cfg.get("default_top_k", 5) or 5)
+    cfg["read_level"] = str(cfg.get("read_level", "overview") or "overview")
     workspace_path = cfg.get("workspace_path")
     if isinstance(workspace_path, str) and workspace_path.strip():
         cfg["workspace_path"] = str(_resolve_path(_expand_env(workspace_path), PROJECT_ROOT))
+    else:
+        cfg["workspace_path"] = str((PROJECT_ROOT / "OpenViking").resolve())
     return cfg
 
 

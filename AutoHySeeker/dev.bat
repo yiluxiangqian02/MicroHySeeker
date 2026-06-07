@@ -138,17 +138,5 @@ start "" "http://localhost:%FRONTEND_PORT%"
 echo.
 echo   Backend and Frontend run in their own windows.
 echo   Close those windows to stop services.
-echo   Press any key to close this launcher.
-pause >nul
-echo   AHS Frontend : http://localhost:%FRONTEND_PORT%
-echo   AHS Backend  : http://localhost:%BACKEND_PORT%/docs
-echo   MHS API      : http://localhost:%MHS_PORT%/docs  (auto-started by AHS)
-echo.
-echo   Opening browser...
-start "" "http://localhost:%FRONTEND_PORT%"
-
-echo.
-echo   Backend and Frontend run in their own windows.
-echo   Close those windows to stop services.
 echo   Press any key to close this launcher window.
 pause >nul

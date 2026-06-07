@@ -1,0 +1,29 @@
+{
+  "paper_id": "2026_unknown_2026_2d8d75",
+  "heading_uid": "HRAW-038-66c499f1",
+  "heading_dirname": "036-1",
+  "heading_text": "研究基础 1：电极反应电化学反应动力学优化及失效机理研究",
+  "heading_level": 1,
+  "doc_heading_order": 38,
+  "display_order": 36,
+  "is_title_page_heading": false,
+  "page_index": null,
+  "block_order": 1,
+  "paragraph_count": 2,
+  "paragraph_ids": [
+    "S05-P019",
+    "S05-P020"
+  ],
+  "paragraph_uids": [
+    "PRAW-000070",
+    "PRAW-000071"
+  ],
+  "paragraph_paths": [
+    "paragraphs/PRAW-000070.md",
+    "paragraphs/PRAW-000071.md"
+  ],
+  "linked_figures": [
+    "FIG003"
+  ],
+  "linked_tables": []
+}

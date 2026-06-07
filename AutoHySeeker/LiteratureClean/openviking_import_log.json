@@ -1,0 +1,241 @@
+{
+  "2017_yosuke_relationship_between_the_redox_reactions_on_a_bipolar_pl_eb3da9": {
+    "paper_id": "2017_yosuke_relationship_between_the_redox_reactions_on_a_bipolar_pl_eb3da9",
+    "target": "literature/2017_yosuke_relationship_between_the_redox_reactions_on_a_bipolar_pl_eb3da9",
+    "timestamp": "2026-05-26T19:10:53.945027",
+    "status": "ok",
+    "uri": "viking://resources/literature/2017_yosuke_relationship_between_the_redox_reactions_on_a_bipolar_pl_eb3da9/",
+    "error": null,
+    "stats": {
+      "skipped_empty": 0,
+      "skipped_stub": 2,
+      "indexed": 14
+    }
+  },
+  "2022_kim_cathodic_protection_system_against_a_reverse_current_aft_180201": {
+    "paper_id": "2022_kim_cathodic_protection_system_against_a_reverse_current_aft_180201",
+    "target": "literature/2022_kim_cathodic_protection_system_against_a_reverse_current_aft_180201",
+    "timestamp": "2026-06-04T14:30:23.790812",
+    "status": "ok",
+    "uri": "viking://resources/literature/2022_kim_cathodic_protection_system_against_a_reverse_current_aft_180201/",
+    "error": null,
+    "stats": {
+      "included": 37,
+      "skipped_non_whitelist": 0,
+      "missing_required": 0
+    },
+    "populate": {
+      "written": 30,
+      "skipped": 0
+    }
+  },
+  "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb": {
+    "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+    "target": "literature/2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+    "timestamp": "2026-06-04T14:30:27.701281",
+    "status": "ok",
+    "uri": "viking://resources/literature/2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb/",
+    "error": null,
+    "stats": {
+      "included": 55,
+      "skipped_non_whitelist": 0,
+      "missing_required": 0
+    },
+    "populate": {
+      "written": 46,
+      "skipped": 0
+    }
+  },
+  "2023_uchino_dependence_of_the_reverse_current_on_the_surface_of_elec_38347e": {
+    "paper_id": "2023_uchino_dependence_of_the_reverse_current_on_the_surface_of_elec_38347e",
+    "target": "literature/2023_uchino_dependence_of_the_reverse_current_on_the_surface_of_elec_38347e",
+    "timestamp": "2026-06-04T14:30:33.342376",
+    "status": "ok",
+    "uri": "viking://resources/literature/2023_uchino_dependence_of_the_reverse_current_on_the_surface_of_elec_38347e/",
+    "error": null,
+    "stats": {
+      "included": 45,
+      "skipped_non_whitelist": 0,
+      "missing_required": 0
+    },
+    "populate": {
+      "written": 32,
+      "skipped": 0
+    }
+  },
+  "2025_center_reverse_current_induced_cascade_degradation_in_ni_ru_ele_2782d6": {
+    "paper_id": "2025_center_reverse_current_induced_cascade_degradation_in_ni_ru_ele_2782d6",
+    "target": "literature/2025_center_reverse_current_induced_cascade_degradation_in_ni_ru_ele_2782d6",
+    "timestamp": "2026-06-04T14:30:41.695465",
+    "status": "ok",
+    "uri": "viking://resources/literature/2025_center_reverse_current_induced_cascade_degradation_in_ni_ru_ele_2782d6/",
+    "error": null,
+    "stats": {
+      "included": 45,
+      "skipped_non_whitelist": 0,
+      "missing_required": 0
+    },
+    "populate": {
+      "written": 36,
+      "skipped": 0
+    }
+  },
+  "2025_sha_10000h_stable_intermittent_alkaline_seawater_electrolysi_333f5c": {
+    "paper_id": "2025_sha_10000h_stable_intermittent_alkaline_seawater_electrolysi_333f5c",
+    "target": "literature/2025_sha_10000h_stable_intermittent_alkaline_seawater_electrolysi_333f5c",
+    "timestamp": "2026-06-04T14:30:49.980665",
+    "status": "ok",
+    "uri": "viking://resources/literature/2025_sha_10000h_stable_intermittent_alkaline_seawater_electrolysi_333f5c/",
+    "error": null,
+    "stats": {
+      "included": 75,
+      "skipped_non_whitelist": 0,
+      "missing_required": 0
+    },
+    "populate": {
+      "written": 52,
+      "skipped": 0
+    }
+  },
+  "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e": {
+    "paper_id": "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e",
+    "target": "literature/2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e",
+    "timestamp": "2026-06-04T14:31:00.013021",
+    "status": "ok",
+    "uri": "viking://resources/literature/2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e/",
+    "error": null,
+    "stats": {
+      "included": 37,
+      "skipped_non_whitelist": 0,
+      "missing_required": 0
+    },
+    "populate": {
+      "written": 28,
+      "skipped": 0
+    }
+  },
+  "unknown_year_jung_reverse_current_tolerance_for_hydrogen_evolution_reactio_4a4ad9": {
+    "paper_id": "unknown_year_jung_reverse_current_tolerance_for_hydrogen_evolution_reactio_4a4ad9",
+    "target": "literature/unknown_year_jung_reverse_current_tolerance_for_hydrogen_evolution_reactio_4a4ad9",
+    "timestamp": "2026-05-26T19:16:11.817190",
+    "status": "ok",
+    "uri": "viking://resources/literature/unknown_year_jung_reverse_current_tolerance_for_hydrogen_evolution_reactio_4a4ad9/",
+    "error": null,
+    "stats": {
+      "skipped_empty": 0,
+      "skipped_stub": 2,
+      "indexed": 11
+    }
+  },
+  "unknown_year_peng_strategies_and_countermeasures_against_reverse_current_f_803838": {
+    "paper_id": "unknown_year_peng_strategies_and_countermeasures_against_reverse_current_f_803838",
+    "target": "literature/unknown_year_peng_strategies_and_countermeasures_against_reverse_current_f_803838",
+    "timestamp": "2026-05-26T19:16:56.157165",
+    "status": "ok",
+    "uri": "viking://resources/literature/unknown_year_peng_strategies_and_countermeasures_against_reverse_current_f_803838/",
+    "error": null,
+    "stats": {
+      "skipped_empty": 0,
+      "skipped_stub": 2,
+      "indexed": 15
+    }
+  },
+  "unknown_year_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7": {
+    "paper_id": "unknown_year_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7",
+    "target": "literature/unknown_year_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7",
+    "timestamp": "2026-05-26T19:17:53.093235",
+    "status": "ok",
+    "uri": "viking://resources/literature/unknown_year_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7/",
+    "error": null,
+    "stats": {
+      "skipped_empty": 0,
+      "skipped_stub": 2,
+      "indexed": 11
+    }
+  },
+  "2017_uchino_relationship_between_the_redox_reactions_on_a_bipolar_pl_eb3da9": {
+    "paper_id": "2017_uchino_relationship_between_the_redox_reactions_on_a_bipolar_pl_eb3da9",
+    "target": "literature/2017_uchino_relationship_between_the_redox_reactions_on_a_bipolar_pl_eb3da9",
+    "timestamp": "2026-06-04T14:30:20.578248",
+    "status": "ok",
+    "uri": "viking://resources/literature/2017_uchino_relationship_between_the_redox_reactions_on_a_bipolar_pl_eb3da9/",
+    "error": null,
+    "stats": {
+      "included": 23,
+      "skipped_non_whitelist": 0,
+      "missing_required": 0
+    },
+    "populate": {
+      "written": 16,
+      "skipped": 0
+    }
+  },
+  "2024_jung_reverse_current_tolerance_for_hydrogen_evolution_reactio_4a4ad9": {
+    "paper_id": "2024_jung_reverse_current_tolerance_for_hydrogen_evolution_reactio_4a4ad9",
+    "target": "literature/2024_jung_reverse_current_tolerance_for_hydrogen_evolution_reactio_4a4ad9",
+    "timestamp": "2026-06-04T14:30:38.439592",
+    "status": "ok",
+    "uri": "viking://resources/literature/2024_jung_reverse_current_tolerance_for_hydrogen_evolution_reactio_4a4ad9/",
+    "error": null,
+    "stats": {
+      "included": 34,
+      "skipped_non_whitelist": 0,
+      "missing_required": 0
+    },
+    "populate": {
+      "written": 30,
+      "skipped": 0
+    }
+  },
+  "2025_peng_strategies_and_countermeasures_against_reverse_current_f_803838": {
+    "paper_id": "2025_peng_strategies_and_countermeasures_against_reverse_current_f_803838",
+    "target": "literature/2025_peng_strategies_and_countermeasures_against_reverse_current_f_803838",
+    "timestamp": "2026-06-04T14:30:45.604653",
+    "status": "ok",
+    "uri": "viking://resources/literature/2025_peng_strategies_and_countermeasures_against_reverse_current_f_803838/",
+    "error": null,
+    "stats": {
+      "included": 49,
+      "skipped_non_whitelist": 0,
+      "missing_required": 0
+    },
+    "populate": {
+      "written": 38,
+      "skipped": 0
+    }
+  },
+  "2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7": {
+    "paper_id": "2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7",
+    "target": "literature/2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7",
+    "timestamp": "2026-06-04T14:30:56.247146",
+    "status": "ok",
+    "uri": "viking://resources/literature/2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7/",
+    "error": null,
+    "stats": {
+      "included": 37,
+      "skipped_non_whitelist": 0,
+      "missing_required": 0
+    },
+    "populate": {
+      "written": 30,
+      "skipped": 0
+    }
+  },
+  "2026_unknown_2026_2d8d75": {
+    "paper_id": "2026_unknown_2026_2d8d75",
+    "target": "literature/2026_unknown_2026_2d8d75",
+    "timestamp": "2026-06-04T14:31:03.672833",
+    "status": "ok",
+    "uri": "viking://resources/literature/2026_unknown_2026_2d8d75/",
+    "error": null,
+    "stats": {
+      "included": 96,
+      "skipped_non_whitelist": 0,
+      "missing_required": 0
+    },
+    "populate": {
+      "written": 84,
+      "skipped": 0
+    }
+  }
+}

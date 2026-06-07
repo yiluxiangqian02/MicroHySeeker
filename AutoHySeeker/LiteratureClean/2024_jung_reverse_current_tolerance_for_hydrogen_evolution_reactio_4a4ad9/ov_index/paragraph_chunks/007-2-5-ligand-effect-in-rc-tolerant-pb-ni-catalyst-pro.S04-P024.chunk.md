@@ -1,0 +1,8 @@
+---
+paper_id: "2024_jung_reverse_current_tolerance_for_hydrogen_evolution_reactio_4a4ad9"
+section_id: "S04_results"
+paragraph_id: "S04-P024"
+evidence_id: "EV-jung2024-4a4ad9-S04-P024"
+chunk_index: 0
+---
+on the electronic structure of the electrocatalyst. To verify the correlation between hydrogen-binding affinity with the presence of lead atom and the oxidation of Ni, we further analyzed core-level XPS spectra (Figure 5a,b). Four catalyst samples were prepared: Ni, Pb/Ni, Ni after the 10th RC cycle (RC-Ni), and Pb/Ni after the 10th RC cycle (RC-Pb/Ni), and ex situ XPS spectra for Ni 2p and Pb 4f were obtained. Figure 5a compares the Ni 2p XPS core level signals for Ni, Pb/Ni, RC-Ni, and RC-Pb/Ni, respectively. The Ni spectrum exhibits a high-intensity metallic $\mathrm{Ni}^0$ peak at a binding energy of $852.28\mathrm{eV}$ , whereas the RC-Ni spectrum exhibits a low-intensity metallic $\mathrm{Ni}^0$ peak and a markedly intense $\mathrm{Ni(OH)}_2$ peak at a binding energy of $854.94\mathrm{eV}$ . Similar to the case for Ni, the metallic $\mathrm{Ni}^0$ peak for Pb/Ni occupies the majority of the XPS spectrum. However, the intensity of the metallic $\mathrm{Ni}^0$ peak for RC-Pb/Ni was slightly decreased compared with that for RC-Ni, and the metallic $\mathrm{Ni}^0$ peak exhibited a negative shift $(0.15\mathrm{eV})$ for the RC-Pb/Ni catalyst, implying that the metallic $\mathrm{Ni}^0$ state was partially reduced by the electron transfer from Pb to Ni.[21c,27] Moreover, the Pb 4f XPS spectra (Figure 5b) of RC-Pb/Ni show that the binding energy of metallic $\mathrm{Pb}^0$ positively shifted after the RC flow,

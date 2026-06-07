@@ -1,0 +1,207 @@
+[
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Dependence of the reverse current on the surface of electrode placed on_9ebe8347\\images\\1ebbb8b6f281fa91e07444bf659592bf3f95af7380f801b2f14fcf33605f4b93.jpg",
+    "raw_relative_path": "images/1ebbb8b6f281fa91e07444bf659592bf3f95af7380f801b2f14fcf33605f4b93.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Dependence of the reverse current on the surface of electrode placed on_9ebe8347\\images\\2daf1848426efd22a6fb130bae84ba6fa6ce37e0b4425c7fd43c1f7e5a3d196f.jpg",
+    "raw_relative_path": "images/2daf1848426efd22a6fb130bae84ba6fa6ce37e0b4425c7fd43c1f7e5a3d196f.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Dependence of the reverse current on the surface of electrode placed on_9ebe8347\\images\\2f2d4a39e4d44f4db0129eff687d536632c36fc4af0bce027799eb0e527efe6a.jpg",
+    "raw_relative_path": "images/2f2d4a39e4d44f4db0129eff687d536632c36fc4af0bce027799eb0e527efe6a.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Dependence of the reverse current on the surface of electrode placed on_9ebe8347\\images\\3fe47ebb8d162c766fbdc7bd49fd93f8863b49e82ac60def33a90509a2116f89.jpg",
+    "raw_relative_path": "images/3fe47ebb8d162c766fbdc7bd49fd93f8863b49e82ac60def33a90509a2116f89.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Dependence of the reverse current on the surface of electrode placed on_9ebe8347\\images\\41ff3b0362a085bd164039d0fb3f5d46f8ca2b606e40a0c032cf60de4bbf86ab.jpg",
+    "raw_relative_path": "images/41ff3b0362a085bd164039d0fb3f5d46f8ca2b606e40a0c032cf60de4bbf86ab.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Dependence of the reverse current on the surface of electrode placed on_9ebe8347\\images\\5dc56da6702bade8d70e998b0b96bc871d18237f66d95618806fd2c5548c92b6.jpg",
+    "raw_relative_path": "images/5dc56da6702bade8d70e998b0b96bc871d18237f66d95618806fd2c5548c92b6.jpg",
+    "status": "used",
+    "figure_id": "FIG005",
+    "clean_path": "figures/FIG005/image_001.jpg",
+    "caption_path": "figures/FIG005/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S04-P025",
+      "S04-P029"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Dependence of the reverse current on the surface of electrode placed on_9ebe8347\\images\\5fa0e4b52f919904631b1f5f263696f8eb8d1b47bde5454bf5d577d79accf043.jpg",
+    "raw_relative_path": "images/5fa0e4b52f919904631b1f5f263696f8eb8d1b47bde5454bf5d577d79accf043.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Dependence of the reverse current on the surface of electrode placed on_9ebe8347\\images\\6cf75e5ae6bfd612997bb9d85eecc99650e26d8370a689519aa502ff303203e5.jpg",
+    "raw_relative_path": "images/6cf75e5ae6bfd612997bb9d85eecc99650e26d8370a689519aa502ff303203e5.jpg",
+    "status": "used",
+    "figure_id": "FIG004",
+    "clean_path": "figures/FIG004/image_001.jpg",
+    "caption_path": "figures/FIG004/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S04-P024",
+      "S04-P026"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Dependence of the reverse current on the surface of electrode placed on_9ebe8347\\images\\6e912408cc46beb6850ced521d06d0e3ee431bb9ab9744f61fdf5c8b653cc0d3.jpg",
+    "raw_relative_path": "images/6e912408cc46beb6850ced521d06d0e3ee431bb9ab9744f61fdf5c8b653cc0d3.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Dependence of the reverse current on the surface of electrode placed on_9ebe8347\\images\\83cc1fc991e8fc0116984d7ab5f8317d78f0f135c262f6a6220a73adb250d388.jpg",
+    "raw_relative_path": "images/83cc1fc991e8fc0116984d7ab5f8317d78f0f135c262f6a6220a73adb250d388.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Dependence of the reverse current on the surface of electrode placed on_9ebe8347\\images\\86531b76e0192571e07558d72877144054c357e912a9fc5b53f2a081e31d4e36.jpg",
+    "raw_relative_path": "images/86531b76e0192571e07558d72877144054c357e912a9fc5b53f2a081e31d4e36.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Dependence of the reverse current on the surface of electrode placed on_9ebe8347\\images\\8ab3b9b5022f073d6cc4c3393f33f2e64f56fc5a92c6bdd78c597554f2bb63c4.jpg",
+    "raw_relative_path": "images/8ab3b9b5022f073d6cc4c3393f33f2e64f56fc5a92c6bdd78c597554f2bb63c4.jpg",
+    "status": "used",
+    "figure_id": "FIG008",
+    "clean_path": "figures/FIG008/image_001.jpg",
+    "caption_path": "figures/FIG008/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S05-P003",
+      "S05-P006"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Dependence of the reverse current on the surface of electrode placed on_9ebe8347\\images\\95d5ee75d3cdecb76c9e1193906996f743d01b55ce641eec625ad6725c507e8a.jpg",
+    "raw_relative_path": "images/95d5ee75d3cdecb76c9e1193906996f743d01b55ce641eec625ad6725c507e8a.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Dependence of the reverse current on the surface of electrode placed on_9ebe8347\\images\\967536343cd15ec107484677b0ef3b7ceb3dfb408927a7be12156af2e9700b20.jpg",
+    "raw_relative_path": "images/967536343cd15ec107484677b0ef3b7ceb3dfb408927a7be12156af2e9700b20.jpg",
+    "status": "used",
+    "figure_id": "FIG006",
+    "clean_path": "figures/FIG006/image_001.jpg",
+    "caption_path": "figures/FIG006/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S03-P002",
+      "S04-P031"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Dependence of the reverse current on the surface of electrode placed on_9ebe8347\\images\\b6c7c590a59b0aa23aa8f3c88f3fa381920409d155c7e51d78120d733e5badec.jpg",
+    "raw_relative_path": "images/b6c7c590a59b0aa23aa8f3c88f3fa381920409d155c7e51d78120d733e5badec.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Dependence of the reverse current on the surface of electrode placed on_9ebe8347\\images\\bf6f15fe7cb517e02ac60b9bf1455c95ebd1b24b0d8da74ddcaf8b0b216f0536.jpg",
+    "raw_relative_path": "images/bf6f15fe7cb517e02ac60b9bf1455c95ebd1b24b0d8da74ddcaf8b0b216f0536.jpg",
+    "status": "used",
+    "figure_id": "FIG007",
+    "clean_path": "figures/FIG007/image_001.jpg",
+    "caption_path": "figures/FIG007/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S04-P032",
+      "S04-P033"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Dependence of the reverse current on the surface of electrode placed on_9ebe8347\\images\\c6301ddff14d6d5c9bd079548951ee02c44866a4aff4390865025b0ff065e0da.jpg",
+    "raw_relative_path": "images/c6301ddff14d6d5c9bd079548951ee02c44866a4aff4390865025b0ff065e0da.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Dependence of the reverse current on the surface of electrode placed on_9ebe8347\\images\\de0fe8deaa8f06373bbe9c7e8c373cb97cfbd76182660f035bed0d1320d99aed.jpg",
+    "raw_relative_path": "images/de0fe8deaa8f06373bbe9c7e8c373cb97cfbd76182660f035bed0d1320d99aed.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Dependence of the reverse current on the surface of electrode placed on_9ebe8347\\images\\fb177a845e54aa5afec01a4dc5457ec2754f142c30ff2597639e1db5ab5d224b.jpg",
+    "raw_relative_path": "images/fb177a845e54aa5afec01a4dc5457ec2754f142c30ff2597639e1db5ab5d224b.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  }
+]

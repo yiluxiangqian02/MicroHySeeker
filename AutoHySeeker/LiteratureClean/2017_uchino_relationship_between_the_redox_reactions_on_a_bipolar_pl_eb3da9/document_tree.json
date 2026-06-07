@@ -1,0 +1,173 @@
+{
+  "paper_id": "2017_uchino_relationship_between_the_redox_reactions_on_a_bipolar_pl_eb3da9",
+  "title": "Relationship Between the Redox Reactions on a Bipolar Plate and Reverse Current After Alkaline Water Electrolysis",
+  "heading_count": 7,
+  "paragraph_count": 64,
+  "headings": [
+    {
+      "heading_uid": "HRAW-001-29694c9f",
+      "heading_text": "Relationship Between the Redox Reactions on a Bipolar Plate and Reverse Current After Alkaline Water Electrolysis",
+      "heading_level": 1,
+      "doc_heading_order": 1,
+      "display_order": 1,
+      "page_index": null,
+      "paragraph_count": 5,
+      "paragraph_uids": [
+        "PRAW-000001",
+        "PRAW-000002",
+        "PRAW-000003",
+        "PRAW-000004",
+        "PRAW-000005"
+      ],
+      "macro_tags": [
+        "S00_front_matter",
+        "S01_abstract"
+      ]
+    },
+    {
+      "heading_uid": "HRAW-002-535ffabb",
+      "heading_text": "Introduction",
+      "heading_level": 1,
+      "doc_heading_order": 2,
+      "display_order": 2,
+      "page_index": null,
+      "paragraph_count": 8,
+      "paragraph_uids": [
+        "PRAW-000006",
+        "PRAW-000007",
+        "PRAW-000008",
+        "PRAW-000009",
+        "PRAW-000010",
+        "PRAW-000011",
+        "PRAW-000012",
+        "PRAW-000013"
+      ],
+      "macro_tags": [
+        "S02_introduction"
+      ]
+    },
+    {
+      "heading_uid": "HRAW-004-1b9802d6",
+      "heading_text": "Experiment Method",
+      "heading_level": 1,
+      "doc_heading_order": 4,
+      "display_order": 4,
+      "page_index": null,
+      "paragraph_count": 5,
+      "paragraph_uids": [
+        "PRAW-000014",
+        "PRAW-000015",
+        "PRAW-000016",
+        "PRAW-000017",
+        "PRAW-000018"
+      ],
+      "macro_tags": [
+        "S03_methods_and_setup"
+      ]
+    },
+    {
+      "heading_uid": "HRAW-005-a3784bf2",
+      "heading_text": "Potential Profile Model",
+      "heading_level": 1,
+      "doc_heading_order": 5,
+      "display_order": 5,
+      "page_index": null,
+      "paragraph_count": 10,
+      "paragraph_uids": [
+        "PRAW-000025",
+        "PRAW-000026",
+        "PRAW-000027",
+        "PRAW-000028",
+        "PRAW-000029",
+        "PRAW-000030",
+        "PRAW-000031",
+        "PRAW-000032",
+        "PRAW-000033",
+        "PRAW-000034"
+      ],
+      "macro_tags": [
+        "S01_abstract",
+        "S04_results"
+      ]
+    },
+    {
+      "heading_uid": "HRAW-006-1da05de7",
+      "heading_text": "Equivalent Circuit Model",
+      "heading_level": 1,
+      "doc_heading_order": 6,
+      "display_order": 6,
+      "page_index": null,
+      "paragraph_count": 6,
+      "paragraph_uids": [
+        "PRAW-000019",
+        "PRAW-000020",
+        "PRAW-000021",
+        "PRAW-000022",
+        "PRAW-000023",
+        "PRAW-000024"
+      ],
+      "macro_tags": [
+        "S03_methods_and_setup"
+      ]
+    },
+    {
+      "heading_uid": "HRAW-007-c4104207",
+      "heading_text": "Results and Discussion",
+      "heading_level": 1,
+      "doc_heading_order": 7,
+      "display_order": 7,
+      "page_index": null,
+      "paragraph_count": 26,
+      "paragraph_uids": [
+        "PRAW-000035",
+        "PRAW-000036",
+        "PRAW-000037",
+        "PRAW-000038",
+        "PRAW-000039",
+        "PRAW-000040",
+        "PRAW-000041",
+        "PRAW-000042",
+        "PRAW-000043",
+        "PRAW-000044",
+        "PRAW-000045",
+        "PRAW-000046",
+        "PRAW-000047",
+        "PRAW-000048",
+        "PRAW-000049",
+        "PRAW-000050",
+        "PRAW-000051",
+        "PRAW-000052",
+        "PRAW-000053",
+        "PRAW-000054",
+        "PRAW-000055",
+        "PRAW-000056",
+        "PRAW-000057",
+        "PRAW-000058",
+        "PRAW-000059",
+        "PRAW-000060"
+      ],
+      "macro_tags": [
+        "S04_results"
+      ]
+    },
+    {
+      "heading_uid": "HRAW-008-46e6721c",
+      "heading_text": "Conclusions",
+      "heading_level": 1,
+      "doc_heading_order": 8,
+      "display_order": 8,
+      "page_index": null,
+      "paragraph_count": 4,
+      "paragraph_uids": [
+        "PRAW-000061",
+        "PRAW-000062",
+        "PRAW-000064",
+        "PRAW-000063"
+      ],
+      "macro_tags": [
+        "S06_conclusion",
+        "S07_back_matter_or_supplementary"
+      ]
+    }
+  ]
+}

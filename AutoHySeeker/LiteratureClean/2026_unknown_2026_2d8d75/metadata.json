@@ -1,0 +1,43 @@
+{
+  "paper_id": "2026_unknown_2026_2d8d75",
+  "title": "报告正文（2026 版）",
+  "doi": "",
+  "doi_url": "",
+  "year": "2026",
+  "published_online": "",
+  "first_author": "unknown",
+  "authors_raw": "发展抗波动性、安全、稳定、高效运行的阴极电极是行业发展的重点需求。经长期探索，产业界和学术界已经清晰地认识到，波动性载荷对电极稳定性的影响[8, 9]。当 ALK 反应停止时，阴极和阳极通过双极板发生电连接，用于循环电解质溶液的歧管诱发额外离子通路，形成了反向电流，进而导致了析氢（HER）阴极的氧化（图 1-1），且波动工况会加速这种电解衰减过程[10-12]。开发极化整流设备可以在一定程度上缓解反向电流的影响，但会带来额外的运行成本[13, 14]。且当前研究多聚焦于技术层面，鲜有深入剖析电极材料的原位演化过程，系统性地探讨电极失效机制与抗波动机制的构建。因此，基于启停工况，探究电极的失效机制、构建耐 RC调控策略并开发高稳定电极，成为行业发展的前沿课题。",
+  "journal": "",
+  "document_type": "research_article",
+  "raw_paths": {
+    "mineru_output_dir": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\76ec4365-1c6d-4a2f-ae16-12acf100a2df_origin",
+    "full_md": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\76ec4365-1c6d-4a2f-ae16-12acf100a2df_origin\\full.md",
+    "content_list_v2_json": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\76ec4365-1c6d-4a2f-ae16-12acf100a2df_origin\\content_list_v2.json",
+    "layout_json": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\76ec4365-1c6d-4a2f-ae16-12acf100a2df_origin\\layout.json",
+    "origin_pdf": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\76ec4365-1c6d-4a2f-ae16-12acf100a2df_origin\\2f97a7fe-973c-48f7-8d5d-b07446f21e68_origin.pdf",
+    "images_dir": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\76ec4365-1c6d-4a2f-ae16-12acf100a2df_origin\\images"
+  },
+  "paper_short": "unknown2026-2d8d75",
+  "clean_paths": {
+    "clean_dir": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\LiteratureClean\\2026_unknown_2026_2d8d75",
+    "full_clean": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\LiteratureClean\\2026_unknown_2026_2d8d75\\full_clean.md",
+    "figures_dir": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\LiteratureClean\\2026_unknown_2026_2d8d75\\figures",
+    "tables_dir": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\LiteratureClean\\2026_unknown_2026_2d8d75\\tables",
+    "sections_by_heading_dir": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\LiteratureClean\\2026_unknown_2026_2d8d75\\sections_by_heading"
+  },
+  "processing": {
+    "mode": "single_paper_semi_automatic",
+    "processed_at": "2026-05-30T16:29:47",
+    "script": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\LiteratureClean\\clean_single_mineru_paper.py",
+    "openviking_ingested": false,
+    "batch_import": false,
+    "section_recovery": {
+      "content_list_hints": {
+        "front_count": 0,
+        "abstract_count": 0,
+        "back_count": 0
+      },
+      "layout_json_available": true
+    }
+  }
+}

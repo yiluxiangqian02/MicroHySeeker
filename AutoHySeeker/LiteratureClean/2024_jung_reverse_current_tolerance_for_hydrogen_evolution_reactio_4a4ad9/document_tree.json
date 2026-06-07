@@ -1,0 +1,283 @@
+{
+  "paper_id": "2024_jung_reverse_current_tolerance_for_hydrogen_evolution_reactio_4a4ad9",
+  "title": "Reverse-Current Tolerance for Hydrogen Evolution Reaction Activity of Lead-Decorated Nickel Catalysts in Zero-Gap Alkaline Water Electrolysis Systems",
+  "heading_count": 14,
+  "paragraph_count": 73,
+  "headings": [
+    {
+      "heading_uid": "HRAW-001-32fd2e89",
+      "heading_text": "Reverse-Current Tolerance for Hydrogen Evolution Reaction Activity of Lead-Decorated Nickel Catalysts in Zero-Gap Alkaline Water Electrolysis Systems",
+      "heading_level": 1,
+      "doc_heading_order": 1,
+      "display_order": 1,
+      "page_index": null,
+      "paragraph_count": 2,
+      "paragraph_uids": [
+        "PRAW-000027",
+        "PRAW-000028"
+      ],
+      "macro_tags": [
+        "S00_front_matter",
+        "S01_abstract"
+      ]
+    },
+    {
+      "heading_uid": "HRAW-002-2812cee1",
+      "heading_text": "1. Introduction",
+      "heading_level": 1,
+      "doc_heading_order": 2,
+      "display_order": 2,
+      "page_index": null,
+      "paragraph_count": 13,
+      "paragraph_uids": [
+        "PRAW-000002",
+        "PRAW-000003",
+        "PRAW-000007",
+        "PRAW-000001",
+        "PRAW-000004",
+        "PRAW-000005",
+        "PRAW-000006",
+        "PRAW-000008",
+        "PRAW-000009",
+        "PRAW-000010",
+        "PRAW-000011",
+        "PRAW-000012",
+        "PRAW-000013"
+      ],
+      "macro_tags": [
+        "S00_front_matter",
+        "S02_introduction"
+      ]
+    },
+    {
+      "heading_uid": "HRAW-004-e33c4ae7",
+      "heading_text": "2.1. Degradation Tolerance of the Pb/Ni Electrocatalyst Under Reverse-Current Conditions",
+      "heading_level": 1,
+      "doc_heading_order": 4,
+      "display_order": 4,
+      "page_index": null,
+      "paragraph_count": 15,
+      "paragraph_uids": [
+        "PRAW-000029",
+        "PRAW-000030",
+        "PRAW-000031",
+        "PRAW-000032",
+        "PRAW-000033",
+        "PRAW-000034",
+        "PRAW-000035",
+        "PRAW-000036",
+        "PRAW-000037",
+        "PRAW-000038",
+        "PRAW-000042",
+        "PRAW-000043",
+        "PRAW-000039",
+        "PRAW-000040",
+        "PRAW-000041"
+      ],
+      "macro_tags": [
+        "S04_results",
+        "S07_back_matter_or_supplementary"
+      ]
+    },
+    {
+      "heading_uid": "HRAW-005-9bca19ab",
+      "heading_text": "2.2. Origin of the Reverse-Current Tolerance and Improved Catalytic Activity of the Pb/Ni Catalyst",
+      "heading_level": 1,
+      "doc_heading_order": 5,
+      "display_order": 5,
+      "page_index": null,
+      "paragraph_count": 10,
+      "paragraph_uids": [
+        "PRAW-000044",
+        "PRAW-000045",
+        "PRAW-000046",
+        "PRAW-000047",
+        "PRAW-000048",
+        "PRAW-000049",
+        "PRAW-000050",
+        "PRAW-000051",
+        "PRAW-000052",
+        "PRAW-000053"
+      ],
+      "macro_tags": [
+        "S04_results"
+      ]
+    },
+    {
+      "heading_uid": "HRAW-006-4a09d2a8",
+      "heading_text": "2.3. Material Characterization of RC Tolerant Pb/Ni Catalyst",
+      "heading_level": 1,
+      "doc_heading_order": 6,
+      "display_order": 6,
+      "page_index": null,
+      "paragraph_count": 4,
+      "paragraph_uids": [
+        "PRAW-000014",
+        "PRAW-000015",
+        "PRAW-000016",
+        "PRAW-000017"
+      ],
+      "macro_tags": [
+        "S07_back_matter_or_supplementary"
+      ]
+    },
+    {
+      "heading_uid": "HRAW-007-61083a01",
+      "heading_text": "2.4. Water Activation Effect of RC Tolerant Pb/Ni Catalyst: Improving Water-Dissociation Ability",
+      "heading_level": 1,
+      "doc_heading_order": 7,
+      "display_order": 7,
+      "page_index": null,
+      "paragraph_count": 4,
+      "paragraph_uids": [
+        "PRAW-000018",
+        "PRAW-000020",
+        "PRAW-000021",
+        "PRAW-000019"
+      ],
+      "macro_tags": [
+        "S03_methods_and_setup",
+        "S07_back_matter_or_supplementary"
+      ]
+    },
+    {
+      "heading_uid": "HRAW-008-42cb5612",
+      "heading_text": "2.5. Ligand Effect in RC Tolerant Pb/Ni Catalyst: Promoting Proton Desorption",
+      "heading_level": 1,
+      "doc_heading_order": 8,
+      "display_order": 8,
+      "page_index": null,
+      "paragraph_count": 10,
+      "paragraph_uids": [
+        "PRAW-000054",
+        "PRAW-000055",
+        "PRAW-000056",
+        "PRAW-000057",
+        "PRAW-000060",
+        "PRAW-000061",
+        "PRAW-000063",
+        "PRAW-000058",
+        "PRAW-000059",
+        "PRAW-000062"
+      ],
+      "macro_tags": [
+        "S04_results",
+        "S07_back_matter_or_supplementary"
+      ]
+    },
+    {
+      "heading_uid": "HRAW-009-d91d28c7",
+      "heading_text": "2.6. Reverse-Current Tolerance of the Pb/Ni Catalyst in an Alkaline Water-Electrolyzer Stack",
+      "heading_level": 1,
+      "doc_heading_order": 9,
+      "display_order": 9,
+      "page_index": null,
+      "paragraph_count": 4,
+      "paragraph_uids": [
+        "PRAW-000064",
+        "PRAW-000065",
+        "PRAW-000066",
+        "PRAW-000067"
+      ],
+      "macro_tags": [
+        "S05_discussion_mechanism"
+      ]
+    },
+    {
+      "heading_uid": "HRAW-010-38873d6c",
+      "heading_text": "3. Conclusion",
+      "heading_level": 1,
+      "doc_heading_order": 10,
+      "display_order": 10,
+      "page_index": null,
+      "paragraph_count": 2,
+      "paragraph_uids": [
+        "PRAW-000068",
+        "PRAW-000069"
+      ],
+      "macro_tags": [
+        "S06_conclusion"
+      ]
+    },
+    {
+      "heading_uid": "HRAW-011-c05b3bd8",
+      "heading_text": "Supporting Information",
+      "heading_level": 1,
+      "doc_heading_order": 11,
+      "display_order": 11,
+      "page_index": null,
+      "paragraph_count": 1,
+      "paragraph_uids": [
+        "PRAW-000070"
+      ],
+      "macro_tags": [
+        "S07_back_matter_or_supplementary"
+      ]
+    },
+    {
+      "heading_uid": "HRAW-012-15dd5f73",
+      "heading_text": "Acknowledgements",
+      "heading_level": 1,
+      "doc_heading_order": 12,
+      "display_order": 12,
+      "page_index": null,
+      "paragraph_count": 1,
+      "paragraph_uids": [
+        "PRAW-000071"
+      ],
+      "macro_tags": [
+        "S07_back_matter_or_supplementary"
+      ]
+    },
+    {
+      "heading_uid": "HRAW-013-4680942b",
+      "heading_text": "Conflict of Interest",
+      "heading_level": 1,
+      "doc_heading_order": 13,
+      "display_order": 13,
+      "page_index": null,
+      "paragraph_count": 1,
+      "paragraph_uids": [
+        "PRAW-000072"
+      ],
+      "macro_tags": [
+        "S07_back_matter_or_supplementary"
+      ]
+    },
+    {
+      "heading_uid": "HRAW-014-e654ce42",
+      "heading_text": "Data Availability Statement",
+      "heading_level": 1,
+      "doc_heading_order": 14,
+      "display_order": 14,
+      "page_index": null,
+      "paragraph_count": 1,
+      "paragraph_uids": [
+        "PRAW-000073"
+      ],
+      "macro_tags": [
+        "S07_back_matter_or_supplementary"
+      ]
+    },
+    {
+      "heading_uid": "HRAW-015-0f2af617",
+      "heading_text": "Keywords",
+      "heading_level": 1,
+      "doc_heading_order": 15,
+      "display_order": 15,
+      "page_index": null,
+      "paragraph_count": 5,
+      "paragraph_uids": [
+        "PRAW-000022",
+        "PRAW-000023",
+        "PRAW-000024",
+        "PRAW-000025",
+        "PRAW-000026"
+      ],
+      "macro_tags": [
+        "S03_methods_and_setup",
+        "S07_back_matter_or_supplementary"
+      ]
+    }
+  ]
+}

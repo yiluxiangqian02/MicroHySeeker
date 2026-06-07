@@ -1,0 +1,8 @@
+---
+paper_id: "2025_center_reverse_current_induced_cascade_degradation_in_ni_ru_ele_2782d6"
+section_id: "S05_discussion_mechanism"
+paragraph_id: "S05-P011"
+evidence_id: "EV-center2025-2782d6-S05-P011"
+chunk_index: 0
+---
+Figure 5c presents the scheme of the degradation pathway in stages based on the above analysis. In the initial stage, dense Ru pre-deposited on the Ni mesh was dissolved into solution under excessive reverse potential, which led to the exposure of underlying Ni substrate and bulk $\mathrm{HRuO}_5^-$ lost in the solution. (Figures S17 and S19) The above results formed the condition of stage 2, during which the exposed Ni and the comprised the galvanic couple, leading to the simultaneous occurrence of Ni corrosion and Ru deposition. (Figure S20) In stage 2 Ni was corroded into $\mathrm{Ni}^{2+}$ and $\mathrm{HRuO}_5^-$ was redeposited, part of which was deposited back to the electrode surface, thereby sophisticated structures were formed. After a period of cycling, for the high content of $\mathrm{HRuO}_5^-$ were consumed by the Ni corrosion, the galvanic reaction was no longer supported, and the Ru-species continued to be dissolved. As a result, the sophisticated structures formed from galvanic reaction were re-dissolved into solution in stage 3, then reduced into precipitates under the regular potential, which occurred until the Ru layer on surface was totally consumed, leaving the corroded Ni substrate exposed distinctly.

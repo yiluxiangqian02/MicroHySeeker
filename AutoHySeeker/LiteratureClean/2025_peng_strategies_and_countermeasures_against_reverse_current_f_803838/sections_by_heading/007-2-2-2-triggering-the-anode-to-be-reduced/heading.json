@@ -1,0 +1,38 @@
+{
+  "paper_id": "2025_peng_strategies_and_countermeasures_against_reverse_current_f_803838",
+  "heading_uid": "HRAW-007-7c23f509",
+  "heading_dirname": "007-2-2-2-triggering-the-anode-to-be-reduced",
+  "heading_text": "2.2.2. Triggering the Anode to be Reduced",
+  "heading_level": 1,
+  "doc_heading_order": 7,
+  "display_order": 7,
+  "is_title_page_heading": false,
+  "page_index": null,
+  "block_order": 1,
+  "paragraph_count": 5,
+  "paragraph_ids": [
+    "S05-P015",
+    "S05-P016",
+    "S05-P017",
+    "S05-P018",
+    "S05-P019"
+  ],
+  "paragraph_uids": [
+    "PRAW-000052",
+    "PRAW-000053",
+    "PRAW-000054",
+    "PRAW-000055",
+    "PRAW-000056"
+  ],
+  "paragraph_paths": [
+    "paragraphs/PRAW-000052.md",
+    "paragraphs/PRAW-000053.md",
+    "paragraphs/PRAW-000054.md",
+    "paragraphs/PRAW-000055.md",
+    "paragraphs/PRAW-000056.md"
+  ],
+  "linked_figures": [
+    "FIG003"
+  ],
+  "linked_tables": []
+}

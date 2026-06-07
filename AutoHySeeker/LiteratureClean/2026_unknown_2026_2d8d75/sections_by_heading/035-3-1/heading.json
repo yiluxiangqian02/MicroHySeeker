@@ -1,0 +1,27 @@
+{
+  "paper_id": "2026_unknown_2026_2d8d75",
+  "heading_uid": "HRAW-037-c843012d",
+  "heading_dirname": "035-3-1",
+  "heading_text": "3.1 研究基础",
+  "heading_level": 1,
+  "doc_heading_order": 37,
+  "display_order": 35,
+  "is_title_page_heading": false,
+  "page_index": null,
+  "block_order": 1,
+  "paragraph_count": 2,
+  "paragraph_ids": [
+    "S03-P025",
+    "S03-P026"
+  ],
+  "paragraph_uids": [
+    "PRAW-000039",
+    "PRAW-000040"
+  ],
+  "paragraph_paths": [
+    "paragraphs/PRAW-000039.md",
+    "paragraphs/PRAW-000040.md"
+  ],
+  "linked_figures": [],
+  "linked_tables": []
+}

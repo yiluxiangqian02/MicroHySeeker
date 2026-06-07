@@ -1,0 +1,267 @@
+{
+  "paper_id": "2022_kim_cathodic_protection_system_against_a_reverse_current_aft_180201",
+  "title": "Cathodic Protection System against a Reverse-Current after Shutdown in Zero-Gap Alkaline Water Electrolysis",
+  "heading_count": 14,
+  "paragraph_count": 62,
+  "headings": [
+    {
+      "heading_uid": "HRAW-001-b97ba7fd",
+      "heading_text": "Cathodic Protection System against a Reverse-Current after Shutdown in Zero-Gap Alkaline Water Electrolysis",
+      "heading_level": 1,
+      "doc_heading_order": 1,
+      "display_order": 1,
+      "page_index": null,
+      "paragraph_count": 4,
+      "paragraph_uids": [
+        "PRAW-000016",
+        "PRAW-000018",
+        "PRAW-000017",
+        "PRAW-000019"
+      ],
+      "macro_tags": [
+        "S00_front_matter",
+        "S01_abstract"
+      ]
+    },
+    {
+      "heading_uid": "HRAW-002-9ee22efc",
+      "heading_text": "INTRODUCTION",
+      "heading_level": 1,
+      "doc_heading_order": 2,
+      "display_order": 2,
+      "page_index": null,
+      "paragraph_count": 12,
+      "paragraph_uids": [
+        "PRAW-000002",
+        "PRAW-000003",
+        "PRAW-000004",
+        "PRAW-000005",
+        "PRAW-000006",
+        "PRAW-000007",
+        "PRAW-000008",
+        "PRAW-000009",
+        "PRAW-000010",
+        "PRAW-000011",
+        "PRAW-000012",
+        "PRAW-000013"
+      ],
+      "macro_tags": [
+        "S02_introduction"
+      ]
+    },
+    {
+      "heading_uid": "HRAW-004-18e13dda",
+      "heading_text": "Reverse-Current Simulation Model",
+      "heading_level": 1,
+      "doc_heading_order": 4,
+      "display_order": 4,
+      "page_index": null,
+      "paragraph_count": 9,
+      "paragraph_uids": [
+        "PRAW-000020",
+        "PRAW-000021",
+        "PRAW-000022",
+        "PRAW-000023",
+        "PRAW-000024",
+        "PRAW-000025",
+        "PRAW-000026",
+        "PRAW-000027",
+        "PRAW-000028"
+      ],
+      "macro_tags": [
+        "S04_results"
+      ]
+    },
+    {
+      "heading_uid": "HRAW-005-fcbf8fd1",
+      "heading_text": "Mechanism of a Cathodic Protection System against Reverse-Current",
+      "heading_level": 1,
+      "doc_heading_order": 5,
+      "display_order": 5,
+      "page_index": null,
+      "paragraph_count": 20,
+      "paragraph_uids": [
+        "PRAW-000032",
+        "PRAW-000033",
+        "PRAW-000034",
+        "PRAW-000035",
+        "PRAW-000036",
+        "PRAW-000037",
+        "PRAW-000038",
+        "PRAW-000039",
+        "PRAW-000040",
+        "PRAW-000041",
+        "PRAW-000042",
+        "PRAW-000043",
+        "PRAW-000044",
+        "PRAW-000045",
+        "PRAW-000046",
+        "PRAW-000047",
+        "PRAW-000048",
+        "PRAW-000049",
+        "PRAW-000050",
+        "PRAW-000051"
+      ],
+      "macro_tags": [
+        "S05_discussion_mechanism"
+      ]
+    },
+    {
+      "heading_uid": "HRAW-006-65d60afd",
+      "heading_text": "Stability of the Alkaline Water-Electrolyzer Stack under Start-Up/Shutdown Conditions",
+      "heading_level": 1,
+      "doc_heading_order": 6,
+      "display_order": 6,
+      "page_index": null,
+      "paragraph_count": 3,
+      "paragraph_uids": [
+        "PRAW-000029",
+        "PRAW-000030",
+        "PRAW-000031"
+      ],
+      "macro_tags": [
+        "S04_results"
+      ]
+    },
+    {
+      "heading_uid": "HRAW-007-7ae76965",
+      "heading_text": "CONCLUSIONS",
+      "heading_level": 1,
+      "doc_heading_order": 7,
+      "display_order": 7,
+      "page_index": null,
+      "paragraph_count": 1,
+      "paragraph_uids": [
+        "PRAW-000052"
+      ],
+      "macro_tags": [
+        "S06_conclusion"
+      ]
+    },
+    {
+      "heading_uid": "HRAW-009-99323f2c",
+      "heading_text": "Supporting Information",
+      "heading_level": 1,
+      "doc_heading_order": 9,
+      "display_order": 9,
+      "page_index": null,
+      "paragraph_count": 2,
+      "paragraph_uids": [
+        "PRAW-000053",
+        "PRAW-000054"
+      ],
+      "macro_tags": [
+        "S07_back_matter_or_supplementary"
+      ]
+    },
+    {
+      "heading_uid": "HRAW-011-7d4a302d",
+      "heading_text": "Corresponding Author",
+      "heading_level": 1,
+      "doc_heading_order": 11,
+      "display_order": 11,
+      "page_index": null,
+      "paragraph_count": 1,
+      "paragraph_uids": [
+        "PRAW-000055"
+      ],
+      "macro_tags": [
+        "S07_back_matter_or_supplementary"
+      ]
+    },
+    {
+      "heading_uid": "HRAW-012-9d736348",
+      "heading_text": "Authors",
+      "heading_level": 1,
+      "doc_heading_order": 12,
+      "display_order": 12,
+      "page_index": null,
+      "paragraph_count": 1,
+      "paragraph_uids": [
+        "PRAW-000001"
+      ],
+      "macro_tags": [
+        "S00_front_matter"
+      ]
+    },
+    {
+      "heading_uid": "HRAW-013-0204eb85",
+      "heading_text": "Author Contributions",
+      "heading_level": 1,
+      "doc_heading_order": 13,
+      "display_order": 13,
+      "page_index": null,
+      "paragraph_count": 1,
+      "paragraph_uids": [
+        "PRAW-000056"
+      ],
+      "macro_tags": [
+        "S07_back_matter_or_supplementary"
+      ]
+    },
+    {
+      "heading_uid": "HRAW-014-1977ecb6",
+      "heading_text": "Notes",
+      "heading_level": 1,
+      "doc_heading_order": 14,
+      "display_order": 14,
+      "page_index": null,
+      "paragraph_count": 1,
+      "paragraph_uids": [
+        "PRAW-000057"
+      ],
+      "macro_tags": [
+        "S07_back_matter_or_supplementary"
+      ]
+    },
+    {
+      "heading_uid": "HRAW-015-5c51cbbd",
+      "heading_text": "ACKNOWLEDGMENTS",
+      "heading_level": 1,
+      "doc_heading_order": 15,
+      "display_order": 15,
+      "page_index": null,
+      "paragraph_count": 1,
+      "paragraph_uids": [
+        "PRAW-000058"
+      ],
+      "macro_tags": [
+        "S07_back_matter_or_supplementary"
+      ]
+    },
+    {
+      "heading_uid": "HRAW-016-a8e1e012",
+      "heading_text": "REFERENCES",
+      "heading_level": 1,
+      "doc_heading_order": 16,
+      "display_order": 16,
+      "page_index": null,
+      "paragraph_count": 4,
+      "paragraph_uids": [
+        "PRAW-000059",
+        "PRAW-000060",
+        "PRAW-000061",
+        "PRAW-000062"
+      ],
+      "macro_tags": [
+        "S07_back_matter_or_supplementary"
+      ]
+    },
+    {
+      "heading_uid": "HRAW-017-4eab6547",
+      "heading_text": "CAS BIOFINDER HELPS YOU FIND YOUR NEXT BREAKTHROUGH FASTER",
+      "heading_level": 1,
+      "doc_heading_order": 17,
+      "display_order": 17,
+      "page_index": null,
+      "paragraph_count": 2,
+      "paragraph_uids": [
+        "PRAW-000014",
+        "PRAW-000015"
+      ],
+      "macro_tags": [
+        "S03_methods_and_setup"
+      ]
+    }
+  ]
+}

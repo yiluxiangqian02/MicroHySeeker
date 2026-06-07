@@ -1,0 +1,298 @@
+[
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Relationship between the redox reactions on a bipolar plate and reverse_9bed6a7a\\images\\0f2b39f71549e5fac29f9442df778d7bf76d197b4ecdb64ce46fd613ca7cf70e.jpg",
+    "raw_relative_path": "images/0f2b39f71549e5fac29f9442df778d7bf76d197b4ecdb64ce46fd613ca7cf70e.jpg",
+    "status": "used",
+    "figure_id": "FIG007",
+    "clean_path": "figures/FIG007/image_001.jpg",
+    "caption_path": "figures/FIG007/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S04-P021",
+      "S04-P022"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Relationship between the redox reactions on a bipolar plate and reverse_9bed6a7a\\images\\1098f68d9aa68d0ccedb16f3b558940537e836501215ef492f6854284a865a10.jpg",
+    "raw_relative_path": "images/1098f68d9aa68d0ccedb16f3b558940537e836501215ef492f6854284a865a10.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Relationship between the redox reactions on a bipolar plate and reverse_9bed6a7a\\images\\25f444ba8fdfba2190a2d7097a4b0991e1e2eac04e90a058c6c707cd2513e09a.jpg",
+    "raw_relative_path": "images/25f444ba8fdfba2190a2d7097a4b0991e1e2eac04e90a058c6c707cd2513e09a.jpg",
+    "status": "used",
+    "figure_id": "FIG006",
+    "clean_path": "figures/FIG006/image_001.jpg",
+    "caption_path": "figures/FIG006/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S04-P017",
+      "S04-P018"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Relationship between the redox reactions on a bipolar plate and reverse_9bed6a7a\\images\\420669db5648405fbbbf907358a447e2f492589929a2769403bcc4a371e27dd3.jpg",
+    "raw_relative_path": "images/420669db5648405fbbbf907358a447e2f492589929a2769403bcc4a371e27dd3.jpg",
+    "status": "used",
+    "figure_id": "FIG009",
+    "clean_path": "figures/FIG009/image_002.jpg",
+    "caption_path": "figures/FIG009/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S04-P034",
+      "S04-P035"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Relationship between the redox reactions on a bipolar plate and reverse_9bed6a7a\\images\\47c4e5c5a8e68f09cac22aaf9b4ba7001d3a545e3f2b3f614e3f2d814692d4cb.jpg",
+    "raw_relative_path": "images/47c4e5c5a8e68f09cac22aaf9b4ba7001d3a545e3f2b3f614e3f2d814692d4cb.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Relationship between the redox reactions on a bipolar plate and reverse_9bed6a7a\\images\\4a136d675196d14b1520998743d5c58211fda9e16d8853b7b76aa1c88d3ad92f.jpg",
+    "raw_relative_path": "images/4a136d675196d14b1520998743d5c58211fda9e16d8853b7b76aa1c88d3ad92f.jpg",
+    "status": "used",
+    "figure_id": "FIG002",
+    "clean_path": "figures/FIG002/image_002.jpg",
+    "caption_path": "figures/FIG002/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S01-P004",
+      "S03-P007",
+      "S04-P001"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Relationship between the redox reactions on a bipolar plate and reverse_9bed6a7a\\images\\4c09aece6d3f2663153c3c892ae60d092a718cdc784bfd8472b3f47c8b41648f.jpg",
+    "raw_relative_path": "images/4c09aece6d3f2663153c3c892ae60d092a718cdc784bfd8472b3f47c8b41648f.jpg",
+    "status": "used",
+    "figure_id": "FIG009",
+    "clean_path": "figures/FIG008/image_001.jpg",
+    "caption_path": "figures/FIG009/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S04-P034",
+      "S04-P035"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Relationship between the redox reactions on a bipolar plate and reverse_9bed6a7a\\images\\500e83c61e2cf4bf455749d2142704d497e52a86b260e007ceef75473ff2b5fa.jpg",
+    "raw_relative_path": "images/500e83c61e2cf4bf455749d2142704d497e52a86b260e007ceef75473ff2b5fa.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Relationship between the redox reactions on a bipolar plate and reverse_9bed6a7a\\images\\5590e97fcb6d7b3cce087e0be6d3cff0bb43e21abe03c89989b57d3bc9fa10a1.jpg",
+    "raw_relative_path": "images/5590e97fcb6d7b3cce087e0be6d3cff0bb43e21abe03c89989b57d3bc9fa10a1.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Relationship between the redox reactions on a bipolar plate and reverse_9bed6a7a\\images\\6dd69d48e84831fe60ed1a749bda7c0c001a53361907c496425c89c5d77676b0.jpg",
+    "raw_relative_path": "images/6dd69d48e84831fe60ed1a749bda7c0c001a53361907c496425c89c5d77676b0.jpg",
+    "status": "used",
+    "figure_id": "FIG004",
+    "clean_path": "figures/FIG004/image_002.jpg",
+    "caption_path": "figures/FIG004/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S04-P010",
+      "S04-P012"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Relationship between the redox reactions on a bipolar plate and reverse_9bed6a7a\\images\\7b3557c1d794df954b8c7ec25d3099f421b7d03850370bfbfe6dded19668d0b1.jpg",
+    "raw_relative_path": "images/7b3557c1d794df954b8c7ec25d3099f421b7d03850370bfbfe6dded19668d0b1.jpg",
+    "status": "used",
+    "figure_id": "FIG005",
+    "clean_path": "figures/FIG005/image_001.jpg",
+    "caption_path": "figures/FIG005/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S04-P014",
+      "S04-P015"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Relationship between the redox reactions on a bipolar plate and reverse_9bed6a7a\\images\\8a7613fdba3e3d705de1e9af1951bd73d98a3676279ba3cabd82a4889532cc7c.jpg",
+    "raw_relative_path": "images/8a7613fdba3e3d705de1e9af1951bd73d98a3676279ba3cabd82a4889532cc7c.jpg",
+    "status": "used",
+    "figure_id": "FIG001",
+    "clean_path": "figures/FIG001/image_001.jpg",
+    "caption_path": "figures/FIG001/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S03-P001",
+      "S03-P003",
+      "S03-P005"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Relationship between the redox reactions on a bipolar plate and reverse_9bed6a7a\\images\\8c2cff2dbdc0915104fa8d852e796ba6c601024f5d7a4c000f6aeed0bdb712ad.jpg",
+    "raw_relative_path": "images/8c2cff2dbdc0915104fa8d852e796ba6c601024f5d7a4c000f6aeed0bdb712ad.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Relationship between the redox reactions on a bipolar plate and reverse_9bed6a7a\\images\\8e8025bef9cf047a5c4d9442ad5c7dbd3cb50e7faa30a34367d5a7c06b4bee08.jpg",
+    "raw_relative_path": "images/8e8025bef9cf047a5c4d9442ad5c7dbd3cb50e7faa30a34367d5a7c06b4bee08.jpg",
+    "status": "used",
+    "figure_id": "FIG004",
+    "clean_path": "figures/FIG003/image_002.jpg",
+    "caption_path": "figures/FIG004/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S04-P010",
+      "S04-P012"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Relationship between the redox reactions on a bipolar plate and reverse_9bed6a7a\\images\\8ff035f1a33b7d4f8a4981cda0383af87b5b74c06bee50ed962a18be0df2cda3.jpg",
+    "raw_relative_path": "images/8ff035f1a33b7d4f8a4981cda0383af87b5b74c06bee50ed962a18be0df2cda3.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Relationship between the redox reactions on a bipolar plate and reverse_9bed6a7a\\images\\975d19d5d5d1290a041dd88d8d99622d41f65a6c1a8365800861604b9dd480a2.jpg",
+    "raw_relative_path": "images/975d19d5d5d1290a041dd88d8d99622d41f65a6c1a8365800861604b9dd480a2.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Relationship between the redox reactions on a bipolar plate and reverse_9bed6a7a\\images\\99162a294758cc7ebade0a8bde86b131fd9578d16ea4e10101e1faa16f693204.jpg",
+    "raw_relative_path": "images/99162a294758cc7ebade0a8bde86b131fd9578d16ea4e10101e1faa16f693204.jpg",
+    "status": "used",
+    "figure_id": "FIG003",
+    "clean_path": "figures/FIG003/image_001.jpg",
+    "caption_path": "figures/FIG003/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S03-P006",
+      "S04-P011"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Relationship between the redox reactions on a bipolar plate and reverse_9bed6a7a\\images\\9d53b59f64acbbfac75b6b1837c1b7b25d799d7a19c908b67e0abb49377a2b8e.jpg",
+    "raw_relative_path": "images/9d53b59f64acbbfac75b6b1837c1b7b25d799d7a19c908b67e0abb49377a2b8e.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Relationship between the redox reactions on a bipolar plate and reverse_9bed6a7a\\images\\a30a5c1cc78edddc59c502c15ff363f9105486b5e7ccee5b1f7f8f366d715f56.jpg",
+    "raw_relative_path": "images/a30a5c1cc78edddc59c502c15ff363f9105486b5e7ccee5b1f7f8f366d715f56.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Relationship between the redox reactions on a bipolar plate and reverse_9bed6a7a\\images\\aaf2727dc40a9eae91f57a3889f70da046639690a8c863655fdac651fb838a0f.jpg",
+    "raw_relative_path": "images/aaf2727dc40a9eae91f57a3889f70da046639690a8c863655fdac651fb838a0f.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Relationship between the redox reactions on a bipolar plate and reverse_9bed6a7a\\images\\b9d361f83170f36906b4eecc1359895e66d7fea9b74480075a75c75d823a4dcf.jpg",
+    "raw_relative_path": "images/b9d361f83170f36906b4eecc1359895e66d7fea9b74480075a75c75d823a4dcf.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Relationship between the redox reactions on a bipolar plate and reverse_9bed6a7a\\images\\ba387b9148ce9817e8a7590e39480d8ed1511ad951136b4001e08e87480f3fb4.jpg",
+    "raw_relative_path": "images/ba387b9148ce9817e8a7590e39480d8ed1511ad951136b4001e08e87480f3fb4.jpg",
+    "status": "used",
+    "figure_id": "FIG002",
+    "clean_path": "figures/FIG002/image_001.jpg",
+    "caption_path": "figures/FIG002/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S01-P004",
+      "S03-P007",
+      "S04-P001"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Relationship between the redox reactions on a bipolar plate and reverse_9bed6a7a\\images\\da3a2dfd4e2933fb68b59f49ff568257c949fb531fe47dade447ec43ed3b076b.jpg",
+    "raw_relative_path": "images/da3a2dfd4e2933fb68b59f49ff568257c949fb531fe47dade447ec43ed3b076b.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Relationship between the redox reactions on a bipolar plate and reverse_9bed6a7a\\images\\df573f3514374708a83a97f995d891ae1cfc1b2265a90f32ce579138e38c17e5.jpg",
+    "raw_relative_path": "images/df573f3514374708a83a97f995d891ae1cfc1b2265a90f32ce579138e38c17e5.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Relationship between the redox reactions on a bipolar plate and reverse_9bed6a7a\\images\\f066f744b3c9eafe410e41975515f7646b1cab0b38ea9d69fe03a45df83dc6dc.jpg",
+    "raw_relative_path": "images/f066f744b3c9eafe410e41975515f7646b1cab0b38ea9d69fe03a45df83dc6dc.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Relationship between the redox reactions on a bipolar plate and reverse_9bed6a7a\\images\\f1eb8adc16c14a33b0451acdf4bc4718a57c51f80d212a8ff5a465aac8831dde.jpg",
+    "raw_relative_path": "images/f1eb8adc16c14a33b0451acdf4bc4718a57c51f80d212a8ff5a465aac8831dde.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  }
+]

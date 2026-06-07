@@ -1,0 +1,8 @@
+---
+paper_id: "2025_sha_10000h_stable_intermittent_alkaline_seawater_electrolysi_333f5c"
+section_id: "S05_discussion_mechanism"
+paragraph_id: "S05-P010"
+evidence_id: "EV-sha2025-333f5c-S05-P010"
+chunk_index: 0
+---
+Moreover, as well as the issue of reversed oxidation at the cathode during start–shutdown electrolysis cycles, the presence of a large amount of halide ions in seawater also presents threats to the cathode. We observed that the phosphate ion vibrational peak appeared during the shutdown period and disappeared during HER, suggesting that under the shutdown condition, phosphate ion could be generated that would effectively resist chloride ions approaching the cathode through electrostatic repulsion23. The phosphate ion formation on NiCoP– $\mathbf { \cdot C r } _ { 2 } \mathbf { O } _ { 3 }$ under the shutdown condition was also verified by TOF-SIMS (Fig. 3f). To determine whether the phosphate ion formed on NiCoP– ${ \bf \cdot C r } _ { 2 } { \bf O } _ { 3 }$ under shutdown condition could dissolve into solution, a 120-h time-dependent ion chromatography (IC) measurement (Fig. 3n, Supplementary Figs. 46 and 47 and Supplementary Note 5) was conducted on the electrolyte removed during HER and shutdown period. The result showed that the phosphate ion content was less than 10 ppb (Fig. 3o), lower than the detection limit. On the basis of the above investigations, it is proposed that the dynamic redox of P under fluctuating electrolysis conditions can maintain a reversible life cycle between P and phosphate/phosphate ion, serving as a protection layer in achieving stable, long-term water/seawater electrolysis powered by intermittent renewable energy sources.

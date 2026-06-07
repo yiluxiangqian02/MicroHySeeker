@@ -1,0 +1,851 @@
+{
+  "paper_id": "2026_unknown_2026_2d8d75",
+  "generated_at": "2026-05-30T16:29:48",
+  "generated_files": [
+    "metadata.json",
+    "full_clean.md",
+    "document_tree.json",
+    "paragraph_index.json",
+    "evidence_links.json",
+    "image_manifest.json",
+    "table_manifest.json",
+    "sections_by_heading/"
+  ],
+  "section_count": 6,
+  "paragraph_count": 91,
+  "figure_count": 3,
+  "table_count": 3,
+  "evidence_count": 97,
+  "front_matter_count": 0,
+  "back_matter_count": 2,
+  "reference_paragraph_count": 2,
+  "conclusion_detected": false,
+  "sections_summary": [
+    {
+      "section_id": "S01_abstract",
+      "section_title": "Abstract",
+      "paragraph_count": 5
+    },
+    {
+      "section_id": "S02_introduction",
+      "section_title": "Introduction",
+      "paragraph_count": 10
+    },
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "paragraph_count": 29
+    },
+    {
+      "section_id": "S04_results",
+      "section_title": "Result",
+      "paragraph_count": 7
+    },
+    {
+      "section_id": "S05_discussion_mechanism",
+      "section_title": "Discussion Mechanism",
+      "paragraph_count": 38
+    },
+    {
+      "section_id": "S07_back_matter_or_supplementary",
+      "section_title": "Back Matter Or Supplementary",
+      "paragraph_count": 2
+    }
+  ],
+  "warnings": [],
+  "fact_layer_coverage": {
+    "total_paragraphs": 91,
+    "with_paragraph_uid": 91,
+    "paragraph_uid_coverage": 1.0,
+    "with_heading_uid": 91,
+    "heading_uid_coverage": 1.0,
+    "with_heading_text": 91,
+    "heading_text_coverage": 1.0,
+    "with_doc_heading_order": 91,
+    "doc_heading_order_coverage": 1.0,
+    "with_page_index": 0,
+    "page_index_coverage": 0.0,
+    "with_block_order": 91,
+    "block_order_coverage": 1.0
+  },
+  "tag_layer_coverage": {
+    "total_paragraphs": 91,
+    "with_macro_primary": 91,
+    "macro_primary_coverage": 1.0,
+    "with_macro_secondary": 5,
+    "macro_secondary_coverage": 0.0549,
+    "with_macro_confidence": 91,
+    "macro_confidence_coverage": 1.0,
+    "with_macro_reasons": 30,
+    "macro_reasons_coverage": 0.3297,
+    "tag_conflict_count": 39,
+    "tag_conflict_ratio": 0.4286,
+    "tag_conflict_high": 30,
+    "tag_conflict_medium": 0,
+    "tag_conflict_low": 9
+  },
+  "removed_noise_summary": "Filtered: empty blocks, <40 chars, heading-only, page numbers, noise patterns",
+  "next_review_items": [
+    "Verify page number estimates against source PDF",
+    "Check figure-paragraph links (linked_figures in paragraph_index.json)",
+    "Review section title mappings in document_tree.json",
+    "Confirm no important paragraphs were filtered as noise"
+  ],
+  "missing_input_files": [],
+  "uncertainty_summary": {
+    "soft_uncertain_count": 0,
+    "needs_manual_review_count": 24,
+    "total_uncertain_count": 24
+  },
+  "soft_uncertain_items": [],
+  "needs_manual_review_items": [
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "original_heading": "报告正文（2026 版）",
+      "assigned_section_id": "S03_methods_and_setup",
+      "top_section_id": "S00_front_matter",
+      "top_score": 0,
+      "second_score": 0,
+      "score_gap": 0,
+      "uncertain_reasons": [
+        "low_top_score",
+        "low_score_gap"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "original_heading": "（一）立项依据：",
+      "assigned_section_id": "S03_methods_and_setup",
+      "top_section_id": "S00_front_matter",
+      "top_score": 0,
+      "second_score": 0,
+      "score_gap": 0,
+      "uncertain_reasons": [
+        "low_top_score",
+        "low_score_gap"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "original_heading": "1.3 课题提出",
+      "assigned_section_id": "S03_methods_and_setup",
+      "top_section_id": "S05_discussion_mechanism",
+      "top_score": 4,
+      "second_score": 3,
+      "score_gap": 1,
+      "uncertain_reasons": [
+        "low_score_gap"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "original_heading": "（二）研究内容：",
+      "assigned_section_id": "S03_methods_and_setup",
+      "top_section_id": "S00_front_matter",
+      "top_score": 0,
+      "second_score": 0,
+      "score_gap": 0,
+      "uncertain_reasons": [
+        "low_top_score",
+        "low_score_gap"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "original_heading": "2.1 研究目标",
+      "assigned_section_id": "S03_methods_and_setup",
+      "top_section_id": "S05_discussion_mechanism",
+      "top_score": 4,
+      "second_score": 3,
+      "score_gap": 1,
+      "uncertain_reasons": [
+        "low_score_gap"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "original_heading": "2.2 研究内容",
+      "assigned_section_id": "S03_methods_and_setup",
+      "top_section_id": "S05_discussion_mechanism",
+      "top_score": 3,
+      "second_score": 0,
+      "score_gap": 3,
+      "uncertain_reasons": [
+        "low_top_score"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "original_heading": "研究内容二：数据驱动的电化学高通量制备、评估和筛选及构效关系",
+      "assigned_section_id": "S03_methods_and_setup",
+      "top_section_id": "S03_methods_and_setup",
+      "top_score": 4,
+      "second_score": 4,
+      "score_gap": 0,
+      "uncertain_reasons": [
+        "low_score_gap"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "original_heading": "研究内容三：基于多物理场耦合调控的均匀电极构筑",
+      "assigned_section_id": "S03_methods_and_setup",
+      "top_section_id": "S03_methods_and_setup",
+      "top_score": 1,
+      "second_score": 1,
+      "score_gap": 0,
+      "uncertain_reasons": [
+        "low_top_score",
+        "low_score_gap"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "original_heading": "2.4 研究方法",
+      "assigned_section_id": "S03_methods_and_setup",
+      "top_section_id": "S05_discussion_mechanism",
+      "top_score": 1,
+      "second_score": 0,
+      "score_gap": 1,
+      "uncertain_reasons": [
+        "low_top_score",
+        "low_score_gap"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "original_heading": "研究方法二：基于数据驱动的高通量电沉积平台与电极快速筛选",
+      "assigned_section_id": "S03_methods_and_setup",
+      "top_section_id": "S04_results",
+      "top_score": 4,
+      "second_score": 3,
+      "score_gap": 1,
+      "uncertain_reasons": [
+        "low_score_gap"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "original_heading": "研究方法三：基于有限元电场模拟的电极均一性调控与规模化制备工艺优化",
+      "assigned_section_id": "S03_methods_and_setup",
+      "top_section_id": "S04_results",
+      "top_score": 4,
+      "second_score": 3,
+      "score_gap": 1,
+      "uncertain_reasons": [
+        "low_score_gap"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "original_heading": "2.5 技术路线",
+      "assigned_section_id": "S03_methods_and_setup",
+      "top_section_id": "S05_discussion_mechanism",
+      "top_score": 3,
+      "second_score": 1,
+      "score_gap": 2,
+      "uncertain_reasons": [
+        "low_top_score"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "original_heading": "（iv）DFT 计算",
+      "assigned_section_id": "S03_methods_and_setup",
+      "top_section_id": "S03_methods_and_setup",
+      "top_score": 3,
+      "second_score": 1,
+      "score_gap": 2,
+      "uncertain_reasons": [
+        "low_top_score"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "original_heading": "实验手段三：基于有限元电场可视化分布优化规模化电极制备工艺",
+      "assigned_section_id": "S03_methods_and_setup",
+      "top_section_id": "S03_methods_and_setup",
+      "top_score": 3,
+      "second_score": 2,
+      "score_gap": 1,
+      "uncertain_reasons": [
+        "low_top_score",
+        "low_score_gap"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "original_heading": "创新点一：构建高温高压、波动电源共同作用的原位探测方法",
+      "assigned_section_id": "S03_methods_and_setup",
+      "top_section_id": "S05_discussion_mechanism",
+      "top_score": 2,
+      "second_score": 1,
+      "score_gap": 1,
+      "uncertain_reasons": [
+        "low_top_score",
+        "low_score_gap"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "original_heading": "创新点三：应用人工智能-过程装备-材料-电化学的学科交叉",
+      "assigned_section_id": "S03_methods_and_setup",
+      "top_section_id": "S04_results",
+      "top_score": 2,
+      "second_score": 2,
+      "score_gap": 0,
+      "uncertain_reasons": [
+        "low_top_score",
+        "low_score_gap"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "original_heading": "2.8 年度研究计划",
+      "assigned_section_id": "S03_methods_and_setup",
+      "top_section_id": "S04_results",
+      "top_score": 5,
+      "second_score": 4,
+      "score_gap": 1,
+      "uncertain_reasons": [
+        "low_score_gap"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "original_heading": "（三）研究基础：",
+      "assigned_section_id": "S03_methods_and_setup",
+      "top_section_id": "S00_front_matter",
+      "top_score": 0,
+      "second_score": 0,
+      "score_gap": 0,
+      "uncertain_reasons": [
+        "low_top_score",
+        "low_score_gap"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "original_heading": "3.1 研究基础",
+      "assigned_section_id": "S03_methods_and_setup",
+      "top_section_id": "S05_discussion_mechanism",
+      "top_score": 3,
+      "second_score": 2,
+      "score_gap": 1,
+      "uncertain_reasons": [
+        "low_top_score",
+        "low_score_gap"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "original_heading": "研究基础 3：Ni基电极成核规律及形貌优化",
+      "assigned_section_id": "S03_methods_and_setup",
+      "top_section_id": "S05_discussion_mechanism",
+      "top_score": 2,
+      "second_score": 1,
+      "score_gap": 1,
+      "uncertain_reasons": [
+        "low_top_score",
+        "low_score_gap"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "original_heading": "研究基础 5：基于可再生能源耦合的碱性电解制氢工程实践基础",
+      "assigned_section_id": "S03_methods_and_setup",
+      "top_section_id": "S05_discussion_mechanism",
+      "top_score": 2,
+      "second_score": 1,
+      "score_gap": 1,
+      "uncertain_reasons": [
+        "low_top_score",
+        "low_score_gap"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S05_discussion_mechanism",
+      "section_title": "Discussion Mechanism",
+      "original_heading": "科学问题一：波动工况下催化反应机理与动态结构演变规律",
+      "assigned_section_id": "S05_discussion_mechanism",
+      "top_section_id": "S05_discussion_mechanism",
+      "top_score": 2,
+      "second_score": 1,
+      "score_gap": 1,
+      "uncertain_reasons": [
+        "low_top_score",
+        "low_score_gap"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S05_discussion_mechanism",
+      "section_title": "Discussion Mechanism",
+      "original_heading": "科学问题三：基于扩散热力学和电沉积动力学的成核-生长机制",
+      "assigned_section_id": "S05_discussion_mechanism",
+      "top_section_id": "S05_discussion_mechanism",
+      "top_score": 2,
+      "second_score": 0,
+      "score_gap": 2,
+      "uncertain_reasons": [
+        "low_top_score"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S05_discussion_mechanism",
+      "section_title": "Discussion Mechanism",
+      "original_heading": "研究基础 1：电极反应电化学反应动力学优化及失效机理研究",
+      "assigned_section_id": "S05_discussion_mechanism",
+      "top_section_id": "S05_discussion_mechanism",
+      "top_score": 4,
+      "second_score": 3,
+      "score_gap": 1,
+      "uncertain_reasons": [
+        "low_score_gap"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    }
+  ],
+  "uncertain_items": [
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "original_heading": "报告正文（2026 版）",
+      "assigned_section_id": "S03_methods_and_setup",
+      "top_section_id": "S00_front_matter",
+      "top_score": 0,
+      "second_score": 0,
+      "score_gap": 0,
+      "uncertain_reasons": [
+        "low_top_score",
+        "low_score_gap"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "original_heading": "（一）立项依据：",
+      "assigned_section_id": "S03_methods_and_setup",
+      "top_section_id": "S00_front_matter",
+      "top_score": 0,
+      "second_score": 0,
+      "score_gap": 0,
+      "uncertain_reasons": [
+        "low_top_score",
+        "low_score_gap"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "original_heading": "1.3 课题提出",
+      "assigned_section_id": "S03_methods_and_setup",
+      "top_section_id": "S05_discussion_mechanism",
+      "top_score": 4,
+      "second_score": 3,
+      "score_gap": 1,
+      "uncertain_reasons": [
+        "low_score_gap"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "original_heading": "（二）研究内容：",
+      "assigned_section_id": "S03_methods_and_setup",
+      "top_section_id": "S00_front_matter",
+      "top_score": 0,
+      "second_score": 0,
+      "score_gap": 0,
+      "uncertain_reasons": [
+        "low_top_score",
+        "low_score_gap"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "original_heading": "2.1 研究目标",
+      "assigned_section_id": "S03_methods_and_setup",
+      "top_section_id": "S05_discussion_mechanism",
+      "top_score": 4,
+      "second_score": 3,
+      "score_gap": 1,
+      "uncertain_reasons": [
+        "low_score_gap"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "original_heading": "2.2 研究内容",
+      "assigned_section_id": "S03_methods_and_setup",
+      "top_section_id": "S05_discussion_mechanism",
+      "top_score": 3,
+      "second_score": 0,
+      "score_gap": 3,
+      "uncertain_reasons": [
+        "low_top_score"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "original_heading": "研究内容二：数据驱动的电化学高通量制备、评估和筛选及构效关系",
+      "assigned_section_id": "S03_methods_and_setup",
+      "top_section_id": "S03_methods_and_setup",
+      "top_score": 4,
+      "second_score": 4,
+      "score_gap": 0,
+      "uncertain_reasons": [
+        "low_score_gap"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "original_heading": "研究内容三：基于多物理场耦合调控的均匀电极构筑",
+      "assigned_section_id": "S03_methods_and_setup",
+      "top_section_id": "S03_methods_and_setup",
+      "top_score": 1,
+      "second_score": 1,
+      "score_gap": 0,
+      "uncertain_reasons": [
+        "low_top_score",
+        "low_score_gap"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "original_heading": "2.4 研究方法",
+      "assigned_section_id": "S03_methods_and_setup",
+      "top_section_id": "S05_discussion_mechanism",
+      "top_score": 1,
+      "second_score": 0,
+      "score_gap": 1,
+      "uncertain_reasons": [
+        "low_top_score",
+        "low_score_gap"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "original_heading": "研究方法二：基于数据驱动的高通量电沉积平台与电极快速筛选",
+      "assigned_section_id": "S03_methods_and_setup",
+      "top_section_id": "S04_results",
+      "top_score": 4,
+      "second_score": 3,
+      "score_gap": 1,
+      "uncertain_reasons": [
+        "low_score_gap"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "original_heading": "研究方法三：基于有限元电场模拟的电极均一性调控与规模化制备工艺优化",
+      "assigned_section_id": "S03_methods_and_setup",
+      "top_section_id": "S04_results",
+      "top_score": 4,
+      "second_score": 3,
+      "score_gap": 1,
+      "uncertain_reasons": [
+        "low_score_gap"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "original_heading": "2.5 技术路线",
+      "assigned_section_id": "S03_methods_and_setup",
+      "top_section_id": "S05_discussion_mechanism",
+      "top_score": 3,
+      "second_score": 1,
+      "score_gap": 2,
+      "uncertain_reasons": [
+        "low_top_score"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "original_heading": "（iv）DFT 计算",
+      "assigned_section_id": "S03_methods_and_setup",
+      "top_section_id": "S03_methods_and_setup",
+      "top_score": 3,
+      "second_score": 1,
+      "score_gap": 2,
+      "uncertain_reasons": [
+        "low_top_score"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "original_heading": "实验手段三：基于有限元电场可视化分布优化规模化电极制备工艺",
+      "assigned_section_id": "S03_methods_and_setup",
+      "top_section_id": "S03_methods_and_setup",
+      "top_score": 3,
+      "second_score": 2,
+      "score_gap": 1,
+      "uncertain_reasons": [
+        "low_top_score",
+        "low_score_gap"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "original_heading": "创新点一：构建高温高压、波动电源共同作用的原位探测方法",
+      "assigned_section_id": "S03_methods_and_setup",
+      "top_section_id": "S05_discussion_mechanism",
+      "top_score": 2,
+      "second_score": 1,
+      "score_gap": 1,
+      "uncertain_reasons": [
+        "low_top_score",
+        "low_score_gap"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "original_heading": "创新点三：应用人工智能-过程装备-材料-电化学的学科交叉",
+      "assigned_section_id": "S03_methods_and_setup",
+      "top_section_id": "S04_results",
+      "top_score": 2,
+      "second_score": 2,
+      "score_gap": 0,
+      "uncertain_reasons": [
+        "low_top_score",
+        "low_score_gap"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "original_heading": "2.8 年度研究计划",
+      "assigned_section_id": "S03_methods_and_setup",
+      "top_section_id": "S04_results",
+      "top_score": 5,
+      "second_score": 4,
+      "score_gap": 1,
+      "uncertain_reasons": [
+        "low_score_gap"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "original_heading": "（三）研究基础：",
+      "assigned_section_id": "S03_methods_and_setup",
+      "top_section_id": "S00_front_matter",
+      "top_score": 0,
+      "second_score": 0,
+      "score_gap": 0,
+      "uncertain_reasons": [
+        "low_top_score",
+        "low_score_gap"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "original_heading": "3.1 研究基础",
+      "assigned_section_id": "S03_methods_and_setup",
+      "top_section_id": "S05_discussion_mechanism",
+      "top_score": 3,
+      "second_score": 2,
+      "score_gap": 1,
+      "uncertain_reasons": [
+        "low_top_score",
+        "low_score_gap"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "original_heading": "研究基础 3：Ni基电极成核规律及形貌优化",
+      "assigned_section_id": "S03_methods_and_setup",
+      "top_section_id": "S05_discussion_mechanism",
+      "top_score": 2,
+      "second_score": 1,
+      "score_gap": 1,
+      "uncertain_reasons": [
+        "low_top_score",
+        "low_score_gap"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S03_methods_and_setup",
+      "section_title": "Methods And Setup",
+      "original_heading": "研究基础 5：基于可再生能源耦合的碱性电解制氢工程实践基础",
+      "assigned_section_id": "S03_methods_and_setup",
+      "top_section_id": "S05_discussion_mechanism",
+      "top_score": 2,
+      "second_score": 1,
+      "score_gap": 1,
+      "uncertain_reasons": [
+        "low_top_score",
+        "low_score_gap"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S05_discussion_mechanism",
+      "section_title": "Discussion Mechanism",
+      "original_heading": "科学问题一：波动工况下催化反应机理与动态结构演变规律",
+      "assigned_section_id": "S05_discussion_mechanism",
+      "top_section_id": "S05_discussion_mechanism",
+      "top_score": 2,
+      "second_score": 1,
+      "score_gap": 1,
+      "uncertain_reasons": [
+        "low_top_score",
+        "low_score_gap"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S05_discussion_mechanism",
+      "section_title": "Discussion Mechanism",
+      "original_heading": "科学问题三：基于扩散热力学和电沉积动力学的成核-生长机制",
+      "assigned_section_id": "S05_discussion_mechanism",
+      "top_section_id": "S05_discussion_mechanism",
+      "top_score": 2,
+      "second_score": 0,
+      "score_gap": 2,
+      "uncertain_reasons": [
+        "low_top_score"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    },
+    {
+      "section_id": "S05_discussion_mechanism",
+      "section_title": "Discussion Mechanism",
+      "original_heading": "研究基础 1：电极反应电化学反应动力学优化及失效机理研究",
+      "assigned_section_id": "S05_discussion_mechanism",
+      "top_section_id": "S05_discussion_mechanism",
+      "top_score": 4,
+      "second_score": 3,
+      "score_gap": 1,
+      "uncertain_reasons": [
+        "low_score_gap"
+      ],
+      "confidence_level": "needs_manual_review",
+      "needs_manual_review": true
+    }
+  ]
+}

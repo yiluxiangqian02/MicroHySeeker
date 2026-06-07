@@ -1,0 +1,43 @@
+{
+  "paper_id": "2022_kim_cathodic_protection_system_against_a_reverse_current_aft_180201",
+  "title": "Cathodic Protection System against a Reverse-Current after Shutdown in Zero-Gap Alkaline Water Electrolysis",
+  "doi": "",
+  "doi_url": "",
+  "year": "2022",
+  "published_online": "",
+  "first_author": "kim",
+  "authors_raw": "Yoona Kim, $^{\\parallel}$ Sang-Mun Jung, $^{\\parallel}$ Kyu-Su Kim, Hyun-Yup Kim, Jaesub Kwon, Jinhyeon Lee, Hyun-Seok Cho, and Yong-Tae Kim*",
+  "journal": "",
+  "document_type": "research_article",
+  "raw_paths": {
+    "mineru_output_dir": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\cathodic-protection-system-against-a-reverse-current-after-shut-down-in-zero-gap-alkaline-water-electrolysis",
+    "full_md": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\cathodic-protection-system-against-a-reverse-current-after-shut-down-in-zero-gap-alkaline-water-electrolysis\\full.md",
+    "content_list_v2_json": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\cathodic-protection-system-against-a-reverse-current-after-shut-down-in-zero-gap-alkaline-water-electrolysis\\content_list_v2.json",
+    "layout_json": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\cathodic-protection-system-against-a-reverse-current-after-shut-down-in-zero-gap-alkaline-water-electrolysis\\layout.json",
+    "origin_pdf": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\cathodic-protection-system-against-a-reverse-current-after-shut-down-in-zero-gap-alkaline-water-electrolysis\\124e14ff-ad67-4c84-a743-100cdbd43007_origin.pdf",
+    "images_dir": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\cathodic-protection-system-against-a-reverse-current-after-shut-down-in-zero-gap-alkaline-water-electrolysis\\images"
+  },
+  "paper_short": "kim2022-180201",
+  "clean_paths": {
+    "clean_dir": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\LiteratureClean\\2022_kim_cathodic_protection_system_against_a_reverse_current_aft_180201",
+    "full_clean": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\LiteratureClean\\2022_kim_cathodic_protection_system_against_a_reverse_current_aft_180201\\full_clean.md",
+    "figures_dir": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\LiteratureClean\\2022_kim_cathodic_protection_system_against_a_reverse_current_aft_180201\\figures",
+    "tables_dir": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\LiteratureClean\\2022_kim_cathodic_protection_system_against_a_reverse_current_aft_180201\\tables",
+    "sections_by_heading_dir": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\LiteratureClean\\2022_kim_cathodic_protection_system_against_a_reverse_current_aft_180201\\sections_by_heading"
+  },
+  "processing": {
+    "mode": "single_paper_semi_automatic",
+    "processed_at": "2026-05-30T16:29:53",
+    "script": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\LiteratureClean\\clean_single_mineru_paper.py",
+    "openviking_ingested": false,
+    "batch_import": false,
+    "section_recovery": {
+      "content_list_hints": {
+        "front_count": 5,
+        "abstract_count": 2,
+        "back_count": 5
+      },
+      "layout_json_available": true
+    }
+  }
+}

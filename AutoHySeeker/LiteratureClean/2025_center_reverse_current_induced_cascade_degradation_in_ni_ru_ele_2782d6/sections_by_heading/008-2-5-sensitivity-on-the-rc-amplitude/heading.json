@@ -1,0 +1,56 @@
+{
+  "paper_id": "2025_center_reverse_current_induced_cascade_degradation_in_ni_ru_ele_2782d6",
+  "heading_uid": "HRAW-009-d2c3d2f7",
+  "heading_dirname": "008-2-5-sensitivity-on-the-rc-amplitude",
+  "heading_text": "2.5 | Sensitivity on the RC Amplitude",
+  "heading_level": 1,
+  "doc_heading_order": 9,
+  "display_order": 8,
+  "is_title_page_heading": false,
+  "page_index": null,
+  "block_order": 1,
+  "paragraph_count": 10,
+  "paragraph_ids": [
+    "S03-P007",
+    "S03-P008",
+    "S03-P009",
+    "S03-P010",
+    "S03-P011",
+    "S03-P012",
+    "S03-P013",
+    "S03-P014",
+    "S03-P015",
+    "S03-P016"
+  ],
+  "paragraph_uids": [
+    "PRAW-000019",
+    "PRAW-000020",
+    "PRAW-000021",
+    "PRAW-000022",
+    "PRAW-000023",
+    "PRAW-000024",
+    "PRAW-000025",
+    "PRAW-000026",
+    "PRAW-000027",
+    "PRAW-000028"
+  ],
+  "paragraph_paths": [
+    "paragraphs/PRAW-000019.md",
+    "paragraphs/PRAW-000020.md",
+    "paragraphs/PRAW-000021.md",
+    "paragraphs/PRAW-000022.md",
+    "paragraphs/PRAW-000023.md",
+    "paragraphs/PRAW-000024.md",
+    "paragraphs/PRAW-000025.md",
+    "paragraphs/PRAW-000026.md",
+    "paragraphs/PRAW-000027.md",
+    "paragraphs/PRAW-000028.md"
+  ],
+  "linked_figures": [
+    "FIG005",
+    "FIG006"
+  ],
+  "linked_tables": [
+    "TAB001"
+  ]
+}

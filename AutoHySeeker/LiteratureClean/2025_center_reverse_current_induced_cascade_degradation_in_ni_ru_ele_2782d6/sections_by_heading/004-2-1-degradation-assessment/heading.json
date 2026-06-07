@@ -1,0 +1,38 @@
+{
+  "paper_id": "2025_center_reverse_current_induced_cascade_degradation_in_ni_ru_ele_2782d6",
+  "heading_uid": "HRAW-005-034192d8",
+  "heading_dirname": "004-2-1-degradation-assessment",
+  "heading_text": "2.1 | Degradation Assessment",
+  "heading_level": 1,
+  "doc_heading_order": 5,
+  "display_order": 4,
+  "is_title_page_heading": false,
+  "page_index": null,
+  "block_order": 1,
+  "paragraph_count": 5,
+  "paragraph_ids": [
+    "S04-P001",
+    "S04-P002",
+    "S04-P003",
+    "S04-P004",
+    "S04-P005"
+  ],
+  "paragraph_uids": [
+    "PRAW-000042",
+    "PRAW-000043",
+    "PRAW-000044",
+    "PRAW-000045",
+    "PRAW-000046"
+  ],
+  "paragraph_paths": [
+    "paragraphs/PRAW-000042.md",
+    "paragraphs/PRAW-000043.md",
+    "paragraphs/PRAW-000044.md",
+    "paragraphs/PRAW-000045.md",
+    "paragraphs/PRAW-000046.md"
+  ],
+  "linked_figures": [
+    "FIG002"
+  ],
+  "linked_tables": []
+}

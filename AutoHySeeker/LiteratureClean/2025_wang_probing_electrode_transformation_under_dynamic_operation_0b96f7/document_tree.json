@@ -1,0 +1,293 @@
+{
+  "paper_id": "2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7",
+  "title": "Probing Electrode Transformation under Dynamic Operation for Alkaline Water Electrolysis",
+  "heading_count": 14,
+  "paragraph_count": 81,
+  "headings": [
+    {
+      "heading_uid": "HRAW-001-df1ed5df",
+      "heading_text": "Probing Electrode Transformation under Dynamic Operation for Alkaline Water Electrolysis",
+      "heading_level": 1,
+      "doc_heading_order": 1,
+      "display_order": 1,
+      "page_index": null,
+      "paragraph_count": 2,
+      "paragraph_uids": [
+        "PRAW-000040",
+        "PRAW-000041"
+      ],
+      "macro_tags": [
+        "S00_front_matter",
+        "S01_abstract"
+      ]
+    },
+    {
+      "heading_uid": "HRAW-002-2812cee1",
+      "heading_text": "1. Introduction",
+      "heading_level": 1,
+      "doc_heading_order": 2,
+      "display_order": 2,
+      "page_index": null,
+      "paragraph_count": 15,
+      "paragraph_uids": [
+        "PRAW-000004",
+        "PRAW-000006",
+        "PRAW-000007",
+        "PRAW-000008",
+        "PRAW-000001",
+        "PRAW-000002",
+        "PRAW-000003",
+        "PRAW-000005",
+        "PRAW-000009",
+        "PRAW-000010",
+        "PRAW-000011",
+        "PRAW-000012",
+        "PRAW-000013",
+        "PRAW-000014",
+        "PRAW-000015"
+      ],
+      "macro_tags": [
+        "S00_front_matter",
+        "S02_introduction"
+      ]
+    },
+    {
+      "heading_uid": "HRAW-004-334fff58",
+      "heading_text": "2.1. Quantify Electrochemical Behaviors in Reverse Current Process",
+      "heading_level": 1,
+      "doc_heading_order": 4,
+      "display_order": 4,
+      "page_index": null,
+      "paragraph_count": 9,
+      "paragraph_uids": [
+        "PRAW-000042",
+        "PRAW-000043",
+        "PRAW-000044",
+        "PRAW-000045",
+        "PRAW-000046",
+        "PRAW-000047",
+        "PRAW-000049",
+        "PRAW-000050",
+        "PRAW-000048"
+      ],
+      "macro_tags": [
+        "S05_discussion_mechanism",
+        "S07_back_matter_or_supplementary"
+      ]
+    },
+    {
+      "heading_uid": "HRAW-005-ddea5b8b",
+      "heading_text": "2.2. Reverse Current Accelerated-Stress Testing (AST)",
+      "heading_level": 1,
+      "doc_heading_order": 5,
+      "display_order": 5,
+      "page_index": null,
+      "paragraph_count": 5,
+      "paragraph_uids": [
+        "PRAW-000051",
+        "PRAW-000052",
+        "PRAW-000053",
+        "PRAW-000054",
+        "PRAW-000055"
+      ],
+      "macro_tags": [
+        "S01_abstract",
+        "S05_discussion_mechanism"
+      ]
+    },
+    {
+      "heading_uid": "HRAW-006-537403c7",
+      "heading_text": "2.3. Electrochemical Behaviors of Anode and Cathode during Reverse Current AST",
+      "heading_level": 1,
+      "doc_heading_order": 6,
+      "display_order": 6,
+      "page_index": null,
+      "paragraph_count": 6,
+      "paragraph_uids": [
+        "PRAW-000056",
+        "PRAW-000057",
+        "PRAW-000058",
+        "PRAW-000059",
+        "PRAW-000061",
+        "PRAW-000060"
+      ],
+      "macro_tags": [
+        "S05_discussion_mechanism",
+        "S07_back_matter_or_supplementary"
+      ]
+    },
+    {
+      "heading_uid": "HRAW-007-0b75d58c",
+      "heading_text": "2.4. Unravel the Degradation Mechanism",
+      "heading_level": 1,
+      "doc_heading_order": 7,
+      "display_order": 7,
+      "page_index": null,
+      "paragraph_count": 12,
+      "paragraph_uids": [
+        "PRAW-000067",
+        "PRAW-000072",
+        "PRAW-000062",
+        "PRAW-000063",
+        "PRAW-000064",
+        "PRAW-000066",
+        "PRAW-000068",
+        "PRAW-000069",
+        "PRAW-000070",
+        "PRAW-000071",
+        "PRAW-000073",
+        "PRAW-000065"
+      ],
+      "macro_tags": [
+        "S01_abstract",
+        "S05_discussion_mechanism",
+        "S07_back_matter_or_supplementary"
+      ]
+    },
+    {
+      "heading_uid": "HRAW-008-2bff91de",
+      "heading_text": "3. Conclusion",
+      "heading_level": 1,
+      "doc_heading_order": 8,
+      "display_order": 8,
+      "page_index": null,
+      "paragraph_count": 1,
+      "paragraph_uids": [
+        "PRAW-000075"
+      ],
+      "macro_tags": [
+        "S06_conclusion"
+      ]
+    },
+    {
+      "heading_uid": "HRAW-009-7b936880",
+      "heading_text": "4. Experimental Section",
+      "heading_level": 1,
+      "doc_heading_order": 9,
+      "display_order": 9,
+      "page_index": null,
+      "paragraph_count": 24,
+      "paragraph_uids": [
+        "PRAW-000016",
+        "PRAW-000017",
+        "PRAW-000018",
+        "PRAW-000019",
+        "PRAW-000020",
+        "PRAW-000022",
+        "PRAW-000023",
+        "PRAW-000024",
+        "PRAW-000025",
+        "PRAW-000026",
+        "PRAW-000027",
+        "PRAW-000028",
+        "PRAW-000029",
+        "PRAW-000030",
+        "PRAW-000031",
+        "PRAW-000032",
+        "PRAW-000033",
+        "PRAW-000034",
+        "PRAW-000035",
+        "PRAW-000036",
+        "PRAW-000038",
+        "PRAW-000039",
+        "PRAW-000021",
+        "PRAW-000037"
+      ],
+      "macro_tags": [
+        "S03_methods_and_setup",
+        "S07_back_matter_or_supplementary"
+      ]
+    },
+    {
+      "heading_uid": "HRAW-010-a0dbfe9a",
+      "heading_text": "Supporting Information",
+      "heading_level": 1,
+      "doc_heading_order": 10,
+      "display_order": 10,
+      "page_index": null,
+      "paragraph_count": 1,
+      "paragraph_uids": [
+        "PRAW-000076"
+      ],
+      "macro_tags": [
+        "S07_back_matter_or_supplementary"
+      ]
+    },
+    {
+      "heading_uid": "HRAW-011-e0fafa1d",
+      "heading_text": "Acknowledgements",
+      "heading_level": 1,
+      "doc_heading_order": 11,
+      "display_order": 11,
+      "page_index": null,
+      "paragraph_count": 2,
+      "paragraph_uids": [
+        "PRAW-000077",
+        "PRAW-000078"
+      ],
+      "macro_tags": [
+        "S07_back_matter_or_supplementary"
+      ]
+    },
+    {
+      "heading_uid": "HRAW-012-da9b5e4b",
+      "heading_text": "Conflict of Interest",
+      "heading_level": 1,
+      "doc_heading_order": 12,
+      "display_order": 12,
+      "page_index": null,
+      "paragraph_count": 1,
+      "paragraph_uids": [
+        "PRAW-000079"
+      ],
+      "macro_tags": [
+        "S07_back_matter_or_supplementary"
+      ]
+    },
+    {
+      "heading_uid": "HRAW-013-0204eb85",
+      "heading_text": "Author Contributions",
+      "heading_level": 1,
+      "doc_heading_order": 13,
+      "display_order": 13,
+      "page_index": null,
+      "paragraph_count": 1,
+      "paragraph_uids": [
+        "PRAW-000080"
+      ],
+      "macro_tags": [
+        "S07_back_matter_or_supplementary"
+      ]
+    },
+    {
+      "heading_uid": "HRAW-014-e654ce42",
+      "heading_text": "Data Availability Statement",
+      "heading_level": 1,
+      "doc_heading_order": 14,
+      "display_order": 14,
+      "page_index": null,
+      "paragraph_count": 1,
+      "paragraph_uids": [
+        "PRAW-000081"
+      ],
+      "macro_tags": [
+        "S07_back_matter_or_supplementary"
+      ]
+    },
+    {
+      "heading_uid": "HRAW-015-0f2af617",
+      "heading_text": "Keywords",
+      "heading_level": 1,
+      "doc_heading_order": 15,
+      "display_order": 15,
+      "page_index": null,
+      "paragraph_count": 1,
+      "paragraph_uids": [
+        "PRAW-000074"
+      ],
+      "macro_tags": [
+        "S05_discussion_mechanism"
+      ]
+    }
+  ]
+}

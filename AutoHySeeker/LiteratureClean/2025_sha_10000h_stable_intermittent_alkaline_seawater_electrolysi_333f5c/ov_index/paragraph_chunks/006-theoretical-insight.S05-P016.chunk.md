@@ -1,0 +1,8 @@
+---
+paper_id: "2025_sha_10000h_stable_intermittent_alkaline_seawater_electrolysi_333f5c"
+section_id: "S05_discussion_mechanism"
+paragraph_id: "S05-P016"
+evidence_id: "EV-sha2025-333f5c-S05-P016"
+chunk_index: 0
+---
+To explore the oxidation process of NiCoP– ${ \bf \cdot C r } _ { 2 } { \bf O } _ { 3 }$ under shutdown condition, we performed adsorption energy calculations for OH− on different sites to assess the propensity of each element to undergo oxidation (Supplementary Fig. 56a). The calculation results show that Co exhibits the lowest binding energy to OH− $\Delta G = - 0 . 5 4 \mathrm { e V } )$ ), followed by $\mathsf { P } ( \Delta G = - 0 . 3 1 \mathrm { e V } )$ ) and then Ni $\Delta G = - 0 . 0 6 \mathrm { e V }$ ) (Supplementary Fig. 56b), indicating a decreasing oxidation tendency. When $\mathrm { O H ^ { - } }$ attacks the surface and diffuses to the interior of NiCoP– ${ \mathrm { C r } } _ { 2 } \mathbf { O } _ { 3 }$ , Co will be oxidized first, followed by P, whereas Ni is less susceptible to oxidation under the protection of Co and P. Our theoretical findings align well with the TOF-SIMS, HAADF-STEM and XPS results: Co was found oxidized within the surface and inner layer of the catalyst to form CoO, followed by a progressive oxidation of P, resulting in the formation of a passivation layer, protecting Ni from oxidation. To further demonstrate how the multilayered passivation structure resists oxidation and preserves active sites for recovery during the next hydrogen evolution cycle, we have constructed three multilayer structure models based on the crystal structure observed in HAADF-STEM and simulated the dynamic

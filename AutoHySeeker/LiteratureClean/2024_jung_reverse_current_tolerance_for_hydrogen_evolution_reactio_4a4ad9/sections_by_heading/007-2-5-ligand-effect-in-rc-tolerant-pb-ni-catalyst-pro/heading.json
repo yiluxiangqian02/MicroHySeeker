@@ -1,0 +1,54 @@
+{
+  "paper_id": "2024_jung_reverse_current_tolerance_for_hydrogen_evolution_reactio_4a4ad9",
+  "heading_uid": "HRAW-008-42cb5612",
+  "heading_dirname": "007-2-5-ligand-effect-in-rc-tolerant-pb-ni-catalyst-pro",
+  "heading_text": "2.5. Ligand Effect in RC Tolerant Pb/Ni Catalyst: Promoting Proton Desorption",
+  "heading_level": 1,
+  "doc_heading_order": 8,
+  "display_order": 7,
+  "is_title_page_heading": false,
+  "page_index": null,
+  "block_order": 1,
+  "paragraph_count": 10,
+  "paragraph_ids": [
+    "S04-P023",
+    "S04-P024",
+    "S04-P025",
+    "S04-P026",
+    "S07-P017",
+    "S07-P018",
+    "S04-P027",
+    "S04-P028",
+    "S07-P019",
+    "S04-P029"
+  ],
+  "paragraph_uids": [
+    "PRAW-000054",
+    "PRAW-000055",
+    "PRAW-000056",
+    "PRAW-000057",
+    "PRAW-000058",
+    "PRAW-000059",
+    "PRAW-000060",
+    "PRAW-000061",
+    "PRAW-000062",
+    "PRAW-000063"
+  ],
+  "paragraph_paths": [
+    "paragraphs/PRAW-000054.md",
+    "paragraphs/PRAW-000055.md",
+    "paragraphs/PRAW-000056.md",
+    "paragraphs/PRAW-000057.md",
+    "paragraphs/PRAW-000058.md",
+    "paragraphs/PRAW-000059.md",
+    "paragraphs/PRAW-000060.md",
+    "paragraphs/PRAW-000061.md",
+    "paragraphs/PRAW-000062.md",
+    "paragraphs/PRAW-000063.md"
+  ],
+  "linked_figures": [
+    "FIG004",
+    "FIG005"
+  ],
+  "linked_tables": []
+}

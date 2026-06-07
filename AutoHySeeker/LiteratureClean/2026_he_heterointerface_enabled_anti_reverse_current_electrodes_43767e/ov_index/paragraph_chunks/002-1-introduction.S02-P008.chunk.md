@@ -1,0 +1,9 @@
+---
+paper_id: "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e"
+section_id: "S02_introduction"
+paragraph_id: "S02-P008"
+evidence_id: "EV-he2026-43767e-S02-P008"
+chunk_index: 0
+---
+![](figures/FIG003/image_003.jpg)
+Figure 3. Structure and stability characterization of $\mathrm{Ni}_3\mathrm{S}_2 / \mathrm{NM}$ I. (a) The element mapping of an individual nickel wire coated with the catalyst. (b) Cross-sectional TEM image of $\mathrm{Ni}_3\mathrm{S}_2 / \mathrm{NM}$ I. (c) Cross-sectional element mapping of $\mathrm{Ni}_3\mathrm{S}_2 / \mathrm{NM}$ I. (d1) HAADF-STEM image and (d2-d4) corresponding EELS spectra. (d5) DPC-STEM phase mapping reconstructed from 4D-STEM data, where blue indicates the Ni substrate, green indicates the $\mathrm{Ni}_3\mathrm{S}_2$ catalytic layer, and the transition color between them corresponds to the composition-gradient interlayer. (d6) Charge distribution image of $\mathrm{Ni}_3\mathrm{S}_2 / \mathrm{NM}$ I. (e) Mechanical stability tests under ultrasonic or flushing treatments in $1.0\mathrm{M}$ KOH for $\mathrm{Ni}_3\mathrm{S}_2 / \mathrm{NM}$ H and $\mathrm{Ni}_3\mathrm{S}_2 / \mathrm{NM}$ I. (f) Long-term stability test of $\mathrm{Ni}_3\mathrm{S}_2 / \mathrm{NM}$ I for HER and OER in $1.0\mathrm{M}$ KOH at $25^{\circ}\mathrm{C}$ .

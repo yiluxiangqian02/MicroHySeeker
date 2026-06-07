@@ -1,0 +1,8 @@
+---
+paper_id: "2025_peng_strategies_and_countermeasures_against_reverse_current_f_803838"
+section_id: "S03_methods_and_setup"
+paragraph_id: "S03-P006"
+evidence_id: "EV-peng2025-803838-S03-P006"
+chunk_index: 0
+---
+Besides cathodic protection and doping of external metals, other strategies can be applied to improve the antioxidant properties of nickel-based cathodes under reverse current conditions. These include surface modification techniques such as atomic layer deposition[81-89] (ALD) or electrochemical passivation,[74,75,80] which can form protective layers that inhibit oxidation without significantly compromising catalytic activity. Additionally, structural engineering approaches—such as designing core-shell architectures or creating nanostructured surfaces—can enhance electron conductivity and facilitate the removal of oxidative intermediates. The incorporation of conductive polymers or carbon-based materials[50,90-97] (e.g., graphene or carbon nanotubes) as support matrices can also help buffer the electrode against harsh electrochemical environments. Moreover, a promising strategy involves the design and application of a protective layer directly onto the cathode surface. This materials-based approach aims to create a physical and electrochemical barrier, specifically engineered to shield the underlying nickel from the corrosive environment present during shutdown periods. By doing so, it directly inhibits the irreversible oxidation caused by reverse current, thereby prolonging the electrode's lifespan. Collectively, the incorporation of such protective layers complements conventional mitigation methods and offers a robust, materials-centric approach to enhancing the durability of nickel-based cathode materials in AEMWE systems.

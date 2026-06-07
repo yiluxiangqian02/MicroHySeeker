@@ -1,0 +1,79 @@
+{
+  "status": "extracted",
+  "table_count": 5,
+  "tables": [
+    {
+      "table_id": "TAB001",
+      "table_number": "1",
+      "title": "Characteristic value to describe cell voltages and leak Table 1current.",
+      "caption": "Characteristic value to describe cell voltages and leak Table 1current.",
+      "evidence_id": "EV-uchino2023-38347e-TAB001",
+      "table_dir": "tables/TAB001/",
+      "markdown_path": "tables/TAB001/table.md",
+      "caption_path": "tables/TAB001/caption.md",
+      "clean_image_paths": [
+        "tables/TAB001/image_001.jpg"
+      ],
+      "raw_images": [
+        "images/5fa0e4b52f919904631b1f5f263696f8eb8d1b47bde5454bf5d577d79accf043.jpg"
+      ],
+      "has_html": true
+    },
+    {
+      "table_id": "TAB002",
+      "table_number": "2",
+      "title": "Measerd cell voltages of the U _ { 1 } and U _ { 2 } for initial, Table 2.middle, and final periods of reverse current.",
+      "caption": "Measerd cell voltages of the U _ { 1 } and U _ { 2 } for initial, Table 2.middle, and final periods of reverse current. Couples are listed in Table 2.",
+      "evidence_id": "EV-uchino2023-38347e-TAB002",
+      "table_dir": "tables/TAB002/",
+      "markdown_path": "tables/TAB002/table.md",
+      "caption_path": "tables/TAB002/caption.md",
+      "clean_image_paths": [
+        "tables/TAB002/image_001.jpg"
+      ],
+      "raw_images": [
+        "images/83cc1fc991e8fc0116984d7ab5f8317d78f0f135c262f6a6220a73adb250d388.jpg"
+      ],
+      "has_html": true
+    },
+    {
+      "table_id": "TAB003",
+      "table_number": "3",
+      "title": "",
+      "caption": "Table 3",
+      "evidence_id": "EV-uchino2023-38347e-TAB003",
+      "table_dir": "tables/TAB003/",
+      "markdown_path": "tables/TAB003/table.md",
+      "caption_path": "tables/TAB003/caption.md",
+      "clean_image_paths": [],
+      "raw_images": [],
+      "has_html": true
+    },
+    {
+      "table_id": "TAB004",
+      "table_number": "4",
+      "title": "",
+      "caption": "Table 4",
+      "evidence_id": "EV-uchino2023-38347e-TAB004",
+      "table_dir": "tables/TAB004/",
+      "markdown_path": "tables/TAB004/table.md",
+      "caption_path": "tables/TAB004/caption.md",
+      "clean_image_paths": [],
+      "raw_images": [],
+      "has_html": true
+    },
+    {
+      "table_id": "TAB005",
+      "table_number": "5",
+      "title": "",
+      "caption": "Table 5",
+      "evidence_id": "EV-uchino2023-38347e-TAB005",
+      "table_dir": "tables/TAB005/",
+      "markdown_path": "tables/TAB005/table.md",
+      "caption_path": "tables/TAB005/caption.md",
+      "clean_image_paths": [],
+      "raw_images": [],
+      "has_html": true
+    }
+  ]
+}

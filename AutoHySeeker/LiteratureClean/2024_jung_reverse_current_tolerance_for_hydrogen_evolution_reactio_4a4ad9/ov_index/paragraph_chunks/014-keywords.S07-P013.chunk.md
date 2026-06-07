@@ -1,0 +1,13 @@
+---
+paper_id: "2024_jung_reverse_current_tolerance_for_hydrogen_evolution_reactio_4a4ad9"
+section_id: "S07_back_matter_or_supplementary"
+paragraph_id: "S07-P013"
+evidence_id: "EV-jung2024-4a4ad9-S07-P013"
+chunk_index: 0
+---
+[27] a) J. Libra, K. Veltruská, V. Matolin, Phys. Rev. B 2007, 76, 165438; b) K. Gurtler, K. Jacobi, Surf. Sci. 1983, 134, 309; c) Y.-H. Lin, C.-H. Hsu, I. Jang, C.-J. Chen, P.-M. Chiu, D.-S. Lin, C.-T. Wu, F.-C. Chuang, P.-Y. Chang, P.-J. Hsu, ACS Appl. Mater. Interfaces 2022, 14, 23990.
+[28] a) J. Durst, A. Siebel, C. Simon, F. Hasché, J. Herranz, H. A. Gasteiger, Energy Environ. Sci. 2014, 7, 2255; b) W. Sheng, Z. Zhuang, M. Gao, J. Zheng, J. G. Chen, Y. Yan, Nat. Commun. 2015, 6, 5848.
+[29] a) Y. Liu, T. Sakthivel, F. Hu, Y. Tian, D. Wu, E. H. Ang, H. Liu, S. Guo, S. Peng, Z. Dai, Adv. Energy Mater. 2023, 13, 2203797; b) D. He, X. Song, W. Li, C. Tang, J. Liu, Z. Ke, C. Jiang, X. Xiao, Angew. Chem., Int. Ed. 2020, 59, 6929.
+[30] a) B. Xing, G.-C. Wang, Phys. Chem. Chem. Phys. 2014, 16, 2621; b) J. Zhang, W. Li, J. Wang, X. Pu, G. Zhang, S. Wang, N. Wang, X. Li, Angew. Chem., Int. Ed. 2023, 62, 202215654.
+[31] a) D. Soares, O. Teschke, I. Torriani, J. Electrochem. Soc. 1992, 139, 98; b) Y. Li, X. Tan, R. K. Hocking, X. Bo, H. Ren, B. Johannessen, S. C. Smith, C. Zhao, Nat. Commun. 2020, 11, 2720; c) F. Song, W. Li, J. Yang, G. Han, P. Liao, Y. Sun, 2018, 9, 4531.
+[32] a) Z. Chen, Y. Song, J. Cai, X. Zheng, D. Han, Y. Wu, Y. Zang, S. Niu, Y. Liu, J. Zhu, X. Liu, G. Wang, Angew. Chem., Int. Ed. 2018, 57, 5076; b) Q. Hu, K. Gao, X. Wang, H. Zheng, J. Cao, L. Mi, Q. Huo, H. Yang, J. Liu, C. He, Nat. Commun. 2022, 13, 3958; c) G. Wu, X. Han, J. Cai, P. Yin, P. Cui, X. Zheng, H. Li, C. Chen, G. Wang, X. Hong, Nat. Commun. 2022, 13, 4200.

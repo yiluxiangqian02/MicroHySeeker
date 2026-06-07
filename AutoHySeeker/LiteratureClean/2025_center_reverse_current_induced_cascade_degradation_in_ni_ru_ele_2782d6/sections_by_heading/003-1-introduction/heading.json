@@ -1,0 +1,47 @@
+{
+  "paper_id": "2025_center_reverse_current_induced_cascade_degradation_in_ni_ru_ele_2782d6",
+  "heading_uid": "HRAW-003-e3db4264",
+  "heading_dirname": "003-1-introduction",
+  "heading_text": "1 | Introduction",
+  "heading_level": 1,
+  "doc_heading_order": 3,
+  "display_order": 3,
+  "is_title_page_heading": false,
+  "page_index": null,
+  "block_order": 1,
+  "paragraph_count": 8,
+  "paragraph_ids": [
+    "S02-P001",
+    "S02-P002",
+    "S02-P003",
+    "S02-P004",
+    "S02-P005",
+    "S02-P006",
+    "S02-P007",
+    "S02-P008"
+  ],
+  "paragraph_uids": [
+    "PRAW-000005",
+    "PRAW-000006",
+    "PRAW-000007",
+    "PRAW-000008",
+    "PRAW-000009",
+    "PRAW-000010",
+    "PRAW-000011",
+    "PRAW-000012"
+  ],
+  "paragraph_paths": [
+    "paragraphs/PRAW-000005.md",
+    "paragraphs/PRAW-000006.md",
+    "paragraphs/PRAW-000007.md",
+    "paragraphs/PRAW-000008.md",
+    "paragraphs/PRAW-000009.md",
+    "paragraphs/PRAW-000010.md",
+    "paragraphs/PRAW-000011.md",
+    "paragraphs/PRAW-000012.md"
+  ],
+  "linked_figures": [
+    "FIG001"
+  ],
+  "linked_tables": []
+}

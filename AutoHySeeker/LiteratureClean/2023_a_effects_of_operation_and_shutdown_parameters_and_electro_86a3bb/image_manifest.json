@@ -1,0 +1,381 @@
+[
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Effects of operation and shutdown parameters and electrode materials on_99bf4606\\images\\015d119f235ff3c6359a333ddeb83f163fc6378eaf52bc2c2b79dd12bb4268de.jpg",
+    "raw_relative_path": "images/015d119f235ff3c6359a333ddeb83f163fc6378eaf52bc2c2b79dd12bb4268de.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Effects of operation and shutdown parameters and electrode materials on_99bf4606\\images\\17bb1ac5e7e642f88f511401e70ed6961804970b2f30f6b5cc16c6fac3abd5ec.jpg",
+    "raw_relative_path": "images/17bb1ac5e7e642f88f511401e70ed6961804970b2f30f6b5cc16c6fac3abd5ec.jpg",
+    "status": "used",
+    "figure_id": "FIG005",
+    "clean_path": "figures/FIG005/image_001.jpg",
+    "caption_path": "figures/FIG005/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S05-P007",
+      "S05-P011"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Effects of operation and shutdown parameters and electrode materials on_99bf4606\\images\\32227f87862b0332eb55392c3b495f09e856524a72f604820514a1053d4726d2.jpg",
+    "raw_relative_path": "images/32227f87862b0332eb55392c3b495f09e856524a72f604820514a1053d4726d2.jpg",
+    "status": "used",
+    "figure_id": "FIG007",
+    "clean_path": "figures/FIG007/image_003.jpg",
+    "caption_path": "figures/FIG007/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S03-P031",
+      "S05-P013",
+      "S05-P014"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Effects of operation and shutdown parameters and electrode materials on_99bf4606\\images\\395fa7d8c919313c0a49f20e89d9c563a9a44ca0f3051a354dcfd05aae777900.jpg",
+    "raw_relative_path": "images/395fa7d8c919313c0a49f20e89d9c563a9a44ca0f3051a354dcfd05aae777900.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Effects of operation and shutdown parameters and electrode materials on_99bf4606\\images\\3d2ddf0dc66c078284470c6a26193f581569111664dbee0955e96f25e9492bb4.jpg",
+    "raw_relative_path": "images/3d2ddf0dc66c078284470c6a26193f581569111664dbee0955e96f25e9492bb4.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Effects of operation and shutdown parameters and electrode materials on_99bf4606\\images\\44ad15a0463096f1020bf5e0c72c80f8b0a672bcc9124ff6f82c7b9f98336828.jpg",
+    "raw_relative_path": "images/44ad15a0463096f1020bf5e0c72c80f8b0a672bcc9124ff6f82c7b9f98336828.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Effects of operation and shutdown parameters and electrode materials on_99bf4606\\images\\508b4b3e79de91cbaf68f4a6f7056bd0aca691b6769537c5064688eb43904de5.jpg",
+    "raw_relative_path": "images/508b4b3e79de91cbaf68f4a6f7056bd0aca691b6769537c5064688eb43904de5.jpg",
+    "status": "used",
+    "figure_id": "FIG002",
+    "clean_path": "figures/FIG002/image_001.jpg",
+    "caption_path": "figures/FIG002/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S03-P003",
+      "S05-P005"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Effects of operation and shutdown parameters and electrode materials on_99bf4606\\images\\54a16d91cd139a4ff9b2ae5f9ab833b3fa5c65d154c94e7477a10e6c749173d8.jpg",
+    "raw_relative_path": "images/54a16d91cd139a4ff9b2ae5f9ab833b3fa5c65d154c94e7477a10e6c749173d8.jpg",
+    "status": "used",
+    "figure_id": "FIG008",
+    "clean_path": "figures/FIG008/image_003.jpg",
+    "caption_path": "figures/FIG008/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S03-P032",
+      "S03-P033",
+      "S03-P034"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Effects of operation and shutdown parameters and electrode materials on_99bf4606\\images\\587960ed6492db0bbaf1a659eb6447f0c3366b4f073587cfdb9d05727bf32af4.jpg",
+    "raw_relative_path": "images/587960ed6492db0bbaf1a659eb6447f0c3366b4f073587cfdb9d05727bf32af4.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Effects of operation and shutdown parameters and electrode materials on_99bf4606\\images\\5cfdebeb2f274a785ab468d45b024faf0860be2403009511bcfbfdac77fc3d5d.jpg",
+    "raw_relative_path": "images/5cfdebeb2f274a785ab468d45b024faf0860be2403009511bcfbfdac77fc3d5d.jpg",
+    "status": "used",
+    "figure_id": "FIG002",
+    "clean_path": "figures/FIG002/image_002.jpg",
+    "caption_path": "figures/FIG002/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S03-P003",
+      "S05-P005"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Effects of operation and shutdown parameters and electrode materials on_99bf4606\\images\\5ea4563a78fa9a26c27b9ba63a29a7cd95348997156627623fb83a3b65638bec.jpg",
+    "raw_relative_path": "images/5ea4563a78fa9a26c27b9ba63a29a7cd95348997156627623fb83a3b65638bec.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Effects of operation and shutdown parameters and electrode materials on_99bf4606\\images\\631485fecc5443664fd6af827eccf8aefb619a7d7b6ab8563df588233a031c81.jpg",
+    "raw_relative_path": "images/631485fecc5443664fd6af827eccf8aefb619a7d7b6ab8563df588233a031c81.jpg",
+    "status": "used",
+    "figure_id": "FIG006",
+    "clean_path": "figures/FIG006/image_002.jpg",
+    "caption_path": "figures/FIG006/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S03-P030",
+      "S05-P012"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Effects of operation and shutdown parameters and electrode materials on_99bf4606\\images\\6519d78d69f7a37e78f2a858e67ba007c7eaf1aca1434e8df4a9fbad71093b1a.jpg",
+    "raw_relative_path": "images/6519d78d69f7a37e78f2a858e67ba007c7eaf1aca1434e8df4a9fbad71093b1a.jpg",
+    "status": "used",
+    "figure_id": "FIG007",
+    "clean_path": "figures/FIG007/image_002.jpg",
+    "caption_path": "figures/FIG007/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S03-P031",
+      "S05-P013",
+      "S05-P014"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Effects of operation and shutdown parameters and electrode materials on_99bf4606\\images\\6db8d06432f02d1f736a6c1544b2cd799339e926feda5308f1e6ef3b6f10e18a.jpg",
+    "raw_relative_path": "images/6db8d06432f02d1f736a6c1544b2cd799339e926feda5308f1e6ef3b6f10e18a.jpg",
+    "status": "used",
+    "figure_id": "FIG004",
+    "clean_path": "figures/FIG004/image_002.jpg",
+    "caption_path": "figures/FIG004/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S01-P002",
+      "S01-P003",
+      "S03-P024",
+      "S03-P026",
+      "S03-P027"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Effects of operation and shutdown parameters and electrode materials on_99bf4606\\images\\79a4207da95998b3913352d5f6fe50dc93333ad0fd883ddf176e886e65b7ce2a.jpg",
+    "raw_relative_path": "images/79a4207da95998b3913352d5f6fe50dc93333ad0fd883ddf176e886e65b7ce2a.jpg",
+    "status": "used",
+    "figure_id": "FIG007",
+    "clean_path": "figures/FIG007/image_001.jpg",
+    "caption_path": "figures/FIG007/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S03-P031",
+      "S05-P013",
+      "S05-P014"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Effects of operation and shutdown parameters and electrode materials on_99bf4606\\images\\8a1191838509ba1f01e4c9c22e956d458d8610a6b2ab5420394cebd504148a75.jpg",
+    "raw_relative_path": "images/8a1191838509ba1f01e4c9c22e956d458d8610a6b2ab5420394cebd504148a75.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Effects of operation and shutdown parameters and electrode materials on_99bf4606\\images\\9ad6296ee0da478d8975eb1a32cf3343b1e111691ada85b5e129d4a8cb859b91.jpg",
+    "raw_relative_path": "images/9ad6296ee0da478d8975eb1a32cf3343b1e111691ada85b5e129d4a8cb859b91.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Effects of operation and shutdown parameters and electrode materials on_99bf4606\\images\\9b1e3b63cb26060e8ca4cdda91e89ee7fd13bc6a38f1712dc65f71d7e9d3d785.jpg",
+    "raw_relative_path": "images/9b1e3b63cb26060e8ca4cdda91e89ee7fd13bc6a38f1712dc65f71d7e9d3d785.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Effects of operation and shutdown parameters and electrode materials on_99bf4606\\images\\9cb75f64f3e7a81bc9d8932bda8b7c7d462dd8b7e288b57dfcadee89a4ad0a27.jpg",
+    "raw_relative_path": "images/9cb75f64f3e7a81bc9d8932bda8b7c7d462dd8b7e288b57dfcadee89a4ad0a27.jpg",
+    "status": "used",
+    "figure_id": "FIG006",
+    "clean_path": "figures/FIG006/image_001.jpg",
+    "caption_path": "figures/FIG006/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S03-P030",
+      "S05-P012"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Effects of operation and shutdown parameters and electrode materials on_99bf4606\\images\\9e5622509dee04952ee4c4f2fd219a368a5bbe8adc3de1c1052dc4ac0e5d5699.jpg",
+    "raw_relative_path": "images/9e5622509dee04952ee4c4f2fd219a368a5bbe8adc3de1c1052dc4ac0e5d5699.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Effects of operation and shutdown parameters and electrode materials on_99bf4606\\images\\a8459f02bc6047d4782acc14376161f7bf0ccf89250569b184f7ff6169c471fe.jpg",
+    "raw_relative_path": "images/a8459f02bc6047d4782acc14376161f7bf0ccf89250569b184f7ff6169c471fe.jpg",
+    "status": "used",
+    "figure_id": "FIG003",
+    "clean_path": "figures/FIG003/image_002.jpg",
+    "caption_path": "figures/FIG003/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S03-P025",
+      "S04-P001"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Effects of operation and shutdown parameters and electrode materials on_99bf4606\\images\\b145ba71f75ec485fadf946975f2bdf594abccb4408426b68aeb453afbe6b774.jpg",
+    "raw_relative_path": "images/b145ba71f75ec485fadf946975f2bdf594abccb4408426b68aeb453afbe6b774.jpg",
+    "status": "used",
+    "figure_id": "FIG004",
+    "clean_path": "figures/FIG004/image_001.jpg",
+    "caption_path": "figures/FIG004/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S01-P002",
+      "S01-P003",
+      "S03-P024",
+      "S03-P026",
+      "S03-P027"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Effects of operation and shutdown parameters and electrode materials on_99bf4606\\images\\c4cb2889f772ac9401cce0eafb5e21bbabb5491c8eee328396bfb16cb3a8328a.jpg",
+    "raw_relative_path": "images/c4cb2889f772ac9401cce0eafb5e21bbabb5491c8eee328396bfb16cb3a8328a.jpg",
+    "status": "used",
+    "figure_id": "FIG003",
+    "clean_path": "figures/FIG003/image_001.jpg",
+    "caption_path": "figures/FIG003/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S03-P025",
+      "S04-P001"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Effects of operation and shutdown parameters and electrode materials on_99bf4606\\images\\d6a6e8c48da8ae5b7494550dce5670750705591c158e5c6b631fb8aa5924027e.jpg",
+    "raw_relative_path": "images/d6a6e8c48da8ae5b7494550dce5670750705591c158e5c6b631fb8aa5924027e.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Effects of operation and shutdown parameters and electrode materials on_99bf4606\\images\\dedc4eaca66f153cf8f79cfd4c7561bf1ebf1ebf630e6de2358f16ae8b69ca4d.jpg",
+    "raw_relative_path": "images/dedc4eaca66f153cf8f79cfd4c7561bf1ebf1ebf630e6de2358f16ae8b69ca4d.jpg",
+    "status": "used",
+    "figure_id": "FIG008",
+    "clean_path": "figures/FIG008/image_001.jpg",
+    "caption_path": "figures/FIG008/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S03-P032",
+      "S03-P033",
+      "S03-P034"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Effects of operation and shutdown parameters and electrode materials on_99bf4606\\images\\e20bb04c83d3b57d06f233cca80a736dff7208c18ab3984ccb91794b3949098f.jpg",
+    "raw_relative_path": "images/e20bb04c83d3b57d06f233cca80a736dff7208c18ab3984ccb91794b3949098f.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Effects of operation and shutdown parameters and electrode materials on_99bf4606\\images\\e9ea904342c4f0f0bf2ac496be2c56655684c5d14d3d9ae53785035f23bd5859.jpg",
+    "raw_relative_path": "images/e9ea904342c4f0f0bf2ac496be2c56655684c5d14d3d9ae53785035f23bd5859.jpg",
+    "status": "used",
+    "figure_id": "FIG001",
+    "clean_path": "figures/FIG001/image_001.jpg",
+    "caption_path": "figures/FIG001/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S01-P005",
+      "S05-P001"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Effects of operation and shutdown parameters and electrode materials on_99bf4606\\images\\ea3935de02f2e95ba32dc7c2d5094e7e56b01503848fd84d5a33b4bce6f90867.jpg",
+    "raw_relative_path": "images/ea3935de02f2e95ba32dc7c2d5094e7e56b01503848fd84d5a33b4bce6f90867.jpg",
+    "status": "used",
+    "figure_id": "FIG004",
+    "clean_path": "figures/FIG004/image_003.jpg",
+    "caption_path": "figures/FIG004/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S01-P002",
+      "S01-P003",
+      "S03-P024",
+      "S03-P026",
+      "S03-P027"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Effects of operation and shutdown parameters and electrode materials on_99bf4606\\images\\ee5a627180f200ac305f5f728c0d7a20ee5b2309ccedf0cc38dc4de9dc286dab.jpg",
+    "raw_relative_path": "images/ee5a627180f200ac305f5f728c0d7a20ee5b2309ccedf0cc38dc4de9dc286dab.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Effects of operation and shutdown parameters and electrode materials on_99bf4606\\images\\ef70a2422b46e821d1c69a99fe272d96eb7e5aa2a14441755b1baf237f1c2a4c.jpg",
+    "raw_relative_path": "images/ef70a2422b46e821d1c69a99fe272d96eb7e5aa2a14441755b1baf237f1c2a4c.jpg",
+    "status": "used",
+    "figure_id": "FIG008",
+    "clean_path": "figures/FIG008/image_002.jpg",
+    "caption_path": "figures/FIG008/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S03-P032",
+      "S03-P033",
+      "S03-P034"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Effects of operation and shutdown parameters and electrode materials on_99bf4606\\images\\f3cbeed2e6552e2ae561636600a2245df1bd92e852784c95d2061eee9aa0f62b.jpg",
+    "raw_relative_path": "images/f3cbeed2e6552e2ae561636600a2245df1bd92e852784c95d2061eee9aa0f62b.jpg",
+    "status": "used",
+    "figure_id": "FIG005",
+    "clean_path": "figures/FIG005/image_002.jpg",
+    "caption_path": "figures/FIG005/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S05-P007",
+      "S05-P011"
+    ]
+  }
+]

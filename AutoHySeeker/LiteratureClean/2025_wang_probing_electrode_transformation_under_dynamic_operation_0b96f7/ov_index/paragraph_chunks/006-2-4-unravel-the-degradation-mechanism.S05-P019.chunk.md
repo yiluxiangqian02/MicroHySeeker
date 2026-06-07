@@ -1,0 +1,8 @@
+---
+paper_id: "2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7"
+section_id: "S05_discussion_mechanism"
+paragraph_id: "S05-P019"
+evidence_id: "EV-wang2025-0b96f7-S05-P019"
+chunk_index: 0
+---
+mortem and in situ characterizations were conducted on both anode and cathode. The morphology of post-AST anode was first examined by scanning electron microscopy (SEM) ( a–c). Figure 5While the original porous structure of Ni electrode is preserved for post-AST anode (Figures S11 and S12, Supporting Information), surface morphology of Ni fibers has been roughened significantly. Notably, the entire surface of Ni fibers is homogeneously covered by vertically arranged nanoneedles, rendering a dense surface coating layer (highlighted in red dotted box, Figure 5b,c; Figure S13a–c, Supporting Information), which is consistent with increase of $\mathrm { C _ { \mathrm { e d l } } }$ of post-AST anode (Figure S8, Supporting Information). The enhancement in surface area could also reduce bubble-induced overpotential, as shown by the reduction in residual overpotential (Figure S7a, Supporting Information). Energy-dispersive X-ray spectroscopy (EDS) mapping in Figure S14 (Supporting Information) indicates that these nanoneedles primarily consist of Ni and O. It should also be noted that a different morphology is observed in the region of Ni fibers that is in

@@ -1,0 +1,8 @@
+---
+paper_id: "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e"
+section_id: "S05_discussion_mechanism"
+paragraph_id: "S05-P019"
+evidence_id: "EV-he2026-43767e-S05-P019"
+chunk_index: 0
+---
+Mechanical resilience of the $\mathrm{Ni}(11\overline{2}) / \mathrm{Ni}_3\mathrm{S}_2(\overline{1} 20)$ heterostructure under operational stresses was further probed through strain-dependent analyses (Figure 5c). Upon $20\%$ tensile strain, the conventional interface displays a stress concentration followed by catastrophic fracture, whereas the gradient architecture maintains structural continuity with higher stress tolerance (Figures 5d and S46). Complementary electron localization function (ELF) analysis reveals critical differences in bond evolution under strain (Figure 5e). For the conventional heterostructure, the ELF value around $30\%$ Z-coordinate drops sharply from $\sim 0.2$ ( $0\%$ strain) to $\sim 0.1$ ( $20\%$ strain), signaling bond weakening at stress-concentrated regions.[46,47] In contrast, the gradient architecture maintains stable ELF across all strain levels, demonstrating its effectiveness in maintaining both structural and electronic stability under strain.[48,49] Collectively, the stabilization mechanism involves: (1) a crystallographically optimized $\mathrm{Ni}(11\overline{2}) / \mathrm{Ni}_3\mathrm{S}_2(\overline{1} 20)$ heterostructure interlayer with enhanced chemical bonding, and (2) gradient-induced continuous lattice matching that dissipates mechanical energy, suppressing crack nucleation. These synergistic effects enable the exceptional resistance to the RC effect and $>3000\mathrm{h}$ stability in alkaline water splitting, establishing new design principles for durable heterostructured electrodes.

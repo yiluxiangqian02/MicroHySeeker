@@ -1,0 +1,260 @@
+{
+  "generated_at": "2026-06-02T17:00:32.007167",
+  "thresholds": {
+    "high_min": 40,
+    "medium_min": 20,
+    "low_max": 19,
+    "semantic_weights": {
+      "high": 10,
+      "medium": 2,
+      "low": 0.5
+    },
+    "normalization": {
+      "section_count_source": "detect_generated_targets.section_targets_count",
+      "multiplier": 2.0
+    },
+    "process_penalty": {
+      "generation_status_not_fresh": 10,
+      "missing_evidence_links": 5,
+      "missing_or_invalid_tag_conflicts": 8,
+      "tag_conflicts_items_missing": 8,
+      "paper_overview_or_abstract_missing": 10,
+      "section_targets_missing": 10
+    }
+  },
+  "summary": {
+    "papers": 11,
+    "high": 2,
+    "medium": 3,
+    "low": 6,
+    "avg_conflict_score": 21.52
+  },
+  "details": [
+    {
+      "paper_id": "2017_uchino_relationship_between_the_redox_reactions_on_a_bipolar_pl_eb3da9",
+      "conflict_score": 19.0,
+      "conflict_level": "low",
+      "status": "fresh",
+      "raw_conflict_score": 66.5,
+      "normalized_conflict_score": 19.0,
+      "process_penalty_score": 0.0,
+      "section_count": 7,
+      "tag_conflict_counts": {
+        "high": 5,
+        "medium": 5,
+        "low": 13
+      },
+      "trigger_conditions": [
+        "high_tag_conflicts:5",
+        "medium_tag_conflicts:5",
+        "low_tag_conflicts:13"
+      ],
+      "checked_at": "2026-06-02T17:00:31.913155"
+    },
+    {
+      "paper_id": "2022_kim_cathodic_protection_system_against_a_reverse_current_aft_180201",
+      "conflict_score": 10.0,
+      "conflict_level": "low",
+      "status": "fresh",
+      "raw_conflict_score": 70.0,
+      "normalized_conflict_score": 10.0,
+      "process_penalty_score": 0.0,
+      "section_count": 14,
+      "tag_conflict_counts": {
+        "high": 6,
+        "medium": 0,
+        "low": 20
+      },
+      "trigger_conditions": [
+        "high_tag_conflicts:6",
+        "low_tag_conflicts:20"
+      ],
+      "checked_at": "2026-06-02T17:00:31.919150"
+    },
+    {
+      "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "conflict_score": 40.86,
+      "conflict_level": "high",
+      "status": "fresh",
+      "raw_conflict_score": 449.5,
+      "normalized_conflict_score": 40.86,
+      "process_penalty_score": 0.0,
+      "section_count": 22,
+      "tag_conflict_counts": {
+        "high": 44,
+        "medium": 1,
+        "low": 15
+      },
+      "trigger_conditions": [
+        "high_tag_conflicts:44",
+        "medium_tag_conflicts:1",
+        "low_tag_conflicts:15"
+      ],
+      "checked_at": "2026-06-02T17:00:31.931155"
+    },
+    {
+      "paper_id": "2023_uchino_dependence_of_the_reverse_current_on_the_surface_of_elec_38347e",
+      "conflict_score": 22.2,
+      "conflict_level": "medium",
+      "status": "fresh",
+      "raw_conflict_score": 166.5,
+      "normalized_conflict_score": 22.2,
+      "process_penalty_score": 0.0,
+      "section_count": 15,
+      "tag_conflict_counts": {
+        "high": 16,
+        "medium": 1,
+        "low": 9
+      },
+      "trigger_conditions": [
+        "high_tag_conflicts:16",
+        "medium_tag_conflicts:1",
+        "low_tag_conflicts:9"
+      ],
+      "checked_at": "2026-06-02T17:00:31.943163"
+    },
+    {
+      "paper_id": "2024_jung_reverse_current_tolerance_for_hydrogen_evolution_reactio_4a4ad9",
+      "conflict_score": 44.86,
+      "conflict_level": "high",
+      "status": "fresh",
+      "raw_conflict_score": 314.0,
+      "normalized_conflict_score": 44.86,
+      "process_penalty_score": 0.0,
+      "section_count": 14,
+      "tag_conflict_counts": {
+        "high": 29,
+        "medium": 9,
+        "low": 12
+      },
+      "trigger_conditions": [
+        "high_tag_conflicts:29",
+        "medium_tag_conflicts:9",
+        "low_tag_conflicts:12"
+      ],
+      "checked_at": "2026-06-02T17:00:31.950155"
+    },
+    {
+      "paper_id": "2025_center_reverse_current_induced_cascade_degradation_in_ni_ru_ele_2782d6",
+      "conflict_score": 29.53,
+      "conflict_level": "medium",
+      "status": "fresh",
+      "raw_conflict_score": 251.0,
+      "normalized_conflict_score": 29.53,
+      "process_penalty_score": 0.0,
+      "section_count": 17,
+      "tag_conflict_counts": {
+        "high": 23,
+        "medium": 7,
+        "low": 14
+      },
+      "trigger_conditions": [
+        "high_tag_conflicts:23",
+        "medium_tag_conflicts:7",
+        "low_tag_conflicts:14"
+      ],
+      "checked_at": "2026-06-02T17:00:31.960160"
+    },
+    {
+      "paper_id": "2025_peng_strategies_and_countermeasures_against_reverse_current_f_803838",
+      "conflict_score": 31.78,
+      "conflict_level": "medium",
+      "status": "fresh",
+      "raw_conflict_score": 286.0,
+      "normalized_conflict_score": 31.78,
+      "process_penalty_score": 0.0,
+      "section_count": 18,
+      "tag_conflict_counts": {
+        "high": 27,
+        "medium": 5,
+        "low": 12
+      },
+      "trigger_conditions": [
+        "high_tag_conflicts:27",
+        "medium_tag_conflicts:5",
+        "low_tag_conflicts:12"
+      ],
+      "checked_at": "2026-06-02T17:00:31.968152"
+    },
+    {
+      "paper_id": "2025_sha_10000h_stable_intermittent_alkaline_seawater_electrolysi_333f5c",
+      "conflict_score": 14.24,
+      "conflict_level": "low",
+      "status": "fresh",
+      "raw_conflict_score": 178.0,
+      "normalized_conflict_score": 14.24,
+      "process_penalty_score": 0.0,
+      "section_count": 25,
+      "tag_conflict_counts": {
+        "high": 16,
+        "medium": 9,
+        "low": 0
+      },
+      "trigger_conditions": [
+        "high_tag_conflicts:16",
+        "medium_tag_conflicts:9"
+      ],
+      "checked_at": "2026-06-02T17:00:31.979155"
+    },
+    {
+      "paper_id": "2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7",
+      "conflict_score": 5.07,
+      "conflict_level": "low",
+      "status": "fresh",
+      "raw_conflict_score": 35.5,
+      "normalized_conflict_score": 5.07,
+      "process_penalty_score": 0.0,
+      "section_count": 14,
+      "tag_conflict_counts": {
+        "high": 0,
+        "medium": 14,
+        "low": 15
+      },
+      "trigger_conditions": [
+        "medium_tag_conflicts:14",
+        "low_tag_conflicts:15"
+      ],
+      "checked_at": "2026-06-02T17:00:31.985152"
+    },
+    {
+      "paper_id": "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e",
+      "conflict_score": 4.31,
+      "conflict_level": "low",
+      "status": "fresh",
+      "raw_conflict_score": 28.0,
+      "normalized_conflict_score": 4.31,
+      "process_penalty_score": 0.0,
+      "section_count": 13,
+      "tag_conflict_counts": {
+        "high": 0,
+        "medium": 9,
+        "low": 20
+      },
+      "trigger_conditions": [
+        "medium_tag_conflicts:9",
+        "low_tag_conflicts:20"
+      ],
+      "checked_at": "2026-06-02T17:00:31.993158"
+    },
+    {
+      "paper_id": "2026_unknown_2026_2d8d75",
+      "conflict_score": 14.85,
+      "conflict_level": "low",
+      "status": "fresh",
+      "raw_conflict_score": 304.5,
+      "normalized_conflict_score": 14.85,
+      "process_penalty_score": 0.0,
+      "section_count": 41,
+      "tag_conflict_counts": {
+        "high": 30,
+        "medium": 0,
+        "low": 9
+      },
+      "trigger_conditions": [
+        "high_tag_conflicts:30",
+        "low_tag_conflicts:9"
+      ],
+      "checked_at": "2026-06-02T17:00:32.007167"
+    }
+  ]
+}

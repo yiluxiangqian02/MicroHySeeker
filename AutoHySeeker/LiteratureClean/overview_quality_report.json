@@ -1,0 +1,2738 @@
+{
+  "generated_at": "2026-06-02T17:00:18.350291",
+  "thresholds": {
+    "pass_min": 85,
+    "warn_min": 70,
+    "paper_overview_word_range": [
+      180,
+      320
+    ],
+    "section_overview_word_range": [
+      120,
+      220
+    ]
+  },
+  "summary": {
+    "papers": 11,
+    "pass": 11,
+    "warn": 0,
+    "fail": 0,
+    "avg_score": 92.97
+  },
+  "details": [
+    {
+      "paper_id": "2017_uchino_relationship_between_the_redox_reactions_on_a_bipolar_pl_eb3da9",
+      "grade": "pass",
+      "avg_score": 93.78,
+      "items_count": 8,
+      "pass_count": 7,
+      "warn_count": 1,
+      "fail_count": 0,
+      "items": [
+        {
+          "kind": "paper_overview",
+          "path": "ov_index/paper.overview.md",
+          "word_count": 280,
+          "length_score": 100,
+          "structure_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        },
+        {
+          "kind": "section_overview",
+          "section": "001-front-matter",
+          "path": "ov_index/sections/001-front-matter/overview.md",
+          "word_count": 178,
+          "length_score": 100,
+          "signal_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        },
+        {
+          "kind": "section_overview",
+          "section": "002-introduction",
+          "path": "ov_index/sections/002-introduction/overview.md",
+          "word_count": 160,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "003-experiment-method",
+          "path": "ov_index/sections/003-experiment-method/overview.md",
+          "word_count": 152,
+          "length_score": 100,
+          "signal_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        },
+        {
+          "kind": "section_overview",
+          "section": "004-potential-profile-model",
+          "path": "ov_index/sections/004-potential-profile-model/overview.md",
+          "word_count": 174,
+          "length_score": 100,
+          "signal_score": 33,
+          "score": 79.9,
+          "grade": "warn",
+          "issues": [
+            "missing_signals:evidence,relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "005-equivalent-circuit-model",
+          "path": "ov_index/sections/005-equivalent-circuit-model/overview.md",
+          "word_count": 174,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "006-results-and-discussion",
+          "path": "ov_index/sections/006-results-and-discussion/overview.md",
+          "word_count": 165,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "007-conclusions",
+          "path": "ov_index/sections/007-conclusions/overview.md",
+          "word_count": 180,
+          "length_score": 100,
+          "signal_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        }
+      ],
+      "checked_at": "2026-06-02T17:00:18.181298"
+    },
+    {
+      "paper_id": "2022_kim_cathodic_protection_system_against_a_reverse_current_aft_180201",
+      "grade": "pass",
+      "avg_score": 92.08,
+      "items_count": 15,
+      "pass_count": 15,
+      "warn_count": 0,
+      "fail_count": 0,
+      "items": [
+        {
+          "kind": "paper_overview",
+          "path": "ov_index/paper.overview.md",
+          "word_count": 282,
+          "length_score": 100,
+          "structure_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        },
+        {
+          "kind": "section_overview",
+          "section": "001-front-matter",
+          "path": "ov_index/sections/001-front-matter/overview.md",
+          "word_count": 179,
+          "length_score": 100,
+          "signal_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        },
+        {
+          "kind": "section_overview",
+          "section": "002-introduction",
+          "path": "ov_index/sections/002-introduction/overview.md",
+          "word_count": 170,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "003-reverse-current-simulation-model",
+          "path": "ov_index/sections/003-reverse-current-simulation-model/overview.md",
+          "word_count": 171,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "004-mechanism-of-a-cathodic-protection-system-against-re",
+          "path": "ov_index/sections/004-mechanism-of-a-cathodic-protection-system-against-re/overview.md",
+          "word_count": 169,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "005-stability-of-the-alkaline-water-electrolyzer-stack-u",
+          "path": "ov_index/sections/005-stability-of-the-alkaline-water-electrolyzer-stack-u/overview.md",
+          "word_count": 189,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "006-conclusions",
+          "path": "ov_index/sections/006-conclusions/overview.md",
+          "word_count": 180,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "007-supporting-information",
+          "path": "ov_index/sections/007-supporting-information/overview.md",
+          "word_count": 159,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "008-corresponding-author",
+          "path": "ov_index/sections/008-corresponding-author/overview.md",
+          "word_count": 139,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "009-authors",
+          "path": "ov_index/sections/009-authors/overview.md",
+          "word_count": 127,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "010-author-contributions",
+          "path": "ov_index/sections/010-author-contributions/overview.md",
+          "word_count": 157,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "011-notes",
+          "path": "ov_index/sections/011-notes/overview.md",
+          "word_count": 165,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "012-acknowledgments",
+          "path": "ov_index/sections/012-acknowledgments/overview.md",
+          "word_count": 133,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "013-references",
+          "path": "ov_index/sections/013-references/overview.md",
+          "word_count": 178,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:evidence"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "014-cas-biofinder-helps-you-find-your-next-breakthrough",
+          "path": "ov_index/sections/014-cas-biofinder-helps-you-find-your-next-breakthrough/overview.md",
+          "word_count": 176,
+          "length_score": 100,
+          "signal_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        }
+      ],
+      "checked_at": "2026-06-02T17:00:18.195294"
+    },
+    {
+      "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "grade": "pass",
+      "avg_score": 93.1,
+      "items_count": 23,
+      "pass_count": 22,
+      "warn_count": 1,
+      "fail_count": 0,
+      "items": [
+        {
+          "kind": "paper_overview",
+          "path": "ov_index/paper.overview.md",
+          "word_count": 294,
+          "length_score": 100,
+          "structure_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        },
+        {
+          "kind": "section_overview",
+          "section": "001-front-matter",
+          "path": "ov_index/sections/001-front-matter/overview.md",
+          "word_count": 161,
+          "length_score": 100,
+          "signal_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        },
+        {
+          "kind": "section_overview",
+          "section": "002-highlights",
+          "path": "ov_index/sections/002-highlights/overview.md",
+          "word_count": 148,
+          "length_score": 100,
+          "signal_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        },
+        {
+          "kind": "section_overview",
+          "section": "003-abstract",
+          "path": "ov_index/sections/003-abstract/overview.md",
+          "word_count": 152,
+          "length_score": 100,
+          "signal_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        },
+        {
+          "kind": "section_overview",
+          "section": "004-1-introduction",
+          "path": "ov_index/sections/004-1-introduction/overview.md",
+          "word_count": 172,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "005-2-1-construction-of-the-alkaline-water-electrolyzer-sy",
+          "path": "ov_index/sections/005-2-1-construction-of-the-alkaline-water-electrolyzer-sy/overview.md",
+          "word_count": 169,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "006-2-2-the-bipolar-plate-stack-and-the-associated-manifol",
+          "path": "ov_index/sections/006-2-2-the-bipolar-plate-stack-and-the-associated-manifol/overview.md",
+          "word_count": 167,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "007-2-3-basics-of-the-reverse-current-phenomenon-and-the-e",
+          "path": "ov_index/sections/007-2-3-basics-of-the-reverse-current-phenomenon-and-the-e/overview.md",
+          "word_count": 171,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "008-2-4-electrolysis-and-shutdown-conditions",
+          "path": "ov_index/sections/008-2-4-electrolysis-and-shutdown-conditions/overview.md",
+          "word_count": 155,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "009-2-5-fabrication-of-the-electrodes",
+          "path": "ov_index/sections/009-2-5-fabrication-of-the-electrodes/overview.md",
+          "word_count": 171,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "010-2-6-modeling-approach",
+          "path": "ov_index/sections/010-2-6-modeling-approach/overview.md",
+          "word_count": 171,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "011-3-1-basic-water-electrolysis-performance-of-the-single",
+          "path": "ov_index/sections/011-3-1-basic-water-electrolysis-performance-of-the-single/overview.md",
+          "word_count": 166,
+          "length_score": 100,
+          "signal_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        },
+        {
+          "kind": "section_overview",
+          "section": "012-3-2-basic-behavior-of-the-electrolyzer-after-shutdown",
+          "path": "ov_index/sections/012-3-2-basic-behavior-of-the-electrolyzer-after-shutdown/overview.md",
+          "word_count": 181,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "013-3-3-effects-of-dissolved-gases-on-the-reverse-current",
+          "path": "ov_index/sections/013-3-3-effects-of-dissolved-gases-on-the-reverse-current/overview.md",
+          "word_count": 180,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "014-3-4-effects-of-the-electrolyte-circulation-on-the-reve",
+          "path": "ov_index/sections/014-3-4-effects-of-the-electrolyte-circulation-on-the-reve/overview.md",
+          "word_count": 172,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "015-3-5-effects-of-the-electrolysis-current-and-temperatur",
+          "path": "ov_index/sections/015-3-5-effects-of-the-electrolysis-current-and-temperatur/overview.md",
+          "word_count": 172,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "016-3-6-effects-of-anode-materials-on-the-reverse-current",
+          "path": "ov_index/sections/016-3-6-effects-of-anode-materials-on-the-reverse-current/overview.md",
+          "word_count": 159,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "017-4-conclusion",
+          "path": "ov_index/sections/017-4-conclusion/overview.md",
+          "word_count": 160,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "018-credit-authorship-contribution-statement",
+          "path": "ov_index/sections/018-credit-authorship-contribution-statement/overview.md",
+          "word_count": 177,
+          "length_score": 100,
+          "signal_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        },
+        {
+          "kind": "section_overview",
+          "section": "019-declaration-of-competing-interest",
+          "path": "ov_index/sections/019-declaration-of-competing-interest/overview.md",
+          "word_count": 159,
+          "length_score": 100,
+          "signal_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        },
+        {
+          "kind": "section_overview",
+          "section": "020-acknowledgements",
+          "path": "ov_index/sections/020-acknowledgements/overview.md",
+          "word_count": 148,
+          "length_score": 100,
+          "signal_score": 33,
+          "score": 79.9,
+          "grade": "warn",
+          "issues": [
+            "missing_signals:evidence,relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "021-appendix-a-supplementary-data",
+          "path": "ov_index/sections/021-appendix-a-supplementary-data/overview.md",
+          "word_count": 138,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "022-references",
+          "path": "ov_index/sections/022-references/overview.md",
+          "word_count": 149,
+          "length_score": 100,
+          "signal_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        }
+      ],
+      "checked_at": "2026-06-02T17:00:18.216291"
+    },
+    {
+      "paper_id": "2023_uchino_dependence_of_the_reverse_current_on_the_surface_of_elec_38347e",
+      "grade": "pass",
+      "avg_score": 92.57,
+      "items_count": 16,
+      "pass_count": 16,
+      "warn_count": 0,
+      "fail_count": 0,
+      "items": [
+        {
+          "kind": "paper_overview",
+          "path": "ov_index/paper.overview.md",
+          "word_count": 303,
+          "length_score": 100,
+          "structure_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        },
+        {
+          "kind": "section_overview",
+          "section": "001-yosuke-uchino-a-b-takayuki-kobayashi-b-shinji-has",
+          "path": "ov_index/sections/001-yosuke-uchino-a-b-takayuki-kobayashi-b-shinji-has/overview.md",
+          "word_count": 169,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "002-abstract",
+          "path": "ov_index/sections/002-abstract/overview.md",
+          "word_count": 176,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "003-1-introduction",
+          "path": "ov_index/sections/003-1-introduction/overview.md",
+          "word_count": 172,
+          "length_score": 100,
+          "signal_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        },
+        {
+          "kind": "section_overview",
+          "section": "004-2-experimental",
+          "path": "ov_index/sections/004-2-experimental/overview.md",
+          "word_count": 167,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "005-3-1-cell-characteristics",
+          "path": "ov_index/sections/005-3-1-cell-characteristics/overview.md",
+          "word_count": 187,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "006-3-2-cell-voltage-behavior-after-electrolysis",
+          "path": "ov_index/sections/006-3-2-cell-voltage-behavior-after-electrolysis/overview.md",
+          "word_count": 154,
+          "length_score": 100,
+          "signal_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        },
+        {
+          "kind": "section_overview",
+          "section": "007-3-2-1-case-of-non-replacement",
+          "path": "ov_index/sections/007-3-2-1-case-of-non-replacement/overview.md",
+          "word_count": 189,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "008-3-3-ratio-of-gas-influence-to-give-cell-voltages",
+          "path": "ov_index/sections/008-3-3-ratio-of-gas-influence-to-give-cell-voltages/overview.md",
+          "word_count": 177,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "009-3-4-redox-couples",
+          "path": "ov_index/sections/009-3-4-redox-couples/overview.md",
+          "word_count": 171,
+          "length_score": 100,
+          "signal_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        },
+        {
+          "kind": "section_overview",
+          "section": "010-3-4-1-redox-couples-in-initial-stage",
+          "path": "ov_index/sections/010-3-4-1-redox-couples-in-initial-stage/overview.md",
+          "word_count": 163,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "011-3-4-2-redox-couples-in-intermediate-stage",
+          "path": "ov_index/sections/011-3-4-2-redox-couples-in-intermediate-stage/overview.md",
+          "word_count": 161,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "012-3-4-3-redox-couples-in-final-stage",
+          "path": "ov_index/sections/012-3-4-3-redox-couples-in-final-stage/overview.md",
+          "word_count": 177,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "013-4-conclusions",
+          "path": "ov_index/sections/013-4-conclusions/overview.md",
+          "word_count": 139,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "014-acknowledgment",
+          "path": "ov_index/sections/014-acknowledgment/overview.md",
+          "word_count": 160,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "015-nomenclature",
+          "path": "ov_index/sections/015-nomenclature/overview.md",
+          "word_count": 161,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        }
+      ],
+      "checked_at": "2026-06-02T17:00:18.231290"
+    },
+    {
+      "paper_id": "2024_jung_reverse_current_tolerance_for_hydrogen_evolution_reactio_4a4ad9",
+      "grade": "pass",
+      "avg_score": 92.06,
+      "items_count": 15,
+      "pass_count": 14,
+      "warn_count": 1,
+      "fail_count": 0,
+      "items": [
+        {
+          "kind": "paper_overview",
+          "path": "ov_index/paper.overview.md",
+          "word_count": 237,
+          "length_score": 100,
+          "structure_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        },
+        {
+          "kind": "section_overview",
+          "section": "001-front-matter",
+          "path": "ov_index/sections/001-front-matter/overview.md",
+          "word_count": 155,
+          "length_score": 100,
+          "signal_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        },
+        {
+          "kind": "section_overview",
+          "section": "002-1-introduction",
+          "path": "ov_index/sections/002-1-introduction/overview.md",
+          "word_count": 160,
+          "length_score": 100,
+          "signal_score": 33,
+          "score": 79.9,
+          "grade": "warn",
+          "issues": [
+            "missing_signals:claim,relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "003-2-1-degradation-tolerance-of-the-pb-ni-electrocatal",
+          "path": "ov_index/sections/003-2-1-degradation-tolerance-of-the-pb-ni-electrocatal/overview.md",
+          "word_count": 182,
+          "length_score": 100,
+          "signal_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        },
+        {
+          "kind": "section_overview",
+          "section": "004-2-2-origin-of-the-reverse-current-tolerance-and-imp",
+          "path": "ov_index/sections/004-2-2-origin-of-the-reverse-current-tolerance-and-imp/overview.md",
+          "word_count": 182,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "005-2-3-material-characterization-of-rc-tolerant-pb-ni",
+          "path": "ov_index/sections/005-2-3-material-characterization-of-rc-tolerant-pb-ni/overview.md",
+          "word_count": 192,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "006-2-4-water-activation-effect-of-rc-tolerant-pb-ni-ca",
+          "path": "ov_index/sections/006-2-4-water-activation-effect-of-rc-tolerant-pb-ni-ca/overview.md",
+          "word_count": 165,
+          "length_score": 100,
+          "signal_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        },
+        {
+          "kind": "section_overview",
+          "section": "007-2-5-ligand-effect-in-rc-tolerant-pb-ni-catalyst-pro",
+          "path": "ov_index/sections/007-2-5-ligand-effect-in-rc-tolerant-pb-ni-catalyst-pro/overview.md",
+          "word_count": 168,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "008-2-6-reverse-current-tolerance-of-the-pb-ni-catalyst",
+          "path": "ov_index/sections/008-2-6-reverse-current-tolerance-of-the-pb-ni-catalyst/overview.md",
+          "word_count": 170,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "009-3-conclusion",
+          "path": "ov_index/sections/009-3-conclusion/overview.md",
+          "word_count": 157,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "010-supporting-information",
+          "path": "ov_index/sections/010-supporting-information/overview.md",
+          "word_count": 165,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "011-acknowledgements",
+          "path": "ov_index/sections/011-acknowledgements/overview.md",
+          "word_count": 121,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "012-conflict-of-interest",
+          "path": "ov_index/sections/012-conflict-of-interest/overview.md",
+          "word_count": 153,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "013-data-availability-statement",
+          "path": "ov_index/sections/013-data-availability-statement/overview.md",
+          "word_count": 143,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "014-keywords",
+          "path": "ov_index/sections/014-keywords/overview.md",
+          "word_count": 161,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:claim"
+          ]
+        }
+      ],
+      "checked_at": "2026-06-02T17:00:18.246295"
+    },
+    {
+      "paper_id": "2025_center_reverse_current_induced_cascade_degradation_in_ni_ru_ele_2782d6",
+      "grade": "pass",
+      "avg_score": 95.05,
+      "items_count": 18,
+      "pass_count": 18,
+      "warn_count": 0,
+      "fail_count": 0,
+      "items": [
+        {
+          "kind": "paper_overview",
+          "path": "ov_index/paper.overview.md",
+          "word_count": 299,
+          "length_score": 100,
+          "structure_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        },
+        {
+          "kind": "section_overview",
+          "section": "001-front-matter",
+          "path": "ov_index/sections/001-front-matter/overview.md",
+          "word_count": 161,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "002-abstract",
+          "path": "ov_index/sections/002-abstract/overview.md",
+          "word_count": 153,
+          "length_score": 100,
+          "signal_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        },
+        {
+          "kind": "section_overview",
+          "section": "003-1-introduction",
+          "path": "ov_index/sections/003-1-introduction/overview.md",
+          "word_count": 166,
+          "length_score": 100,
+          "signal_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        },
+        {
+          "kind": "section_overview",
+          "section": "004-2-1-degradation-assessment",
+          "path": "ov_index/sections/004-2-1-degradation-assessment/overview.md",
+          "word_count": 156,
+          "length_score": 100,
+          "signal_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        },
+        {
+          "kind": "section_overview",
+          "section": "005-2-2-electrochemical-behavior-and-morphology-evolu",
+          "path": "ov_index/sections/005-2-2-electrochemical-behavior-and-morphology-evolu/overview.md",
+          "word_count": 156,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "006-2-3-solution-and-interface-evolutions",
+          "path": "ov_index/sections/006-2-3-solution-and-interface-evolutions/overview.md",
+          "word_count": 163,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "007-2-4-degradation-mechanism-and-pathway-analysis",
+          "path": "ov_index/sections/007-2-4-degradation-mechanism-and-pathway-analysis/overview.md",
+          "word_count": 175,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "008-2-5-sensitivity-on-the-rc-amplitude",
+          "path": "ov_index/sections/008-2-5-sensitivity-on-the-rc-amplitude/overview.md",
+          "word_count": 181,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "009-3-conclusions",
+          "path": "ov_index/sections/009-3-conclusions/overview.md",
+          "word_count": 165,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "010-4-1-electrode-preparation",
+          "path": "ov_index/sections/010-4-1-electrode-preparation/overview.md",
+          "word_count": 164,
+          "length_score": 100,
+          "signal_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        },
+        {
+          "kind": "section_overview",
+          "section": "011-4-2-ast-setup-and-electrochemical-measurement",
+          "path": "ov_index/sections/011-4-2-ast-setup-and-electrochemical-measurement/overview.md",
+          "word_count": 178,
+          "length_score": 100,
+          "signal_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        },
+        {
+          "kind": "section_overview",
+          "section": "012-4-3-configuration-of-the-electrolyzer-validation",
+          "path": "ov_index/sections/012-4-3-configuration-of-the-electrolyzer-validation/overview.md",
+          "word_count": 190,
+          "length_score": 100,
+          "signal_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        },
+        {
+          "kind": "section_overview",
+          "section": "013-4-4-physical-characterization",
+          "path": "ov_index/sections/013-4-4-physical-characterization/overview.md",
+          "word_count": 159,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "014-4-5-dynamic-dissolution-deposition-and-osterwalde",
+          "path": "ov_index/sections/014-4-5-dynamic-dissolution-deposition-and-osterwalde/overview.md",
+          "word_count": 162,
+          "length_score": 100,
+          "signal_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        },
+        {
+          "kind": "section_overview",
+          "section": "015-acknowledgements",
+          "path": "ov_index/sections/015-acknowledgements/overview.md",
+          "word_count": 148,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "016-conflicts-of-interest",
+          "path": "ov_index/sections/016-conflicts-of-interest/overview.md",
+          "word_count": 152,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "017-data-availability-statement",
+          "path": "ov_index/sections/017-data-availability-statement/overview.md",
+          "word_count": 141,
+          "length_score": 100,
+          "signal_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        }
+      ],
+      "checked_at": "2026-06-02T17:00:18.261297"
+    },
+    {
+      "paper_id": "2025_peng_strategies_and_countermeasures_against_reverse_current_f_803838",
+      "grade": "pass",
+      "avg_score": 93.72,
+      "items_count": 19,
+      "pass_count": 17,
+      "warn_count": 2,
+      "fail_count": 0,
+      "items": [
+        {
+          "kind": "paper_overview",
+          "path": "ov_index/paper.overview.md",
+          "word_count": 273,
+          "length_score": 100,
+          "structure_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        },
+        {
+          "kind": "section_overview",
+          "section": "001-front-matter",
+          "path": "ov_index/sections/001-front-matter/overview.md",
+          "word_count": 174,
+          "length_score": 100,
+          "signal_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        },
+        {
+          "kind": "section_overview",
+          "section": "002-1-introduction",
+          "path": "ov_index/sections/002-1-introduction/overview.md",
+          "word_count": 166,
+          "length_score": 100,
+          "signal_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        },
+        {
+          "kind": "section_overview",
+          "section": "003-2-background-of-reverse-current",
+          "path": "ov_index/sections/003-2-background-of-reverse-current/overview.md",
+          "word_count": 167,
+          "length_score": 100,
+          "signal_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        },
+        {
+          "kind": "section_overview",
+          "section": "004-2-1-origin-of-reverse-current",
+          "path": "ov_index/sections/004-2-1-origin-of-reverse-current/overview.md",
+          "word_count": 186,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "005-2-2-influence-of-reverse-current",
+          "path": "ov_index/sections/005-2-2-influence-of-reverse-current/overview.md",
+          "word_count": 180,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "006-2-2-1-inducing-the-cathode-to-be-oxidized",
+          "path": "ov_index/sections/006-2-2-1-inducing-the-cathode-to-be-oxidized/overview.md",
+          "word_count": 175,
+          "length_score": 100,
+          "signal_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        },
+        {
+          "kind": "section_overview",
+          "section": "007-2-2-2-triggering-the-anode-to-be-reduced",
+          "path": "ov_index/sections/007-2-2-2-triggering-the-anode-to-be-reduced/overview.md",
+          "word_count": 175,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "008-2-2-3-precipitating-energy-waste-and-safety-hazard",
+          "path": "ov_index/sections/008-2-2-3-precipitating-energy-waste-and-safety-hazard/overview.md",
+          "word_count": 167,
+          "length_score": 100,
+          "signal_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        },
+        {
+          "kind": "section_overview",
+          "section": "009-2-3-common-methods-for-testing-electrode-resistance",
+          "path": "ov_index/sections/009-2-3-common-methods-for-testing-electrode-resistance/overview.md",
+          "word_count": 161,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "010-3-mitigation-strategies-against-reverse-current",
+          "path": "ov_index/sections/010-3-mitigation-strategies-against-reverse-current/overview.md",
+          "word_count": 158,
+          "length_score": 100,
+          "signal_score": 33,
+          "score": 79.9,
+          "grade": "warn",
+          "issues": [
+            "missing_signals:claim,relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "011-3-1-material-engineering",
+          "path": "ov_index/sections/011-3-1-material-engineering/overview.md",
+          "word_count": 165,
+          "length_score": 100,
+          "signal_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        },
+        {
+          "kind": "section_overview",
+          "section": "012-3-1-1-elemental-doping",
+          "path": "ov_index/sections/012-3-1-1-elemental-doping/overview.md",
+          "word_count": 147,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "013-3-1-2-nanoarchitecture-and-structural-engineering",
+          "path": "ov_index/sections/013-3-1-2-nanoarchitecture-and-structural-engineering/overview.md",
+          "word_count": 160,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:claim"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "014-3-2-external-environmental-regulation",
+          "path": "ov_index/sections/014-3-2-external-environmental-regulation/overview.md",
+          "word_count": 167,
+          "length_score": 100,
+          "signal_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        },
+        {
+          "kind": "section_overview",
+          "section": "015-4-conclusion-and-perspective",
+          "path": "ov_index/sections/015-4-conclusion-and-perspective/overview.md",
+          "word_count": 178,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "016-acknowledgements",
+          "path": "ov_index/sections/016-acknowledgements/overview.md",
+          "word_count": 150,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "017-conflict-of-interest",
+          "path": "ov_index/sections/017-conflict-of-interest/overview.md",
+          "word_count": 169,
+          "length_score": 100,
+          "signal_score": 33,
+          "score": 79.9,
+          "grade": "warn",
+          "issues": [
+            "missing_signals:evidence,relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "018-keywords",
+          "path": "ov_index/sections/018-keywords/overview.md",
+          "word_count": 165,
+          "length_score": 100,
+          "signal_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        }
+      ],
+      "checked_at": "2026-06-02T17:00:18.280302"
+    },
+    {
+      "paper_id": "2025_sha_10000h_stable_intermittent_alkaline_seawater_electrolysi_333f5c",
+      "grade": "pass",
+      "avg_score": 94.29,
+      "items_count": 26,
+      "pass_count": 26,
+      "warn_count": 0,
+      "fail_count": 0,
+      "items": [
+        {
+          "kind": "paper_overview",
+          "path": "ov_index/paper.overview.md",
+          "word_count": 241,
+          "length_score": 100,
+          "structure_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        },
+        {
+          "kind": "section_overview",
+          "section": "001-front-matter",
+          "path": "ov_index/sections/001-front-matter/overview.md",
+          "word_count": 168,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "002-cathode-oxidation-during-start-shutdown-water-splitt",
+          "path": "ov_index/sections/002-cathode-oxidation-during-start-shutdown-water-splitt/overview.md",
+          "word_count": 159,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "003-catalysts-design-strategy",
+          "path": "ov_index/sections/003-catalysts-design-strategy/overview.md",
+          "word_count": 152,
+          "length_score": 100,
+          "signal_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        },
+        {
+          "kind": "section_overview",
+          "section": "004-activity-and-stability-of-nicop-mathbf-c-r-2-0-3-cat",
+          "path": "ov_index/sections/004-activity-and-stability-of-nicop-mathbf-c-r-2-0-3-cat/overview.md",
+          "word_count": 151,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "005-reaction-mechanism",
+          "path": "ov_index/sections/005-reaction-mechanism/overview.md",
+          "word_count": 158,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "006-theoretical-insight",
+          "path": "ov_index/sections/006-theoretical-insight/overview.md",
+          "word_count": 160,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "007-discussion",
+          "path": "ov_index/sections/007-discussion/overview.md",
+          "word_count": 157,
+          "length_score": 100,
+          "signal_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        },
+        {
+          "kind": "section_overview",
+          "section": "008-online-content",
+          "path": "ov_index/sections/008-online-content/overview.md",
+          "word_count": 165,
+          "length_score": 100,
+          "signal_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        },
+        {
+          "kind": "section_overview",
+          "section": "009-materials",
+          "path": "ov_index/sections/009-materials/overview.md",
+          "word_count": 141,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "010-synthesis-of-nico-ldh",
+          "path": "ov_index/sections/010-synthesis-of-nico-ldh/overview.md",
+          "word_count": 174,
+          "length_score": 100,
+          "signal_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        },
+        {
+          "kind": "section_overview",
+          "section": "011-synthesis-of-nicop",
+          "path": "ov_index/sections/011-synthesis-of-nicop/overview.md",
+          "word_count": 146,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "012-synthesis-of-nicop-mathbf-c-r-2-0-3",
+          "path": "ov_index/sections/012-synthesis-of-nicop-mathbf-c-r-2-0-3/overview.md",
+          "word_count": 154,
+          "length_score": 100,
+          "signal_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        },
+        {
+          "kind": "section_overview",
+          "section": "013-synthesis-of-nicofep",
+          "path": "ov_index/sections/013-synthesis-of-nicofep/overview.md",
+          "word_count": 160,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "014-synthesis-of-nifep",
+          "path": "ov_index/sections/014-synthesis-of-nifep/overview.md",
+          "word_count": 169,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "015-synthesis-of-ni-mathbf-n-i-o-mathbf-c-r-2-mathbf-o-3",
+          "path": "ov_index/sections/015-synthesis-of-ni-mathbf-n-i-o-mathbf-c-r-2-mathbf-o-3/overview.md",
+          "word_count": 148,
+          "length_score": 100,
+          "signal_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        },
+        {
+          "kind": "section_overview",
+          "section": "016-electrochemical-measurement",
+          "path": "ov_index/sections/016-electrochemical-measurement/overview.md",
+          "word_count": 184,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "017-aem-electrolyser-measurement",
+          "path": "ov_index/sections/017-aem-electrolyser-measurement/overview.md",
+          "word_count": 161,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "018-operando-raman-characterization",
+          "path": "ov_index/sections/018-operando-raman-characterization/overview.md",
+          "word_count": 172,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "019-operando-atr-seiras-characterization",
+          "path": "ov_index/sections/019-operando-atr-seiras-characterization/overview.md",
+          "word_count": 173,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "020-material-characterization",
+          "path": "ov_index/sections/020-material-characterization/overview.md",
+          "word_count": 189,
+          "length_score": 100,
+          "signal_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        },
+        {
+          "kind": "section_overview",
+          "section": "021-haadf-stem-characterization",
+          "path": "ov_index/sections/021-haadf-stem-characterization/overview.md",
+          "word_count": 159,
+          "length_score": 100,
+          "signal_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        },
+        {
+          "kind": "section_overview",
+          "section": "022-tof-sims-measurement",
+          "path": "ov_index/sections/022-tof-sims-measurement/overview.md",
+          "word_count": 159,
+          "length_score": 100,
+          "signal_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        },
+        {
+          "kind": "section_overview",
+          "section": "023-computational-methods",
+          "path": "ov_index/sections/023-computational-methods/overview.md",
+          "word_count": 165,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "024-data-availability",
+          "path": "ov_index/sections/024-data-availability/overview.md",
+          "word_count": 142,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "025-additional-information",
+          "path": "ov_index/sections/025-additional-information/overview.md",
+          "word_count": 142,
+          "length_score": 100,
+          "signal_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        }
+      ],
+      "checked_at": "2026-06-02T17:00:18.299298"
+    },
+    {
+      "paper_id": "2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7",
+      "grade": "pass",
+      "avg_score": 91.4,
+      "items_count": 15,
+      "pass_count": 14,
+      "warn_count": 1,
+      "fail_count": 0,
+      "items": [
+        {
+          "kind": "paper_overview",
+          "path": "ov_index/paper.overview.md",
+          "word_count": 284,
+          "length_score": 100,
+          "structure_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        },
+        {
+          "kind": "section_overview",
+          "section": "001-front-matter",
+          "path": "ov_index/sections/001-front-matter/overview.md",
+          "word_count": 168,
+          "length_score": 100,
+          "signal_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        },
+        {
+          "kind": "section_overview",
+          "section": "002-1-introduction",
+          "path": "ov_index/sections/002-1-introduction/overview.md",
+          "word_count": 161,
+          "length_score": 100,
+          "signal_score": 33,
+          "score": 79.9,
+          "grade": "warn",
+          "issues": [
+            "missing_signals:claim,relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "003-2-1-quantify-electrochemical-behaviors-in-reverse-c",
+          "path": "ov_index/sections/003-2-1-quantify-electrochemical-behaviors-in-reverse-c/overview.md",
+          "word_count": 171,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "004-2-2-reverse-current-accelerated-stress-testing-ast",
+          "path": "ov_index/sections/004-2-2-reverse-current-accelerated-stress-testing-ast/overview.md",
+          "word_count": 164,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "005-2-3-electrochemical-behaviors-of-anode-and-cathode",
+          "path": "ov_index/sections/005-2-3-electrochemical-behaviors-of-anode-and-cathode/overview.md",
+          "word_count": 173,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "006-2-4-unravel-the-degradation-mechanism",
+          "path": "ov_index/sections/006-2-4-unravel-the-degradation-mechanism/overview.md",
+          "word_count": 146,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "007-3-conclusion",
+          "path": "ov_index/sections/007-3-conclusion/overview.md",
+          "word_count": 157,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "008-4-experimental-section",
+          "path": "ov_index/sections/008-4-experimental-section/overview.md",
+          "word_count": 188,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "009-supporting-information",
+          "path": "ov_index/sections/009-supporting-information/overview.md",
+          "word_count": 156,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "010-acknowledgements",
+          "path": "ov_index/sections/010-acknowledgements/overview.md",
+          "word_count": 165,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "011-conflict-of-interest",
+          "path": "ov_index/sections/011-conflict-of-interest/overview.md",
+          "word_count": 132,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "012-author-contributions",
+          "path": "ov_index/sections/012-author-contributions/overview.md",
+          "word_count": 159,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "013-data-availability-statement",
+          "path": "ov_index/sections/013-data-availability-statement/overview.md",
+          "word_count": 137,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "014-keywords",
+          "path": "ov_index/sections/014-keywords/overview.md",
+          "word_count": 152,
+          "length_score": 100,
+          "signal_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        }
+      ],
+      "checked_at": "2026-06-02T17:00:18.311291"
+    },
+    {
+      "paper_id": "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e",
+      "grade": "pass",
+      "avg_score": 92.91,
+      "items_count": 14,
+      "pass_count": 13,
+      "warn_count": 1,
+      "fail_count": 0,
+      "items": [
+        {
+          "kind": "paper_overview",
+          "path": "ov_index/paper.overview.md",
+          "word_count": 277,
+          "length_score": 100,
+          "structure_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        },
+        {
+          "kind": "section_overview",
+          "section": "001-front-matter",
+          "path": "ov_index/sections/001-front-matter/overview.md",
+          "word_count": 142,
+          "length_score": 100,
+          "signal_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        },
+        {
+          "kind": "section_overview",
+          "section": "002-1-introduction",
+          "path": "ov_index/sections/002-1-introduction/overview.md",
+          "word_count": 145,
+          "length_score": 100,
+          "signal_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        },
+        {
+          "kind": "section_overview",
+          "section": "003-2-results-and-discussion",
+          "path": "ov_index/sections/003-2-results-and-discussion/overview.md",
+          "word_count": 158,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "004-3-conclusions",
+          "path": "ov_index/sections/004-3-conclusions/overview.md",
+          "word_count": 159,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "005-4-experimental-section",
+          "path": "ov_index/sections/005-4-experimental-section/overview.md",
+          "word_count": 148,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "006-supporting-information",
+          "path": "ov_index/sections/006-supporting-information/overview.md",
+          "word_count": 153,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "007-corresponding-authors",
+          "path": "ov_index/sections/007-corresponding-authors/overview.md",
+          "word_count": 135,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "008-authors",
+          "path": "ov_index/sections/008-authors/overview.md",
+          "word_count": 162,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "009-author-contributions",
+          "path": "ov_index/sections/009-author-contributions/overview.md",
+          "word_count": 153,
+          "length_score": 100,
+          "signal_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        },
+        {
+          "kind": "section_overview",
+          "section": "010-notes",
+          "path": "ov_index/sections/010-notes/overview.md",
+          "word_count": 155,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "011-acknowledgments",
+          "path": "ov_index/sections/011-acknowledgments/overview.md",
+          "word_count": 125,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "012-references",
+          "path": "ov_index/sections/012-references/overview.md",
+          "word_count": 163,
+          "length_score": 100,
+          "signal_score": 33,
+          "score": 79.9,
+          "grade": "warn",
+          "issues": [
+            "missing_signals:evidence,relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "013-note-added-after-asap-publication",
+          "path": "ov_index/sections/013-note-added-after-asap-publication/overview.md",
+          "word_count": 160,
+          "length_score": 100,
+          "signal_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        }
+      ],
+      "checked_at": "2026-06-02T17:00:18.323293"
+    },
+    {
+      "paper_id": "2026_unknown_2026_2d8d75",
+      "grade": "pass",
+      "avg_score": 91.66,
+      "items_count": 42,
+      "pass_count": 36,
+      "warn_count": 5,
+      "fail_count": 1,
+      "items": [
+        {
+          "kind": "paper_overview",
+          "path": "ov_index/paper.overview.md",
+          "word_count": 20,
+          "length_score": 30,
+          "structure_score": 100,
+          "score": 58.0,
+          "grade": "fail",
+          "issues": [
+            "too_short:20<180"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "001-front-matter",
+          "path": "ov_index/sections/001-front-matter/overview.md",
+          "word_count": 156,
+          "length_score": 100,
+          "signal_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        },
+        {
+          "kind": "section_overview",
+          "section": "002-1-1",
+          "path": "ov_index/sections/002-1-1/overview.md",
+          "word_count": 156,
+          "length_score": 100,
+          "signal_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        },
+        {
+          "kind": "section_overview",
+          "section": "003-1-2",
+          "path": "ov_index/sections/003-1-2/overview.md",
+          "word_count": 163,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:claim"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "004-1-2-1",
+          "path": "ov_index/sections/004-1-2-1/overview.md",
+          "word_count": 168,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "005-1-2-2",
+          "path": "ov_index/sections/005-1-2-2/overview.md",
+          "word_count": 176,
+          "length_score": 100,
+          "signal_score": 33,
+          "score": 79.9,
+          "grade": "warn",
+          "issues": [
+            "missing_signals:claim,relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "006-1-2-3",
+          "path": "ov_index/sections/006-1-2-3/overview.md",
+          "word_count": 164,
+          "length_score": 100,
+          "signal_score": 33,
+          "score": 79.9,
+          "grade": "warn",
+          "issues": [
+            "missing_signals:claim,relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "007-1-3",
+          "path": "ov_index/sections/007-1-3/overview.md",
+          "word_count": 174,
+          "length_score": 100,
+          "signal_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        },
+        {
+          "kind": "section_overview",
+          "section": "008-1-4",
+          "path": "ov_index/sections/008-1-4/overview.md",
+          "word_count": 154,
+          "length_score": 100,
+          "signal_score": 33,
+          "score": 79.9,
+          "grade": "warn",
+          "issues": [
+            "missing_signals:claim,evidence"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "009-untitled",
+          "path": "ov_index/sections/009-untitled/overview.md",
+          "word_count": 145,
+          "length_score": 100,
+          "signal_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        },
+        {
+          "kind": "section_overview",
+          "section": "010-untitled",
+          "path": "ov_index/sections/010-untitled/overview.md",
+          "word_count": 142,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "011-2-1",
+          "path": "ov_index/sections/011-2-1/overview.md",
+          "word_count": 178,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "012-2-2",
+          "path": "ov_index/sections/012-2-2/overview.md",
+          "word_count": 137,
+          "length_score": 100,
+          "signal_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        },
+        {
+          "kind": "section_overview",
+          "section": "013-untitled",
+          "path": "ov_index/sections/013-untitled/overview.md",
+          "word_count": 150,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "014-untitled",
+          "path": "ov_index/sections/014-untitled/overview.md",
+          "word_count": 146,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "015-untitled",
+          "path": "ov_index/sections/015-untitled/overview.md",
+          "word_count": 168,
+          "length_score": 100,
+          "signal_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        },
+        {
+          "kind": "section_overview",
+          "section": "016-untitled",
+          "path": "ov_index/sections/016-untitled/overview.md",
+          "word_count": 165,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "017-nixmy-her",
+          "path": "ov_index/sections/017-nixmy-her/overview.md",
+          "word_count": 162,
+          "length_score": 100,
+          "signal_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        },
+        {
+          "kind": "section_overview",
+          "section": "018-untitled",
+          "path": "ov_index/sections/018-untitled/overview.md",
+          "word_count": 156,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "019-2-4",
+          "path": "ov_index/sections/019-2-4/overview.md",
+          "word_count": 135,
+          "length_score": 100,
+          "signal_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        },
+        {
+          "kind": "section_overview",
+          "section": "020-untitled",
+          "path": "ov_index/sections/020-untitled/overview.md",
+          "word_count": 160,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "021-untitled",
+          "path": "ov_index/sections/021-untitled/overview.md",
+          "word_count": 140,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "022-untitled",
+          "path": "ov_index/sections/022-untitled/overview.md",
+          "word_count": 165,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "023-2-5",
+          "path": "ov_index/sections/023-2-5/overview.md",
+          "word_count": 150,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "024-2-6",
+          "path": "ov_index/sections/024-2-6/overview.md",
+          "word_count": 162,
+          "length_score": 100,
+          "signal_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        },
+        {
+          "kind": "section_overview",
+          "section": "025-iii",
+          "path": "ov_index/sections/025-iii/overview.md",
+          "word_count": 153,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "026-iv-dft",
+          "path": "ov_index/sections/026-iv-dft/overview.md",
+          "word_count": 157,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "027-untitled",
+          "path": "ov_index/sections/027-untitled/overview.md",
+          "word_count": 175,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "028-untitled",
+          "path": "ov_index/sections/028-untitled/overview.md",
+          "word_count": 166,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "029-2-7",
+          "path": "ov_index/sections/029-2-7/overview.md",
+          "word_count": 171,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "030-untitled",
+          "path": "ov_index/sections/030-untitled/overview.md",
+          "word_count": 156,
+          "length_score": 100,
+          "signal_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        },
+        {
+          "kind": "section_overview",
+          "section": "031-untitled",
+          "path": "ov_index/sections/031-untitled/overview.md",
+          "word_count": 152,
+          "length_score": 100,
+          "signal_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        },
+        {
+          "kind": "section_overview",
+          "section": "032-untitled",
+          "path": "ov_index/sections/032-untitled/overview.md",
+          "word_count": 154,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "033-2-8",
+          "path": "ov_index/sections/033-2-8/overview.md",
+          "word_count": 168,
+          "length_score": 100,
+          "signal_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        },
+        {
+          "kind": "section_overview",
+          "section": "034-untitled",
+          "path": "ov_index/sections/034-untitled/overview.md",
+          "word_count": 148,
+          "length_score": 100,
+          "signal_score": 33,
+          "score": 79.9,
+          "grade": "warn",
+          "issues": [
+            "missing_signals:claim,relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "035-3-1",
+          "path": "ov_index/sections/035-3-1/overview.md",
+          "word_count": 184,
+          "length_score": 100,
+          "signal_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        },
+        {
+          "kind": "section_overview",
+          "section": "036-1",
+          "path": "ov_index/sections/036-1/overview.md",
+          "word_count": 150,
+          "length_score": 100,
+          "signal_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        },
+        {
+          "kind": "section_overview",
+          "section": "037-2",
+          "path": "ov_index/sections/037-2/overview.md",
+          "word_count": 163,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "038-3-ni",
+          "path": "ov_index/sections/038-3-ni/overview.md",
+          "word_count": 132,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "039-4",
+          "path": "ov_index/sections/039-4/overview.md",
+          "word_count": 150,
+          "length_score": 100,
+          "signal_score": 33,
+          "score": 79.9,
+          "grade": "warn",
+          "issues": [
+            "missing_signals:claim,relevance"
+          ]
+        },
+        {
+          "kind": "section_overview",
+          "section": "040-5",
+          "path": "ov_index/sections/040-5/overview.md",
+          "word_count": 162,
+          "length_score": 100,
+          "signal_score": 100,
+          "score": 100.0,
+          "grade": "pass",
+          "issues": []
+        },
+        {
+          "kind": "section_overview",
+          "section": "041-3-2",
+          "path": "ov_index/sections/041-3-2/overview.md",
+          "word_count": 189,
+          "length_score": 100,
+          "signal_score": 67,
+          "score": 90.1,
+          "grade": "pass",
+          "issues": [
+            "missing_signals:relevance"
+          ]
+        }
+      ],
+      "checked_at": "2026-06-02T17:00:18.350291"
+    }
+  ]
+}

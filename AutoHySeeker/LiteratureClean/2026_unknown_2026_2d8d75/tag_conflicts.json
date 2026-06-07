@@ -1,0 +1,3165 @@
+{
+  "paper_id": "2026_unknown_2026_2d8d75",
+  "generated_at": "2026-05-30T16:29:48",
+  "total_conflicts": 39,
+  "high_conflicts": 30,
+  "medium_conflicts": 0,
+  "low_conflicts": 9,
+  "items": [
+    {
+      "paper_id": "2026_unknown_2026_2d8d75",
+      "paragraph_uid": "PRAW-000018",
+      "paragraph_id": "S01-P001",
+      "heading_uid": "HRAW-008-f3e7d394",
+      "heading_text": "1.3 课题提出",
+      "doc_heading_order": 8,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S03_methods_and_setup",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S04_results",
+        "top_score": 4,
+        "second_score": 3,
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 4,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "机理",
+                "weight": 1
+              },
+              {
+                "term": "机制",
+                "weight": 1
+              },
+              {
+                "term": "失效机制",
+                "weight": 1
+              },
+              {
+                "term": "反向电流",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 3,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "性能",
+                "weight": 1
+              },
+              {
+                "term": "电化学性能",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_score_gap",
+          "paragraph_rerouted",
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S01_abstract",
+        "secondary_section_id": "S03_methods_and_setup",
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S04_results",
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "面向可再生能源稳定电解制氢的重大需求，本项目以二元 NixMy 催化剂为研究对象，围绕启停过程中失效机理复杂的难题，拟解决 Ni基催化剂配位环境/氧化态的精确调控和动态结构演变机理的关键科学问题。本研究首先开发基于数据驱动的电化学自动化制备平台，实现 NixMy 的高通量制备、评估和筛选；进一步基于实际工况下高温、高压的原位表征技术，从原子、分子水平揭示催化反应路径，重点揭示 NixMy 基电极的在反向电流存在下失效机制；将材料的晶体结"
+    },
+    {
+      "paper_id": "2026_unknown_2026_2d8d75",
+      "paragraph_uid": "PRAW-000026",
+      "paragraph_id": "S01-P002",
+      "heading_uid": "HRAW-021-24f314f0",
+      "heading_text": "2.4 研究方法",
+      "doc_heading_order": 21,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S03_methods_and_setup",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S00_front_matter",
+        "top_score": 1,
+        "second_score": 0,
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_top_score",
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 1,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "机理",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S00_front_matter",
+            "section_title": "Front Matter",
+            "score": 0,
+            "heading_hits": [],
+            "preview_hits": [],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_score_gap",
+          "low_top_score",
+          "paragraph_rerouted"
+        ],
+        "primary_section_id": "S01_abstract",
+        "secondary_section_id": "S03_methods_and_setup",
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S00_front_matter",
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "本项目的基本研究思路为搭平台、探机理、建联系、构方法。采用由微观到宏观的分析方法，具体研究方法如下。"
+    },
+    {
+      "paper_id": "2026_unknown_2026_2d8d75",
+      "paragraph_uid": "PRAW-000027",
+      "paragraph_id": "S01-P003",
+      "heading_uid": "HRAW-023-9c6e42c8",
+      "heading_text": "研究方法二：基于数据驱动的高通量电沉积平台与电极快速筛选",
+      "doc_heading_order": 23,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S03_methods_and_setup",
+        "top_section_id": "S04_results",
+        "second_section_id": "S03_methods_and_setup",
+        "top_score": 4,
+        "second_score": 3,
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 4,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "性能",
+                "weight": 1
+              },
+              {
+                "term": "电化学性能",
+                "weight": 1
+              },
+              {
+                "term": "稳定性",
+                "weight": 1
+              },
+              {
+                "term": "活性",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S03_methods_and_setup",
+            "section_title": "Methods And Setup",
+            "score": 3,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "合成",
+                "weight": 1
+              },
+              {
+                "term": "制备",
+                "weight": 1
+              },
+              {
+                "term": "电化学测试",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_score_gap",
+          "paragraph_rerouted",
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S01_abstract",
+        "secondary_section_id": "S03_methods_and_setup",
+        "top_candidate_section_id": "S04_results",
+        "second_candidate_section_id": "S03_methods_and_setup",
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "本研究首先构建一套集自动化控制与机器学习于一体的高通量电沉积制备与评估平台，旨在高效探索Ni基二元合金 NixMy 的广阔组分与参数空间。从氧化电位梯度、界面晶格匹配和导电通道三个层面协同调控，选定 Ni 为基底，引入 Pb、Fe、Mo、Co、P 等异质元素，通过精确调控还原电流和沉积时间，实现 Ni配位结构和价态的初步调控。平台采用自主研发的 MicroHySeeker 实现电沉积制备、电化学测试及反向电流加速模拟实验的全流程自动化控"
+    },
+    {
+      "paper_id": "2026_unknown_2026_2d8d75",
+      "paragraph_uid": "PRAW-000028",
+      "paragraph_id": "S01-P004",
+      "heading_uid": "HRAW-024-e2caecef",
+      "heading_text": "研究方法三：基于有限元电场模拟的电极均一性调控与规模化制备工艺优化",
+      "doc_heading_order": 24,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S03_methods_and_setup",
+        "top_section_id": "S04_results",
+        "second_section_id": "S05_discussion_mechanism",
+        "top_score": 4,
+        "second_score": 3,
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 4,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "结果",
+                "weight": 1
+              },
+              {
+                "term": "性能",
+                "weight": 1
+              },
+              {
+                "term": "稳定性",
+                "weight": 1
+              },
+              {
+                "term": "活性",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 3,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "sem",
+                "weight": 1
+              },
+              {
+                "term": "机制",
+                "weight": 1
+              },
+              {
+                "term": "失效机制",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_score_gap",
+          "paragraph_rerouted",
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S01_abstract",
+        "secondary_section_id": "S03_methods_and_setup",
+        "top_candidate_section_id": "S04_results",
+        "second_candidate_section_id": "S05_discussion_mechanism",
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "在明确高性能活性组分及其失效机制后，本部分旨在解决实验室成果向大尺寸工业化电极转化的关键科学问题—沉积层的均一性。本研究将基于 COMSOLMultiphysics 等有限元软件，建立耦合电极几何结构、电解液流动及电场分布的多物理场模型。模型将以扩散热力学和电沉积动力学为理论框架，导入前期实验获得的电解液物性参数（如扩散系数、迁移数）及电极反应动力学参数。通过有限元模拟，重点研究以下物理场的空间分布规律：一次/二次电流分布：模拟不同电极"
+    },
+    {
+      "paper_id": "2026_unknown_2026_2d8d75",
+      "paragraph_uid": "PRAW-000062",
+      "paragraph_id": "S01-P005",
+      "heading_uid": "HRAW-018-97d4ab3f",
+      "heading_text": "科学问题一：波动工况下催化反应机理与动态结构演变规律",
+      "doc_heading_order": 18,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S05_discussion_mechanism",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S03_methods_and_setup",
+        "top_score": 2,
+        "second_score": 1,
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_top_score",
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 2,
+            "heading_hits": [
+              {
+                "term": "机理",
+                "weight": 2
+              }
+            ],
+            "preview_hits": [],
+            "position_hits": []
+          },
+          {
+            "section_id": "S03_methods_and_setup",
+            "section_title": "Methods And Setup",
+            "score": 1,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "表征",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_score_gap",
+          "low_top_score",
+          "paragraph_rerouted"
+        ],
+        "primary_section_id": "S01_abstract",
+        "secondary_section_id": "S05_discussion_mechanism",
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S03_methods_and_setup",
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "二元 Ni基材料其反应过程中动态的价态及配位结构变化，影响着催化反应活性及催化生命窗口。结合波动性工况，开展高温/高压原位谱学表征，建立配位结构-氧化态-原位电化学分析方法，确定二元 Ni 基反应活性位点及生命窗阐明反应机理，是解析本研究根本科学问题并升华研究理论高度的关键。"
+    },
+    {
+      "paper_id": "2026_unknown_2026_2d8d75",
+      "paragraph_uid": "PRAW-000001",
+      "paragraph_id": "S02-P001",
+      "heading_uid": "HRAW-003-21411374",
+      "heading_text": "1.1 抗反向电流研究的背景与意义",
+      "doc_heading_order": 3,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "direct_rule",
+        "assigned_section_id": "S02_introduction",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S02_introduction",
+        "top_score": 5,
+        "second_score": 2,
+        "score_gap": 3,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 5,
+            "heading_hits": [
+              {
+                "term": "反向电流",
+                "weight": 2
+              }
+            ],
+            "preview_hits": [
+              {
+                "term": "机制",
+                "weight": 1
+              },
+              {
+                "term": "失效机制",
+                "weight": 1
+              },
+              {
+                "term": "衰减",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S02_introduction",
+            "section_title": "Introduction",
+            "score": 2,
+            "heading_hits": [
+              {
+                "term": "背景与意义",
+                "weight": 2
+              }
+            ],
+            "preview_hits": [],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "low",
+        "conflict_reasons": [
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S02_introduction",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S02_introduction",
+        "score_gap": 3,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "氢能作为新质生产力，具有热值高（ $. 1 4 3 \\mathrm { k J / g }$ ）、来源丰富、绿色低碳等特点，是第四次能源革命的载体。2022 年 3 月，国家发改委、国家能源局联合印发《氢能产业发展中长期规划（2021-2035 年）》中明确氢能是未来国家能源体系的重要组成部分[1]。可再生能源驱动的电解绿氢制备技术作为战略性新性产业，对构建清洁低碳安全高效的能源体系、实现碳达峰碳中和目标，具有重要意义[2, 3]。目前"
+    },
+    {
+      "paper_id": "2026_unknown_2026_2d8d75",
+      "paragraph_uid": "PRAW-000002",
+      "paragraph_id": "S02-P002",
+      "heading_uid": "HRAW-003-21411374",
+      "heading_text": "1.1 抗反向电流研究的背景与意义",
+      "doc_heading_order": 3,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "direct_rule",
+        "assigned_section_id": "S02_introduction",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S02_introduction",
+        "top_score": 5,
+        "second_score": 2,
+        "score_gap": 3,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 5,
+            "heading_hits": [
+              {
+                "term": "反向电流",
+                "weight": 2
+              }
+            ],
+            "preview_hits": [
+              {
+                "term": "机制",
+                "weight": 1
+              },
+              {
+                "term": "失效机制",
+                "weight": 1
+              },
+              {
+                "term": "衰减",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S02_introduction",
+            "section_title": "Introduction",
+            "score": 2,
+            "heading_hits": [
+              {
+                "term": "背景与意义",
+                "weight": 2
+              }
+            ],
+            "preview_hits": [],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "low",
+        "conflict_reasons": [
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S02_introduction",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S02_introduction",
+        "score_gap": 3,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "![](figures/FIG001/image_003.jpg) 图 1-1（a-b）双极板式ALK 电解槽结构示意图; （c） 反向电流失效示意[7]"
+    },
+    {
+      "paper_id": "2026_unknown_2026_2d8d75",
+      "paragraph_uid": "PRAW-000003",
+      "paragraph_id": "S02-P003",
+      "heading_uid": "HRAW-003-21411374",
+      "heading_text": "1.1 抗反向电流研究的背景与意义",
+      "doc_heading_order": 3,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "direct_rule",
+        "assigned_section_id": "S02_introduction",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S02_introduction",
+        "top_score": 5,
+        "second_score": 2,
+        "score_gap": 3,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 5,
+            "heading_hits": [
+              {
+                "term": "反向电流",
+                "weight": 2
+              }
+            ],
+            "preview_hits": [
+              {
+                "term": "机制",
+                "weight": 1
+              },
+              {
+                "term": "失效机制",
+                "weight": 1
+              },
+              {
+                "term": "衰减",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S02_introduction",
+            "section_title": "Introduction",
+            "score": 2,
+            "heading_hits": [
+              {
+                "term": "背景与意义",
+                "weight": 2
+              }
+            ],
+            "preview_hits": [],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "low",
+        "conflict_reasons": [
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S02_introduction",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S02_introduction",
+        "score_gap": 3,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "发展抗波动性、安全、稳定、高效运行的阴极电极是行业发展的重点需求。经长期探索，产业界和学术界已经清晰地认识到，波动性载荷对电极稳定性的影响[8, 9]。当 ALK 反应停止时，阴极和阳极通过双极板发生电连接，用于循环电解质溶液的歧管诱发额外离子通路，形成了反向电流，进而导致了析氢（HER）阴极的氧化（图 1-1），且波动工况会加速这种电解衰减过程[10-12]。开发极化整流设备可以在一定程度上缓解反向电流的影响，但会带来额外的运行成本["
+    },
+    {
+      "paper_id": "2026_unknown_2026_2d8d75",
+      "paragraph_uid": "PRAW-000007",
+      "paragraph_id": "S02-P007",
+      "heading_uid": "HRAW-009-cc410835",
+      "heading_text": "1.4创新性及研究意义",
+      "doc_heading_order": 9,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "direct_rule",
+        "assigned_section_id": "S02_introduction",
+        "top_section_id": "S04_results",
+        "second_section_id": "S05_discussion_mechanism",
+        "top_score": 5,
+        "second_score": 5,
+        "score_gap": 0,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 5,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "性能",
+                "weight": 1
+              },
+              {
+                "term": "电化学性能",
+                "weight": 1
+              },
+              {
+                "term": "稳定性",
+                "weight": 1
+              },
+              {
+                "term": "活性",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 5,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "机理",
+                "weight": 1
+              },
+              {
+                "term": "机制",
+                "weight": 1
+              },
+              {
+                "term": "反向电流",
+                "weight": 1
+              },
+              {
+                "term": "腐蚀",
+                "weight": 1
+              },
+              {
+                "term": "衰减",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "low",
+        "conflict_reasons": [
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S02_introduction",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S04_results",
+        "second_candidate_section_id": "S05_discussion_mechanism",
+        "score_gap": 0,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "本项目在科学思想、研究方法与技术路径三个层面具有创新性。科学思想创新层面，将电极失效研究从“静态防护”拓展至“动态响应”。突破传统电极稳定性研究基于“静态稳态腐蚀”的模式，提出ALK 制氢阴极在启停工况下的“动态界面保护”概念。利用 NixMy 二元合金中 M 金属的梯度氧化特性，使电极在反向氧化电位时形成可逆氧化保护层，在正常电解负电位恢复高活性，实现“活性-稳定性”的动态平衡。研究方法创新层面，引入数据驱动的“制备-表征-筛选”闭环"
+    },
+    {
+      "paper_id": "2026_unknown_2026_2d8d75",
+      "paragraph_uid": "PRAW-000008",
+      "paragraph_id": "S02-P008",
+      "heading_uid": "HRAW-009-cc410835",
+      "heading_text": "1.4创新性及研究意义",
+      "doc_heading_order": 9,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "direct_rule",
+        "assigned_section_id": "S02_introduction",
+        "top_section_id": "S04_results",
+        "second_section_id": "S05_discussion_mechanism",
+        "top_score": 5,
+        "second_score": 5,
+        "score_gap": 0,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 5,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "性能",
+                "weight": 1
+              },
+              {
+                "term": "电化学性能",
+                "weight": 1
+              },
+              {
+                "term": "稳定性",
+                "weight": 1
+              },
+              {
+                "term": "活性",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 5,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "机理",
+                "weight": 1
+              },
+              {
+                "term": "机制",
+                "weight": 1
+              },
+              {
+                "term": "反向电流",
+                "weight": 1
+              },
+              {
+                "term": "腐蚀",
+                "weight": 1
+              },
+              {
+                "term": "衰减",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "low",
+        "conflict_reasons": [
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S02_introduction",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S04_results",
+        "second_candidate_section_id": "S05_discussion_mechanism",
+        "score_gap": 0,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "率。技术路径创新层面，将“电场可视化分布优化”引入大尺寸电极均一性调控。融合有限元电场模拟与电沉积动力学理论，通过多物理场模拟指导工艺放大，破解实验室高性能工艺难以转化为工业化稳定制备技术瓶颈。"
+    },
+    {
+      "paper_id": "2026_unknown_2026_2d8d75",
+      "paragraph_uid": "PRAW-000009",
+      "paragraph_id": "S02-P009",
+      "heading_uid": "HRAW-009-cc410835",
+      "heading_text": "1.4创新性及研究意义",
+      "doc_heading_order": 9,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "direct_rule",
+        "assigned_section_id": "S02_introduction",
+        "top_section_id": "S04_results",
+        "second_section_id": "S05_discussion_mechanism",
+        "top_score": 5,
+        "second_score": 5,
+        "score_gap": 0,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 5,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "性能",
+                "weight": 1
+              },
+              {
+                "term": "电化学性能",
+                "weight": 1
+              },
+              {
+                "term": "稳定性",
+                "weight": 1
+              },
+              {
+                "term": "活性",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 5,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "机理",
+                "weight": 1
+              },
+              {
+                "term": "机制",
+                "weight": 1
+              },
+              {
+                "term": "反向电流",
+                "weight": 1
+              },
+              {
+                "term": "腐蚀",
+                "weight": 1
+              },
+              {
+                "term": "衰减",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "low",
+        "conflict_reasons": [
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S02_introduction",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S04_results",
+        "second_candidate_section_id": "S05_discussion_mechanism",
+        "score_gap": 0,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "本项目研究具有重要的科学价值与工程应用意义。ALK 阴极在启停工况下的RC 失效是制约其寿命的关键工程问题，然而现有研究多聚焦于稳态 HER 活性，对工业 HT/HP 启停过程中电极表面动态氧化行为及其原子级演化机制认识不清。本项目通过构建 HT/HP 原位光谱电化学平台，实时追踪电极在电位反转时的物相演变与界面反应，有望揭示“反向电流冲击-表面氧化-活性衰减”的本征关联机制，丰富电化学腐蚀与催化领域的理论基础，为电极材料设计提供科学依"
+    },
+    {
+      "paper_id": "2026_unknown_2026_2d8d75",
+      "paragraph_uid": "PRAW-000010",
+      "paragraph_id": "S02-P010",
+      "heading_uid": "HRAW-009-cc410835",
+      "heading_text": "1.4创新性及研究意义",
+      "doc_heading_order": 9,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "direct_rule",
+        "assigned_section_id": "S02_introduction",
+        "top_section_id": "S04_results",
+        "second_section_id": "S05_discussion_mechanism",
+        "top_score": 5,
+        "second_score": 5,
+        "score_gap": 0,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 5,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "性能",
+                "weight": 1
+              },
+              {
+                "term": "电化学性能",
+                "weight": 1
+              },
+              {
+                "term": "稳定性",
+                "weight": 1
+              },
+              {
+                "term": "活性",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 5,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "机理",
+                "weight": 1
+              },
+              {
+                "term": "机制",
+                "weight": 1
+              },
+              {
+                "term": "反向电流",
+                "weight": 1
+              },
+              {
+                "term": "腐蚀",
+                "weight": 1
+              },
+              {
+                "term": "衰减",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "low",
+        "conflict_reasons": [
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S02_introduction",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S04_results",
+        "second_candidate_section_id": "S05_discussion_mechanism",
+        "score_gap": 0,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "碱性电解水制氢阴极反向电流失效机理研究及长寿命电极构筑 图 1-7 立项依据整体思路图"
+    },
+    {
+      "paper_id": "2026_unknown_2026_2d8d75",
+      "paragraph_uid": "PRAW-000011",
+      "paragraph_id": "S03-P001",
+      "heading_uid": "HRAW-001-0113a7ff",
+      "heading_text": "报告正文（2026 版）",
+      "doc_heading_order": 1,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S03_methods_and_setup",
+        "top_section_id": "S00_front_matter",
+        "second_section_id": "S01_abstract",
+        "top_score": 0,
+        "second_score": 0,
+        "score_gap": 0,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_top_score",
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S00_front_matter",
+            "section_title": "Front Matter",
+            "score": 0,
+            "heading_hits": [],
+            "preview_hits": [],
+            "position_hits": []
+          },
+          {
+            "section_id": "S01_abstract",
+            "section_title": "Abstract",
+            "score": 0,
+            "heading_hits": [],
+            "preview_hits": [],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_score_gap",
+          "low_top_score"
+        ],
+        "primary_section_id": "S03_methods_and_setup",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S00_front_matter",
+        "second_candidate_section_id": "S01_abstract",
+        "score_gap": 0,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "参照以下提纲撰写，要求内容翔实、清晰，层次分明，标题突出。申请书正文原则上不超过 30 页，鼓励简洁表达。请勿删除或改动下述提纲标题及括号中的文字。"
+    },
+    {
+      "paper_id": "2026_unknown_2026_2d8d75",
+      "paragraph_uid": "PRAW-000019",
+      "paragraph_id": "S03-P008",
+      "heading_uid": "HRAW-011-3efd18dc",
+      "heading_text": "（二）研究内容：",
+      "doc_heading_order": 11,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S03_methods_and_setup",
+        "top_section_id": "S00_front_matter",
+        "second_section_id": "S01_abstract",
+        "top_score": 0,
+        "second_score": 0,
+        "score_gap": 0,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_top_score",
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S00_front_matter",
+            "section_title": "Front Matter",
+            "score": 0,
+            "heading_hits": [],
+            "preview_hits": [],
+            "position_hits": []
+          },
+          {
+            "section_id": "S01_abstract",
+            "section_title": "Abstract",
+            "score": 0,
+            "heading_hits": [],
+            "preview_hits": [],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_score_gap",
+          "low_top_score"
+        ],
+        "primary_section_id": "S03_methods_and_setup",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S00_front_matter",
+        "second_candidate_section_id": "S01_abstract",
+        "score_gap": 0,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "（提纲不做限制，请按照研究工作的自身逻辑撰写。应提炼出特色与创新点、年度研究计划）"
+    },
+    {
+      "paper_id": "2026_unknown_2026_2d8d75",
+      "paragraph_uid": "PRAW-000020",
+      "paragraph_id": "S03-P009",
+      "heading_uid": "HRAW-012-371e08eb",
+      "heading_text": "2.1 研究目标",
+      "doc_heading_order": 12,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S03_methods_and_setup",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S04_results",
+        "top_score": 4,
+        "second_score": 3,
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 4,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "机制",
+                "weight": 1
+              },
+              {
+                "term": "失效机制",
+                "weight": 1
+              },
+              {
+                "term": "反向电流",
+                "weight": 1
+              },
+              {
+                "term": "腐蚀",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 3,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "性能",
+                "weight": 1
+              },
+              {
+                "term": "电化学性能",
+                "weight": 1
+              },
+              {
+                "term": "稳定性",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_score_gap",
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S03_methods_and_setup",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S04_results",
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "本项目以构建抗波动耐反向电流腐蚀的阴极电极为目标。首先开展高通量电极的制备、评估、筛选和优化：基于贝叶斯优化和高斯过程回归的混合数据驱动策略，开发二元 NixMy 抗波动阴极电极；基于电化学性能评估和电极的配位机构和电子结构表征，解析该类催化剂结构与电化学性能的构-效关系；进一步结合高温高压原位电化学表征技术和理论计算，阐明波动工况下阴极电极失效机制；形成析氢电极的抗波动优化策略，构筑耐反向电流侵蚀的阴极电极；最后基于扩散热力学和电沉积"
+    },
+    {
+      "paper_id": "2026_unknown_2026_2d8d75",
+      "paragraph_uid": "PRAW-000021",
+      "paragraph_id": "S03-P010",
+      "heading_uid": "HRAW-012-371e08eb",
+      "heading_text": "2.1 研究目标",
+      "doc_heading_order": 12,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S03_methods_and_setup",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S04_results",
+        "top_score": 4,
+        "second_score": 3,
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 4,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "机制",
+                "weight": 1
+              },
+              {
+                "term": "失效机制",
+                "weight": 1
+              },
+              {
+                "term": "反向电流",
+                "weight": 1
+              },
+              {
+                "term": "腐蚀",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 3,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "性能",
+                "weight": 1
+              },
+              {
+                "term": "电化学性能",
+                "weight": 1
+              },
+              {
+                "term": "稳定性",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_score_gap",
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S03_methods_and_setup",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S04_results",
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "（1）建立基于原子、分子尺度的高温/高压原位表征方法，探明催化剂波动工况下动态表界面结构变化机制, 为调控析氢电极价态及配位结构提供理论支撑； （2）搭建基于数据驱动的高通量电化学制备、评估一体化平台，建立标准化波动性工况稳定性测试流程系统，实现析氢电极的高通量制备和高效筛选； （3）探明反向电流对电极稳定性影响规律，揭示二元 NixMy 基析氢催化剂构-效关系，建立析氢电极抗波动性优化策略，开发耐反向电流的阴极电极。 （4）明晰电沉积"
+    },
+    {
+      "paper_id": "2026_unknown_2026_2d8d75",
+      "paragraph_uid": "PRAW-000022",
+      "paragraph_id": "S03-P011",
+      "heading_uid": "HRAW-012-371e08eb",
+      "heading_text": "2.1 研究目标",
+      "doc_heading_order": 12,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S03_methods_and_setup",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S04_results",
+        "top_score": 4,
+        "second_score": 3,
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 4,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "机制",
+                "weight": 1
+              },
+              {
+                "term": "失效机制",
+                "weight": 1
+              },
+              {
+                "term": "反向电流",
+                "weight": 1
+              },
+              {
+                "term": "腐蚀",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 3,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "性能",
+                "weight": 1
+              },
+              {
+                "term": "电化学性能",
+                "weight": 1
+              },
+              {
+                "term": "稳定性",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_score_gap",
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S03_methods_and_setup",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S04_results",
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "![](figures/FIG002/image_001.jpg) 图2-1 研究内容、关键科学问题及研究目标的关系"
+    },
+    {
+      "paper_id": "2026_unknown_2026_2d8d75",
+      "paragraph_uid": "PRAW-000023",
+      "paragraph_id": "S03-P012",
+      "heading_uid": "HRAW-013-64386ea8",
+      "heading_text": "2.2 研究内容",
+      "doc_heading_order": 13,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S03_methods_and_setup",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S00_front_matter",
+        "top_score": 3,
+        "second_score": 0,
+        "score_gap": 3,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_top_score"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 3,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "机理",
+                "weight": 1
+              },
+              {
+                "term": "反向电流",
+                "weight": 1
+              },
+              {
+                "term": "腐蚀",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S00_front_matter",
+            "section_title": "Front Matter",
+            "score": 0,
+            "heading_hits": [],
+            "preview_hits": [],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_top_score"
+        ],
+        "primary_section_id": "S03_methods_and_setup",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S00_front_matter",
+        "score_gap": 3,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "本项目采用由微观到宏观、从现象到机理的研究方法，高效开发抗波动性、耐反向电流腐蚀的阴极电极。具体研究内容如下："
+    },
+    {
+      "paper_id": "2026_unknown_2026_2d8d75",
+      "paragraph_uid": "PRAW-000024",
+      "paragraph_id": "S03-P013",
+      "heading_uid": "HRAW-015-d0e127e8",
+      "heading_text": "研究内容二：数据驱动的电化学高通量制备、评估和筛选及构效关系",
+      "doc_heading_order": 15,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S03_methods_and_setup",
+        "top_section_id": "S03_methods_and_setup",
+        "second_section_id": "S04_results",
+        "top_score": 4,
+        "second_score": 4,
+        "score_gap": 0,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S03_methods_and_setup",
+            "section_title": "Methods And Setup",
+            "score": 4,
+            "heading_hits": [
+              {
+                "term": "制备",
+                "weight": 2
+              }
+            ],
+            "preview_hits": [
+              {
+                "term": "dft",
+                "weight": 1
+              },
+              {
+                "term": "表征",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 4,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "结果",
+                "weight": 1
+              },
+              {
+                "term": "性能",
+                "weight": 1
+              },
+              {
+                "term": "电化学性能",
+                "weight": 1
+              },
+              {
+                "term": "活性",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_score_gap"
+        ],
+        "primary_section_id": "S03_methods_and_setup",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S03_methods_and_setup",
+        "second_candidate_section_id": "S04_results",
+        "score_gap": 0,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "针对二元 NixMy 基多组分催化剂开发周期长、实验成本高等问题，基于贝叶斯优化和高斯过程回归的混合策略，搭建数据驱动的高通量电化学制备和测试一体化平台；依据数据反馈和模型迭代进行快速制备，实现高效 NixMy 析氢电极的高效筛选；建立波动性工况测试模块，对制备的电极进行性能验证，并反馈电极筛选和设计，最终获得最优化耐反向电流的 NixMy 析氢催化电极。揭示二元 NixMy析氢催化剂构-效关系基于高通量电极筛选结果和电极晶体结构表征，"
+    },
+    {
+      "paper_id": "2026_unknown_2026_2d8d75",
+      "paragraph_uid": "PRAW-000025",
+      "paragraph_id": "S03-P014",
+      "heading_uid": "HRAW-016-8431cae0",
+      "heading_text": "研究内容三：基于多物理场耦合调控的均匀电极构筑",
+      "doc_heading_order": 16,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S03_methods_and_setup",
+        "top_section_id": "S03_methods_and_setup",
+        "second_section_id": "S05_discussion_mechanism",
+        "top_score": 1,
+        "second_score": 1,
+        "score_gap": 0,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_top_score",
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S03_methods_and_setup",
+            "section_title": "Methods And Setup",
+            "score": 1,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "制备",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 1,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "反向电流",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_score_gap",
+          "low_top_score"
+        ],
+        "primary_section_id": "S03_methods_and_setup",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S03_methods_and_setup",
+        "second_candidate_section_id": "S05_discussion_mechanism",
+        "score_gap": 0,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "针对电沉积放大制备过程中面临着沉积不均匀的问题，通过 COMSOLMultiphysics有限元分析构建多物理场模型来实现大面积电极制备过程中的电场分布可视化。基于电沉积动力学和扩散热力学，耦合电化学、电场分布、流体力学、热传导等多物理场的结合，以确保模拟的电沉积工艺在大面积电极上的均匀性，最终实现抗反向电流的阴极电极的高质量、大规模制备。"
+    },
+    {
+      "paper_id": "2026_unknown_2026_2d8d75",
+      "paragraph_uid": "PRAW-000029",
+      "paragraph_id": "S03-P015",
+      "heading_uid": "HRAW-024-e2caecef",
+      "heading_text": "研究方法三：基于有限元电场模拟的电极均一性调控与规模化制备工艺优化",
+      "doc_heading_order": 24,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S03_methods_and_setup",
+        "top_section_id": "S04_results",
+        "second_section_id": "S05_discussion_mechanism",
+        "top_score": 4,
+        "second_score": 3,
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 4,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "结果",
+                "weight": 1
+              },
+              {
+                "term": "性能",
+                "weight": 1
+              },
+              {
+                "term": "稳定性",
+                "weight": 1
+              },
+              {
+                "term": "活性",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 3,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "sem",
+                "weight": 1
+              },
+              {
+                "term": "机制",
+                "weight": 1
+              },
+              {
+                "term": "失效机制",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_score_gap",
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S03_methods_and_setup",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S04_results",
+        "second_candidate_section_id": "S05_discussion_mechanism",
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "流对阴极表面耗尽层厚度及离子补充速率的影响。基于模拟结果，定量评估电流密度、极板间距、电解液流速等宏观工艺参数对沉积层厚度及成分均一性的影响。通过虚拟实验优化迭代放大参数，筛选出能够实现高度均一电场分布的工艺窗口。最终将优化后的工艺参数应用于大面积电极（如 $1 0 \\ : \\mathrm { c m } \\ \\times \\ 1 0 \\ : \\mathrm { c m } ,$ ）的电沉积制备，通过截面 SEM 和元素面分布验证沉积层"
+    },
+    {
+      "paper_id": "2026_unknown_2026_2d8d75",
+      "paragraph_uid": "PRAW-000030",
+      "paragraph_id": "S03-P016",
+      "heading_uid": "HRAW-025-3ce1bf5f",
+      "heading_text": "2.5 技术路线",
+      "doc_heading_order": 25,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S03_methods_and_setup",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S03_methods_and_setup",
+        "top_score": 3,
+        "second_score": 1,
+        "score_gap": 2,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_top_score"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 3,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "机制",
+                "weight": 1
+              },
+              {
+                "term": "失效机制",
+                "weight": 1
+              },
+              {
+                "term": "理论分析",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S03_methods_and_setup",
+            "section_title": "Methods And Setup",
+            "score": 1,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "制备",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_top_score",
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S03_methods_and_setup",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S03_methods_and_setup",
+        "score_gap": 2,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "本项目将综合运用实验数据分析、数值模拟、理论分析相结合的研究手段，实现ALK 长寿命电极的构筑。i. 基于自主开发的 HP/HT电化学界面分析零配件，分析HP/HT工业工况下电解槽反复启停阴极失效机制；ii. 通过建立的数据驱动高通量电化学制备筛选平台，构筑二元 NixMy基多维平衡的HER催化剂，明析电化学特性与 NixMy 催化剂的构-效关系，基于机器学习完成成分的多目标优化；iii. 探索电沉积制备参数对电极成核的影响规律，并结合"
+    },
+    {
+      "paper_id": "2026_unknown_2026_2d8d75",
+      "paragraph_uid": "PRAW-000031",
+      "paragraph_id": "S03-P017",
+      "heading_uid": "HRAW-028-01513af8",
+      "heading_text": "（iv）DFT 计算",
+      "doc_heading_order": 28,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S03_methods_and_setup",
+        "top_section_id": "S03_methods_and_setup",
+        "second_section_id": "S04_results",
+        "top_score": 3,
+        "second_score": 1,
+        "score_gap": 2,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_top_score"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S03_methods_and_setup",
+            "section_title": "Methods And Setup",
+            "score": 3,
+            "heading_hits": [
+              {
+                "term": "dft",
+                "weight": 2
+              }
+            ],
+            "preview_hits": [
+              {
+                "term": "表征",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 1,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "结果",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_top_score"
+        ],
+        "primary_section_id": "S03_methods_and_setup",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S03_methods_and_setup",
+        "second_candidate_section_id": "S04_results",
+        "score_gap": 2,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "密度泛函理论（DFT）计算在第一性原理模拟包（VASP）中执行，采用Perdew-Burke-Ernzerhof（PBE）和（PAW）方法。在所有 DFT 模拟中，自洽场收敛精度设置为每原子 $1 \\times 1 0 ^ { - 5 } \\mathrm { e V }$ ，离子弛豫设置为 $0 . 0 3 ~ \\mathrm { e V } / \\mathrm { \\AA }$ 。计算模型基于 XRD等表征测试的结果构建。在对 Ran"
+    },
+    {
+      "paper_id": "2026_unknown_2026_2d8d75",
+      "paragraph_uid": "PRAW-000032",
+      "paragraph_id": "S03-P018",
+      "heading_uid": "HRAW-030-cf080bbb",
+      "heading_text": "实验手段三：基于有限元电场可视化分布优化规模化电极制备工艺",
+      "doc_heading_order": 30,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S03_methods_and_setup",
+        "top_section_id": "S03_methods_and_setup",
+        "second_section_id": "S05_discussion_mechanism",
+        "top_score": 3,
+        "second_score": 2,
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_top_score",
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S03_methods_and_setup",
+            "section_title": "Methods And Setup",
+            "score": 3,
+            "heading_hits": [
+              {
+                "term": "制备",
+                "weight": 2
+              }
+            ],
+            "preview_hits": [
+              {
+                "term": "表征",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 2,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "xrd",
+                "weight": 1
+              },
+              {
+                "term": "sem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_score_gap",
+          "low_top_score"
+        ],
+        "primary_section_id": "S03_methods_and_setup",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S03_methods_and_setup",
+        "second_candidate_section_id": "S05_discussion_mechanism",
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "对 5x5cm 大小的泡沫铜，通入 $3 0 \\mathrm { m A } / \\mathrm { c m } ^ { 2 }$ 的平均电密，电解一小时后利用 SEM、XRD 表征其边缘效应不均匀氧化的表面形貌与物质构成。利用 COMSOLMultiphysics 软件构建瞬态电化学模型，针对不同占空比工况，设置了包含 10 个完整脉冲周期的仿真时长。利用周期平均法求得电极表面每个节点周期平均电流密度。通过统一颜色标尺下的云图及周期平"
+    },
+    {
+      "paper_id": "2026_unknown_2026_2d8d75",
+      "paragraph_uid": "PRAW-000033",
+      "paragraph_id": "S03-P019",
+      "heading_uid": "HRAW-032-f607c2c9",
+      "heading_text": "创新点一：构建高温高压、波动电源共同作用的原位探测方法",
+      "doc_heading_order": 32,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S03_methods_and_setup",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S03_methods_and_setup",
+        "top_score": 2,
+        "second_score": 1,
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_top_score",
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 2,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "raman",
+                "weight": 1
+              },
+              {
+                "term": "机理",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S03_methods_and_setup",
+            "section_title": "Methods And Setup",
+            "score": 1,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "表征",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_score_gap",
+          "low_top_score",
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S03_methods_and_setup",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S03_methods_and_setup",
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "传统的原位机理探究通常在常温常压情况下，未能还原工业电解槽中高温高压的实际工况。本项目通过搭建高温高压（0.1MPa-3.0MPa）的原位 Raman 和原位 FTIR 电化学表征平台，能够更加真实地模拟 HER 工作电极的电化学环境，系"
+    },
+    {
+      "paper_id": "2026_unknown_2026_2d8d75",
+      "paragraph_uid": "PRAW-000034",
+      "paragraph_id": "S03-P020",
+      "heading_uid": "HRAW-032-f607c2c9",
+      "heading_text": "创新点一：构建高温高压、波动电源共同作用的原位探测方法",
+      "doc_heading_order": 32,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S03_methods_and_setup",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S03_methods_and_setup",
+        "top_score": 2,
+        "second_score": 1,
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_top_score",
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 2,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "raman",
+                "weight": 1
+              },
+              {
+                "term": "机理",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S03_methods_and_setup",
+            "section_title": "Methods And Setup",
+            "score": 1,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "表征",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_score_gap",
+          "low_top_score",
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S03_methods_and_setup",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S03_methods_and_setup",
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "统探究随着压力和温度的变化，导致 HER失效的关键影响因素，为高效稳定 HER催化剂的设计提供坚实的理论基础。"
+    },
+    {
+      "paper_id": "2026_unknown_2026_2d8d75",
+      "paragraph_uid": "PRAW-000036",
+      "paragraph_id": "S03-P022",
+      "heading_uid": "HRAW-034-4ea0e7fa",
+      "heading_text": "创新点三：应用人工智能-过程装备-材料-电化学的学科交叉",
+      "doc_heading_order": 34,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S03_methods_and_setup",
+        "top_section_id": "S04_results",
+        "second_section_id": "S05_discussion_mechanism",
+        "top_score": 2,
+        "second_score": 2,
+        "score_gap": 0,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_top_score",
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 2,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "性能",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 2,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "机制",
+                "weight": 1
+              },
+              {
+                "term": "失效机制",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_score_gap",
+          "low_top_score",
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S03_methods_and_setup",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S04_results",
+        "second_candidate_section_id": "S05_discussion_mechanism",
+        "score_gap": 0,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "本项目基于机器学习的贝叶斯优化算法，结合了过程装备学，创新开发了数据驱动的自动化电化学制备平台，实现了高效的二元 NixMy 催化剂的制备与电化学评估，并构建了构-效关系。进一步结合材料学中的晶体结构分析、原位电化学谱学探究与过渡态计算和分子动力学模拟，实现了多学科交叉揭示 HER催化剂的失效机制及高性能 HER 电极的开发。"
+    },
+    {
+      "paper_id": "2026_unknown_2026_2d8d75",
+      "paragraph_uid": "PRAW-000037",
+      "paragraph_id": "S03-P023",
+      "heading_uid": "HRAW-035-626dff1e",
+      "heading_text": "2.8 年度研究计划",
+      "doc_heading_order": 35,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S03_methods_and_setup",
+        "top_section_id": "S04_results",
+        "second_section_id": "S05_discussion_mechanism",
+        "top_score": 5,
+        "second_score": 4,
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 5,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "结果",
+                "weight": 1
+              },
+              {
+                "term": "性能",
+                "weight": 1
+              },
+              {
+                "term": "稳定性",
+                "weight": 1
+              },
+              {
+                "term": "活性",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 4,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "raman",
+                "weight": 1
+              },
+              {
+                "term": "机理",
+                "weight": 1
+              },
+              {
+                "term": "机制",
+                "weight": 1
+              },
+              {
+                "term": "失效机制",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_score_gap",
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S03_methods_and_setup",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S04_results",
+        "second_candidate_section_id": "S05_discussion_mechanism",
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "<table><tr><td>时间</td><td>年度计划</td></tr><tr><td rowspan=\"2\">2027</td><td>机理初探与构效关系建立</td></tr><tr><td>• 原位电化学平台：基于前期HP/HT电化学谱学（Raman、FTIR）测试平台的调试，追踪ALK电解Ni基电极在HP/HT和RC况下的动态演变；理论计算：开展DFT模型构建，对Ni电极动力学和热力学初步计算；失效机制研究：结合高温高压"
+    },
+    {
+      "paper_id": "2026_unknown_2026_2d8d75",
+      "paragraph_uid": "PRAW-000038",
+      "paragraph_id": "S03-P024",
+      "heading_uid": "HRAW-036-be660420",
+      "heading_text": "（三）研究基础：",
+      "doc_heading_order": 36,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S03_methods_and_setup",
+        "top_section_id": "S00_front_matter",
+        "second_section_id": "S01_abstract",
+        "top_score": 0,
+        "second_score": 0,
+        "score_gap": 0,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_top_score",
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S00_front_matter",
+            "section_title": "Front Matter",
+            "score": 0,
+            "heading_hits": [],
+            "preview_hits": [],
+            "position_hits": []
+          },
+          {
+            "section_id": "S01_abstract",
+            "section_title": "Abstract",
+            "score": 0,
+            "heading_hits": [],
+            "preview_hits": [],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_score_gap",
+          "low_top_score"
+        ],
+        "primary_section_id": "S03_methods_and_setup",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S00_front_matter",
+        "second_candidate_section_id": "S01_abstract",
+        "score_gap": 0,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "1．研究基础与可行性分析（与本项目相关的研究工作积累和已取得的研究工作成绩，研究风险的应对措施等）；"
+    },
+    {
+      "paper_id": "2026_unknown_2026_2d8d75",
+      "paragraph_uid": "PRAW-000039",
+      "paragraph_id": "S03-P025",
+      "heading_uid": "HRAW-037-c843012d",
+      "heading_text": "3.1 研究基础",
+      "doc_heading_order": 37,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S03_methods_and_setup",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S04_results",
+        "top_score": 3,
+        "second_score": 2,
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_top_score",
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 3,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "机理",
+                "weight": 1
+              },
+              {
+                "term": "机制",
+                "weight": 1
+              },
+              {
+                "term": "失效机制",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 2,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "结果",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_score_gap",
+          "low_top_score",
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S03_methods_and_setup",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S04_results",
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "本项目团队长期聚焦电解制氢装备的失效机理研究。在机理研究方面，开展了一系列基于原子、分子时空的原位机理的探究；在工程应用方面，积极与国家电网等企业开展合作研究，探究工业电解槽失效机制和安全边界。本项目是在申请人前期理论与研究的基础上，深入开展波动性电源接入对电极响应特性研究，以从本质上探明基于高温、高压、低/高载荷共同作用下阴极 HER电极的失效机制。本项目的研究成果可为后续的阴极电极优化设计以及动态失效结果分析提供指导，对申请人长期开"
+    },
+    {
+      "paper_id": "2026_unknown_2026_2d8d75",
+      "paragraph_uid": "PRAW-000040",
+      "paragraph_id": "S03-P026",
+      "heading_uid": "HRAW-037-c843012d",
+      "heading_text": "3.1 研究基础",
+      "doc_heading_order": 37,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S03_methods_and_setup",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S04_results",
+        "top_score": 3,
+        "second_score": 2,
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_top_score",
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 3,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "机理",
+                "weight": 1
+              },
+              {
+                "term": "机制",
+                "weight": 1
+              },
+              {
+                "term": "失效机制",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 2,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "结果",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_score_gap",
+          "low_top_score",
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S03_methods_and_setup",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S04_results",
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "申请人主持在研国家自然科学青年基金项目 1 项，主持 3 项包括省市及在内的纵横向课题，具有较为丰富的主持承担基础研究项目的经验。申请人近 3 年来取得的与本项目相关的研究成果在 Nat. Commnuni eSicene Nano Energy 等期刊发表SCI 收录论文20余篇(其中第一/通讯作者发表SCI 论文16 篇），授权发明专利10项，参与制氢可再生能源制氢相关国家标准3项。本项目所提到的思路和"
+    },
+    {
+      "paper_id": "2026_unknown_2026_2d8d75",
+      "paragraph_uid": "PRAW-000041",
+      "paragraph_id": "S03-P027",
+      "heading_uid": "HRAW-040-9e3f2c1a",
+      "heading_text": "研究基础 3：Ni基电极成核规律及形貌优化",
+      "doc_heading_order": 40,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S03_methods_and_setup",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S03_methods_and_setup",
+        "top_score": 2,
+        "second_score": 1,
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_top_score",
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 2,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "机理",
+                "weight": 1
+              },
+              {
+                "term": "机制",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S03_methods_and_setup",
+            "section_title": "Methods And Setup",
+            "score": 1,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "合成",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_score_gap",
+          "low_top_score",
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S03_methods_and_setup",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S03_methods_and_setup",
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "i. 成核机理研究： $\\mathrm { M o O } _ { 4 } ^ { - }$ 的浓度可作为关键调节因子，通过调控反应物的电解离解度（ α）与过饱和度（S）之间的平衡，实现对材料形貌及电子结构的优化调控。基于此机制，成功合成了高效二维 NiFeMo 纳米片催化剂与一维 NiFeMo"
+    },
+    {
+      "paper_id": "2026_unknown_2026_2d8d75",
+      "paragraph_uid": "PRAW-000042",
+      "paragraph_id": "S03-P028",
+      "heading_uid": "HRAW-040-9e3f2c1a",
+      "heading_text": "研究基础 3：Ni基电极成核规律及形貌优化",
+      "doc_heading_order": 40,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S03_methods_and_setup",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S03_methods_and_setup",
+        "top_score": 2,
+        "second_score": 1,
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_top_score",
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 2,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "机理",
+                "weight": 1
+              },
+              {
+                "term": "机制",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S03_methods_and_setup",
+            "section_title": "Methods And Setup",
+            "score": 1,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "合成",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_score_gap",
+          "low_top_score",
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S03_methods_and_setup",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S03_methods_and_setup",
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "ii. 电极均一性研究：对不同占空比用瞬态仿真 10个完整脉冲周期对电极表面每个点的电流密度进行积分平均观察相同标尺下周期平均电密分布情况，计算平均电密的均值、标准差、变异系数。通过调控脉冲幅度和脉宽，可以实现对沉积薄膜成分和厚度的原子级调控（图 3-3）。"
+    },
+    {
+      "paper_id": "2026_unknown_2026_2d8d75",
+      "paragraph_uid": "PRAW-000043",
+      "paragraph_id": "S03-P029",
+      "heading_uid": "HRAW-042-994b1241",
+      "heading_text": "研究基础 5：基于可再生能源耦合的碱性电解制氢工程实践基础",
+      "doc_heading_order": 42,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S03_methods_and_setup",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S04_results",
+        "top_score": 2,
+        "second_score": 1,
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_top_score",
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 2,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "机制",
+                "weight": 1
+              },
+              {
+                "term": "反向电流",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 1,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "her",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_score_gap",
+          "low_top_score",
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S03_methods_and_setup",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S04_results",
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "i. 可再生能源耦合的 50kW 碱性电解槽运行：申请人负责开展了国家电网波动能源下碱槽能效和安全研究项目，项目就 $1 0 0 0 \\mathrm { N m } ^ { 3 }$ 工业电解槽单元为研究对象，研究单元电解槽在启停过程中反向电流对阴极 HER电极的影响机制。研究证实了阴极电极在反向氧化电流的作用下发生了氧化，导致了电极的脱落和失效。 ii. 基于碱性阴离子交换电解制氢系统高原应用示范：申请人负责开展了高原高海拔制氢制氧项"
+    },
+    {
+      "paper_id": "2026_unknown_2026_2d8d75",
+      "paragraph_uid": "PRAW-000063",
+      "paragraph_id": "S05-P012",
+      "heading_uid": "HRAW-020-dfea861e",
+      "heading_text": "科学问题三：基于扩散热力学和电沉积动力学的成核-生长机制",
+      "doc_heading_order": 20,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S05_discussion_mechanism",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S00_front_matter",
+        "top_score": 2,
+        "second_score": 0,
+        "score_gap": 2,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_top_score"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 2,
+            "heading_hits": [
+              {
+                "term": "机制",
+                "weight": 2
+              }
+            ],
+            "preview_hits": [],
+            "position_hits": []
+          },
+          {
+            "section_id": "S00_front_matter",
+            "section_title": "Front Matter",
+            "score": 0,
+            "heading_hits": [],
+            "preview_hits": [],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_top_score"
+        ],
+        "primary_section_id": "S05_discussion_mechanism",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S00_front_matter",
+        "score_gap": 2,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "电沉积过程中，电沉积过程中的电流分布不均会导致沉积速率在不同区域产生差异，且金属的形核和生长行为对电极表面的微观结构有重要影响。如何通过调控沉积条件（如电流密度、电解液浓度、温度等）优化形核过程，使得沉积层的生长更加均匀，是提高电极均一性的关键。"
+    },
+    {
+      "paper_id": "2026_unknown_2026_2d8d75",
+      "paragraph_uid": "PRAW-000070",
+      "paragraph_id": "S05-P019",
+      "heading_uid": "HRAW-038-66c499f1",
+      "heading_text": "研究基础 1：电极反应电化学反应动力学优化及失效机理研究",
+      "doc_heading_order": 38,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S05_discussion_mechanism",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S04_results",
+        "top_score": 4,
+        "second_score": 3,
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 4,
+            "heading_hits": [
+              {
+                "term": "机理",
+                "weight": 2
+              }
+            ],
+            "preview_hits": [
+              {
+                "term": "机制",
+                "weight": 1
+              },
+              {
+                "term": "失效机制",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 3,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "tafel",
+                "weight": 1
+              },
+              {
+                "term": "活性",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_score_gap"
+        ],
+        "primary_section_id": "S05_discussion_mechanism",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S04_results",
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "i．析氢电极开发：申请人在博士期间专注于高效稳定碱性 HER 催化剂的制备，结合原子数调控 $d$ 带中心的策略，设计了 5 原子配位的 Ru-NC 催化剂用于碱性析氢。该原子配位结构有效加快 Volmer 步骤（碱性析氢的决速步），实现了Volmer-Tafel 高效析氢路径（图 3-1）。相关工作发表在国际著名期刊 Carbon（Li,Yang, et al. Carbon 183 (2021); 362-367.）。 ii. Ni"
+    },
+    {
+      "paper_id": "2026_unknown_2026_2d8d75",
+      "paragraph_uid": "PRAW-000071",
+      "paragraph_id": "S05-P020",
+      "heading_uid": "HRAW-038-66c499f1",
+      "heading_text": "研究基础 1：电极反应电化学反应动力学优化及失效机理研究",
+      "doc_heading_order": 38,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S05_discussion_mechanism",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S04_results",
+        "top_score": 4,
+        "second_score": 3,
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 4,
+            "heading_hits": [
+              {
+                "term": "机理",
+                "weight": 2
+              }
+            ],
+            "preview_hits": [
+              {
+                "term": "机制",
+                "weight": 1
+              },
+              {
+                "term": "失效机制",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 3,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "tafel",
+                "weight": 1
+              },
+              {
+                "term": "活性",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_score_gap"
+        ],
+        "primary_section_id": "S05_discussion_mechanism",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S04_results",
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "![](figures/FIG003/image_001.jpg) 图3-1 阴极催化剂开发及动力学优化"
+    },
+    {
+      "paper_id": "2026_unknown_2026_2d8d75",
+      "paragraph_uid": "PRAW-000090",
+      "paragraph_id": "S07-P001",
+      "heading_uid": "HRAW-010-204f1342",
+      "heading_text": "主要参考文献",
+      "doc_heading_order": 10,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "direct_rule",
+        "assigned_section_id": "S07_back_matter_or_supplementary",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S04_results",
+        "top_score": 9,
+        "second_score": 8,
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 9,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "mechanism",
+                "weight": 1
+              },
+              {
+                "term": "corrosion",
+                "weight": 1
+              },
+              {
+                "term": "oxidation",
+                "weight": 1
+              },
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "reverse-current",
+                "weight": 1
+              },
+              {
+                "term": "redox",
+                "weight": 1
+              },
+              {
+                "term": "in situ",
+                "weight": 1
+              },
+              {
+                "term": "operando",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 8,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "activity",
+                "weight": 1
+              },
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "water electrolysis",
+                "weight": 1
+              },
+              {
+                "term": "seawater electrolysis",
+                "weight": 1
+              },
+              {
+                "term": "stability",
+                "weight": 1
+              },
+              {
+                "term": "durability",
+                "weight": 1
+              },
+              {
+                "term": "intermittent",
+                "weight": 1
+              },
+              {
+                "term": "current density",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "low",
+        "conflict_reasons": [
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S07_back_matter_or_supplementary",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S04_results",
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "[1] 国家发展改革委. 氢能产业发展中长期规划（2021-2035 年）[R]. 北京, 2022. [2] 夏杨红, 韦巍, 程浩然, 等. 大规模可再生能源直接电解碱液制氢关键科学问题[J]. 太阳能学报, 2024, 45(07): 224-31. [3] 张盛, 郑津洋, 戴剑锋, 等. 可再生能源大规模制氢及储氢系统研究进展 [J].太阳能学报, 2024, 45(01): 457-65. [4] 张文韬, 周家辉, 张润之"
+    },
+    {
+      "paper_id": "2026_unknown_2026_2d8d75",
+      "paragraph_uid": "PRAW-000091",
+      "paragraph_id": "S07-P002",
+      "heading_uid": "HRAW-010-204f1342",
+      "heading_text": "主要参考文献",
+      "doc_heading_order": 10,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "direct_rule",
+        "assigned_section_id": "S07_back_matter_or_supplementary",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S04_results",
+        "top_score": 9,
+        "second_score": 8,
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 9,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "mechanism",
+                "weight": 1
+              },
+              {
+                "term": "corrosion",
+                "weight": 1
+              },
+              {
+                "term": "oxidation",
+                "weight": 1
+              },
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "reverse-current",
+                "weight": 1
+              },
+              {
+                "term": "redox",
+                "weight": 1
+              },
+              {
+                "term": "in situ",
+                "weight": 1
+              },
+              {
+                "term": "operando",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 8,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "activity",
+                "weight": 1
+              },
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "water electrolysis",
+                "weight": 1
+              },
+              {
+                "term": "seawater electrolysis",
+                "weight": 1
+              },
+              {
+                "term": "stability",
+                "weight": 1
+              },
+              {
+                "term": "durability",
+                "weight": 1
+              },
+              {
+                "term": "intermittent",
+                "weight": 1
+              },
+              {
+                "term": "current density",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "low",
+        "conflict_reasons": [
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S07_back_matter_or_supplementary",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S04_results",
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "(2174): :20140792 [18] Hu C, Hu Y, Zhang B, et al. Advanced catalyst design strategies and in-situ characterization techniques for enhancing electrocatalytic activity and stability of oxygen evolution reaction [J]. Elect"
+    }
+  ]
+}

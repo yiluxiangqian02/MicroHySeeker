@@ -1,0 +1,700 @@
+[
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\10,000-h-stable intermittent alkaline seawater electrolysis\\images\\0007c5cc9f7508f60e0c16b3d86cc3dfc24d2dc4399b204bc7f11146c5630bfe.jpg",
+    "raw_relative_path": "images/0007c5cc9f7508f60e0c16b3d86cc3dfc24d2dc4399b204bc7f11146c5630bfe.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\10,000-h-stable intermittent alkaline seawater electrolysis\\images\\01f5e68ed98e0450f619b353fc2876425a0c73c8072e8b5c6132560d27b3343b.jpg",
+    "raw_relative_path": "images/01f5e68ed98e0450f619b353fc2876425a0c73c8072e8b5c6132560d27b3343b.jpg",
+    "status": "used",
+    "figure_id": "FIG005",
+    "clean_path": "figures/FIG005/image_001.jpg",
+    "caption_path": "figures/FIG005/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S00-P003",
+      "S05-P014",
+      "S05-P017"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\10,000-h-stable intermittent alkaline seawater electrolysis\\images\\045f01ba2c582d1095d3bcc855458f54bc672072d2a2faba52e1f7d82090616a.jpg",
+    "raw_relative_path": "images/045f01ba2c582d1095d3bcc855458f54bc672072d2a2faba52e1f7d82090616a.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\10,000-h-stable intermittent alkaline seawater electrolysis\\images\\0952c629de1b6b6a00ad5db0cd2e7d893fc237e50484b3a54a66ea193c306b3d.jpg",
+    "raw_relative_path": "images/0952c629de1b6b6a00ad5db0cd2e7d893fc237e50484b3a54a66ea193c306b3d.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\10,000-h-stable intermittent alkaline seawater electrolysis\\images\\0a7e756a46d5348f1cbba717a7a1439bc8011603dc352e7d70a3baaed5db0a6b.jpg",
+    "raw_relative_path": "images/0a7e756a46d5348f1cbba717a7a1439bc8011603dc352e7d70a3baaed5db0a6b.jpg",
+    "status": "used",
+    "figure_id": "FIG001",
+    "clean_path": "figures/FIG001/image_003.jpg",
+    "caption_path": "figures/FIG001/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S00-P003",
+      "S01-P002",
+      "S05-P001",
+      "S05-P002"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\10,000-h-stable intermittent alkaline seawater electrolysis\\images\\13579725813d0b89aa2f688e57adcb2b756cdf6514d47d4eb025d50670591bf5.jpg",
+    "raw_relative_path": "images/13579725813d0b89aa2f688e57adcb2b756cdf6514d47d4eb025d50670591bf5.jpg",
+    "status": "used",
+    "figure_id": "FIG004",
+    "clean_path": "figures/FIG004/image_001.jpg",
+    "caption_path": "figures/FIG004/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S00-P003",
+      "S05-P011",
+      "S05-P012",
+      "S05-P013"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\10,000-h-stable intermittent alkaline seawater electrolysis\\images\\210c51a31d938c990f865365cbae50fed33606250b098d6847f4bf211a3e978b.jpg",
+    "raw_relative_path": "images/210c51a31d938c990f865365cbae50fed33606250b098d6847f4bf211a3e978b.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\10,000-h-stable intermittent alkaline seawater electrolysis\\images\\2640695730593323ac4579780a302c6db0e4daa210c4a06d4de92a5a09a4cfab.jpg",
+    "raw_relative_path": "images/2640695730593323ac4579780a302c6db0e4daa210c4a06d4de92a5a09a4cfab.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\10,000-h-stable intermittent alkaline seawater electrolysis\\images\\27153176f0b347e544eb7d8c3831a9ebf47bbe65efcc932eb5b215f3c2534540.jpg",
+    "raw_relative_path": "images/27153176f0b347e544eb7d8c3831a9ebf47bbe65efcc932eb5b215f3c2534540.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\10,000-h-stable intermittent alkaline seawater electrolysis\\images\\2813449c98d41d3af10c2a053504c34509d2f0ff53d48d1cea4e916d97a450cc.jpg",
+    "raw_relative_path": "images/2813449c98d41d3af10c2a053504c34509d2f0ff53d48d1cea4e916d97a450cc.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\10,000-h-stable intermittent alkaline seawater electrolysis\\images\\2d8d5b21758e82712cb1c1434b586f0f1e04cb8c6cfa3938cfa6263053b6083c.jpg",
+    "raw_relative_path": "images/2d8d5b21758e82712cb1c1434b586f0f1e04cb8c6cfa3938cfa6263053b6083c.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\10,000-h-stable intermittent alkaline seawater electrolysis\\images\\2e1e903dfd89e58a0700aec036399af98b589060d4e82c6e93cf725e72e20726.jpg",
+    "raw_relative_path": "images/2e1e903dfd89e58a0700aec036399af98b589060d4e82c6e93cf725e72e20726.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\10,000-h-stable intermittent alkaline seawater electrolysis\\images\\308b4feb840a8d8881cd3c7114f23f217b7cf11f09958faf09b537d9072d80b0.jpg",
+    "raw_relative_path": "images/308b4feb840a8d8881cd3c7114f23f217b7cf11f09958faf09b537d9072d80b0.jpg",
+    "status": "used",
+    "figure_id": "FIG002",
+    "clean_path": "figures/FIG002/image_001.jpg",
+    "caption_path": "figures/FIG002/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S04-P002",
+      "S04-P004",
+      "S04-P005",
+      "S04-P007",
+      "S07-P014"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\10,000-h-stable intermittent alkaline seawater electrolysis\\images\\3785a8977f6d54ce3eb6101d2f629cb154ebf7cf0961857aa7e8efc6a6ac5d2d.jpg",
+    "raw_relative_path": "images/3785a8977f6d54ce3eb6101d2f629cb154ebf7cf0961857aa7e8efc6a6ac5d2d.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\10,000-h-stable intermittent alkaline seawater electrolysis\\images\\3f211418e107e34957a0e140a1a33909e7dad569b56b9a38ba1c6134bdd24ec9.jpg",
+    "raw_relative_path": "images/3f211418e107e34957a0e140a1a33909e7dad569b56b9a38ba1c6134bdd24ec9.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\10,000-h-stable intermittent alkaline seawater electrolysis\\images\\426b479d01937649c42bead560bfaf6e0b4133d4986d85e73d1841c9ba365ecd.jpg",
+    "raw_relative_path": "images/426b479d01937649c42bead560bfaf6e0b4133d4986d85e73d1841c9ba365ecd.jpg",
+    "status": "used",
+    "figure_id": "FIG003",
+    "clean_path": "figures/FIG003/image_002.jpg",
+    "caption_path": "figures/FIG003/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S00-P003",
+      "S05-P003",
+      "S05-P004",
+      "S05-P005",
+      "S05-P007",
+      "S05-P008",
+      "S05-P010",
+      "S05-P011"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\10,000-h-stable intermittent alkaline seawater electrolysis\\images\\43759eaf78e5d64ba434c341550f8b92162b7b6747686bbcc6262a76e9d1c236.jpg",
+    "raw_relative_path": "images/43759eaf78e5d64ba434c341550f8b92162b7b6747686bbcc6262a76e9d1c236.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\10,000-h-stable intermittent alkaline seawater electrolysis\\images\\478148bd02f6e4d84d2890753142e0c685140905835e09116e867ef10932c943.jpg",
+    "raw_relative_path": "images/478148bd02f6e4d84d2890753142e0c685140905835e09116e867ef10932c943.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\10,000-h-stable intermittent alkaline seawater electrolysis\\images\\4a57befb7e58274d3b14936b93aca05b9c428a047ae1f3da9febbaba12eea05f.jpg",
+    "raw_relative_path": "images/4a57befb7e58274d3b14936b93aca05b9c428a047ae1f3da9febbaba12eea05f.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\10,000-h-stable intermittent alkaline seawater electrolysis\\images\\504b6889797b199f2491ff3af1aed6940468238899bc923575c6501651e949ff.jpg",
+    "raw_relative_path": "images/504b6889797b199f2491ff3af1aed6940468238899bc923575c6501651e949ff.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\10,000-h-stable intermittent alkaline seawater electrolysis\\images\\542dd9e3220695fd3be83cb9c38e8c09cb7695fe489d3d0a55f6d0c0270c1f5a.jpg",
+    "raw_relative_path": "images/542dd9e3220695fd3be83cb9c38e8c09cb7695fe489d3d0a55f6d0c0270c1f5a.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\10,000-h-stable intermittent alkaline seawater electrolysis\\images\\5e6052c1ea7c044f727cc0e1fd5077c98211276cf9f1957b5f902e895aa5e078.jpg",
+    "raw_relative_path": "images/5e6052c1ea7c044f727cc0e1fd5077c98211276cf9f1957b5f902e895aa5e078.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\10,000-h-stable intermittent alkaline seawater electrolysis\\images\\5e6bb29d0d7aebd5ad2a19e76532246f186eb4d181452024abcd46c9ce94800f.jpg",
+    "raw_relative_path": "images/5e6bb29d0d7aebd5ad2a19e76532246f186eb4d181452024abcd46c9ce94800f.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\10,000-h-stable intermittent alkaline seawater electrolysis\\images\\5ea9b07fb8a82eac49d48390fe21e9669a4591924ddb2a2970c703b3f2ca0d0b.jpg",
+    "raw_relative_path": "images/5ea9b07fb8a82eac49d48390fe21e9669a4591924ddb2a2970c703b3f2ca0d0b.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\10,000-h-stable intermittent alkaline seawater electrolysis\\images\\5fba7e61db6c2fd3c3fa9c57ee024b1d6a94a5b46fb736f2f5e00a87ea2ed051.jpg",
+    "raw_relative_path": "images/5fba7e61db6c2fd3c3fa9c57ee024b1d6a94a5b46fb736f2f5e00a87ea2ed051.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\10,000-h-stable intermittent alkaline seawater electrolysis\\images\\61a7aa374e8c3d18d28a4f8ccca7d2bf3d53b556747a4ca048aaeb7c110afe8a.jpg",
+    "raw_relative_path": "images/61a7aa374e8c3d18d28a4f8ccca7d2bf3d53b556747a4ca048aaeb7c110afe8a.jpg",
+    "status": "used",
+    "figure_id": "FIG001",
+    "clean_path": "figures/FIG001/image_001.jpg",
+    "caption_path": "figures/FIG001/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S00-P003",
+      "S01-P002",
+      "S05-P001",
+      "S05-P002"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\10,000-h-stable intermittent alkaline seawater electrolysis\\images\\63fd404cd4b079d0a62864bb1604e1aabe4aef5772c463f55997cc75aca24d36.jpg",
+    "raw_relative_path": "images/63fd404cd4b079d0a62864bb1604e1aabe4aef5772c463f55997cc75aca24d36.jpg",
+    "status": "used",
+    "figure_id": "FIG005",
+    "clean_path": "figures/FIG005/image_002.jpg",
+    "caption_path": "figures/FIG005/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S00-P003",
+      "S05-P014",
+      "S05-P017"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\10,000-h-stable intermittent alkaline seawater electrolysis\\images\\6755e523c9651ac8b53804e3192a27c75ad797b0be59ad28e73e779a5555eb4d.jpg",
+    "raw_relative_path": "images/6755e523c9651ac8b53804e3192a27c75ad797b0be59ad28e73e779a5555eb4d.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\10,000-h-stable intermittent alkaline seawater electrolysis\\images\\68203c8fe6de0f7188d67504e950067ae1a6c003ea55164e527e379963d70ff7.jpg",
+    "raw_relative_path": "images/68203c8fe6de0f7188d67504e950067ae1a6c003ea55164e527e379963d70ff7.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\10,000-h-stable intermittent alkaline seawater electrolysis\\images\\7178f89830e6692fe0d812393b8b62b342d2e5410cdaa67e6a66d7474c207d00.jpg",
+    "raw_relative_path": "images/7178f89830e6692fe0d812393b8b62b342d2e5410cdaa67e6a66d7474c207d00.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\10,000-h-stable intermittent alkaline seawater electrolysis\\images\\72f666f45f5f941773caf535ed66ee06334ab1dbd9ba62b30f3e4f5a75671ebf.jpg",
+    "raw_relative_path": "images/72f666f45f5f941773caf535ed66ee06334ab1dbd9ba62b30f3e4f5a75671ebf.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\10,000-h-stable intermittent alkaline seawater electrolysis\\images\\74f0e9af37f67ffb3919d6f5abd205b6918d8ffea008969b4858d99eda69773e.jpg",
+    "raw_relative_path": "images/74f0e9af37f67ffb3919d6f5abd205b6918d8ffea008969b4858d99eda69773e.jpg",
+    "status": "used",
+    "figure_id": "FIG002",
+    "clean_path": "figures/FIG002/image_002.jpg",
+    "caption_path": "figures/FIG002/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S04-P002",
+      "S04-P004",
+      "S04-P005",
+      "S04-P007",
+      "S07-P014"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\10,000-h-stable intermittent alkaline seawater electrolysis\\images\\76a7b22ef240b5696716d17bdbebdddeadcaa445aea940c458272b33b144500c.jpg",
+    "raw_relative_path": "images/76a7b22ef240b5696716d17bdbebdddeadcaa445aea940c458272b33b144500c.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\10,000-h-stable intermittent alkaline seawater electrolysis\\images\\77bd0b59b4d99d4f5c37157f18e7b37396e7d561d82efcd098b85bd0bd44b7eb.jpg",
+    "raw_relative_path": "images/77bd0b59b4d99d4f5c37157f18e7b37396e7d561d82efcd098b85bd0bd44b7eb.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\10,000-h-stable intermittent alkaline seawater electrolysis\\images\\78b780be04e9921ea34d27972c1390cdb0cf64b262e1fbfd78a39a75a8c46934.jpg",
+    "raw_relative_path": "images/78b780be04e9921ea34d27972c1390cdb0cf64b262e1fbfd78a39a75a8c46934.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\10,000-h-stable intermittent alkaline seawater electrolysis\\images\\84d0adf215b93c2338047cf19cf904f152b1b4493d9885bcd4d6f5ea0a4238fc.jpg",
+    "raw_relative_path": "images/84d0adf215b93c2338047cf19cf904f152b1b4493d9885bcd4d6f5ea0a4238fc.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\10,000-h-stable intermittent alkaline seawater electrolysis\\images\\8e37a87eae2df1d6a5b31d59878050327ebbf7311a4561c1af9908d7d9352341.jpg",
+    "raw_relative_path": "images/8e37a87eae2df1d6a5b31d59878050327ebbf7311a4561c1af9908d7d9352341.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\10,000-h-stable intermittent alkaline seawater electrolysis\\images\\91c678e2dff22d8d0637ae3ce4b4896ac68b2478300e71b45f2e7e9ae1c1a4dc.jpg",
+    "raw_relative_path": "images/91c678e2dff22d8d0637ae3ce4b4896ac68b2478300e71b45f2e7e9ae1c1a4dc.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\10,000-h-stable intermittent alkaline seawater electrolysis\\images\\94f0ad317631e9baee95c48af40cd83f29814061083cb3f4ca530d20d0e315b5.jpg",
+    "raw_relative_path": "images/94f0ad317631e9baee95c48af40cd83f29814061083cb3f4ca530d20d0e315b5.jpg",
+    "status": "used",
+    "figure_id": "FIG002",
+    "clean_path": "figures/FIG002/image_003.jpg",
+    "caption_path": "figures/FIG002/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S04-P002",
+      "S04-P004",
+      "S04-P005",
+      "S04-P007",
+      "S07-P014"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\10,000-h-stable intermittent alkaline seawater electrolysis\\images\\95416c89201642133425ec1002b5212136c08656b4991c1d3ef5f45f64dc9613.jpg",
+    "raw_relative_path": "images/95416c89201642133425ec1002b5212136c08656b4991c1d3ef5f45f64dc9613.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\10,000-h-stable intermittent alkaline seawater electrolysis\\images\\a49dad68e467e3dac3b6804d713974f86f8b1c11879f03cb798cf32f28d5ccb5.jpg",
+    "raw_relative_path": "images/a49dad68e467e3dac3b6804d713974f86f8b1c11879f03cb798cf32f28d5ccb5.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\10,000-h-stable intermittent alkaline seawater electrolysis\\images\\a82d2917d669fdc14f5768ac66dca263a1a1b829cc2cfbbd6eb56e19bc343564.jpg",
+    "raw_relative_path": "images/a82d2917d669fdc14f5768ac66dca263a1a1b829cc2cfbbd6eb56e19bc343564.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\10,000-h-stable intermittent alkaline seawater electrolysis\\images\\aa3a389fe5f907fac7a4f553590cec79e7a58825b5f3e29bd7f6dff92c637b0e.jpg",
+    "raw_relative_path": "images/aa3a389fe5f907fac7a4f553590cec79e7a58825b5f3e29bd7f6dff92c637b0e.jpg",
+    "status": "used",
+    "figure_id": "FIG003",
+    "clean_path": "figures/FIG003/image_003.jpg",
+    "caption_path": "figures/FIG003/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S00-P003",
+      "S05-P003",
+      "S05-P004",
+      "S05-P005",
+      "S05-P007",
+      "S05-P008",
+      "S05-P010",
+      "S05-P011"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\10,000-h-stable intermittent alkaline seawater electrolysis\\images\\b6f1d11999368ffafcc4c0689ed26e05edda840c58dbcfeb67acbf37fea0f7b7.jpg",
+    "raw_relative_path": "images/b6f1d11999368ffafcc4c0689ed26e05edda840c58dbcfeb67acbf37fea0f7b7.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\10,000-h-stable intermittent alkaline seawater electrolysis\\images\\b703cc5cb4c9f80aee5d4f62e33907f46f4f28aa826f4d0599f3d2a7cf9cc90c.jpg",
+    "raw_relative_path": "images/b703cc5cb4c9f80aee5d4f62e33907f46f4f28aa826f4d0599f3d2a7cf9cc90c.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\10,000-h-stable intermittent alkaline seawater electrolysis\\images\\b8961e808cf6c16e3a2a819d2867b6418c53a923431d2832b59678dbebc09558.jpg",
+    "raw_relative_path": "images/b8961e808cf6c16e3a2a819d2867b6418c53a923431d2832b59678dbebc09558.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\10,000-h-stable intermittent alkaline seawater electrolysis\\images\\bda5b4b0336576f610d17d76fd529466c39bfe632b3d347344bd4a1af94937b7.jpg",
+    "raw_relative_path": "images/bda5b4b0336576f610d17d76fd529466c39bfe632b3d347344bd4a1af94937b7.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\10,000-h-stable intermittent alkaline seawater electrolysis\\images\\c664242c482e2d27a7952ac995c36942147c6075c647fa9f622aa1d13d7264cd.jpg",
+    "raw_relative_path": "images/c664242c482e2d27a7952ac995c36942147c6075c647fa9f622aa1d13d7264cd.jpg",
+    "status": "used",
+    "figure_id": "FIG004",
+    "clean_path": "figures/FIG004/image_002.jpg",
+    "caption_path": "figures/FIG004/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S00-P003",
+      "S05-P011",
+      "S05-P012",
+      "S05-P013"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\10,000-h-stable intermittent alkaline seawater electrolysis\\images\\c86ff679d79833fcfa8431dca6e59ad077993fa915c4ebe88edb93386a73feb5.jpg",
+    "raw_relative_path": "images/c86ff679d79833fcfa8431dca6e59ad077993fa915c4ebe88edb93386a73feb5.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\10,000-h-stable intermittent alkaline seawater electrolysis\\images\\c89bc0385cc595048a71548d1145907920deb7e6edd9746c5e21fdc398deb523.jpg",
+    "raw_relative_path": "images/c89bc0385cc595048a71548d1145907920deb7e6edd9746c5e21fdc398deb523.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\10,000-h-stable intermittent alkaline seawater electrolysis\\images\\cb2c99d650f37dd5d74c358c2313b03a7779a2db1f5f34a6a5862b56b35c6a79.jpg",
+    "raw_relative_path": "images/cb2c99d650f37dd5d74c358c2313b03a7779a2db1f5f34a6a5862b56b35c6a79.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\10,000-h-stable intermittent alkaline seawater electrolysis\\images\\cb7552ccac749c67a8afa8895e7ba99419541518bdba070907babedceef6de8d.jpg",
+    "raw_relative_path": "images/cb7552ccac749c67a8afa8895e7ba99419541518bdba070907babedceef6de8d.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\10,000-h-stable intermittent alkaline seawater electrolysis\\images\\cf50511e1f9147bc6681c554a548ac50f9e7f763e9b98382eb6bd9e7fe4e4d32.jpg",
+    "raw_relative_path": "images/cf50511e1f9147bc6681c554a548ac50f9e7f763e9b98382eb6bd9e7fe4e4d32.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\10,000-h-stable intermittent alkaline seawater electrolysis\\images\\d0d7cb9cffb0d1870e0c7772add5a8e11b9bd48ecab5aa1cf8ec89bc47382511.jpg",
+    "raw_relative_path": "images/d0d7cb9cffb0d1870e0c7772add5a8e11b9bd48ecab5aa1cf8ec89bc47382511.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\10,000-h-stable intermittent alkaline seawater electrolysis\\images\\d2c6b5ce48d8b99faf92b7dc2cbfc90d58114e64bb0091985a7012cba0ac7137.jpg",
+    "raw_relative_path": "images/d2c6b5ce48d8b99faf92b7dc2cbfc90d58114e64bb0091985a7012cba0ac7137.jpg",
+    "status": "used",
+    "figure_id": "FIG001",
+    "clean_path": "figures/FIG001/image_002.jpg",
+    "caption_path": "figures/FIG001/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S00-P003",
+      "S01-P002",
+      "S05-P001",
+      "S05-P002"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\10,000-h-stable intermittent alkaline seawater electrolysis\\images\\d4a9c39cb850ee08f15944c207516b27b0c41529962bf0add3f41bbf53a85567.jpg",
+    "raw_relative_path": "images/d4a9c39cb850ee08f15944c207516b27b0c41529962bf0add3f41bbf53a85567.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\10,000-h-stable intermittent alkaline seawater electrolysis\\images\\d4f696431ae279d61782cdd990f00b758da51d5506c828395a176df62502a01f.jpg",
+    "raw_relative_path": "images/d4f696431ae279d61782cdd990f00b758da51d5506c828395a176df62502a01f.jpg",
+    "status": "used",
+    "figure_id": "FIG003",
+    "clean_path": "figures/FIG003/image_001.jpg",
+    "caption_path": "figures/FIG003/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S00-P003",
+      "S05-P003",
+      "S05-P004",
+      "S05-P005",
+      "S05-P007",
+      "S05-P008",
+      "S05-P010",
+      "S05-P011"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\10,000-h-stable intermittent alkaline seawater electrolysis\\images\\d99300c7c7584e0b2afe48fc77322f75cea56b7a9a41ea5df4b08b5d05787377.jpg",
+    "raw_relative_path": "images/d99300c7c7584e0b2afe48fc77322f75cea56b7a9a41ea5df4b08b5d05787377.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\10,000-h-stable intermittent alkaline seawater electrolysis\\images\\e01d14679856754959b47246fba952c83d73109484bfb9e25a9e68a9cb358b14.jpg",
+    "raw_relative_path": "images/e01d14679856754959b47246fba952c83d73109484bfb9e25a9e68a9cb358b14.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\10,000-h-stable intermittent alkaline seawater electrolysis\\images\\ea1568df42526889935c1812072247a11228b4b856bf3064bb7d51ad6a1eef32.jpg",
+    "raw_relative_path": "images/ea1568df42526889935c1812072247a11228b4b856bf3064bb7d51ad6a1eef32.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\10,000-h-stable intermittent alkaline seawater electrolysis\\images\\f393d8d96b5d6d8b2cb0a6f12cf70022397410bdc95f597199ef0da093ffed13.jpg",
+    "raw_relative_path": "images/f393d8d96b5d6d8b2cb0a6f12cf70022397410bdc95f597199ef0da093ffed13.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\10,000-h-stable intermittent alkaline seawater electrolysis\\images\\fe11c17636593553bc03b8f8036793ca59fec6a84f017d7bf2294355896a4554.jpg",
+    "raw_relative_path": "images/fe11c17636593553bc03b8f8036793ca59fec6a84f017d7bf2294355896a4554.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  }
+]

@@ -1,0 +1,21 @@
+{
+  "status": "fresh",
+  "generated_at": "2026-05-31T14:27:00.138025",
+  "source_checksum": "6a902e9562cfdcea48b37ed5f35974a9a965837c43f1536321f08fdf315d33d6",
+  "source_items": [
+    "document_tree.json:ef7f0346d4fe7c27c1ba1b7888d67013ea3975ac70fb19548535c348eea2170a",
+    "full_clean.md:c38002827beb35c3c4d070c54340dc5a5abfb9543a4836b8ab0f27ca6459343c",
+    "image_manifest.json:9dc2a95be19c70ffac016087b8f07c99eb10ebd6146a4f748dffff08164605d5",
+    "paragraph_index.json:d1a2bb64bda4c04ebd51e1683188d6675ce22b98ab563b97881f8c780c55720c",
+    "table_manifest.json:6ccd32a177b7ad4cb7b7660140d157c25bb8e1f348e85aa85a7b1c3d4afaf5b7"
+  ],
+  "based_on_preprocess_version": null,
+  "llm_model": "ali/qwen3-max-2026-01-23",
+  "llm_provider": "openai",
+  "llm_base_url": "https://router.shengsuanyun.com/api/v1",
+  "targets": {
+    "paper_targets_ok": true,
+    "section_targets_count": 25
+  },
+  "evaluated_at": "2026-06-04T14:30:20.538072"
+}

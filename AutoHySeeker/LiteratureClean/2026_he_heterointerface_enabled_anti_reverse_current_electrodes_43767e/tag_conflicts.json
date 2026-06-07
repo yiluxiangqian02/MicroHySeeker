@@ -1,0 +1,3323 @@
+{
+  "paper_id": "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e",
+  "generated_at": "2026-05-30T16:29:54",
+  "total_conflicts": 29,
+  "high_conflicts": 0,
+  "medium_conflicts": 9,
+  "low_conflicts": 20,
+  "items": [
+    {
+      "paper_id": "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e",
+      "paragraph_uid": "PRAW-000001",
+      "paragraph_id": "S00-P012",
+      "heading_uid": "HRAW-001-dcbbe410",
+      "heading_text": "Heterointerface-Enabled Anti-Reverse-Current Electrodes for Alkaline Water Electrolyzers at $1000\\mathrm{mAcm}^{-2}$",
+      "doc_heading_order": 1,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "front_matter_hard_rule",
+        "assigned_section_id": "S00_front_matter",
+        "top_section_id": "S04_results",
+        "second_section_id": "S05_discussion_mechanism",
+        "top_score": 5,
+        "second_score": 4,
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 5,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "activity",
+                "weight": 1
+              },
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "water electrolysis",
+                "weight": 1
+              },
+              {
+                "term": "stability",
+                "weight": 1
+              },
+              {
+                "term": "durability",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 4,
+            "heading_hits": [
+              {
+                "term": "reverse-current",
+                "weight": 2
+              }
+            ],
+            "preview_hits": [
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "charge redistribution",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "low",
+        "conflict_reasons": [
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S00_front_matter",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S04_results",
+        "second_candidate_section_id": "S05_discussion_mechanism",
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "Wenjun He, $^{\\diamond}$ Yueshuai Wang, $^{\\diamond}$ Yilong Zhao, $^{\\diamond}$ Cheng Tang, $^{*}$ Linchuan Cong, Changli Wang, Yue Lu, Xin Liu, Juncai Dong, Serhiy Cherevko, Qingsong Hua, and Qiang Zhang $^{*}$"
+    },
+    {
+      "paper_id": "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e",
+      "paragraph_uid": "PRAW-000002",
+      "paragraph_id": "S00-P013",
+      "heading_uid": "HRAW-001-dcbbe410",
+      "heading_text": "Heterointerface-Enabled Anti-Reverse-Current Electrodes for Alkaline Water Electrolyzers at $1000\\mathrm{mAcm}^{-2}$",
+      "doc_heading_order": 1,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "front_matter_hard_rule",
+        "assigned_section_id": "S00_front_matter",
+        "top_section_id": "S04_results",
+        "second_section_id": "S05_discussion_mechanism",
+        "top_score": 5,
+        "second_score": 4,
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 5,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "activity",
+                "weight": 1
+              },
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "water electrolysis",
+                "weight": 1
+              },
+              {
+                "term": "stability",
+                "weight": 1
+              },
+              {
+                "term": "durability",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 4,
+            "heading_hits": [
+              {
+                "term": "reverse-current",
+                "weight": 2
+              }
+            ],
+            "preview_hits": [
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "charge redistribution",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "low",
+        "conflict_reasons": [
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S00_front_matter",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S04_results",
+        "second_candidate_section_id": "S05_discussion_mechanism",
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "Cite This: https://doi.org/10.1021/jacs.5c17603"
+    },
+    {
+      "paper_id": "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e",
+      "paragraph_uid": "PRAW-000021",
+      "paragraph_id": "S00-P014",
+      "heading_uid": "HRAW-002-9ff10219",
+      "heading_text": "1. INTRODUCTION",
+      "doc_heading_order": 2,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "direct_rule",
+        "assigned_section_id": "S02_introduction",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S04_results",
+        "top_score": 10,
+        "second_score": 9,
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 10,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "mechanism",
+                "weight": 1
+              },
+              {
+                "term": "corrosion",
+                "weight": 1
+              },
+              {
+                "term": "oxidation",
+                "weight": 1
+              },
+              {
+                "term": "reduction",
+                "weight": 1
+              },
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "degradation",
+                "weight": 1
+              },
+              {
+                "term": "in situ",
+                "weight": 1
+              },
+              {
+                "term": "xps",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              },
+              {
+                "term": "charge redistribution",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 9,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "result",
+                "weight": 1
+              },
+              {
+                "term": "performance",
+                "weight": 1
+              },
+              {
+                "term": "activity",
+                "weight": 1
+              },
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "oer",
+                "weight": 1
+              },
+              {
+                "term": "water electrolysis",
+                "weight": 1
+              },
+              {
+                "term": "stability",
+                "weight": 1
+              },
+              {
+                "term": "durability",
+                "weight": 1
+              },
+              {
+                "term": "current density",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "medium",
+        "conflict_reasons": [
+          "paragraph_rerouted",
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S00_front_matter",
+        "secondary_section_id": "S02_introduction",
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S04_results",
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "![](figures/FIG002/image_003.jpg) Figure 2. Chemical stability and in situ reconstruction of $\\mathrm{Ni}_3\\mathrm{S}_2$ (a) IL-TEM images of $\\mathrm{Ni@Ni_3S_2}$ at $1.3\\mathrm{V}$ (vs RHE): TEM images of (a1) pristine"
+    },
+    {
+      "paper_id": "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e",
+      "paragraph_uid": "PRAW-000003",
+      "paragraph_id": "S01-P001",
+      "heading_uid": "HRAW-001-dcbbe410",
+      "heading_text": "Heterointerface-Enabled Anti-Reverse-Current Electrodes for Alkaline Water Electrolyzers at $1000\\mathrm{mAcm}^{-2}$",
+      "doc_heading_order": 1,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "front_matter_hard_rule",
+        "assigned_section_id": "S00_front_matter",
+        "top_section_id": "S04_results",
+        "second_section_id": "S05_discussion_mechanism",
+        "top_score": 5,
+        "second_score": 4,
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 5,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "activity",
+                "weight": 1
+              },
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "water electrolysis",
+                "weight": 1
+              },
+              {
+                "term": "stability",
+                "weight": 1
+              },
+              {
+                "term": "durability",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 4,
+            "heading_hits": [
+              {
+                "term": "reverse-current",
+                "weight": 2
+              }
+            ],
+            "preview_hits": [
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "charge redistribution",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "medium",
+        "conflict_reasons": [
+          "paragraph_rerouted",
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S01_abstract",
+        "secondary_section_id": "S00_front_matter",
+        "top_candidate_section_id": "S04_results",
+        "second_candidate_section_id": "S05_discussion_mechanism",
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "ABSTRACT: Achieving stable and efficient alkaline water electrolysis (AWE) under fluctuating renewable energy inputs is essential for large-scale green hydrogen production. However, frequent shutdown-induced reverse curr"
+    },
+    {
+      "paper_id": "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e",
+      "paragraph_uid": "PRAW-000004",
+      "paragraph_id": "S01-P002",
+      "heading_uid": "HRAW-001-dcbbe410",
+      "heading_text": "Heterointerface-Enabled Anti-Reverse-Current Electrodes for Alkaline Water Electrolyzers at $1000\\mathrm{mAcm}^{-2}$",
+      "doc_heading_order": 1,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "front_matter_hard_rule",
+        "assigned_section_id": "S00_front_matter",
+        "top_section_id": "S04_results",
+        "second_section_id": "S05_discussion_mechanism",
+        "top_score": 5,
+        "second_score": 4,
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 5,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "activity",
+                "weight": 1
+              },
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "water electrolysis",
+                "weight": 1
+              },
+              {
+                "term": "stability",
+                "weight": 1
+              },
+              {
+                "term": "durability",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 4,
+            "heading_hits": [
+              {
+                "term": "reverse-current",
+                "weight": 2
+              }
+            ],
+            "preview_hits": [
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "charge redistribution",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "medium",
+        "conflict_reasons": [
+          "paragraph_rerouted",
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S01_abstract",
+        "secondary_section_id": "S00_front_matter",
+        "top_candidate_section_id": "S04_results",
+        "second_candidate_section_id": "S05_discussion_mechanism",
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "charge redistribution, ensuring robust stability and integrity even under operational strains and potential reversals. This work establishes interface crystallography as a design paradigm for durable electrodes, potentia"
+    },
+    {
+      "paper_id": "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e",
+      "paragraph_uid": "PRAW-000031",
+      "paragraph_id": "S01-P003",
+      "heading_uid": "HRAW-005-62ff258a",
+      "heading_text": "4. EXPERIMENTAL SECTION",
+      "doc_heading_order": 5,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "score_breakdown",
+        "assigned_section_id": "S03_methods_and_setup",
+        "top_section_id": "S03_methods_and_setup",
+        "second_section_id": "S04_results",
+        "top_score": 13,
+        "second_score": 7,
+        "score_gap": 6,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S03_methods_and_setup",
+            "section_title": "Methods And Setup",
+            "score": 13,
+            "heading_hits": [
+              {
+                "term": "experimental",
+                "weight": 2
+              },
+              {
+                "term": "experimental section",
+                "weight": 2
+              }
+            ],
+            "preview_hits": [
+              {
+                "term": "method",
+                "weight": 1
+              },
+              {
+                "term": "synthesis",
+                "weight": 1
+              },
+              {
+                "term": "characterization",
+                "weight": 1
+              },
+              {
+                "term": "measurement",
+                "weight": 1
+              },
+              {
+                "term": "electrochemical measurement",
+                "weight": 1
+              },
+              {
+                "term": "material",
+                "weight": 1
+              },
+              {
+                "term": "materials",
+                "weight": 1
+              },
+              {
+                "term": "dft",
+                "weight": 1
+              },
+              {
+                "term": "theoretical calculation",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 7,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "result",
+                "weight": 1
+              },
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "oer",
+                "weight": 1
+              },
+              {
+                "term": "stability",
+                "weight": 1
+              },
+              {
+                "term": "current density",
+                "weight": 1
+              },
+              {
+                "term": "lsv",
+                "weight": 1
+              },
+              {
+                "term": "eis",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "medium",
+        "conflict_reasons": [
+          "paragraph_rerouted"
+        ],
+        "primary_section_id": "S01_abstract",
+        "secondary_section_id": "S03_methods_and_setup",
+        "top_candidate_section_id": "S03_methods_and_setup",
+        "second_candidate_section_id": "S04_results",
+        "score_gap": 6,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "Double layer capacitance $(C_{\\mathrm{dl}})$ was obtained by measuring CVs at a scan rate of 5 to $150~\\mathrm{mV~s^{-1}}$ . Electrochemical impedance spectroscopy (EIS) was obtained at $5\\mathrm{mV}$ amplitude with a fr"
+    },
+    {
+      "paper_id": "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e",
+      "paragraph_uid": "PRAW-000016",
+      "paragraph_id": "S02-P001",
+      "heading_uid": "HRAW-002-9ff10219",
+      "heading_text": "1. INTRODUCTION",
+      "doc_heading_order": 2,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "direct_rule",
+        "assigned_section_id": "S02_introduction",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S04_results",
+        "top_score": 10,
+        "second_score": 9,
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 10,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "mechanism",
+                "weight": 1
+              },
+              {
+                "term": "corrosion",
+                "weight": 1
+              },
+              {
+                "term": "oxidation",
+                "weight": 1
+              },
+              {
+                "term": "reduction",
+                "weight": 1
+              },
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "degradation",
+                "weight": 1
+              },
+              {
+                "term": "in situ",
+                "weight": 1
+              },
+              {
+                "term": "xps",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              },
+              {
+                "term": "charge redistribution",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 9,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "result",
+                "weight": 1
+              },
+              {
+                "term": "performance",
+                "weight": 1
+              },
+              {
+                "term": "activity",
+                "weight": 1
+              },
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "oer",
+                "weight": 1
+              },
+              {
+                "term": "water electrolysis",
+                "weight": 1
+              },
+              {
+                "term": "stability",
+                "weight": 1
+              },
+              {
+                "term": "durability",
+                "weight": 1
+              },
+              {
+                "term": "current density",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "low",
+        "conflict_reasons": [
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S02_introduction",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S04_results",
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "Green hydrogen, produced through renewable-powered water electrolysis, stands as a cornerstone for decarbonizing hard-to-abate sectors and balancing grid intermittency. $^{1,2}$ Among various technologies, alkaline water"
+    },
+    {
+      "paper_id": "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e",
+      "paragraph_uid": "PRAW-000017",
+      "paragraph_id": "S02-P002",
+      "heading_uid": "HRAW-002-9ff10219",
+      "heading_text": "1. INTRODUCTION",
+      "doc_heading_order": 2,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "direct_rule",
+        "assigned_section_id": "S02_introduction",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S04_results",
+        "top_score": 10,
+        "second_score": 9,
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 10,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "mechanism",
+                "weight": 1
+              },
+              {
+                "term": "corrosion",
+                "weight": 1
+              },
+              {
+                "term": "oxidation",
+                "weight": 1
+              },
+              {
+                "term": "reduction",
+                "weight": 1
+              },
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "degradation",
+                "weight": 1
+              },
+              {
+                "term": "in situ",
+                "weight": 1
+              },
+              {
+                "term": "xps",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              },
+              {
+                "term": "charge redistribution",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 9,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "result",
+                "weight": 1
+              },
+              {
+                "term": "performance",
+                "weight": 1
+              },
+              {
+                "term": "activity",
+                "weight": 1
+              },
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "oer",
+                "weight": 1
+              },
+              {
+                "term": "water electrolysis",
+                "weight": 1
+              },
+              {
+                "term": "stability",
+                "weight": 1
+              },
+              {
+                "term": "durability",
+                "weight": 1
+              },
+              {
+                "term": "current density",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "low",
+        "conflict_reasons": [
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S02_introduction",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S04_results",
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "Central to addressing this challenge is the development of high-performance electrodes capable of accelerating the oxygen and hydrogen evolution reactions (OER and HER) under industrial-grade current densities $(\\geq 100"
+    },
+    {
+      "paper_id": "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e",
+      "paragraph_uid": "PRAW-000018",
+      "paragraph_id": "S02-P003",
+      "heading_uid": "HRAW-002-9ff10219",
+      "heading_text": "1. INTRODUCTION",
+      "doc_heading_order": 2,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "direct_rule",
+        "assigned_section_id": "S02_introduction",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S04_results",
+        "top_score": 10,
+        "second_score": 9,
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 10,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "mechanism",
+                "weight": 1
+              },
+              {
+                "term": "corrosion",
+                "weight": 1
+              },
+              {
+                "term": "oxidation",
+                "weight": 1
+              },
+              {
+                "term": "reduction",
+                "weight": 1
+              },
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "degradation",
+                "weight": 1
+              },
+              {
+                "term": "in situ",
+                "weight": 1
+              },
+              {
+                "term": "xps",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              },
+              {
+                "term": "charge redistribution",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 9,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "result",
+                "weight": 1
+              },
+              {
+                "term": "performance",
+                "weight": 1
+              },
+              {
+                "term": "activity",
+                "weight": 1
+              },
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "oer",
+                "weight": 1
+              },
+              {
+                "term": "water electrolysis",
+                "weight": 1
+              },
+              {
+                "term": "stability",
+                "weight": 1
+              },
+              {
+                "term": "durability",
+                "weight": 1
+              },
+              {
+                "term": "current density",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "low",
+        "conflict_reasons": [
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S02_introduction",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S04_results",
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "The stability—activity dichotomy underscores a fundamental gap in catalyst design principles, which intensifies under real-world operational conditions.16 Industrial AWE operates under aggressive conditions (30 wt % KOH,"
+    },
+    {
+      "paper_id": "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e",
+      "paragraph_uid": "PRAW-000019",
+      "paragraph_id": "S02-P004",
+      "heading_uid": "HRAW-002-9ff10219",
+      "heading_text": "1. INTRODUCTION",
+      "doc_heading_order": 2,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "direct_rule",
+        "assigned_section_id": "S02_introduction",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S04_results",
+        "top_score": 10,
+        "second_score": 9,
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 10,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "mechanism",
+                "weight": 1
+              },
+              {
+                "term": "corrosion",
+                "weight": 1
+              },
+              {
+                "term": "oxidation",
+                "weight": 1
+              },
+              {
+                "term": "reduction",
+                "weight": 1
+              },
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "degradation",
+                "weight": 1
+              },
+              {
+                "term": "in situ",
+                "weight": 1
+              },
+              {
+                "term": "xps",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              },
+              {
+                "term": "charge redistribution",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 9,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "result",
+                "weight": 1
+              },
+              {
+                "term": "performance",
+                "weight": 1
+              },
+              {
+                "term": "activity",
+                "weight": 1
+              },
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "oer",
+                "weight": 1
+              },
+              {
+                "term": "water electrolysis",
+                "weight": 1
+              },
+              {
+                "term": "stability",
+                "weight": 1
+              },
+              {
+                "term": "durability",
+                "weight": 1
+              },
+              {
+                "term": "current density",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "low",
+        "conflict_reasons": [
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S02_introduction",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S04_results",
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "exposure, mechanical fatigue from bubble turbulence, and structural collapse under high oxidative potentials. $^{17,18}$ These issues are exacerbated in fluctuating renewable-coupled systems, which frequently cycle betwe"
+    },
+    {
+      "paper_id": "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e",
+      "paragraph_uid": "PRAW-000020",
+      "paragraph_id": "S02-P005",
+      "heading_uid": "HRAW-002-9ff10219",
+      "heading_text": "1. INTRODUCTION",
+      "doc_heading_order": 2,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "direct_rule",
+        "assigned_section_id": "S02_introduction",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S04_results",
+        "top_score": 10,
+        "second_score": 9,
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 10,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "mechanism",
+                "weight": 1
+              },
+              {
+                "term": "corrosion",
+                "weight": 1
+              },
+              {
+                "term": "oxidation",
+                "weight": 1
+              },
+              {
+                "term": "reduction",
+                "weight": 1
+              },
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "degradation",
+                "weight": 1
+              },
+              {
+                "term": "in situ",
+                "weight": 1
+              },
+              {
+                "term": "xps",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              },
+              {
+                "term": "charge redistribution",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 9,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "result",
+                "weight": 1
+              },
+              {
+                "term": "performance",
+                "weight": 1
+              },
+              {
+                "term": "activity",
+                "weight": 1
+              },
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "oer",
+                "weight": 1
+              },
+              {
+                "term": "water electrolysis",
+                "weight": 1
+              },
+              {
+                "term": "stability",
+                "weight": 1
+              },
+              {
+                "term": "durability",
+                "weight": 1
+              },
+              {
+                "term": "current density",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "low",
+        "conflict_reasons": [
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S02_introduction",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S04_results",
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "![](figures/FIG001/image_003.jpg) Figure 1. Reverse current effect and electrode degradation under startup/shutdown cycles. (a) Schematic of the reverse current flow in a bipolar electrolyzer following shutdown. (b) Sche"
+    },
+    {
+      "paper_id": "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e",
+      "paragraph_uid": "PRAW-000022",
+      "paragraph_id": "S02-P006",
+      "heading_uid": "HRAW-002-9ff10219",
+      "heading_text": "1. INTRODUCTION",
+      "doc_heading_order": 2,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "direct_rule",
+        "assigned_section_id": "S02_introduction",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S04_results",
+        "top_score": 10,
+        "second_score": 9,
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 10,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "mechanism",
+                "weight": 1
+              },
+              {
+                "term": "corrosion",
+                "weight": 1
+              },
+              {
+                "term": "oxidation",
+                "weight": 1
+              },
+              {
+                "term": "reduction",
+                "weight": 1
+              },
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "degradation",
+                "weight": 1
+              },
+              {
+                "term": "in situ",
+                "weight": 1
+              },
+              {
+                "term": "xps",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              },
+              {
+                "term": "charge redistribution",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 9,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "result",
+                "weight": 1
+              },
+              {
+                "term": "performance",
+                "weight": 1
+              },
+              {
+                "term": "activity",
+                "weight": 1
+              },
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "oer",
+                "weight": 1
+              },
+              {
+                "term": "water electrolysis",
+                "weight": 1
+              },
+              {
+                "term": "stability",
+                "weight": 1
+              },
+              {
+                "term": "durability",
+                "weight": 1
+              },
+              {
+                "term": "current density",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "low",
+        "conflict_reasons": [
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S02_introduction",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S04_results",
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "penalties or escalate system complexity, rendering them impractical for industrial deployment.[31,32] Consequently, material-centric solutions that intrinsically enhance the electrocatalytic activity and RC resistance ar"
+    },
+    {
+      "paper_id": "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e",
+      "paragraph_uid": "PRAW-000023",
+      "paragraph_id": "S02-P007",
+      "heading_uid": "HRAW-002-9ff10219",
+      "heading_text": "1. INTRODUCTION",
+      "doc_heading_order": 2,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "direct_rule",
+        "assigned_section_id": "S02_introduction",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S04_results",
+        "top_score": 10,
+        "second_score": 9,
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 10,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "mechanism",
+                "weight": 1
+              },
+              {
+                "term": "corrosion",
+                "weight": 1
+              },
+              {
+                "term": "oxidation",
+                "weight": 1
+              },
+              {
+                "term": "reduction",
+                "weight": 1
+              },
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "degradation",
+                "weight": 1
+              },
+              {
+                "term": "in situ",
+                "weight": 1
+              },
+              {
+                "term": "xps",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              },
+              {
+                "term": "charge redistribution",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 9,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "result",
+                "weight": 1
+              },
+              {
+                "term": "performance",
+                "weight": 1
+              },
+              {
+                "term": "activity",
+                "weight": 1
+              },
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "oer",
+                "weight": 1
+              },
+              {
+                "term": "water electrolysis",
+                "weight": 1
+              },
+              {
+                "term": "stability",
+                "weight": 1
+              },
+              {
+                "term": "durability",
+                "weight": 1
+              },
+              {
+                "term": "current density",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "low",
+        "conflict_reasons": [
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S02_introduction",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S04_results",
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "In this contribution, we address this challenge through a gradient interlayer engineering approach that decouples stability-activity trade-offs (Figure S1). By in situ growing a $\\mathrm{Ni}_3\\mathrm{S}_2$ catalytic laye"
+    },
+    {
+      "paper_id": "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e",
+      "paragraph_uid": "PRAW-000024",
+      "paragraph_id": "S02-P008",
+      "heading_uid": "HRAW-002-9ff10219",
+      "heading_text": "1. INTRODUCTION",
+      "doc_heading_order": 2,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "direct_rule",
+        "assigned_section_id": "S02_introduction",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S04_results",
+        "top_score": 10,
+        "second_score": 9,
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 10,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "mechanism",
+                "weight": 1
+              },
+              {
+                "term": "corrosion",
+                "weight": 1
+              },
+              {
+                "term": "oxidation",
+                "weight": 1
+              },
+              {
+                "term": "reduction",
+                "weight": 1
+              },
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "degradation",
+                "weight": 1
+              },
+              {
+                "term": "in situ",
+                "weight": 1
+              },
+              {
+                "term": "xps",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              },
+              {
+                "term": "charge redistribution",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 9,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "result",
+                "weight": 1
+              },
+              {
+                "term": "performance",
+                "weight": 1
+              },
+              {
+                "term": "activity",
+                "weight": 1
+              },
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "oer",
+                "weight": 1
+              },
+              {
+                "term": "water electrolysis",
+                "weight": 1
+              },
+              {
+                "term": "stability",
+                "weight": 1
+              },
+              {
+                "term": "durability",
+                "weight": 1
+              },
+              {
+                "term": "current density",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "low",
+        "conflict_reasons": [
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S02_introduction",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S04_results",
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "![](figures/FIG003/image_003.jpg) Figure 3. Structure and stability characterization of $\\mathrm{Ni}_3\\mathrm{S}_2 / \\mathrm{NM}$ I. (a) The element mapping of an individual nickel wire coated with the catalyst. (b) Cros"
+    },
+    {
+      "paper_id": "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e",
+      "paragraph_uid": "PRAW-000025",
+      "paragraph_id": "S02-P009",
+      "heading_uid": "HRAW-002-9ff10219",
+      "heading_text": "1. INTRODUCTION",
+      "doc_heading_order": 2,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "direct_rule",
+        "assigned_section_id": "S02_introduction",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S04_results",
+        "top_score": 10,
+        "second_score": 9,
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 10,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "mechanism",
+                "weight": 1
+              },
+              {
+                "term": "corrosion",
+                "weight": 1
+              },
+              {
+                "term": "oxidation",
+                "weight": 1
+              },
+              {
+                "term": "reduction",
+                "weight": 1
+              },
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "degradation",
+                "weight": 1
+              },
+              {
+                "term": "in situ",
+                "weight": 1
+              },
+              {
+                "term": "xps",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              },
+              {
+                "term": "charge redistribution",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 9,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "result",
+                "weight": 1
+              },
+              {
+                "term": "performance",
+                "weight": 1
+              },
+              {
+                "term": "activity",
+                "weight": 1
+              },
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "oer",
+                "weight": 1
+              },
+              {
+                "term": "water electrolysis",
+                "weight": 1
+              },
+              {
+                "term": "stability",
+                "weight": 1
+              },
+              {
+                "term": "durability",
+                "weight": 1
+              },
+              {
+                "term": "current density",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "low",
+        "conflict_reasons": [
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S02_introduction",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S04_results",
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "dynamic phase evolution and interfacial delamination to maintain structural integrity under RC effects (Figure 1c). The seamlessly bonded gradient heterointerface mitigates lattice mismatch while facilitating charge redi"
+    },
+    {
+      "paper_id": "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e",
+      "paragraph_uid": "PRAW-000062",
+      "paragraph_id": "S06-P001",
+      "heading_uid": "HRAW-004-c39a4b34",
+      "heading_text": "3. CONCLUSIONS",
+      "doc_heading_order": 4,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "direct_rule",
+        "assigned_section_id": "S06_conclusion",
+        "top_section_id": "S04_results",
+        "second_section_id": "S05_discussion_mechanism",
+        "top_score": 5,
+        "second_score": 3,
+        "score_gap": 2,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 5,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "activity",
+                "weight": 1
+              },
+              {
+                "term": "water electrolysis",
+                "weight": 1
+              },
+              {
+                "term": "stability",
+                "weight": 1
+              },
+              {
+                "term": "durability",
+                "weight": 1
+              },
+              {
+                "term": "intermittent",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 3,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "insight",
+                "weight": 1
+              },
+              {
+                "term": "degradation",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "low",
+        "conflict_reasons": [
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S06_conclusion",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S04_results",
+        "second_candidate_section_id": "S05_discussion_mechanism",
+        "score_gap": 2,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "We demonstrate a gradient interlayer engineering strategy to construct a $\\mathrm{Ni}_3\\mathrm{S}_2 / \\mathrm{NM - I}$ heterostructured electrode with exceptional bifunctional activity, anti-RC durability, and industrial"
+    },
+    {
+      "paper_id": "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e",
+      "paragraph_uid": "PRAW-000063",
+      "paragraph_id": "S07-P001",
+      "heading_uid": "HRAW-007-1b530b5d",
+      "heading_text": "Supporting Information",
+      "doc_heading_order": 7,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "direct_rule",
+        "assigned_section_id": "S07_back_matter_or_supplementary",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S07_back_matter_or_supplementary",
+        "top_score": 5,
+        "second_score": 3,
+        "score_gap": 2,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 5,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "xps",
+                "weight": 1
+              },
+              {
+                "term": "xrd",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              },
+              {
+                "term": "sem",
+                "weight": 1
+              },
+              {
+                "term": "raman",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S07_back_matter_or_supplementary",
+            "section_title": "Back Matter Or Supplementary",
+            "score": 3,
+            "heading_hits": [
+              {
+                "term": "supporting information",
+                "weight": 2
+              }
+            ],
+            "preview_hits": [],
+            "position_hits": [
+              {
+                "term": "back matter or supplementary",
+                "weight": 1
+              }
+            ]
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "low",
+        "conflict_reasons": [
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S07_back_matter_or_supplementary",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S07_back_matter_or_supplementary",
+        "score_gap": 2,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "The Supporting Information is available free of charge at https://pubs.acs.org/doi/10.1021/jacs.Sc17603."
+    },
+    {
+      "paper_id": "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e",
+      "paragraph_uid": "PRAW-000064",
+      "paragraph_id": "S07-P002",
+      "heading_uid": "HRAW-007-1b530b5d",
+      "heading_text": "Supporting Information",
+      "doc_heading_order": 7,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "direct_rule",
+        "assigned_section_id": "S07_back_matter_or_supplementary",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S07_back_matter_or_supplementary",
+        "top_score": 5,
+        "second_score": 3,
+        "score_gap": 2,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 5,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "xps",
+                "weight": 1
+              },
+              {
+                "term": "xrd",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              },
+              {
+                "term": "sem",
+                "weight": 1
+              },
+              {
+                "term": "raman",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S07_back_matter_or_supplementary",
+            "section_title": "Back Matter Or Supplementary",
+            "score": 3,
+            "heading_hits": [
+              {
+                "term": "supporting information",
+                "weight": 2
+              }
+            ],
+            "preview_hits": [],
+            "position_hits": [
+              {
+                "term": "back matter or supplementary",
+                "weight": 1
+              }
+            ]
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "low",
+        "conflict_reasons": [
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S07_back_matter_or_supplementary",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S07_back_matter_or_supplementary",
+        "score_gap": 2,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "Additional XRD, SEM, TEM, XPS, Raman, electrochemical, and DFT data (PDF)"
+    },
+    {
+      "paper_id": "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e",
+      "paragraph_uid": "PRAW-000065",
+      "paragraph_id": "S07-P003",
+      "heading_uid": "HRAW-009-f200f9c8",
+      "heading_text": "Corresponding Authors",
+      "doc_heading_order": 9,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "direct_rule",
+        "assigned_section_id": "S07_back_matter_or_supplementary",
+        "top_section_id": "S00_front_matter",
+        "second_section_id": "S07_back_matter_or_supplementary",
+        "top_score": 9,
+        "second_score": 2,
+        "score_gap": 7,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S00_front_matter",
+            "section_title": "Front Matter",
+            "score": 9,
+            "heading_hits": [
+              {
+                "term": "author",
+                "weight": 2
+              },
+              {
+                "term": "authors",
+                "weight": 2
+              },
+              {
+                "term": "corresponding author",
+                "weight": 2
+              }
+            ],
+            "preview_hits": [
+              {
+                "term": "university",
+                "weight": 1
+              },
+              {
+                "term": "department",
+                "weight": 1
+              },
+              {
+                "term": "email",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S07_back_matter_or_supplementary",
+            "section_title": "Back Matter Or Supplementary",
+            "score": 2,
+            "heading_hits": [
+              {
+                "term": "corresponding author",
+                "weight": 2
+              }
+            ],
+            "preview_hits": [],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "low",
+        "conflict_reasons": [
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S07_back_matter_or_supplementary",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S00_front_matter",
+        "second_candidate_section_id": "S07_back_matter_or_supplementary",
+        "score_gap": 7,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "Cheng Tang - Tsinghua Center for Green Chemical Engineering Electrification, Department of Chemical Engineering, Tsinghua University, Beijing 100084, P. R. China; State Key Laboratory of Chemical Engineering and Low-Carb"
+    },
+    {
+      "paper_id": "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e",
+      "paragraph_uid": "PRAW-000066",
+      "paragraph_id": "S07-P004",
+      "heading_uid": "HRAW-009-f200f9c8",
+      "heading_text": "Corresponding Authors",
+      "doc_heading_order": 9,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "direct_rule",
+        "assigned_section_id": "S07_back_matter_or_supplementary",
+        "top_section_id": "S00_front_matter",
+        "second_section_id": "S07_back_matter_or_supplementary",
+        "top_score": 9,
+        "second_score": 2,
+        "score_gap": 7,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S00_front_matter",
+            "section_title": "Front Matter",
+            "score": 9,
+            "heading_hits": [
+              {
+                "term": "author",
+                "weight": 2
+              },
+              {
+                "term": "authors",
+                "weight": 2
+              },
+              {
+                "term": "corresponding author",
+                "weight": 2
+              }
+            ],
+            "preview_hits": [
+              {
+                "term": "university",
+                "weight": 1
+              },
+              {
+                "term": "department",
+                "weight": 1
+              },
+              {
+                "term": "email",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S07_back_matter_or_supplementary",
+            "section_title": "Back Matter Or Supplementary",
+            "score": 2,
+            "heading_hits": [
+              {
+                "term": "corresponding author",
+                "weight": 2
+              }
+            ],
+            "preview_hits": [],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "low",
+        "conflict_reasons": [
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S07_back_matter_or_supplementary",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S00_front_matter",
+        "second_candidate_section_id": "S07_back_matter_or_supplementary",
+        "score_gap": 7,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "Qiang Zhang - Tsinghua Center for Green Chemical Engineering Electrification, Department of Chemical Engineering, Tsinghua University, Beijing 100084, P. R. China; State Key Laboratory of Chemical Engineering and Low-Car"
+    },
+    {
+      "paper_id": "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e",
+      "paragraph_uid": "PRAW-000071",
+      "paragraph_id": "S07-P009",
+      "heading_uid": "HRAW-014-3c3cb2b2",
+      "heading_text": "REFERENCES",
+      "doc_heading_order": 14,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "direct_rule",
+        "assigned_section_id": "S07_back_matter_or_supplementary",
+        "top_section_id": "S04_results",
+        "second_section_id": "S05_discussion_mechanism",
+        "top_score": 13,
+        "second_score": 10,
+        "score_gap": 3,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 13,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "performance",
+                "weight": 1
+              },
+              {
+                "term": "activity",
+                "weight": 1
+              },
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "oer",
+                "weight": 1
+              },
+              {
+                "term": "water electrolysis",
+                "weight": 1
+              },
+              {
+                "term": "seawater electrolysis",
+                "weight": 1
+              },
+              {
+                "term": "stability",
+                "weight": 1
+              },
+              {
+                "term": "durability",
+                "weight": 1
+              },
+              {
+                "term": "intermittent",
+                "weight": 1
+              },
+              {
+                "term": "current density",
+                "weight": 1
+              },
+              {
+                "term": "overpotential",
+                "weight": 1
+              },
+              {
+                "term": "tafel",
+                "weight": 1
+              },
+              {
+                "term": "eis",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 10,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "mechanism",
+                "weight": 1
+              },
+              {
+                "term": "corrosion",
+                "weight": 1
+              },
+              {
+                "term": "oxidation",
+                "weight": 1
+              },
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "reverse-current",
+                "weight": 1
+              },
+              {
+                "term": "degradation",
+                "weight": 1
+              },
+              {
+                "term": "in situ",
+                "weight": 1
+              },
+              {
+                "term": "operando",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              },
+              {
+                "term": "sem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "low",
+        "conflict_reasons": [
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S07_back_matter_or_supplementary",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S04_results",
+        "second_candidate_section_id": "S05_discussion_mechanism",
+        "score_gap": 3,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "(1) Odenweller, A.; Ueckerdt, F. The green hydrogen ambition and implementation gap. Nat. Energy 2025, 10 (1), 110-123. (2) Zhao, H.; Yuan, Z. -Y. Progress and perspectives for solar-driven water electrolysis to produce"
+    },
+    {
+      "paper_id": "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e",
+      "paragraph_uid": "PRAW-000072",
+      "paragraph_id": "S07-P010",
+      "heading_uid": "HRAW-014-3c3cb2b2",
+      "heading_text": "REFERENCES",
+      "doc_heading_order": 14,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "direct_rule",
+        "assigned_section_id": "S07_back_matter_or_supplementary",
+        "top_section_id": "S04_results",
+        "second_section_id": "S05_discussion_mechanism",
+        "top_score": 13,
+        "second_score": 10,
+        "score_gap": 3,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 13,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "performance",
+                "weight": 1
+              },
+              {
+                "term": "activity",
+                "weight": 1
+              },
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "oer",
+                "weight": 1
+              },
+              {
+                "term": "water electrolysis",
+                "weight": 1
+              },
+              {
+                "term": "seawater electrolysis",
+                "weight": 1
+              },
+              {
+                "term": "stability",
+                "weight": 1
+              },
+              {
+                "term": "durability",
+                "weight": 1
+              },
+              {
+                "term": "intermittent",
+                "weight": 1
+              },
+              {
+                "term": "current density",
+                "weight": 1
+              },
+              {
+                "term": "overpotential",
+                "weight": 1
+              },
+              {
+                "term": "tafel",
+                "weight": 1
+              },
+              {
+                "term": "eis",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 10,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "mechanism",
+                "weight": 1
+              },
+              {
+                "term": "corrosion",
+                "weight": 1
+              },
+              {
+                "term": "oxidation",
+                "weight": 1
+              },
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "reverse-current",
+                "weight": 1
+              },
+              {
+                "term": "degradation",
+                "weight": 1
+              },
+              {
+                "term": "in situ",
+                "weight": 1
+              },
+              {
+                "term": "operando",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              },
+              {
+                "term": "sem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "low",
+        "conflict_reasons": [
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S07_back_matter_or_supplementary",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S04_results",
+        "second_candidate_section_id": "S05_discussion_mechanism",
+        "score_gap": 3,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "(19) Kojima, H.; Nagasawa, K.; Todoroki, N.; Ito, Y.; Matsui, T.; Nakajima, R. Influence of renewable energy power fluctuations on water electrolysis for green hydrogen production. Int. J. Hydrogen Energy 2023, 48 (12),"
+    },
+    {
+      "paper_id": "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e",
+      "paragraph_uid": "PRAW-000073",
+      "paragraph_id": "S07-P011",
+      "heading_uid": "HRAW-014-3c3cb2b2",
+      "heading_text": "REFERENCES",
+      "doc_heading_order": 14,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "direct_rule",
+        "assigned_section_id": "S07_back_matter_or_supplementary",
+        "top_section_id": "S04_results",
+        "second_section_id": "S05_discussion_mechanism",
+        "top_score": 13,
+        "second_score": 10,
+        "score_gap": 3,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 13,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "performance",
+                "weight": 1
+              },
+              {
+                "term": "activity",
+                "weight": 1
+              },
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "oer",
+                "weight": 1
+              },
+              {
+                "term": "water electrolysis",
+                "weight": 1
+              },
+              {
+                "term": "seawater electrolysis",
+                "weight": 1
+              },
+              {
+                "term": "stability",
+                "weight": 1
+              },
+              {
+                "term": "durability",
+                "weight": 1
+              },
+              {
+                "term": "intermittent",
+                "weight": 1
+              },
+              {
+                "term": "current density",
+                "weight": 1
+              },
+              {
+                "term": "overpotential",
+                "weight": 1
+              },
+              {
+                "term": "tafel",
+                "weight": 1
+              },
+              {
+                "term": "eis",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 10,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "mechanism",
+                "weight": 1
+              },
+              {
+                "term": "corrosion",
+                "weight": 1
+              },
+              {
+                "term": "oxidation",
+                "weight": 1
+              },
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "reverse-current",
+                "weight": 1
+              },
+              {
+                "term": "degradation",
+                "weight": 1
+              },
+              {
+                "term": "in situ",
+                "weight": 1
+              },
+              {
+                "term": "operando",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              },
+              {
+                "term": "sem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "low",
+        "conflict_reasons": [
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S07_back_matter_or_supplementary",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S04_results",
+        "second_candidate_section_id": "S05_discussion_mechanism",
+        "score_gap": 3,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "(35) Liu, X.; Wang, J.; Liao, H.; Chen, J.; Zhang, S.; Tan, L.; Zheng, X.; Chu, D.; Tan, P.; Pan, J. Cationic oxidative leaching engineering modulated in situ self-reconstruction of nickel sulfide for superior water oxid"
+    },
+    {
+      "paper_id": "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e",
+      "paragraph_uid": "PRAW-000074",
+      "paragraph_id": "S07-P012",
+      "heading_uid": "HRAW-014-3c3cb2b2",
+      "heading_text": "REFERENCES",
+      "doc_heading_order": 14,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "direct_rule",
+        "assigned_section_id": "S07_back_matter_or_supplementary",
+        "top_section_id": "S04_results",
+        "second_section_id": "S05_discussion_mechanism",
+        "top_score": 13,
+        "second_score": 10,
+        "score_gap": 3,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 13,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "performance",
+                "weight": 1
+              },
+              {
+                "term": "activity",
+                "weight": 1
+              },
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "oer",
+                "weight": 1
+              },
+              {
+                "term": "water electrolysis",
+                "weight": 1
+              },
+              {
+                "term": "seawater electrolysis",
+                "weight": 1
+              },
+              {
+                "term": "stability",
+                "weight": 1
+              },
+              {
+                "term": "durability",
+                "weight": 1
+              },
+              {
+                "term": "intermittent",
+                "weight": 1
+              },
+              {
+                "term": "current density",
+                "weight": 1
+              },
+              {
+                "term": "overpotential",
+                "weight": 1
+              },
+              {
+                "term": "tafel",
+                "weight": 1
+              },
+              {
+                "term": "eis",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 10,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "mechanism",
+                "weight": 1
+              },
+              {
+                "term": "corrosion",
+                "weight": 1
+              },
+              {
+                "term": "oxidation",
+                "weight": 1
+              },
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "reverse-current",
+                "weight": 1
+              },
+              {
+                "term": "degradation",
+                "weight": 1
+              },
+              {
+                "term": "in situ",
+                "weight": 1
+              },
+              {
+                "term": "operando",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              },
+              {
+                "term": "sem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "low",
+        "conflict_reasons": [
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S07_back_matter_or_supplementary",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S04_results",
+        "second_candidate_section_id": "S05_discussion_mechanism",
+        "score_gap": 3,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "Goddard, W. A.; Kang, Y. Tantalum-stabilized ruthenium oxide electrocatalysts for industrial water electrolysis. Science 2025, 387 (6729), 48-55. (52) He, W.; Zhang, R.; Liu, H.; Hao, Q.; Li, Y.; Zheng, X.; Liu, C.; Zhan"
+    },
+    {
+      "paper_id": "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e",
+      "paragraph_uid": "PRAW-000075",
+      "paragraph_id": "S07-P013",
+      "heading_uid": "HRAW-015-7df30f2b",
+      "heading_text": "NOTE ADDED AFTER ASAP PUBLICATION",
+      "doc_heading_order": 15,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S07_back_matter_or_supplementary",
+        "top_section_id": "S00_front_matter",
+        "second_section_id": "S05_discussion_mechanism",
+        "top_score": 1,
+        "second_score": 1,
+        "score_gap": 0,
+        "confidence_level": "soft_uncertain",
+        "is_uncertain": true,
+        "needs_manual_review": false,
+        "uncertain_reasons": [
+          "low_top_score",
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S00_front_matter",
+            "section_title": "Front Matter",
+            "score": 1,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "published",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 1,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "insight",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "medium",
+        "conflict_reasons": [
+          "low_score_gap",
+          "low_top_score",
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S07_back_matter_or_supplementary",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S00_front_matter",
+        "second_candidate_section_id": "S05_discussion_mechanism",
+        "score_gap": 0,
+        "confidence_level": "soft_uncertain",
+        "needs_manual_review": false
+      },
+      "text_preview": "Due to a production error, this paper was published ASAP on December 11, 2025, with corrupted versions of Figures 1 and 2. The corrected version was reposted on December 15, 2025."
+    },
+    {
+      "paper_id": "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e",
+      "paragraph_uid": "PRAW-000076",
+      "paragraph_id": "S07-P014",
+      "heading_uid": "HRAW-015-7df30f2b",
+      "heading_text": "NOTE ADDED AFTER ASAP PUBLICATION",
+      "doc_heading_order": 15,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S07_back_matter_or_supplementary",
+        "top_section_id": "S00_front_matter",
+        "second_section_id": "S05_discussion_mechanism",
+        "top_score": 1,
+        "second_score": 1,
+        "score_gap": 0,
+        "confidence_level": "soft_uncertain",
+        "is_uncertain": true,
+        "needs_manual_review": false,
+        "uncertain_reasons": [
+          "low_top_score",
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S00_front_matter",
+            "section_title": "Front Matter",
+            "score": 1,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "published",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 1,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "insight",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "medium",
+        "conflict_reasons": [
+          "low_score_gap",
+          "low_top_score",
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S07_back_matter_or_supplementary",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S00_front_matter",
+        "second_candidate_section_id": "S05_discussion_mechanism",
+        "score_gap": 0,
+        "confidence_level": "soft_uncertain",
+        "needs_manual_review": false
+      },
+      "text_preview": "CAS BioFinder helps you identify targets, biomarkers, and pathway"
+    },
+    {
+      "paper_id": "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e",
+      "paragraph_uid": "PRAW-000077",
+      "paragraph_id": "S07-P015",
+      "heading_uid": "HRAW-015-7df30f2b",
+      "heading_text": "NOTE ADDED AFTER ASAP PUBLICATION",
+      "doc_heading_order": 15,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S07_back_matter_or_supplementary",
+        "top_section_id": "S00_front_matter",
+        "second_section_id": "S05_discussion_mechanism",
+        "top_score": 1,
+        "second_score": 1,
+        "score_gap": 0,
+        "confidence_level": "soft_uncertain",
+        "is_uncertain": true,
+        "needs_manual_review": false,
+        "uncertain_reasons": [
+          "low_top_score",
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S00_front_matter",
+            "section_title": "Front Matter",
+            "score": 1,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "published",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 1,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "insight",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "medium",
+        "conflict_reasons": [
+          "low_score_gap",
+          "low_top_score",
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S07_back_matter_or_supplementary",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S00_front_matter",
+        "second_candidate_section_id": "S05_discussion_mechanism",
+        "score_gap": 0,
+        "confidence_level": "soft_uncertain",
+        "needs_manual_review": false
+      },
+      "text_preview": "A division of the American Chemical Society"
+    },
+    {
+      "paper_id": "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e",
+      "paragraph_uid": "PRAW-000029",
+      "paragraph_id": "S07-P016",
+      "heading_uid": "HRAW-005-62ff258a",
+      "heading_text": "4. EXPERIMENTAL SECTION",
+      "doc_heading_order": 5,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "score_breakdown",
+        "assigned_section_id": "S03_methods_and_setup",
+        "top_section_id": "S03_methods_and_setup",
+        "second_section_id": "S04_results",
+        "top_score": 13,
+        "second_score": 7,
+        "score_gap": 6,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S03_methods_and_setup",
+            "section_title": "Methods And Setup",
+            "score": 13,
+            "heading_hits": [
+              {
+                "term": "experimental",
+                "weight": 2
+              },
+              {
+                "term": "experimental section",
+                "weight": 2
+              }
+            ],
+            "preview_hits": [
+              {
+                "term": "method",
+                "weight": 1
+              },
+              {
+                "term": "synthesis",
+                "weight": 1
+              },
+              {
+                "term": "characterization",
+                "weight": 1
+              },
+              {
+                "term": "measurement",
+                "weight": 1
+              },
+              {
+                "term": "electrochemical measurement",
+                "weight": 1
+              },
+              {
+                "term": "material",
+                "weight": 1
+              },
+              {
+                "term": "materials",
+                "weight": 1
+              },
+              {
+                "term": "dft",
+                "weight": 1
+              },
+              {
+                "term": "theoretical calculation",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 7,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "result",
+                "weight": 1
+              },
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "oer",
+                "weight": 1
+              },
+              {
+                "term": "stability",
+                "weight": 1
+              },
+              {
+                "term": "current density",
+                "weight": 1
+              },
+              {
+                "term": "lsv",
+                "weight": 1
+              },
+              {
+                "term": "eis",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "medium",
+        "conflict_reasons": [
+          "paragraph_rerouted"
+        ],
+        "primary_section_id": "S07_back_matter_or_supplementary",
+        "secondary_section_id": "S03_methods_and_setup",
+        "top_candidate_section_id": "S03_methods_and_setup",
+        "second_candidate_section_id": "S04_results",
+        "score_gap": 6,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "4.3. Synthesis of $\\mathrm{Ni}_3\\mathrm{S}_2 / \\mathrm{NM}$ I. The synthesis method of $\\mathrm{Ni}_3\\mathrm{S}_2/$ NM-I was the same as that of $\\mathrm{Ni}@\\mathrm{Ni}_3\\mathrm{S}_2$ NPs, requiring only the replacement"
+    },
+    {
+      "paper_id": "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e",
+      "paragraph_uid": "PRAW-000044",
+      "paragraph_id": "S07-P017",
+      "heading_uid": "HRAW-003-2037b5ff",
+      "heading_text": "2. RESULTS AND DISCUSSION",
+      "doc_heading_order": 3,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "score_breakdown",
+        "assigned_section_id": "S05_discussion_mechanism",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S04_results",
+        "top_score": 13,
+        "second_score": 11,
+        "score_gap": 2,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 13,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "mechanism",
+                "weight": 1
+              },
+              {
+                "term": "insight",
+                "weight": 1
+              },
+              {
+                "term": "structural evolution",
+                "weight": 1
+              },
+              {
+                "term": "oxidation",
+                "weight": 1
+              },
+              {
+                "term": "reduction",
+                "weight": 1
+              },
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "degradation",
+                "weight": 1
+              },
+              {
+                "term": "in situ",
+                "weight": 1
+              },
+              {
+                "term": "xps",
+                "weight": 1
+              },
+              {
+                "term": "xrd",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              },
+              {
+                "term": "sem",
+                "weight": 1
+              },
+              {
+                "term": "raman",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 11,
+            "heading_hits": [
+              {
+                "term": "result",
+                "weight": 2
+              }
+            ],
+            "preview_hits": [
+              {
+                "term": "performance",
+                "weight": 1
+              },
+              {
+                "term": "activity",
+                "weight": 1
+              },
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "oer",
+                "weight": 1
+              },
+              {
+                "term": "stability",
+                "weight": 1
+              },
+              {
+                "term": "durability",
+                "weight": 1
+              },
+              {
+                "term": "intermittent",
+                "weight": 1
+              },
+              {
+                "term": "current density",
+                "weight": 1
+              },
+              {
+                "term": "cell voltage",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "medium",
+        "conflict_reasons": [
+          "paragraph_rerouted"
+        ],
+        "primary_section_id": "S07_back_matter_or_supplementary",
+        "secondary_section_id": "S05_discussion_mechanism",
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S04_results",
+        "score_gap": 2,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "tion concurrent with oxygen incorporation and sulfur depletion (Figures 2a,b and S7). High-resolution XPS spectra demonstrate complete S 2p signal attenuation after $100\\mathrm{h}$ of OER (Figure 2c), accompanied by a $\\"
+    }
+  ]
+}

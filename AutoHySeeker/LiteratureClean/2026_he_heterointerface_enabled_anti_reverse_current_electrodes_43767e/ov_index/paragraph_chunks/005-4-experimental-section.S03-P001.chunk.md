@@ -1,0 +1,8 @@
+---
+paper_id: "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e"
+section_id: "S03_methods_and_setup"
+paragraph_id: "S03-P001"
+evidence_id: "EV-he2026-43767e-S03-P001"
+chunk_index: 0
+---
+4.1. Chemicals and Materials. Ethanol $(\geq 99.7\%)$ , triethylene glycol (TEG), and potassium hydroxide (KOH, $95\%$ ) were purchased from Aladdin. 2-Mercaptoethanol $(\geq 99\%)$ was provided by Sigma-Aldrich. Nickel nitrate $\left(\mathrm{Ni}(\mathrm{NO}_3)_2 \cdot 6\mathrm{H}_2\mathrm{O}, 99.99\%\right)$ , urea $(99\%)$ , ammonium fluoride $\left(\mathrm{NH}_4\mathrm{F}, 99\%\right)$ , and nickel nanoparticles (Ni NPs, $99.9\%$ ) were obtained from Macklin. Nickel mesh (NM, $1.0~\mathrm{mm}$ thickness, $\geq 99.5\%$ ) was purchased from Hebei Chaochuang Metal Mesh Industry Co., Ltd. NM was ultrasonically cleaned in pure water, dilute hydrochloric acid (36% concentrated hydrochloric acid and pure water were mixed evenly in a volume ratio of 1:3), acetone, and alcohol, and then dried at $60^{\circ}\mathrm{C}$ under vacuum for $8\mathrm{h}$ to obtain clean NM.

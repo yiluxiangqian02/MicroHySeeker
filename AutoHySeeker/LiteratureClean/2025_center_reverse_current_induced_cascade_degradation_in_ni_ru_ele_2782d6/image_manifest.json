@@ -1,0 +1,409 @@
+[
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Reverse‐Current Induced Cascade Degradation in Ni Ru Electrodes  Tracin_9f7209bf\\images\\02cb55d92a96a8f5e880675c6271319e83209a6842f22f2f86a0f51fd3005c49.jpg",
+    "raw_relative_path": "images/02cb55d92a96a8f5e880675c6271319e83209a6842f22f2f86a0f51fd3005c49.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Reverse‐Current Induced Cascade Degradation in Ni Ru Electrodes  Tracin_9f7209bf\\images\\0390a9bdc519432694620a20a8cfabb0ca613da8e677e1b3d0cccc83544453b2.jpg",
+    "raw_relative_path": "images/0390a9bdc519432694620a20a8cfabb0ca613da8e677e1b3d0cccc83544453b2.jpg",
+    "status": "used",
+    "figure_id": "FIG002",
+    "clean_path": "figures/FIG002/image_002.jpg",
+    "caption_path": "figures/FIG002/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S01-P002",
+      "S04-P001",
+      "S04-P002",
+      "S04-P004",
+      "S04-P005"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Reverse‐Current Induced Cascade Degradation in Ni Ru Electrodes  Tracin_9f7209bf\\images\\0907a749e658239f3c93588751d7adc616d46f3e43267013eeea17c6084d7cde.jpg",
+    "raw_relative_path": "images/0907a749e658239f3c93588751d7adc616d46f3e43267013eeea17c6084d7cde.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Reverse‐Current Induced Cascade Degradation in Ni Ru Electrodes  Tracin_9f7209bf\\images\\0d60f65473bf6cedf5d9948d3f7953e12aca26267be502b680cd970198747381.jpg",
+    "raw_relative_path": "images/0d60f65473bf6cedf5d9948d3f7953e12aca26267be502b680cd970198747381.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Reverse‐Current Induced Cascade Degradation in Ni Ru Electrodes  Tracin_9f7209bf\\images\\1999ce54a7d54ca76fb169b53f451013afbd87d49dfdae53d328d2c4c117f8cd.jpg",
+    "raw_relative_path": "images/1999ce54a7d54ca76fb169b53f451013afbd87d49dfdae53d328d2c4c117f8cd.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Reverse‐Current Induced Cascade Degradation in Ni Ru Electrodes  Tracin_9f7209bf\\images\\282147153b8bebe55743c79b9dfb85d214c805431042ac01473a3abdb7fdf3a0.jpg",
+    "raw_relative_path": "images/282147153b8bebe55743c79b9dfb85d214c805431042ac01473a3abdb7fdf3a0.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Reverse‐Current Induced Cascade Degradation in Ni Ru Electrodes  Tracin_9f7209bf\\images\\3731576c5f0e10a9578b20bf36dcad95c47c3bae941ca1d3d6a4f76498384b1a.jpg",
+    "raw_relative_path": "images/3731576c5f0e10a9578b20bf36dcad95c47c3bae941ca1d3d6a4f76498384b1a.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Reverse‐Current Induced Cascade Degradation in Ni Ru Electrodes  Tracin_9f7209bf\\images\\3ad1766679d02f28065516375c381110038c3bc4c03af6d9a5055f79cfa3e892.jpg",
+    "raw_relative_path": "images/3ad1766679d02f28065516375c381110038c3bc4c03af6d9a5055f79cfa3e892.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Reverse‐Current Induced Cascade Degradation in Ni Ru Electrodes  Tracin_9f7209bf\\images\\3b8acccd47b69b295afdba73b837a488bd214783cbd554dc652e155368a262d4.jpg",
+    "raw_relative_path": "images/3b8acccd47b69b295afdba73b837a488bd214783cbd554dc652e155368a262d4.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Reverse‐Current Induced Cascade Degradation in Ni Ru Electrodes  Tracin_9f7209bf\\images\\3ba031dadd74ead26c8499ad3314842b32584194be968212befe005a220a39b8.jpg",
+    "raw_relative_path": "images/3ba031dadd74ead26c8499ad3314842b32584194be968212befe005a220a39b8.jpg",
+    "status": "used",
+    "figure_id": "FIG006",
+    "clean_path": "figures/FIG006/image_002.jpg",
+    "caption_path": "figures/FIG006/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S03-P007",
+      "S03-P008",
+      "S03-P010",
+      "S03-P011",
+      "S03-P012",
+      "S03-P013"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Reverse‐Current Induced Cascade Degradation in Ni Ru Electrodes  Tracin_9f7209bf\\images\\451cce3bb632847e4568cc69de77897e5327a7fea44333b571ed763253c90cc9.jpg",
+    "raw_relative_path": "images/451cce3bb632847e4568cc69de77897e5327a7fea44333b571ed763253c90cc9.jpg",
+    "status": "used",
+    "figure_id": "FIG005",
+    "clean_path": "figures/FIG005/image_002.jpg",
+    "caption_path": "figures/FIG005/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S01-P004",
+      "S03-P009",
+      "S03-P017",
+      "S05-P010",
+      "S05-P011"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Reverse‐Current Induced Cascade Degradation in Ni Ru Electrodes  Tracin_9f7209bf\\images\\45dade4d296239e8bfab88c394636c1516d6b6ed317503a9fbf771ac6d39b8b2.jpg",
+    "raw_relative_path": "images/45dade4d296239e8bfab88c394636c1516d6b6ed317503a9fbf771ac6d39b8b2.jpg",
+    "status": "used",
+    "figure_id": "FIG004",
+    "clean_path": "figures/FIG004/image_002.jpg",
+    "caption_path": "figures/FIG004/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S03-P024",
+      "S05-P002",
+      "S05-P004",
+      "S05-P006",
+      "S05-P007"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Reverse‐Current Induced Cascade Degradation in Ni Ru Electrodes  Tracin_9f7209bf\\images\\4a59c5cc884455a4b59078ee33b237a702bf541162e66cec6691c7630a5430b2.jpg",
+    "raw_relative_path": "images/4a59c5cc884455a4b59078ee33b237a702bf541162e66cec6691c7630a5430b2.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Reverse‐Current Induced Cascade Degradation in Ni Ru Electrodes  Tracin_9f7209bf\\images\\4baa87c11a899c21fe7420021caeee565aba1cf8504639dd85909fd3c21fd052.jpg",
+    "raw_relative_path": "images/4baa87c11a899c21fe7420021caeee565aba1cf8504639dd85909fd3c21fd052.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Reverse‐Current Induced Cascade Degradation in Ni Ru Electrodes  Tracin_9f7209bf\\images\\4d3593bc6c80d2837f73a02abc1db513c7a88e135802da57db1f6dbe552631cb.jpg",
+    "raw_relative_path": "images/4d3593bc6c80d2837f73a02abc1db513c7a88e135802da57db1f6dbe552631cb.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Reverse‐Current Induced Cascade Degradation in Ni Ru Electrodes  Tracin_9f7209bf\\images\\5e81ab760c0631a8b5b4916ff51d41c37a990612796e503a55eb03fccde72ffa.jpg",
+    "raw_relative_path": "images/5e81ab760c0631a8b5b4916ff51d41c37a990612796e503a55eb03fccde72ffa.jpg",
+    "status": "used",
+    "figure_id": "FIG002",
+    "clean_path": "figures/FIG002/image_003.jpg",
+    "caption_path": "figures/FIG002/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S01-P002",
+      "S04-P001",
+      "S04-P002",
+      "S04-P004",
+      "S04-P005"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Reverse‐Current Induced Cascade Degradation in Ni Ru Electrodes  Tracin_9f7209bf\\images\\5e9ba38c486bb92e8fc5775ff9a6ec4ac1eec6d067a375f34f2a6d43f7398cbf.jpg",
+    "raw_relative_path": "images/5e9ba38c486bb92e8fc5775ff9a6ec4ac1eec6d067a375f34f2a6d43f7398cbf.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Reverse‐Current Induced Cascade Degradation in Ni Ru Electrodes  Tracin_9f7209bf\\images\\70a24754f150696ff93f9eacce622372cfe1924295f754e412cf54121449a260.jpg",
+    "raw_relative_path": "images/70a24754f150696ff93f9eacce622372cfe1924295f754e412cf54121449a260.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Reverse‐Current Induced Cascade Degradation in Ni Ru Electrodes  Tracin_9f7209bf\\images\\79eb8c9d7b8ec680f9d44ef49c0e26f0c3044ad3d5e2a23cb27475b7f6d19d73.jpg",
+    "raw_relative_path": "images/79eb8c9d7b8ec680f9d44ef49c0e26f0c3044ad3d5e2a23cb27475b7f6d19d73.jpg",
+    "status": "used",
+    "figure_id": "FIG005",
+    "clean_path": "figures/FIG005/image_001.jpg",
+    "caption_path": "figures/FIG005/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S01-P004",
+      "S03-P009",
+      "S03-P017",
+      "S05-P010",
+      "S05-P011"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Reverse‐Current Induced Cascade Degradation in Ni Ru Electrodes  Tracin_9f7209bf\\images\\87bfd6e715b84574fb6b585168d1663b246a3aa2e8a5d5d0767ea1c9de55ac6b.jpg",
+    "raw_relative_path": "images/87bfd6e715b84574fb6b585168d1663b246a3aa2e8a5d5d0767ea1c9de55ac6b.jpg",
+    "status": "used",
+    "figure_id": "FIG004",
+    "clean_path": "figures/FIG004/image_001.jpg",
+    "caption_path": "figures/FIG004/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S03-P024",
+      "S05-P002",
+      "S05-P004",
+      "S05-P006",
+      "S05-P007"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Reverse‐Current Induced Cascade Degradation in Ni Ru Electrodes  Tracin_9f7209bf\\images\\a1fad0635e065dc585e227c6cf9e80cbcd64c575aaebe2ba02448f980a56383f.jpg",
+    "raw_relative_path": "images/a1fad0635e065dc585e227c6cf9e80cbcd64c575aaebe2ba02448f980a56383f.jpg",
+    "status": "used",
+    "figure_id": "FIG001",
+    "clean_path": "figures/FIG001/image_001.jpg",
+    "caption_path": "figures/FIG001/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S02-P004",
+      "S02-P005"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Reverse‐Current Induced Cascade Degradation in Ni Ru Electrodes  Tracin_9f7209bf\\images\\abf7fb2d6ba004d5f2042908bec699ac7f5daddadf7cf35617d9b1f5cb3bbc46.jpg",
+    "raw_relative_path": "images/abf7fb2d6ba004d5f2042908bec699ac7f5daddadf7cf35617d9b1f5cb3bbc46.jpg",
+    "status": "used",
+    "figure_id": "FIG005",
+    "clean_path": "figures/FIG005/image_003.jpg",
+    "caption_path": "figures/FIG005/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S01-P004",
+      "S03-P009",
+      "S03-P017",
+      "S05-P010",
+      "S05-P011"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Reverse‐Current Induced Cascade Degradation in Ni Ru Electrodes  Tracin_9f7209bf\\images\\b0af896d3dc1af0c0c96eab387059792e9404584b74ee6d3d8f099a0c0596b38.jpg",
+    "raw_relative_path": "images/b0af896d3dc1af0c0c96eab387059792e9404584b74ee6d3d8f099a0c0596b38.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Reverse‐Current Induced Cascade Degradation in Ni Ru Electrodes  Tracin_9f7209bf\\images\\b2e465e857da15f401cb59e7abac242ef4a612e126d28a54bc06bd981f37364b.jpg",
+    "raw_relative_path": "images/b2e465e857da15f401cb59e7abac242ef4a612e126d28a54bc06bd981f37364b.jpg",
+    "status": "used",
+    "figure_id": "FIG003",
+    "clean_path": "figures/FIG003/image_001.jpg",
+    "caption_path": "figures/FIG003/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S03-P001",
+      "S03-P002",
+      "S03-P003",
+      "S03-P005"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Reverse‐Current Induced Cascade Degradation in Ni Ru Electrodes  Tracin_9f7209bf\\images\\bb3050207de88e9da5cc3dd64ad9c985cd9994611906d028988f82e553de02fa.jpg",
+    "raw_relative_path": "images/bb3050207de88e9da5cc3dd64ad9c985cd9994611906d028988f82e553de02fa.jpg",
+    "status": "used",
+    "figure_id": "FIG003",
+    "clean_path": "figures/FIG003/image_002.jpg",
+    "caption_path": "figures/FIG003/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S03-P001",
+      "S03-P002",
+      "S03-P003",
+      "S03-P005"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Reverse‐Current Induced Cascade Degradation in Ni Ru Electrodes  Tracin_9f7209bf\\images\\ca772ef46ede5d89b7fdfad7d0cfe350c26e731e288ce206366c0219698c2081.jpg",
+    "raw_relative_path": "images/ca772ef46ede5d89b7fdfad7d0cfe350c26e731e288ce206366c0219698c2081.jpg",
+    "status": "used",
+    "figure_id": "FIG003",
+    "clean_path": "figures/FIG003/image_003.jpg",
+    "caption_path": "figures/FIG003/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S03-P001",
+      "S03-P002",
+      "S03-P003",
+      "S03-P005"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Reverse‐Current Induced Cascade Degradation in Ni Ru Electrodes  Tracin_9f7209bf\\images\\d0f32a30736126630d95588b66899d52856e45d44d5bb7984e87745db425f99f.jpg",
+    "raw_relative_path": "images/d0f32a30736126630d95588b66899d52856e45d44d5bb7984e87745db425f99f.jpg",
+    "status": "used",
+    "figure_id": "FIG002",
+    "clean_path": "figures/FIG002/image_001.jpg",
+    "caption_path": "figures/FIG002/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S01-P002",
+      "S04-P001",
+      "S04-P002",
+      "S04-P004",
+      "S04-P005"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Reverse‐Current Induced Cascade Degradation in Ni Ru Electrodes  Tracin_9f7209bf\\images\\d2c6492ab0e2c1ebb078852f9ebd47b8e0981a249a6bbd536fc7b282b4bf149e.jpg",
+    "raw_relative_path": "images/d2c6492ab0e2c1ebb078852f9ebd47b8e0981a249a6bbd536fc7b282b4bf149e.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Reverse‐Current Induced Cascade Degradation in Ni Ru Electrodes  Tracin_9f7209bf\\images\\d89bea98246fa6abbcd7ef6d0904164f1f2eb924fc0645bcd71e2a2e4c874059.jpg",
+    "raw_relative_path": "images/d89bea98246fa6abbcd7ef6d0904164f1f2eb924fc0645bcd71e2a2e4c874059.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Reverse‐Current Induced Cascade Degradation in Ni Ru Electrodes  Tracin_9f7209bf\\images\\d9023aefee9a8fb209ede6908bd8da9f7f3883b5fd90c61fa260cb17fb3cc846.jpg",
+    "raw_relative_path": "images/d9023aefee9a8fb209ede6908bd8da9f7f3883b5fd90c61fa260cb17fb3cc846.jpg",
+    "status": "used",
+    "figure_id": "FIG006",
+    "clean_path": "figures/FIG006/image_001.jpg",
+    "caption_path": "figures/FIG006/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S03-P007",
+      "S03-P008",
+      "S03-P010",
+      "S03-P011",
+      "S03-P012",
+      "S03-P013"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Reverse‐Current Induced Cascade Degradation in Ni Ru Electrodes  Tracin_9f7209bf\\images\\dbf645f4b61ca0400d3cb2f7cf505b02c5f9d9ea5c1bbbd2a69c2a2763b6ad34.jpg",
+    "raw_relative_path": "images/dbf645f4b61ca0400d3cb2f7cf505b02c5f9d9ea5c1bbbd2a69c2a2763b6ad34.jpg",
+    "status": "used",
+    "figure_id": "FIG006",
+    "clean_path": "figures/FIG006/image_003.jpg",
+    "caption_path": "figures/FIG006/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S03-P007",
+      "S03-P008",
+      "S03-P010",
+      "S03-P011",
+      "S03-P012",
+      "S03-P013"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Reverse‐Current Induced Cascade Degradation in Ni Ru Electrodes  Tracin_9f7209bf\\images\\f6d9d3f000ca0781faa25a1be5d6e66b8fac11da184275ff40ab8aef0cd717e6.jpg",
+    "raw_relative_path": "images/f6d9d3f000ca0781faa25a1be5d6e66b8fac11da184275ff40ab8aef0cd717e6.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  }
+]

@@ -1,0 +1,259 @@
+{
+  "paper_id": "2025_center_reverse_current_induced_cascade_degradation_in_ni_ru_ele_2782d6",
+  "heading_count": 17,
+  "paragraph_count": 65,
+  "headings": [
+    {
+      "heading_uid": "HRAW-001-31b3ef9c",
+      "heading_text": "Reverse-Current Induced Cascade Degradation in Ni-Ru Electrodes: Tracing the Path from Noble Metal Loss to Substrate Corrosion",
+      "heading_level": 1,
+      "doc_heading_order": 1,
+      "page_index": null,
+      "block_order": 1,
+      "paragraph_uid_list": [
+        "PRAW-000001",
+        "PRAW-000002",
+        "PRAW-000003",
+        "PRAW-000004"
+      ],
+      "inferred_type": "abstract"
+    },
+    {
+      "heading_uid": "HRAW-002-9d7aea4c",
+      "heading_text": "Abstract",
+      "heading_level": 1,
+      "doc_heading_order": 2,
+      "page_index": null,
+      "block_order": 1,
+      "paragraph_uid_list": [
+        "PRAW-000047"
+      ],
+      "inferred_type": "abstract"
+    },
+    {
+      "heading_uid": "HRAW-003-e3db4264",
+      "heading_text": "1 | Introduction",
+      "heading_level": 1,
+      "doc_heading_order": 3,
+      "page_index": null,
+      "block_order": 1,
+      "paragraph_uid_list": [
+        "PRAW-000005",
+        "PRAW-000006",
+        "PRAW-000007",
+        "PRAW-000008",
+        "PRAW-000009",
+        "PRAW-000010",
+        "PRAW-000011",
+        "PRAW-000012"
+      ],
+      "inferred_type": "none"
+    },
+    {
+      "heading_uid": "HRAW-005-034192d8",
+      "heading_text": "2.1 | Degradation Assessment",
+      "heading_level": 1,
+      "doc_heading_order": 5,
+      "page_index": null,
+      "block_order": 1,
+      "paragraph_uid_list": [
+        "PRAW-000042",
+        "PRAW-000043",
+        "PRAW-000044",
+        "PRAW-000045",
+        "PRAW-000046"
+      ],
+      "inferred_type": "none"
+    },
+    {
+      "heading_uid": "HRAW-006-e0d94cc5",
+      "heading_text": "2.2 | Electrochemical Behavior and Morphology Evolutions",
+      "heading_level": 1,
+      "doc_heading_order": 6,
+      "page_index": null,
+      "block_order": 1,
+      "paragraph_uid_list": [
+        "PRAW-000013",
+        "PRAW-000014",
+        "PRAW-000015",
+        "PRAW-000016",
+        "PRAW-000017",
+        "PRAW-000018"
+      ],
+      "inferred_type": "none"
+    },
+    {
+      "heading_uid": "HRAW-007-56efe849",
+      "heading_text": "2.3 | Solution and Interface Evolutions",
+      "heading_level": 1,
+      "doc_heading_order": 7,
+      "page_index": null,
+      "block_order": 1,
+      "paragraph_uid_list": [
+        "PRAW-000048",
+        "PRAW-000049",
+        "PRAW-000050",
+        "PRAW-000051",
+        "PRAW-000052",
+        "PRAW-000053",
+        "PRAW-000054"
+      ],
+      "inferred_type": "none"
+    },
+    {
+      "heading_uid": "HRAW-008-b346148b",
+      "heading_text": "2.4 | Degradation Mechanism and Pathway Analysis",
+      "heading_level": 1,
+      "doc_heading_order": 8,
+      "page_index": null,
+      "block_order": 1,
+      "paragraph_uid_list": [
+        "PRAW-000055",
+        "PRAW-000056",
+        "PRAW-000057",
+        "PRAW-000058",
+        "PRAW-000059",
+        "PRAW-000060"
+      ],
+      "inferred_type": "back_matter"
+    },
+    {
+      "heading_uid": "HRAW-009-d2c3d2f7",
+      "heading_text": "2.5 | Sensitivity on the RC Amplitude",
+      "heading_level": 1,
+      "doc_heading_order": 9,
+      "page_index": null,
+      "block_order": 1,
+      "paragraph_uid_list": [
+        "PRAW-000019",
+        "PRAW-000020",
+        "PRAW-000021",
+        "PRAW-000022",
+        "PRAW-000023",
+        "PRAW-000024",
+        "PRAW-000025",
+        "PRAW-000026",
+        "PRAW-000027",
+        "PRAW-000028"
+      ],
+      "inferred_type": "none"
+    },
+    {
+      "heading_uid": "HRAW-010-3eb17ab8",
+      "heading_text": "3 | Conclusions",
+      "heading_level": 1,
+      "doc_heading_order": 10,
+      "page_index": null,
+      "block_order": 1,
+      "paragraph_uid_list": [
+        "PRAW-000061",
+        "PRAW-000062",
+        "PRAW-000063"
+      ],
+      "inferred_type": "back_matter"
+    },
+    {
+      "heading_uid": "HRAW-012-80ee755b",
+      "heading_text": "4.1 | Electrode Preparation",
+      "heading_level": 1,
+      "doc_heading_order": 12,
+      "page_index": null,
+      "block_order": 1,
+      "paragraph_uid_list": [
+        "PRAW-000029"
+      ],
+      "inferred_type": "none"
+    },
+    {
+      "heading_uid": "HRAW-013-ea48dd39",
+      "heading_text": "4.2 | AST Setup and Electrochemical Measurement",
+      "heading_level": 1,
+      "doc_heading_order": 13,
+      "page_index": null,
+      "block_order": 1,
+      "paragraph_uid_list": [
+        "PRAW-000030",
+        "PRAW-000031",
+        "PRAW-000032",
+        "PRAW-000033",
+        "PRAW-000034",
+        "PRAW-000035"
+      ],
+      "inferred_type": "abstract"
+    },
+    {
+      "heading_uid": "HRAW-014-e4a250d8",
+      "heading_text": "4.3 | Configuration of the Electrolyzer Validation Experiment",
+      "heading_level": 1,
+      "doc_heading_order": 14,
+      "page_index": null,
+      "block_order": 1,
+      "paragraph_uid_list": [
+        "PRAW-000036"
+      ],
+      "inferred_type": "none"
+    },
+    {
+      "heading_uid": "HRAW-015-5c2bca7a",
+      "heading_text": "4.4 | Physical Characterization",
+      "heading_level": 1,
+      "doc_heading_order": 15,
+      "page_index": null,
+      "block_order": 1,
+      "paragraph_uid_list": [
+        "PRAW-000037",
+        "PRAW-000038",
+        "PRAW-000039"
+      ],
+      "inferred_type": "none"
+    },
+    {
+      "heading_uid": "HRAW-016-0cd3eeb8",
+      "heading_text": "4.5 | Dynamic Dissolution/Deposition and Osterwalder Ripening",
+      "heading_level": 1,
+      "doc_heading_order": 16,
+      "page_index": null,
+      "block_order": 1,
+      "paragraph_uid_list": [
+        "PRAW-000040"
+      ],
+      "inferred_type": "none"
+    },
+    {
+      "heading_uid": "HRAW-017-d3c01fc0",
+      "heading_text": "Acknowledgements",
+      "heading_level": 1,
+      "doc_heading_order": 17,
+      "page_index": null,
+      "block_order": 1,
+      "paragraph_uid_list": [
+        "PRAW-000064"
+      ],
+      "inferred_type": "none"
+    },
+    {
+      "heading_uid": "HRAW-018-16b14ece",
+      "heading_text": "Conflicts of Interest",
+      "heading_level": 1,
+      "doc_heading_order": 18,
+      "page_index": null,
+      "block_order": 1,
+      "paragraph_uid_list": [
+        "PRAW-000041"
+      ],
+      "inferred_type": "none"
+    },
+    {
+      "heading_uid": "HRAW-019-97acb72e",
+      "heading_text": "Data Availability Statement",
+      "heading_level": 1,
+      "doc_heading_order": 19,
+      "page_index": null,
+      "block_order": 1,
+      "paragraph_uid_list": [
+        "PRAW-000065"
+      ],
+      "inferred_type": "none"
+    }
+  ]
+}

@@ -1,0 +1,146 @@
+{
+  "generated_at": "2026-06-02T00:32:53.076006",
+  "summary": {
+    "papers": 11,
+    "ok": 11,
+    "issue": 0,
+    "missing_files": 0,
+    "placeholder_files": 0,
+    "path_mismatch": 0,
+    "index_chain_issues": 0
+  },
+  "details": [
+    {
+      "paper_id": "2017_uchino_relationship_between_the_redox_reactions_on_a_bipolar_pl_eb3da9",
+      "status": "ok",
+      "issue_count": 0,
+      "missing_files": [],
+      "placeholder_files": [],
+      "path_mismatch": [],
+      "index_chain_issues": [],
+      "expected_sections": 7,
+      "actual_sections": 7,
+      "checked_at": "2026-06-02T00:32:48.788234"
+    },
+    {
+      "paper_id": "2022_kim_cathodic_protection_system_against_a_reverse_current_aft_180201",
+      "status": "ok",
+      "issue_count": 0,
+      "missing_files": [],
+      "placeholder_files": [],
+      "path_mismatch": [],
+      "index_chain_issues": [],
+      "expected_sections": 14,
+      "actual_sections": 14,
+      "checked_at": "2026-06-02T00:32:49.166480"
+    },
+    {
+      "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "status": "ok",
+      "issue_count": 0,
+      "missing_files": [],
+      "placeholder_files": [],
+      "path_mismatch": [],
+      "index_chain_issues": [],
+      "expected_sections": 22,
+      "actual_sections": 22,
+      "checked_at": "2026-06-02T00:32:49.630202"
+    },
+    {
+      "paper_id": "2023_uchino_dependence_of_the_reverse_current_on_the_surface_of_elec_38347e",
+      "status": "ok",
+      "issue_count": 0,
+      "missing_files": [],
+      "placeholder_files": [],
+      "path_mismatch": [],
+      "index_chain_issues": [],
+      "expected_sections": 15,
+      "actual_sections": 15,
+      "checked_at": "2026-06-02T00:32:49.977493"
+    },
+    {
+      "paper_id": "2024_jung_reverse_current_tolerance_for_hydrogen_evolution_reactio_4a4ad9",
+      "status": "ok",
+      "issue_count": 0,
+      "missing_files": [],
+      "placeholder_files": [],
+      "path_mismatch": [],
+      "index_chain_issues": [],
+      "expected_sections": 14,
+      "actual_sections": 14,
+      "checked_at": "2026-06-02T00:32:50.277817"
+    },
+    {
+      "paper_id": "2025_center_reverse_current_induced_cascade_degradation_in_ni_ru_ele_2782d6",
+      "status": "ok",
+      "issue_count": 0,
+      "missing_files": [],
+      "placeholder_files": [],
+      "path_mismatch": [],
+      "index_chain_issues": [],
+      "expected_sections": 17,
+      "actual_sections": 17,
+      "checked_at": "2026-06-02T00:32:50.649016"
+    },
+    {
+      "paper_id": "2025_peng_strategies_and_countermeasures_against_reverse_current_f_803838",
+      "status": "ok",
+      "issue_count": 0,
+      "missing_files": [],
+      "placeholder_files": [],
+      "path_mismatch": [],
+      "index_chain_issues": [],
+      "expected_sections": 18,
+      "actual_sections": 18,
+      "checked_at": "2026-06-02T00:32:51.133156"
+    },
+    {
+      "paper_id": "2025_sha_10000h_stable_intermittent_alkaline_seawater_electrolysi_333f5c",
+      "status": "ok",
+      "issue_count": 0,
+      "missing_files": [],
+      "placeholder_files": [],
+      "path_mismatch": [],
+      "index_chain_issues": [],
+      "expected_sections": 25,
+      "actual_sections": 25,
+      "checked_at": "2026-06-02T00:32:51.666175"
+    },
+    {
+      "paper_id": "2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7",
+      "status": "ok",
+      "issue_count": 0,
+      "missing_files": [],
+      "placeholder_files": [],
+      "path_mismatch": [],
+      "index_chain_issues": [],
+      "expected_sections": 14,
+      "actual_sections": 14,
+      "checked_at": "2026-06-02T00:32:51.963995"
+    },
+    {
+      "paper_id": "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e",
+      "status": "ok",
+      "issue_count": 0,
+      "missing_files": [],
+      "placeholder_files": [],
+      "path_mismatch": [],
+      "index_chain_issues": [],
+      "expected_sections": 13,
+      "actual_sections": 13,
+      "checked_at": "2026-06-02T00:32:52.224709"
+    },
+    {
+      "paper_id": "2026_unknown_2026_2d8d75",
+      "status": "ok",
+      "issue_count": 0,
+      "missing_files": [],
+      "placeholder_files": [],
+      "path_mismatch": [],
+      "index_chain_issues": [],
+      "expected_sections": 41,
+      "actual_sections": 41,
+      "checked_at": "2026-06-02T00:32:53.075945"
+    }
+  ]
+}

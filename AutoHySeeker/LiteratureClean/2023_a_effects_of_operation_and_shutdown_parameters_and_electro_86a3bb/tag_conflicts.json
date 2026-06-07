@@ -1,0 +1,5430 @@
+{
+  "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+  "generated_at": "2026-05-30T16:29:49",
+  "total_conflicts": 60,
+  "high_conflicts": 44,
+  "medium_conflicts": 1,
+  "low_conflicts": 15,
+  "items": [
+    {
+      "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "paragraph_uid": "PRAW-000001",
+      "paragraph_id": "S00-P001",
+      "heading_uid": "HRAW-001-32a2621f",
+      "heading_text": "Effects of operation and shutdown parameters and electrode materials on the reverse current phenomenon in alkaline water analyzers",
+      "doc_heading_order": 1,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "front_matter_hard_rule",
+        "assigned_section_id": "S00_front_matter",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S03_methods_and_setup",
+        "top_score": 5,
+        "second_score": 4,
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 5,
+            "heading_hits": [
+              {
+                "term": "reverse current",
+                "weight": 5
+              }
+            ],
+            "preview_hits": [],
+            "position_hits": []
+          },
+          {
+            "section_id": "S03_methods_and_setup",
+            "section_title": "Methods And Setup",
+            "score": 4,
+            "heading_hits": [
+              {
+                "term": "material",
+                "weight": 2
+              },
+              {
+                "term": "materials",
+                "weight": 2
+              }
+            ],
+            "preview_hits": [],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "low",
+        "conflict_reasons": [
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S00_front_matter",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S03_methods_and_setup",
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "Ashraf Abdel Haleem a,\\*, Jinlei Huyan b, Kensaku Nagasawa a, Yoshiyuki Kuroda c, Yoshinori Nishiki d, Akihiro Kato d, Takaaki Nakai d, Takuto Araki b, Shigenori Mitsushima a,c"
+    },
+    {
+      "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "paragraph_uid": "PRAW-000002",
+      "paragraph_id": "S00-P002",
+      "heading_uid": "HRAW-001-32a2621f",
+      "heading_text": "Effects of operation and shutdown parameters and electrode materials on the reverse current phenomenon in alkaline water analyzers",
+      "doc_heading_order": 1,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "front_matter_hard_rule",
+        "assigned_section_id": "S00_front_matter",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S03_methods_and_setup",
+        "top_score": 5,
+        "second_score": 4,
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 5,
+            "heading_hits": [
+              {
+                "term": "reverse current",
+                "weight": 5
+              }
+            ],
+            "preview_hits": [],
+            "position_hits": []
+          },
+          {
+            "section_id": "S03_methods_and_setup",
+            "section_title": "Methods And Setup",
+            "score": 4,
+            "heading_hits": [
+              {
+                "term": "material",
+                "weight": 2
+              },
+              {
+                "term": "materials",
+                "weight": 2
+              }
+            ],
+            "preview_hits": [],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "low",
+        "conflict_reasons": [
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S00_front_matter",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S03_methods_and_setup",
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "a Institute of Advanced Sciences, Yokohama National University, 79-5 Tokiwadai, Hodogaya-ku, Yokohama, 240-8501, Japan b Graduate School of Engineering, Yokohama National University, 79-5 Tokiwadai, Hodogaya, Yokohama, $"
+    },
+    {
+      "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "paragraph_uid": "PRAW-000004",
+      "paragraph_id": "S01-P001",
+      "heading_uid": "HRAW-005-8663ac07",
+      "heading_text": "ABSTRACT",
+      "doc_heading_order": 5,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S01_abstract",
+        "top_section_id": "S01_abstract",
+        "second_section_id": "S03_methods_and_setup",
+        "top_score": 3,
+        "second_score": 3,
+        "score_gap": 0,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_top_score",
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S01_abstract",
+            "section_title": "Abstract",
+            "score": 3,
+            "heading_hits": [
+              {
+                "term": "abstract",
+                "weight": 2
+              }
+            ],
+            "preview_hits": [],
+            "position_hits": [
+              {
+                "term": "abstract",
+                "weight": 1
+              }
+            ]
+          },
+          {
+            "section_id": "S03_methods_and_setup",
+            "section_title": "Methods And Setup",
+            "score": 3,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "experimental",
+                "weight": 1
+              },
+              {
+                "term": "material",
+                "weight": 1
+              },
+              {
+                "term": "materials",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_score_gap",
+          "low_top_score"
+        ],
+        "primary_section_id": "S01_abstract",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S01_abstract",
+        "second_candidate_section_id": "S03_methods_and_setup",
+        "score_gap": 0,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "One of the major challenges facing the coupling of alkaline water electrolyzers (AWE) and inherently intermittent renewable energy sources (RES) is the reverse current phenomenon that takes place after shutdown and adver"
+    },
+    {
+      "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "paragraph_uid": "PRAW-000037",
+      "paragraph_id": "S01-P002",
+      "heading_uid": "HRAW-016-1aa55629",
+      "heading_text": "3.2. Basic behavior of the electrolyzer after shutdown",
+      "doc_heading_order": 16,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S03_methods_and_setup",
+        "top_section_id": "S04_results",
+        "second_section_id": "S05_discussion_mechanism",
+        "top_score": 5,
+        "second_score": 4,
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 5,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "result",
+                "weight": 1
+              },
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "durability",
+                "weight": 1
+              },
+              {
+                "term": "current density",
+                "weight": 1
+              },
+              {
+                "term": "cell voltage",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 4,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "oxidation",
+                "weight": 1
+              },
+              {
+                "term": "reduction",
+                "weight": 1
+              },
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_score_gap",
+          "paragraph_rerouted",
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S01_abstract",
+        "secondary_section_id": "S03_methods_and_setup",
+        "top_candidate_section_id": "S04_results",
+        "second_candidate_section_id": "S05_discussion_mechanism",
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "Before discussing the factors that affects the reverse current phenomenon, we present the basic information and most likely the general behavior of the electrocatalysts of alkaline water electrolyzers under the start-up/"
+    },
+    {
+      "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "paragraph_uid": "PRAW-000043",
+      "paragraph_id": "S01-P003",
+      "heading_uid": "HRAW-016-1aa55629",
+      "heading_text": "3.2. Basic behavior of the electrolyzer after shutdown",
+      "doc_heading_order": 16,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S03_methods_and_setup",
+        "top_section_id": "S04_results",
+        "second_section_id": "S05_discussion_mechanism",
+        "top_score": 5,
+        "second_score": 4,
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 5,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "result",
+                "weight": 1
+              },
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "durability",
+                "weight": 1
+              },
+              {
+                "term": "current density",
+                "weight": 1
+              },
+              {
+                "term": "cell voltage",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 4,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "oxidation",
+                "weight": 1
+              },
+              {
+                "term": "reduction",
+                "weight": 1
+              },
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_score_gap",
+          "paragraph_rerouted",
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S01_abstract",
+        "secondary_section_id": "S03_methods_and_setup",
+        "top_candidate_section_id": "S04_results",
+        "second_candidate_section_id": "S05_discussion_mechanism",
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "2000 s from the moment the electrolyzer was turned off. It is obvious that the amount of change in the potential of each BP cathode is rather greater than that of the associated anode. This indicates that the BPs cathode"
+    },
+    {
+      "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "paragraph_uid": "PRAW-000050",
+      "paragraph_id": "S01-P004",
+      "heading_uid": "HRAW-012-cdbbc92d",
+      "heading_text": "2.5. Fabrication of the electrodes",
+      "doc_heading_order": 12,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "score_breakdown",
+        "assigned_section_id": "S04_results",
+        "top_section_id": "S04_results",
+        "second_section_id": "S03_methods_and_setup",
+        "top_score": 4,
+        "second_score": 2,
+        "score_gap": 2,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 4,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "activity",
+                "weight": 1
+              },
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "oer",
+                "weight": 1
+              },
+              {
+                "term": "durability",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S03_methods_and_setup",
+            "section_title": "Methods And Setup",
+            "score": 2,
+            "heading_hits": [
+              {
+                "term": "fabrication",
+                "weight": 2
+              }
+            ],
+            "preview_hits": [],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "medium",
+        "conflict_reasons": [
+          "paragraph_rerouted"
+        ],
+        "primary_section_id": "S01_abstract",
+        "secondary_section_id": "S04_results",
+        "top_candidate_section_id": "S04_results",
+        "second_candidate_section_id": "S03_methods_and_setup",
+        "score_gap": 2,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "In this study, two different OER electrocatalysts were individually utilized with the same HER electrocatalyst. The first OER electrocatalyst is $\\mathrm{NiCoO_x}$ electrocatalyst that was deposited on the a blasted Ni-m"
+    },
+    {
+      "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "paragraph_uid": "PRAW-000052",
+      "paragraph_id": "S01-P005",
+      "heading_uid": "HRAW-008-c206dd51",
+      "heading_text": "2.1. Construction of the alkaline water electrolyzer system",
+      "doc_heading_order": 8,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S05_discussion_mechanism",
+        "top_section_id": "S04_results",
+        "second_section_id": "S05_discussion_mechanism",
+        "top_score": 3,
+        "second_score": 3,
+        "score_gap": 0,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_top_score",
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 3,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "water electrolysis",
+                "weight": 1
+              },
+              {
+                "term": "cell voltage",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 3,
+            "heading_hits": [
+              {
+                "term": "tem",
+                "weight": 2
+              }
+            ],
+            "preview_hits": [
+              {
+                "term": "reverse current",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_score_gap",
+          "low_top_score",
+          "paragraph_rerouted",
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S01_abstract",
+        "secondary_section_id": "S05_discussion_mechanism",
+        "top_candidate_section_id": "S04_results",
+        "second_candidate_section_id": "S05_discussion_mechanism",
+        "score_gap": 0,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "Fig. 1 shows a schematic diagram of the AWE system used in this study. A 4-cell stack was connected to an external plumbing system which enabled the circulation of the electrolyte and the evacuation of the generated gase"
+    },
+    {
+      "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "paragraph_uid": "PRAW-000055",
+      "paragraph_id": "S01-P006",
+      "heading_uid": "HRAW-009-d6615769",
+      "heading_text": "2.2. The bipolar plate stack and the associated manifold assembly",
+      "doc_heading_order": 9,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S05_discussion_mechanism",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S04_results",
+        "top_score": 3,
+        "second_score": 1,
+        "score_gap": 2,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_top_score"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 3,
+            "heading_hits": [
+              {
+                "term": "sem",
+                "weight": 2
+              }
+            ],
+            "preview_hits": [
+              {
+                "term": "tem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 1,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "her",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_top_score",
+          "paragraph_rerouted"
+        ],
+        "primary_section_id": "S01_abstract",
+        "secondary_section_id": "S05_discussion_mechanism",
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S04_results",
+        "score_gap": 2,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "Fig. S1 shows a schematic diagram of the first two cells of the utilized bipolar plate AWE stack. The cells were grouped based on the zero-gap configuration, in which the anode and cathode of each cell are in direct cont"
+    },
+    {
+      "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "paragraph_uid": "PRAW-000005",
+      "paragraph_id": "S02-P001",
+      "heading_uid": "HRAW-006-a488834b",
+      "heading_text": "1. Introduction",
+      "doc_heading_order": 6,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "direct_rule",
+        "assigned_section_id": "S02_introduction",
+        "top_section_id": "S04_results",
+        "second_section_id": "S05_discussion_mechanism",
+        "top_score": 9,
+        "second_score": 6,
+        "score_gap": 3,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 9,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "result",
+                "weight": 1
+              },
+              {
+                "term": "performance",
+                "weight": 1
+              },
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "oer",
+                "weight": 1
+              },
+              {
+                "term": "water electrolysis",
+                "weight": 1
+              },
+              {
+                "term": "durability",
+                "weight": 1
+              },
+              {
+                "term": "intermittent",
+                "weight": 1
+              },
+              {
+                "term": "current density",
+                "weight": 1
+              },
+              {
+                "term": "cell voltage",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 6,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "oxidation",
+                "weight": 1
+              },
+              {
+                "term": "reduction",
+                "weight": 1
+              },
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "degradation",
+                "weight": 1
+              },
+              {
+                "term": "redox",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "low",
+        "conflict_reasons": [
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S02_introduction",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S04_results",
+        "second_candidate_section_id": "S05_discussion_mechanism",
+        "score_gap": 3,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "Carbon neutrality by 2050 is a globally accepted strategy to limit global warming to $1.5^{\\circ}\\mathrm{C}$ above pre-industrial levels [1,2]. Hydrogen as a clean energy carrier can play a vital role towards achieving t"
+    },
+    {
+      "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "paragraph_uid": "PRAW-000006",
+      "paragraph_id": "S02-P002",
+      "heading_uid": "HRAW-006-a488834b",
+      "heading_text": "1. Introduction",
+      "doc_heading_order": 6,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "direct_rule",
+        "assigned_section_id": "S02_introduction",
+        "top_section_id": "S04_results",
+        "second_section_id": "S05_discussion_mechanism",
+        "top_score": 9,
+        "second_score": 6,
+        "score_gap": 3,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 9,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "result",
+                "weight": 1
+              },
+              {
+                "term": "performance",
+                "weight": 1
+              },
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "oer",
+                "weight": 1
+              },
+              {
+                "term": "water electrolysis",
+                "weight": 1
+              },
+              {
+                "term": "durability",
+                "weight": 1
+              },
+              {
+                "term": "intermittent",
+                "weight": 1
+              },
+              {
+                "term": "current density",
+                "weight": 1
+              },
+              {
+                "term": "cell voltage",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 6,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "oxidation",
+                "weight": 1
+              },
+              {
+                "term": "reduction",
+                "weight": 1
+              },
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "degradation",
+                "weight": 1
+              },
+              {
+                "term": "redox",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "low",
+        "conflict_reasons": [
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S02_introduction",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S04_results",
+        "second_candidate_section_id": "S05_discussion_mechanism",
+        "score_gap": 3,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "For instance, the potential of the emerging hydrogen fuel cell vehicle (HFCV) technology to decarbonize the global transportation sector in the foreseeable future is significant [12-15]. In the power generation sector, h"
+    },
+    {
+      "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "paragraph_uid": "PRAW-000007",
+      "paragraph_id": "S02-P003",
+      "heading_uid": "HRAW-006-a488834b",
+      "heading_text": "1. Introduction",
+      "doc_heading_order": 6,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "direct_rule",
+        "assigned_section_id": "S02_introduction",
+        "top_section_id": "S04_results",
+        "second_section_id": "S05_discussion_mechanism",
+        "top_score": 9,
+        "second_score": 6,
+        "score_gap": 3,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 9,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "result",
+                "weight": 1
+              },
+              {
+                "term": "performance",
+                "weight": 1
+              },
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "oer",
+                "weight": 1
+              },
+              {
+                "term": "water electrolysis",
+                "weight": 1
+              },
+              {
+                "term": "durability",
+                "weight": 1
+              },
+              {
+                "term": "intermittent",
+                "weight": 1
+              },
+              {
+                "term": "current density",
+                "weight": 1
+              },
+              {
+                "term": "cell voltage",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 6,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "oxidation",
+                "weight": 1
+              },
+              {
+                "term": "reduction",
+                "weight": 1
+              },
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "degradation",
+                "weight": 1
+              },
+              {
+                "term": "redox",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "low",
+        "conflict_reasons": [
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S02_introduction",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S04_results",
+        "second_candidate_section_id": "S05_discussion_mechanism",
+        "score_gap": 3,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "Alkaline water electrolysis (AWE) is a more mature and cost-effective technology compared to other water electrolysis techniques [8,16,17]. However, technical development must be achieved before the widespread deployment"
+    },
+    {
+      "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "paragraph_uid": "PRAW-000008",
+      "paragraph_id": "S02-P004",
+      "heading_uid": "HRAW-006-a488834b",
+      "heading_text": "1. Introduction",
+      "doc_heading_order": 6,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "direct_rule",
+        "assigned_section_id": "S02_introduction",
+        "top_section_id": "S04_results",
+        "second_section_id": "S05_discussion_mechanism",
+        "top_score": 9,
+        "second_score": 6,
+        "score_gap": 3,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 9,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "result",
+                "weight": 1
+              },
+              {
+                "term": "performance",
+                "weight": 1
+              },
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "oer",
+                "weight": 1
+              },
+              {
+                "term": "water electrolysis",
+                "weight": 1
+              },
+              {
+                "term": "durability",
+                "weight": 1
+              },
+              {
+                "term": "intermittent",
+                "weight": 1
+              },
+              {
+                "term": "current density",
+                "weight": 1
+              },
+              {
+                "term": "cell voltage",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 6,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "oxidation",
+                "weight": 1
+              },
+              {
+                "term": "reduction",
+                "weight": 1
+              },
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "degradation",
+                "weight": 1
+              },
+              {
+                "term": "redox",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "low",
+        "conflict_reasons": [
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S02_introduction",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S04_results",
+        "second_candidate_section_id": "S05_discussion_mechanism",
+        "score_gap": 3,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "During the operation time, the oxygen evolution reaction (OER) electrocatalysts (anodes) are highly oxidized, and the hydrogen evolution reaction (HER) electrocatalysts (cathodes) are in their reduced states. Given that"
+    },
+    {
+      "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "paragraph_uid": "PRAW-000009",
+      "paragraph_id": "S02-P005",
+      "heading_uid": "HRAW-006-a488834b",
+      "heading_text": "1. Introduction",
+      "doc_heading_order": 6,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "direct_rule",
+        "assigned_section_id": "S02_introduction",
+        "top_section_id": "S04_results",
+        "second_section_id": "S05_discussion_mechanism",
+        "top_score": 9,
+        "second_score": 6,
+        "score_gap": 3,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 9,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "result",
+                "weight": 1
+              },
+              {
+                "term": "performance",
+                "weight": 1
+              },
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "oer",
+                "weight": 1
+              },
+              {
+                "term": "water electrolysis",
+                "weight": 1
+              },
+              {
+                "term": "durability",
+                "weight": 1
+              },
+              {
+                "term": "intermittent",
+                "weight": 1
+              },
+              {
+                "term": "current density",
+                "weight": 1
+              },
+              {
+                "term": "cell voltage",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 6,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "oxidation",
+                "weight": 1
+              },
+              {
+                "term": "reduction",
+                "weight": 1
+              },
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "degradation",
+                "weight": 1
+              },
+              {
+                "term": "redox",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "low",
+        "conflict_reasons": [
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S02_introduction",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S04_results",
+        "second_candidate_section_id": "S05_discussion_mechanism",
+        "score_gap": 3,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "In addition, adjusting the operating and shutdown conditions to"
+    },
+    {
+      "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "paragraph_uid": "PRAW-000010",
+      "paragraph_id": "S02-P006",
+      "heading_uid": "HRAW-006-a488834b",
+      "heading_text": "1. Introduction",
+      "doc_heading_order": 6,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "direct_rule",
+        "assigned_section_id": "S02_introduction",
+        "top_section_id": "S04_results",
+        "second_section_id": "S05_discussion_mechanism",
+        "top_score": 9,
+        "second_score": 6,
+        "score_gap": 3,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 9,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "result",
+                "weight": 1
+              },
+              {
+                "term": "performance",
+                "weight": 1
+              },
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "oer",
+                "weight": 1
+              },
+              {
+                "term": "water electrolysis",
+                "weight": 1
+              },
+              {
+                "term": "durability",
+                "weight": 1
+              },
+              {
+                "term": "intermittent",
+                "weight": 1
+              },
+              {
+                "term": "current density",
+                "weight": 1
+              },
+              {
+                "term": "cell voltage",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 6,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "oxidation",
+                "weight": 1
+              },
+              {
+                "term": "reduction",
+                "weight": 1
+              },
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "degradation",
+                "weight": 1
+              },
+              {
+                "term": "redox",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "low",
+        "conflict_reasons": [
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S02_introduction",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S04_results",
+        "second_candidate_section_id": "S05_discussion_mechanism",
+        "score_gap": 3,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "achieve both high conversion efficiency and long service life of the system is essential. In fact, optimizing the operating parameters of alkaline water electrolyzers to improve the efficiency of the water electrolysis,"
+    },
+    {
+      "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "paragraph_uid": "PRAW-000011",
+      "paragraph_id": "S02-P007",
+      "heading_uid": "HRAW-006-a488834b",
+      "heading_text": "1. Introduction",
+      "doc_heading_order": 6,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "direct_rule",
+        "assigned_section_id": "S02_introduction",
+        "top_section_id": "S04_results",
+        "second_section_id": "S05_discussion_mechanism",
+        "top_score": 9,
+        "second_score": 6,
+        "score_gap": 3,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 9,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "result",
+                "weight": 1
+              },
+              {
+                "term": "performance",
+                "weight": 1
+              },
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "oer",
+                "weight": 1
+              },
+              {
+                "term": "water electrolysis",
+                "weight": 1
+              },
+              {
+                "term": "durability",
+                "weight": 1
+              },
+              {
+                "term": "intermittent",
+                "weight": 1
+              },
+              {
+                "term": "current density",
+                "weight": 1
+              },
+              {
+                "term": "cell voltage",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 6,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "oxidation",
+                "weight": 1
+              },
+              {
+                "term": "reduction",
+                "weight": 1
+              },
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "degradation",
+                "weight": 1
+              },
+              {
+                "term": "redox",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "low",
+        "conflict_reasons": [
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S02_introduction",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S04_results",
+        "second_candidate_section_id": "S05_discussion_mechanism",
+        "score_gap": 3,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "Therefore, research studies are needed that shed light, for example, on the factors likely to influence the reverse current phenomenon, how quickly the potential of the electrocatalysts changes during the shutdown time,"
+    },
+    {
+      "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "paragraph_uid": "PRAW-000012",
+      "paragraph_id": "S02-P008",
+      "heading_uid": "HRAW-006-a488834b",
+      "heading_text": "1. Introduction",
+      "doc_heading_order": 6,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "direct_rule",
+        "assigned_section_id": "S02_introduction",
+        "top_section_id": "S04_results",
+        "second_section_id": "S05_discussion_mechanism",
+        "top_score": 9,
+        "second_score": 6,
+        "score_gap": 3,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 9,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "result",
+                "weight": 1
+              },
+              {
+                "term": "performance",
+                "weight": 1
+              },
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "oer",
+                "weight": 1
+              },
+              {
+                "term": "water electrolysis",
+                "weight": 1
+              },
+              {
+                "term": "durability",
+                "weight": 1
+              },
+              {
+                "term": "intermittent",
+                "weight": 1
+              },
+              {
+                "term": "current density",
+                "weight": 1
+              },
+              {
+                "term": "cell voltage",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 6,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "oxidation",
+                "weight": 1
+              },
+              {
+                "term": "reduction",
+                "weight": 1
+              },
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "degradation",
+                "weight": 1
+              },
+              {
+                "term": "redox",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "low",
+        "conflict_reasons": [
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S02_introduction",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S04_results",
+        "second_candidate_section_id": "S05_discussion_mechanism",
+        "score_gap": 3,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "The current study presents, for a 4-cell stack AWE system, a detailed study of the influence of the operation and shutdown conditions as well as the electrode materials on the reverse current phenomenon and the electrode"
+    },
+    {
+      "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "paragraph_uid": "PRAW-000013",
+      "paragraph_id": "S02-P009",
+      "heading_uid": "HRAW-006-a488834b",
+      "heading_text": "1. Introduction",
+      "doc_heading_order": 6,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "direct_rule",
+        "assigned_section_id": "S02_introduction",
+        "top_section_id": "S04_results",
+        "second_section_id": "S05_discussion_mechanism",
+        "top_score": 9,
+        "second_score": 6,
+        "score_gap": 3,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 9,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "result",
+                "weight": 1
+              },
+              {
+                "term": "performance",
+                "weight": 1
+              },
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "oer",
+                "weight": 1
+              },
+              {
+                "term": "water electrolysis",
+                "weight": 1
+              },
+              {
+                "term": "durability",
+                "weight": 1
+              },
+              {
+                "term": "intermittent",
+                "weight": 1
+              },
+              {
+                "term": "current density",
+                "weight": 1
+              },
+              {
+                "term": "cell voltage",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 6,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "oxidation",
+                "weight": 1
+              },
+              {
+                "term": "reduction",
+                "weight": 1
+              },
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "degradation",
+                "weight": 1
+              },
+              {
+                "term": "redox",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "low",
+        "conflict_reasons": [
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S02_introduction",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S04_results",
+        "second_candidate_section_id": "S05_discussion_mechanism",
+        "score_gap": 3,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "Therefore, the new basic information provided in the present study could help to apply appropriate start-up and shutdown conditions that increase the efficiency of the AWE system and do not degrade its long-term durabili"
+    },
+    {
+      "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "paragraph_uid": "PRAW-000014",
+      "paragraph_id": "S03-P001",
+      "heading_uid": "HRAW-011-7cbde4bc",
+      "heading_text": "2.4. Electrolysis and shutdown conditions",
+      "doc_heading_order": 11,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S03_methods_and_setup",
+        "top_section_id": "S03_methods_and_setup",
+        "second_section_id": "S04_results",
+        "top_score": 3,
+        "second_score": 2,
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_top_score",
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S03_methods_and_setup",
+            "section_title": "Methods And Setup",
+            "score": 3,
+            "heading_hits": [
+              {
+                "term": "electrolysis and shutdown conditions",
+                "weight": 2
+              }
+            ],
+            "preview_hits": [
+              {
+                "term": "measurement",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 2,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "water electrolysis",
+                "weight": 1
+              },
+              {
+                "term": "current density",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_score_gap",
+          "low_top_score"
+        ],
+        "primary_section_id": "S03_methods_and_setup",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S03_methods_and_setup",
+        "second_candidate_section_id": "S04_results",
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "The following electrolysis conditions were applied separately during the operating mode:"
+    },
+    {
+      "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "paragraph_uid": "PRAW-000015",
+      "paragraph_id": "S03-P002",
+      "heading_uid": "HRAW-011-7cbde4bc",
+      "heading_text": "2.4. Electrolysis and shutdown conditions",
+      "doc_heading_order": 11,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S03_methods_and_setup",
+        "top_section_id": "S03_methods_and_setup",
+        "second_section_id": "S04_results",
+        "top_score": 3,
+        "second_score": 2,
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_top_score",
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S03_methods_and_setup",
+            "section_title": "Methods And Setup",
+            "score": 3,
+            "heading_hits": [
+              {
+                "term": "electrolysis and shutdown conditions",
+                "weight": 2
+              }
+            ],
+            "preview_hits": [
+              {
+                "term": "measurement",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 2,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "water electrolysis",
+                "weight": 1
+              },
+              {
+                "term": "current density",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_score_gap",
+          "low_top_score"
+        ],
+        "primary_section_id": "S03_methods_and_setup",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S03_methods_and_setup",
+        "second_candidate_section_id": "S04_results",
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "1 DC current density of $0.4\\mathrm{Acm}^{-2}$ for $1.0\\mathrm{h}$ at $30^{\\circ}\\mathrm{C}$ . 2 DC current density of $0.6\\mathrm{Acm}^{-2}$ for $1.0\\mathrm{h}$ at $30^{\\circ}\\mathrm{C}$ . 3 DC current density of $0.6\\m"
+    },
+    {
+      "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "paragraph_uid": "PRAW-000016",
+      "paragraph_id": "S03-P003",
+      "heading_uid": "HRAW-011-7cbde4bc",
+      "heading_text": "2.4. Electrolysis and shutdown conditions",
+      "doc_heading_order": 11,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S03_methods_and_setup",
+        "top_section_id": "S03_methods_and_setup",
+        "second_section_id": "S04_results",
+        "top_score": 3,
+        "second_score": 2,
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_top_score",
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S03_methods_and_setup",
+            "section_title": "Methods And Setup",
+            "score": 3,
+            "heading_hits": [
+              {
+                "term": "electrolysis and shutdown conditions",
+                "weight": 2
+              }
+            ],
+            "preview_hits": [
+              {
+                "term": "measurement",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 2,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "water electrolysis",
+                "weight": 1
+              },
+              {
+                "term": "current density",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_score_gap",
+          "low_top_score"
+        ],
+        "primary_section_id": "S03_methods_and_setup",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S03_methods_and_setup",
+        "second_candidate_section_id": "S04_results",
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "![](figures/FIG002/image_002.jpg) Fig. 2. a) A schematic diagram of the 4-cell stack alkaline water electrolyzer and the attached manifold assembly. B) The corresponding equivalent electrical circuit after shutdown."
+    },
+    {
+      "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "paragraph_uid": "PRAW-000017",
+      "paragraph_id": "S03-P004",
+      "heading_uid": "HRAW-011-7cbde4bc",
+      "heading_text": "2.4. Electrolysis and shutdown conditions",
+      "doc_heading_order": 11,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S03_methods_and_setup",
+        "top_section_id": "S03_methods_and_setup",
+        "second_section_id": "S04_results",
+        "top_score": 3,
+        "second_score": 2,
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_top_score",
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S03_methods_and_setup",
+            "section_title": "Methods And Setup",
+            "score": 3,
+            "heading_hits": [
+              {
+                "term": "electrolysis and shutdown conditions",
+                "weight": 2
+              }
+            ],
+            "preview_hits": [
+              {
+                "term": "measurement",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 2,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "water electrolysis",
+                "weight": 1
+              },
+              {
+                "term": "current density",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_score_gap",
+          "low_top_score"
+        ],
+        "primary_section_id": "S03_methods_and_setup",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S03_methods_and_setup",
+        "second_candidate_section_id": "S04_results",
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "After $1.0\\mathrm{h}$ of steady-state operation, the power supply was turned off and the circuit breaker was physically opened to prevent any external influence on the electrodes' potentials during the measurements. It i"
+    },
+    {
+      "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "paragraph_uid": "PRAW-000018",
+      "paragraph_id": "S03-P005",
+      "heading_uid": "HRAW-011-7cbde4bc",
+      "heading_text": "2.4. Electrolysis and shutdown conditions",
+      "doc_heading_order": 11,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S03_methods_and_setup",
+        "top_section_id": "S03_methods_and_setup",
+        "second_section_id": "S04_results",
+        "top_score": 3,
+        "second_score": 2,
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_top_score",
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S03_methods_and_setup",
+            "section_title": "Methods And Setup",
+            "score": 3,
+            "heading_hits": [
+              {
+                "term": "electrolysis and shutdown conditions",
+                "weight": 2
+              }
+            ],
+            "preview_hits": [
+              {
+                "term": "measurement",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 2,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "water electrolysis",
+                "weight": 1
+              },
+              {
+                "term": "current density",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_score_gap",
+          "low_top_score"
+        ],
+        "primary_section_id": "S03_methods_and_setup",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S03_methods_and_setup",
+        "second_candidate_section_id": "S04_results",
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "In addition, effects of the electrolyte circulation, with and without the nitrogen bubbling in the electrolyte, on the reverse current and the electrodes' potentials during the shutdown time were studied. The following c"
+    },
+    {
+      "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "paragraph_uid": "PRAW-000019",
+      "paragraph_id": "S03-P006",
+      "heading_uid": "HRAW-011-7cbde4bc",
+      "heading_text": "2.4. Electrolysis and shutdown conditions",
+      "doc_heading_order": 11,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S03_methods_and_setup",
+        "top_section_id": "S03_methods_and_setup",
+        "second_section_id": "S04_results",
+        "top_score": 3,
+        "second_score": 2,
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_top_score",
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S03_methods_and_setup",
+            "section_title": "Methods And Setup",
+            "score": 3,
+            "heading_hits": [
+              {
+                "term": "electrolysis and shutdown conditions",
+                "weight": 2
+              }
+            ],
+            "preview_hits": [
+              {
+                "term": "measurement",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 2,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "water electrolysis",
+                "weight": 1
+              },
+              {
+                "term": "current density",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_score_gap",
+          "low_top_score"
+        ],
+        "primary_section_id": "S03_methods_and_setup",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S03_methods_and_setup",
+        "second_candidate_section_id": "S04_results",
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "1 With KOH electrolyte circulation (pumps ON). 2 Without KOH electrolyte circulation (pumps OFF). 3 Feeding of vigorous nitrogen gas bubbles to the KOH electrolyte inside the gas separators. In this case, the KOH circula"
+    },
+    {
+      "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "paragraph_uid": "PRAW-000020",
+      "paragraph_id": "S03-P007",
+      "heading_uid": "HRAW-013-360f245c",
+      "heading_text": "2.6. Modeling approach",
+      "doc_heading_order": 13,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S03_methods_and_setup",
+        "top_section_id": "S03_methods_and_setup",
+        "second_section_id": "S05_discussion_mechanism",
+        "top_score": 3,
+        "second_score": 3,
+        "score_gap": 0,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_top_score",
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S03_methods_and_setup",
+            "section_title": "Methods And Setup",
+            "score": 3,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "experimental",
+                "weight": 1
+              },
+              {
+                "term": "material",
+                "weight": 1
+              },
+              {
+                "term": "materials",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 3,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "redox",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_score_gap",
+          "low_top_score"
+        ],
+        "primary_section_id": "S03_methods_and_setup",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S03_methods_and_setup",
+        "second_candidate_section_id": "S05_discussion_mechanism",
+        "score_gap": 0,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "In this model, the reverse current phenomenon is considered as a battery discharge. The reactions are expressed based on the electrical circuit model shown in Fig. S5. The simulator was fed with the numerical data of the"
+    },
+    {
+      "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "paragraph_uid": "PRAW-000021",
+      "paragraph_id": "S03-P008",
+      "heading_uid": "HRAW-013-360f245c",
+      "heading_text": "2.6. Modeling approach",
+      "doc_heading_order": 13,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S03_methods_and_setup",
+        "top_section_id": "S03_methods_and_setup",
+        "second_section_id": "S05_discussion_mechanism",
+        "top_score": 3,
+        "second_score": 3,
+        "score_gap": 0,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_top_score",
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S03_methods_and_setup",
+            "section_title": "Methods And Setup",
+            "score": 3,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "experimental",
+                "weight": 1
+              },
+              {
+                "term": "material",
+                "weight": 1
+              },
+              {
+                "term": "materials",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 3,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "redox",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_score_gap",
+          "low_top_score"
+        ],
+        "primary_section_id": "S03_methods_and_setup",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S03_methods_and_setup",
+        "second_candidate_section_id": "S05_discussion_mechanism",
+        "score_gap": 0,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "charge flowing in the circuit branch of that BP. The $E - Q_{\\mathrm{rev}}$ plot, shown in Fig. S6, was obtained based on the results of the actual experiment of the present 4-cell AWE system. For each BP, the emf of the"
+    },
+    {
+      "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "paragraph_uid": "PRAW-000022",
+      "paragraph_id": "S03-P009",
+      "heading_uid": "HRAW-013-360f245c",
+      "heading_text": "2.6. Modeling approach",
+      "doc_heading_order": 13,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S03_methods_and_setup",
+        "top_section_id": "S03_methods_and_setup",
+        "second_section_id": "S05_discussion_mechanism",
+        "top_score": 3,
+        "second_score": 3,
+        "score_gap": 0,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_top_score",
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S03_methods_and_setup",
+            "section_title": "Methods And Setup",
+            "score": 3,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "experimental",
+                "weight": 1
+              },
+              {
+                "term": "material",
+                "weight": 1
+              },
+              {
+                "term": "materials",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 3,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "redox",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_score_gap",
+          "low_top_score"
+        ],
+        "primary_section_id": "S03_methods_and_setup",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S03_methods_and_setup",
+        "second_candidate_section_id": "S05_discussion_mechanism",
+        "score_gap": 0,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "$$ \\nabla \\quad (- \\sigma_ {S} \\cdot \\nabla \\varnothing_ {S}) = 0 $$"
+    },
+    {
+      "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "paragraph_uid": "PRAW-000023",
+      "paragraph_id": "S03-P010",
+      "heading_uid": "HRAW-013-360f245c",
+      "heading_text": "2.6. Modeling approach",
+      "doc_heading_order": 13,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S03_methods_and_setup",
+        "top_section_id": "S03_methods_and_setup",
+        "second_section_id": "S05_discussion_mechanism",
+        "top_score": 3,
+        "second_score": 3,
+        "score_gap": 0,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_top_score",
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S03_methods_and_setup",
+            "section_title": "Methods And Setup",
+            "score": 3,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "experimental",
+                "weight": 1
+              },
+              {
+                "term": "material",
+                "weight": 1
+              },
+              {
+                "term": "materials",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 3,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "redox",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_score_gap",
+          "low_top_score"
+        ],
+        "primary_section_id": "S03_methods_and_setup",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S03_methods_and_setup",
+        "second_candidate_section_id": "S05_discussion_mechanism",
+        "score_gap": 0,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "$$ \\nabla (- \\sigma_ {\\mathrm {E}} \\cdot \\nabla \\varnothing_ {\\mathrm {E}}) = 0 \\tag {1} $$"
+    },
+    {
+      "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "paragraph_uid": "PRAW-000024",
+      "paragraph_id": "S03-P011",
+      "heading_uid": "HRAW-013-360f245c",
+      "heading_text": "2.6. Modeling approach",
+      "doc_heading_order": 13,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S03_methods_and_setup",
+        "top_section_id": "S03_methods_and_setup",
+        "second_section_id": "S05_discussion_mechanism",
+        "top_score": 3,
+        "second_score": 3,
+        "score_gap": 0,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_top_score",
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S03_methods_and_setup",
+            "section_title": "Methods And Setup",
+            "score": 3,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "experimental",
+                "weight": 1
+              },
+              {
+                "term": "material",
+                "weight": 1
+              },
+              {
+                "term": "materials",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 3,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "redox",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_score_gap",
+          "low_top_score"
+        ],
+        "primary_section_id": "S03_methods_and_setup",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S03_methods_and_setup",
+        "second_candidate_section_id": "S05_discussion_mechanism",
+        "score_gap": 0,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "where, $\\varphi_{E}$ is the potential of any point inside the KOH electrolyte through the cells and the manifolds. In addition, $\\varphi_{S}$ is the potential of metallic parts including the associated electrodes, end pl"
+    },
+    {
+      "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "paragraph_uid": "PRAW-000025",
+      "paragraph_id": "S03-P012",
+      "heading_uid": "HRAW-013-360f245c",
+      "heading_text": "2.6. Modeling approach",
+      "doc_heading_order": 13,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S03_methods_and_setup",
+        "top_section_id": "S03_methods_and_setup",
+        "second_section_id": "S05_discussion_mechanism",
+        "top_score": 3,
+        "second_score": 3,
+        "score_gap": 0,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_top_score",
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S03_methods_and_setup",
+            "section_title": "Methods And Setup",
+            "score": 3,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "experimental",
+                "weight": 1
+              },
+              {
+                "term": "material",
+                "weight": 1
+              },
+              {
+                "term": "materials",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 3,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "redox",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_score_gap",
+          "low_top_score"
+        ],
+        "primary_section_id": "S03_methods_and_setup",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S03_methods_and_setup",
+        "second_candidate_section_id": "S05_discussion_mechanism",
+        "score_gap": 0,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "$$ i _ {\\text {r e a c}} = \\frac {1}{R _ {\\text {i n t}}} \\left(\\varnothing_ {\\mathrm {S}} - \\varnothing_ {\\mathrm {E}} - E\\right) \\tag {2} $$"
+    },
+    {
+      "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "paragraph_uid": "PRAW-000026",
+      "paragraph_id": "S03-P013",
+      "heading_uid": "HRAW-013-360f245c",
+      "heading_text": "2.6. Modeling approach",
+      "doc_heading_order": 13,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S03_methods_and_setup",
+        "top_section_id": "S03_methods_and_setup",
+        "second_section_id": "S05_discussion_mechanism",
+        "top_score": 3,
+        "second_score": 3,
+        "score_gap": 0,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_top_score",
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S03_methods_and_setup",
+            "section_title": "Methods And Setup",
+            "score": 3,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "experimental",
+                "weight": 1
+              },
+              {
+                "term": "material",
+                "weight": 1
+              },
+              {
+                "term": "materials",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 3,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "redox",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_score_gap",
+          "low_top_score"
+        ],
+        "primary_section_id": "S03_methods_and_setup",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S03_methods_and_setup",
+        "second_candidate_section_id": "S05_discussion_mechanism",
+        "score_gap": 0,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "where, $i_{\\text{reac}}$ is the reaction current that resulted from the redox reactions of the electrodes."
+    },
+    {
+      "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "paragraph_uid": "PRAW-000027",
+      "paragraph_id": "S03-P014",
+      "heading_uid": "HRAW-013-360f245c",
+      "heading_text": "2.6. Modeling approach",
+      "doc_heading_order": 13,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S03_methods_and_setup",
+        "top_section_id": "S03_methods_and_setup",
+        "second_section_id": "S05_discussion_mechanism",
+        "top_score": 3,
+        "second_score": 3,
+        "score_gap": 0,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_top_score",
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S03_methods_and_setup",
+            "section_title": "Methods And Setup",
+            "score": 3,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "experimental",
+                "weight": 1
+              },
+              {
+                "term": "material",
+                "weight": 1
+              },
+              {
+                "term": "materials",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 3,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "redox",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_score_gap",
+          "low_top_score"
+        ],
+        "primary_section_id": "S03_methods_and_setup",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S03_methods_and_setup",
+        "second_candidate_section_id": "S05_discussion_mechanism",
+        "score_gap": 0,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "$R_{int}$ is the internal resistance of each cell. $E$ is the potential of the associated anode and cathode that experimentally measured during the shutdown time of the electrolyzer."
+    },
+    {
+      "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "paragraph_uid": "PRAW-000028",
+      "paragraph_id": "S03-P015",
+      "heading_uid": "HRAW-013-360f245c",
+      "heading_text": "2.6. Modeling approach",
+      "doc_heading_order": 13,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S03_methods_and_setup",
+        "top_section_id": "S03_methods_and_setup",
+        "second_section_id": "S05_discussion_mechanism",
+        "top_score": 3,
+        "second_score": 3,
+        "score_gap": 0,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_top_score",
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S03_methods_and_setup",
+            "section_title": "Methods And Setup",
+            "score": 3,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "experimental",
+                "weight": 1
+              },
+              {
+                "term": "material",
+                "weight": 1
+              },
+              {
+                "term": "materials",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 3,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "redox",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_score_gap",
+          "low_top_score"
+        ],
+        "primary_section_id": "S03_methods_and_setup",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S03_methods_and_setup",
+        "second_candidate_section_id": "S05_discussion_mechanism",
+        "score_gap": 0,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "For the time development, the relationship between the flowing charges and the reaction current becomes:"
+    },
+    {
+      "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "paragraph_uid": "PRAW-000029",
+      "paragraph_id": "S03-P016",
+      "heading_uid": "HRAW-013-360f245c",
+      "heading_text": "2.6. Modeling approach",
+      "doc_heading_order": 13,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S03_methods_and_setup",
+        "top_section_id": "S03_methods_and_setup",
+        "second_section_id": "S05_discussion_mechanism",
+        "top_score": 3,
+        "second_score": 3,
+        "score_gap": 0,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_top_score",
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S03_methods_and_setup",
+            "section_title": "Methods And Setup",
+            "score": 3,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "experimental",
+                "weight": 1
+              },
+              {
+                "term": "material",
+                "weight": 1
+              },
+              {
+                "term": "materials",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 3,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "redox",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_score_gap",
+          "low_top_score"
+        ],
+        "primary_section_id": "S03_methods_and_setup",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S03_methods_and_setup",
+        "second_candidate_section_id": "S05_discussion_mechanism",
+        "score_gap": 0,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "$$ \\frac {\\partial Q}{\\partial t} = i _ {\\text {r e a c}} \\tag {3} $$"
+    },
+    {
+      "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "paragraph_uid": "PRAW-000030",
+      "paragraph_id": "S03-P017",
+      "heading_uid": "HRAW-013-360f245c",
+      "heading_text": "2.6. Modeling approach",
+      "doc_heading_order": 13,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S03_methods_and_setup",
+        "top_section_id": "S03_methods_and_setup",
+        "second_section_id": "S05_discussion_mechanism",
+        "top_score": 3,
+        "second_score": 3,
+        "score_gap": 0,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_top_score",
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S03_methods_and_setup",
+            "section_title": "Methods And Setup",
+            "score": 3,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "experimental",
+                "weight": 1
+              },
+              {
+                "term": "material",
+                "weight": 1
+              },
+              {
+                "term": "materials",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 3,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "redox",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_score_gap",
+          "low_top_score"
+        ],
+        "primary_section_id": "S03_methods_and_setup",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S03_methods_and_setup",
+        "second_candidate_section_id": "S05_discussion_mechanism",
+        "score_gap": 0,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "where, $Q$ is the cumulative reverse charge associated with the experimentally measured reverse current during the shutdown time of the electrolyzer."
+    },
+    {
+      "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "paragraph_uid": "PRAW-000031",
+      "paragraph_id": "S03-P018",
+      "heading_uid": "HRAW-013-360f245c",
+      "heading_text": "2.6. Modeling approach",
+      "doc_heading_order": 13,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S03_methods_and_setup",
+        "top_section_id": "S03_methods_and_setup",
+        "second_section_id": "S05_discussion_mechanism",
+        "top_score": 3,
+        "second_score": 3,
+        "score_gap": 0,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_top_score",
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S03_methods_and_setup",
+            "section_title": "Methods And Setup",
+            "score": 3,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "experimental",
+                "weight": 1
+              },
+              {
+                "term": "material",
+                "weight": 1
+              },
+              {
+                "term": "materials",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 3,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "redox",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_score_gap",
+          "low_top_score"
+        ],
+        "primary_section_id": "S03_methods_and_setup",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S03_methods_and_setup",
+        "second_candidate_section_id": "S05_discussion_mechanism",
+        "score_gap": 0,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "The boundary conditions are set as follows:"
+    },
+    {
+      "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "paragraph_uid": "PRAW-000032",
+      "paragraph_id": "S03-P019",
+      "heading_uid": "HRAW-013-360f245c",
+      "heading_text": "2.6. Modeling approach",
+      "doc_heading_order": 13,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S03_methods_and_setup",
+        "top_section_id": "S03_methods_and_setup",
+        "second_section_id": "S05_discussion_mechanism",
+        "top_score": 3,
+        "second_score": 3,
+        "score_gap": 0,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_top_score",
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S03_methods_and_setup",
+            "section_title": "Methods And Setup",
+            "score": 3,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "experimental",
+                "weight": 1
+              },
+              {
+                "term": "material",
+                "weight": 1
+              },
+              {
+                "term": "materials",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 3,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "redox",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_score_gap",
+          "low_top_score"
+        ],
+        "primary_section_id": "S03_methods_and_setup",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S03_methods_and_setup",
+        "second_candidate_section_id": "S05_discussion_mechanism",
+        "score_gap": 0,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "- All internal boundaries are continuous. Inside the definition area of $\\varphi_{\\mathrm{S}}$ and $\\varphi_{\\mathrm{E}}$ , the source term of ionic current flux is always equal to zero. Thus, the following relations are"
+    },
+    {
+      "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "paragraph_uid": "PRAW-000033",
+      "paragraph_id": "S03-P020",
+      "heading_uid": "HRAW-013-360f245c",
+      "heading_text": "2.6. Modeling approach",
+      "doc_heading_order": 13,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S03_methods_and_setup",
+        "top_section_id": "S03_methods_and_setup",
+        "second_section_id": "S05_discussion_mechanism",
+        "top_score": 3,
+        "second_score": 3,
+        "score_gap": 0,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_top_score",
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S03_methods_and_setup",
+            "section_title": "Methods And Setup",
+            "score": 3,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "experimental",
+                "weight": 1
+              },
+              {
+                "term": "material",
+                "weight": 1
+              },
+              {
+                "term": "materials",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 3,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "redox",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_score_gap",
+          "low_top_score"
+        ],
+        "primary_section_id": "S03_methods_and_setup",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S03_methods_and_setup",
+        "second_candidate_section_id": "S05_discussion_mechanism",
+        "score_gap": 0,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "$$ - \\boldsymbol {n} \\cdot \\left(- \\sigma_ {\\mathrm {S}} \\nabla \\varphi_ {\\mathrm {S}}\\right) = 0 \\tag {4} $$"
+    },
+    {
+      "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "paragraph_uid": "PRAW-000034",
+      "paragraph_id": "S03-P021",
+      "heading_uid": "HRAW-013-360f245c",
+      "heading_text": "2.6. Modeling approach",
+      "doc_heading_order": 13,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S03_methods_and_setup",
+        "top_section_id": "S03_methods_and_setup",
+        "second_section_id": "S05_discussion_mechanism",
+        "top_score": 3,
+        "second_score": 3,
+        "score_gap": 0,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_top_score",
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S03_methods_and_setup",
+            "section_title": "Methods And Setup",
+            "score": 3,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "experimental",
+                "weight": 1
+              },
+              {
+                "term": "material",
+                "weight": 1
+              },
+              {
+                "term": "materials",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 3,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "redox",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_score_gap",
+          "low_top_score"
+        ],
+        "primary_section_id": "S03_methods_and_setup",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S03_methods_and_setup",
+        "second_candidate_section_id": "S05_discussion_mechanism",
+        "score_gap": 0,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "$$ - \\boldsymbol {n} \\cdot \\left(- \\sigma_ {\\mathrm {E}} \\nabla \\varphi_ {\\mathrm {E}}\\right) = 0 \\tag {5} $$"
+    },
+    {
+      "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "paragraph_uid": "PRAW-000035",
+      "paragraph_id": "S03-P022",
+      "heading_uid": "HRAW-013-360f245c",
+      "heading_text": "2.6. Modeling approach",
+      "doc_heading_order": 13,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S03_methods_and_setup",
+        "top_section_id": "S03_methods_and_setup",
+        "second_section_id": "S05_discussion_mechanism",
+        "top_score": 3,
+        "second_score": 3,
+        "score_gap": 0,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_top_score",
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S03_methods_and_setup",
+            "section_title": "Methods And Setup",
+            "score": 3,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "experimental",
+                "weight": 1
+              },
+              {
+                "term": "material",
+                "weight": 1
+              },
+              {
+                "term": "materials",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 3,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "redox",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_score_gap",
+          "low_top_score"
+        ],
+        "primary_section_id": "S03_methods_and_setup",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S03_methods_and_setup",
+        "second_candidate_section_id": "S05_discussion_mechanism",
+        "score_gap": 0,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "- The end plate on the cathode side of the cells stack is set to ground, $\\varphi_{\\mathrm{S}} = 0$"
+    },
+    {
+      "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "paragraph_uid": "PRAW-000036",
+      "paragraph_id": "S03-P023",
+      "heading_uid": "HRAW-013-360f245c",
+      "heading_text": "2.6. Modeling approach",
+      "doc_heading_order": 13,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S03_methods_and_setup",
+        "top_section_id": "S03_methods_and_setup",
+        "second_section_id": "S05_discussion_mechanism",
+        "top_score": 3,
+        "second_score": 3,
+        "score_gap": 0,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_top_score",
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S03_methods_and_setup",
+            "section_title": "Methods And Setup",
+            "score": 3,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "experimental",
+                "weight": 1
+              },
+              {
+                "term": "material",
+                "weight": 1
+              },
+              {
+                "term": "materials",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 3,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "redox",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_score_gap",
+          "low_top_score"
+        ],
+        "primary_section_id": "S03_methods_and_setup",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S03_methods_and_setup",
+        "second_candidate_section_id": "S05_discussion_mechanism",
+        "score_gap": 0,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "The reverse current model of the 4-cell stack considers the anode compartments, anode manifolds, the cathode compartments, cathode manifolds, bipolar plates, end plates, and the separators. In this model, the geometric d"
+    },
+    {
+      "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "paragraph_uid": "PRAW-000038",
+      "paragraph_id": "S03-P024",
+      "heading_uid": "HRAW-016-1aa55629",
+      "heading_text": "3.2. Basic behavior of the electrolyzer after shutdown",
+      "doc_heading_order": 16,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S03_methods_and_setup",
+        "top_section_id": "S04_results",
+        "second_section_id": "S05_discussion_mechanism",
+        "top_score": 5,
+        "second_score": 4,
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 5,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "result",
+                "weight": 1
+              },
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "durability",
+                "weight": 1
+              },
+              {
+                "term": "current density",
+                "weight": 1
+              },
+              {
+                "term": "cell voltage",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 4,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "oxidation",
+                "weight": 1
+              },
+              {
+                "term": "reduction",
+                "weight": 1
+              },
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_score_gap",
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S03_methods_and_setup",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S04_results",
+        "second_candidate_section_id": "S05_discussion_mechanism",
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "earlier than that of the other two bipolar plates (BP-1 and BP-2) which have almost the same behavior. Fig. 4 (b) shows the experimentally measured as well as the theoretically calculated, by means of the COMSOL model de"
+    },
+    {
+      "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "paragraph_uid": "PRAW-000039",
+      "paragraph_id": "S03-P025",
+      "heading_uid": "HRAW-016-1aa55629",
+      "heading_text": "3.2. Basic behavior of the electrolyzer after shutdown",
+      "doc_heading_order": 16,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S03_methods_and_setup",
+        "top_section_id": "S04_results",
+        "second_section_id": "S05_discussion_mechanism",
+        "top_score": 5,
+        "second_score": 4,
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 5,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "result",
+                "weight": 1
+              },
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "durability",
+                "weight": 1
+              },
+              {
+                "term": "current density",
+                "weight": 1
+              },
+              {
+                "term": "cell voltage",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 4,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "oxidation",
+                "weight": 1
+              },
+              {
+                "term": "reduction",
+                "weight": 1
+              },
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_score_gap",
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S03_methods_and_setup",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S04_results",
+        "second_candidate_section_id": "S05_discussion_mechanism",
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "![](figures/FIG003/image_002.jpg) Fig. 3. For the two set of electrodes AN-1//CA-1 and AN-2//CA-1, the cell voltage against the current density of a single-cell electrolyzer at a) $30^{\\circ}\\mathrm{C}$ and b) $80^{\\circ"
+    },
+    {
+      "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "paragraph_uid": "PRAW-000040",
+      "paragraph_id": "S03-P026",
+      "heading_uid": "HRAW-016-1aa55629",
+      "heading_text": "3.2. Basic behavior of the electrolyzer after shutdown",
+      "doc_heading_order": 16,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S03_methods_and_setup",
+        "top_section_id": "S04_results",
+        "second_section_id": "S05_discussion_mechanism",
+        "top_score": 5,
+        "second_score": 4,
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 5,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "result",
+                "weight": 1
+              },
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "durability",
+                "weight": 1
+              },
+              {
+                "term": "current density",
+                "weight": 1
+              },
+              {
+                "term": "cell voltage",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 4,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "oxidation",
+                "weight": 1
+              },
+              {
+                "term": "reduction",
+                "weight": 1
+              },
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_score_gap",
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S03_methods_and_setup",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S04_results",
+        "second_candidate_section_id": "S05_discussion_mechanism",
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "![](figures/FIG004/image_003.jpg) Fig. 4. For the electrode system with AN-2 anodes after electrolysis under condition of $0.6\\mathrm{Acm}^{-2}$ at $30^{\\circ}\\mathrm{C}$ for 1 h a) The electromotive forces of bipolar pl"
+    },
+    {
+      "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "paragraph_uid": "PRAW-000041",
+      "paragraph_id": "S03-P027",
+      "heading_uid": "HRAW-016-1aa55629",
+      "heading_text": "3.2. Basic behavior of the electrolyzer after shutdown",
+      "doc_heading_order": 16,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S03_methods_and_setup",
+        "top_section_id": "S04_results",
+        "second_section_id": "S05_discussion_mechanism",
+        "top_score": 5,
+        "second_score": 4,
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 5,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "result",
+                "weight": 1
+              },
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "durability",
+                "weight": 1
+              },
+              {
+                "term": "current density",
+                "weight": 1
+              },
+              {
+                "term": "cell voltage",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 4,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "oxidation",
+                "weight": 1
+              },
+              {
+                "term": "reduction",
+                "weight": 1
+              },
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_score_gap",
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S03_methods_and_setup",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S04_results",
+        "second_candidate_section_id": "S05_discussion_mechanism",
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "bipolar plate $(\\mathrm{BP_k})$ the electromotive force $emf_{\\mathrm{k}}$ was plotted against the measured reverse current $(i_{\\mathrm{k}})$ where $\\mathrm{k} = 1,2,$ and 3, the graph is shown in Fig. S11 (a). The figu"
+    },
+    {
+      "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "paragraph_uid": "PRAW-000042",
+      "paragraph_id": "S03-P028",
+      "heading_uid": "HRAW-016-1aa55629",
+      "heading_text": "3.2. Basic behavior of the electrolyzer after shutdown",
+      "doc_heading_order": 16,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S03_methods_and_setup",
+        "top_section_id": "S04_results",
+        "second_section_id": "S05_discussion_mechanism",
+        "top_score": 5,
+        "second_score": 4,
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 5,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "result",
+                "weight": 1
+              },
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "durability",
+                "weight": 1
+              },
+              {
+                "term": "current density",
+                "weight": 1
+              },
+              {
+                "term": "cell voltage",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 4,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "oxidation",
+                "weight": 1
+              },
+              {
+                "term": "reduction",
+                "weight": 1
+              },
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_score_gap",
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S03_methods_and_setup",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S04_results",
+        "second_candidate_section_id": "S05_discussion_mechanism",
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "(EP) and bipolar plates (BP-1, BP-2, and BP-3) versus shutdown time. Anodes (cathodes) have almost the same positive (negative) initial potential value. Basically, during the shutdown time, the electrodes of the end plat"
+    },
+    {
+      "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "paragraph_uid": "PRAW-000044",
+      "paragraph_id": "S03-P029",
+      "heading_uid": "HRAW-020-22111ab3",
+      "heading_text": "3.6. Effects of anode materials on the reverse current phenomenon",
+      "doc_heading_order": 20,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S03_methods_and_setup",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S04_results",
+        "top_score": 7,
+        "second_score": 6,
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 7,
+            "heading_hits": [
+              {
+                "term": "reverse current",
+                "weight": 5
+              }
+            ],
+            "preview_hits": [
+              {
+                "term": "degradation",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 6,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "activity",
+                "weight": 1
+              },
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "oer",
+                "weight": 1
+              },
+              {
+                "term": "water electrolysis",
+                "weight": 1
+              },
+              {
+                "term": "durability",
+                "weight": 1
+              },
+              {
+                "term": "current density",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_score_gap",
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S03_methods_and_setup",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S04_results",
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "For the two systems of electrodes used in this part of our study, the cathodes are the same. The improved anode (AN-2), which consisted of two layers of metal oxides including precious metal oxide, has higher OER activit"
+    },
+    {
+      "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "paragraph_uid": "PRAW-000045",
+      "paragraph_id": "S03-P030",
+      "heading_uid": "HRAW-020-22111ab3",
+      "heading_text": "3.6. Effects of anode materials on the reverse current phenomenon",
+      "doc_heading_order": 20,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S03_methods_and_setup",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S04_results",
+        "top_score": 7,
+        "second_score": 6,
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 7,
+            "heading_hits": [
+              {
+                "term": "reverse current",
+                "weight": 5
+              }
+            ],
+            "preview_hits": [
+              {
+                "term": "degradation",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 6,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "activity",
+                "weight": 1
+              },
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "oer",
+                "weight": 1
+              },
+              {
+                "term": "water electrolysis",
+                "weight": 1
+              },
+              {
+                "term": "durability",
+                "weight": 1
+              },
+              {
+                "term": "current density",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_score_gap",
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S03_methods_and_setup",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S04_results",
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "![](figures/FIG006/image_002.jpg) Fig. 6. For experiments conducted with (Pumps ON) and without (Pumps OFF) electrolyte circulation a) The average reverse current of BP-1 and BP-3 versus shutdown time of the experiment ("
+    },
+    {
+      "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "paragraph_uid": "PRAW-000046",
+      "paragraph_id": "S03-P031",
+      "heading_uid": "HRAW-020-22111ab3",
+      "heading_text": "3.6. Effects of anode materials on the reverse current phenomenon",
+      "doc_heading_order": 20,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S03_methods_and_setup",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S04_results",
+        "top_score": 7,
+        "second_score": 6,
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 7,
+            "heading_hits": [
+              {
+                "term": "reverse current",
+                "weight": 5
+              }
+            ],
+            "preview_hits": [
+              {
+                "term": "degradation",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 6,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "activity",
+                "weight": 1
+              },
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "oer",
+                "weight": 1
+              },
+              {
+                "term": "water electrolysis",
+                "weight": 1
+              },
+              {
+                "term": "durability",
+                "weight": 1
+              },
+              {
+                "term": "current density",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_score_gap",
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S03_methods_and_setup",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S04_results",
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "![](figures/FIG007/image_003.jpg) Fig. 7. For water electrolysis condition of $0.4\\mathrm{Acm}^{-2}$ at $30^{\\circ}\\mathrm{C},$ $0.6\\mathrm{Acm}^{-2}$ at $30^{\\circ}\\mathrm{C},$ $0.6\\mathrm{Acm}^{-2}$ at $80^{\\circ}\\math"
+    },
+    {
+      "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "paragraph_uid": "PRAW-000047",
+      "paragraph_id": "S03-P032",
+      "heading_uid": "HRAW-020-22111ab3",
+      "heading_text": "3.6. Effects of anode materials on the reverse current phenomenon",
+      "doc_heading_order": 20,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S03_methods_and_setup",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S04_results",
+        "top_score": 7,
+        "second_score": 6,
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 7,
+            "heading_hits": [
+              {
+                "term": "reverse current",
+                "weight": 5
+              }
+            ],
+            "preview_hits": [
+              {
+                "term": "degradation",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 6,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "activity",
+                "weight": 1
+              },
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "oer",
+                "weight": 1
+              },
+              {
+                "term": "water electrolysis",
+                "weight": 1
+              },
+              {
+                "term": "durability",
+                "weight": 1
+              },
+              {
+                "term": "current density",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_score_gap",
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S03_methods_and_setup",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S04_results",
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "consists of only one layer of $\\mathrm{NiCoO_x}$ . The two systems were operated under a constant current density of $0.6\\mathrm{Acm}^{-2}$ for $1.0\\mathrm{h}$ at $30^{\\circ}\\mathrm{C}$ . Fig. 8 (a) shows the emf of the"
+    },
+    {
+      "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "paragraph_uid": "PRAW-000048",
+      "paragraph_id": "S03-P033",
+      "heading_uid": "HRAW-020-22111ab3",
+      "heading_text": "3.6. Effects of anode materials on the reverse current phenomenon",
+      "doc_heading_order": 20,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S03_methods_and_setup",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S04_results",
+        "top_score": 7,
+        "second_score": 6,
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 7,
+            "heading_hits": [
+              {
+                "term": "reverse current",
+                "weight": 5
+              }
+            ],
+            "preview_hits": [
+              {
+                "term": "degradation",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 6,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "activity",
+                "weight": 1
+              },
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "oer",
+                "weight": 1
+              },
+              {
+                "term": "water electrolysis",
+                "weight": 1
+              },
+              {
+                "term": "durability",
+                "weight": 1
+              },
+              {
+                "term": "current density",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_score_gap",
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S03_methods_and_setup",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S04_results",
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "the AWE system with AN-1 anodes, due to RES fluctuations, should not exceed about 3 min to avoid the electrocatalysts degradation/detachment. On the other hand, after about 500 s of shutdown, the cathode associated with"
+    },
+    {
+      "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "paragraph_uid": "PRAW-000049",
+      "paragraph_id": "S03-P034",
+      "heading_uid": "HRAW-020-22111ab3",
+      "heading_text": "3.6. Effects of anode materials on the reverse current phenomenon",
+      "doc_heading_order": 20,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S03_methods_and_setup",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S04_results",
+        "top_score": 7,
+        "second_score": 6,
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 7,
+            "heading_hits": [
+              {
+                "term": "reverse current",
+                "weight": 5
+              }
+            ],
+            "preview_hits": [
+              {
+                "term": "degradation",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 6,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "activity",
+                "weight": 1
+              },
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "oer",
+                "weight": 1
+              },
+              {
+                "term": "water electrolysis",
+                "weight": 1
+              },
+              {
+                "term": "durability",
+                "weight": 1
+              },
+              {
+                "term": "current density",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_score_gap",
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S03_methods_and_setup",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S04_results",
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "![](figures/FIG008/image_003.jpg) Fig. 8. For the electrode systems with AN-1 and AN-2 anodes operated under water electrolysis condition of $0.6\\mathrm{Acm}^{-2}$ at $30^{\\circ}\\mathrm{C}$ for $1.0\\mathrm{h}$ a) The ave"
+    },
+    {
+      "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "paragraph_uid": "PRAW-000053",
+      "paragraph_id": "S05-P001",
+      "heading_uid": "HRAW-008-c206dd51",
+      "heading_text": "2.1. Construction of the alkaline water electrolyzer system",
+      "doc_heading_order": 8,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S05_discussion_mechanism",
+        "top_section_id": "S04_results",
+        "second_section_id": "S05_discussion_mechanism",
+        "top_score": 3,
+        "second_score": 3,
+        "score_gap": 0,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_top_score",
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 3,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "water electrolysis",
+                "weight": 1
+              },
+              {
+                "term": "cell voltage",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 3,
+            "heading_hits": [
+              {
+                "term": "tem",
+                "weight": 2
+              }
+            ],
+            "preview_hits": [
+              {
+                "term": "reverse current",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_score_gap",
+          "low_top_score",
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S05_discussion_mechanism",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S04_results",
+        "second_candidate_section_id": "S05_discussion_mechanism",
+        "score_gap": 0,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "![](figures/FIG001/image_001.jpg) Fig. 1. Schematic diagram of the utilized 4-cell stack bipolar plate alkaline water electrolysis system."
+    },
+    {
+      "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "paragraph_uid": "PRAW-000054",
+      "paragraph_id": "S05-P002",
+      "heading_uid": "HRAW-008-c206dd51",
+      "heading_text": "2.1. Construction of the alkaline water electrolyzer system",
+      "doc_heading_order": 8,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S05_discussion_mechanism",
+        "top_section_id": "S04_results",
+        "second_section_id": "S05_discussion_mechanism",
+        "top_score": 3,
+        "second_score": 3,
+        "score_gap": 0,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_top_score",
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 3,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "water electrolysis",
+                "weight": 1
+              },
+              {
+                "term": "cell voltage",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 3,
+            "heading_hits": [
+              {
+                "term": "tem",
+                "weight": 2
+              }
+            ],
+            "preview_hits": [
+              {
+                "term": "reverse current",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_score_gap",
+          "low_top_score",
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S05_discussion_mechanism",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S04_results",
+        "second_candidate_section_id": "S05_discussion_mechanism",
+        "score_gap": 0,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "inlet and the outlet of the manifold tubes. The DC milliampere clamp meter can measure the ionic current flowing through the KOH electrolyte inside the PTFE tubes. A reversible hydrogen electrode (RHE) is connected to ea"
+    },
+    {
+      "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "paragraph_uid": "PRAW-000056",
+      "paragraph_id": "S05-P003",
+      "heading_uid": "HRAW-009-d6615769",
+      "heading_text": "2.2. The bipolar plate stack and the associated manifold assembly",
+      "doc_heading_order": 9,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S05_discussion_mechanism",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S04_results",
+        "top_score": 3,
+        "second_score": 1,
+        "score_gap": 2,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_top_score"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 3,
+            "heading_hits": [
+              {
+                "term": "sem",
+                "weight": 2
+              }
+            ],
+            "preview_hits": [
+              {
+                "term": "tem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 1,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "her",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_top_score"
+        ],
+        "primary_section_id": "S05_discussion_mechanism",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S04_results",
+        "score_gap": 2,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "Fig. S2 shows a detailed schematic diagram of the 4-cell AWE stack and the connected manifold assembly. The manifold tubes are made of PTFE with an inner diameter of $4\\mathrm{mm}$ . The manifold system was designed to b"
+    },
+    {
+      "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "paragraph_uid": "PRAW-000066",
+      "paragraph_id": "S05-P013",
+      "heading_uid": "HRAW-019-7747b909",
+      "heading_text": "3.5. Effects of the electrolysis current and temperature on the reverse current phenomenon",
+      "doc_heading_order": 19,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S05_discussion_mechanism",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S04_results",
+        "top_score": 7,
+        "second_score": 6,
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 7,
+            "heading_hits": [
+              {
+                "term": "reverse current",
+                "weight": 5
+              },
+              {
+                "term": "tem",
+                "weight": 2
+              }
+            ],
+            "preview_hits": [],
+            "position_hits": []
+          },
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 6,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "result",
+                "weight": 1
+              },
+              {
+                "term": "activity",
+                "weight": 1
+              },
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "water electrolysis",
+                "weight": 1
+              },
+              {
+                "term": "durability",
+                "weight": 1
+              },
+              {
+                "term": "current density",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_score_gap"
+        ],
+        "primary_section_id": "S05_discussion_mechanism",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S04_results",
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "The influences of the parameters of the electrolysis condition, namely the electrolyte temperature and the value of the DC current density, on the reverse current phenomenon were studied. Experiments were carried out und"
+    },
+    {
+      "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "paragraph_uid": "PRAW-000067",
+      "paragraph_id": "S05-P014",
+      "heading_uid": "HRAW-019-7747b909",
+      "heading_text": "3.5. Effects of the electrolysis current and temperature on the reverse current phenomenon",
+      "doc_heading_order": 19,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "uncertain_fallback",
+        "assigned_section_id": "S05_discussion_mechanism",
+        "top_section_id": "S05_discussion_mechanism",
+        "second_section_id": "S04_results",
+        "top_score": 7,
+        "second_score": 6,
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "is_uncertain": true,
+        "needs_manual_review": true,
+        "uncertain_reasons": [
+          "low_score_gap"
+        ],
+        "top_candidates": [
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 7,
+            "heading_hits": [
+              {
+                "term": "reverse current",
+                "weight": 5
+              },
+              {
+                "term": "tem",
+                "weight": 2
+              }
+            ],
+            "preview_hits": [],
+            "position_hits": []
+          },
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 6,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "result",
+                "weight": 1
+              },
+              {
+                "term": "activity",
+                "weight": 1
+              },
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "water electrolysis",
+                "weight": 1
+              },
+              {
+                "term": "durability",
+                "weight": 1
+              },
+              {
+                "term": "current density",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "high",
+        "conflict_reasons": [
+          "low_score_gap"
+        ],
+        "primary_section_id": "S05_discussion_mechanism",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S05_discussion_mechanism",
+        "second_candidate_section_id": "S04_results",
+        "score_gap": 1,
+        "confidence_level": "needs_manual_review",
+        "needs_manual_review": true
+      },
+      "text_preview": "Fig. S16 (b). This means that the total reverse charge is approximately independent of the electrolysis current in the range of $400 - 1000\\mathrm{mAcm}^{-2}$ . It is worthy to mention that Uchino et al. (2018) studied t"
+    },
+    {
+      "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "paragraph_uid": "PRAW-000068",
+      "paragraph_id": "S06-P001",
+      "heading_uid": "HRAW-021-c65c4454",
+      "heading_text": "4. Conclusion",
+      "doc_heading_order": 21,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "direct_rule",
+        "assigned_section_id": "S06_conclusion",
+        "top_section_id": "S04_results",
+        "second_section_id": "S05_discussion_mechanism",
+        "top_score": 5,
+        "second_score": 4,
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 5,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "result",
+                "weight": 1
+              },
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "water electrolysis",
+                "weight": 1
+              },
+              {
+                "term": "durability",
+                "weight": 1
+              },
+              {
+                "term": "current density",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 4,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "corrosion",
+                "weight": 1
+              },
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "redox",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "low",
+        "conflict_reasons": [
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S06_conclusion",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S04_results",
+        "second_candidate_section_id": "S05_discussion_mechanism",
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "In the present study, we operated a 4-cell stack alkaline water electrolyzer under different operating parameters. The effects on the reverse current phenomenon of these parameters as well as electrode material are discu"
+    },
+    {
+      "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "paragraph_uid": "PRAW-000069",
+      "paragraph_id": "S06-P002",
+      "heading_uid": "HRAW-021-c65c4454",
+      "heading_text": "4. Conclusion",
+      "doc_heading_order": 21,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "direct_rule",
+        "assigned_section_id": "S06_conclusion",
+        "top_section_id": "S04_results",
+        "second_section_id": "S05_discussion_mechanism",
+        "top_score": 5,
+        "second_score": 4,
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 5,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "result",
+                "weight": 1
+              },
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "water electrolysis",
+                "weight": 1
+              },
+              {
+                "term": "durability",
+                "weight": 1
+              },
+              {
+                "term": "current density",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 4,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "corrosion",
+                "weight": 1
+              },
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "redox",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "low",
+        "conflict_reasons": [
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S06_conclusion",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S04_results",
+        "second_candidate_section_id": "S05_discussion_mechanism",
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "the reverse current is directly related to the redox reactions of the electrocatalysts material not to the redox reactions of the dissolved $\\mathrm{O}_2$ and $\\mathrm{H}_2$ gasses. Interestingly, the value of the operat"
+    },
+    {
+      "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "paragraph_uid": "PRAW-000070",
+      "paragraph_id": "S06-P003",
+      "heading_uid": "HRAW-021-c65c4454",
+      "heading_text": "4. Conclusion",
+      "doc_heading_order": 21,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "direct_rule",
+        "assigned_section_id": "S06_conclusion",
+        "top_section_id": "S04_results",
+        "second_section_id": "S05_discussion_mechanism",
+        "top_score": 5,
+        "second_score": 4,
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 5,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "result",
+                "weight": 1
+              },
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "water electrolysis",
+                "weight": 1
+              },
+              {
+                "term": "durability",
+                "weight": 1
+              },
+              {
+                "term": "current density",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 4,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "corrosion",
+                "weight": 1
+              },
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "redox",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "low",
+        "conflict_reasons": [
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S06_conclusion",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S04_results",
+        "second_candidate_section_id": "S05_discussion_mechanism",
+        "score_gap": 1,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "study provides new basic information that is necessary to adapt AWE systems to the dynamic operating conditions of RES."
+    },
+    {
+      "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "paragraph_uid": "PRAW-000075",
+      "paragraph_id": "S07-P005",
+      "heading_uid": "HRAW-026-d41cf7da",
+      "heading_text": "References",
+      "doc_heading_order": 26,
+      "macro_trace": {
+        "rule_source": "yaml",
+        "decision": "direct_rule",
+        "assigned_section_id": "S07_back_matter_or_supplementary",
+        "top_section_id": "S04_results",
+        "second_section_id": "S05_discussion_mechanism",
+        "top_score": 7,
+        "second_score": 5,
+        "score_gap": 2,
+        "confidence_level": "auto_accept",
+        "is_uncertain": false,
+        "needs_manual_review": false,
+        "uncertain_reasons": [],
+        "top_candidates": [
+          {
+            "section_id": "S04_results",
+            "section_title": "Result",
+            "score": 7,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "performance",
+                "weight": 1
+              },
+              {
+                "term": "activity",
+                "weight": 1
+              },
+              {
+                "term": "her",
+                "weight": 1
+              },
+              {
+                "term": "water electrolysis",
+                "weight": 1
+              },
+              {
+                "term": "stability",
+                "weight": 1
+              },
+              {
+                "term": "durability",
+                "weight": 1
+              },
+              {
+                "term": "intermittent",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          },
+          {
+            "section_id": "S05_discussion_mechanism",
+            "section_title": "Discussion Mechanism",
+            "score": 5,
+            "heading_hits": [],
+            "preview_hits": [
+              {
+                "term": "oxidation",
+                "weight": 1
+              },
+              {
+                "term": "reverse current",
+                "weight": 1
+              },
+              {
+                "term": "degradation",
+                "weight": 1
+              },
+              {
+                "term": "redox",
+                "weight": 1
+              },
+              {
+                "term": "tem",
+                "weight": 1
+              }
+            ],
+            "position_hits": []
+          }
+        ]
+      },
+      "macro_conflict": {
+        "conflict_level": "low",
+        "conflict_reasons": [
+          "top_candidate_mismatch"
+        ],
+        "primary_section_id": "S07_back_matter_or_supplementary",
+        "secondary_section_id": null,
+        "top_candidate_section_id": "S04_results",
+        "second_candidate_section_id": "S05_discussion_mechanism",
+        "score_gap": 2,
+        "confidence_level": "auto_accept",
+        "needs_manual_review": false
+      },
+      "text_preview": "fundamentals with realistic operation, ACS Sustain. Chem. Eng. 6 (2018) 4829-4837, https://doi.org/10.1021/acssuschemeng.7b04173. [37] F. ezazra Chakik, M. Kaddami, M. Mikou, Effect of operating parameters on hydrogen pr"
+    }
+  ]
+}

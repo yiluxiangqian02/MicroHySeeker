@@ -1,0 +1,25 @@
+---
+paper_id: "2023_uchino_dependence_of_the_reverse_current_on_the_surface_of_elec_38347e"
+section_id: "S04_results"
+paragraph_id: "S04-P036"
+evidence_id: "EV-uchino2023-38347e-S04-P036"
+chunk_index: 1
+---
+f } }$ : Cell voltage of anode terminal side cell in initial, middle and final stage in case of replacement [V]
+$U _ { 2 \mathrm { r } , \mathrm { i } } ,$ , $U _ { 2 \mathrm { r } , \mathrm { m } } .$ , $U _ { 2 \mathrm { r } , \mathrm { f } }$ : Cell voltage of anode terminal side cell in initial, middle and final stage in case of replacement [V]
+$U ^ { \mathrm { { o } } }$ : Theoretical decomposition voltage [V]
+$U _ { \mathrm { s t } }$ : Voltage of electrolyzer [V]
+$\Delta U$ : Potential difference between one side and the other side on a bipolar plate [V]
+$\eta _ { \mathrm { c } } ( i ) , \eta _ { \mathrm { a } } ( i )$ : Overpotential at the anode and cathode as a function of the current density i through electrode, respectively [V]
+$S _ { \mathrm { d } }$ : Projected area of electrodes $[ \mathrm { c m } ^ { 2 } ]$
+I: Total currents [mA]
+i: Total current density $[ \mathrm { m A c m } ^ { - 2 } ]$
+$I _ { \mathrm { d } }$ : Total currents through the electrode $[ \mathrm { m A c m } ^ { - 2 } ]$
+$i _ { \mathrm { d } }$ : Total current density through electrode $[ \mathrm { m A c m } ^ { - 2 } ]$
+IL: Total leak currents through manifold [mA]
+iL: Total leak current density through manifold $[ \mathrm { m A c m } ^ { - 2 } ]$
+$I _ { \mathrm { r } }$ : Total reverse currents through manifold [mA]
+a: Tafel intercept adding that of anode and cathode [V]
+b: Tafel slope adding that of anode and cathode [V/dec.]
+$\boldsymbol { Q } _ { \mathrm { r , t o t l } }$ : Charge of reverse current amount [C]
+$E _ { \mathrm { p } }$ : Standard electrode potential [V]

@@ -1,0 +1,43 @@
+{
+  "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+  "title": "Effects of operation and shutdown parameters and electrode materials on the reverse current phenomenon in alkaline water analyzers",
+  "doi": "10.1016/j.jpowsour.2022.231454",
+  "doi_url": "https://doi.org/10.1016/j.jpowsour.2022.231454",
+  "year": "2023",
+  "published_online": "",
+  "first_author": "a",
+  "authors_raw": "Ashraf Abdel Haleem a,\\*, Jinlei Huyan b, Kensaku Nagasawa a, Yoshiyuki Kuroda c, Yoshinori Nishiki d, Akihiro Kato d, Takaaki Nakai d, Takuto Araki b, Shigenori Mitsushima a,c",
+  "journal": "",
+  "document_type": "research_article",
+  "raw_paths": {
+    "mineru_output_dir": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Effects of operation and shutdown parameters and electrode materials on_99bf4606",
+    "full_md": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Effects of operation and shutdown parameters and electrode materials on_99bf4606\\full.md",
+    "content_list_v2_json": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Effects of operation and shutdown parameters and electrode materials on_99bf4606\\content_list_v2.json",
+    "layout_json": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Effects of operation and shutdown parameters and electrode materials on_99bf4606\\layout.json",
+    "origin_pdf": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Effects of operation and shutdown parameters and electrode materials on_99bf4606\\3d2bce52-7f5b-42f5-a5e1-2dbe25c74c2c_origin.pdf",
+    "images_dir": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Effects of operation and shutdown parameters and electrode materials on_99bf4606\\images"
+  },
+  "paper_short": "a2023-86a3bb",
+  "clean_paths": {
+    "clean_dir": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\LiteratureClean\\2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+    "full_clean": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\LiteratureClean\\2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb\\full_clean.md",
+    "figures_dir": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\LiteratureClean\\2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb\\figures",
+    "tables_dir": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\LiteratureClean\\2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb\\tables",
+    "sections_by_heading_dir": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\LiteratureClean\\2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb\\sections_by_heading"
+  },
+  "processing": {
+    "mode": "single_paper_semi_automatic",
+    "processed_at": "2026-05-30T16:29:49",
+    "script": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\LiteratureClean\\clean_single_mineru_paper.py",
+    "openviking_ingested": false,
+    "batch_import": false,
+    "section_recovery": {
+      "content_list_hints": {
+        "front_count": 2,
+        "abstract_count": 2,
+        "back_count": 7
+      },
+      "layout_json_available": true
+    }
+  }
+}

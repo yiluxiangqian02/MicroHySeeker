@@ -1,0 +1,8 @@
+---
+paper_id: "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb"
+section_id: "S05_discussion_mechanism"
+paragraph_id: "S05-P012"
+evidence_id: "EV-a2023-86a3bb-S05-P012"
+chunk_index: 0
+---
+bubbles remain inside the electrolyte and thus contribute to raising the ionic resistance. Although the electromotive forces have the same initial value, the electrolyte circulation accelerate their decline with time, as shown in Fig. S15 (b). Consequently, experimental as well as the simulation results agreed that the reverse current in the case of electrolyte circulation is much higher than that of without electrolyte circulation, as shown in Fig. 6 (a). Fig. 6 (b) shows the average potentials of the anodes and cathodes of BP-1 and BP-3 versus the shutdown time. The figure reveals that the electrolyte circulation fastened the redox reaction on the electrode surfaces during the shutdown time. In addition, the figure reveals that, in case of suspended electrolyte circulation, the potential of the cathodes and anodes did not change remarkably up to $\sim 3000$ s (the cathode and anode potential reach $\sim 0.1$ V and $1.25\mathrm{V}$ vs RHE, respectively). This may indicate that the repeated temporary shutdown of this electrolyzer, due RES fluctuations, for about $50\mathrm{min}$ does not have significant effect on the long-term durability of the electrocatalysts. This safe shutdown period reduced to about $12\mathrm{min}$ ( $720~\mathrm{s}$ ) in case of electrolyte circulation, as shown in Fig. 6 (b). Consequently, from the perspective of the long-term durability of the electrodes, it is highly recommended to suspend the electrolyte circulation during the shutdown time.

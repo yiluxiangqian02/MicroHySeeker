@@ -1,0 +1,10 @@
+---
+paper_id: "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e"
+section_id: "S07_back_matter_or_supplementary"
+paragraph_id: "S07-P016"
+evidence_id: "EV-he2026-43767e-S07-P016"
+chunk_index: 0
+---
+4.3. Synthesis of $\mathrm{Ni}_3\mathrm{S}_2 / \mathrm{NM}$ I. The synthesis method of $\mathrm{Ni}_3\mathrm{S}_2/$ NM-I was the same as that of $\mathrm{Ni}@\mathrm{Ni}_3\mathrm{S}_2$ NPs, requiring only the replacement of Ni NPs with a piece of clean NM (1 cm × 3 cm). The $\mathrm{Ni}_3\mathrm{S}_2 / \mathrm{NM}$ I catalyst used in the AWE exhibited a size of 2 cm × 2 cm or larger. The synthesis method was consistent, requiring only proportional amplification of the amount of TEG and 2- mercaptoethanol.
+4.4. Synthesis of $\mathrm{Ni}_3\mathrm{S}_2 / \mathrm{NM - H}$ . 2.25 mmol of $\mathrm{Ni(NO_3)_2\cdot 6H_2O}$ , 10 mmol of urea, 4 mmol of $\mathrm{NH_4F}$ , and $35~\mathrm{mL}$ of pure water were mixed to form a uniform solution and poured into an autoclave with a volume of $45~\mathrm{mL}$ . Two pieces of NM (1 cm × 3 cm) were also added to it and maintained at $120^{\circ}\mathrm{C}$ for 6 h to synthesize the $\mathrm{Ni(OH)}_2/$ NM precursor. Then, a piece of $\mathrm{Ni(OH)}_2 / \mathrm{NM}$ was added into a 45 mL autoclave containing a solution of $25~\mathrm{mL}$ of alcohol and $2.5~\mathrm{mL}$ of 2-mercaptoethanol, followed by heating at $150^{\circ}\mathrm{C}$ for 5 h. Finally, the $\mathrm{Ni}_3\mathrm{S}_2 / \mathrm{NM - H}$ sample was obtained after cleaning with pure water and drying under vacuum.
+4.5. Electrochemical Measurements. The electrochemical test was performed on a CS310X electrochemical workstation with a three-electrode configuration. The working, reference, and counter electrodes were the prepared sample, the $\mathrm{Hg / HgO}$ electrode, and the platinum plate, respectively. A cyclic voltammetry (CV) scan was carried out at a scan rate of $100\mathrm{mV}s^{-1}$ , and then a linear sweep voltammetry (LSV) test was performed at a scan rate of $2\mathrm{mV}s^{-1}$ , accompanied by an $iR$ compensation of $60\%$ . The potential $(E)$ vs RHE was derived from the Nernst equation:

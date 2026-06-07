@@ -1,0 +1,29 @@
+{
+  "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+  "heading_uid": "HRAW-019-7747b909",
+  "heading_dirname": "015-3-5-effects-of-the-electrolysis-current-and-temperatur",
+  "heading_text": "3.5. Effects of the electrolysis current and temperature on the reverse current phenomenon",
+  "heading_level": 1,
+  "doc_heading_order": 19,
+  "display_order": 15,
+  "is_title_page_heading": false,
+  "page_index": null,
+  "block_order": 1,
+  "paragraph_count": 2,
+  "paragraph_ids": [
+    "S05-P013",
+    "S05-P014"
+  ],
+  "paragraph_uids": [
+    "PRAW-000066",
+    "PRAW-000067"
+  ],
+  "paragraph_paths": [
+    "paragraphs/PRAW-000066.md",
+    "paragraphs/PRAW-000067.md"
+  ],
+  "linked_figures": [
+    "FIG007"
+  ],
+  "linked_tables": []
+}

@@ -1,0 +1,223 @@
+{
+  "paper_id": "2022_kim_cathodic_protection_system_against_a_reverse_current_aft_180201",
+  "heading_count": 14,
+  "paragraph_count": 62,
+  "headings": [
+    {
+      "heading_uid": "HRAW-001-b97ba7fd",
+      "heading_text": "Cathodic Protection System against a Reverse-Current after Shutdown in Zero-Gap Alkaline Water Electrolysis",
+      "heading_level": 1,
+      "doc_heading_order": 1,
+      "page_index": null,
+      "block_order": 1,
+      "paragraph_uid_list": [
+        "PRAW-000016",
+        "PRAW-000017",
+        "PRAW-000018",
+        "PRAW-000019"
+      ],
+      "inferred_type": "abstract"
+    },
+    {
+      "heading_uid": "HRAW-002-9ee22efc",
+      "heading_text": "INTRODUCTION",
+      "heading_level": 1,
+      "doc_heading_order": 2,
+      "page_index": null,
+      "block_order": 1,
+      "paragraph_uid_list": [
+        "PRAW-000002",
+        "PRAW-000003",
+        "PRAW-000004",
+        "PRAW-000005",
+        "PRAW-000006",
+        "PRAW-000007",
+        "PRAW-000008",
+        "PRAW-000009",
+        "PRAW-000010",
+        "PRAW-000011",
+        "PRAW-000012",
+        "PRAW-000013"
+      ],
+      "inferred_type": "none"
+    },
+    {
+      "heading_uid": "HRAW-004-18e13dda",
+      "heading_text": "Reverse-Current Simulation Model",
+      "heading_level": 1,
+      "doc_heading_order": 4,
+      "page_index": null,
+      "block_order": 1,
+      "paragraph_uid_list": [
+        "PRAW-000020",
+        "PRAW-000021",
+        "PRAW-000022",
+        "PRAW-000023",
+        "PRAW-000024",
+        "PRAW-000025",
+        "PRAW-000026",
+        "PRAW-000027",
+        "PRAW-000028"
+      ],
+      "inferred_type": "none"
+    },
+    {
+      "heading_uid": "HRAW-005-fcbf8fd1",
+      "heading_text": "Mechanism of a Cathodic Protection System against Reverse-Current",
+      "heading_level": 1,
+      "doc_heading_order": 5,
+      "page_index": null,
+      "block_order": 1,
+      "paragraph_uid_list": [
+        "PRAW-000032",
+        "PRAW-000033",
+        "PRAW-000034",
+        "PRAW-000035",
+        "PRAW-000036",
+        "PRAW-000037",
+        "PRAW-000038",
+        "PRAW-000039",
+        "PRAW-000040",
+        "PRAW-000041",
+        "PRAW-000042",
+        "PRAW-000043",
+        "PRAW-000044",
+        "PRAW-000045",
+        "PRAW-000046",
+        "PRAW-000047",
+        "PRAW-000048",
+        "PRAW-000049",
+        "PRAW-000050",
+        "PRAW-000051"
+      ],
+      "inferred_type": "none"
+    },
+    {
+      "heading_uid": "HRAW-006-65d60afd",
+      "heading_text": "Stability of the Alkaline Water-Electrolyzer Stack under Start-Up/Shutdown Conditions",
+      "heading_level": 1,
+      "doc_heading_order": 6,
+      "page_index": null,
+      "block_order": 1,
+      "paragraph_uid_list": [
+        "PRAW-000029",
+        "PRAW-000030",
+        "PRAW-000031"
+      ],
+      "inferred_type": "none"
+    },
+    {
+      "heading_uid": "HRAW-007-7ae76965",
+      "heading_text": "CONCLUSIONS",
+      "heading_level": 1,
+      "doc_heading_order": 7,
+      "page_index": null,
+      "block_order": 1,
+      "paragraph_uid_list": [
+        "PRAW-000052"
+      ],
+      "inferred_type": "none"
+    },
+    {
+      "heading_uid": "HRAW-009-99323f2c",
+      "heading_text": "Supporting Information",
+      "heading_level": 1,
+      "doc_heading_order": 9,
+      "page_index": null,
+      "block_order": 1,
+      "paragraph_uid_list": [
+        "PRAW-000053",
+        "PRAW-000054"
+      ],
+      "inferred_type": "none"
+    },
+    {
+      "heading_uid": "HRAW-011-7d4a302d",
+      "heading_text": "Corresponding Author",
+      "heading_level": 1,
+      "doc_heading_order": 11,
+      "page_index": null,
+      "block_order": 1,
+      "paragraph_uid_list": [
+        "PRAW-000055"
+      ],
+      "inferred_type": "none"
+    },
+    {
+      "heading_uid": "HRAW-012-9d736348",
+      "heading_text": "Authors",
+      "heading_level": 1,
+      "doc_heading_order": 12,
+      "page_index": null,
+      "block_order": 1,
+      "paragraph_uid_list": [
+        "PRAW-000001"
+      ],
+      "inferred_type": "none"
+    },
+    {
+      "heading_uid": "HRAW-013-0204eb85",
+      "heading_text": "Author Contributions",
+      "heading_level": 1,
+      "doc_heading_order": 13,
+      "page_index": null,
+      "block_order": 1,
+      "paragraph_uid_list": [
+        "PRAW-000056"
+      ],
+      "inferred_type": "none"
+    },
+    {
+      "heading_uid": "HRAW-014-1977ecb6",
+      "heading_text": "Notes",
+      "heading_level": 1,
+      "doc_heading_order": 14,
+      "page_index": null,
+      "block_order": 1,
+      "paragraph_uid_list": [
+        "PRAW-000057"
+      ],
+      "inferred_type": "none"
+    },
+    {
+      "heading_uid": "HRAW-015-5c51cbbd",
+      "heading_text": "ACKNOWLEDGMENTS",
+      "heading_level": 1,
+      "doc_heading_order": 15,
+      "page_index": null,
+      "block_order": 1,
+      "paragraph_uid_list": [
+        "PRAW-000058"
+      ],
+      "inferred_type": "none"
+    },
+    {
+      "heading_uid": "HRAW-016-a8e1e012",
+      "heading_text": "REFERENCES",
+      "heading_level": 1,
+      "doc_heading_order": 16,
+      "page_index": null,
+      "block_order": 1,
+      "paragraph_uid_list": [
+        "PRAW-000059",
+        "PRAW-000060",
+        "PRAW-000061",
+        "PRAW-000062"
+      ],
+      "inferred_type": "none"
+    },
+    {
+      "heading_uid": "HRAW-017-4eab6547",
+      "heading_text": "CAS BIOFINDER HELPS YOU FIND YOUR NEXT BREAKTHROUGH FASTER",
+      "heading_level": 1,
+      "doc_heading_order": 17,
+      "page_index": null,
+      "block_order": 1,
+      "paragraph_uid_list": [
+        "PRAW-000014",
+        "PRAW-000015"
+      ],
+      "inferred_type": "none"
+    }
+  ]
+}

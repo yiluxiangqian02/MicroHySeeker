@@ -1,0 +1,5 @@
+{
+  "status": "no_tables_detected",
+  "tables": [],
+  "note": "No tables were detected in this MinerU output. MinerU may have rendered tables as images only, or the paper contains no main-text tables. Check image_manifest.json for entries with table-related file names."
+}

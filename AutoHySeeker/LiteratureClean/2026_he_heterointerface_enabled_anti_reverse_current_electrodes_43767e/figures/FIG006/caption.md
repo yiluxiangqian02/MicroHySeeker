@@ -1,0 +1,3 @@
+# Caption
+
+Figure 6. Alkaline water electrolyzer performance. (a) Polarization curves of $\mathrm{Ni}_3\mathrm{S}_2 / \mathrm{NM - I}\parallel \mathrm{Ni}_3\mathrm{S}_2 / \mathrm{NM - I},$ R-Ni/NM $\parallel$ NM, and NM $\parallel$ NM in 30 wt $\%$ KOH at $80^{\circ}\mathrm{C}$ . (b) Long-term stability of $\mathrm{Ni}_3\mathrm{S}_2 / \mathrm{NM - I}\parallel \mathrm{Ni}_3\mathrm{S}_2 / \mathrm{NM - I}$ at current densities of 500 and $1000\mathrm{mAcm}^{-2}$ in 30 wt $\%$ KOH at $80^{\circ}\mathrm{C}$ . (c) Intermittent stability test of $\mathrm{Ni}_3\mathrm{S}_2 / \mathrm{NM - I}\parallel \mathrm{Ni}_3\mathrm{S}_2 / \mathrm{NM - I}$ with 10 min startup/shutdown cycles at $1000\mathrm{mAcm}^{-2}$ in 30 wt $\%$ KOH at $80^{\circ}\mathrm{C}$ .

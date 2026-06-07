@@ -1,0 +1,32 @@
+{
+  "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+  "heading_uid": "HRAW-008-c206dd51",
+  "heading_dirname": "005-2-1-construction-of-the-alkaline-water-electrolyzer-sy",
+  "heading_text": "2.1. Construction of the alkaline water electrolyzer system",
+  "heading_level": 1,
+  "doc_heading_order": 8,
+  "display_order": 5,
+  "is_title_page_heading": false,
+  "page_index": null,
+  "block_order": 1,
+  "paragraph_count": 3,
+  "paragraph_ids": [
+    "S01-P005",
+    "S05-P001",
+    "S05-P002"
+  ],
+  "paragraph_uids": [
+    "PRAW-000052",
+    "PRAW-000053",
+    "PRAW-000054"
+  ],
+  "paragraph_paths": [
+    "paragraphs/PRAW-000052.md",
+    "paragraphs/PRAW-000053.md",
+    "paragraphs/PRAW-000054.md"
+  ],
+  "linked_figures": [
+    "FIG001"
+  ],
+  "linked_tables": []
+}

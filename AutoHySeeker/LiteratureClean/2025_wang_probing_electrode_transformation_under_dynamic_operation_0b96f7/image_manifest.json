@@ -1,0 +1,486 @@
+[
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Probing Electrode Transformation under Dynamic Operation for Alkaline W_4ff0d6af\\images\\011a80e62429c8a7167493c3a69604ccbfc400d7dbd5b4468135589fcce1260e.jpg",
+    "raw_relative_path": "images/011a80e62429c8a7167493c3a69604ccbfc400d7dbd5b4468135589fcce1260e.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Probing Electrode Transformation under Dynamic Operation for Alkaline W_4ff0d6af\\images\\043310779047f300a4c3c1e68efeb565105a52219b8842a6ad64c8b90501a5a6.jpg",
+    "raw_relative_path": "images/043310779047f300a4c3c1e68efeb565105a52219b8842a6ad64c8b90501a5a6.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Probing Electrode Transformation under Dynamic Operation for Alkaline W_4ff0d6af\\images\\0581d3596f1de0cfe15e5716c044650e4ae83740d25d34799b0afcabb0921cf1.jpg",
+    "raw_relative_path": "images/0581d3596f1de0cfe15e5716c044650e4ae83740d25d34799b0afcabb0921cf1.jpg",
+    "status": "used",
+    "figure_id": "FIG001",
+    "clean_path": "figures/FIG001/image_001.jpg",
+    "caption_path": "figures/FIG001/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S02-P006",
+      "S02-P008"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Probing Electrode Transformation under Dynamic Operation for Alkaline W_4ff0d6af\\images\\06f61129f287b70853c43cf33770d09d07dc9e65159585c41f89d38ed18fe080.jpg",
+    "raw_relative_path": "images/06f61129f287b70853c43cf33770d09d07dc9e65159585c41f89d38ed18fe080.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Probing Electrode Transformation under Dynamic Operation for Alkaline W_4ff0d6af\\images\\08eb40c23c863ec6192a0f21edeb29cfa5c875045f6b7825cc34a50dccde06de.jpg",
+    "raw_relative_path": "images/08eb40c23c863ec6192a0f21edeb29cfa5c875045f6b7825cc34a50dccde06de.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Probing Electrode Transformation under Dynamic Operation for Alkaline W_4ff0d6af\\images\\133e5e23ba5c7ce3d4bfb974f5895423b6d8beb85b5f4fc16b79c29863d17918.jpg",
+    "raw_relative_path": "images/133e5e23ba5c7ce3d4bfb974f5895423b6d8beb85b5f4fc16b79c29863d17918.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Probing Electrode Transformation under Dynamic Operation for Alkaline W_4ff0d6af\\images\\19737a1579914415fe3ed684ec6227315a82919212d28a05770e9084acb7369c.jpg",
+    "raw_relative_path": "images/19737a1579914415fe3ed684ec6227315a82919212d28a05770e9084acb7369c.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Probing Electrode Transformation under Dynamic Operation for Alkaline W_4ff0d6af\\images\\1b8a830dc69e9842b52352bf207373e1edccd52846adafce637f30df61048591.jpg",
+    "raw_relative_path": "images/1b8a830dc69e9842b52352bf207373e1edccd52846adafce637f30df61048591.jpg",
+    "status": "used",
+    "figure_id": "FIG004",
+    "clean_path": "figures/FIG004/image_002.jpg",
+    "caption_path": "figures/FIG004/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S05-P011",
+      "S05-P013",
+      "S05-P014",
+      "S05-P015",
+      "S05-P026"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Probing Electrode Transformation under Dynamic Operation for Alkaline W_4ff0d6af\\images\\2350e6881788d87c0bf8eca2f08e9ec14f80c185116bd5d423c2c5ecfb051ca2.jpg",
+    "raw_relative_path": "images/2350e6881788d87c0bf8eca2f08e9ec14f80c185116bd5d423c2c5ecfb051ca2.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Probing Electrode Transformation under Dynamic Operation for Alkaline W_4ff0d6af\\images\\2b2081b71447603c97e9510817974b58494a526b175b3695fc31bbaf9c056f3f.jpg",
+    "raw_relative_path": "images/2b2081b71447603c97e9510817974b58494a526b175b3695fc31bbaf9c056f3f.jpg",
+    "status": "used",
+    "figure_id": "FIG003",
+    "clean_path": "figures/FIG003/image_002.jpg",
+    "caption_path": "figures/FIG003/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S01-P002",
+      "S05-P007",
+      "S05-P010"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Probing Electrode Transformation under Dynamic Operation for Alkaline W_4ff0d6af\\images\\2bbee928c6bf85eddd1283f33c948959e663e8d07b642dbb9c092450d3a48bad.jpg",
+    "raw_relative_path": "images/2bbee928c6bf85eddd1283f33c948959e663e8d07b642dbb9c092450d3a48bad.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Probing Electrode Transformation under Dynamic Operation for Alkaline W_4ff0d6af\\images\\32ea164874beee853be8b2b40ba05a61681e132aac98e11922b5618a0d245a05.jpg",
+    "raw_relative_path": "images/32ea164874beee853be8b2b40ba05a61681e132aac98e11922b5618a0d245a05.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Probing Electrode Transformation under Dynamic Operation for Alkaline W_4ff0d6af\\images\\3dfaa2cbc240741bbe869c710a1ea223f9c82fb2b4ffc7b66dc31bafd33f5317.jpg",
+    "raw_relative_path": "images/3dfaa2cbc240741bbe869c710a1ea223f9c82fb2b4ffc7b66dc31bafd33f5317.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Probing Electrode Transformation under Dynamic Operation for Alkaline W_4ff0d6af\\images\\3dfb70e57945903fdb9ab84cf0946542f02bf8201de88230d6761ca88780aee2.jpg",
+    "raw_relative_path": "images/3dfb70e57945903fdb9ab84cf0946542f02bf8201de88230d6761ca88780aee2.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Probing Electrode Transformation under Dynamic Operation for Alkaline W_4ff0d6af\\images\\46a6f5291b9fcfed5916d2778705f2ac598b35ff97de0623831191349fa57e57.jpg",
+    "raw_relative_path": "images/46a6f5291b9fcfed5916d2778705f2ac598b35ff97de0623831191349fa57e57.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Probing Electrode Transformation under Dynamic Operation for Alkaline W_4ff0d6af\\images\\487a262d413a50428dfa5b0e69541c919f5c117d74f615e24c59d3ea858601c9.jpg",
+    "raw_relative_path": "images/487a262d413a50428dfa5b0e69541c919f5c117d74f615e24c59d3ea858601c9.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Probing Electrode Transformation under Dynamic Operation for Alkaline W_4ff0d6af\\images\\487cd61564bcc286c60ea6f90cf6f5a1d24cab7bc1464a53efb63d8840c1e976.jpg",
+    "raw_relative_path": "images/487cd61564bcc286c60ea6f90cf6f5a1d24cab7bc1464a53efb63d8840c1e976.jpg",
+    "status": "used",
+    "figure_id": "FIG004",
+    "clean_path": "figures/FIG004/image_001.jpg",
+    "caption_path": "figures/FIG004/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S05-P011",
+      "S05-P013",
+      "S05-P014",
+      "S05-P015",
+      "S05-P026"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Probing Electrode Transformation under Dynamic Operation for Alkaline W_4ff0d6af\\images\\48b3c9f63a4a26e79c845602f02bd46d7c1adcb455e9124ab58b13a99eab896a.jpg",
+    "raw_relative_path": "images/48b3c9f63a4a26e79c845602f02bd46d7c1adcb455e9124ab58b13a99eab896a.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Probing Electrode Transformation under Dynamic Operation for Alkaline W_4ff0d6af\\images\\60c39136072275757d9df3e66478255b07b3630157c984846be1aeeec90cdb3f.jpg",
+    "raw_relative_path": "images/60c39136072275757d9df3e66478255b07b3630157c984846be1aeeec90cdb3f.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Probing Electrode Transformation under Dynamic Operation for Alkaline W_4ff0d6af\\images\\613f80e259e2489878d4fdc4656f1292b26421ac276797be547955fcbed2ee7b.jpg",
+    "raw_relative_path": "images/613f80e259e2489878d4fdc4656f1292b26421ac276797be547955fcbed2ee7b.jpg",
+    "status": "used",
+    "figure_id": "FIG002",
+    "clean_path": "figures/FIG002/image_001.jpg",
+    "caption_path": "figures/FIG002/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S05-P001",
+      "S05-P003",
+      "S05-P004",
+      "S05-P005",
+      "S05-P008"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Probing Electrode Transformation under Dynamic Operation for Alkaline W_4ff0d6af\\images\\64bdd7ff138864e2139b99ec04d096643b5e7eabf4638c04b141a55515bc81d2.jpg",
+    "raw_relative_path": "images/64bdd7ff138864e2139b99ec04d096643b5e7eabf4638c04b141a55515bc81d2.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Probing Electrode Transformation under Dynamic Operation for Alkaline W_4ff0d6af\\images\\6a88ede411ac3e01dfcd59430c4040925a9563fc228a02dabed4397642c630bb.jpg",
+    "raw_relative_path": "images/6a88ede411ac3e01dfcd59430c4040925a9563fc228a02dabed4397642c630bb.jpg",
+    "status": "used",
+    "figure_id": "FIG002",
+    "clean_path": "figures/FIG002/image_002.jpg",
+    "caption_path": "figures/FIG002/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S05-P001",
+      "S05-P003",
+      "S05-P004",
+      "S05-P005",
+      "S05-P008"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Probing Electrode Transformation under Dynamic Operation for Alkaline W_4ff0d6af\\images\\7fb50a278cd43a95cd8761922e1a29d5ab8e6f98ac5a44522034abe13d4df9ce.jpg",
+    "raw_relative_path": "images/7fb50a278cd43a95cd8761922e1a29d5ab8e6f98ac5a44522034abe13d4df9ce.jpg",
+    "status": "used",
+    "figure_id": "FIG006",
+    "clean_path": "figures/FIG006/image_003.jpg",
+    "caption_path": "figures/FIG006/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S01-P004",
+      "S05-P022",
+      "S05-P023",
+      "S05-P024",
+      "S05-P025",
+      "S05-P026"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Probing Electrode Transformation under Dynamic Operation for Alkaline W_4ff0d6af\\images\\83c49769d7abf14f1039db8a6e3004dd321fe3401122025de3fb61c21d83f1bb.jpg",
+    "raw_relative_path": "images/83c49769d7abf14f1039db8a6e3004dd321fe3401122025de3fb61c21d83f1bb.jpg",
+    "status": "used",
+    "figure_id": "FIG006",
+    "clean_path": "figures/FIG006/image_001.jpg",
+    "caption_path": "figures/FIG006/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S01-P004",
+      "S05-P022",
+      "S05-P023",
+      "S05-P024",
+      "S05-P025",
+      "S05-P026"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Probing Electrode Transformation under Dynamic Operation for Alkaline W_4ff0d6af\\images\\9503a3b78c15d16d86875c4984f08377738380267e83568aaadfe7083771fcda.jpg",
+    "raw_relative_path": "images/9503a3b78c15d16d86875c4984f08377738380267e83568aaadfe7083771fcda.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Probing Electrode Transformation under Dynamic Operation for Alkaline W_4ff0d6af\\images\\96114dfa19d0cddace9c76a83c36d3d9d58593ada55dc41651c7d8db3a638d47.jpg",
+    "raw_relative_path": "images/96114dfa19d0cddace9c76a83c36d3d9d58593ada55dc41651c7d8db3a638d47.jpg",
+    "status": "used",
+    "figure_id": "FIG003",
+    "clean_path": "figures/FIG003/image_001.jpg",
+    "caption_path": "figures/FIG003/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S01-P002",
+      "S05-P007",
+      "S05-P010"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Probing Electrode Transformation under Dynamic Operation for Alkaline W_4ff0d6af\\images\\a60d52e6efbac7661926c0db6cf18cb646f1f663123fa3ac64e7bd7a5b85533d.jpg",
+    "raw_relative_path": "images/a60d52e6efbac7661926c0db6cf18cb646f1f663123fa3ac64e7bd7a5b85533d.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Probing Electrode Transformation under Dynamic Operation for Alkaline W_4ff0d6af\\images\\ab8c6cd7bfa75919a6ed63c4b7fed56c6058547bb1c078c8a51649ce25f1a9f2.jpg",
+    "raw_relative_path": "images/ab8c6cd7bfa75919a6ed63c4b7fed56c6058547bb1c078c8a51649ce25f1a9f2.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Probing Electrode Transformation under Dynamic Operation for Alkaline W_4ff0d6af\\images\\ac376b5bd1abcbefaa9202061dfb848c38277fd4f11ddf8c9c98e29162cb11d0.jpg",
+    "raw_relative_path": "images/ac376b5bd1abcbefaa9202061dfb848c38277fd4f11ddf8c9c98e29162cb11d0.jpg",
+    "status": "used",
+    "figure_id": "FIG005",
+    "clean_path": "figures/FIG005/image_002.jpg",
+    "caption_path": "figures/FIG005/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S01-P003",
+      "S05-P016",
+      "S05-P019",
+      "S05-P020",
+      "S05-P021",
+      "S07-P011"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Probing Electrode Transformation under Dynamic Operation for Alkaline W_4ff0d6af\\images\\b8643e67acb2657224ba17ed5975f4dd5e961d4bbda2e38c25d28811ad6e25c4.jpg",
+    "raw_relative_path": "images/b8643e67acb2657224ba17ed5975f4dd5e961d4bbda2e38c25d28811ad6e25c4.jpg",
+    "status": "used",
+    "figure_id": "FIG003",
+    "clean_path": "figures/FIG003/image_003.jpg",
+    "caption_path": "figures/FIG003/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S01-P002",
+      "S05-P007",
+      "S05-P010"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Probing Electrode Transformation under Dynamic Operation for Alkaline W_4ff0d6af\\images\\bdcce06eeb8433cbfe6cb46abe9c6ffa0e29d3f0a50c926417ebf1d6f56c9079.jpg",
+    "raw_relative_path": "images/bdcce06eeb8433cbfe6cb46abe9c6ffa0e29d3f0a50c926417ebf1d6f56c9079.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Probing Electrode Transformation under Dynamic Operation for Alkaline W_4ff0d6af\\images\\be80134e7143909b9d57a16f9ebc1cebf63017d6e3cc088af5b6cb5067865bfd.jpg",
+    "raw_relative_path": "images/be80134e7143909b9d57a16f9ebc1cebf63017d6e3cc088af5b6cb5067865bfd.jpg",
+    "status": "used",
+    "figure_id": "FIG006",
+    "clean_path": "figures/FIG006/image_002.jpg",
+    "caption_path": "figures/FIG006/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S01-P004",
+      "S05-P022",
+      "S05-P023",
+      "S05-P024",
+      "S05-P025",
+      "S05-P026"
+    ]
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Probing Electrode Transformation under Dynamic Operation for Alkaline W_4ff0d6af\\images\\cc3cb88e78a41043f1271a7b820b0d9f4bd8d86cf6777c6564cbf19743d4c91a.jpg",
+    "raw_relative_path": "images/cc3cb88e78a41043f1271a7b820b0d9f4bd8d86cf6777c6564cbf19743d4c91a.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Probing Electrode Transformation under Dynamic Operation for Alkaline W_4ff0d6af\\images\\d11ae194bbae109cd0c3aad6adb5fbeea1d16471efb1fca787567400aab65d30.jpg",
+    "raw_relative_path": "images/d11ae194bbae109cd0c3aad6adb5fbeea1d16471efb1fca787567400aab65d30.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Probing Electrode Transformation under Dynamic Operation for Alkaline W_4ff0d6af\\images\\d47d3442d1f2974e815b92fcaff053ecf15f0cbdbad4a2afbc01934949dde7ea.jpg",
+    "raw_relative_path": "images/d47d3442d1f2974e815b92fcaff053ecf15f0cbdbad4a2afbc01934949dde7ea.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Probing Electrode Transformation under Dynamic Operation for Alkaline W_4ff0d6af\\images\\d860642cf727bdbcce93ab43d8440ad0b07748991ff756338efac36fb1e626e2.jpg",
+    "raw_relative_path": "images/d860642cf727bdbcce93ab43d8440ad0b07748991ff756338efac36fb1e626e2.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Probing Electrode Transformation under Dynamic Operation for Alkaline W_4ff0d6af\\images\\d9f34c35ee4768af07e7b332028fec9767095507e9c797e48172c5de76300c10.jpg",
+    "raw_relative_path": "images/d9f34c35ee4768af07e7b332028fec9767095507e9c797e48172c5de76300c10.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Probing Electrode Transformation under Dynamic Operation for Alkaline W_4ff0d6af\\images\\e24b3841fdf8f74e80f90f3a5fd7a00295a0bd630524c59c402d36e9cab00954.jpg",
+    "raw_relative_path": "images/e24b3841fdf8f74e80f90f3a5fd7a00295a0bd630524c59c402d36e9cab00954.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Probing Electrode Transformation under Dynamic Operation for Alkaline W_4ff0d6af\\images\\fba4d5a4688d8f6ce6275c92243d4a2516ffc3638ac692e62acb152b092a8715.jpg",
+    "raw_relative_path": "images/fba4d5a4688d8f6ce6275c92243d4a2516ffc3638ac692e62acb152b092a8715.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Probing Electrode Transformation under Dynamic Operation for Alkaline W_4ff0d6af\\images\\fbbf5f2092abfe4d606fa10e5ceb645d78e6f587e2914fc390b1f7c054ec72ca.jpg",
+    "raw_relative_path": "images/fbbf5f2092abfe4d606fa10e5ceb645d78e6f587e2914fc390b1f7c054ec72ca.jpg",
+    "status": "uncertain",
+    "figure_id": null,
+    "clean_path": null,
+    "caption_path": null,
+    "note": "Not associated with an automatically detected main-text figure; keep raw path for manual review.",
+    "linked_paragraphs": []
+  },
+  {
+    "raw_path": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Probing Electrode Transformation under Dynamic Operation for Alkaline W_4ff0d6af\\images\\fed5e8dbcc704c3e823962de5883d050306aa1a9d2f40f1558370d63aaba309c.jpg",
+    "raw_relative_path": "images/fed5e8dbcc704c3e823962de5883d050306aa1a9d2f40f1558370d63aaba309c.jpg",
+    "status": "used",
+    "figure_id": "FIG005",
+    "clean_path": "figures/FIG005/image_001.jpg",
+    "caption_path": "figures/FIG005/caption.md",
+    "note": "Copied into figures/FIGxxx/ and paired with caption.md.",
+    "linked_paragraphs": [
+      "S01-P003",
+      "S05-P016",
+      "S05-P019",
+      "S05-P020",
+      "S05-P021",
+      "S07-P011"
+    ]
+  }
+]

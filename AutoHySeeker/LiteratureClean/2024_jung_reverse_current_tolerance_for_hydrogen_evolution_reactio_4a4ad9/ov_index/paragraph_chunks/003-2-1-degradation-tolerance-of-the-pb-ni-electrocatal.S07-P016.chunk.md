@@ -1,0 +1,8 @@
+---
+paper_id: "2024_jung_reverse_current_tolerance_for_hydrogen_evolution_reactio_4a4ad9"
+section_id: "S07_back_matter_or_supplementary"
+paragraph_id: "S07-P016"
+evidence_id: "EV-jung2024-4a4ad9-S07-P016"
+chunk_index: 0
+---
+To further confirm the durability of the RC-Pb/Ni-based electrode for HER during repeated RC cycles, 700 RC cycles were implemented with CV measurement ( $\approx$ 12.6 h, Figure S6, Supporting Information). The CV measurements were conducted from $-0.3\mathrm{V}$ (HER region) to $1.3\mathrm{V}$ (RC region), at a scan rate of $50\mathrm{mVs^{-1}}$ . As the cycle count increased, the Ni catalyst performance continuously deteriorated, and thus, an increased overpotential was observed. Remarkably, the overpotential of the Pb/Ni catalyst at $5\mathrm{mAcm}^{-2}$ gradually decreased from $243\mathrm{mV}$ to $221\mathrm{mV}$ and saturated after the 700th cycle. The $\mathrm{RCSF}_{\eta}$ and $\mathrm{RCAF}_{\eta}$ values for Pb/Ni were also larger than those for Ni, indicating that the HER activity of Pb/Ni was notably improved and that it could tolerate the RC flow for extended periods.

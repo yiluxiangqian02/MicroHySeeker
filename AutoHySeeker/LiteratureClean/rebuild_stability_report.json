@@ -1,0 +1,125 @@
+{
+  "generated_at": "2026-05-30T01:45:35",
+  "clean_root": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\LiteratureClean",
+  "paper_count": 11,
+  "pass_count": 11,
+  "fail_count": 0,
+  "pass_rate": "100.00%",
+  "rebuild_status": {
+    "ran": true,
+    "exit_code": 0,
+    "output_tail": "[batch] SKIP duplicate  97258947-9fe4-41e1-af38-7ebc8f559868_origin\n        same paper_id as 10,000-h-stable intermittent alkaline seawater electrolysis  (2025_sha_10000h_stable_intermittent_alkaline_seawater_electrolysi_333f5c)\n[batch] SKIP duplicate  cathodic-protection-system-against-a-reverse-current-after-shut-down-in_9f543e97\n        same paper_id as cathodic-protection-system-against-a-reverse-current-after-shut-down-in-zero-gap-alkaline-water-electrolysis  (2022_kim_cathodic_protection_system_against_a_reverse_current_aft_180201)\n[batch] SKIP duplicate  面上项目-正文-2026-R3 (1)\n        same paper_id as 76ec4365-1c6d-4a2f-ae16-12acf100a2df_origin  (2026_unknown_2026_2d8d75)\n[batch] PROCESS  10,000-h-stable intermittent alkaline seawater electrolysis ...\n[batch] OK       2025_sha_10000h_stable_intermittent_alkaline_seawater_electrolysi_333f5c\n[batch] PROCESS  76ec4365-1c6d-4a2f-ae16-12acf100a2df_origin ...\n[batch] OK       2026_unknown_2026_2d8d75\n[batch] PROCESS  Dependence of the reverse current on the surface of electrod ...\n[batch] OK       2023_uchino_dependence_of_the_reverse_current_on_the_surface_of_elec_38347e\n[batch] PROCESS  Effects of operation and shutdown parameters and electrode m ...\n[batch] OK       2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb\n[batch] PROCESS  Probing Electrode Transformation under Dynamic Operation for ...\n[batch] OK       2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7\n[batch] PROCESS  Relationship between the redox reactions on a bipolar plate  ...\n[batch] OK       2017_uchino_relationship_between_the_redox_reactions_on_a_bipolar_pl_eb3da9\n[batch] PROCESS  Reverse‐Current Induced Cascade Degradation in Ni Ru Electro ...\n[batch] OK       2025_center_reverse_current_induced_cascade_degradation_in_ni_ru_ele_2782d6\n[batch] PROCESS  Reverse‐Current Tolerance for Hydrogen Evolution Reaction Ac ...\n[batch] OK       2024_jung_reverse_current_tolerance_for_hydrogen_evolution_reactio_4a4ad9\n[batch] PROCESS  Strategies and Countermeasures Against Reverse Current for E ...\n[batch] OK       2025_peng_strategies_and_countermeasures_against_reverse_current_f_803838\n[batch] PROCESS  cathodic-protection-system-against-a-reverse-current-after-s ...\n[batch] OK       2022_kim_cathodic_protection_system_against_a_reverse_current_aft_180201\n[batch] PROCESS  heterointerface-enabled-anti-reverse-current-electrodes-for- ...\n[batch] OK       2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e\nBatch run summary\n  Processed : 11\n  Skipped   : 0\n  Failed    : 0\n  Run log   : D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\LiteratureClean\\batch_run_log.json\n  Regression report updated : D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\LiteratureClean\\preprocessing_regression_report.md"
+  },
+  "papers": [
+    {
+      "paper_id": "2017_uchino_relationship_between_the_redox_reactions_on_a_bipolar_pl_eb3da9",
+      "status": "pass",
+      "heading_order_stable": true,
+      "paragraph_uid_stable": true,
+      "heading_count_before": 7,
+      "heading_count_after": 7,
+      "paragraph_count_before": 64,
+      "paragraph_count_after": 64
+    },
+    {
+      "paper_id": "2022_kim_cathodic_protection_system_against_a_reverse_current_aft_180201",
+      "status": "pass",
+      "heading_order_stable": true,
+      "paragraph_uid_stable": true,
+      "heading_count_before": 14,
+      "heading_count_after": 14,
+      "paragraph_count_before": 62,
+      "paragraph_count_after": 62
+    },
+    {
+      "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "status": "pass",
+      "heading_order_stable": true,
+      "paragraph_uid_stable": true,
+      "heading_count_before": 22,
+      "heading_count_after": 22,
+      "paragraph_count_before": 75,
+      "paragraph_count_after": 75
+    },
+    {
+      "paper_id": "2023_uchino_dependence_of_the_reverse_current_on_the_surface_of_elec_38347e",
+      "status": "pass",
+      "heading_order_stable": true,
+      "paragraph_uid_stable": true,
+      "heading_count_before": 15,
+      "heading_count_after": 15,
+      "paragraph_count_before": 77,
+      "paragraph_count_after": 77
+    },
+    {
+      "paper_id": "2024_jung_reverse_current_tolerance_for_hydrogen_evolution_reactio_4a4ad9",
+      "status": "pass",
+      "heading_order_stable": true,
+      "paragraph_uid_stable": true,
+      "heading_count_before": 14,
+      "heading_count_after": 14,
+      "paragraph_count_before": 73,
+      "paragraph_count_after": 73
+    },
+    {
+      "paper_id": "2025_center_reverse_current_induced_cascade_degradation_in_ni_ru_ele_2782d6",
+      "status": "pass",
+      "heading_order_stable": true,
+      "paragraph_uid_stable": true,
+      "heading_count_before": 17,
+      "heading_count_after": 17,
+      "paragraph_count_before": 65,
+      "paragraph_count_after": 65
+    },
+    {
+      "paper_id": "2025_peng_strategies_and_countermeasures_against_reverse_current_f_803838",
+      "status": "pass",
+      "heading_order_stable": true,
+      "paragraph_uid_stable": true,
+      "heading_count_before": 18,
+      "heading_count_after": 18,
+      "paragraph_count_before": 82,
+      "paragraph_count_after": 82
+    },
+    {
+      "paper_id": "2025_sha_10000h_stable_intermittent_alkaline_seawater_electrolysi_333f5c",
+      "status": "pass",
+      "heading_order_stable": true,
+      "paragraph_uid_stable": true,
+      "heading_count_before": 25,
+      "heading_count_after": 25,
+      "paragraph_count_before": 63,
+      "paragraph_count_after": 63
+    },
+    {
+      "paper_id": "2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7",
+      "status": "pass",
+      "heading_order_stable": true,
+      "paragraph_uid_stable": true,
+      "heading_count_before": 14,
+      "heading_count_after": 14,
+      "paragraph_count_before": 81,
+      "paragraph_count_after": 81
+    },
+    {
+      "paper_id": "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e",
+      "status": "pass",
+      "heading_order_stable": true,
+      "paragraph_uid_stable": true,
+      "heading_count_before": 13,
+      "heading_count_after": 13,
+      "paragraph_count_before": 77,
+      "paragraph_count_after": 77
+    },
+    {
+      "paper_id": "2026_unknown_2026_2d8d75",
+      "status": "pass",
+      "heading_order_stable": true,
+      "paragraph_uid_stable": true,
+      "heading_count_before": 41,
+      "heading_count_after": 41,
+      "paragraph_count_before": 91,
+      "paragraph_count_after": 91
+    }
+  ]
+}

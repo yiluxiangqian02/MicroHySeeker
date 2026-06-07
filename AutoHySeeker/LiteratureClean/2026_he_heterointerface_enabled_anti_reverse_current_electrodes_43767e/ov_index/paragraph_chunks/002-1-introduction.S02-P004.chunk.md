@@ -1,0 +1,8 @@
+---
+paper_id: "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e"
+section_id: "S02_introduction"
+paragraph_id: "S02-P004"
+evidence_id: "EV-he2026-43767e-S02-P004"
+chunk_index: 0
+---
+exposure, mechanical fatigue from bubble turbulence, and structural collapse under high oxidative potentials. $^{17,18}$ These issues are exacerbated in fluctuating renewable-coupled systems, which frequently cycle between startup and shutdown operations due to gas crossover and safety issues at low loads. $^{19,20}$ Crucially, such dynamic operation triggers the reverse current (RC) phenomenon as a paramount yet overlooked failure mechanism for AWE electrodes. $^{6,21-23}$ RC originates from the AWE's stack design: bipolar plates electrically bridge adjacent cells, while circulating electrolyte forms ionic pathways, creating unintended short circuits between anodes and cathodes during shutdowns (Figure 1a). $^{20,24}$ This transient reverse polarity drives cathodic oxidation (e.g., $\mathrm{Ni} \rightarrow \beta\text{-Ni(OH)}_2$ ) and anodic reduction (e.g., $\mathrm{NiOOH} \rightarrow \mathrm{Ni(OH)}_2$ ), $^{8,22,25}$ destabilizing electrode interfaces through rapid phase reconstruction, accelerated corrosion, and interfacial delamination (Figure 1b). $^{9,22,26}$ Existing mitigation strategies—external polarized rectifiers $^{27,28}$ and sacrificial anodes $^{29,30}$ —impose prohibitive efficiency

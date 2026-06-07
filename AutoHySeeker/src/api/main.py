@@ -32,6 +32,10 @@ from src.api.routes.tasks import router as tasks_router
 from src.api.routes.templates import router as templates_router
 from src.common.config import API_HOST, API_PORT
 from src.common.logger import configure_logging, get_logger
+from src.knowledge.viking_client import (
+    close_shared_openviking_client,
+    get_shared_openviking_client,
+)
 
 configure_logging()
 logger = get_logger(__name__)
@@ -69,6 +73,7 @@ app.include_router(knowledge_router)
 @app.on_event("startup")
 async def _startup_filter() -> None:
     _install_access_log_filter()
+    _ensure_openviking_running()
     await _ensure_mhs_running()
 
 
@@ -178,6 +183,25 @@ async def _shutdown_mhs() -> None:
         except subprocess.TimeoutExpired:
             _MHS_PROCESS.kill()
         _MHS_PROCESS = None
+    close_shared_openviking_client()
+
+
+def _ensure_openviking_running() -> None:
+    from src.common.config import get_knowledge_config
+
+    config = get_knowledge_config()
+    if config.get("enabled", True) is False:
+        logger.info("OpenViking disabled by configs/knowledge.toml")
+        return
+
+    client = get_shared_openviking_client(
+        workspace_path=config.get("workspace_path"),
+        initialize=True,
+    )
+    if client.is_available:
+        logger.info("OpenViking ready: %s", client.workspace)
+    else:
+        logger.warning("OpenViking unavailable: %s", client.availability_reason)
 
 
 @app.get("/health")

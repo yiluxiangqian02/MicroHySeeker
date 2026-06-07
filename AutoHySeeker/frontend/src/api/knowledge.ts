@@ -2,6 +2,7 @@ import { apiClient } from "./client";
 
 export interface KnowledgeItem {
   id: string;
+  displayId?: string;
   partition: string;
   title: string;
   content: string;
@@ -22,6 +23,7 @@ interface KnowledgeSearchBackendItem {
   content?: string;
   score?: number;
   metadata?: Record<string, unknown>;
+  payload?: Record<string, unknown>;
 }
 
 interface KnowledgeSearchResponse {
@@ -55,22 +57,167 @@ const normalizeTags = (metadata?: Record<string, unknown>) => {
   return partition ? [partition] : [];
 };
 
+const clipText = (value: string, maxLen: number = 340) => {
+  const compact = value.replace(/\s+/g, " ").trim();
+  if (compact.length <= maxLen) {
+    return compact;
+  }
+  return `${compact.slice(0, maxLen - 1)}…`;
+};
+
+const parsePaperIdFromUri = (uri?: string): string | undefined => {
+  if (!uri) {
+    return undefined;
+  }
+  const m = uri.match(/\/literature\/([^/]+)/i);
+  return m?.[1];
+};
+
+const parseSeqFromRaw = (value: unknown): string | undefined => {
+  if (typeof value !== "string") {
+    return undefined;
+  }
+  const raw = value.trim();
+  if (!raw) {
+    return undefined;
+  }
+  const m = raw.match(/(?:-|_)?P(\d{1,6})$/i) || raw.match(/(\d{1,6})$/);
+  if (!m) {
+    return undefined;
+  }
+  return m[1].padStart(3, "0").slice(-3);
+};
+
+const parseSeqFromUri = (uri?: string): string | undefined => {
+  if (!uri) {
+    return undefined;
+  }
+  const m = uri.match(/\/P(\d{1,6})\.md$/i);
+  return m?.[1]?.padStart(3, "0").slice(-3);
+};
+
+const paperTagNoHash = (paperId?: string): string | undefined => {
+  if (!paperId) {
+    return undefined;
+  }
+  const m = paperId.match(/^(\d{4})_([a-zA-Z]+)/);
+  if (m) {
+    return `${m[2].toUpperCase()}${m[1]}`;
+  }
+  return undefined;
+};
+
+const buildDisplayId = (
+  item: KnowledgeSearchBackendItem,
+  payload?: Record<string, unknown>,
+): string | undefined => {
+  const paperId =
+    (typeof payload?.paper_id === "string" ? payload.paper_id : undefined) ||
+    (typeof item.metadata?.paper_id === "string" ? item.metadata.paper_id : undefined) ||
+    parsePaperIdFromUri(item.uri);
+  const tag = paperTagNoHash(paperId);
+  const seq =
+    parseSeqFromRaw(payload?.paragraph_uid) ||
+    parseSeqFromRaw(payload?.paragraph_id) ||
+    parseSeqFromRaw(item.metadata?.paragraph_uid) ||
+    parseSeqFromRaw(item.metadata?.paragraph_id) ||
+    parseSeqFromUri(item.uri);
+  if (!tag || !seq) {
+    return undefined;
+  }
+  return `${tag}-P${seq}`;
+};
+
+const extractReadableContent = (
+  rawContent: string | undefined,
+  payload: Record<string, unknown>,
+): string => {
+  const candidates: unknown[] = [
+    payload.paragraph_text,
+    payload.text,
+    payload.content,
+    payload.abstract,
+    payload.summary,
+  ];
+
+  for (const candidate of candidates) {
+    if (typeof candidate === "string" && candidate.trim()) {
+      return clipText(candidate);
+    }
+  }
+
+  if (rawContent) {
+    const trimmed = rawContent.trim();
+    if (!trimmed) {
+      return "";
+    }
+    if (trimmed.startsWith("{") || trimmed.startsWith("[")) {
+      try {
+        const parsed = JSON.parse(trimmed);
+        return clipText(JSON.stringify(parsed, null, 2));
+      } catch {
+        return clipText(trimmed);
+      }
+    }
+    return clipText(trimmed);
+  }
+
+  return "";
+};
+
 const toKnowledgeItem = (
   item: KnowledgeSearchBackendItem,
   partitionFallback: string,
 ): KnowledgeItem => {
   const timestamp = nowIso();
+  const payload =
+    item.payload && typeof item.payload === "object"
+      ? item.payload
+      : (() => {
+          if (!item.content) {
+            return {} as Record<string, unknown>;
+          }
+          try {
+            const parsed = JSON.parse(item.content);
+            return parsed && typeof parsed === "object" ? (parsed as Record<string, unknown>) : {};
+          } catch {
+            return {} as Record<string, unknown>;
+          }
+        })();
   const partition =
     typeof item.metadata?.partition === "string" ? item.metadata.partition : partitionFallback;
   const uri = typeof item.uri === "string" ? item.uri : undefined;
+  const displayId = buildDisplayId(item, payload);
+  const paperId =
+    (typeof payload.paper_id === "string" ? payload.paper_id : undefined) ||
+    (typeof item.metadata?.paper_id === "string" ? item.metadata.paper_id : undefined) ||
+    parsePaperIdFromUri(uri);
+  const headingText =
+    (typeof payload.heading_text === "string" ? payload.heading_text : undefined) ||
+    (typeof payload.original_heading === "string" ? payload.original_heading : undefined);
+  const titleBase = titleFromUri(uri);
+  const title = displayId
+    ? headingText
+      ? `${displayId} · ${headingText}`
+      : displayId
+    : titleBase;
 
   return {
     id: uri || `${partition}-${timestamp}`,
+    displayId,
     partition,
-    title: titleFromUri(uri),
-    content: item.content || "",
+    title,
+    content: extractReadableContent(item.content, payload),
     tags: normalizeTags(item.metadata),
-    metadata: item.metadata,
+    metadata: {
+      ...item.metadata,
+      ...(paperId ? { paper_id: paperId } : {}),
+      ...(headingText ? { heading_text: headingText } : {}),
+      ...(typeof payload.paragraph_uid === "string" ? { paragraph_uid: payload.paragraph_uid } : {}),
+      ...(typeof payload.paragraph_id === "string" ? { paragraph_id: payload.paragraph_id } : {}),
+      ...(typeof payload.evidence_id === "string" ? { evidence_id: payload.evidence_id } : {}),
+      ...(uri ? { uri } : {}),
+    },
     createdAt: timestamp,
     updatedAt: timestamp,
   };

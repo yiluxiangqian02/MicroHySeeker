@@ -1,0 +1,43 @@
+{
+  "paper_id": "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e",
+  "title": "Heterointerface-Enabled Anti-Reverse-Current Electrodes for Alkaline Water Electrolyzers at $1000\\mathrm{mAcm}^{-2}$",
+  "doi": "10.1021/jacs.5c17603",
+  "doi_url": "https://doi.org/10.1021/jacs.5c17603",
+  "year": "2026",
+  "published_online": "",
+  "first_author": "he",
+  "authors_raw": "Wenjun He, $^{\\diamond}$ Yueshuai Wang, $^{\\diamond}$ Yilong Zhao, $^{\\diamond}$ Cheng Tang, $^{*}$ Linchuan Cong, Changli Wang, Yue Lu, Xin Liu, Juncai Dong, Serhiy Cherevko, Qingsong Hua, and Qiang Zhang $^{*}$",
+  "journal": "JACS",
+  "document_type": "research_article",
+  "raw_paths": {
+    "mineru_output_dir": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\heterointerface-enabled-anti-reverse-current-electrodes-for-alkaline-wa_4250254b",
+    "full_md": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\heterointerface-enabled-anti-reverse-current-electrodes-for-alkaline-wa_4250254b\\full.md",
+    "content_list_v2_json": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\heterointerface-enabled-anti-reverse-current-electrodes-for-alkaline-wa_4250254b\\content_list_v2.json",
+    "layout_json": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\heterointerface-enabled-anti-reverse-current-electrodes-for-alkaline-wa_4250254b\\layout.json",
+    "origin_pdf": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\heterointerface-enabled-anti-reverse-current-electrodes-for-alkaline-wa_4250254b\\38a65643-2bf1-4b8a-a3da-5f8361467fe1_origin.pdf",
+    "images_dir": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\heterointerface-enabled-anti-reverse-current-electrodes-for-alkaline-wa_4250254b\\images"
+  },
+  "paper_short": "he2026-43767e",
+  "clean_paths": {
+    "clean_dir": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\LiteratureClean\\2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e",
+    "full_clean": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\LiteratureClean\\2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e\\full_clean.md",
+    "figures_dir": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\LiteratureClean\\2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e\\figures",
+    "tables_dir": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\LiteratureClean\\2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e\\tables",
+    "sections_by_heading_dir": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\LiteratureClean\\2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e\\sections_by_heading"
+  },
+  "processing": {
+    "mode": "single_paper_semi_automatic",
+    "processed_at": "2026-05-30T16:29:54",
+    "script": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\LiteratureClean\\clean_single_mineru_paper.py",
+    "openviking_ingested": false,
+    "batch_import": false,
+    "section_recovery": {
+      "content_list_hints": {
+        "front_count": 5,
+        "abstract_count": 1,
+        "back_count": 7
+      },
+      "layout_json_available": true
+    }
+  }
+}

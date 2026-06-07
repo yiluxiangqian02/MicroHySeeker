@@ -1,0 +1,43 @@
+{
+  "paper_id": "2017_uchino_relationship_between_the_redox_reactions_on_a_bipolar_pl_eb3da9",
+  "title": "Relationship Between the Redox Reactions on a Bipolar Plate and Reverse Current After Alkaline Water Electrolysis",
+  "doi": "",
+  "doi_url": "",
+  "year": "2017",
+  "published_online": "1 October 2017 $©$ Springer Science+Business Media, LLC 2017",
+  "first_author": "uchino",
+  "authors_raw": "Yosuke Uchino1,2 & Takayuki Kobayashi 2 & Shinji Hasegawa1 & Ikuo Nagashima3 & Yoshio Sunada4 & Akiyoshi Manabe5 & Yoshinori Nishiki5 & Shigenori Mitsushima2",
+  "journal": "",
+  "document_type": "research_article",
+  "raw_paths": {
+    "mineru_output_dir": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Relationship between the redox reactions on a bipolar plate and reverse_9bed6a7a",
+    "full_md": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Relationship between the redox reactions on a bipolar plate and reverse_9bed6a7a\\full.md",
+    "content_list_v2_json": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Relationship between the redox reactions on a bipolar plate and reverse_9bed6a7a\\content_list_v2.json",
+    "layout_json": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Relationship between the redox reactions on a bipolar plate and reverse_9bed6a7a\\layout.json",
+    "origin_pdf": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Relationship between the redox reactions on a bipolar plate and reverse_9bed6a7a\\9bed917e-f947-4dbd-a344-f4b1cbf65b2e_origin.pdf",
+    "images_dir": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Relationship between the redox reactions on a bipolar plate and reverse_9bed6a7a\\images"
+  },
+  "paper_short": "uchino2017-eb3da9",
+  "clean_paths": {
+    "clean_dir": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\LiteratureClean\\2017_uchino_relationship_between_the_redox_reactions_on_a_bipolar_pl_eb3da9",
+    "full_clean": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\LiteratureClean\\2017_uchino_relationship_between_the_redox_reactions_on_a_bipolar_pl_eb3da9\\full_clean.md",
+    "figures_dir": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\LiteratureClean\\2017_uchino_relationship_between_the_redox_reactions_on_a_bipolar_pl_eb3da9\\figures",
+    "tables_dir": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\LiteratureClean\\2017_uchino_relationship_between_the_redox_reactions_on_a_bipolar_pl_eb3da9\\tables",
+    "sections_by_heading_dir": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\LiteratureClean\\2017_uchino_relationship_between_the_redox_reactions_on_a_bipolar_pl_eb3da9\\sections_by_heading"
+  },
+  "processing": {
+    "mode": "single_paper_semi_automatic",
+    "processed_at": "2026-05-30T16:29:50",
+    "script": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\LiteratureClean\\clean_single_mineru_paper.py",
+    "openviking_ingested": false,
+    "batch_import": false,
+    "section_recovery": {
+      "content_list_hints": {
+        "front_count": 1,
+        "abstract_count": 2,
+        "back_count": 2
+      },
+      "layout_json_available": true
+    }
+  }
+}

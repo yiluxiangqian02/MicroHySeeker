@@ -1,0 +1,8 @@
+---
+paper_id: "2025_peng_strategies_and_countermeasures_against_reverse_current_f_803838"
+section_id: "S06_conclusion"
+paragraph_id: "S06-P005"
+evidence_id: "EV-peng2025-803838-S06-P005"
+chunk_index: 0
+---
+Within this forward-looking framework, a particularly compelling direction is the development and implementation of multifunctional dynamic protective layers. The concept involves depositing an ultrathin, conformal coating directly onto the surface of the active cathode material. These engineered coatings must be meticulously designed to act as a robust physical and electrochemical barrier, effectively shielding the underlying nickel from oxidation during idle periods. However, the design of such a layer is a formidable challenge governed by a delicate balance of properties. The ideal layer must be chemically inert in the harsh alkaline environment, mechanically robust to withstand operational stresses, and strongly adherent to the substrate. Critically, it must remain highly electronically conductive to not impede charge transfer to the active sites, yet ideally be ionically insulating to halt the galvanic circuit. An excessive or poorly designed layer, for example, a thick, amorphous carbon coating, can inadvertently passivate the electrode surface and block active sites and severely hindering its catalytic performance. Therefore, future work must focus on novel materials and deposition techniques that allow for atomic-level control over the thickness, morphology, and chemical nature of these protective films, exploring candidates from graphene and other 2D materials to conductive metal oxides and polymers.

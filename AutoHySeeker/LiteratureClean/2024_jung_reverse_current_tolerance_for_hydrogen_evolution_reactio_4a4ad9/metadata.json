@@ -1,0 +1,43 @@
+{
+  "paper_id": "2024_jung_reverse_current_tolerance_for_hydrogen_evolution_reactio_4a4ad9",
+  "title": "Reverse-Current Tolerance for Hydrogen Evolution Reaction Activity of Lead-Decorated Nickel Catalysts in Zero-Gap Alkaline Water Electrolysis Systems",
+  "doi": "10.1002/adfm.202316150",
+  "doi_url": "https://doi.org/10.1002/adfm.202316150",
+  "year": "2024",
+  "published_online": "March 3, 2024",
+  "first_author": "jung",
+  "authors_raw": "Sang-Mun Jung, Yoona Kim, Byung-Jo Lee, Hyeonjung Jung, Jaesub Kwon, Jinhyeon Lee, Kyu-Su Kim, Young-Woo Kim, Ki-Jeong Kim, Hyun-Seok Cho, Jong Hyeok Park, Jeong Woo Han, and Yong-Tae Kim*",
+  "journal": "Advanced Functional Materials",
+  "document_type": "research_article",
+  "raw_paths": {
+    "mineru_output_dir": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Reverse‐Current Tolerance for Hydrogen Evolution Reaction Activity of L_66c3dfa7",
+    "full_md": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Reverse‐Current Tolerance for Hydrogen Evolution Reaction Activity of L_66c3dfa7\\full.md",
+    "content_list_v2_json": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Reverse‐Current Tolerance for Hydrogen Evolution Reaction Activity of L_66c3dfa7\\content_list_v2.json",
+    "layout_json": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Reverse‐Current Tolerance for Hydrogen Evolution Reaction Activity of L_66c3dfa7\\layout.json",
+    "origin_pdf": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Reverse‐Current Tolerance for Hydrogen Evolution Reaction Activity of L_66c3dfa7\\edbdcc3a-6c4a-4c4f-a26f-1a3b56d24780_origin.pdf",
+    "images_dir": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\Reverse‐Current Tolerance for Hydrogen Evolution Reaction Activity of L_66c3dfa7\\images"
+  },
+  "paper_short": "jung2024-4a4ad9",
+  "clean_paths": {
+    "clean_dir": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\LiteratureClean\\2024_jung_reverse_current_tolerance_for_hydrogen_evolution_reactio_4a4ad9",
+    "full_clean": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\LiteratureClean\\2024_jung_reverse_current_tolerance_for_hydrogen_evolution_reactio_4a4ad9\\full_clean.md",
+    "figures_dir": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\LiteratureClean\\2024_jung_reverse_current_tolerance_for_hydrogen_evolution_reactio_4a4ad9\\figures",
+    "tables_dir": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\LiteratureClean\\2024_jung_reverse_current_tolerance_for_hydrogen_evolution_reactio_4a4ad9\\tables",
+    "sections_by_heading_dir": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\LiteratureClean\\2024_jung_reverse_current_tolerance_for_hydrogen_evolution_reactio_4a4ad9\\sections_by_heading"
+  },
+  "processing": {
+    "mode": "single_paper_semi_automatic",
+    "processed_at": "2026-05-30T16:29:51",
+    "script": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\LiteratureClean\\clean_single_mineru_paper.py",
+    "openviking_ingested": false,
+    "batch_import": false,
+    "section_recovery": {
+      "content_list_hints": {
+        "front_count": 8,
+        "abstract_count": 1,
+        "back_count": 23
+      },
+      "layout_json_available": true
+    }
+  }
+}

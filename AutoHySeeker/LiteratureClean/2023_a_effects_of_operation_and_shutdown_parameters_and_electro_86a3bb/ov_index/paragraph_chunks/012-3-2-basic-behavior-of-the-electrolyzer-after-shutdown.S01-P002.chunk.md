@@ -1,0 +1,8 @@
+---
+paper_id: "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb"
+section_id: "S01_abstract"
+paragraph_id: "S01-P002"
+evidence_id: "EV-a2023-86a3bb-S01-P002"
+chunk_index: 0
+---
+Before discussing the factors that affects the reverse current phenomenon, we present the basic information and most likely the general behavior of the electrocatalysts of alkaline water electrolyzers under the start-up/shutdown operation condition. As a case study, an electrolyzer with AN-2 electrodes operated under a constant current of $0.6\mathrm{Acm}^{-2}$ for $1.0\mathrm{h}$ at $30^{\circ}\mathrm{C}$ was considered. Fig. 4 (a) shows the behavior of the electromotive forces over time after the shutdown. The electromotive forces of the three BPs have almost the same initial value $(\sim 1.55\mathrm{V})$ . They gradually decrease at approximately the same rate down to about $1.1\mathrm{V}$ after which they decline at higher rates. It is noteworthy that the sharp decrease of the emf of the middle bipolar plate (BP-2) started

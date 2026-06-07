@@ -14,9 +14,6 @@ from src.common.config import (
     reload_all_configs,
     update_agent_model_config,
 )
-from src.graph.orchestrator import get_supervisor_graph
-from src.graph.state import AutoHySeekerState
-
 router = APIRouter(tags=["agents"])
 
 _AGENT_SECTION_ORDER = (
@@ -71,6 +68,9 @@ def _serialise_agent_model(agent_name: str) -> dict[str, Any]:
 
 @router.post("/agents/invoke")
 async def invoke_agent(request: AgentInvokeRequest) -> dict[str, Any]:
+    from src.graph.orchestrator import get_supervisor_graph
+    from src.graph.state import AutoHySeekerState
+
     graph = get_supervisor_graph()
     state: AutoHySeekerState = {
         "messages": request.messages,  # type: ignore[assignment]

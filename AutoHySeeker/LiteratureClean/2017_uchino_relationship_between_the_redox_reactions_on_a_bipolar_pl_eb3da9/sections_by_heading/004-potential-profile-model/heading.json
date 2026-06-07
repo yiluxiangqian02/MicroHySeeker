@@ -1,0 +1,53 @@
+{
+  "paper_id": "2017_uchino_relationship_between_the_redox_reactions_on_a_bipolar_pl_eb3da9",
+  "heading_uid": "HRAW-005-a3784bf2",
+  "heading_dirname": "004-potential-profile-model",
+  "heading_text": "Potential Profile Model",
+  "heading_level": 1,
+  "doc_heading_order": 5,
+  "display_order": 4,
+  "is_title_page_heading": false,
+  "page_index": null,
+  "block_order": 1,
+  "paragraph_count": 10,
+  "paragraph_ids": [
+    "S01-P004",
+    "S04-P001",
+    "S04-P002",
+    "S04-P003",
+    "S04-P004",
+    "S04-P005",
+    "S04-P006",
+    "S04-P007",
+    "S04-P008",
+    "S04-P009"
+  ],
+  "paragraph_uids": [
+    "PRAW-000025",
+    "PRAW-000026",
+    "PRAW-000027",
+    "PRAW-000028",
+    "PRAW-000029",
+    "PRAW-000030",
+    "PRAW-000031",
+    "PRAW-000032",
+    "PRAW-000033",
+    "PRAW-000034"
+  ],
+  "paragraph_paths": [
+    "paragraphs/PRAW-000025.md",
+    "paragraphs/PRAW-000026.md",
+    "paragraphs/PRAW-000027.md",
+    "paragraphs/PRAW-000028.md",
+    "paragraphs/PRAW-000029.md",
+    "paragraphs/PRAW-000030.md",
+    "paragraphs/PRAW-000031.md",
+    "paragraphs/PRAW-000032.md",
+    "paragraphs/PRAW-000033.md",
+    "paragraphs/PRAW-000034.md"
+  ],
+  "linked_figures": [
+    "FIG002"
+  ],
+  "linked_tables": []
+}

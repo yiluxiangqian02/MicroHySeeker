@@ -1,0 +1,32 @@
+{
+  "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+  "heading_uid": "HRAW-010-64583ed1",
+  "heading_dirname": "007-2-3-basics-of-the-reverse-current-phenomenon-and-the-e",
+  "heading_text": "2.3. Basics of the reverse current phenomenon and the equivalent electrical circuit",
+  "heading_level": 1,
+  "doc_heading_order": 10,
+  "display_order": 7,
+  "is_title_page_heading": false,
+  "page_index": null,
+  "block_order": 1,
+  "paragraph_count": 3,
+  "paragraph_ids": [
+    "S05-P004",
+    "S05-P005",
+    "S05-P006"
+  ],
+  "paragraph_uids": [
+    "PRAW-000057",
+    "PRAW-000058",
+    "PRAW-000059"
+  ],
+  "paragraph_paths": [
+    "paragraphs/PRAW-000057.md",
+    "paragraphs/PRAW-000058.md",
+    "paragraphs/PRAW-000059.md"
+  ],
+  "linked_figures": [
+    "FIG002"
+  ],
+  "linked_tables": []
+}

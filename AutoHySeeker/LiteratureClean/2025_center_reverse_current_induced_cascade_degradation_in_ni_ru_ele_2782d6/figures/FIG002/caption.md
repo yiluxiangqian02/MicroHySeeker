@@ -1,0 +1,3 @@
+# Caption
+
+FIGURE 2 | Applied input profile and electrode degradation. (a,b) Applied potential profile including the AST of regular $-20\%$ reverse cycle (cycling ranging from $-1.3\mathrm{V}$ vs RHE to $0.5\mathrm{V}$ vs RHE for 60 000 cycles) and constant durability test of regular condition (at $-1.3\mathrm{V}$ vs RHE for $50\mathrm{h}$ ). (c) Measured LSV curves of pristine NR electrode, NR electrode after AST and after constant test, (d) EIS plots (e) the morphology images of pristine NR electrode, NR electrode after AST and after constant test. (f) The atomic percentage acquired from EDS.

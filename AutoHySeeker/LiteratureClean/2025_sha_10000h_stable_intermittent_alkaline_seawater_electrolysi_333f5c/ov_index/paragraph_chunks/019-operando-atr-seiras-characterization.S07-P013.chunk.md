@@ -1,0 +1,8 @@
+---
+paper_id: "2025_sha_10000h_stable_intermittent_alkaline_seawater_electrolysi_333f5c"
+section_id: "S07_back_matter_or_supplementary"
+paragraph_id: "S07-P013"
+evidence_id: "EV-sha2025-333f5c-S07-P013"
+chunk_index: 0
+---
+The operando attenuated total reflectance surface-enhanced infrared absorption spectroscopy (ATR-SEIRAS) spectra were recorded on a Nicolet iS50 FTIR Spectrometer equipped with a mercury cadmium telluride detector cooled by liquid nitrogen and a PIKE VeeMAX III variable angle ATR sampling accessory. The spectral resolution was set to $8 \mathrm { c m ^ { - 1 } }$ and 64 interferograms were obtained for each spectrum. The spectra are shown in absorption units defined as $\mathbf { A } = - \mathrm { l o g } { \left( R / R _ { 0 } \right) }$ , in which $R$ and $R _ { 0 }$ represent the reflected infrared intensities corresponding to the sample and the reference single-beam spectrum, respectively. Ultrathin Au film was deposited chemically for infrared signal enhancement and conduction of electrons. The NiCoP– ${ \bf \cdot C r } _ { 2 } { \bf O } _ { 3 }$ electrocatalyst was dropped onto the Au film to serve as a working electrode for SEIRAS experiments with a loading of $0 . 0 5 \mathsf { m g c m } ^ { - 2 }$ . A platinum wire and a saturated calomel electrode were used as the counter and reference electrodes, respectively. 1 M KOH was used as the electrolyte. The chronopotentiometry method was adopted at different potentials (−1.02 to −1.52 V versus saturated calomel electrode). The SEIRAS spectra were collected during the chronopotentiometry test. The reference single-beam spectrum was collected at 0 V versus RHE.

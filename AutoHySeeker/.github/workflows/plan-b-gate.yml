@@ -1,0 +1,31 @@
+name: plan-b-gate
+
+on:
+  push:
+    branches:
+      - main
+      - master
+      - develop
+  pull_request:
+
+jobs:
+  plan-b-strict-checks:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: AutoHySeeker/LiteratureClean
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Verify heading-based structure (strict)
+        run: python verify_new_structure.py --strict
+
+      - name: Check Plan-B compliance (strict)
+        run: python check_plan_b_compliance.py --strict

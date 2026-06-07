@@ -14,10 +14,16 @@ from src.knowledge.schema import (
     OperationRecord,
     ProjectRecord,
 )
-from src.knowledge.viking_client import OpenVikingClient
+from src.knowledge.viking_client import (
+    OpenVikingClient,
+    close_shared_openviking_client,
+    get_shared_openviking_client,
+)
 
 __all__ = [
     "OpenVikingClient",
+    "get_shared_openviking_client",
+    "close_shared_openviking_client",
     "KnowledgePartition",
     "LiteratureRecord",
     "ExperimentRecord",

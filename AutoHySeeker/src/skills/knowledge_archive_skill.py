@@ -20,19 +20,12 @@ from typing import Any
 
 from src.common.config import get_knowledge_config
 from src.knowledge.schema import ExperimentRecord, KnowledgePartition, OperationRecord
-from src.knowledge.viking_client import OpenVikingClient
+from src.knowledge.viking_client import OpenVikingClient, get_shared_openviking_client
 from src.skills.base import BaseSkill, SkillResult
 
 _logger = logging.getLogger("autohyseeker.skill.knowledge_archive")
 
 # ── VikingKnowledgeBase optional integration ──────────────────────────────────
-try:
-    from src.rag import get_viking_kb as _get_viking_kb, VikingKnowledgeBase  # noqa: F401
-    _VIKING_AVAILABLE = True
-except ImportError:
-    _VIKING_AVAILABLE = False
-    _get_viking_kb = None  # type: ignore[assignment]
-
 # ── Built-in literature reference data ────────────────────────────────────────
 
 LITERATURE_KNOWLEDGE: list[dict[str, Any]] = [
@@ -92,20 +85,9 @@ class KnowledgeArchiveSkill(BaseSkill):
 
         knowledge_config = get_knowledge_config()
         workspace_path = knowledge_config.get("workspace_path")
-        self._viking_client = viking_client or OpenVikingClient(workspace_path=workspace_path)
-
-        # VikingKnowledgeBase semantic search (optional)
-        self._viking_kb: Any = None
-        if _VIKING_AVAILABLE and _get_viking_kb is not None:
-            try:
-                self._viking_kb = _get_viking_kb()
-                if self._viking_kb.is_available:
-                    _logger.info("KnowledgeArchiveSkill: VikingKnowledgeBase enabled")
-                else:
-                    self._viking_kb = None
-            except Exception as exc:
-                _logger.debug("VikingKB unavailable: %s", exc)
-                self._viking_kb = None
+        self._viking_client = viking_client or get_shared_openviking_client(
+            workspace_path=workspace_path,
+        )
 
     # ── BaseSkill interface ───────────────────────────────────────────────────
 
@@ -211,22 +193,6 @@ class KnowledgeArchiveSkill(BaseSkill):
             payload=record,
             resource_name=f"{run_id}.json",
         )
-
-        # Ingest into VikingKB when available
-        if self._viking_kb is not None:
-            try:
-                import tempfile
-                import os
-
-                tmp = tempfile.NamedTemporaryFile(
-                    mode="w", suffix=".json", delete=False, encoding="utf-8"
-                )
-                json.dump(record, tmp, ensure_ascii=False, indent=2)
-                tmp.close()
-                self._viking_kb.ingest_experiment(tmp.name)
-                os.unlink(tmp.name)
-            except Exception as exc:
-                _logger.debug("VikingKB ingest failed: %s", exc)
 
         _logger.info(
             "KnowledgeArchiveSkill: archived run_id=%s (total=%d)",
@@ -375,23 +341,25 @@ class KnowledgeArchiveSkill(BaseSkill):
 
     def _search_literature(self, query: str, top_k: int) -> list[dict[str, Any]]:
         """Search literature knowledge base."""
-        # VikingKB semantic search (preferred)
-        if self._viking_kb is not None:
-            try:
-                viking_results = self._viking_kb.search_literature(query, top_k=top_k)
-                if viking_results:
-                    return [
-                        {
-                            "source": "literature",
-                            "title": r.get("uri", "VikingKB Resource"),
-                            "content": r.get("content", ""),
-                            "relevance": round(float(r.get("score", 0.5)), 2),
-                            "category": "semantic_search",
-                        }
-                        for r in viking_results
-                    ]
-            except Exception as exc:
-                _logger.debug("VikingKB literature search failed: %s", exc)
+        try:
+            viking_results = self._viking_client.search(
+                query=query,
+                partition=KnowledgePartition.LITERATURE,
+                top_k=top_k,
+            )
+            if viking_results:
+                return [
+                    {
+                        "source": "literature",
+                        "title": r.get("uri", "OpenViking Resource"),
+                        "content": r.get("content", ""),
+                        "relevance": round(float(r.get("score", 0.5)), 2),
+                        "category": "semantic_search",
+                    }
+                    for r in viking_results
+                ]
+        except Exception as exc:
+            _logger.debug("OpenViking literature search failed: %s", exc)
 
         # Fallback: built-in keyword search
         query_lower = query.lower()

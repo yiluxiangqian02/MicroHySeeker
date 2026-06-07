@@ -1,0 +1,8 @@
+---
+paper_id: "2025_sha_10000h_stable_intermittent_alkaline_seawater_electrolysi_333f5c"
+section_id: "S05_discussion_mechanism"
+paragraph_id: "S05-P011"
+evidence_id: "EV-sha2025-333f5c-S05-P011"
+chunk_index: 0
+---
+Furthermore, we used high-angle annular dark-field scanning transmission electron microscopy (HAADF-STEM) to analyse the composition of NiCoP– ${ \bf \cdot C r } _ { 2 } { \bf O } _ { 3 }$ in two distinct states (Fig. 4a): after HER and after shutdown. The HAADF-STEM image of the sample after HER exhibits a regular NiCoP lattice (Fig. 4b,d). Electron energy loss spectroscopy (EELS) and atomic elemental mapping (Fig. 4b,d and Supplementary Fig. 48) indicate that it shares the same atomic structure as the hexagonal NiCoP. The sample after shutdown reveals formation of passivation layers (Fig. 4c and Supplementary Figs. 49 and 50), showing a combination of CoO and ${ \mathrm { C r } } _ { 2 } { \mathrm { O } } _ { 3 }$ at the outermost layer, followed by an amorphous layer of phosphates, a high-contrast cubic CoO lattice (Fig. 4e and Supplementary Fig. 51) and finally NiCoP lattice in the innermost layer. EELS (Fig. 4f,g and Supplementary Fig. 48) substantiated the oxidation process in which cobalt was oxidized to form CoO (ref. 24), transitioning from the NiCoP phase to the CoO phase. Concurrently, Ni and P species migrated to the inner layer and sublayer, respectively, resulting in the formation of a Ni-rich inner layer and a cobalt phosphate sublayer (Figs. 3h and 4c and Supplementary Note 6). [EVID: EVID012]

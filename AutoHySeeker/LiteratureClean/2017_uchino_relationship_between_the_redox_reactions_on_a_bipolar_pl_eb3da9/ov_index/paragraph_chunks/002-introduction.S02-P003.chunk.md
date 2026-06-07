@@ -1,0 +1,8 @@
+---
+paper_id: "2017_uchino_relationship_between_the_redox_reactions_on_a_bipolar_pl_eb3da9"
+section_id: "S02_introduction"
+paragraph_id: "S02-P003"
+evidence_id: "EV-uchino2017-eb3da9-S02-P003"
+chunk_index: 0
+---
+electrolyzers build up a number of cells which consist of anode, cathode, and ion exchange membrane. The electrolyzer is called monopolar type when the elements are electrically connected in parallel. The electrolyzer is called bipolar type, when elements are connected in series. In most of conventional monopolar electrolyzers, since the anodes and cathodes are electronically separated, the internal structure, production, and maintenance are simple. Instead, they are hardly acceptable high current density operation comparing to bipolar electrolyzers newly developed. On the other hand, the bipolar type directly connects the anode and cathode as a bipolar plate, which works as a separator to separate the anode chamber and cathode chamber, with twice the number of nozzles, which are the inlet and outlet of the reactant and products, of the monopolar type. At the cell design, reduction of electrical resistance of electrolyte is important because it likely increases corresponding to current density. Therefore, minimizing the gap between electrode and ion exchange membrane has been tried in order to reduce the cell voltage loss. Thanks to improvement of the cell design and performance of ion exchange membranes, higher current density operations of $5 { - } 6 \operatorname { k A } \mathrm { m } ^ { - 2 }$ were achieved with bipolar electrolyzers. As a result, the bipolar-type electrolyzer has rapidly increased in popularity since the 1990s [2]. Also, the alkaline water electrolyzer is typically the bipolar type.

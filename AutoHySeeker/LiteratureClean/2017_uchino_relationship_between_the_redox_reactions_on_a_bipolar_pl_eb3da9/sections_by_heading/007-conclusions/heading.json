@@ -1,0 +1,33 @@
+{
+  "paper_id": "2017_uchino_relationship_between_the_redox_reactions_on_a_bipolar_pl_eb3da9",
+  "heading_uid": "HRAW-008-46e6721c",
+  "heading_dirname": "007-conclusions",
+  "heading_text": "Conclusions",
+  "heading_level": 1,
+  "doc_heading_order": 8,
+  "display_order": 7,
+  "is_title_page_heading": false,
+  "page_index": null,
+  "block_order": 1,
+  "paragraph_count": 4,
+  "paragraph_ids": [
+    "S06-P001",
+    "S06-P002",
+    "S07-P001",
+    "S06-P003"
+  ],
+  "paragraph_uids": [
+    "PRAW-000061",
+    "PRAW-000062",
+    "PRAW-000063",
+    "PRAW-000064"
+  ],
+  "paragraph_paths": [
+    "paragraphs/PRAW-000061.md",
+    "paragraphs/PRAW-000062.md",
+    "paragraphs/PRAW-000063.md",
+    "paragraphs/PRAW-000064.md"
+  ],
+  "linked_figures": [],
+  "linked_tables": []
+}

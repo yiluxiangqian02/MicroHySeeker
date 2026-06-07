@@ -1,0 +1,47 @@
+{
+  "paper_id": "2023_uchino_dependence_of_the_reverse_current_on_the_surface_of_elec_38347e",
+  "heading_uid": "HRAW-007-c6dfc4ce",
+  "heading_dirname": "005-3-1-cell-characteristics",
+  "heading_text": "3.1 Cell characteristics",
+  "heading_level": 1,
+  "doc_heading_order": 7,
+  "display_order": 5,
+  "is_title_page_heading": false,
+  "page_index": null,
+  "block_order": 1,
+  "paragraph_count": 7,
+  "paragraph_ids": [
+    "S04-P024",
+    "S04-P025",
+    "S04-P026",
+    "S04-P027",
+    "S04-P028",
+    "S04-P029",
+    "S04-P030"
+  ],
+  "paragraph_uids": [
+    "PRAW-000046",
+    "PRAW-000047",
+    "PRAW-000048",
+    "PRAW-000049",
+    "PRAW-000050",
+    "PRAW-000051",
+    "PRAW-000052"
+  ],
+  "paragraph_paths": [
+    "paragraphs/PRAW-000046.md",
+    "paragraphs/PRAW-000047.md",
+    "paragraphs/PRAW-000048.md",
+    "paragraphs/PRAW-000049.md",
+    "paragraphs/PRAW-000050.md",
+    "paragraphs/PRAW-000051.md",
+    "paragraphs/PRAW-000052.md"
+  ],
+  "linked_figures": [
+    "FIG004",
+    "FIG005"
+  ],
+  "linked_tables": [
+    "TAB001"
+  ]
+}

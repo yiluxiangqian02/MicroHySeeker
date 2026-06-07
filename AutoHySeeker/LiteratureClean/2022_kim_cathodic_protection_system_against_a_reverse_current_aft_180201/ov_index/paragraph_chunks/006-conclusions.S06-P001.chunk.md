@@ -1,0 +1,8 @@
+---
+paper_id: "2022_kim_cathodic_protection_system_against_a_reverse_current_aft_180201"
+section_id: "S06_conclusion"
+paragraph_id: "S06-P001"
+evidence_id: "EV-kim2022-180201-S06-P001"
+chunk_index: 0
+---
+In summary, we clarified the deactivation mechanism of the Ni cathode under a reverse-current flow in AWE systems. The Ni cathode was oxidized to irreversible $\beta\text{-Ni}(\mathrm{OH})_2$ or NiO phases at a potential above $0.6\mathrm{V}$ versus RHE under the reverse-current flow that occurred after the shut-down of the AWE, resulting in severe electrode degradation. We verified that the cathodic protection systems effectively protected the Ni cathode against RC, maintaining the chemical state, morphology, and catalytic activity of the protected cathode. Among various candidate metals for the cathodic protection system, Pb was the most ideal for the sacrificial anode material due to its minimal electrochemical dissolution rate, chemical stability in alkaline medium, and low cost. Furthermore, RCSF, as a metric for the stability of a catalyst under RC, should be considered for the evaluation of the transient stability of catalysts in AWE. An AWE stack with the cathodic protection system maintained a stable performance with little loss of current for $20\mathrm{h}$ during repetitive SU/SD events, while the performance of a conventional AWE stack was degraded by $13.82\%$ . We firmly believe that this straightforward and feasible system can solve the cathode deactivation problem in AWE that is subjected to repetitive SU/SD events. We anticipate that this work will trigger several follow-up studies from the perspective of the catalyst on the reverse-current phenomenon in water electrolysis.

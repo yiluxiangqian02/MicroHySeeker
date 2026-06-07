@@ -1,0 +1,8 @@
+---
+paper_id: "2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7"
+section_id: "S05_discussion_mechanism"
+paragraph_id: "S05-P013"
+evidence_id: "EV-wang2025-0b96f7-S05-P013"
+chunk_index: 0
+---
+Thanks to the three-electrode MEA setup, we were able to quantify how RC AST cycles could impact anode and cathode polarization and impedance behaviors. A corresponding voltage breakdown analysis was also conducted to evaluate the relative role of ohmic resistance, kinetics and transport in cell performance degradation for both anode and cathode. Surprisingly, for anode, there was significant performance improvement after the initial $7 . 5 \mathrm { ~ k ~ }$ cycles compared to BOL, with about a $2 5 0 ~ \mathrm { m V }$ decrease in overpotential at $2 \mathrm { ~ A ~ c m } ^ { - 2 }$ (from 2.045 V vs RHE to $1 . 8 0 0 \mathrm { V }$ vs RHE, a). Over the subsequent $3 7 . 5 \mathrm { k }$ cycles, an-Figure 4ode performance remained relatively stable. The primary source of performance improvement comes from reduction of kinetic overpotential, with about a $2 0 0 { \cdot } \mathrm { m V }$ decline in kinetic overpotential at $2 \mathrm { ~ A ~ c m } ^ { - 2 }$ compared to that of the BOL (from 420 to $2 2 0 \mathrm { m V } ,$ Figure 4b). The improvement in apparent electrode kinetics is also evident from Tafel plots, where a reduction in Tafel slopes is observed $( 1 0 2 ~ \mathrm { m V ~ d e c ^ { - 1 } }$ at BOL vs 66 mV dec−1 after $4 5 \mathrm { ~ k ~ }$ cycles, Figure S7a, Supporting Information). Additionally, residual overpotential also decreased following RC AST operation (Figure S7b, Supporting Information), which could be related to improved electrode surface bubble management due to
