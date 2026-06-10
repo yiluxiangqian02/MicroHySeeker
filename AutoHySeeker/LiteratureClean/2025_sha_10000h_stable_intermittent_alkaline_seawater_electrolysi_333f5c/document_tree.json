@@ -1,423 +1,162 @@
 {
   "paper_id": "2025_sha_10000h_stable_intermittent_alkaline_seawater_electrolysi_333f5c",
-  "title": "10,000-h-stable intermittent alkaline seawater electrolysis",
-  "heading_count": 25,
-  "paragraph_count": 63,
-  "headings": [
+  "sections": [
     {
       "heading_uid": "HRAW-001-7119bc65",
+      "heading_id": "H01",
       "heading_text": "10,000-h-stable intermittent alkaline seawater electrolysis",
-      "heading_level": 1,
-      "doc_heading_order": 1,
-      "display_order": 1,
-      "page_index": null,
-      "paragraph_count": 6,
-      "paragraph_uids": [
-        "PRAW-000021",
-        "PRAW-000022",
-        "PRAW-000023",
-        "PRAW-000024",
-        "PRAW-000025",
-        "PRAW-000026"
-      ],
-      "macro_tags": [
-        "S00_front_matter",
-        "S01_abstract"
+      "heading_order": 1,
+      "paragraph_count": 10,
+      "paragraph_ids": [
+        "S01-P001",
+        "S01-P002",
+        "S01-P003",
+        "S01-P004",
+        "S01-P005",
+        "S01-P006",
+        "S01-P007",
+        "S01-P008",
+        "S01-P009",
+        "S01-P010"
       ]
     },
     {
       "heading_uid": "HRAW-002-b9517897",
+      "heading_id": "H02",
       "heading_text": "Cathode oxidation during start–shutdown water splitting cycles",
-      "heading_level": 1,
-      "doc_heading_order": 2,
-      "display_order": 2,
-      "page_index": null,
-      "paragraph_count": 4,
-      "paragraph_uids": [
-        "PRAW-000037",
-        "PRAW-000034",
-        "PRAW-000035",
-        "PRAW-000036"
-      ],
-      "macro_tags": [
-        "S00_front_matter",
-        "S05_discussion_mechanism",
-        "S07_back_matter_or_supplementary"
-      ]
-    },
-    {
-      "heading_uid": "HRAW-003-537c371e",
-      "heading_text": "Catalysts design strategy",
-      "heading_level": 1,
-      "doc_heading_order": 3,
-      "display_order": 3,
-      "page_index": null,
-      "paragraph_count": 2,
-      "paragraph_uids": [
-        "PRAW-000001",
-        "PRAW-000002"
-      ],
-      "macro_tags": [
-        "S03_methods_and_setup"
-      ]
-    },
-    {
-      "heading_uid": "HRAW-004-6ad99548",
-      "heading_text": "Activity and stability of NiCoP– $\\mathbf { C r _ { 2 } 0 _ { 3 } }$ cathode in intermittent electrolysis",
-      "heading_level": 1,
-      "doc_heading_order": 4,
-      "display_order": 4,
-      "page_index": null,
+      "heading_order": 2,
       "paragraph_count": 7,
-      "paragraph_uids": [
-        "PRAW-000027",
-        "PRAW-000028",
-        "PRAW-000029",
-        "PRAW-000030",
-        "PRAW-000031",
-        "PRAW-000032",
-        "PRAW-000033"
-      ],
-      "macro_tags": [
-        "S04_results"
+      "paragraph_ids": [
+        "S02-P001",
+        "S02-P002",
+        "S02-P003",
+        "S02-P004",
+        "S02-P005",
+        "S02-P006",
+        "S02-P007"
       ]
     },
     {
-      "heading_uid": "HRAW-005-1f41d25c",
+      "heading_uid": "HRAW-003-7005681b",
+      "heading_id": "H03",
+      "heading_text": "Activity and stability of NiCoP– $\\mathbf { C r _ { 2 } 0 _ { 3 } }$ cathode in intermittent electrolysis",
+      "heading_order": 3,
+      "paragraph_count": 7,
+      "paragraph_ids": [
+        "S03-P001",
+        "S03-P002",
+        "S03-P003",
+        "S03-P004",
+        "S03-P005",
+        "S03-P006",
+        "S03-P007"
+      ]
+    },
+    {
+      "heading_uid": "HRAW-004-afa6f12a",
+      "heading_id": "H04",
       "heading_text": "Reaction mechanism",
-      "heading_level": 1,
-      "doc_heading_order": 5,
-      "display_order": 5,
-      "page_index": null,
-      "paragraph_count": 13,
-      "paragraph_uids": [
-        "PRAW-000038",
-        "PRAW-000039",
-        "PRAW-000040",
-        "PRAW-000041",
-        "PRAW-000042",
-        "PRAW-000043",
-        "PRAW-000044",
-        "PRAW-000045",
-        "PRAW-000046",
-        "PRAW-000047",
-        "PRAW-000048",
-        "PRAW-000049",
-        "PRAW-000050"
-      ],
-      "macro_tags": [
-        "S05_discussion_mechanism"
+      "heading_order": 4,
+      "paragraph_count": 14,
+      "paragraph_ids": [
+        "S04-P001",
+        "S04-P002",
+        "S04-P003",
+        "S04-P004",
+        "S04-P005",
+        "S04-P006",
+        "S04-P007",
+        "S04-P008",
+        "S04-P009",
+        "S04-P010",
+        "S04-P011",
+        "S04-P012",
+        "S04-P013",
+        "S04-P014"
       ]
     },
     {
-      "heading_uid": "HRAW-006-2489533d",
+      "heading_uid": "HRAW-005-fc159122",
+      "heading_id": "H05",
       "heading_text": "Theoretical insight",
-      "heading_level": 1,
-      "doc_heading_order": 6,
-      "display_order": 6,
-      "page_index": null,
+      "heading_order": 5,
       "paragraph_count": 4,
-      "paragraph_uids": [
-        "PRAW-000051",
-        "PRAW-000052",
-        "PRAW-000053",
-        "PRAW-000054"
-      ],
-      "macro_tags": [
-        "S05_discussion_mechanism"
+      "paragraph_ids": [
+        "S05-P001",
+        "S05-P002",
+        "S05-P003",
+        "S05-P004"
       ]
     },
     {
-      "heading_uid": "HRAW-007-55b7d24e",
+      "heading_uid": "HRAW-006-06035a6a",
+      "heading_id": "H06",
       "heading_text": "Discussion",
-      "heading_level": 1,
-      "doc_heading_order": 7,
-      "display_order": 7,
-      "page_index": null,
-      "paragraph_count": 1,
-      "paragraph_uids": [
-        "PRAW-000003"
-      ],
-      "macro_tags": [
-        "S03_methods_and_setup"
+      "heading_order": 6,
+      "paragraph_count": 3,
+      "paragraph_ids": [
+        "S06-P001",
+        "S06-P002",
+        "S06-P003"
       ]
     },
     {
-      "heading_uid": "HRAW-008-71c8a761",
-      "heading_text": "Online content",
-      "heading_level": 1,
-      "doc_heading_order": 8,
-      "display_order": 8,
-      "page_index": null,
-      "paragraph_count": 1,
-      "paragraph_uids": [
-        "PRAW-000055"
-      ],
-      "macro_tags": [
-        "S07_back_matter_or_supplementary"
+      "heading_uid": "HRAW-007-c1061b99",
+      "heading_id": "H07",
+      "heading_text": "Methods",
+      "heading_order": 7,
+      "paragraph_count": 30,
+      "paragraph_ids": [
+        "S07-P001",
+        "S07-P002",
+        "S07-P003",
+        "S07-P004",
+        "S07-P005",
+        "S07-P006",
+        "S07-P007",
+        "S07-P008",
+        "S07-P009",
+        "S07-P010",
+        "S07-P011",
+        "S07-P012",
+        "S07-P013",
+        "S07-P014",
+        "S07-P015",
+        "S07-P016",
+        "S07-P017",
+        "S07-P018",
+        "S07-P019",
+        "S07-P020",
+        "S07-P021",
+        "S07-P022",
+        "S07-P023",
+        "S07-P024",
+        "S07-P025",
+        "S07-P026",
+        "S07-P027",
+        "S07-P028",
+        "S07-P029",
+        "S07-P030"
       ]
     },
     {
-      "heading_uid": "HRAW-010-7acc6812",
-      "heading_text": "Materials",
-      "heading_level": 1,
-      "doc_heading_order": 10,
-      "display_order": 10,
-      "page_index": null,
-      "paragraph_count": 1,
-      "paragraph_uids": [
-        "PRAW-000004"
-      ],
-      "macro_tags": [
-        "S03_methods_and_setup"
-      ]
-    },
-    {
-      "heading_uid": "HRAW-011-e5d2899f",
-      "heading_text": "Synthesis of NiCo–LDH",
-      "heading_level": 1,
-      "doc_heading_order": 11,
-      "display_order": 11,
-      "page_index": null,
-      "paragraph_count": 1,
-      "paragraph_uids": [
-        "PRAW-000005"
-      ],
-      "macro_tags": [
-        "S03_methods_and_setup"
-      ]
-    },
-    {
-      "heading_uid": "HRAW-012-7ff79422",
-      "heading_text": "Synthesis of NiCoP",
-      "heading_level": 1,
-      "doc_heading_order": 12,
-      "display_order": 12,
-      "page_index": null,
-      "paragraph_count": 1,
-      "paragraph_uids": [
-        "PRAW-000006"
-      ],
-      "macro_tags": [
-        "S03_methods_and_setup"
-      ]
-    },
-    {
-      "heading_uid": "HRAW-013-bc33b4ec",
-      "heading_text": "Synthesis of NiCoP– $\\mathbf { { C r } _ { 2 } 0 } _ { 3 }$",
-      "heading_level": 1,
-      "doc_heading_order": 13,
-      "display_order": 13,
-      "page_index": null,
-      "paragraph_count": 1,
-      "paragraph_uids": [
-        "PRAW-000007"
-      ],
-      "macro_tags": [
-        "S03_methods_and_setup"
-      ]
-    },
-    {
-      "heading_uid": "HRAW-014-cc9891f2",
-      "heading_text": "Synthesis of NiCoFeP",
-      "heading_level": 1,
-      "doc_heading_order": 14,
-      "display_order": 14,
-      "page_index": null,
-      "paragraph_count": 2,
-      "paragraph_uids": [
-        "PRAW-000008",
-        "PRAW-000009"
-      ],
-      "macro_tags": [
-        "S03_methods_and_setup"
-      ]
-    },
-    {
-      "heading_uid": "HRAW-015-4d264050",
-      "heading_text": "Synthesis of NiFeP",
-      "heading_level": 1,
-      "doc_heading_order": 15,
-      "display_order": 15,
-      "page_index": null,
-      "paragraph_count": 1,
-      "paragraph_uids": [
-        "PRAW-000010"
-      ],
-      "macro_tags": [
-        "S03_methods_and_setup"
-      ]
-    },
-    {
-      "heading_uid": "HRAW-016-74fb04f8",
-      "heading_text": "Synthesis of Ni $/ \\mathbf { N i O } / \\mathbf { C r } _ { 2 } \\mathbf { O } _ { 3 }$",
-      "heading_level": 1,
-      "doc_heading_order": 16,
-      "display_order": 16,
-      "page_index": null,
-      "paragraph_count": 1,
-      "paragraph_uids": [
-        "PRAW-000011"
-      ],
-      "macro_tags": [
-        "S07_back_matter_or_supplementary"
-      ]
-    },
-    {
-      "heading_uid": "HRAW-017-b42c835a",
-      "heading_text": "Electrochemical measurement",
-      "heading_level": 1,
-      "doc_heading_order": 17,
-      "display_order": 17,
-      "page_index": null,
-      "paragraph_count": 1,
-      "paragraph_uids": [
-        "PRAW-000012"
-      ],
-      "macro_tags": [
-        "S07_back_matter_or_supplementary"
-      ]
-    },
-    {
-      "heading_uid": "HRAW-018-8eea4694",
-      "heading_text": "AEM electrolyser measurement",
-      "heading_level": 1,
-      "doc_heading_order": 18,
-      "display_order": 18,
-      "page_index": null,
-      "paragraph_count": 2,
-      "paragraph_uids": [
-        "PRAW-000013",
-        "PRAW-000014"
-      ],
-      "macro_tags": [
-        "S03_methods_and_setup"
-      ]
-    },
-    {
-      "heading_uid": "HRAW-019-67ace38f",
-      "heading_text": "Operando Raman characterization",
-      "heading_level": 1,
-      "doc_heading_order": 19,
-      "display_order": 19,
-      "page_index": null,
-      "paragraph_count": 1,
-      "paragraph_uids": [
-        "PRAW-000015"
-      ],
-      "macro_tags": [
-        "S07_back_matter_or_supplementary"
-      ]
-    },
-    {
-      "heading_uid": "HRAW-020-387aa7d3",
-      "heading_text": "Operando ATR-SEIRAS characterization",
-      "heading_level": 1,
-      "doc_heading_order": 20,
-      "display_order": 20,
-      "page_index": null,
-      "paragraph_count": 1,
-      "paragraph_uids": [
-        "PRAW-000016"
-      ],
-      "macro_tags": [
-        "S07_back_matter_or_supplementary"
-      ]
-    },
-    {
-      "heading_uid": "HRAW-021-b7a493ab",
-      "heading_text": "Material characterization",
-      "heading_level": 1,
-      "doc_heading_order": 21,
-      "display_order": 21,
-      "page_index": null,
-      "paragraph_count": 1,
-      "paragraph_uids": [
-        "PRAW-000017"
-      ],
-      "macro_tags": [
-        "S03_methods_and_setup"
-      ]
-    },
-    {
-      "heading_uid": "HRAW-022-a1225246",
-      "heading_text": "HAADF-STEM characterization",
-      "heading_level": 1,
-      "doc_heading_order": 22,
-      "display_order": 22,
-      "page_index": null,
-      "paragraph_count": 1,
-      "paragraph_uids": [
-        "PRAW-000018"
-      ],
-      "macro_tags": [
-        "S03_methods_and_setup"
-      ]
-    },
-    {
-      "heading_uid": "HRAW-023-f22e34c3",
-      "heading_text": "TOF-SIMS measurement",
-      "heading_level": 1,
-      "doc_heading_order": 23,
-      "display_order": 23,
-      "page_index": null,
-      "paragraph_count": 1,
-      "paragraph_uids": [
-        "PRAW-000019"
-      ],
-      "macro_tags": [
-        "S03_methods_and_setup"
-      ]
-    },
-    {
-      "heading_uid": "HRAW-024-8e9b9dd2",
+      "heading_uid": "HRAW-008-66cb7a00",
+      "heading_id": "H08",
       "heading_text": "Computational methods",
-      "heading_level": 1,
-      "doc_heading_order": 24,
-      "display_order": 24,
-      "page_index": null,
-      "paragraph_count": 1,
-      "paragraph_uids": [
-        "PRAW-000020"
-      ],
-      "macro_tags": [
-        "S03_methods_and_setup"
-      ]
-    },
-    {
-      "heading_uid": "HRAW-025-f1913dcc",
-      "heading_text": "Data availability",
-      "heading_level": 1,
-      "doc_heading_order": 25,
-      "display_order": 25,
-      "page_index": null,
-      "paragraph_count": 4,
-      "paragraph_uids": [
-        "PRAW-000056",
-        "PRAW-000057",
-        "PRAW-000058",
-        "PRAW-000059"
-      ],
-      "macro_tags": [
-        "S07_back_matter_or_supplementary"
-      ]
-    },
-    {
-      "heading_uid": "HRAW-026-7ccab6e3",
-      "heading_text": "Additional information",
-      "heading_level": 1,
-      "doc_heading_order": 26,
-      "display_order": 26,
-      "page_index": null,
-      "paragraph_count": 4,
-      "paragraph_uids": [
-        "PRAW-000060",
-        "PRAW-000061",
-        "PRAW-000062",
-        "PRAW-000063"
-      ],
-      "macro_tags": [
-        "S07_back_matter_or_supplementary"
+      "heading_order": 8,
+      "paragraph_count": 11,
+      "paragraph_ids": [
+        "S08-P001",
+        "S08-P002",
+        "S08-P003",
+        "S08-P004",
+        "S08-P005",
+        "S08-P006",
+        "S08-P007",
+        "S08-P008",
+        "S08-P009",
+        "S08-P010",
+        "S08-P011"
       ]
     }
   ]

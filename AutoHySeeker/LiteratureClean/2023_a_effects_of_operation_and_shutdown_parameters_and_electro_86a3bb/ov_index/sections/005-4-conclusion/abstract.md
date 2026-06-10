@@ -1,0 +1,3 @@
+Section Role: This section presents the Conclusion of the study.  
+Core Content: It summarizes key findings on how operating parameters and electrode materials influence the reverse current phenomenon in alkaline water electrolyzers during shutdown, offering practical recommendations to enhance system durability under dynamic renewable energy conditions.  
+Key Entities: alkaline water electrolyzer, 4-cell stack, reverse current, electrocatalysts, operating temperature, electrolyte circulation, N₂ bubbling, DC current density, bipolar plates (BPs), multilayer anode, cathode corrosion, COMSOL 5.6 simulation, dynamic operating conditions, renewable energy sources (RES)

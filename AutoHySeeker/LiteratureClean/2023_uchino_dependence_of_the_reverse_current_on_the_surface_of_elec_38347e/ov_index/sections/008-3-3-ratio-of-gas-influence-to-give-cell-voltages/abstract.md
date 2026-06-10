@@ -1,3 +1,3 @@
-章节定位：Results  
-核心内容：本章节通过比较电解过程中气体置换与非置换条件下反向电流电荷量的差异，分析氢气和氧气对电池电压的影响，并指出镍电极活性物质是反向电流的主要驱动力。  
-关键实体：反向电流电荷量 $Q_{\mathrm{r}}(t)$, 电解时间, 气体置换, 氢气, 氧气, 镍电极, DC毫安钳形表 KEW 2500, 电流阈值 0.1 mA
+Section Role: This section presents experimental results examining the influence of gas composition ratios on cell voltages in electrochemical systems.  
+Core Content: The study evaluates how varying the ratio of hydrogen to nitrogen gas (H₂:N₂) from 1:4 to 4:1 affects open-circuit voltage (OCV) and operating cell voltage under a constant current density of 200 mA/cm², revealing a maximum OCV of 1.02 V at a 3:1 H₂:N₂ ratio and a minimum of 0.78 V at 1:4.  
+Key Entities: hydrogen-nitrogen gas mixture, H₂:N₂ ratio (1:4 to 4:1), open-circuit voltage (OCV), operating cell voltage, current density (200 mA/cm²), OCV range (0.78–1.02 V)

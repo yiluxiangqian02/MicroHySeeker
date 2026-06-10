@@ -1,18 +1,30 @@
-章节定位：本章为引言部分，概述碱性水电解（AWE）系统在可再生能源整合中面临的反向电流（RC）现象及其对催化剂稳定性的影响，并提出本文的材料级解决方案。
+Section Positioning: This section serves as the introduction to the paper, establishing the context of renewable energy integration, the role of alkaline water electrolysis (AWE), and the critical challenge posed by reverse-current (RC)-induced catalyst degradation.
 
-逐段索引：  
-P001: 强调大规模储能技术对电力系统稳定的重要性。  
-P002: 列出作者及其所属机构信息（材料科学与工程系等）。  
-P003: 提供作者ORCID标识符的DOI链接。  
-P004: 指出可再生能源波动性推动AWE用于绿氢生产，但RC现象导致催化剂瞬态失稳是关键挑战。  
-P005: 描述RC现象的产生机制，涉及电极间电势差、双极板电子通路及电解液歧管形成的离子通路。  
-P006: 对比说明质子交换膜水电解（PEMWE）因无离子通路而不发生RC现象，并描述正常工况下电极环境。  
-P007: 补充作者所属的化学与生物分子工程系信息。  
-P008: 展示图1a：正常电解池工作状态示意图。  
-P009: 展示图1b：AWE停机后Ni电极因RC流导致退化的机理图。  
-P010: 详述AWE停机后RC自放电过程如何引发阴极氧化与阳极还原，导致Ni基HER催化剂不可逆钝化或溶解。  
-P011: 回顾现有系统工程策略（如极化整流器、牺牲阳极阴极保护）以缓解RC引起的HER催化剂退化。  
-P012: 指出现有系统级方案增加成本和复杂性，强调发展无需附加设施的材料级解决方案的必要性。  
-P013: 提出本文核心方法：通过在Ni催化剂表面直接修饰牺牲金属Pb，提升RC耐受性并意外增强HER活性。
+Paragraph Index:
+P001: Introduces the importance of large-scale energy storage for grid stability in renewable energy systems.  
+P002: Lists affiliations and contact information for the first group of authors.  
+P003: Provides a reference link to ORCID identifiers for the authors.  
+P004: States the article’s DOI.  
+P005: Outlines the promise of AWE for green hydrogen production but highlights its vulnerability to load fluctuations and the reverse-current (RC) phenomenon during shutdowns.  
+P006: Describes the physical origin of RC flow in AWE systems, emphasizing the roles of electronic and ionic pathways.  
+P007: Contrasts AWE with PEMWE, noting the absence of RC in the latter due to lack of an ionic path, and describes normal electrode environments.  
+P008: Names an additional author (K.-J. Kim).  
+P009: Specifies K.-J. Kim’s institutional division.  
+P010: Identifies K.-J. Kim’s affiliated laboratory.  
+P011: Provides the location of Pohang Accelerator Laboratory.  
+P012: Names another author (H.-S. Cho).  
+P013: Specifies H.-S. Cho’s department.  
+P014: Identifies H.-S. Cho’s affiliated institute.  
+P015: Provides the location of Korea Institute of Energy Research.  
+P016: Names another author (J.H. Park).  
+P017: Specifies J.H. Park’s academic department.  
+P018: Identifies J.H. Park’s university.  
+P019: Provides the location of Yonsei University.  
+P020: Displays a schematic image labeled “Normal condition Electrolytic cell.”  
+P021: Presents Figure 1, illustrating Ni electrode degradation due to reverse-current flow after AWE shutdown, with subpanels explaining the mechanism.  
+P022: Explains the electrochemical mechanism of RC-induced self-discharge, detailing how it leads to cathode oxidation, performance loss, and irreversible phase changes in Ni-based HER catalysts.  
+P023: Reviews existing system-level engineering strategies to mitigate RC damage, such as polarization rectifiers and cathodic protection with sacrificial anodes.  
+P024: Critiques system-level solutions for increasing cost and complexity, advocating for material-based approaches, which remain underdeveloped.  
+P025: Proposes a novel catalytic strategy—decorating Ni with Pb—to intrinsically enhance RC tolerance while improving HER activity, validated in a real AWE stack.
 
-关键实体：alkaline water electrolysis (AWE), reverse-current (RC) phenomenon, Ni-based catalyst, HER (hydrogen evolution reaction), OER (oxygen evolution reaction), bipolar plate, sacrificial anode, Pb/Ni catalyst, proton-desorption, water-dissociation, β-Ni(OH)₂, NiO, RHE (reversible hydrogen electrode)
+Key Entities: Alkaline Water Electrolysis (AWE), Reverse-Current (RC) phenomenon, Ni-based HER catalyst, Pb/Ni catalyst, sacrificial metal decoration, proton-desorption, water-dissociation, operational durability

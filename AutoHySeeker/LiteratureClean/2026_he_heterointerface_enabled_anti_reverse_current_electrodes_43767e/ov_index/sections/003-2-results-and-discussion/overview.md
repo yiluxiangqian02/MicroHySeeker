@@ -1,27 +1,28 @@
-章节定位：本章节系统阐述了$\mathrm{Ni}_3\mathrm{S}_2$基电极在碱性水电解中的化学稳定性、界面工程设计、抗反向电流能力、理论稳定性机制及实际电解槽性能。
+Section Positioning: This section presents the core experimental and theoretical findings on the chemical, mechanical, and operational stability of Ni₃S₂-based electrodes, along with performance validation in alkaline water electrolysis.
 
-逐段索引：  
-P001: 引入$\mathrm{Ni@Ni_3S_2}$核壳纳米颗粒模型系统，研究其在碱性析氢（HER）和析氧（OER）反应中的本征化学稳定性。  
-P002: 展示加速耐久性测试（ADT）方案及$\mathrm{Ni}_3\mathrm{S}_2/\mathrm{NM-I}$电极在ADT后的结构表征数据（含图4）。  
-P003: 报告HER条件下电极初始稳定性良好，性能衰减主因是催化剂从碳纸脱落而非化学失活。  
-P004: 描述OER过程中$\mathrm{Ni}_3\mathrm{S}_2$发生表面重构，原位拉曼检测到$\mathrm{Ni^{III}}$-O特征峰。  
-P005: 通过XPS、XANES和EXAFS证实OER导致硫流失与晶态$\mathrm{Ni}_3\mathrm{S}_2$不可逆转化为非晶$\mathrm{NiOOH}$。  
-P006: 指出该重构过程反而提升OER活性，但催化剂脱落仍是寿命限制因素。  
-P007: 设计模拟启停循环的ADT协议，揭示反向电流（RC）流动加剧界面应力并导致严重脱落。  
-P008: 提出通过原位硫化构建具有成分梯度界面层的集成电极$\mathrm{Ni}_3\mathrm{S}_2/\mathrm{NM-I}$，实现无缝结合。  
-P009: 利用EELS和4D-STEM解析梯度界面的结构与电子特性，证明其兼具强机械粘附与高效电荷传输。  
-P010: 超声与高流速冲刷测试验证$\mathrm{Ni}_3\mathrm{S}_2/\mathrm{NM-I}$优异的机械稳定性，并展示其>3000 h稳定电解性能。  
-P011: 尽管OER中发生硫流失与表面非晶化，但界面粘附保障了高ECSA与低$R_{\mathrm{ct}}$，维持长期活性。  
-P012: 设计模拟启停循环的ADT协议评估电极抗反向电流（RC）能力，对比不同电极结构表现。  
-P013: ADT后表征显示$\mathrm{Ni}_3\mathrm{S}_2/\mathrm{NM-I}$保持高ECSA与低$R_{\mathrm{ct}}$，而对照组因脱落性能退化。  
-P014: 阳极经历可控的$\mathrm{Ni}_3\mathrm{S}_2 \rightarrow \mathrm{NiOOH} \rightarrow \mathrm{Ni(OH)}_2 \rightarrow \mathrm{NiOOH}$重构路径，无活性物质损失。  
-P015: 展示理论计算相关图表（图5），包括HAADF-STEM、界面粘附功及异质结构模型。  
-P016: 展示全电解槽性能数据（图6），包括极化曲线、长期稳定性及间歇运行测试结果。  
-P017: 开展多尺度理论模拟以阐明$\mathrm{Ni}_3\mathrm{S}_2/\mathrm{NM-I}$界面超高稳定性的微观机制。  
-P018: HAADF-STEM识别界面处$\mathrm{Ni}_3\mathrm{S}_2$(101)与Ni(111)晶面共存。  
-P019: 基于晶面匹配构建$\mathrm{Ni}(11\overline{2})/\mathrm{Ni}_3\mathrm{S}_2(\overline{1}20)$模型，计算显示其界面粘附功显著增强。  
-P020: 应变分析与电子局域函数（ELF）证明梯度结构可有效分散应力、维持键合稳定性，抑制裂纹萌生。  
-P021: 报告$\mathrm{Ni}_3\mathrm{S}_2/\mathrm{NM-I}$在工业级碱性电解槽中的优异性能，满足美国DOE 2026目标。  
-P022: 证实该电极在频繁启停工况下稳定运行超1200小时（3600次循环），并具备大面积制备可行性。
+Paragraph Index:
+P001: Introduces the investigation of intrinsic chemical stability of Ni@Ni₃S₂ core-shell nanoparticles as a model system for alkaline water splitting.
+P002: Contains a figure panel (part of Figure 4) without descriptive text.
+P003: Presents Figure 4, which summarizes ADT protocols and structural stability characterizations of Ni₃S₂/NM-I under HER and OER conditions.
+P004: Reports initial stability of HER/OER performance in model tests and identifies catalyst detachment—not chemical degradation—as the primary cause of decay.
+P005: Describes dynamic surface reconstruction during OER, evidenced by in situ Raman showing Ni³⁺-O peak formation.
+P006: Provides spectroscopic and microscopic evidence (XPS, XANES, EXAFS) confirming irreversible conversion of Ni₃S₂ to amorphous NiOOH with sulfur leaching.
+P007: Notes that OER-induced reconstruction enhances activity, but mechanical detachment remains the key durability challenge.
+P008: Details an accelerated durability test (ADT) simulating reverse current flow, revealing severe degradation due to interfacial stress in powder-based electrodes.
+P009: Introduces an integrated Ni₃S₂/NM-I electrode with a composition-gradient interlayer engineered via in situ sulfidation for robust adhesion.
+P010: Uses EELS and 4D-STEM to characterize the gradient interlayer’s structural and electronic properties, highlighting seamless interfaces and efficient charge transport.
+P011: Demonstrates superior mechanical stability of Ni₃S₂/NM-I under ultrasonic agitation and long-term high-current water splitting.
+P012: Confirms sustained performance despite OER-driven surface amorphization, attributing durability to persistent interlayer adhesion rather than catalyst preservation.
+P013: Introduces reverse current (RC) resistance testing via a custom ADT protocol mimicking startup/shutdown cycles in alkaline water electrolyzers.
+P014: Shows post-ADT retention of high ECSA and low R_ct in Ni₃S₂/NM-I, contrasting with delamination and performance loss in Ni₃S₂/NM-H.
+P015: Describes controlled reconstruction pathways in the anode during RC cycling and confirms stable NiOOH formation only in the gradient-interlayer electrode.
+P016: Displays Figure 5, illustrating theoretical models and HAADF-STEM data related to interfacial structural stability.
+P017: Shows Figure 6, presenting full-cell alkaline electrolyzer performance metrics including polarization, long-term, and intermittent stability.
+P018: Begins theoretical analysis of interfacial stability, linking experimental observations to computational models.
+P019: Identifies lattice spacings from HAADF-STEM corresponding to Ni₃S₂(101) and Ni(111) planes at the interface.
+P020: Constructs a crystallographically matched Ni(11̄2)/Ni₃S₂(1̄20) heterostructure model and reports enhanced adhesion work (W_ad) values.
+P021: Analyzes mechanical resilience under strain using stress-strain curves and electron localization function (ELF), demonstrating superior stability of the gradient architecture.
+P022: Evaluates full-cell alkaline water electrolyzer performance of Ni₃S₂/NM-I, showing low cell voltages and compliance with DOE targets.
+P023: Reports exceptional intermittent stability over 1200 h (3600 cycles) and scalability of the electrode synthesis, affirming industrial viability.
 
-关键实体：$\mathrm{Ni}_3\mathrm{S}_2$, $\mathrm{Ni@Ni_3S_2}$ NPs, $\mathrm{Ni}_3\mathrm{S}_2/\mathrm{NM-I}$, $\mathrm{NiOOH}$, ADT（加速耐久性测试）, ECSA（电化学活性面积）, $R_{\mathrm{ct}}$（电荷转移电阻）, 成分梯度界面, 反向电流（RC）, 碱性水电解槽（AWE）
+Key Entities: Ni₃S₂, Ni@Ni₃S₂ nanoparticles, NM (nickel mesh), Ni₃S₂/NM-I (integrated electrode with gradient interlayer), NiOOH, reverse current (RC) resistance, accelerated durability test (ADT), composition-gradient interlayer, HAADF-STEM, adhesion work (W_ad), alkaline water electrolyzer (AWE)

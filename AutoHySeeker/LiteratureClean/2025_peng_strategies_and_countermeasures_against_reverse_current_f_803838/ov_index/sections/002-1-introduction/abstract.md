@@ -1,3 +1,3 @@
-章节定位：Introduction  
-核心内容：本章节综述了可再生能源驱动水电解制氢过程中反向电流现象的成因、作用机制及其对电解系统稳定性与电极材料耐久性的危害，并概述了当前的缓解策略。  
-关键实体：氢气, 水电解, 可再生能源, 反向电流, 碱性电解（ALK）, 质子交换膜电解（PEM）, 阴离子交换膜电解（AEM）, 电极材料, 非贵金属催化剂（Ni, Fe, Co）, 离子交换膜, 极化整流器, 智能控制电路, 电压波动, 功率中断
+Section Role: This section is the Introduction, establishing the context and significance of reverse current in renewable-powered water electrolysis.  
+Core Content: It reviews the origins, mechanisms, and impacts of reverse current—induced by renewable intermittency, voltage imbalances, or control failures—on alkaline (ALK), proton exchange membrane (PEM), and anion exchange membrane (AEM) electrolyzers, highlighting degradation of non-noble metal catalysts (e.g., Ni, Fe, Co), membrane damage, and mitigation strategies like electrode optimization, environmental regulation, and system-level protections such as polarization rectifiers.  
+Key Entities: ALK electrolysis, PEM electrolysis, AEM electrolysis, reverse current, renewable energy intermittency, voltage fluctuations, power interruptions, non-noble metal catalysts (Ni, Fe, Co), oxidative dissolution, ion exchange membranes, polarization rectifiers, intelligent control circuits, temperature, electrolyte composition

@@ -5,7 +5,7 @@ Paper ID: `2026_unknown_2026_2d8d75`
 Source MinerU directory:
 
 ```text
-D:\AI4S\MicroHySeeker\MicroHySeeker\AutoHySeeker\MinerU\output\76ec4365-1c6d-4a2f-ae16-12acf100a2df_origin
+D:\AI4S\MicroHySeeker\MicroHySeeker\AutoHySeeker\MinerU\output\面上项目-正文-2026-R3 (1)
 ```
 
 Clean output directory:
@@ -31,12 +31,12 @@ This run processes one MinerU output folder into one LiteratureClean preprocessi
 
 ## Output Summary
 
-- Raw MinerU images remain untouched in `D:\AI4S\MicroHySeeker\MicroHySeeker\AutoHySeeker\MinerU\output\76ec4365-1c6d-4a2f-ae16-12acf100a2df_origin\images`.
+- Raw MinerU images remain untouched in `D:\AI4S\MicroHySeeker\MicroHySeeker\AutoHySeeker\MinerU\output\面上项目-正文-2026-R3 (1)\images`.
 - Clean figure copies are stored under `D:\AI4S\MicroHySeeker\MicroHySeeker\AutoHySeeker\LiteratureClean\2026_unknown_2026_2d8d75\figures` as `FIGxxx/image_XXX.*`.
 - Clean table files are stored under `D:\AI4S\MicroHySeeker\MicroHySeeker\AutoHySeeker\LiteratureClean\2026_unknown_2026_2d8d75\tables` as `TABxxx/table.md`, `caption.md`, and optional rendered images.
-- Heading directories generated: 41
+- Heading directories generated: 4
 - Used image count: 5
-- Uncertain image count: 93
+- Uncertain image count: 89
 - Table directory count: 3
 
 ## Generated Main Files
@@ -56,47 +56,10 @@ This run processes one MinerU output folder into one LiteratureClean preprocessi
 
 ## Heading Directories Generated
 
-- `001-front-matter`
+- `001-2026`
 - `002-1-1`
-- `003-1-2`
-- `004-1-2-1`
-- `005-1-2-2`
-- `006-1-2-3`
-- `007-1-3`
-- `008-1-4`
-- `009-untitled`
-- `010-untitled`
-- `011-2-1`
-- `012-2-2`
-- `013-untitled`
-- `014-untitled`
-- `015-untitled`
-- `016-untitled`
-- `017-nixmy-her`
-- `018-untitled`
-- `019-2-4`
-- `020-untitled`
-- `021-untitled`
-- `022-untitled`
-- `023-2-5`
-- `024-2-6`
-- `025-iii`
-- `026-iv-dft`
-- `027-untitled`
-- `028-untitled`
-- `029-2-7`
-- `030-untitled`
-- `031-untitled`
-- `032-untitled`
-- `033-2-8`
-- `034-untitled`
-- `035-3-1`
-- `036-1`
-- `037-2`
-- `038-3-ni`
-- `039-4`
-- `040-5`
-- `041-3-2`
+- `003-2-1`
+- `004-3-1`
 
 ## Figures Generated
 

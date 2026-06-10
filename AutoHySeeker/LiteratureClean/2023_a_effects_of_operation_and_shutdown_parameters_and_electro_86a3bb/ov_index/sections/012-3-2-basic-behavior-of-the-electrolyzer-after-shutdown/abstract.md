@@ -1,3 +1,3 @@
-章节定位：Results  
-核心内容：本章节展示了碱性水电解槽在停机后双极板的电动势衰减行为及反向电流特性，结合实验与COMSOL模拟结果，揭示了中间双极板（BP-2）因电解液电位梯度和流道结构导致其反向电流更大、电极电位变化更剧烈的现象。  
-关键实体：AN-2电极, 碱性水电解槽, 双极板（BP-1/BP-2/BP-3）, 电动势（emf）, 反向电流, COMSOL模型, KOH电解液, 电解液电位, 等效电阻, 累积反向电荷, 停机时间
+Section Role: This section presents results characterizing the post-shutdown behavior of an electrolyzer.  
+Core Content: It describes the fundamental operational dynamics and transient responses of the electrolyzer system following cessation of active operation.  
+Key Entities: electrolyzer, shutdown, transient response, operational dynamics, post-shutdown behavior

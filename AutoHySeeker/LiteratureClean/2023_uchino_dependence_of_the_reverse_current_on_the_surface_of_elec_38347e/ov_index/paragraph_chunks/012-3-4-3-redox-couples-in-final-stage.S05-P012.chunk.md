@@ -1,8 +1,0 @@
----
-paper_id: "2023_uchino_dependence_of_the_reverse_current_on_the_surface_of_elec_38347e"
-section_id: "S05_discussion_mechanism"
-paragraph_id: "S05-P012"
-evidence_id: "EV-uchino2023-38347e-S05-P012"
-chunk_index: 0
----
-The $U _ { \mathrm { 1 f } }$ and $U _ { 2 \mathrm { f } }$ were 1.14 and $0 . 3 5 \mathrm { V } _ { : }$ , respectively. The potential difference between $\left[ \gamma \mathrm { - N i O O H } / \alpha \mathrm { - N i ( O H ) } _ { 2 } \right]$ (c) and [Ni/ $\mathrm { N i } ( \mathrm { O H } ) _ { 2 } ]$ (f 3) of $1 . 1 9 4 \mathrm { V }$ would correspond to $1 . 1 4 \mathrm { V }$ of $U _ { \mathrm { 1 , f } } .$ . The potential difference between $[ \mathrm { H } _ { 2 } / \mathrm { H } _ { 2 } \mathrm { O } ]$ (h) and $[ \mathrm { N i } / \mathrm { N i } ( \mathrm { O H } ) _ { 2 } ]$ of (f1) or (f2), which is in the potential difference range from 0.426 to $0 . 2 7 0 \mathrm { V }$ would correspond to the $0 . 3 5 \mathrm { V }$ of the $U _ { 2 , \mathrm { f } } .$ At this time, the potential difference $\Delta U$ between one side and the other side on a bipolar plate would be around $0 . 2 4 \mathrm { V } ( = U _ { 2 \mathrm { f } } - ( \mathrm { f } 3 - \mathrm { h } ) )$ .

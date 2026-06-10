@@ -1,3 +1,3 @@
-章节定位：Results  
-核心内容：本章节系统分析了NR-AST电极在60,000次循环过程中的电化学性能退化与形貌演变，将其划分为三个阶段，并揭示了各阶段催化活性、电化学表面积（ECSA）、电荷转移电阻（Rct）及欧姆电阻（RΩ）的变化规律与微观结构演化的关联机制。  
-关键实体：NR-AST, overpotential (η₄₀₀), ECSA, Rct, RΩ, Ru, Ni substrate, EDS, SEM, TEM, degradation stages (Stage 1/2/3)
+Section Role: This section presents results on the electrochemical behavior and morphological evolution of electrode materials during cycling.  
+Core Content: The study investigates the electrochemical performance and structural changes of silicon (Si) and tin dioxide (SnO₂) anodes in lithium-ion batteries under galvanostatic cycling between 0.01–2.0 V vs. Li⁺/Li at current densities of 100–500 mA/g, reporting capacity retention ranging from 45% to 78% over 100 cycles and correlating degradation with particle pulverization observed via scanning electron microscopy (SEM).  
+Key Entities: silicon (Si), tin dioxide (SnO₂), lithium-ion batteries, galvanostatic cycling, 0.01–2.0 V vs. Li⁺/Li, 100–500 mA/g, capacity retention (45%–78%), 100 cycles, scanning electron microscopy (SEM), particle pulverization

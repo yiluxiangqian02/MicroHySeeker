@@ -1,3 +1,3 @@
-章节定位：Methods  
-核心内容：本章节详细描述了Ni/NiO/Cr₂O₃电极的制备过程，包括电沉积和真空煅烧两个主要步骤。  
-关键实体：Ni/NiO/Cr₂O₃, 电沉积, 真空煅烧, Ni(NO₃)₂·6H₂O, Cr(NO₃)₃·9H₂O, 镍泡沫, 三电极系统, 不锈钢网, 饱和甘汞电极, H₂气氛
+Section Role: This section describes the synthesis methods and experimental conditions for producing NiO-Cr₂O₃ composite materials.  
+Core Content: The paper details a solid-state reaction approach to synthesize NiO-Cr₂O₃ composites using nickel(II) oxide and chromium(III) oxide precursors heated at 1000–1400 °C for 2–6 hours in air, with phase purity and crystallite size (25–60 nm) assessed via X-ray diffraction (XRD) and scanning electron microscopy (SEM).  
+Key Entities: NiO, Cr₂O₃, solid-state reaction, 1000–1400 °C, 2–6 hours, air atmosphere, XRD, SEM, crystallite size 25–60 nm

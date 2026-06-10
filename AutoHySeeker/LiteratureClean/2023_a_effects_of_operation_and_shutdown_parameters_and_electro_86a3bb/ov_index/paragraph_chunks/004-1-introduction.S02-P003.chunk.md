@@ -1,8 +1,0 @@
----
-paper_id: "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb"
-section_id: "S02_introduction"
-paragraph_id: "S02-P003"
-evidence_id: "EV-a2023-86a3bb-S02-P003"
-chunk_index: 0
----
-Alkaline water electrolysis (AWE) is a more mature and cost-effective technology compared to other water electrolysis techniques [8,16,17]. However, technical development must be achieved before the widespread deployment of RES-powered AWE systems. One of the main challenges facing the RES-powered AWE technology is the high gas impurity in the part-load range. Therefore, to prevent the formation of inflammable oxygen and hydrogen mixtures, the system undergoes a safety shutdown when the gas impurity reaches 2 vol% [18-20]. Therefore, it is widely accepted that the RES-powered AWE system must operate above a lower operating part-load limit of $25 - 40\%$ of its rated operating full-load [18,21-23]. Consequently, RES-powered AWE systems are subject to frequent start-up/shutdown cycles, which apply additional stressors on the electrocatalysts and significantly shorten their service life [24-30]. In practice, this problem is usually addressed by applying an arbitrary low protective current during shutdown time [31-33]. Therefore, for the RES-powered AWE system, an additional power source is required to supply this protective current. Subsequently, an evident understanding of the reverse current and factors affecting this phenomenon is essential to adopt appropriate protective current that inhibits the degradation of the electrodes with minimal cost, to devise simple and cost-effective protection measures or to develop robust electrodes that do not require protective current during shutdown.

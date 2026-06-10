@@ -34,7 +34,7 @@ This run processes one MinerU output folder into one LiteratureClean preprocessi
 - Raw MinerU images remain untouched in `D:\AI4S\MicroHySeeker\MicroHySeeker\AutoHySeeker\MinerU\output\heterointerface-enabled-anti-reverse-current-electrodes-for-alkaline-wa_4250254b\images`.
 - Clean figure copies are stored under `D:\AI4S\MicroHySeeker\MicroHySeeker\AutoHySeeker\LiteratureClean\2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e\figures` as `FIGxxx/image_XXX.*`.
 - Clean table files are stored under `D:\AI4S\MicroHySeeker\MicroHySeeker\AutoHySeeker\LiteratureClean\2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e\tables` as `TABxxx/table.md`, `caption.md`, and optional rendered images.
-- Heading directories generated: 13
+- Heading directories generated: 5
 - Used image count: 17
 - Uncertain image count: 33
 - Table directory count: 0
@@ -56,19 +56,11 @@ This run processes one MinerU output folder into one LiteratureClean preprocessi
 
 ## Heading Directories Generated
 
-- `001-front-matter`
+- `001-heterointerface-enabled-anti-reverse-current-electrodes-for-alka`
 - `002-1-introduction`
 - `003-2-results-and-discussion`
 - `004-3-conclusions`
 - `005-4-experimental-section`
-- `006-supporting-information`
-- `007-corresponding-authors`
-- `008-authors`
-- `009-author-contributions`
-- `010-notes`
-- `011-acknowledgments`
-- `012-references`
-- `013-note-added-after-asap-publication`
 
 ## Figures Generated
 

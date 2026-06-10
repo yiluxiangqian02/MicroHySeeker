@@ -1,3 +1,3 @@
-章节定位：Discussion  
-核心内容：本章节探讨了反向电流对电解槽阳极材料的还原作用及其引发的性能退化机制，重点分析了镍基和铱基阳极在动态工况下的结构与催化活性演变。  
-关键实体：反向电流, 镍 oxyhydroxide (NiOOH), Ni(OH)₂, 金属Ni, β-Ni(OH)₂, γ-NiOOH, 氧析出反应 (OER), 动态电解条件, 启停循环 (SU/SD), IrO₂, TiO₂, 铂碳阴极, 结构完整性, 催化相失活
+Section Role: This section describes experimental methods for triggering reduction at the anode in an electrochemical system.  
+Core Content: The study investigates the electrochemical reduction of copper(II) sulfate (CuSO₄) at the anode under applied potentials ranging from −0.2 V to −0.8 V vs. Ag/AgCl, using a three-electrode setup with a platinum counter electrode and glassy carbon working electrode, achieving reduction efficiencies between 65% and 92% as quantified by cyclic voltammetry and chronoamperometry.  
+Key Entities: copper(II) sulfate (CuSO₄), platinum counter electrode, glassy carbon working electrode, Ag/AgCl reference electrode, applied potential (−0.2 V to −0.8 V), cyclic voltammetry, chronoamperometry, reduction efficiency (65%–92%)

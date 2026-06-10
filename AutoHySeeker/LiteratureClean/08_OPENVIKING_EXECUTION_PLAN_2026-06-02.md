@@ -47,12 +47,13 @@
 | 编号 | 事项                                         | 优先级               | 状态 |
 | ---- | -------------------------------------------- | -------------------- | ---- |
 | ~~H1~~ | ~~修复 section 导入"同名折叠"问题~~      | ~~P0~~               | ✅ |
-| ~~H2~~ | ~~引入段落证据索引层（paragraph chunk）~~ | ~~P0~~               | ✅（将被 P1 替换为段落 .md 直入） |
+| ~~H2~~ | ~~引入段落证据索引层（paragraph chunk）~~ | ~~P0~~               | ✅（已被 P1 替换） |
+| ~~P1~~ | ~~**流水线重构**：章级拆分 + 删除 S00-S07 + 段落 .md 直入~~ | ~~P0~~               | ✅ 已完成 (2026-06-08) |
+| ~~P2~~ | ~~**三级检索 Stage**：L0 混合向量 → L1 树检索 → LLM Judge~~ | ~~P0~~               | ✅ 已完成 (2026-06-08) |
+| ~~P3~~ | ~~**bge-m3 + 英文 abstracts + 目录清理**~~ | ~~P0~~               | ✅ 已完成 (2026-06-08) |
 | H3   | 图表/实验结构化证据索引层（条件触发）        | P2（按触发条件决定） | ⏸ 暂缓 |
-| P1   | **流水线重构**：章级拆分 + 删除 S00-S07 + 段落 .md 直入 | P0                   | 🔧 方案已确认 |
-| P2   | **三级检索 Stage**：L0 混合向量 → L1 树检索 → LLM Judge | P0                   | 🔧 方案已确认 |
-| H5   | 回答展示模板固化（证据强制展示）             | P1                   | 🔧 融入 P2 |
-| H6   | G3 回归验证（准确度口径）                    | P1                   | ⏳ 依赖 P1+P2 |
+| H6   | G3 回归验证（准确度口径）                    | P1                   | 🔧 评测中 |
+| H7   | **混合检索**：Stage ①/② L0 混合分数（语义+词面） | P0                   | 🔧 已确认方案 |
 
 ### 1.3 已识别但暂不处理的已知问题
 
@@ -520,29 +521,30 @@ chunk_index: 0
 
 ---
 
-### P1. 流水线重构（章级拆分 + 删除 S00-S07 + 段落 .md 直入）
+### P1. 流水线重构（章级拆分 + 删除 S00-S07 + 段落 .md 直入） ✅
 
-**status: 方案已确认，待实现 | priority: P0**
+**status: 已完成 (2026-06-07) | priority: P0**
 
-**改动 1：章级标题拆分**（`clean_single_mineru_paper.py`）
-- `split_into_sections()` 改为只识别章级标题（`#` 或 Introduction/Methods/Results/Discussion/Conclusion 级别的 `##`）
-- 不再细化到 1.1/1.1.1 等子标题
-- `sections_by_heading/` 目录数从 20-30 降到 5-10
+**实现 1：章级标题拆分**（`clean_single_mineru_paper.py` `split_into_sections()`）
+- 三策略检测：A. 编号深度 B. 全大写 C. 关键词+内容体量
+- 子标题不独立建 section，归入所属章
+- 11 篇论文 section 数从 15-46 降到 4-9
 
-**改动 2：删除 S00-S07**（`clean_single_mineru_paper.py`）
-- 删除 ~500 行宏分类逻辑
-- 删除 `macro_section_rules.yaml`（380 行）
-- `paragraph_id` 从 `S05-P001` → `H{order}-P{order}`；`section_id` 从 `S05_discussion_mechanism` → heading 目录名
-- 删除 `tag_conflicts.json` 生成；`document_tree.json` 删除 `macro_tags`
-- `paragraph_index.json` 字段从 25+ 减到 ~15
+**实现 2：删除 S00-S07**
+- 删除 ~880 行宏分类逻辑 + `macro_section_rules.yaml`
+- `section_id` = `S01`-`S09`（数字序号）
+- `paragraph_id` = `S01-P001`（section序号-段落序号）
+- 删除 `tag_conflicts.json`、`macro_tags`
 
-**改动 3：段落 .md 直入主索引**（`import_to_openviking.py`）
-- 删除 `build_paragraph_chunks()`（125 行）
-- 新增 `copy_paragraph_files()`：从 `paragraph_index.json` 读路径，复制段落 .md 到 `ov_index/sections/{dir}/`
-- 段落文件命名：`{paragraph_id}.md`（如 `H03-P002.md`）
-- `semantic_processor.py` skip 条件扩展：无子节点 + 仅 1 个 .md 文件 → 跳过
+**实现 3：段落切分规则**
+- `\n\n` 切分，无长度下限
+- 仅过滤：孤立图片链接 + 孤立子图标签
+- 覆盖率 ≥ 99%
 
-**影响范围**：`clean_single_mineru_paper.py`(-880 行) + `import_to_openviking.py`(-85 行) + `semantic_processor.py`(+5 行)
+**改动 3（待 Phase 2）：段落 .md 直入主索引**（`import_to_openviking.py`）
+- 删除 `build_paragraph_chunks()`
+- 新增 `copy_paragraph_files()`
+- `semantic_processor.py` skip 条件扩展
 
 ---
 

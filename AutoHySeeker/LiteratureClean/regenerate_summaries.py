@@ -122,6 +122,112 @@ SECTION_L1_USER = """请为以下论文章节生成一个约800字的结构化�
 段落内容：
 {paragraphs_text}"""
 
+# ── English L0 Paper Abstract Prompt ──────────────────────────────────
+EN_PAPER_L0_SYSTEM = (
+    "You are a scientific abstract writer. Output must strictly follow the "
+    "specified format. Do not add any extra commentary."
+)
+
+EN_PAPER_L0_USER = """Write a concise abstract (~200 words) for the following paper,
+to be used for vector-based relevance retrieval.
+
+Requirements:
+1. One sentence identifying the research object (material system, reaction type)
+2. One sentence stating the core finding (directional, no specific values)
+3. One sentence describing the methodological approach
+4. One sentence summarizing the main conclusion/contribution
+5. List 3-5 keywords
+
+Do NOT include: specific numerical values, literature references, author info, background.
+
+Output format (plain text):
+Research Object: ...
+Core Finding: ...
+Method: ...
+Conclusion: ...
+Keywords: xxx, xxx, xxx
+
+Paper content:
+{content}"""
+
+# ── English L0 Section Abstract Prompt ────────────────────────────────
+EN_SECTION_L0_SYSTEM = (
+    "You are a scientific abstract writer. Output must strictly follow the "
+    "specified format. Do not add any extra commentary."
+)
+
+EN_SECTION_L0_USER = """Write a concise abstract (~200 words) for the following paper section,
+to be used for vector-based relevance retrieval.
+
+Requirements:
+1. One sentence positioning this section (Introduction / Methods / Results / Discussion)
+2. One sentence summarizing the core content of this section
+3. List key entities involved (materials, methods, metrics, conditions, etc.)
+
+Do NOT include specific numerical values.
+
+Output format (plain text):
+Section Role: ...
+Core Content: ...
+Key Entities: xxx, xxx, xxx
+
+Section content:
+Title: {section_title}
+Paragraphs:
+{paragraphs_text}"""
+
+# ── English L1 Paper Overview Prompt ──────────────────────────────────
+EN_PAPER_L1_SYSTEM = (
+    "You are a scientific overview writer. Output must strictly follow the "
+    "specified format. Do not add any extra commentary."
+)
+
+EN_PAPER_L1_USER = """Write a structured overview (~800 words) for the following paper,
+to help agents navigate from paper-level to specific sections.
+
+Requirements:
+1. Paper positioning (1 sentence: what this paper does overall)
+2. Section index (1 sentence per chapter), using actual section names
+3. Summary of key entities (materials, methods, metrics, conditions)
+
+Output format (plain text):
+Paper Positioning: ...
+
+Section Index:
+{section_list}
+
+Key Entities: xxx, xxx, xxx
+
+Paper content:
+{content}"""
+
+# ── English L1 Section Overview Prompt ────────────────────────────────
+EN_SECTION_L1_SYSTEM = (
+    "You are a scientific overview writer. Output must strictly follow the "
+    "specified format. Do not add any extra commentary."
+)
+
+EN_SECTION_L1_USER = """Write a structured overview (~800 words) for the following paper section,
+to help agents navigate from section-level to specific paragraphs.
+
+Requirements:
+1. Section positioning (1 sentence)
+2. Paragraph index (1 sentence per paragraph describing information type), format: P001: ...
+3. Key entities in this section
+
+Output format (plain text):
+Section Positioning: ...
+
+Paragraph Index:
+{paragraph_index}
+
+Key Entities: xxx, xxx, xxx
+
+Section content:
+Title: {section_title}
+Paragraphs:
+{paragraphs_text}"""
+
 # ── LLM Judge Prompt ──────────────────────────────────────────────────
 LLM_JUDGE_SYSTEM = "你是一个科研文献段落筛选助手。输出严格JSON数组，不要任何其他文字。"
 
@@ -141,6 +247,31 @@ LLM_JUDGE_USER = """用户查询：
 
 输出格式（严格JSON数组，不要任何其他文字）：
 ["P003", "P005"]"""
+
+
+# ── Language Detection ──────────────────────────────────────────────────
+
+def detect_paper_language(paper_dir: Path) -> str:
+    """Return 'zh' or 'en' based on the paper's dominant language."""
+    full_clean = paper_dir / "full_clean.md"
+    if not full_clean.exists():
+        return "en"  # default to English
+    text = full_clean.read_text(encoding="utf-8", errors="replace")[:5000]
+    # Count Chinese characters
+    zh_chars = sum(1 for c in text if "一" <= c <= "鿿" or "㐀" <= c <= "䶿")
+    # If >15% Chinese characters, treat as Chinese paper
+    return "zh" if zh_chars > len(text) * 0.15 else "en"
+
+
+def select_prompts(lang: str):
+    """Return (paper_L0_sys, paper_L0_usr, paper_L1_sys, paper_L1_usr,
+                section_L0_sys, section_L0_usr, section_L1_sys, section_L1_usr)."""
+    if lang == "zh":
+        return (PAPER_L0_SYSTEM, PAPER_L0_USER, PAPER_L1_SYSTEM, PAPER_L1_USER,
+                SECTION_L0_SYSTEM, SECTION_L0_USER, SECTION_L1_SYSTEM, SECTION_L1_USER)
+    else:
+        return (EN_PAPER_L0_SYSTEM, EN_PAPER_L0_USER, EN_PAPER_L1_SYSTEM, EN_PAPER_L1_USER,
+                EN_SECTION_L0_SYSTEM, EN_SECTION_L0_USER, EN_SECTION_L1_SYSTEM, EN_SECTION_L1_USER)
 
 
 # ── Helpers ────────────────────────────────────────────────────────────
@@ -278,21 +409,23 @@ def read_section_paragraphs_text(paper_dir: Path, section_slug: str) -> str:
 
 # ── Generators ─────────────────────────────────────────────────────────
 
-def generate_paper_l0(paper_dir: Path, cfg: dict[str, Any]) -> str:
+def generate_paper_l0(paper_dir: Path, cfg: dict[str, Any], lang: str = "en") -> str:
     content = _read_limited(paper_dir / "full_clean.md", 16000)
-    user = PAPER_L0_USER.format(content=content)
-    return call_llm(PAPER_L0_SYSTEM, user, cfg)
+    sys_p, usr_p, _, _, _, _, _, _ = select_prompts(lang)
+    user = usr_p.format(content=content)
+    return call_llm(sys_p, user, cfg)
 
 
-def generate_paper_l1(paper_dir: Path, cfg: dict[str, Any]) -> str:
+def generate_paper_l1(paper_dir: Path, cfg: dict[str, Any], lang: str = "en") -> str:
     content = _read_limited(paper_dir / "full_clean.md", 16000)
     section_list = build_section_list(paper_dir)
-    user = PAPER_L1_USER.format(section_list=section_list, content=content)
-    return call_llm(PAPER_L1_SYSTEM, user, cfg)
+    _, _, sys_p, usr_p, _, _, _, _ = select_prompts(lang)
+    user = usr_p.format(section_list=section_list, content=content)
+    return call_llm(sys_p, user, cfg)
 
 
 def generate_section_l0(
-    paper_dir: Path, section_slug: str, cfg: dict[str, Any]
+    paper_dir: Path, section_slug: str, cfg: dict[str, Any], lang: str = "en"
 ) -> str:
     heading_file = paper_dir / "sections_by_heading" / section_slug / "heading.json"
     if heading_file.exists():
@@ -305,14 +438,15 @@ def generate_section_l0(
         section_title = section_slug
 
     paragraphs_text = read_section_paragraphs_text(paper_dir, section_slug)
-    user = SECTION_L0_USER.format(
+    _, _, _, _, sys_p, usr_p, _, _ = select_prompts(lang)
+    user = usr_p.format(
         section_title=section_title, paragraphs_text=paragraphs_text
     )
-    return call_llm(SECTION_L0_SYSTEM, user, cfg)
+    return call_llm(sys_p, user, cfg)
 
 
 def generate_section_l1(
-    paper_dir: Path, section_slug: str, cfg: dict[str, Any]
+    paper_dir: Path, section_slug: str, cfg: dict[str, Any], lang: str = "en"
 ) -> str:
     heading_file = paper_dir / "sections_by_heading" / section_slug / "heading.json"
     if heading_file.exists():
@@ -326,12 +460,13 @@ def generate_section_l1(
 
     para_index = build_paragraph_index_for_section(paper_dir, section_slug)
     paragraphs_text = read_section_paragraphs_text(paper_dir, section_slug)
-    user = SECTION_L1_USER.format(
+    _, _, _, _, _, _, sys_p, usr_p = select_prompts(lang)
+    user = usr_p.format(
         section_title=section_title,
         paragraph_index=para_index,
         paragraphs_text=paragraphs_text,
     )
-    return call_llm(SECTION_L1_SYSTEM, user, cfg)
+    return call_llm(sys_p, user, cfg)
 
 
 # ── Main ────────────────────────────────────────────────────────────────
@@ -371,7 +506,9 @@ def main() -> None:
         ov = paper_dir / "ov_index"
         sections_root = ov / "sections"
 
-        print(f"\n[{paper_id}]")
+        lang = detect_paper_language(paper_dir)
+        lang_label = "ZH" if lang == "zh" else "EN"
+        print(f"\n[{paper_id}] [{lang_label}]")
 
         # ── Paper L0 ──
         pa = ov / "paper.abstract.md"
@@ -379,7 +516,7 @@ def main() -> None:
             print(f"  [dry-run] would regenerate paper.abstract.md")
         else:
             try:
-                result = generate_paper_l0(paper_dir, cfg)
+                result = generate_paper_l0(paper_dir, cfg, lang)
                 pa.write_text(result + "\n", encoding="utf-8")
                 print(f"  paper.abstract.md: OK ({len(result)} chars)")
                 total_ok += 1
@@ -395,7 +532,7 @@ def main() -> None:
             print(f"  [dry-run] would regenerate paper.overview.md")
         else:
             try:
-                result = generate_paper_l1(paper_dir, cfg)
+                result = generate_paper_l1(paper_dir, cfg, lang)
                 po.write_text(result + "\n", encoding="utf-8")
                 print(f"  paper.overview.md: OK ({len(result)} chars)")
                 total_ok += 1
@@ -422,7 +559,7 @@ def main() -> None:
                 print(f"  [dry-run] would regenerate {short}/abstract.md")
             else:
                 try:
-                    result = generate_section_l0(paper_dir, section_slug, cfg)
+                    result = generate_section_l0(paper_dir, section_slug, cfg, lang)
                     sa.write_text(result + "\n", encoding="utf-8")
                     print(f"  {short}/abstract.md: OK ({len(result)} chars)")
                     total_ok += 1
@@ -438,7 +575,7 @@ def main() -> None:
                 print(f"  [dry-run] would regenerate {short}/overview.md")
             else:
                 try:
-                    result = generate_section_l1(paper_dir, section_slug, cfg)
+                    result = generate_section_l1(paper_dir, section_slug, cfg, lang)
                     so.write_text(result + "\n", encoding="utf-8")
                     print(f"  {short}/overview.md: OK ({len(result)} chars)")
                     total_ok += 1

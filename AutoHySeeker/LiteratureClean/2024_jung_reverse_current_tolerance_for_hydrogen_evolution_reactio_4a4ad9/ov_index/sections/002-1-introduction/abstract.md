@@ -1,3 +1,3 @@
-章节定位：Introduction  
-核心内容：本章节介绍了碱性水电解（AWE）系统在可再生能源波动供电下面临的反向电流（RC）现象及其对催化剂耐久性的挑战，并提出通过在镍催化剂表面修饰牺牲金属铅（Pb）以提升其抗RC能力和析氢反应（HER）活性的新策略。  
-关键实体：碱性水电解（AWE）、反向电流（RC）、镍基电极（Ni）、铅修饰（Pb/Ni）、析氢反应（HER）、双极板、电解液歧管、牺牲阳极、阴极氧化、β-Ni(OH)₂、NiO、可再生能源
+Section Role: This section is the Introduction, establishing the context and motivation for the study.  
+Core Content: It identifies reverse-current (RC)-induced cathode oxidation—particularly in Ni-based electrodes above 0.6 V vs. RHE—as a critical degradation mechanism in alkaline water electrolysis (AWE) systems under intermittent renewable energy operation, and introduces Pb-decorated Ni (Pb/Ni) catalysts as a material-level solution that enhances both HER activity and RC tolerance.  
+Key Entities: alkaline water electrolysis (AWE), reverse-current (RC) phenomenon, Ni-based electrode, Pb/Ni catalyst, hydrogen evolution reaction (HER), oxygen evolution reaction (OER), 0.6 V vs. RHE, β-Ni(OH)₂, NiO, cathodic protection, sacrificial anode, polarization rectifiers, intermittent power fluctuations, renewable energy sources

@@ -1,172 +1,140 @@
 {
   "paper_id": "2017_uchino_relationship_between_the_redox_reactions_on_a_bipolar_pl_eb3da9",
-  "title": "Relationship Between the Redox Reactions on a Bipolar Plate and Reverse Current After Alkaline Water Electrolysis",
-  "heading_count": 7,
-  "paragraph_count": 64,
-  "headings": [
+  "sections": [
     {
       "heading_uid": "HRAW-001-29694c9f",
+      "heading_id": "H01",
       "heading_text": "Relationship Between the Redox Reactions on a Bipolar Plate and Reverse Current After Alkaline Water Electrolysis",
-      "heading_level": 1,
-      "doc_heading_order": 1,
-      "display_order": 1,
-      "page_index": null,
-      "paragraph_count": 5,
-      "paragraph_uids": [
-        "PRAW-000001",
-        "PRAW-000002",
-        "PRAW-000003",
-        "PRAW-000004",
-        "PRAW-000005"
-      ],
-      "macro_tags": [
-        "S00_front_matter",
-        "S01_abstract"
+      "heading_order": 1,
+      "paragraph_count": 7,
+      "paragraph_ids": [
+        "S01-P001",
+        "S01-P002",
+        "S01-P003",
+        "S01-P004",
+        "S01-P005",
+        "S01-P006",
+        "S01-P007"
       ]
     },
     {
       "heading_uid": "HRAW-002-535ffabb",
+      "heading_id": "H02",
       "heading_text": "Introduction",
-      "heading_level": 1,
-      "doc_heading_order": 2,
-      "display_order": 2,
-      "page_index": null,
+      "heading_order": 2,
       "paragraph_count": 8,
-      "paragraph_uids": [
-        "PRAW-000006",
-        "PRAW-000007",
-        "PRAW-000008",
-        "PRAW-000009",
-        "PRAW-000010",
-        "PRAW-000011",
-        "PRAW-000012",
-        "PRAW-000013"
-      ],
-      "macro_tags": [
-        "S02_introduction"
+      "paragraph_ids": [
+        "S02-P001",
+        "S02-P002",
+        "S02-P003",
+        "S02-P004",
+        "S02-P005",
+        "S02-P006",
+        "S02-P007",
+        "S02-P008"
+      ]
+    },
+    {
+      "heading_uid": "HRAW-003-908d512c",
+      "heading_id": "H03",
+      "heading_text": "Experiment Method and Analytical Model",
+      "heading_order": 3,
+      "paragraph_count": 1,
+      "paragraph_ids": [
+        "S03-P001"
       ]
     },
     {
       "heading_uid": "HRAW-004-1b9802d6",
+      "heading_id": "H04",
       "heading_text": "Experiment Method",
-      "heading_level": 1,
-      "doc_heading_order": 4,
-      "display_order": 4,
-      "page_index": null,
+      "heading_order": 4,
       "paragraph_count": 5,
-      "paragraph_uids": [
-        "PRAW-000014",
-        "PRAW-000015",
-        "PRAW-000016",
-        "PRAW-000017",
-        "PRAW-000018"
-      ],
-      "macro_tags": [
-        "S03_methods_and_setup"
+      "paragraph_ids": [
+        "S04-P001",
+        "S04-P002",
+        "S04-P003",
+        "S04-P004",
+        "S04-P005"
       ]
     },
     {
       "heading_uid": "HRAW-005-a3784bf2",
+      "heading_id": "H05",
       "heading_text": "Potential Profile Model",
-      "heading_level": 1,
-      "doc_heading_order": 5,
-      "display_order": 5,
-      "page_index": null,
-      "paragraph_count": 10,
-      "paragraph_uids": [
-        "PRAW-000025",
-        "PRAW-000026",
-        "PRAW-000027",
-        "PRAW-000028",
-        "PRAW-000029",
-        "PRAW-000030",
-        "PRAW-000031",
-        "PRAW-000032",
-        "PRAW-000033",
-        "PRAW-000034"
-      ],
-      "macro_tags": [
-        "S01_abstract",
-        "S04_results"
+      "heading_order": 5,
+      "paragraph_count": 18,
+      "paragraph_ids": [
+        "S05-P001",
+        "S05-P002",
+        "S05-P003",
+        "S05-P004",
+        "S05-P005",
+        "S05-P006",
+        "S05-P007",
+        "S05-P008",
+        "S05-P009",
+        "S05-P010",
+        "S05-P011",
+        "S05-P012",
+        "S05-P013",
+        "S05-P014",
+        "S05-P015",
+        "S05-P016",
+        "S05-P017",
+        "S05-P018"
       ]
     },
     {
-      "heading_uid": "HRAW-006-1da05de7",
-      "heading_text": "Equivalent Circuit Model",
-      "heading_level": 1,
-      "doc_heading_order": 6,
-      "display_order": 6,
-      "page_index": null,
-      "paragraph_count": 6,
-      "paragraph_uids": [
-        "PRAW-000019",
-        "PRAW-000020",
-        "PRAW-000021",
-        "PRAW-000022",
-        "PRAW-000023",
-        "PRAW-000024"
-      ],
-      "macro_tags": [
-        "S03_methods_and_setup"
-      ]
-    },
-    {
-      "heading_uid": "HRAW-007-c4104207",
+      "heading_uid": "HRAW-006-248c9b3f",
+      "heading_id": "H06",
       "heading_text": "Results and Discussion",
-      "heading_level": 1,
-      "doc_heading_order": 7,
-      "display_order": 7,
-      "page_index": null,
-      "paragraph_count": 26,
-      "paragraph_uids": [
-        "PRAW-000035",
-        "PRAW-000036",
-        "PRAW-000037",
-        "PRAW-000038",
-        "PRAW-000039",
-        "PRAW-000040",
-        "PRAW-000041",
-        "PRAW-000042",
-        "PRAW-000043",
-        "PRAW-000044",
-        "PRAW-000045",
-        "PRAW-000046",
-        "PRAW-000047",
-        "PRAW-000048",
-        "PRAW-000049",
-        "PRAW-000050",
-        "PRAW-000051",
-        "PRAW-000052",
-        "PRAW-000053",
-        "PRAW-000054",
-        "PRAW-000055",
-        "PRAW-000056",
-        "PRAW-000057",
-        "PRAW-000058",
-        "PRAW-000059",
-        "PRAW-000060"
-      ],
-      "macro_tags": [
-        "S04_results"
+      "heading_order": 6,
+      "paragraph_count": 29,
+      "paragraph_ids": [
+        "S06-P001",
+        "S06-P002",
+        "S06-P003",
+        "S06-P004",
+        "S06-P005",
+        "S06-P006",
+        "S06-P007",
+        "S06-P008",
+        "S06-P009",
+        "S06-P010",
+        "S06-P011",
+        "S06-P012",
+        "S06-P013",
+        "S06-P014",
+        "S06-P015",
+        "S06-P016",
+        "S06-P017",
+        "S06-P018",
+        "S06-P019",
+        "S06-P020",
+        "S06-P021",
+        "S06-P022",
+        "S06-P023",
+        "S06-P024",
+        "S06-P025",
+        "S06-P026",
+        "S06-P027",
+        "S06-P028",
+        "S06-P029"
       ]
     },
     {
-      "heading_uid": "HRAW-008-46e6721c",
+      "heading_uid": "HRAW-007-0b8c1338",
+      "heading_id": "H07",
       "heading_text": "Conclusions",
-      "heading_level": 1,
-      "doc_heading_order": 8,
-      "display_order": 8,
-      "page_index": null,
-      "paragraph_count": 4,
-      "paragraph_uids": [
-        "PRAW-000061",
-        "PRAW-000062",
-        "PRAW-000064",
-        "PRAW-000063"
-      ],
-      "macro_tags": [
-        "S06_conclusion",
-        "S07_back_matter_or_supplementary"
+      "heading_order": 7,
+      "paragraph_count": 5,
+      "paragraph_ids": [
+        "S07-P001",
+        "S07-P002",
+        "S07-P003",
+        "S07-P004",
+        "S07-P005"
       ]
     }
   ]

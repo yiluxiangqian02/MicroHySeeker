@@ -1,0 +1,3 @@
+Section Role: This section describes the Methods used in the experimental investigation of reverse current phenomena in an alkaline electrolysis system.  
+Core Content: It details the setup of a dual-cell electrolyzer, including materials, operational conditions, and procedures for measuring reverse current and internal/ionic resistances during and after electrolysis.  
+Key Entities: Ni mesh electrodes, Nafion NRE212CS membranes, 7.0 M NaOH electrolyte, Teflon tubing, AC impedance method, DC milliampere clamp meter, cell voltages (U₁, U₂), ionic resistances (Rₐ₋c, R_b₋d, R_g₋i, R_h₋j, Rₘ), heat exchanger, gas–liquid separation tanks, projected electrode area, electrolyte flow rate, shutdown condition

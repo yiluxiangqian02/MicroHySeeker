@@ -1,19 +1,10 @@
-论文定位：本文通过构建三电极膜电极组件（MEA）实验平台，结合加速应力测试与原位/非原位表征手段，系统揭示了碱性水电解槽在动态启停过程中因反向电流引发的阳极与阴极性能演变及退化机制。
+Paper Positioning: This paper investigates the degradation mechanisms of nickel-based electrodes in alkaline water electrolyzers under dynamic operation, specifically focusing on reverse current phenomena during frequent startup/shutdown cycles, using a custom three-electrode membrane electrode assembly setup combined with operando and post-mortem analyses.
 
-章节索引：  
-  001-front-matter: Probing Electrode Transformation under Dynamic Operation for Alkaline Water Electrolysis  
-  002-1-introduction: 1. Introduction — 阐述碱性水电解槽在动态运行下面临的反向电流挑战，并提出需解耦电极行为以深入理解退化机理。  
-  003-2-1-quantify-electrochemical-behaviors-in-reverse-c: 2.1. Quantify Electrochemical Behaviors in Reverse Current Process — 介绍三电极MEA装置设计，用于在反向电流过程中独立监测阳极和阴极的电化学行为。  
-  004-2-2-reverse-current-accelerated-stress-testing-ast: 2.2. Reverse Current Accelerated-Stress Testing (AST) — 提出一种模拟启停过程中反向电流的加速应力测试协议。  
-  005-2-3-electrochemical-behaviors-of-anode-and-cathode: 2.3. Electrochemical Behaviors of Anode and Cathode during Reverse Current AST — 展示在AST循环中阳极性能提升而阴极显著退化的电化学响应差异。  
-  006-2-4-unravel-the-degradation-mechanism: 2.4. Unravel the Degradation Mechanism — 结合原位与事后表征，阐明阳极形成高活性镍（氧）氢氧化物而阴极不可逆氧化为β-Ni(OH)₂导致性能衰减的机制。  
-  007-3-conclusion: 3. Conclusion — 总结电极在动态操作下的转化规律，指出提升阴极氧化还原可逆性是增强电解槽耐久性的关键。  
-  008-4-experimental-section: 4. Experimental Section — 描述三电极MEA组装、电解液条件、测试参数及材料制备细节。  
-  009-supporting-information: Supporting Information — 提供补充图示与数据，包括装置细节、阻抗谱、对齐效应分析等。  
-  010-acknowledgements: Acknowledgements — 致谢资助机构与合作单位。  
-  011-conflict-of-interest: Conflict of Interest — 声明作者无利益冲突。  
-  012-author-contributions: Author Contributions — 说明各作者在研究中的具体贡献。  
-  013-data-availability-statement: Data Availability Statement — 说明原始数据可通过合理请求获取。  
-  014-keywords: Keywords — 列出关键词：alkaline water electrolysis, reverse current, electrode degradation, nickel-based electrodes, dynamic operation, accelerated stress testing。
+Section Index:
+  001-probing-electrode-transformation-under-dynamic-operation-for-alk: Probing Electrode Transformation under Dynamic Operation for Alkaline Water Electrolysis
+  002-1-introduction: 1. Introduction – Introduces the challenges of dynamic operation in alkaline water electrolyzers (AWEs), particularly electrode degradation due to reverse current during startup/shutdown, and outlines the need for decoupled electrode analysis.
+  003-2-results-and-discussion: 2. Results and Discussion – Presents electrochemical characterization of anode and cathode under reverse current using a three-electrode MEA setup, accelerated stress testing, and mechanistic insights into performance enhancement (anode) versus degradation (cathode).
+  004-3-conclusion: 3. Conclusion – Summarizes that anode activity improves via nickel (oxy)hydroxide formation while cathode degrades irreversibly to β-nickel hydroxide, suggesting redox-reversible cathodes could enhance AWE durability under dynamic conditions.
+  005-4-experimental-section: 4. Experimental Section – Details the fabrication of the three-electrode zero-gap MEA, materials used (Ni felt electrodes, Zirfon separator, Ag/AgCl reference), electrolyte conditions (7 M KOH, 80 °C), and protocols for accelerated stress testing and electrochemical measurements.
 
-关键实体：镍毡电极（Ni felt）、Zirfon隔膜（Agfa Perl UTP 500）、7 M KOH电解液（80°C）、三电极MEA装置、Ag/AgCl参比电极、反向电流加速应力测试（RC-AST）、阳极氧析出反应（OER）、阴极氢析出反应（HER）、镍（氧）氢氧化物、β-氢氧化镍（β-Ni(OH)₂）、可逆氢电极（RHE）、电化学阻抗谱（EIS）、恒电位/恒电流测试、原位/事后表征
+Key Entities: nickel (Ni) felt electrodes, Zirfon Perl UTP 500 separator, 7 M KOH electrolyte at 80 °C, three-electrode membrane electrode assembly (MEA) with Ag/AgCl reference electrode, accelerated stress testing (AST) protocol simulating reverse current via 0 V chronoamperometry, polarization curves vs. RHE, electrochemical impedance spectroscopy (EIS), operando potential monitoring, in situ and post-mortem characterization, oxygen evolution reaction (OER), hydrogen evolution reaction (HER), nickel (oxy)hydroxides (active anode phase), β-nickel hydroxide (degraded cathode phase), reverse current (RC) phenomenon, overpotential decomposition (kinetic, ohmic, mass transport).

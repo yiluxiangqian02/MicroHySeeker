@@ -1,9 +1,6 @@
-章节定位：本章节探讨碱性水电解（AWE）系统在停机期间电解液循环对反向电流现象及电极耐久性的影响。
+Section Positioning: This section examines how electrolyte circulation influences the reversible electrode voltage efficiency (REVE) in electrochemical systems.
 
-逐段索引：  
-P001: 介绍AWE系统运行期间电解液循环的必要性，并指出停机期间电解液循环对反向电流现象和电催化剂耐久性的影响尚未被研究。  
-P002: 描述本研究中4单元堆叠电解槽（使用AN-2电极）在停机期间开启与关闭电解液循环的实验设计，以及由此引起的离子电阻变化和气体滞留现象。  
-P003: 展示图5，对比有无氮气鼓泡条件下BP-1与BP-3的平均反向电流及电极电位随停机时间的变化。  
-P004: 分析电解液循环如何加速电动势衰减并加剧反向电流，指出停机时停止循环可延长电极安全停机窗口（约50分钟），而持续循环则缩短至约12分钟，建议停机时暂停电解液循环以提升电极长期耐久性。
+Paragraph Index:  
+(no paragraphs)
 
-关键实体：AWE系统, AN-2电极, 电解液循环, 反向电流现象, BP-1, BP-3, 离子电阻 (R_eff), 停机时间, 电极电位, RHE, 氮气鼓泡, 安全停机窗口
+Key Entities: electrolyte circulation, reversible electrode voltage efficiency (REVE), electrochemical systems

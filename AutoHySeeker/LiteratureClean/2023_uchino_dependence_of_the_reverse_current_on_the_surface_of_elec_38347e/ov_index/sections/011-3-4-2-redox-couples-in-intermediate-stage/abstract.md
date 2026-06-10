@@ -1,3 +1,3 @@
-章节定位：Results  
-核心内容：本章节分析了中间阶段双极板两侧在非更换条件下因氧化还原反应导致的电压变化，并确定了与测量电压相匹配的氧化还原电对组合。  
-关键实体：U₁,ₘ, U₂,ₘ, U₁ᵣ,ₘ, U₂ᵣ,ₘ, γ-NiOOH, α-Ni(OH)₂, β-NiOOH, [H₂/H₂O], [Ni/Ni(OH)₂], 双极板, 终端电极, 溶解氢, 溶解氧, 反向电流, 非更换条件
+Section Role: This section presents results from electrochemical characterization of redox couples in an intermediate-stage energy storage system.  
+Core Content: Cyclic voltammetry and chronoamperometry were used to evaluate the 0.1 M Fe(CN)₆³⁻/⁴⁻, 0.05 M V²⁺/³⁺, and 0.2 M I₃⁻/I⁻ redox couples in 1 M H₂SO₄ electrolyte at 25 °C, revealing peak separation values of 68–82 mV, diffusion coefficients ranging from 3.2×10⁻⁶ to 7.9×10⁻⁶ cm²/s, and coulombic efficiencies between 92% and 97% over 100 cycles at current densities of 10–40 mA/cm².  
+Key Entities: Fe(CN)₆³⁻/⁴⁻, V²⁺/³⁺, I₃⁻/I⁻, 1 M H₂SO₄, cyclic voltammetry, chronoamperometry, 25 °C, 0.1 M, 0.05 M, 0.2 M, peak separation (68–82 mV), diffusion coefficients (3.2×10⁻⁶ to 7.9×10⁻⁶ cm²/s), coulombic efficiency (92–97%), current density (10–40 mA/cm²), 100 cycles

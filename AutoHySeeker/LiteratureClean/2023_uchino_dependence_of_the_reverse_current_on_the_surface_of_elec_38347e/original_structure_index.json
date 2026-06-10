@@ -1,43 +1,19 @@
 {
   "paper_id": "2023_uchino_dependence_of_the_reverse_current_on_the_surface_of_elec_38347e",
-  "heading_count": 15,
-  "paragraph_count": 77,
+  "heading_count": 5,
+  "paragraph_count": 92,
   "headings": [
     {
-      "heading_uid": "HRAW-002-5fba8735",
-      "heading_text": "Yosuke UCHINO,a,b,* Takayuki KOBAYASHI,b Shinji HASEGAWA,a Ikuo NAGASHIMA,c Yoshio SUNADA,d Akiyoshi MANABE,e Yoshinori NISHIKI,e and Shigenori MITSUSHIMAb",
+      "heading_uid": "HRAW-001-8cb16912",
+      "heading_text": "Dependence of the Reverse Current on the Surface of Electrode Placed on a Bipolar Plate in an Alkaline Water Electrolyzer",
       "heading_level": 1,
-      "doc_heading_order": 2,
-      "page_index": null,
-      "block_order": 1,
-      "paragraph_uid_list": [
-        "PRAW-000009",
-        "PRAW-000010"
-      ],
-      "inferred_type": "none"
-    },
-    {
-      "heading_uid": "HRAW-003-ecf82b73",
-      "heading_text": "ABSTRACT",
-      "heading_level": 1,
-      "doc_heading_order": 3,
+      "doc_heading_order": 1,
       "page_index": null,
       "block_order": 1,
       "paragraph_uid_list": [
         "PRAW-000001",
         "PRAW-000002",
-        "PRAW-000003"
-      ],
-      "inferred_type": "none"
-    },
-    {
-      "heading_uid": "HRAW-004-fe484858",
-      "heading_text": "1. Introduction",
-      "heading_level": 1,
-      "doc_heading_order": 4,
-      "page_index": null,
-      "block_order": 1,
-      "paragraph_uid_list": [
+        "PRAW-000003",
         "PRAW-000004",
         "PRAW-000005",
         "PRAW-000006",
@@ -47,13 +23,37 @@
       "inferred_type": "none"
     },
     {
-      "heading_uid": "HRAW-005-55a0c0c8",
-      "heading_text": "2. Experimental",
+      "heading_uid": "HRAW-002-2812cee1",
+      "heading_text": "1. Introduction",
       "heading_level": 1,
-      "doc_heading_order": 5,
+      "doc_heading_order": 2,
       "page_index": null,
       "block_order": 1,
       "paragraph_uid_list": [
+        "PRAW-000009",
+        "PRAW-000010",
+        "PRAW-000011",
+        "PRAW-000012",
+        "PRAW-000013"
+      ],
+      "inferred_type": "none"
+    },
+    {
+      "heading_uid": "HRAW-003-a08e40af",
+      "heading_text": "2. Experimental",
+      "heading_level": 1,
+      "doc_heading_order": 3,
+      "page_index": null,
+      "block_order": 1,
+      "paragraph_uid_list": [
+        "PRAW-000014",
+        "PRAW-000015",
+        "PRAW-000016",
+        "PRAW-000017",
+        "PRAW-000018",
+        "PRAW-000019",
+        "PRAW-000020",
+        "PRAW-000021",
         "PRAW-000022",
         "PRAW-000023",
         "PRAW-000024",
@@ -69,7 +69,18 @@
         "PRAW-000034",
         "PRAW-000035",
         "PRAW-000036",
-        "PRAW-000037",
+        "PRAW-000037"
+      ],
+      "inferred_type": "none"
+    },
+    {
+      "heading_uid": "HRAW-004-e2434c38",
+      "heading_text": "3. Results and Discussion",
+      "heading_level": 1,
+      "doc_heading_order": 4,
+      "page_index": null,
+      "block_order": 1,
+      "paragraph_uid_list": [
         "PRAW-000038",
         "PRAW-000039",
         "PRAW-000040",
@@ -77,171 +88,65 @@
         "PRAW-000042",
         "PRAW-000043",
         "PRAW-000044",
-        "PRAW-000045"
-      ],
-      "inferred_type": "back_matter"
-    },
-    {
-      "heading_uid": "HRAW-007-c6dfc4ce",
-      "heading_text": "3.1 Cell characteristics",
-      "heading_level": 1,
-      "doc_heading_order": 7,
-      "page_index": null,
-      "block_order": 1,
-      "paragraph_uid_list": [
+        "PRAW-000045",
         "PRAW-000046",
         "PRAW-000047",
         "PRAW-000048",
         "PRAW-000049",
         "PRAW-000050",
         "PRAW-000051",
-        "PRAW-000052"
-      ],
-      "inferred_type": "none"
-    },
-    {
-      "heading_uid": "HRAW-008-70fd0edf",
-      "heading_text": "3.2 Cell voltage behavior after electrolysis",
-      "heading_level": 1,
-      "doc_heading_order": 8,
-      "page_index": null,
-      "block_order": 1,
-      "paragraph_uid_list": [
-        "PRAW-000053"
-      ],
-      "inferred_type": "none"
-    },
-    {
-      "heading_uid": "HRAW-009-be2bf16c",
-      "heading_text": "3.2.1 Case of non-replacement",
-      "heading_level": 1,
-      "doc_heading_order": 9,
-      "page_index": null,
-      "block_order": 1,
-      "paragraph_uid_list": [
-        "PRAW-000011",
-        "PRAW-000012",
-        "PRAW-000013",
-        "PRAW-000014",
-        "PRAW-000015",
-        "PRAW-000016",
-        "PRAW-000017",
-        "PRAW-000018",
-        "PRAW-000019",
-        "PRAW-000020"
-      ],
-      "inferred_type": "none"
-    },
-    {
-      "heading_uid": "HRAW-010-05e9f6dc",
-      "heading_text": "3.3 Ratio of gas influence to give cell voltages",
-      "heading_level": 1,
-      "doc_heading_order": 10,
-      "page_index": null,
-      "block_order": 1,
-      "paragraph_uid_list": [
+        "PRAW-000052",
+        "PRAW-000053",
         "PRAW-000054",
         "PRAW-000055",
-        "PRAW-000056"
-      ],
-      "inferred_type": "none"
-    },
-    {
-      "heading_uid": "HRAW-011-eea5a404",
-      "heading_text": "3.4 Redox couples",
-      "heading_level": 1,
-      "doc_heading_order": 11,
-      "page_index": null,
-      "block_order": 1,
-      "paragraph_uid_list": [
+        "PRAW-000056",
+        "PRAW-000057",
+        "PRAW-000058",
         "PRAW-000059",
         "PRAW-000060",
-        "PRAW-000061"
-      ],
-      "inferred_type": "none"
-    },
-    {
-      "heading_uid": "HRAW-012-3db71f2a",
-      "heading_text": "3.4.1 Redox couples in initial stage",
-      "heading_level": 1,
-      "doc_heading_order": 12,
-      "page_index": null,
-      "block_order": 1,
-      "paragraph_uid_list": [
+        "PRAW-000061",
         "PRAW-000062",
         "PRAW-000063",
-        "PRAW-000064"
-      ],
-      "inferred_type": "none"
-    },
-    {
-      "heading_uid": "HRAW-013-6861c565",
-      "heading_text": "3.4.2 Redox couples in intermediate stage",
-      "heading_level": 1,
-      "doc_heading_order": 13,
-      "page_index": null,
-      "block_order": 1,
-      "paragraph_uid_list": [
+        "PRAW-000064",
         "PRAW-000065",
         "PRAW-000066",
         "PRAW-000067",
         "PRAW-000068",
-        "PRAW-000069"
-      ],
-      "inferred_type": "none"
-    },
-    {
-      "heading_uid": "HRAW-014-c7643d23",
-      "heading_text": "3.4.3 Redox couples in final stage",
-      "heading_level": 1,
-      "doc_heading_order": 14,
-      "page_index": null,
-      "block_order": 1,
-      "paragraph_uid_list": [
+        "PRAW-000069",
         "PRAW-000070",
         "PRAW-000071",
         "PRAW-000072",
-        "PRAW-000073"
-      ],
-      "inferred_type": "none"
-    },
-    {
-      "heading_uid": "HRAW-015-6db82ec1",
-      "heading_text": "4. Conclusions",
-      "heading_level": 1,
-      "doc_heading_order": 15,
-      "page_index": null,
-      "block_order": 1,
-      "paragraph_uid_list": [
+        "PRAW-000073",
         "PRAW-000074",
         "PRAW-000075",
         "PRAW-000076",
-        "PRAW-000077"
+        "PRAW-000077",
+        "PRAW-000078",
+        "PRAW-000079",
+        "PRAW-000080",
+        "PRAW-000081",
+        "PRAW-000082"
       ],
       "inferred_type": "none"
     },
     {
-      "heading_uid": "HRAW-016-e87d6689",
-      "heading_text": "Acknowledgment",
+      "heading_uid": "HRAW-005-ae08e505",
+      "heading_text": "4. Conclusions",
       "heading_level": 1,
-      "doc_heading_order": 16,
+      "doc_heading_order": 5,
       "page_index": null,
       "block_order": 1,
       "paragraph_uid_list": [
-        "PRAW-000021"
-      ],
-      "inferred_type": "none"
-    },
-    {
-      "heading_uid": "HRAW-017-4585333e",
-      "heading_text": "Nomenclature",
-      "heading_level": 1,
-      "doc_heading_order": 17,
-      "page_index": null,
-      "block_order": 1,
-      "paragraph_uid_list": [
-        "PRAW-000057",
-        "PRAW-000058"
+        "PRAW-000083",
+        "PRAW-000084",
+        "PRAW-000085",
+        "PRAW-000086",
+        "PRAW-000087",
+        "PRAW-000088",
+        "PRAW-000089",
+        "PRAW-000090",
+        "PRAW-000091",
+        "PRAW-000092"
       ],
       "inferred_type": "none"
     }

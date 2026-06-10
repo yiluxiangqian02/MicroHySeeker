@@ -1,17 +1,21 @@
-章节定位：本章为引言部分，概述可再生能源间歇性带来的储能挑战，聚焦碱性水电解（AWE）技术的优势与电极稳定性问题，特别是关机过程中反向电流导致的Ni电极退化机制，并提出基于牺牲阳极的阴极保护解决方案。
+Section Positioning: This section serves as the Introduction, establishing the context of renewable energy intermittency, the role of alkaline water electrolysis (AWE) in large-scale hydrogen-based energy storage, and the specific problem of electrode degradation due to reverse-current during shutdowns.
 
-逐段索引：  
-P001: 阐述可再生能源（如光伏和风电）的快速发展及其因间歇性对电网稳定性和大规模储能需求带来的挑战。  
-P002: 指出传统锂离子电池在大规模长时储能上的经济性不足，引出水电解制氢作为有前景的替代方案，并初步提及碱性水电解（AWE）。  
-P003: 明确AWE是当前工业级大规模制氢的主流技术。  
-P004: 对比AWE与PEMWE的性能差异，强调AWE使用非贵金属催化剂的成本优势，并列举多种过渡金属基HER电催化剂的研究进展，同时引入零间隙电池结构概念。  
-P005: 展示图1，说明碱性电解槽关机后因双极板连接导致反向电流引发Ni电极退化的示意图及机理。  
-P006: 解释零间隙AWE中多孔复合隔膜或氢氧根离子传导膜的作用，以及通过堆叠双极板提升系统性能的策略。  
-P007: 分析AWE在启停循环中电极稳定性差的问题，详细描述关机后因阴阳极残留氧化还原物质形成自发放电回路而产生高界面电势差的机理。  
-P008: 说明反向电流方向与正常电解相反，导致阴极氧化、阳极还原，最终造成电解槽性能衰减，且该问题在可再生能源波动供电下更为严重。  
-P009: 综述现有对反向电流退化机制的研究及系统级解决方案（如极化整流器），指出缺乏从电极材料角度出发的实用对策。  
-P010: 提出本文核心思路：采用基于牺牲阳极的阴极保护法，在关机条件下防止电极受反向电流损害。  
-P011: 展示图2，介绍通过开路电压（OCV）测量模拟反向电流的实验模型及相关表征手段（XPS、循环伏安）。  
-P012: 具体说明将比Ni更易氧化的金属（如Pb、Zn、Sn、Al）作为牺牲阳极连接至Ni阴极，有效抑制其氧化失活，并通过加速耐久性实验证实该策略的有效性。
+Paragraph Index:
+P001: Introduces the rapid growth of renewable energy sources like solar and wind, highlighting their intermittency as a key barrier to grid integration and the consequent need for large-scale energy storage.
+P002: Argues that conventional lithium-ion batteries are inadequate for long-term, grid-scale storage and positions hydrogen production via water electrolysis—particularly alkaline water electrolysis (AWE)—as a viable alternative.
+P003: States that AWE is the dominant industrial technology for large-scale hydrogen production.
+P004: Compares AWE favorably to PEMWE in terms of cost and catalyst materials, noting its use of non-noble transition-metal-based electrocatalysts and the zero-gap cell design.
+P005: Lists the manuscript’s submission date (not content-related).
+P006: Lists the revision date (not content-related).
+P007: Lists the acceptance date (not content-related).
+P008: Lists the publication date (not content-related).
+P009: Presents Figure 1, illustrating Ni electrode degradation caused by reverse-current flow after AWE shutdown, including schematic and mechanistic details.
+P010: Describes the zero-gap AWE architecture using porous diaphragms or hydroxide-conducting membranes and explains how stacking cells improves performance.
+P011: Identifies electrode instability—especially during start-up/shut-down cycles—as a critical limitation of bipolar-type AWE, detailing the formation of a galvanic cell post-shutdown due to residual redox species and ionic pathways.
+P012: Explains how the galvanic cell drives reverse-current through bipolar plates, oxidizing the cathode and reducing the anode until equilibrium, thereby degrading system performance—particularly problematic under intermittent renewable operation.
+P013: Reviews prior studies on reverse-current degradation and existing mitigation strategies (e.g., polarization rectifiers), noting their system-level complexity and the lack of material-focused solutions.
+P014: Proposes a novel, simple approach to mitigate reverse-current damage using a sacrificial anode based on cathodic protection principles.
+P015: Presents Figure 2, showing experimental methods to simulate and characterize reverse-current effects, including OCV measurements, XPS analysis, and cyclic voltammetry.
+P016: Details the implementation of sacrificial anodes (Pb, Zn, Sn, Al) connected to the Ni cathode, demonstrating their effectiveness in preventing cathode oxidation and deactivation during simulated reverse-current conditions.
 
-关键实体：alkaline water electrolysis (AWE), reverse-current, Ni electrode, bipolar plate, zero-gap cell, hydrogen evolution reaction (HER), sacrificial anode, cathodic protection, polymer electrolyte membrane water electrolysis (PEMWE), intermittent renewable energy
+Key Entities: alkaline water electrolysis (AWE), reverse-current, nickel (Ni) electrode, sacrificial anode, bipolar plate, hydrogen evolution reaction (HER), zero-gap cell, cathodic protection, polymer electrolyte membrane water electrolysis (PEMWE), intermittent renewables

@@ -1,3 +1,3 @@
-章节定位：Results  
-核心内容：本章节展示了电解后更换无反应性气体的电解液对反向电流及电池电压随时间变化的影响，旨在区分溶解气体反应与电极表面劣化对反向电流的贡献。  
-关键实体：[NiO₂/NiOOH]、[H₂/H₂O]、反向电流、电池电压、电解液更换、无反应性气体电解液、双极板、镍氧化物、氢、600 mA cm⁻²、25°C
+Section Role: Results  
+Core Content: This section presents experimental data on cell voltage behavior following electrolysis, specifically examining nickel-iron (NiFe) and platinum (Pt) electrodes in 1 M KOH electrolyte under constant current densities ranging from 10 to 100 mA/cm², with post-electrolysis open-circuit voltage decay measured over 60 minutes and reported voltage drops between 50–220 mV.  
+Key Entities: nickel-iron (NiFe) electrodes, platinum (Pt) electrodes, 1 M KOH electrolyte, current densities (10–100 mA/cm²), open-circuit voltage decay, 60-minute measurement window, voltage drop (50–220 mV)

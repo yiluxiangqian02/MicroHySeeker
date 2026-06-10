@@ -1,5 +1,5 @@
-研究对象：碱性水电解槽在启停过程中因电极材料和运行/停机参数引发的反向电流现象。  
-核心发现：反向电流主要源于停机期间电极上发生的逆向氧化还原反应，且中间双极板的电极电位变化更快、承受更大应力。  
-方法路线：结合四电池堆实验与等效电路模拟，系统考察电解液温度、循环条件、氮气鼓泡及电解电流等因素对反向电流的影响。  
-主要结论：电解液高温与停机期间的循环会加剧反向电流，而电解电流影响较小；该研究为碱性水电解槽适应动态运行提供了关键参数依据。  
-关键词：碱性水电解, 反向电流, 动态运行, 电极材料, 启停循环
+Research Object: Alkaline water electrolyzers under dynamic operation involving frequent shutdowns.  
+Core Finding: The reverse current phenomenon intensifies with higher operating temperatures and electrolyte circulation during shutdown, while being largely independent of the prior electrolysis current.  
+Method: Combined experimental measurements on a 4-cell stack and theoretical circuit modeling to analyze electrode potentials and reverse current behavior during and after shutdown.  
+Conclusion: The study clarifies how operational and material factors influence reverse redox reactions during shutdown, providing guidance for designing durable alkaline electrolyzers compatible with intermittent renewable energy sources.  
+Keywords: alkaline water electrolysis, reverse current, dynamic operation, electrode degradation, bipolar plate

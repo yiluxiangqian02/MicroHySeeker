@@ -1,9 +1,0 @@
----
-paper_id: "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e"
-section_id: "S00_front_matter"
-paragraph_id: "S00-P014"
-evidence_id: "EV-he2026-43767e-S00-P014"
-chunk_index: 0
----
-![](figures/FIG002/image_003.jpg)
-Figure 2. Chemical stability and in situ reconstruction of $\mathrm{Ni}_3\mathrm{S}_2$ (a) IL-TEM images of $\mathrm{Ni@Ni_3S_2}$ at $1.3\mathrm{V}$ (vs RHE): TEM images of (a1) pristine $\mathrm{Ni@Ni_3S_2}$ NPs, (a2) after $10\mathrm{h}$ OER, and (a3) after $20\mathrm{h}$ OER. Selected area electron diffraction (SAED) of (a4) pristine $\mathrm{Ni@Ni_3S_2}$ NPs, (a5) after $10\mathrm{h}$ OER, and (a6) after $20\mathrm{h}$ OER. (b) Energy dispersive spectroscopy (EDS) quantitative results of Ni, S, and O elements for $\mathrm{Ni@Ni_3S_2}$ NPs before and after $10$ and $20\mathrm{h}$ OER. (c) High-resolution S 2p XPS spectra for $\mathrm{Ni@Ni_3S_2}$ NPs before and after $100\mathrm{h}$ OER. (d) Ni K-edge XANES spectra and (e) FT of Ni K-edge EXAFS spectra of Ni NPs, NiO reference, and $\mathrm{Ni@Ni_3S_2}$ NPs before and after $100\mathrm{h}$ OER.

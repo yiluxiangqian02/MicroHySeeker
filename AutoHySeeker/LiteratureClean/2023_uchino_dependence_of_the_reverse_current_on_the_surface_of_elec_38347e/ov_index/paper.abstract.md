@@ -1,5 +1,5 @@
-研究对象：碱性水电解槽中双极板电极表面的反向电流行为。  
-核心发现：反向电流的主要驱动力源于镍电极表面的活性镍基材料，而非溶解气体。  
-方法路线：通过构建双电池双极型电解槽实验系统，在电解后替换为无反应性气体的电解液，结合等效电路模型与电化学测量分析反向电流机制。  
-主要结论：明确了电极表面氧化还原对（如NiO₂/NiOOH）在反向电流中的主导作用，为抑制电极退化提供了理论依据。  
-关键词：碱性水电解, 反向电流, 双极板, 镍电极, 氧化还原对
+Research Object: Nickel mesh electrodes in a bipolar-type alkaline water electrolyzer.  
+Core Finding: The dominant driving force of the reverse current originates from redox-active nickel-based materials on the electrode surface rather than dissolved gases.  
+Method: Electrolyte replacement with gas-free solution after electrolysis was used to isolate contributions from surface species versus gaseous reactants, combined with cell voltage and reverse current measurements.  
+Conclusion: The study clarifies that surface-bound nickel redox couples govern reverse current behavior, providing insight for mitigating electrode degradation in alkaline electrolyzers.  
+Keywords: Alkaline Water Electrolysis, Reverse Current, Bipolar Plate, Ni Electrode, Redox Couples

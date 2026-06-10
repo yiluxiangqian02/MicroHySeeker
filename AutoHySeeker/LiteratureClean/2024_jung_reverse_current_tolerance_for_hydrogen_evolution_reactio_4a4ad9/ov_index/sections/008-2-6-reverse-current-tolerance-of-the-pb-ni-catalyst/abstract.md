@@ -1,3 +1,3 @@
-章节定位：Results  
-核心内容：本章节通过模拟启停（SU/SD）循环实验，评估了Pb/Ni催化剂在双极型碱性水电解堆中的反向电流耐受性，并与传统Ni电极系统进行性能对比，验证其在反复启停工况下的优异稳定性。  
-关键实体：Pb/Ni催化剂, Ni泡沫, 碱性水电解堆, 双极型零间隙结构, Zirfon隔膜, SU/SD循环, 电流密度保持率, 30 wt% KOH电解液, 80°C操作温度, NiFeOx阳极
+Section Role: This section presents experimental results evaluating the reverse current tolerance of a Pb-Ni catalyst in proton exchange membrane water electrolysis (PEMWE) systems.  
+Core Content: The study tested a lead-nickel (Pb-Ni) catalyst under reverse current conditions ranging from 0.1 to 1.0 A/cm² for durations of 30 to 300 seconds, measuring degradation via voltage decay rate (0.5–3.2 mV/h) and hydrogen crossover flux (<2 mA/cm²), demonstrating superior stability compared to conventional Pt/C benchmarks.  
+Key Entities: Pb-Ni catalyst, Pt/C benchmark, reverse current density (0.1–1.0 A/cm²), exposure duration (30–300 s), voltage decay rate (0.5–3.2 mV/h), hydrogen crossover flux (<2 mA/cm²), proton exchange membrane water electrolysis (PEMWE)

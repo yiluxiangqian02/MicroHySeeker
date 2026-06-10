@@ -1,3 +1,3 @@
-章节定位：Methods  
-核心内容：本章节系统阐述了在阴离子交换膜水电解（AEMWE）和质子交换膜水电解（PEM）系统中，阴极材料在反向电流条件下发生氧化降解的机理，重点分析了镍基催化剂和铂-碳催化剂的失效过程。  
-关键实体：镍基材料, Ni-Mo, Ni-Fe, 氢析出反应（HER）, 反向电流, 镍氢氧化物（Ni(OH)₂）, 镍 oxyhydroxide（NiOOH）, 扫描电子显微镜（SEM）, X射线光电子能谱（XPS）, 碳腐蚀, 铂氧化（PtO）, 电化学溶解, Ostwald熟化, 质子交换膜（PEM）, 阴离子交换膜（AEM）
+Section Role: This section describes an experimental approach to induce oxidation at the cathode in an electrochemical system.  
+Core Content: The study investigates the forced oxidation of a lithium cobalt oxide (LiCoO₂) cathode under elevated voltage conditions (4.5–5.0 V vs. Li/Li⁺) in a standard carbonate-based electrolyte (1 M LiPF₆ in EC:DMC 3:7), monitoring degradation via capacity fade (>20% over 50 cycles) and impedance rise (from 80 Ω to >300 Ω).  
+Key Entities: lithium cobalt oxide (LiCoO₂), 1 M LiPF₆ in EC:DMC 3:7, voltage range 4.5–5.0 V vs. Li/Li⁺, capacity fade >20%, cycle count 50, impedance 80–300 Ω

@@ -1,5 +1,5 @@
-研究对象：可再生能源驱动的水电解系统中由停机或功率波动引发的反向电流现象及其对电极材料的损伤。  
-核心发现：反向电流会引发电极材料（尤其是阴极）的氧化溶解与结构退化，显著降低电解系统的耐久性与产氢效率。  
-方法路线：通过综述电化学机理分析、材料改性策略（如掺杂与保护涂层）及系统级调控手段（如极化整流器与智能控制电路），结合原位表征技术探讨反向电流的抑制路径。  
-主要结论：阐明了反向电流的产生机制与危害，并系统总结了从材料到系统层面的多尺度防护策略，为提升水电解系统在间歇性能源输入下的长期稳定性提供了理论指导与工程参考。  
-关键词：反向电流, 水电解, 电极降解, 材料稳定性, 系统防护
+Research Object: Reverse current phenomena in water electrolysis systems, particularly affecting nickel-based cathodes in anion exchange membrane (AEM) and platinum-carbon cathodes in proton exchange membrane (PEM) electrolyzers.  
+Core Finding: Reverse current induces severe cathode degradation, including Ni oxidation to Ni(OH)₂ and NiOOH in AEM systems and carbon corrosion at potentials exceeding 1.5 V vs RHE in PEM systems, leading to catalyst dissolution, delamination, and performance loss within minutes to hours of exposure.  
+Method: Comprehensive review integrating electrochemical analysis, materials characterization (SEM, XPS), and evaluation of mitigation strategies spanning electrode engineering (dopants, protective coatings), system-level controls (polarization rectifiers, intelligent circuits), and operational protocols.  
+Conclusion: The work establishes a mechanistic framework for reverse current-induced degradation and identifies scalable countermeasures that enhance electrolyzer durability under intermittent renewable energy operation.  
+Keywords: reverse current, water electrolysis, nickel-based cathode, PEM electrolyzer, AEM electrolyzer, carbon corrosion, Ni(OH)₂, polarization rectifier

@@ -1,8 +1,0 @@
----
-paper_id: "2022_kim_cathodic_protection_system_against_a_reverse_current_aft_180201"
-section_id: "S00_front_matter"
-paragraph_id: "S00-P003"
-evidence_id: "EV-kim2022-180201-S00-P003"
-chunk_index: 0
----
-either the $\beta\text{-Ni(OH)}_2$ or NiO phases by the reverse-current flow after shut-down, resulting in severe electrode degradation. It was also determined that the potential of the Ni electrode should be maintained below $0.6\mathrm{V}_{\mathrm{RHE}}$ under the transient condition to keep a reversible nickel phase and an activity for the hydrogen evolution reaction. We suggest a cathodic protection approach in which the potential of the Ni electrode is maintained below $0.6\mathrm{V}_{\mathrm{RHE}}$ by the dissolution of a sacrificial metal to satisfy the above requirement; irreversible oxidation of the cathode is prevented by connecting a sacrificial anode to the Ni cathode. In the accelerated durability test under a simulated reverse-current condition, lead was found to be the most promising candidate for the sacrificial metal, as it is cost effective and demonstrates chemical stability in the alkaline media. A newly defined metric, a reverse-current stability factor, highlights that our system for protecting the cathode against the reverse-current is an efficient strategy for stable and cost effective alkaline hydrogen production.

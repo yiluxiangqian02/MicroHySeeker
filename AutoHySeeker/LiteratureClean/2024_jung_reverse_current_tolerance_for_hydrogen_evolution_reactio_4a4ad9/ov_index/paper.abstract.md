@@ -1,5 +1,5 @@
-研究对象：铅修饰镍（Pb/Ni）催化剂在零间隙碱性水电解系统中的析氢反应（HER）行为及抗反向电流（RC）性能。  
-核心发现：铅修饰不仅赋予镍催化剂优异的反向电流耐受性，还在经历反向电流后意外提升了其析氢活性。  
-方法路线：通过溶液沉积与快速煅烧制备Pb/Ni催化剂，结合电化学测试、阻抗谱和塔菲尔分析评估其在模拟启停循环中的性能演变，并在真实碱性电解槽中验证其稳定性。  
-主要结论：该工作提出了一种材料层面的策略，通过牺牲性金属修饰有效抑制反向电流引起的阴极氧化降解，同时增强催化活性，显著提升碱性水电解系统的运行耐久性。  
-关键词：碱性水电解, 反向电流耐受性, 铅修饰镍催化剂, 析氢反应, 启停循环
+Research Object: Lead-decorated nickel (Pb/Ni) cathode catalysts for the hydrogen evolution reaction (HER) in zero-gap alkaline water electrolysis systems.  
+Core Finding: After 10 reverse-current (RC) cycles, Pb/Ni exhibited a 231 mV overpotential at −10 mA cm⁻², a 14.1 mA cm⁻² current density at −0.25 V vs. RHE, and RC stability and activity factors (RCSF_η = 6.35, RCAF_η = 14.11 mA cm⁻² at 250 mV overpotential), significantly outperforming bare Ni and other metal-decorated variants.  
+Method: Catalysts were synthesized via solution deposition and rapid calcination, then evaluated using linear sweep voltammetry, chronopotentiometry to simulate RC conditions, electrochemical impedance spectroscopy, and Tafel analysis in 1 M KOH, followed by stack-level startup/shutdown testing.  
+Conclusion: Pb decoration not only imparts exceptional reverse-current tolerance by acting as a sacrificial component that lowers the galvanic electromotive force but also enhances HER kinetics by promoting proton desorption and water dissociation, enabling durable and high-performance alkaline electrolysis under intermittent operation.  
+Keywords: Pb/Ni catalyst, reverse-current tolerance, hydrogen evolution reaction, alkaline water electrolysis, overpotential, current density, RCSF_η, RCAF_η

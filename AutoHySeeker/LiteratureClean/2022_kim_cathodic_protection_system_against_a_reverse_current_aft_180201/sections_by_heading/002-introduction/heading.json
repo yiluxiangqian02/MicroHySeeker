@@ -1,60 +1,8 @@
 {
   "paper_id": "2022_kim_cathodic_protection_system_against_a_reverse_current_aft_180201",
   "heading_uid": "HRAW-002-9ee22efc",
-  "heading_dirname": "002-introduction",
+  "heading_id": "H02",
   "heading_text": "INTRODUCTION",
   "heading_level": 1,
-  "doc_heading_order": 2,
-  "display_order": 2,
-  "is_title_page_heading": false,
-  "page_index": null,
-  "block_order": 1,
-  "paragraph_count": 12,
-  "paragraph_ids": [
-    "S02-P001",
-    "S02-P002",
-    "S02-P003",
-    "S02-P004",
-    "S02-P005",
-    "S02-P006",
-    "S02-P007",
-    "S02-P008",
-    "S02-P009",
-    "S02-P010",
-    "S02-P011",
-    "S02-P012"
-  ],
-  "paragraph_uids": [
-    "PRAW-000002",
-    "PRAW-000003",
-    "PRAW-000004",
-    "PRAW-000005",
-    "PRAW-000006",
-    "PRAW-000007",
-    "PRAW-000008",
-    "PRAW-000009",
-    "PRAW-000010",
-    "PRAW-000011",
-    "PRAW-000012",
-    "PRAW-000013"
-  ],
-  "paragraph_paths": [
-    "paragraphs/PRAW-000002.md",
-    "paragraphs/PRAW-000003.md",
-    "paragraphs/PRAW-000004.md",
-    "paragraphs/PRAW-000005.md",
-    "paragraphs/PRAW-000006.md",
-    "paragraphs/PRAW-000007.md",
-    "paragraphs/PRAW-000008.md",
-    "paragraphs/PRAW-000009.md",
-    "paragraphs/PRAW-000010.md",
-    "paragraphs/PRAW-000011.md",
-    "paragraphs/PRAW-000012.md",
-    "paragraphs/PRAW-000013.md"
-  ],
-  "linked_figures": [
-    "FIG001",
-    "FIG002"
-  ],
-  "linked_tables": []
+  "heading_order": 2
 }

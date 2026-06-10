@@ -27,15 +27,15 @@
   },
   "processing": {
     "mode": "single_paper_semi_automatic",
-    "processed_at": "2026-05-30T16:29:50",
+    "processed_at": "2026-06-07T19:01:29",
     "script": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\LiteratureClean\\clean_single_mineru_paper.py",
     "openviking_ingested": false,
     "batch_import": false,
     "section_recovery": {
       "content_list_hints": {
-        "front_count": 1,
-        "abstract_count": 2,
-        "back_count": 2
+        "front_count": 0,
+        "abstract_count": 1,
+        "back_count": 0
       },
       "layout_json_available": true
     }

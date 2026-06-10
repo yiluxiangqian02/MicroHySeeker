@@ -1,8 +1,0 @@
----
-paper_id: "2025_peng_strategies_and_countermeasures_against_reverse_current_f_803838"
-section_id: "S06_conclusion"
-paragraph_id: "S06-P002"
-evidence_id: "EV-peng2025-803838-S06-P002"
-chunk_index: 0
----
-In response to this critical challenge, current mitigation efforts have established a foundational toolkit of strategies. These primarily revolve around materials-centric approaches, including elemental doping, where elements like iron, cobalt, molybdenum, or chromium are introduced into the nickel lattice to enhance its intrinsic corrosion resistance. Another key strategy is the engineering of sophisticated nanostructures. By creating hierarchical architectures such as core-shell nanoparticles or 3D porous foams, researchers aim to develop electrodes that are not only highly active but also structurally resilient to the stresses of shutdown cycles. Alongside these material modifications are system-level interventions, such as implementing external environmental controls. These include polarization rectifiers that apply a small protective voltage during idle periods or dedicated cathodic protection systems. While these strategies have certainly shown promise and have advanced our understanding, particularly in lab-scale studies, they often represent incremental improvements. Dopants can leach out over time, complex nanostructures can lose their integrity, and external systems add significant cost and complexity to the balance of the plant. Consequently, they have yet to fully resolve the profound stability challenges required for the widespread, cost-effective industrial deployment of AEMWE technology.

@@ -1,3 +1,3 @@
-章节定位：Results  
-核心内容：本章节通过模拟启停循环水电解实验，揭示了在电解停止后阴极发生长时间放电并导致不可逆氧化损伤的现象，尤其在海水电解中因卤素阴离子富集而加剧腐蚀。  
-关键实体：NiCoP–Cr₂O₃, Ni foam, 启停循环, 恒电流电解, 阴极氧化, 阴极腐蚀, HgO参比电极, 可逆氢电极（RHE）, 电流密度（0.5 A cm⁻², 1 A cm⁻²）, 卤素阴离子, 海水电解
+Section Role: This section presents results on cathode oxidation during fuel cell start-up and shutdown events, focusing on the role of water splitting in accelerating carbon corrosion.  
+Core Content: Experimental and modeling results demonstrate that during rapid start-up/shutdown cycles, local hydrogen starvation induces reverse current decay, leading to cathode potentials exceeding 1.5 V vs. RHE under dry nitrogen purge conditions, which accelerates carbon support oxidation rates by up to 3× compared to steady-state operation, with degradation quantified via electrochemical surface area (ECSA) loss (15–40% over 100 cycles) and fluoride emission rates (FER ≈ 5–20 nA cm⁻²).  
+Key Entities: carbon corrosion, reverse current decay, hydrogen starvation, cathode potential >1.5 V vs. RHE, dry nitrogen purge, ECSA loss (15–40%), fluoride emission rate (5–20 nA cm⁻²), 100 start-shutdown cycles

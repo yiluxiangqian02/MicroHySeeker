@@ -1,8 +1,0 @@
----
-paper_id: "2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7"
-section_id: "S05_discussion_mechanism"
-paragraph_id: "S05-P008"
-evidence_id: "EV-wang2025-0b96f7-S05-P008"
-chunk_index: 0
----
-cell is much lower than that through manifolds in cell stacks. During shutdown operation, anode and cathode potentials remain equal and stabilize at ${ \approx } 0 . 9 \mathrm { ~ V ~ }$ versus RHE after brief fluctuations. Drawing from redox potential diagram for reactions of the Ni-water phase (Figure 2f), possible electrochemical reactions occurring on electrode during startup/shutdown operations can be deduced.[24] During normal electrolysis operation, anode facilitates the OER, continuously turning metallic Ni to oxidized species such as nickel dioxide $( \mathrm { N i O } _ { 2 } )$ or nickel (oxy)hydroxide NiOOH.[25] While HER occurs mostly on metallic Ni surface on cathode. During electrolyzer shutdown, anode potential shifts to 0.9 V versus RHE, likely corresponding to reduction of surface oxidized species from $\mathrm { N i O } _ { 2 }$ to NiOOH or from NiOOH to nickel hydroxide $\mathrm { ( N i ( O H ) } _ { 2 } )$ ), and reduction of dissolved $\mathrm { O } _ { 2 }$ to hydroxide ions $\left( \mathrm { O H ^ { - } } \right)$ . The cathode is likely to undergo oxidation of surface metallic Ni to $\mathrm { N i } ( \mathrm { O H } ) _ { 2 }$ or nickel oxide (NiO) and the possible oxidation of dissolved $\mathrm { H } _ { 2 }$ to $\mathrm { H } _ { 2 } \mathrm { O }$ . Although these reactions can occur, the dominant factor and mechanism leading to AWEs degradation have not been well understood.

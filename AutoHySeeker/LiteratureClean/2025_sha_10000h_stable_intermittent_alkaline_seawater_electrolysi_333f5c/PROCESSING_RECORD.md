@@ -5,7 +5,7 @@ Paper ID: `2025_sha_10000h_stable_intermittent_alkaline_seawater_electrolysi_333
 Source MinerU directory:
 
 ```text
-D:\AI4S\MicroHySeeker\MicroHySeeker\AutoHySeeker\MinerU\output\10,000-h-stable intermittent alkaline seawater electrolysis
+D:\AI4S\MicroHySeeker\MicroHySeeker\AutoHySeeker\MinerU\output\97258947-9fe4-41e1-af38-7ebc8f559868_origin
 ```
 
 Clean output directory:
@@ -31,10 +31,10 @@ This run processes one MinerU output folder into one LiteratureClean preprocessi
 
 ## Output Summary
 
-- Raw MinerU images remain untouched in `D:\AI4S\MicroHySeeker\MicroHySeeker\AutoHySeeker\MinerU\output\10,000-h-stable intermittent alkaline seawater electrolysis\images`.
+- Raw MinerU images remain untouched in `D:\AI4S\MicroHySeeker\MicroHySeeker\AutoHySeeker\MinerU\output\97258947-9fe4-41e1-af38-7ebc8f559868_origin\images`.
 - Clean figure copies are stored under `D:\AI4S\MicroHySeeker\MicroHySeeker\AutoHySeeker\LiteratureClean\2025_sha_10000h_stable_intermittent_alkaline_seawater_electrolysi_333f5c\figures` as `FIGxxx/image_XXX.*`.
 - Clean table files are stored under `D:\AI4S\MicroHySeeker\MicroHySeeker\AutoHySeeker\LiteratureClean\2025_sha_10000h_stable_intermittent_alkaline_seawater_electrolysi_333f5c\tables` as `TABxxx/table.md`, `caption.md`, and optional rendered images.
-- Heading directories generated: 25
+- Heading directories generated: 8
 - Used image count: 13
 - Uncertain image count: 49
 - Table directory count: 0
@@ -56,31 +56,14 @@ This run processes one MinerU output folder into one LiteratureClean preprocessi
 
 ## Heading Directories Generated
 
-- `001-front-matter`
-- `002-cathode-oxidation-during-start-shutdown-water-splitt`
-- `003-catalysts-design-strategy`
-- `004-activity-and-stability-of-nicop-mathbf-c-r-2-0-3-cat`
-- `005-reaction-mechanism`
-- `006-theoretical-insight`
-- `007-discussion`
-- `008-online-content`
-- `009-materials`
-- `010-synthesis-of-nico-ldh`
-- `011-synthesis-of-nicop`
-- `012-synthesis-of-nicop-mathbf-c-r-2-0-3`
-- `013-synthesis-of-nicofep`
-- `014-synthesis-of-nifep`
-- `015-synthesis-of-ni-mathbf-n-i-o-mathbf-c-r-2-mathbf-o-3`
-- `016-electrochemical-measurement`
-- `017-aem-electrolyser-measurement`
-- `018-operando-raman-characterization`
-- `019-operando-atr-seiras-characterization`
-- `020-material-characterization`
-- `021-haadf-stem-characterization`
-- `022-tof-sims-measurement`
-- `023-computational-methods`
-- `024-data-availability`
-- `025-additional-information`
+- `001-10-000-h-stable-intermittent-alkaline-seawater-electrolysis`
+- `002-cathode-oxidation-during-start-shutdown-water-splitting-cycles`
+- `003-activity-and-stability-of-nicop-mathbf-c-r-2-0-3-cathode-in-inte`
+- `004-reaction-mechanism`
+- `005-theoretical-insight`
+- `006-discussion`
+- `007-methods`
+- `008-computational-methods`
 
 ## Figures Generated
 

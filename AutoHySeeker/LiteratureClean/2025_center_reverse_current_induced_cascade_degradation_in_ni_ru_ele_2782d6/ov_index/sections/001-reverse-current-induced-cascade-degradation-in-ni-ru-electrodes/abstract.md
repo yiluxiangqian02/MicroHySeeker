@@ -1,0 +1,3 @@
+Section Role: Abstract  
+Core Content: This abstract summarizes a study on reverse-current-induced multistage degradation in Ni-Ru (NR) electrodes under alkaline water electrolysis, revealing a cascade from Ru oxidation (via Ostwald ripening) to Ni substrate galvanic corrosion and eventual structural collapse, with degradation rates decreasing from 4.756 to 0.257 mV h⁻¹ as reverse current amplitude is reduced from 20% to 0%.  
+Key Entities: Ni-Ru electrodes, alkaline water electrolysis, reverse current, accelerated stress test, Ostwald ripening, galvanic corrosion, Ru oxidation, Ni substrate corrosion, Ru redeposition, degradation rate (4.756–0.257 mV h⁻¹), reverse current amplitude (0–20%)

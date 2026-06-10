@@ -1,3 +1,3 @@
-章节定位：Results  
-核心内容：本章节通过三电极MEA体系和烧杯电池测试，系统分析了反向电流加速应力测试（RC AST）对镍基阳极和阴极电化学行为的相反影响：阳极析氧反应（OER）性能显著提升，而阴极析氢反应（HER）性能严重劣化，导致全电池整体性能下降。  
-关键实体：三电极MEA, 反向电流AST（RC AST）, 阳极, 阴极, 极化行为, 阻抗行为, 动力学过电位, Tafel斜率, 电化学双层电容（C<sub>edl</sub>）, 欧姆电阻, OER, HER, 表面粗糙度, Ni电极
+Section Role: This section presents the electrochemical characterization of anode and cathode materials under controlled experimental conditions.  
+Core Content: The study evaluates the electrochemical behaviors of graphite anodes and LiCoO₂ cathodes in 1M LiPF₆ in EC:DMC (1:1 v/v) electrolyte, measuring cyclic voltammetry (CV) responses between 2.5–4.2 V vs. Li/Li⁺ at scan rates of 0.1–1.0 mV/s, and reporting specific capacities ranging from 140–160 mAh/g for the cathode and 330–360 mAh/g for the anode.  
+Key Entities: graphite anode, LiCoO₂ cathode, 1M LiPF₆ in EC:DMC (1:1 v/v), cyclic voltammetry, 2.5–4.2 V vs. Li/Li⁺, 0.1–1.0 mV/s, 140–160 mAh/g, 330–360 mAh/g

@@ -1,8 +1,0 @@
----
-paper_id: "2024_jung_reverse_current_tolerance_for_hydrogen_evolution_reactio_4a4ad9"
-section_id: "S07_back_matter_or_supplementary"
-paragraph_id: "S07-P011"
-evidence_id: "EV-jung2024-4a4ad9-S07-P011"
-chunk_index: 1
----
-Joo, Y. Jung, J. Lee, J. Son, J. Snyder, V. Stamenkovic, N. M. Markovic, Y.-T. Kim, Nat. Catal. 2020, 3, 639. [10] a) J. Suntivich, H. A. Gasteiger, N. Yabuuchi, Y. Shao-Horn, J. Electrochem. Soc. 2010, 157, B1263; b) J. Suntivich, K. J. May, H. A. Gasteiger, J. B. Goodenough, Y. Shao-Horn, Science 2011, 334, 1383; c) B. Zhang, X. Zheng, O. Voznyy, R. Comin, M. Bajdich, M. Garcia-Melchor, L. Han, J. Xu, M. Liu, L. Zheng, Science 2016, 352, 333. [11] M. Alsabet, M. Grden, G. Jerkiewicz, Electrocatalysis 2015, 6, 60. [12] A. Y. Faid, A. O. Barnett, F. Seland, S. Sunde, Electrochim. Acta 2020, 361, 137040. [13] a) J. Petó, T. Ollár, P. Vancsó, Z. I. Popov, G. Z. Magda, G. Dobrik, C. Hwang, P. B. Sorokin, L. Tapasztó, Nat. Chem. 2018, 10, 1246; b) J. Xie, J. Zhang, S. Li, F. Grote, X. Zhang, H. Zhang, R. Wang, Y. Lei, B. Pan, Y. Xie, J. Am. Chem. Soc. 2013, 135, 17881. [14] M. S. A. Sher Shah, V. K. Paidi, H. Jung, S. Kim, G. Lee, J. W. Han, K.-S. Lee, J. H. Park, J. Mater. Chem. A 2021, 9, 1770. [15] a) G. Chen, T. Wang, J. Zhang, P. Liu, H. Sun, X. Zhuang, M. Chen, X. Feng, Adv. Mater. 2018, 30, 1706279; b) Y. Jia, L. Zhang, G. Gao, H. Chen, B. Wang, J. Zhou, M. T. Soo, M. Hong, X. Yan, G. Qian, J. Zou, A. Du, X. Yao, Adv. Mater. 2017, 29, 1700017. [16] a) P. Panda, J. Mater. Sci. 2009, 44, 5049; b) J. Wu, D. Xiao, J. Zhu, Chem. Rev. 2015, 115, 2559. [17] M. Hua, S. Zhang, B. Pan, W. Zhang, L. Lv, Q. Zhang, J. Hazard. Mater. 2012, 211, 317. [18] a) Y. Liu, X. Liang, L. Gu, Y.

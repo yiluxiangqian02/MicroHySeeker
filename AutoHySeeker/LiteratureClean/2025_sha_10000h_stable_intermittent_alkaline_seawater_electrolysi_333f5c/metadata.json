@@ -10,12 +10,12 @@
   "journal": "Nature",
   "document_type": "research_article",
   "raw_paths": {
-    "mineru_output_dir": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\10,000-h-stable intermittent alkaline seawater electrolysis",
-    "full_md": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\10,000-h-stable intermittent alkaline seawater electrolysis\\full.md",
-    "content_list_v2_json": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\10,000-h-stable intermittent alkaline seawater electrolysis\\content_list_v2.json",
-    "layout_json": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\10,000-h-stable intermittent alkaline seawater electrolysis\\layout.json",
-    "origin_pdf": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\10,000-h-stable intermittent alkaline seawater electrolysis\\653db22f-235d-4ea4-b4a8-bcb3f6850fc2_origin.pdf",
-    "images_dir": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\10,000-h-stable intermittent alkaline seawater electrolysis\\images"
+    "mineru_output_dir": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\97258947-9fe4-41e1-af38-7ebc8f559868_origin",
+    "full_md": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\97258947-9fe4-41e1-af38-7ebc8f559868_origin\\full.md",
+    "content_list_v2_json": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\97258947-9fe4-41e1-af38-7ebc8f559868_origin\\content_list_v2.json",
+    "layout_json": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\97258947-9fe4-41e1-af38-7ebc8f559868_origin\\layout.json",
+    "origin_pdf": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\97258947-9fe4-41e1-af38-7ebc8f559868_origin\\29e5e976-b380-4fc5-823f-42ce82765323_origin.pdf",
+    "images_dir": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\97258947-9fe4-41e1-af38-7ebc8f559868_origin\\images"
   },
   "paper_short": "sha2025-333f5c",
   "clean_paths": {
@@ -27,15 +27,15 @@
   },
   "processing": {
     "mode": "single_paper_semi_automatic",
-    "processed_at": "2026-05-30T16:29:47",
+    "processed_at": "2026-06-07T19:01:28",
     "script": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\LiteratureClean\\clean_single_mineru_paper.py",
     "openviking_ingested": false,
     "batch_import": false,
     "section_recovery": {
       "content_list_hints": {
-        "front_count": 7,
-        "abstract_count": 2,
-        "back_count": 17
+        "front_count": 0,
+        "abstract_count": 0,
+        "back_count": 0
       },
       "layout_json_available": true
     }

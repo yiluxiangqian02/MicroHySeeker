@@ -1,271 +1,156 @@
 {
   "paper_id": "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e",
-  "title": "Heterointerface-Enabled Anti-Reverse-Current Electrodes for Alkaline Water Electrolyzers at $1000\\mathrm{mAcm}^{-2}$",
-  "heading_count": 13,
-  "paragraph_count": 77,
-  "headings": [
+  "sections": [
     {
       "heading_uid": "HRAW-001-dcbbe410",
+      "heading_id": "H01",
       "heading_text": "Heterointerface-Enabled Anti-Reverse-Current Electrodes for Alkaline Water Electrolyzers at $1000\\mathrm{mAcm}^{-2}$",
-      "heading_level": 1,
-      "doc_heading_order": 1,
-      "display_order": 1,
-      "page_index": null,
-      "paragraph_count": 4,
-      "paragraph_uids": [
-        "PRAW-000001",
-        "PRAW-000002",
-        "PRAW-000003",
-        "PRAW-000004"
-      ],
-      "macro_tags": [
-        "S00_front_matter",
-        "S01_abstract"
+      "heading_order": 1,
+      "paragraph_count": 10,
+      "paragraph_ids": [
+        "S01-P001",
+        "S01-P002",
+        "S01-P003",
+        "S01-P004",
+        "S01-P005",
+        "S01-P006",
+        "S01-P007",
+        "S01-P008",
+        "S01-P009",
+        "S01-P010"
       ]
     },
     {
       "heading_uid": "HRAW-002-9ff10219",
+      "heading_id": "H02",
       "heading_text": "1. INTRODUCTION",
-      "heading_level": 1,
-      "doc_heading_order": 2,
-      "display_order": 2,
-      "page_index": null,
-      "paragraph_count": 10,
-      "paragraph_uids": [
-        "PRAW-000021",
-        "PRAW-000016",
-        "PRAW-000017",
-        "PRAW-000018",
-        "PRAW-000019",
-        "PRAW-000020",
-        "PRAW-000022",
-        "PRAW-000023",
-        "PRAW-000024",
-        "PRAW-000025"
-      ],
-      "macro_tags": [
-        "S00_front_matter",
-        "S02_introduction"
+      "heading_order": 2,
+      "paragraph_count": 16,
+      "paragraph_ids": [
+        "S02-P001",
+        "S02-P002",
+        "S02-P003",
+        "S02-P004",
+        "S02-P005",
+        "S02-P006",
+        "S02-P007",
+        "S02-P008",
+        "S02-P009",
+        "S02-P010",
+        "S02-P011",
+        "S02-P012",
+        "S02-P013",
+        "S02-P014",
+        "S02-P015",
+        "S02-P016"
       ]
     },
     {
       "heading_uid": "HRAW-003-2037b5ff",
+      "heading_id": "H03",
       "heading_text": "2. RESULTS AND DISCUSSION",
-      "heading_level": 1,
-      "doc_heading_order": 3,
-      "display_order": 3,
-      "page_index": null,
-      "paragraph_count": 22,
-      "paragraph_uids": [
-        "PRAW-000040",
-        "PRAW-000041",
-        "PRAW-000042",
-        "PRAW-000043",
-        "PRAW-000045",
-        "PRAW-000046",
-        "PRAW-000047",
-        "PRAW-000048",
-        "PRAW-000049",
-        "PRAW-000050",
-        "PRAW-000051",
-        "PRAW-000052",
-        "PRAW-000053",
-        "PRAW-000054",
-        "PRAW-000055",
-        "PRAW-000056",
-        "PRAW-000057",
-        "PRAW-000058",
-        "PRAW-000059",
-        "PRAW-000060",
-        "PRAW-000061",
-        "PRAW-000044"
-      ],
-      "macro_tags": [
-        "S05_discussion_mechanism",
-        "S07_back_matter_or_supplementary"
+      "heading_order": 3,
+      "paragraph_count": 23,
+      "paragraph_ids": [
+        "S03-P001",
+        "S03-P002",
+        "S03-P003",
+        "S03-P004",
+        "S03-P005",
+        "S03-P006",
+        "S03-P007",
+        "S03-P008",
+        "S03-P009",
+        "S03-P010",
+        "S03-P011",
+        "S03-P012",
+        "S03-P013",
+        "S03-P014",
+        "S03-P015",
+        "S03-P016",
+        "S03-P017",
+        "S03-P018",
+        "S03-P019",
+        "S03-P020",
+        "S03-P021",
+        "S03-P022",
+        "S03-P023"
       ]
     },
     {
       "heading_uid": "HRAW-004-c39a4b34",
+      "heading_id": "H04",
       "heading_text": "3. CONCLUSIONS",
-      "heading_level": 1,
-      "doc_heading_order": 4,
-      "display_order": 4,
-      "page_index": null,
+      "heading_order": 4,
       "paragraph_count": 1,
-      "paragraph_uids": [
-        "PRAW-000062"
-      ],
-      "macro_tags": [
-        "S06_conclusion"
+      "paragraph_ids": [
+        "S04-P001"
       ]
     },
     {
       "heading_uid": "HRAW-005-62ff258a",
+      "heading_id": "H05",
       "heading_text": "4. EXPERIMENTAL SECTION",
-      "heading_level": 1,
-      "doc_heading_order": 5,
-      "display_order": 5,
-      "page_index": null,
-      "paragraph_count": 14,
-      "paragraph_uids": [
-        "PRAW-000031",
-        "PRAW-000026",
-        "PRAW-000027",
-        "PRAW-000028",
-        "PRAW-000030",
-        "PRAW-000032",
-        "PRAW-000033",
-        "PRAW-000034",
-        "PRAW-000035",
-        "PRAW-000036",
-        "PRAW-000037",
-        "PRAW-000038",
-        "PRAW-000039",
-        "PRAW-000029"
-      ],
-      "macro_tags": [
-        "S01_abstract",
-        "S03_methods_and_setup",
-        "S07_back_matter_or_supplementary"
-      ]
-    },
-    {
-      "heading_uid": "HRAW-007-1b530b5d",
-      "heading_text": "Supporting Information",
-      "heading_level": 1,
-      "doc_heading_order": 7,
-      "display_order": 7,
-      "page_index": null,
-      "paragraph_count": 2,
-      "paragraph_uids": [
-        "PRAW-000063",
-        "PRAW-000064"
-      ],
-      "macro_tags": [
-        "S07_back_matter_or_supplementary"
-      ]
-    },
-    {
-      "heading_uid": "HRAW-009-f200f9c8",
-      "heading_text": "Corresponding Authors",
-      "heading_level": 1,
-      "doc_heading_order": 9,
-      "display_order": 9,
-      "page_index": null,
-      "paragraph_count": 2,
-      "paragraph_uids": [
-        "PRAW-000065",
-        "PRAW-000066"
-      ],
-      "macro_tags": [
-        "S07_back_matter_or_supplementary"
-      ]
-    },
-    {
-      "heading_uid": "HRAW-010-07527515",
-      "heading_text": "Authors",
-      "heading_level": 1,
-      "doc_heading_order": 10,
-      "display_order": 10,
-      "page_index": null,
-      "paragraph_count": 11,
-      "paragraph_uids": [
-        "PRAW-000005",
-        "PRAW-000006",
-        "PRAW-000007",
-        "PRAW-000008",
-        "PRAW-000009",
-        "PRAW-000010",
-        "PRAW-000011",
-        "PRAW-000012",
-        "PRAW-000013",
-        "PRAW-000014",
-        "PRAW-000015"
-      ],
-      "macro_tags": [
-        "S00_front_matter"
-      ]
-    },
-    {
-      "heading_uid": "HRAW-011-613e64f6",
-      "heading_text": "Author Contributions",
-      "heading_level": 1,
-      "doc_heading_order": 11,
-      "display_order": 11,
-      "page_index": null,
-      "paragraph_count": 1,
-      "paragraph_uids": [
-        "PRAW-000067"
-      ],
-      "macro_tags": [
-        "S07_back_matter_or_supplementary"
-      ]
-    },
-    {
-      "heading_uid": "HRAW-012-edaa0c5b",
-      "heading_text": "Notes",
-      "heading_level": 1,
-      "doc_heading_order": 12,
-      "display_order": 12,
-      "page_index": null,
-      "paragraph_count": 1,
-      "paragraph_uids": [
-        "PRAW-000068"
-      ],
-      "macro_tags": [
-        "S07_back_matter_or_supplementary"
-      ]
-    },
-    {
-      "heading_uid": "HRAW-013-4b31be97",
-      "heading_text": "ACKNOWLEDGMENTS",
-      "heading_level": 1,
-      "doc_heading_order": 13,
-      "display_order": 13,
-      "page_index": null,
-      "paragraph_count": 2,
-      "paragraph_uids": [
-        "PRAW-000069",
-        "PRAW-000070"
-      ],
-      "macro_tags": [
-        "S07_back_matter_or_supplementary"
-      ]
-    },
-    {
-      "heading_uid": "HRAW-014-3c3cb2b2",
-      "heading_text": "REFERENCES",
-      "heading_level": 1,
-      "doc_heading_order": 14,
-      "display_order": 14,
-      "page_index": null,
-      "paragraph_count": 4,
-      "paragraph_uids": [
-        "PRAW-000071",
-        "PRAW-000072",
-        "PRAW-000073",
-        "PRAW-000074"
-      ],
-      "macro_tags": [
-        "S07_back_matter_or_supplementary"
-      ]
-    },
-    {
-      "heading_uid": "HRAW-015-7df30f2b",
-      "heading_text": "NOTE ADDED AFTER ASAP PUBLICATION",
-      "heading_level": 1,
-      "doc_heading_order": 15,
-      "display_order": 15,
-      "page_index": null,
-      "paragraph_count": 3,
-      "paragraph_uids": [
-        "PRAW-000075",
-        "PRAW-000076",
-        "PRAW-000077"
-      ],
-      "macro_tags": [
-        "S07_back_matter_or_supplementary"
+      "heading_order": 5,
+      "paragraph_count": 57,
+      "paragraph_ids": [
+        "S05-P001",
+        "S05-P002",
+        "S05-P003",
+        "S05-P004",
+        "S05-P005",
+        "S05-P006",
+        "S05-P007",
+        "S05-P008",
+        "S05-P009",
+        "S05-P010",
+        "S05-P011",
+        "S05-P012",
+        "S05-P013",
+        "S05-P014",
+        "S05-P015",
+        "S05-P016",
+        "S05-P017",
+        "S05-P018",
+        "S05-P019",
+        "S05-P020",
+        "S05-P021",
+        "S05-P022",
+        "S05-P023",
+        "S05-P024",
+        "S05-P025",
+        "S05-P026",
+        "S05-P027",
+        "S05-P028",
+        "S05-P029",
+        "S05-P030",
+        "S05-P031",
+        "S05-P032",
+        "S05-P033",
+        "S05-P034",
+        "S05-P035",
+        "S05-P036",
+        "S05-P037",
+        "S05-P038",
+        "S05-P039",
+        "S05-P040",
+        "S05-P041",
+        "S05-P042",
+        "S05-P043",
+        "S05-P044",
+        "S05-P045",
+        "S05-P046",
+        "S05-P047",
+        "S05-P048",
+        "S05-P049",
+        "S05-P050",
+        "S05-P051",
+        "S05-P052",
+        "S05-P053",
+        "S05-P054",
+        "S05-P055",
+        "S05-P056",
+        "S05-P057"
       ]
     }
   ]

@@ -1,15 +1,21 @@
-章节定位：本章为引言，概述绿氢在脱碳中的关键作用、碱性水电解（AWE）的技术瓶颈，以及电极材料在高电流密度与动态工况下面临的稳定性—活性权衡问题，并提出梯度界面工程解决方案。
+Section Positioning: This section serves as the introduction to the paper, establishing the context, challenges, and motivation for the study on durable electrode design for alkaline water electrolysis under dynamic operating conditions.
 
-逐段索引：  
-P001: 介绍绿氢及其主流技术碱性水电解（AWE）的优势与当前工业应用中的性能瓶颈（低电流密度、负载灵活性差）。  
-P002: 强调开发兼具高活性与高稳定性的电极材料对实现工业级水电解的关键意义，并指出稳定性常被忽视。  
-P003: 阐述催化剂设计中“稳定性—活性”二元困境在真实工况下加剧的问题。  
-P004: 描述AWE电极在强碱、高温及动态运行条件下遭受的多重退化机制，重点引入反向电流（RC）现象及其破坏机理。  
-P005: 图1展示反向电流效应及启停循环中电极退化的示意图，包括短路路径、界面剥离与所提梯度界面抑制策略。  
-P006: 图2通过多种原位/非原位表征手段揭示Ni₃S₂在OER过程中的化学稳定性与结构重构行为。  
-P007: 指出现有RC缓解策略因效率损失或系统复杂而不适用于工业场景，呼吁发展本征抗RC的材料方案。  
-P008: 提出本文核心策略——梯度界面工程，通过热注入法在镍网上原位构建Ni/Ni₃S₂异质界面以解耦稳定性与活性矛盾。  
-P009: 图3展示Ni₃S₂/NM-I电极的微观结构、元素分布、界面梯度特征及机械与电化学稳定性测试结果。  
-P010: 总结梯度异质界面如何抑制相变与界面剥离，在RC效应下保持结构完整性，并实现工业级效率与超长耐久性。
+Paragraph Index:
+P001: Introduces green hydrogen and alkaline water electrolysis (AWE) as key decarbonization technologies, highlighting AWE’s industrial dominance but also its limitations in current density and load flexibility.  
+P002: Identifies the need for high-performance electrodes that maintain activity at industrial current densities and under fluctuating conditions, noting that stability is a critical yet underaddressed barrier.  
+P003: Describes the stability–activity trade-off in catalyst design and introduces the harsh operational environment of industrial AWE systems.  
+P004: Details multiple degradation mechanisms—including chemical corrosion, mechanical fatigue, and structural collapse—and emphasizes the reverse current (RC) effect during startup/shutdown cycles as a major but overlooked failure mode.  
+P005: Records the manuscript submission date.  
+P006: Records the revision date.  
+P007: Records the acceptance date.  
+P008: Records the publication date.  
+P009: Presents Figure 1, illustrating the reverse current phenomenon and associated electrode degradation mechanisms, along with the proposed mitigation strategy via gradient interlayer engineering.  
+P010: Presents Figure 2, showing chemical stability and in situ reconstruction data for Ni₃S₂-based nanoparticles under oxygen evolution reaction (OER) conditions using TEM, EDS, XPS, and XANES/EXAFS.  
+P011: Critiques existing RC mitigation strategies as impractical for industry and calls for intrinsic material-level solutions that simultaneously enhance activity and RC resistance.  
+P012: Outlines the paper’s core approach—gradient interlayer engineering—to decouple the stability–activity trade-off, using in situ grown Ni₃S₂ on nickel mesh with a heterointerface buffer.  
+P013: Appears to be a fragment or placeholder with minimal content (“b C”).  
+P014: Appears to be a figure panel label (“e”) without substantive text.  
+P015: Presents Figure 3, providing structural and stability characterization of the Ni₃S₂/NM electrode, including elemental mapping, cross-sectional TEM/EELS, 4D-STEM phase mapping, mechanical tests, and long-term electrochemical stability.  
+P016: Summarizes how the gradient heterointerface enables resistance to dynamic phase changes and delamination under RC effects, reporting high efficiency, durability, and validation through advanced characterization and theory.
 
-关键实体：green hydrogen, alkaline water electrolysis (AWE), oxygen evolution reaction (OER), hydrogen evolution reaction (HER), reverse current (RC) effect, Ni₃S₂, nickel mesh (NM), gradient interlayer, stability–activity dichotomy, startup/shutdown cycles
+Key Entities: Green hydrogen, alkaline water electrolysis (AWE), reverse current (RC) effect, Ni₃S₂, nickel mesh (NM), gradient interlayer, oxygen evolution reaction (OER), stability–activity dichotomy, startup/shutdown cycles, heterointerface

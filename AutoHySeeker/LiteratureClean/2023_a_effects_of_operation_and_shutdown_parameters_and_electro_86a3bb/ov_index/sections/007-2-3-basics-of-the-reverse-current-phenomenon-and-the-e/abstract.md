@@ -1,3 +1,3 @@
-章节定位：Methods  
-核心内容：本章节阐述了电解槽停机后双极板上因电荷积累而产生的反向电流现象，并提出了描述该现象的等效电路模型。  
-关键实体：双极板（BP）、反向电流、电动势（emf）、离子电阻、纵向管、横向管、电解质、隔膜、等效电路
+Section Role: This section serves as an introduction to the reverse current phenomenon and its underlying electrochemical principles.  
+Core Content: It outlines the fundamental mechanisms and theoretical basis of reverse current behavior in electrochemical systems, particularly in relation to electrode processes and energy conversion.  
+Key Entities: reverse current phenomenon, electrochemical systems, electrode processes, energy conversion, theoretical models

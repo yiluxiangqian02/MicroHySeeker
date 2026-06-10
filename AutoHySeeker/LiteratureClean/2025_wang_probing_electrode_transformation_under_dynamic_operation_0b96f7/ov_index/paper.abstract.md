@@ -1,5 +1,5 @@
-研究对象：镍基碱性水电解槽在动态启停过程中因反向电流引起的电极材料演变。  
-核心发现：阳极因持续生成高活性镍（氧）氢氧化物而性能提升，而阴极因不可逆氧化为β-氢氧化镍导致严重退化。  
-方法路线：采用三电极膜电极组件结合加速应力测试协议，通过原位与断后表征追踪电极在反向电流下的性能演变。  
-主要结论：揭示了镍基电极在动态工况下的差异化转化机制，指出提升阴极氧化还原可逆性是增强碱性电解槽耐久性的关键。  
-关键词：碱性水电解，反向电流，镍基电极，电极退化，动态操作
+Research Object: Nickel-based electrodes in alkaline water electrolysis under reverse current conditions induced by dynamic startup/shutdown operation.  
+Core Finding: Under accelerated stress testing simulating 5-minute shutdown cycles, the anode exhibited improved oxygen evolution reaction activity due to nickel (oxy)hydroxide formation, while the cathode suffered irreversible degradation—manifested as material dissolution, loss of electrical conductivity, and reduced hydrogen evolution reaction activity—after repeated cycling at 2 A cm⁻² and 80 °C.  
+Method: A custom three-electrode membrane electrode assembly (MEA) setup with an ionically connected reference electrode enabled decoupled monitoring of anode and cathode potentials during an accelerated stress testing protocol that applied 0 V between electrodes to simulate reverse current; degradation mechanisms were probed via operando electrochemical measurements combined with in situ and post-mortem characterizations.  
+Conclusion: The study reveals asymmetric electrode transformation under reverse current, highlighting that enhancing cathode redox reversibility is critical for improving alkaline water electrolyzer durability in dynamic operation.  
+Keywords: nickel electrodes, alkaline water electrolysis, reverse current, membrane electrode assembly (MEA), accelerated stress testing, oxygen evolution reaction, hydrogen evolution reaction, nickel (oxy)hydroxide

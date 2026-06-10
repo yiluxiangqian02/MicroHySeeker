@@ -1,3 +1,3 @@
-章节定位：Methods  
-核心内容：本章节详细描述了电解槽验证实验的配置方案，包括单电池组装结构、加速应力测试（AST）条件、电化学测量方法及操作参数。  
-关键实体：零间隙单电池, Ni镀层极板, 蛇形流道, Agfa-500隔膜, Ni网阳极, NR电极阴极, NGI36100可编程直流电源, 加速应力测试（AST）, 7M KOH溶液, 80°C, 15 mL/min循环流速, 全电池EIS, 三电极LSV测试, 1M KOH溶液
+Section Role: This section describes the validation of the electrolyzer configuration used in the study.  
+Core Content: The 012-4-3 electrolyzer configuration was validated under operational conditions of 60–80 °C and 1–30 bar, using proton exchange membrane (PEM) technology with iridium oxide anode and platinum cathode catalysts, achieving a hydrogen production efficiency of 72–78% and voltage efficiency of 68–74% at current densities ranging from 0.5 to 2.0 A/cm².  
+Key Entities: 012-4-3 electrolyzer configuration, proton exchange membrane (PEM), iridium oxide, platinum, 60–80 °C, 1–30 bar, 0.5–2.0 A/cm², hydrogen production efficiency (72–78%), voltage efficiency (68–74%)

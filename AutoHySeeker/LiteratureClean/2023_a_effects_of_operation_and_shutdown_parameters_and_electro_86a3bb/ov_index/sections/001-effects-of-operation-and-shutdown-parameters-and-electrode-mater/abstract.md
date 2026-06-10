@@ -1,0 +1,3 @@
+Section Role: This section presents the abstract of the paper, summarizing the motivation, approach, key findings, and implications of the study.  
+Core Content: The study investigates the reverse current phenomenon in alkaline water electrolyzers during shutdown, examining how operational and shutdown parameters as well as electrode materials influence this effect through experimental and theoretical analyses.  
+Key Entities: alkaline water electrolysis, reverse current, bipolar plate, electrode materials, operating temperature, electrolyte circulation, shutdown conditions, redox reactions, electrocatalysts, dynamic operation

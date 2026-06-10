@@ -1,0 +1,543 @@
+[
+  {
+    "id": "Q1",
+    "query": "What causes reverse current in alkaline water electrolyzers?",
+    "level": "paper",
+    "l0_hits": 11,
+    "l0_papers": [
+      "2025_peng_strategies_and_countermeasures_against_reverse_current_f_803838",
+      "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "2023_uchino_dependence_of_the_reverse_current_on_the_surface_of_elec_38347e",
+      "2024_jung_reverse_current_tolerance_for_hydrogen_evolution_reactio_4a4ad9",
+      "2025_center_reverse_current_induced_cascade_degradation_in_ni_ru_ele_2782d6",
+      "2022_kim_cathodic_protection_system_against_a_reverse_current_aft_180201",
+      "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e",
+      "2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7",
+      "2017_uchino_relationship_between_the_redox_reactions_on_a_bipolar_pl_eb3da9",
+      "2026_unknown_2026_2d8d75"
+    ],
+    "l0_section_keys": [],
+    "expected_keys": [
+      "2017_uchino_relationship_between_the_redox_reactions_on_a_bipolar_pl_eb3da9/S06",
+      "2025_peng_strategies_and_countermeasures_against_reverse_current_f_803838/S03",
+      "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb/S04"
+    ],
+    "recall5": 0.333,
+    "recall10": 1.0,
+    "mrr": 1.0,
+    "stage2_sections": 3,
+    "stage3_paragraphs": 0,
+    "stage3_paragraph_ids": []
+  },
+  {
+    "id": "Q2",
+    "query": "What strategies mitigate reverse current degradation in alkaline water electrolysis?",
+    "level": "paper",
+    "l0_hits": 11,
+    "l0_papers": [
+      "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e",
+      "2025_peng_strategies_and_countermeasures_against_reverse_current_f_803838",
+      "2023_uchino_dependence_of_the_reverse_current_on_the_surface_of_elec_38347e",
+      "2024_jung_reverse_current_tolerance_for_hydrogen_evolution_reactio_4a4ad9",
+      "2025_center_reverse_current_induced_cascade_degradation_in_ni_ru_ele_2782d6",
+      "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7",
+      "2022_kim_cathodic_protection_system_against_a_reverse_current_aft_180201",
+      "2025_sha_10000h_stable_intermittent_alkaline_seawater_electrolysi_333f5c",
+      "2017_uchino_relationship_between_the_redox_reactions_on_a_bipolar_pl_eb3da9"
+    ],
+    "l0_section_keys": [],
+    "expected_keys": [
+      "2022_kim_cathodic_protection_system_against_a_reverse_current_aft_180201/S03",
+      "2025_peng_strategies_and_countermeasures_against_reverse_current_f_803838/S04",
+      "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e/S03"
+    ],
+    "recall5": 0.667,
+    "recall10": 1.0,
+    "mrr": 1.0,
+    "stage2_sections": 3,
+    "stage3_paragraphs": 0,
+    "stage3_paragraph_ids": []
+  },
+  {
+    "id": "Q3",
+    "query": "How does intermittent renewable energy affect water electrolysis durability?",
+    "level": "paper",
+    "l0_hits": 11,
+    "l0_papers": [
+      "2025_sha_10000h_stable_intermittent_alkaline_seawater_electrolysi_333f5c",
+      "2025_peng_strategies_and_countermeasures_against_reverse_current_f_803838",
+      "2022_kim_cathodic_protection_system_against_a_reverse_current_aft_180201",
+      "2023_uchino_dependence_of_the_reverse_current_on_the_surface_of_elec_38347e",
+      "2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7",
+      "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e",
+      "2017_uchino_relationship_between_the_redox_reactions_on_a_bipolar_pl_eb3da9",
+      "2025_center_reverse_current_induced_cascade_degradation_in_ni_ru_ele_2782d6",
+      "2024_jung_reverse_current_tolerance_for_hydrogen_evolution_reactio_4a4ad9",
+      "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb"
+    ],
+    "l0_section_keys": [],
+    "expected_keys": [
+      "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb/S01",
+      "2025_sha_10000h_stable_intermittent_alkaline_seawater_electrolysi_333f5c/S02"
+    ],
+    "recall5": 0.0,
+    "recall10": 1.0,
+    "mrr": 1.0,
+    "stage2_sections": 3,
+    "stage3_paragraphs": 0,
+    "stage3_paragraph_ids": []
+  },
+  {
+    "id": "Q4",
+    "query": "What nickel-based catalysts are used for HER in alkaline electrolysis?",
+    "level": "paper",
+    "l0_hits": 11,
+    "l0_papers": [
+      "2022_kim_cathodic_protection_system_against_a_reverse_current_aft_180201",
+      "2025_sha_10000h_stable_intermittent_alkaline_seawater_electrolysi_333f5c",
+      "2024_jung_reverse_current_tolerance_for_hydrogen_evolution_reactio_4a4ad9",
+      "2025_center_reverse_current_induced_cascade_degradation_in_ni_ru_ele_2782d6",
+      "2017_uchino_relationship_between_the_redox_reactions_on_a_bipolar_pl_eb3da9",
+      "2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7",
+      "2023_uchino_dependence_of_the_reverse_current_on_the_surface_of_elec_38347e",
+      "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e",
+      "2025_peng_strategies_and_countermeasures_against_reverse_current_f_803838"
+    ],
+    "l0_section_keys": [],
+    "expected_keys": [
+      "2025_center_reverse_current_induced_cascade_degradation_in_ni_ru_ele_2782d6/S03",
+      "2024_jung_reverse_current_tolerance_for_hydrogen_evolution_reactio_4a4ad9/S03",
+      "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e/S03"
+    ],
+    "recall5": 1.0,
+    "recall10": 1.0,
+    "mrr": 0.333,
+    "stage2_sections": 3,
+    "stage3_paragraphs": 1,
+    "stage3_paragraph_ids": [
+      "2022_kim_cathodic_protection_s/S02/S02-P011"
+    ]
+  },
+  {
+    "id": "Q5",
+    "query": "How is the cathodic protection system implemented in zero-gap AWE?",
+    "level": "section",
+    "l0_hits": 11,
+    "l0_papers": [
+      "2022_kim_cathodic_protection_system_against_a_reverse_current_aft_180201",
+      "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "2025_peng_strategies_and_countermeasures_against_reverse_current_f_803838",
+      "2024_jung_reverse_current_tolerance_for_hydrogen_evolution_reactio_4a4ad9",
+      "2025_sha_10000h_stable_intermittent_alkaline_seawater_electrolysi_333f5c",
+      "2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7",
+      "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e",
+      "2017_uchino_relationship_between_the_redox_reactions_on_a_bipolar_pl_eb3da9",
+      "2023_uchino_dependence_of_the_reverse_current_on_the_surface_of_elec_38347e",
+      "2025_center_reverse_current_induced_cascade_degradation_in_ni_ru_ele_2782d6"
+    ],
+    "l0_section_keys": [],
+    "expected_keys": [
+      "2022_kim_cathodic_protection_system_against_a_reverse_current_aft_180201/S03"
+    ],
+    "recall5": 1.0,
+    "recall10": 1.0,
+    "mrr": 1.0,
+    "stage2_sections": 3,
+    "stage3_paragraphs": 0,
+    "stage3_paragraph_ids": []
+  },
+  {
+    "id": "Q6",
+    "query": "What is the reaction mechanism of NiCoP-Cr2O3 during intermittent electrolysis?",
+    "level": "section",
+    "l0_hits": 10,
+    "l0_papers": [
+      "2025_sha_10000h_stable_intermittent_alkaline_seawater_electrolysi_333f5c",
+      "2024_jung_reverse_current_tolerance_for_hydrogen_evolution_reactio_4a4ad9",
+      "2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7",
+      "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "2023_uchino_dependence_of_the_reverse_current_on_the_surface_of_elec_38347e",
+      "2025_center_reverse_current_induced_cascade_degradation_in_ni_ru_ele_2782d6",
+      "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e",
+      "2025_peng_strategies_and_countermeasures_against_reverse_current_f_803838",
+      "2026_unknown_2026_2d8d75",
+      "2022_kim_cathodic_protection_system_against_a_reverse_current_aft_180201"
+    ],
+    "l0_section_keys": [],
+    "expected_keys": [
+      "2025_sha_10000h_stable_intermittent_alkaline_seawater_electrolysi_333f5c/S04"
+    ],
+    "recall5": 0.0,
+    "recall10": 1.0,
+    "mrr": 1.0,
+    "stage2_sections": 3,
+    "stage3_paragraphs": 0,
+    "stage3_paragraph_ids": []
+  },
+  {
+    "id": "Q7",
+    "query": "What experimental methods characterize electrode transformation under dynamic operation?",
+    "level": "section",
+    "l0_hits": 11,
+    "l0_papers": [
+      "2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7",
+      "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "2025_peng_strategies_and_countermeasures_against_reverse_current_f_803838",
+      "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e",
+      "2023_uchino_dependence_of_the_reverse_current_on_the_surface_of_elec_38347e",
+      "2025_sha_10000h_stable_intermittent_alkaline_seawater_electrolysi_333f5c",
+      "2022_kim_cathodic_protection_system_against_a_reverse_current_aft_180201",
+      "2017_uchino_relationship_between_the_redox_reactions_on_a_bipolar_pl_eb3da9",
+      "2026_unknown_2026_2d8d75",
+      "2024_jung_reverse_current_tolerance_for_hydrogen_evolution_reactio_4a4ad9"
+    ],
+    "l0_section_keys": [],
+    "expected_keys": [
+      "2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7/S05"
+    ],
+    "recall5": 1.0,
+    "recall10": 1.0,
+    "mrr": 1.0,
+    "stage2_sections": 3,
+    "stage3_paragraphs": 0,
+    "stage3_paragraph_ids": []
+  },
+  {
+    "id": "Q8",
+    "query": "How does Pb decoration on Ni catalyst improve reverse current tolerance?",
+    "level": "section",
+    "l0_hits": 11,
+    "l0_papers": [
+      "2024_jung_reverse_current_tolerance_for_hydrogen_evolution_reactio_4a4ad9",
+      "2017_uchino_relationship_between_the_redox_reactions_on_a_bipolar_pl_eb3da9",
+      "2023_uchino_dependence_of_the_reverse_current_on_the_surface_of_elec_38347e",
+      "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "2025_center_reverse_current_induced_cascade_degradation_in_ni_ru_ele_2782d6",
+      "2025_sha_10000h_stable_intermittent_alkaline_seawater_electrolysi_333f5c",
+      "2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7",
+      "2022_kim_cathodic_protection_system_against_a_reverse_current_aft_180201",
+      "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e",
+      "2025_peng_strategies_and_countermeasures_against_reverse_current_f_803838"
+    ],
+    "l0_section_keys": [],
+    "expected_keys": [
+      "2024_jung_reverse_current_tolerance_for_hydrogen_evolution_reactio_4a4ad9/S03"
+    ],
+    "recall5": 1.0,
+    "recall10": 1.0,
+    "mrr": 1.0,
+    "stage2_sections": 3,
+    "stage3_paragraphs": 20,
+    "stage3_paragraph_ids": [
+      "2024_jung_reverse_current_tole/S02/S02-P022",
+      "2024_jung_reverse_current_tole/S02/S02-P025",
+      "2024_jung_reverse_current_tole/S03/S03-P002",
+      "2024_jung_reverse_current_tole/S03/S03-P004",
+      "2024_jung_reverse_current_tole/S03/S03-P006",
+      "2024_jung_reverse_current_tole/S03/S03-P007",
+      "2024_jung_reverse_current_tole/S03/S03-P013",
+      "2024_jung_reverse_current_tole/S03/S03-P014",
+      "2024_jung_reverse_current_tole/S03/S03-P015",
+      "2024_jung_reverse_current_tole/S03/S03-P017",
+      "2024_jung_reverse_current_tole/S03/S03-P019",
+      "2024_jung_reverse_current_tole/S03/S03-P020",
+      "2024_jung_reverse_current_tole/S03/S03-P021",
+      "2024_jung_reverse_current_tole/S03/S03-P023",
+      "2024_jung_reverse_current_tole/S03/S03-P024",
+      "2024_jung_reverse_current_tole/S03/S03-P025",
+      "2024_jung_reverse_current_tole/S03/S03-P026",
+      "2024_jung_reverse_current_tole/S03/S03-P027",
+      "2024_jung_reverse_current_tole/S03/S03-P028",
+      "2024_jung_reverse_current_tole/S03/S03-P050"
+    ]
+  },
+  {
+    "id": "Q9",
+    "query": "What is the effect of dissolved gases on reverse current?",
+    "level": "section",
+    "l0_hits": 11,
+    "l0_papers": [
+      "2023_uchino_dependence_of_the_reverse_current_on_the_surface_of_elec_38347e",
+      "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "2025_peng_strategies_and_countermeasures_against_reverse_current_f_803838",
+      "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e",
+      "2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7",
+      "2017_uchino_relationship_between_the_redox_reactions_on_a_bipolar_pl_eb3da9",
+      "2024_jung_reverse_current_tolerance_for_hydrogen_evolution_reactio_4a4ad9",
+      "2022_kim_cathodic_protection_system_against_a_reverse_current_aft_180201",
+      "2025_center_reverse_current_induced_cascade_degradation_in_ni_ru_ele_2782d6",
+      "2026_unknown_2026_2d8d75"
+    ],
+    "l0_section_keys": [],
+    "expected_keys": [
+      "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb/S03"
+    ],
+    "recall5": 0.0,
+    "recall10": 1.0,
+    "mrr": 0.5,
+    "stage2_sections": 3,
+    "stage3_paragraphs": 2,
+    "stage3_paragraph_ids": [
+      "2023_a_effects_of_operation_an/S04/S04-P012",
+      "2023_a_effects_of_operation_an/S04/S04-P013"
+    ]
+  },
+  {
+    "id": "Q10",
+    "query": "How was the NiCoP-Cr2O3 catalyst synthesized?",
+    "level": "section",
+    "l0_hits": 11,
+    "l0_papers": [
+      "2025_sha_10000h_stable_intermittent_alkaline_seawater_electrolysi_333f5c",
+      "2024_jung_reverse_current_tolerance_for_hydrogen_evolution_reactio_4a4ad9",
+      "2022_kim_cathodic_protection_system_against_a_reverse_current_aft_180201",
+      "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e",
+      "2023_uchino_dependence_of_the_reverse_current_on_the_surface_of_elec_38347e",
+      "2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7",
+      "2025_peng_strategies_and_countermeasures_against_reverse_current_f_803838",
+      "2017_uchino_relationship_between_the_redox_reactions_on_a_bipolar_pl_eb3da9",
+      "2026_unknown_2026_2d8d75"
+    ],
+    "l0_section_keys": [],
+    "expected_keys": [
+      "2025_sha_10000h_stable_intermittent_alkaline_seawater_electrolysi_333f5c/S07"
+    ],
+    "recall5": 0.0,
+    "recall10": 1.0,
+    "mrr": 1.0,
+    "stage2_sections": 3,
+    "stage3_paragraphs": 0,
+    "stage3_paragraph_ids": []
+  },
+  {
+    "id": "Q11",
+    "query": "What is the voltage increase rate of NiCoP-Cr2O3 cathode in seawater?",
+    "level": "paragraph",
+    "l0_hits": 11,
+    "l0_papers": [
+      "2025_sha_10000h_stable_intermittent_alkaline_seawater_electrolysi_333f5c",
+      "2022_kim_cathodic_protection_system_against_a_reverse_current_aft_180201",
+      "2024_jung_reverse_current_tolerance_for_hydrogen_evolution_reactio_4a4ad9",
+      "2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7",
+      "2023_uchino_dependence_of_the_reverse_current_on_the_surface_of_elec_38347e",
+      "2025_peng_strategies_and_countermeasures_against_reverse_current_f_803838",
+      "2025_center_reverse_current_induced_cascade_degradation_in_ni_ru_ele_2782d6",
+      "2017_uchino_relationship_between_the_redox_reactions_on_a_bipolar_pl_eb3da9",
+      "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "2026_unknown_2026_2d8d75"
+    ],
+    "l0_section_keys": [],
+    "expected_keys": [
+      "2025_sha_10000h_stable_intermittent_alkaline_seawater_electrolysi_333f5c/S03"
+    ],
+    "recall5": 0.0,
+    "recall10": 1.0,
+    "mrr": 1.0,
+    "stage2_sections": 3,
+    "stage3_paragraphs": 1,
+    "stage3_paragraph_ids": [
+      "2025_sha_10000h_stable_intermi/S06/S06-P001"
+    ]
+  },
+  {
+    "id": "Q12",
+    "query": "What current density range was tested in the 2017 Uchino reverse current study?",
+    "level": "paragraph",
+    "l0_hits": 11,
+    "l0_papers": [
+      "2025_center_reverse_current_induced_cascade_degradation_in_ni_ru_ele_2782d6",
+      "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e",
+      "2024_jung_reverse_current_tolerance_for_hydrogen_evolution_reactio_4a4ad9",
+      "2023_uchino_dependence_of_the_reverse_current_on_the_surface_of_elec_38347e",
+      "2025_peng_strategies_and_countermeasures_against_reverse_current_f_803838",
+      "2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7",
+      "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "2022_kim_cathodic_protection_system_against_a_reverse_current_aft_180201",
+      "2026_unknown_2026_2d8d75",
+      "2017_uchino_relationship_between_the_redox_reactions_on_a_bipolar_pl_eb3da9"
+    ],
+    "l0_section_keys": [],
+    "expected_keys": [
+      "2017_uchino_relationship_between_the_redox_reactions_on_a_bipolar_pl_eb3da9/S04"
+    ],
+    "recall5": 0.0,
+    "recall10": 1.0,
+    "mrr": 0.1,
+    "stage2_sections": 3,
+    "stage3_paragraphs": 1,
+    "stage3_paragraph_ids": [
+      "2023_a_effects_of_operation_an/S04/S04-P020"
+    ]
+  },
+  {
+    "id": "Q13",
+    "query": "What anode materials were compared for their effect on reverse current?",
+    "level": "paragraph",
+    "l0_hits": 10,
+    "l0_papers": [
+      "2017_uchino_relationship_between_the_redox_reactions_on_a_bipolar_pl_eb3da9",
+      "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "2023_uchino_dependence_of_the_reverse_current_on_the_surface_of_elec_38347e",
+      "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e",
+      "2022_kim_cathodic_protection_system_against_a_reverse_current_aft_180201",
+      "2025_sha_10000h_stable_intermittent_alkaline_seawater_electrolysi_333f5c",
+      "2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7",
+      "2024_jung_reverse_current_tolerance_for_hydrogen_evolution_reactio_4a4ad9",
+      "2025_peng_strategies_and_countermeasures_against_reverse_current_f_803838",
+      "2026_unknown_2026_2d8d75"
+    ],
+    "l0_section_keys": [],
+    "expected_keys": [
+      "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb/S04"
+    ],
+    "recall5": 0.0,
+    "recall10": 1.0,
+    "mrr": 0.5,
+    "stage2_sections": 3,
+    "stage3_paragraphs": 0,
+    "stage3_paragraph_ids": []
+  },
+  {
+    "id": "Q14",
+    "query": "How many hours of stable operation was achieved with NiCoP-Cr2O3 cathode?",
+    "level": "paragraph",
+    "l0_hits": 11,
+    "l0_papers": [
+      "2025_sha_10000h_stable_intermittent_alkaline_seawater_electrolysi_333f5c",
+      "2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7",
+      "2025_peng_strategies_and_countermeasures_against_reverse_current_f_803838",
+      "2022_kim_cathodic_protection_system_against_a_reverse_current_aft_180201",
+      "2026_unknown_2026_2d8d75",
+      "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "2024_jung_reverse_current_tolerance_for_hydrogen_evolution_reactio_4a4ad9",
+      "2023_uchino_dependence_of_the_reverse_current_on_the_surface_of_elec_38347e",
+      "2025_center_reverse_current_induced_cascade_degradation_in_ni_ru_ele_2782d6",
+      "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e"
+    ],
+    "l0_section_keys": [],
+    "expected_keys": [
+      "2025_sha_10000h_stable_intermittent_alkaline_seawater_electrolysi_333f5c/S01"
+    ],
+    "recall5": 0.0,
+    "recall10": 1.0,
+    "mrr": 1.0,
+    "stage2_sections": 3,
+    "stage3_paragraphs": 1,
+    "stage3_paragraph_ids": [
+      "2025_sha_10000h_stable_intermi/S06/S06-P001"
+    ]
+  },
+  {
+    "id": "Q15",
+    "query": "如何防止碱性水电解槽关机时的反向电流？",
+    "level": "cross_lingual",
+    "l0_hits": 11,
+    "l0_papers": [
+      "2023_uchino_dependence_of_the_reverse_current_on_the_surface_of_elec_38347e",
+      "2026_unknown_2026_2d8d75",
+      "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "2017_uchino_relationship_between_the_redox_reactions_on_a_bipolar_pl_eb3da9",
+      "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e",
+      "2025_peng_strategies_and_countermeasures_against_reverse_current_f_803838",
+      "2025_sha_10000h_stable_intermittent_alkaline_seawater_electrolysi_333f5c",
+      "2025_center_reverse_current_induced_cascade_degradation_in_ni_ru_ele_2782d6",
+      "2024_jung_reverse_current_tolerance_for_hydrogen_evolution_reactio_4a4ad9",
+      "2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7"
+    ],
+    "l0_section_keys": [],
+    "expected_keys": [
+      "2022_kim_cathodic_protection_system_against_a_reverse_current_aft_180201/S03",
+      "2025_peng_strategies_and_countermeasures_against_reverse_current_f_803838/S04",
+      "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e/S03"
+    ],
+    "recall5": 1.0,
+    "recall10": 1.0,
+    "mrr": 0.2,
+    "stage2_sections": 3,
+    "stage3_paragraphs": 0,
+    "stage3_paragraph_ids": []
+  },
+  {
+    "id": "Q16",
+    "query": "磷酸盐钝化层如何保护阴极免受海水腐蚀？",
+    "level": "cross_lingual",
+    "l0_hits": 10,
+    "l0_papers": [
+      "2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7",
+      "2024_jung_reverse_current_tolerance_for_hydrogen_evolution_reactio_4a4ad9",
+      "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "2022_kim_cathodic_protection_system_against_a_reverse_current_aft_180201",
+      "2026_unknown_2026_2d8d75",
+      "2025_sha_10000h_stable_intermittent_alkaline_seawater_electrolysi_333f5c",
+      "2017_uchino_relationship_between_the_redox_reactions_on_a_bipolar_pl_eb3da9",
+      "2025_peng_strategies_and_countermeasures_against_reverse_current_f_803838",
+      "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e",
+      "2023_uchino_dependence_of_the_reverse_current_on_the_surface_of_elec_38347e"
+    ],
+    "l0_section_keys": [],
+    "expected_keys": [
+      "2025_sha_10000h_stable_intermittent_alkaline_seawater_electrolysi_333f5c/S04"
+    ],
+    "recall5": 0.0,
+    "recall10": 1.0,
+    "mrr": 0.167,
+    "stage2_sections": 3,
+    "stage3_paragraphs": 0,
+    "stage3_paragraph_ids": []
+  },
+  {
+    "id": "Q17",
+    "query": "What is the efficiency of PEM electrolysis with iridium catalysts?",
+    "level": "negative",
+    "l0_hits": 11,
+    "l0_papers": [
+      "2024_jung_reverse_current_tolerance_for_hydrogen_evolution_reactio_4a4ad9",
+      "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "2025_sha_10000h_stable_intermittent_alkaline_seawater_electrolysi_333f5c",
+      "2025_peng_strategies_and_countermeasures_against_reverse_current_f_803838",
+      "2022_kim_cathodic_protection_system_against_a_reverse_current_aft_180201",
+      "2023_uchino_dependence_of_the_reverse_current_on_the_surface_of_elec_38347e",
+      "2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7",
+      "2017_uchino_relationship_between_the_redox_reactions_on_a_bipolar_pl_eb3da9",
+      "2026_unknown_2026_2d8d75",
+      "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e"
+    ],
+    "l0_section_keys": [],
+    "expected_keys": [],
+    "recall5": 1.0,
+    "recall10": 1.0,
+    "mrr": 1.0,
+    "stage2_sections": 3,
+    "stage3_paragraphs": 0,
+    "stage3_paragraph_ids": []
+  },
+  {
+    "id": "Q18",
+    "query": "How to synthesize MOF-based electrocatalysts for CO2 reduction?",
+    "level": "negative",
+    "l0_hits": 11,
+    "l0_papers": [
+      "2025_sha_10000h_stable_intermittent_alkaline_seawater_electrolysi_333f5c",
+      "2026_unknown_2026_2d8d75",
+      "2024_jung_reverse_current_tolerance_for_hydrogen_evolution_reactio_4a4ad9",
+      "2025_center_reverse_current_induced_cascade_degradation_in_ni_ru_ele_2782d6",
+      "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e",
+      "2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7",
+      "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
+      "2025_peng_strategies_and_countermeasures_against_reverse_current_f_803838",
+      "2023_uchino_dependence_of_the_reverse_current_on_the_surface_of_elec_38347e",
+      "2017_uchino_relationship_between_the_redox_reactions_on_a_bipolar_pl_eb3da9"
+    ],
+    "l0_section_keys": [],
+    "expected_keys": [],
+    "recall5": 1.0,
+    "recall10": 1.0,
+    "mrr": 1.0,
+    "stage2_sections": 3,
+    "stage3_paragraphs": 0,
+    "stage3_paragraph_ids": []
+  }
+]

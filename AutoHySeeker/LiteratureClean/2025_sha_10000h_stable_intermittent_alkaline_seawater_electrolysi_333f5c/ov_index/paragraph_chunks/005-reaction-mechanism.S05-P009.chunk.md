@@ -1,8 +1,0 @@
----
-paper_id: "2025_sha_10000h_stable_intermittent_alkaline_seawater_electrolysi_333f5c"
-section_id: "S05_discussion_mechanism"
-paragraph_id: "S05-P009"
-evidence_id: "EV-sha2025-333f5c-S05-P009"
-chunk_index: 0
----
-observed on NiCoP– $\mathbf { \cdot C r } _ { 2 } \mathbf { O } _ { 3 }$ owing to facile oxidation of phosphides in air. As the applied cathodic potential increased to −0.1 V versus RHE, the P–O vibration gradually disappeared with time, indicating gradual reduction of P. Subsequently, after the removal of the cathodic potential and a 3,600-s wait period, the P–O vibration peak re-emerged, attributed to the reformation of the phosphorus-rich oxidation layer, which then disappeared during the subsequent HER process. This observation indicates that the phosphate oxidation layer can achieve dynamic recovery during intermittent electrolysis (Supplementary Fig. 45).

@@ -34,7 +34,7 @@ This run processes one MinerU output folder into one LiteratureClean preprocessi
 - Raw MinerU images remain untouched in `D:\AI4S\MicroHySeeker\MicroHySeeker\AutoHySeeker\MinerU\output\Reverse‐Current Induced Cascade Degradation in Ni Ru Electrodes  Tracin_9f7209bf\images`.
 - Clean figure copies are stored under `D:\AI4S\MicroHySeeker\MicroHySeeker\AutoHySeeker\LiteratureClean\2025_center_reverse_current_induced_cascade_degradation_in_ni_ru_ele_2782d6\figures` as `FIGxxx/image_XXX.*`.
 - Clean table files are stored under `D:\AI4S\MicroHySeeker\MicroHySeeker\AutoHySeeker\LiteratureClean\2025_center_reverse_current_induced_cascade_degradation_in_ni_ru_ele_2782d6\tables` as `TABxxx/table.md`, `caption.md`, and optional rendered images.
-- Heading directories generated: 17
+- Heading directories generated: 5
 - Used image count: 15
 - Uncertain image count: 17
 - Table directory count: 1
@@ -56,23 +56,11 @@ This run processes one MinerU output folder into one LiteratureClean preprocessi
 
 ## Heading Directories Generated
 
-- `001-front-matter`
-- `002-abstract`
-- `003-1-introduction`
-- `004-2-1-degradation-assessment`
-- `005-2-2-electrochemical-behavior-and-morphology-evolu`
-- `006-2-3-solution-and-interface-evolutions`
-- `007-2-4-degradation-mechanism-and-pathway-analysis`
-- `008-2-5-sensitivity-on-the-rc-amplitude`
-- `009-3-conclusions`
-- `010-4-1-electrode-preparation`
-- `011-4-2-ast-setup-and-electrochemical-measurement`
-- `012-4-3-configuration-of-the-electrolyzer-validation`
-- `013-4-4-physical-characterization`
-- `014-4-5-dynamic-dissolution-deposition-and-osterwalde`
-- `015-acknowledgements`
-- `016-conflicts-of-interest`
-- `017-data-availability-statement`
+- `001-reverse-current-induced-cascade-degradation-in-ni-ru-electrodes`
+- `002-1-introduction`
+- `003-2-results-and-discussion`
+- `004-3-conclusions`
+- `005-4-experimental`
 
 ## Figures Generated
 

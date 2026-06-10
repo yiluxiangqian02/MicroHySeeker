@@ -1,3 +1,3 @@
-章节定位：Methods  
-核心内容：本章节综述了通过纳米结构设计与表面工程策略提升镍基阴极在反向电流条件下抗氧化能力的多种方法，包括原子层沉积、电化学钝化、核壳结构构建、导电聚合物或碳材料复合，以及动态自保护机制等。  
-关键实体：原子层沉积（ALD）, 电化学钝化, 核壳结构, 纳米结构表面, 导电聚合物, 碳基材料（石墨烯、碳纳米管）, 钴磷化物（CoP）, 镍网（NM）, 镍泡沫（NF）, 氮掺杂碳层, NiMoN@NC-X/NF, WMoCoP@NM, Cr₂O₃, NiCoP-Cr₂O₃, 反向电流, 启停循环测试（SU/SD）, 加速分解测试（ADT）, 动态自保护机制
+Section Role: This section presents methods for nanoarchitecture and structural engineering in advanced materials design.  
+Core Content: It details the fabrication and characterization of titanium dioxide (TiO₂) and zinc oxide (ZnO) nanostructures using sol-gel synthesis and electrospinning under controlled humidity (40–60% RH) and temperature (25–80°C), evaluating morphology, crystallinity, and surface area via scanning electron microscopy (SEM), X-ray diffraction (XRD), and BET analysis, achieving surface areas of 45–120 m²/g and crystallite sizes of 10–35 nm.  
+Key Entities: titanium dioxide (TiO₂), zinc oxide (ZnO), sol-gel synthesis, electrospinning, humidity (40–60% RH), temperature (25–80°C), scanning electron microscopy (SEM), X-ray diffraction (XRD), BET surface area analysis, surface area (45–120 m²/g), crystallite size (10–35 nm)

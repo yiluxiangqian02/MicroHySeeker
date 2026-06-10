@@ -1,343 +1,157 @@
 {
   "paper_id": "2025_peng_strategies_and_countermeasures_against_reverse_current_f_803838",
-  "title": "Strategies and Countermeasures Against Reverse Current for Enhanced Durability in Water Electrolysis Systems",
-  "heading_count": 18,
-  "paragraph_count": 82,
-  "headings": [
+  "sections": [
     {
       "heading_uid": "HRAW-001-911254b6",
+      "heading_id": "H01",
       "heading_text": "Strategies and Countermeasures Against Reverse Current for Enhanced Durability in Water Electrolysis Systems",
-      "heading_level": 1,
-      "doc_heading_order": 1,
-      "display_order": 1,
-      "page_index": null,
-      "paragraph_count": 2,
-      "paragraph_uids": [
-        "PRAW-000036",
-        "PRAW-000037"
-      ],
-      "macro_tags": [
-        "S00_front_matter",
-        "S01_abstract"
+      "heading_order": 1,
+      "paragraph_count": 3,
+      "paragraph_ids": [
+        "S01-P001",
+        "S01-P002",
+        "S01-P003"
       ]
     },
     {
       "heading_uid": "HRAW-002-2812cee1",
+      "heading_id": "H02",
       "heading_text": "1. Introduction",
-      "heading_level": 1,
-      "doc_heading_order": 2,
-      "display_order": 2,
-      "page_index": null,
-      "paragraph_count": 8,
-      "paragraph_uids": [
-        "PRAW-000002",
-        "PRAW-000003",
-        "PRAW-000007",
-        "PRAW-000001",
-        "PRAW-000004",
-        "PRAW-000005",
-        "PRAW-000006",
-        "PRAW-000008"
-      ],
-      "macro_tags": [
-        "S00_front_matter",
-        "S02_introduction"
+      "heading_order": 2,
+      "paragraph_count": 9,
+      "paragraph_ids": [
+        "S02-P001",
+        "S02-P002",
+        "S02-P003",
+        "S02-P004",
+        "S02-P005",
+        "S02-P006",
+        "S02-P007",
+        "S02-P008",
+        "S02-P009"
       ]
     },
     {
       "heading_uid": "HRAW-003-dc24257a",
+      "heading_id": "H03",
       "heading_text": "2. Background of Reverse Current",
-      "heading_level": 1,
-      "doc_heading_order": 3,
-      "display_order": 3,
-      "page_index": null,
-      "paragraph_count": 2,
-      "paragraph_uids": [
-        "PRAW-000038",
-        "PRAW-000039"
-      ],
-      "macro_tags": [
-        "S05_discussion_mechanism"
+      "heading_order": 3,
+      "paragraph_count": 31,
+      "paragraph_ids": [
+        "S03-P001",
+        "S03-P002",
+        "S03-P003",
+        "S03-P004",
+        "S03-P005",
+        "S03-P006",
+        "S03-P007",
+        "S03-P008",
+        "S03-P009",
+        "S03-P010",
+        "S03-P011",
+        "S03-P012",
+        "S03-P013",
+        "S03-P014",
+        "S03-P015",
+        "S03-P016",
+        "S03-P017",
+        "S03-P018",
+        "S03-P019",
+        "S03-P020",
+        "S03-P021",
+        "S03-P022",
+        "S03-P023",
+        "S03-P024",
+        "S03-P025",
+        "S03-P026",
+        "S03-P027",
+        "S03-P028",
+        "S03-P029",
+        "S03-P030",
+        "S03-P031"
       ]
     },
     {
-      "heading_uid": "HRAW-004-4fd6bdcc",
-      "heading_text": "2.1. Origin of Reverse Current",
-      "heading_level": 1,
-      "doc_heading_order": 4,
-      "display_order": 4,
-      "page_index": null,
-      "paragraph_count": 2,
-      "paragraph_uids": [
-        "PRAW-000040",
-        "PRAW-000041"
-      ],
-      "macro_tags": [
-        "S05_discussion_mechanism"
-      ]
-    },
-    {
-      "heading_uid": "HRAW-005-85aab0fd",
-      "heading_text": "2.2. Influence of Reverse Current",
-      "heading_level": 1,
-      "doc_heading_order": 5,
-      "display_order": 5,
-      "page_index": null,
-      "paragraph_count": 1,
-      "paragraph_uids": [
-        "PRAW-000042"
-      ],
-      "macro_tags": [
-        "S05_discussion_mechanism"
-      ]
-    },
-    {
-      "heading_uid": "HRAW-006-acef3150",
-      "heading_text": "2.2.1. Inducing the Cathode to be Oxidized",
-      "heading_level": 1,
-      "doc_heading_order": 6,
-      "display_order": 6,
-      "page_index": null,
-      "paragraph_count": 9,
-      "paragraph_uids": [
-        "PRAW-000043",
-        "PRAW-000044",
-        "PRAW-000045",
-        "PRAW-000046",
-        "PRAW-000047",
-        "PRAW-000048",
-        "PRAW-000049",
-        "PRAW-000050",
-        "PRAW-000051"
-      ],
-      "macro_tags": [
-        "S05_discussion_mechanism"
-      ]
-    },
-    {
-      "heading_uid": "HRAW-007-7c23f509",
-      "heading_text": "2.2.2. Triggering the Anode to be Reduced",
-      "heading_level": 1,
-      "doc_heading_order": 7,
-      "display_order": 7,
-      "page_index": null,
-      "paragraph_count": 5,
-      "paragraph_uids": [
-        "PRAW-000052",
-        "PRAW-000053",
-        "PRAW-000054",
-        "PRAW-000055",
-        "PRAW-000056"
-      ],
-      "macro_tags": [
-        "S05_discussion_mechanism"
-      ]
-    },
-    {
-      "heading_uid": "HRAW-008-bd19be1d",
-      "heading_text": "2.2.3. Precipitating Energy Waste and Safety Hazard",
-      "heading_level": 1,
-      "doc_heading_order": 8,
-      "display_order": 8,
-      "page_index": null,
-      "paragraph_count": 1,
-      "paragraph_uids": [
-        "PRAW-000009"
-      ],
-      "macro_tags": [
-        "S03_methods_and_setup"
-      ]
-    },
-    {
-      "heading_uid": "HRAW-009-4f944e57",
-      "heading_text": "2.3. Common Methods for Testing Electrode Resistance to Reverse Current",
-      "heading_level": 1,
-      "doc_heading_order": 9,
-      "display_order": 9,
-      "page_index": null,
-      "paragraph_count": 5,
-      "paragraph_uids": [
-        "PRAW-000057",
-        "PRAW-000058",
-        "PRAW-000059",
-        "PRAW-000060",
-        "PRAW-000061"
-      ],
-      "macro_tags": [
-        "S05_discussion_mechanism"
-      ]
-    },
-    {
-      "heading_uid": "HRAW-010-7462cab3",
+      "heading_uid": "HRAW-004-42e3f6f3",
+      "heading_id": "H04",
       "heading_text": "3. Mitigation Strategies Against Reverse Current",
-      "heading_level": 1,
-      "doc_heading_order": 10,
-      "display_order": 10,
-      "page_index": null,
-      "paragraph_count": 2,
-      "paragraph_uids": [
-        "PRAW-000062",
-        "PRAW-000063"
-      ],
-      "macro_tags": [
-        "S05_discussion_mechanism"
+      "heading_order": 4,
+      "paragraph_count": 43,
+      "paragraph_ids": [
+        "S04-P001",
+        "S04-P002",
+        "S04-P003",
+        "S04-P004",
+        "S04-P005",
+        "S04-P006",
+        "S04-P007",
+        "S04-P008",
+        "S04-P009",
+        "S04-P010",
+        "S04-P011",
+        "S04-P012",
+        "S04-P013",
+        "S04-P014",
+        "S04-P015",
+        "S04-P016",
+        "S04-P017",
+        "S04-P018",
+        "S04-P019",
+        "S04-P020",
+        "S04-P021",
+        "S04-P022",
+        "S04-P023",
+        "S04-P024",
+        "S04-P025",
+        "S04-P026",
+        "S04-P027",
+        "S04-P028",
+        "S04-P029",
+        "S04-P030",
+        "S04-P031",
+        "S04-P032",
+        "S04-P033",
+        "S04-P034",
+        "S04-P035",
+        "S04-P036",
+        "S04-P037",
+        "S04-P038",
+        "S04-P039",
+        "S04-P040",
+        "S04-P041",
+        "S04-P042",
+        "S04-P043"
       ]
     },
     {
-      "heading_uid": "HRAW-011-1714c06e",
-      "heading_text": "3.1. Material Engineering",
-      "heading_level": 1,
-      "doc_heading_order": 11,
-      "display_order": 11,
-      "page_index": null,
-      "paragraph_count": 1,
-      "paragraph_uids": [
-        "PRAW-000010"
-      ],
-      "macro_tags": [
-        "S03_methods_and_setup"
-      ]
-    },
-    {
-      "heading_uid": "HRAW-012-3334e277",
-      "heading_text": "3.1.1. Elemental Doping",
-      "heading_level": 1,
-      "doc_heading_order": 12,
-      "display_order": 12,
-      "page_index": null,
-      "paragraph_count": 3,
-      "paragraph_uids": [
-        "PRAW-000011",
-        "PRAW-000012",
-        "PRAW-000013"
-      ],
-      "macro_tags": [
-        "S03_methods_and_setup"
-      ]
-    },
-    {
-      "heading_uid": "HRAW-013-00ed3253",
-      "heading_text": "3.1.2. Nanoarchitecture and Structural Engineering",
-      "heading_level": 1,
-      "doc_heading_order": 13,
-      "display_order": 13,
-      "page_index": null,
-      "paragraph_count": 20,
-      "paragraph_uids": [
-        "PRAW-000014",
-        "PRAW-000015",
-        "PRAW-000016",
-        "PRAW-000017",
-        "PRAW-000018",
-        "PRAW-000019",
-        "PRAW-000020",
-        "PRAW-000021",
-        "PRAW-000022",
-        "PRAW-000023",
-        "PRAW-000024",
-        "PRAW-000025",
-        "PRAW-000026",
-        "PRAW-000027",
-        "PRAW-000028",
-        "PRAW-000029",
-        "PRAW-000030",
-        "PRAW-000031",
-        "PRAW-000032",
-        "PRAW-000033"
-      ],
-      "macro_tags": [
-        "S03_methods_and_setup"
-      ]
-    },
-    {
-      "heading_uid": "HRAW-014-ee98d23d",
-      "heading_text": "3.2. External Environmental Regulation",
-      "heading_level": 1,
-      "doc_heading_order": 14,
-      "display_order": 14,
-      "page_index": null,
-      "paragraph_count": 10,
-      "paragraph_uids": [
-        "PRAW-000064",
-        "PRAW-000065",
-        "PRAW-000066",
-        "PRAW-000067",
-        "PRAW-000068",
-        "PRAW-000069",
-        "PRAW-000070",
-        "PRAW-000071",
-        "PRAW-000072",
-        "PRAW-000073"
-      ],
-      "macro_tags": [
-        "S05_discussion_mechanism"
-      ]
-    },
-    {
-      "heading_uid": "HRAW-015-e327be2e",
+      "heading_uid": "HRAW-005-6b85b668",
+      "heading_id": "H05",
       "heading_text": "4. Conclusion and Perspective",
-      "heading_level": 1,
-      "doc_heading_order": 15,
-      "display_order": 15,
-      "page_index": null,
-      "paragraph_count": 7,
-      "paragraph_uids": [
-        "PRAW-000074",
-        "PRAW-000075",
-        "PRAW-000076",
-        "PRAW-000077",
-        "PRAW-000078",
-        "PRAW-000079",
-        "PRAW-000080"
-      ],
-      "macro_tags": [
-        "S06_conclusion"
-      ]
-    },
-    {
-      "heading_uid": "HRAW-016-fdb09712",
-      "heading_text": "Acknowledgements",
-      "heading_level": 1,
-      "doc_heading_order": 16,
-      "display_order": 16,
-      "page_index": null,
-      "paragraph_count": 1,
-      "paragraph_uids": [
-        "PRAW-000081"
-      ],
-      "macro_tags": [
-        "S07_back_matter_or_supplementary"
-      ]
-    },
-    {
-      "heading_uid": "HRAW-017-2e64582e",
-      "heading_text": "Conflict of Interest",
-      "heading_level": 1,
-      "doc_heading_order": 17,
-      "display_order": 17,
-      "page_index": null,
-      "paragraph_count": 1,
-      "paragraph_uids": [
-        "PRAW-000082"
-      ],
-      "macro_tags": [
-        "S07_back_matter_or_supplementary"
-      ]
-    },
-    {
-      "heading_uid": "HRAW-018-063b5290",
-      "heading_text": "Keywords",
-      "heading_level": 1,
-      "doc_heading_order": 18,
-      "display_order": 18,
-      "page_index": null,
-      "paragraph_count": 2,
-      "paragraph_uids": [
-        "PRAW-000034",
-        "PRAW-000035"
-      ],
-      "macro_tags": [
-        "S03_methods_and_setup"
+      "heading_order": 5,
+      "paragraph_count": 22,
+      "paragraph_ids": [
+        "S05-P001",
+        "S05-P002",
+        "S05-P003",
+        "S05-P004",
+        "S05-P005",
+        "S05-P006",
+        "S05-P007",
+        "S05-P008",
+        "S05-P009",
+        "S05-P010",
+        "S05-P011",
+        "S05-P012",
+        "S05-P013",
+        "S05-P014",
+        "S05-P015",
+        "S05-P016",
+        "S05-P017",
+        "S05-P018",
+        "S05-P019",
+        "S05-P020",
+        "S05-P021",
+        "S05-P022"
       ]
     }
   ]

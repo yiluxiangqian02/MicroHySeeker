@@ -1,3 +1,3 @@
-章节定位：Results and Discussion  
-核心内容：本章节展示了电解槽在恒电流测试下的极化曲线、交流阻抗测量结果及反向电流行为，并结合电化学反应机理分析了反向电流的来源及其与镍氧化物电极状态的关系。  
-关键实体：电解槽, 电流密度, 电池电压, 极化曲线, 内阻, 交流阻抗, 反向电流, 镍氧化物 (NiO₂, NiOOH, Ni(OH)₂), 溶解氢/氧, 双极板, 理论分解电压, 欧姆极化, 电荷量, Pourbaix图
+Section Role: This section presents the Results and Discussion of experimental and analytical investigations into reverse current behavior in a water electrolyzer.  
+Core Content: The section analyzes polarization curves, internal resistance via AC impedance, time-dependent reverse current dynamics, and proposes electrochemical reaction mechanisms responsible for the observed electromotive forces, linking them to nickel-based redox processes on bipolar plates.  
+Key Entities: loading current density, cell voltages (U₁, U₂), polarization curves, internal resistance (R_int), ohmic polarization, overpotential, AC impedance, Cole-Cole plot, reverse current, electric charge (Q_r,totl), nickel oxide (NiO₂, NiOOH, Ni(OH)₂), dissolved hydrogen/oxygen, Pourbaix diagram, electromotive force (U₀), bipolar electrolyzer, equivalent circuit model

@@ -1,3 +1,3 @@
-章节定位：Results  
-核心内容：本章节通过对比两种不同阳极材料（AN-1和AN-2）在水电解系统停机期间的表现，分析了阳极材料对反向电流现象及电极电位演变的影响，揭示了阳极催化活性与系统动态运行稳定性之间的关联。  
-关键实体：AN-1阳极, AN-2阳极, NiCoO_x, 贵金属氧化物, 反向电流, 反向电荷, 电动势, 电极电位, 停机时间, 电解液循环, 电流密度, 温度, AWE系统, BP-1, BP-3
+Section Role: This section presents experimental results examining how different anode materials influence reverse current behavior in electrochemical systems.  
+Core Content: It demonstrates that the choice of anode material significantly affects the magnitude and stability of reverse current under controlled operational conditions.  
+Key Entities: anode materials, reverse current, electrochemical systems, operational conditions, current stability

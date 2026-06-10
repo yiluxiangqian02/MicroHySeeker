@@ -1,31 +1,34 @@
-章节定位：本章节呈现并分析了碱性水电解槽在恒流电解后产生的反向电流现象，结合极化曲线、阻抗测量、电荷积分及可能的电化学反应机制进行综合讨论。
+Section Positioning: This section presents the experimental results and their interpretation regarding reverse current behavior in a bipolar alkaline water electrolyzer, linking electrochemical measurements to underlying reaction mechanisms.
 
-逐段索引：  
-P001: 描述图4所示的加载电流密度与电解槽单元电压之间的关系。  
-P002: 展示图3，包括简化实验系统示意图和等效电路模型。  
-P003: 显示图4中两个电解槽单元（U₁和U₂）的电压-电流密度数据点。  
-P004: 解释典型水电解极化曲线的组成，并分析U₁与U₂差异可能源于欧姆压降项。  
-P005: 介绍交流阻抗测量中高频实轴截距的结果。  
-P006: 展示图5，显示不同电压下Cole-Cole图的高频实轴截距。  
-P007: 分析内部电阻R_int的构成及其随电压变化的原因，并给出具体数值估算。  
-P008: 描述图6中电解结束后反向电流和单元电压随时间的变化趋势。  
-P009: 展示图6，包含不同电流密度下测得与计算的反向电流及电压时间曲线。  
-P010: 补充说明U₂电压下降至约0.4 V后反向电流停止的时间点及最终电压值。  
-P011: 对比实测与计算反向电流的吻合程度，并讨论模型假设与实际偏差原因。  
-P012: 引出图7，说明反向电流电荷量随电解电流密度增加而上升的现象及其物理解释。  
-P013: 展示图7，显示60分钟电解后反向电流总电荷与电流密度的关系。  
-P014: 列举基于Pourbaix图预测的可能产生反向电流电动势的候选反应类型。  
-P015: 给出NiO₂还原为NiOOH的半反应方程式（式8）。  
-P016: 提供该反应的标准电极电位表达式（vs. SHE）。  
-P017: 给出NiOOH进一步还原为Ni(OH)₂的半反应方程式（式9）。  
-P018: 提供该反应的标准电极电位表达式（vs. SHE）。  
-P019: 给出溶解氧还原为OH⁻的半反应方程式（式10）。  
-P020: 提供该反应的标准电极电位表达式（vs. SHE）。  
-P021: 给出Ni氧化为Ni(OH)₂的阳极反应方程式及其标准电位（式11）。  
-P022: 给出H₂氧化为H₂O的阳极反应方程式及其标准电位（式12）。  
-P023: 分析图8中各候选反应组合的最大电动势，并推断最可能的反应对。  
-P024: 展示图8，图示各候选反应的标准电位及其构成的反向电动势U₀。  
-P025: 展示图9，描绘反向电流停止时双极电解槽的一维状态分布。  
-P026: 推测反向电流终止机制，指出双极板两侧最终趋于相同镍氢氧化物中间态，并结合电压范围确认反应对。
+Paragraph Index:
+P001: Introduces Figure 4, which displays the relationship between loading current density and cell voltages for two electrolyzer cells under constant current conditions.  
+P002: Shows panel (a) of Figure 3, depicting the simplified experimental system.  
+P003: Shows panel (b) of Figure 3, illustrating the equivalent circuit model of the experimental setup.  
+P004: Presents Figure 4 with labeled data points for cell voltages U₁ and U₂ as functions of current density.  
+P005: Explains the typical polarization curve behavior in water electrolysis and attributes minor differences between U₁ and U₂ to ohmic resistance effects.  
+P006: Describes high-frequency intercept data from AC impedance measurements across different cell voltages.  
+P007: Displays Figure 5, showing Cole-Cole plot intercepts at various applied voltages.  
+P008: Analyzes internal resistance components (Rₘ and Rᵢₙₜ), estimates their values, and discusses the impact of gas bubbles on ionic resistance.  
+P009: Introduces Figure 6, comparing measured and calculated reverse currents and corresponding cell voltages over time after electrolysis.  
+P010: Shows Figure 6, plotting reverse current and cell voltage dynamics following 60 minutes of electrolysis at varying current densities.  
+P011: Details the temporal decay of U₂ to ~0.4 V and cessation of reverse current around 100 minutes, with final voltage values reported.  
+P012: Compares measured and calculated reverse currents, explaining discrepancies via assumptions about plumbing resistance and electromotive force stability.  
+P013: Presents Figure 7, showing that total reverse charge increases with electrolysis current density, and links this trend to nickel oxide formation on the anode.  
+P014: Displays Figure 7, illustrating the dependence of reverse current charge on prior electrolysis current density.  
+P015: Lists candidate redox reactions responsible for the reverse current electromotive force, based on Pourbaix diagram predictions.  
+P016: Labels the following equations as cathodic (reduction) reactions occurring at the anode side during reverse current flow.  
+P017: Provides the first candidate reduction reaction: NiO₂ to NiOOH.  
+P018: Gives the standard potential expression for the NiO₂/NiOOH reaction versus SHE.  
+P019: Provides the second candidate reduction reaction: NiOOH to Ni(OH)₂.  
+P020: Gives the standard potential expression for the NiOOH/Ni(OH)₂ reaction versus SHE.  
+P021: Provides the third candidate reduction reaction: oxygen reduction to hydroxide.  
+P022: Gives the standard potential expression for the O₂/OH⁻ reaction versus SHE.  
+P023: Labels the following equations as anodic (oxidation) reactions occurring at the cathode side during reverse current flow.  
+P024: Provides the first candidate oxidation reaction: Ni metal to Ni(OH)₂, with its standard potential.  
+P025: Provides the second candidate oxidation reaction: hydrogen oxidation to water, with its standard potential.  
+P026: Interprets Figure 8, identifying the most plausible redox couple based on observed initial cell voltages and theoretical electromotive forces.  
+P027: Displays Figure 8, mapping standard potentials of candidate reactions to infer the dominant reverse current mechanism.  
+P028: Shows Figure 9, illustrating the one-dimensional chemical state profile of the bipolar electrolyzer when reverse current ceases.  
+P029: Concludes the mechanism by describing the progression of surface reactions on both sides of the bipolar plate and aligning final voltages with specific redox couples.
 
-关键实体：NiO₂/NiOOH, H₂/H₂O, Ni/Ni(OH)₂, O₂/OH⁻, reverse current, internal resistance (R_int), polarization curve, electromotive force (U₀), bipolar electrolyzer, Pourbaix diagram
+Key Entities: reverse current, nickel oxide (NiO₂, NiOOH, Ni(OH)₂), cell voltage (U₁, U₂), internal resistance (Rᵢₙₜ, Rₘ), electromotive force (U₀), Pourbaix diagram, bipolar electrolyzer

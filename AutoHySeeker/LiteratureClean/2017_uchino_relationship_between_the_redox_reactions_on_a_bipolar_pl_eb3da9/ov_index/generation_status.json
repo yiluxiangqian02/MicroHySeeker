@@ -1,12 +1,12 @@
 {
   "status": "fresh",
-  "generated_at": "2026-06-01T17:04:35.924148",
-  "source_checksum": "76943f74d8bfd68da4063943a5854122fd1189fb5cb9100716c31fcf55eae56a",
+  "generated_at": null,
+  "source_checksum": "2ca31e3d2b5d961ec4d21e82d30af13448d1f5e6e709c424ef5d77f85af3600d",
   "source_items": [
-    "document_tree.json:ccbca680ca7ad6b69ec21a8f4d536dd3bd298fdff89d954661ec4a2293711c4e",
+    "document_tree.json:a70e1a6099c22c161bde8ad33e273eda5dbd38cc495c9beb17d579d74e3d753e",
     "full_clean.md:6721f8a3e09fa7e8730704e026df67d862fb5030349a9e8e65fe6441f80e0ce0",
-    "image_manifest.json:8870b8a9726bf031dddd3dcffce9ae93af13807ed8dea963bb9f17ecd2f4a692",
-    "paragraph_index.json:c772dd35fb04e86616d42e7a4469d59f04a9cd62fc444d9aaa8ef3b57da74cc9",
+    "image_manifest.json:9963a5c4b02b28db9fb7774c3eb7f69f5b82677b95e9a7f6db1ec765d1379b28",
+    "paragraph_index.json:cfcc0a3650cdd65eb619df454b4a7ea1ee6975ee74ee3e793b975c0acbacb42b",
     "table_manifest.json:6ccd32a177b7ad4cb7b7660140d157c25bb8e1f348e85aa85a7b1c3d4afaf5b7"
   ],
   "based_on_preprocess_version": null,
@@ -17,5 +17,5 @@
     "paper_targets_ok": true,
     "section_targets_count": 7
   },
-  "evaluated_at": "2026-06-04T14:30:20.439076"
+  "evaluated_at": "2026-06-09T14:51:29.155948"
 }

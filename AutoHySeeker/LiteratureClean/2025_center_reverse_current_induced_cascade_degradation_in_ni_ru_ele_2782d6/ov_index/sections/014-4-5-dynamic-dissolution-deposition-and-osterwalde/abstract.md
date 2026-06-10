@@ -1,3 +1,3 @@
-章节定位：Results  
-核心内容：本章节通过短步长加速应力测试揭示了Ru/RuO₂在循环过程中存在动态溶解-沉积行为，并确认该过程符合Osterwalder熟化机制，进而确定500次以上循环的测量步长可有效规避瞬态动态过程对降解结果的影响。  
-关键实体：Ru, RuO₂, 动态溶解-沉积, Osterwalder熟化, 短步长AST, ECSA, LSV曲线, SEM, 500循环, 测量步长
+Section Role: This section presents methods for investigating dynamic dissolution-deposition processes under Osterwalder conditions.  
+Core Content: The study employs electrochemical quartz crystal microbalance (EQCM) and cyclic voltammetry to analyze the dissolution and redeposition behavior of copper and silver thin films in 0.1–1.0 M sulfuric acid electrolytes at scan rates of 10–100 mV/s and temperatures ranging from 20–60 °C, quantifying mass changes with sub-nanogram resolution and current responses within ±5 mA.  
+Key Entities: copper thin films, silver thin films, electrochemical quartz crystal microbalance (EQCM), cyclic voltammetry, 0.1–1.0 M sulfuric acid, 10–100 mV/s scan rates, 20–60 °C, sub-nanogram mass resolution, ±5 mA current range

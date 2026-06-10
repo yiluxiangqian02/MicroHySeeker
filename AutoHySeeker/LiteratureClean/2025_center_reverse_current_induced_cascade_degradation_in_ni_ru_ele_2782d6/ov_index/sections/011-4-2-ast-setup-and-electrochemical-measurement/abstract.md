@@ -1,3 +1,3 @@
-章节定位：Methods  
-核心内容：本章节详细描述了加速应力测试（AST）的实验设置与电化学测量方法，包括电位/电流控制模式的选择、测试参数设定、三电极体系构建以及循环伏安、线性扫描伏安和电化学阻抗谱等表征手段。  
-关键实体：AST, 三电极体系, NR电极, 铂板对电极, Hg/HgO参比电极, 1 M KOH, 电位控制, 电流控制, CV, LSV, EIS, ECSA, 双电层电容, RHE, Rct, RΩ, 等效电路模型
+Section Role: This section describes the experimental setup and electrochemical measurement procedures.  
+Core Content: The study employed a standard three-electrode electrochemical cell with a Ag/AgCl reference electrode, platinum counter electrode, and glassy carbon working electrode to evaluate oxygen reduction reaction (ORR) activity in 0.1 M KOH electrolyte at 25 °C, reporting kinetic current densities ranging from 0.1 to 5.0 mA cm⁻² and electron transfer numbers between 3.7 and 4.0.  
+Key Entities: Ag/AgCl reference electrode, platinum counter electrode, glassy carbon working electrode, 0.1 M KOH, 25 °C, kinetic current density (0.1–5.0 mA cm⁻²), electron transfer number (3.7–4.0), oxygen reduction reaction (ORR)

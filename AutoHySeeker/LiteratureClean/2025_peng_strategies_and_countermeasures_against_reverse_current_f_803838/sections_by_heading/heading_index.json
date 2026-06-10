@@ -1,304 +1,37 @@
-{
-  "paper_id": "2025_peng_strategies_and_countermeasures_against_reverse_current_f_803838",
-  "heading_count": 18,
-  "headings": [
-    {
-      "heading_uid": "HRAW-001-911254b6",
-      "heading_dirname": "001-front-matter",
-      "heading_text": "Strategies and Countermeasures Against Reverse Current for Enhanced Durability in Water Electrolysis Systems",
-      "heading_level": 1,
-      "doc_heading_order": 1,
-      "display_order": 1,
-      "paragraph_count": 2,
-      "paragraph_uids": [
-        "PRAW-000036",
-        "PRAW-000037"
-      ],
-      "path": "sections_by_heading/001-front-matter/"
-    },
-    {
-      "heading_uid": "HRAW-002-2812cee1",
-      "heading_dirname": "002-1-introduction",
-      "heading_text": "1. Introduction",
-      "heading_level": 1,
-      "doc_heading_order": 2,
-      "display_order": 2,
-      "paragraph_count": 8,
-      "paragraph_uids": [
-        "PRAW-000001",
-        "PRAW-000002",
-        "PRAW-000003",
-        "PRAW-000004",
-        "PRAW-000005",
-        "PRAW-000006",
-        "PRAW-000007",
-        "PRAW-000008"
-      ],
-      "path": "sections_by_heading/002-1-introduction/"
-    },
-    {
-      "heading_uid": "HRAW-003-dc24257a",
-      "heading_dirname": "003-2-background-of-reverse-current",
-      "heading_text": "2. Background of Reverse Current",
-      "heading_level": 1,
-      "doc_heading_order": 3,
-      "display_order": 3,
-      "paragraph_count": 2,
-      "paragraph_uids": [
-        "PRAW-000038",
-        "PRAW-000039"
-      ],
-      "path": "sections_by_heading/003-2-background-of-reverse-current/"
-    },
-    {
-      "heading_uid": "HRAW-004-4fd6bdcc",
-      "heading_dirname": "004-2-1-origin-of-reverse-current",
-      "heading_text": "2.1. Origin of Reverse Current",
-      "heading_level": 1,
-      "doc_heading_order": 4,
-      "display_order": 4,
-      "paragraph_count": 2,
-      "paragraph_uids": [
-        "PRAW-000040",
-        "PRAW-000041"
-      ],
-      "path": "sections_by_heading/004-2-1-origin-of-reverse-current/"
-    },
-    {
-      "heading_uid": "HRAW-005-85aab0fd",
-      "heading_dirname": "005-2-2-influence-of-reverse-current",
-      "heading_text": "2.2. Influence of Reverse Current",
-      "heading_level": 1,
-      "doc_heading_order": 5,
-      "display_order": 5,
-      "paragraph_count": 1,
-      "paragraph_uids": [
-        "PRAW-000042"
-      ],
-      "path": "sections_by_heading/005-2-2-influence-of-reverse-current/"
-    },
-    {
-      "heading_uid": "HRAW-006-acef3150",
-      "heading_dirname": "006-2-2-1-inducing-the-cathode-to-be-oxidized",
-      "heading_text": "2.2.1. Inducing the Cathode to be Oxidized",
-      "heading_level": 1,
-      "doc_heading_order": 6,
-      "display_order": 6,
-      "paragraph_count": 9,
-      "paragraph_uids": [
-        "PRAW-000043",
-        "PRAW-000044",
-        "PRAW-000045",
-        "PRAW-000046",
-        "PRAW-000047",
-        "PRAW-000048",
-        "PRAW-000049",
-        "PRAW-000050",
-        "PRAW-000051"
-      ],
-      "path": "sections_by_heading/006-2-2-1-inducing-the-cathode-to-be-oxidized/"
-    },
-    {
-      "heading_uid": "HRAW-007-7c23f509",
-      "heading_dirname": "007-2-2-2-triggering-the-anode-to-be-reduced",
-      "heading_text": "2.2.2. Triggering the Anode to be Reduced",
-      "heading_level": 1,
-      "doc_heading_order": 7,
-      "display_order": 7,
-      "paragraph_count": 5,
-      "paragraph_uids": [
-        "PRAW-000052",
-        "PRAW-000053",
-        "PRAW-000054",
-        "PRAW-000055",
-        "PRAW-000056"
-      ],
-      "path": "sections_by_heading/007-2-2-2-triggering-the-anode-to-be-reduced/"
-    },
-    {
-      "heading_uid": "HRAW-008-bd19be1d",
-      "heading_dirname": "008-2-2-3-precipitating-energy-waste-and-safety-hazard",
-      "heading_text": "2.2.3. Precipitating Energy Waste and Safety Hazard",
-      "heading_level": 1,
-      "doc_heading_order": 8,
-      "display_order": 8,
-      "paragraph_count": 1,
-      "paragraph_uids": [
-        "PRAW-000009"
-      ],
-      "path": "sections_by_heading/008-2-2-3-precipitating-energy-waste-and-safety-hazard/"
-    },
-    {
-      "heading_uid": "HRAW-009-4f944e57",
-      "heading_dirname": "009-2-3-common-methods-for-testing-electrode-resistance",
-      "heading_text": "2.3. Common Methods for Testing Electrode Resistance to Reverse Current",
-      "heading_level": 1,
-      "doc_heading_order": 9,
-      "display_order": 9,
-      "paragraph_count": 5,
-      "paragraph_uids": [
-        "PRAW-000057",
-        "PRAW-000058",
-        "PRAW-000059",
-        "PRAW-000060",
-        "PRAW-000061"
-      ],
-      "path": "sections_by_heading/009-2-3-common-methods-for-testing-electrode-resistance/"
-    },
-    {
-      "heading_uid": "HRAW-010-7462cab3",
-      "heading_dirname": "010-3-mitigation-strategies-against-reverse-current",
-      "heading_text": "3. Mitigation Strategies Against Reverse Current",
-      "heading_level": 1,
-      "doc_heading_order": 10,
-      "display_order": 10,
-      "paragraph_count": 2,
-      "paragraph_uids": [
-        "PRAW-000062",
-        "PRAW-000063"
-      ],
-      "path": "sections_by_heading/010-3-mitigation-strategies-against-reverse-current/"
-    },
-    {
-      "heading_uid": "HRAW-011-1714c06e",
-      "heading_dirname": "011-3-1-material-engineering",
-      "heading_text": "3.1. Material Engineering",
-      "heading_level": 1,
-      "doc_heading_order": 11,
-      "display_order": 11,
-      "paragraph_count": 1,
-      "paragraph_uids": [
-        "PRAW-000010"
-      ],
-      "path": "sections_by_heading/011-3-1-material-engineering/"
-    },
-    {
-      "heading_uid": "HRAW-012-3334e277",
-      "heading_dirname": "012-3-1-1-elemental-doping",
-      "heading_text": "3.1.1. Elemental Doping",
-      "heading_level": 1,
-      "doc_heading_order": 12,
-      "display_order": 12,
-      "paragraph_count": 3,
-      "paragraph_uids": [
-        "PRAW-000011",
-        "PRAW-000012",
-        "PRAW-000013"
-      ],
-      "path": "sections_by_heading/012-3-1-1-elemental-doping/"
-    },
-    {
-      "heading_uid": "HRAW-013-00ed3253",
-      "heading_dirname": "013-3-1-2-nanoarchitecture-and-structural-engineering",
-      "heading_text": "3.1.2. Nanoarchitecture and Structural Engineering",
-      "heading_level": 1,
-      "doc_heading_order": 13,
-      "display_order": 13,
-      "paragraph_count": 20,
-      "paragraph_uids": [
-        "PRAW-000014",
-        "PRAW-000015",
-        "PRAW-000016",
-        "PRAW-000017",
-        "PRAW-000018",
-        "PRAW-000019",
-        "PRAW-000020",
-        "PRAW-000021",
-        "PRAW-000022",
-        "PRAW-000023",
-        "PRAW-000024",
-        "PRAW-000025",
-        "PRAW-000026",
-        "PRAW-000027",
-        "PRAW-000028",
-        "PRAW-000029",
-        "PRAW-000030",
-        "PRAW-000031",
-        "PRAW-000032",
-        "PRAW-000033"
-      ],
-      "path": "sections_by_heading/013-3-1-2-nanoarchitecture-and-structural-engineering/"
-    },
-    {
-      "heading_uid": "HRAW-014-ee98d23d",
-      "heading_dirname": "014-3-2-external-environmental-regulation",
-      "heading_text": "3.2. External Environmental Regulation",
-      "heading_level": 1,
-      "doc_heading_order": 14,
-      "display_order": 14,
-      "paragraph_count": 10,
-      "paragraph_uids": [
-        "PRAW-000064",
-        "PRAW-000065",
-        "PRAW-000066",
-        "PRAW-000067",
-        "PRAW-000068",
-        "PRAW-000069",
-        "PRAW-000070",
-        "PRAW-000071",
-        "PRAW-000072",
-        "PRAW-000073"
-      ],
-      "path": "sections_by_heading/014-3-2-external-environmental-regulation/"
-    },
-    {
-      "heading_uid": "HRAW-015-e327be2e",
-      "heading_dirname": "015-4-conclusion-and-perspective",
-      "heading_text": "4. Conclusion and Perspective",
-      "heading_level": 1,
-      "doc_heading_order": 15,
-      "display_order": 15,
-      "paragraph_count": 7,
-      "paragraph_uids": [
-        "PRAW-000074",
-        "PRAW-000075",
-        "PRAW-000076",
-        "PRAW-000077",
-        "PRAW-000078",
-        "PRAW-000079",
-        "PRAW-000080"
-      ],
-      "path": "sections_by_heading/015-4-conclusion-and-perspective/"
-    },
-    {
-      "heading_uid": "HRAW-016-fdb09712",
-      "heading_dirname": "016-acknowledgements",
-      "heading_text": "Acknowledgements",
-      "heading_level": 1,
-      "doc_heading_order": 16,
-      "display_order": 16,
-      "paragraph_count": 1,
-      "paragraph_uids": [
-        "PRAW-000081"
-      ],
-      "path": "sections_by_heading/016-acknowledgements/"
-    },
-    {
-      "heading_uid": "HRAW-017-2e64582e",
-      "heading_dirname": "017-conflict-of-interest",
-      "heading_text": "Conflict of Interest",
-      "heading_level": 1,
-      "doc_heading_order": 17,
-      "display_order": 17,
-      "paragraph_count": 1,
-      "paragraph_uids": [
-        "PRAW-000082"
-      ],
-      "path": "sections_by_heading/017-conflict-of-interest/"
-    },
-    {
-      "heading_uid": "HRAW-018-063b5290",
-      "heading_dirname": "018-keywords",
-      "heading_text": "Keywords",
-      "heading_level": 1,
-      "doc_heading_order": 18,
-      "display_order": 18,
-      "paragraph_count": 2,
-      "paragraph_uids": [
-        "PRAW-000034",
-        "PRAW-000035"
-      ],
-      "path": "sections_by_heading/018-keywords/"
-    }
-  ]
-}
+[
+  {
+    "dirname": "001-strategies-and-countermeasures-against-reverse-current-for-enhan",
+    "heading_uid": "HRAW-001-911254b6",
+    "heading_text": "Strategies and Countermeasures Against Reverse Current for Enhanced Durability in Water Electrolysis Systems",
+    "heading_order": 1,
+    "paragraph_count": 3
+  },
+  {
+    "dirname": "002-1-introduction",
+    "heading_uid": "HRAW-002-2812cee1",
+    "heading_text": "1. Introduction",
+    "heading_order": 2,
+    "paragraph_count": 9
+  },
+  {
+    "dirname": "003-2-background-of-reverse-current",
+    "heading_uid": "HRAW-003-dc24257a",
+    "heading_text": "2. Background of Reverse Current",
+    "heading_order": 3,
+    "paragraph_count": 31
+  },
+  {
+    "dirname": "004-3-mitigation-strategies-against-reverse-current",
+    "heading_uid": "HRAW-004-42e3f6f3",
+    "heading_text": "3. Mitigation Strategies Against Reverse Current",
+    "heading_order": 4,
+    "paragraph_count": 43
+  },
+  {
+    "dirname": "005-4-conclusion-and-perspective",
+    "heading_uid": "HRAW-005-6b85b668",
+    "heading_text": "4. Conclusion and Perspective",
+    "heading_order": 5,
+    "paragraph_count": 22
+  }
+]

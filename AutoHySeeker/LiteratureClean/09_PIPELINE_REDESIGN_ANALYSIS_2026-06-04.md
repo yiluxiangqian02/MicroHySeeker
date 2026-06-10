@@ -20,31 +20,62 @@
 
 ---
 
-## 1. 章级标题拆分（不再细化到子标题）
+## 1. 章级标题拆分（已实现 ✅）
 
-### 1.1 现状
+### 1.1 问题背景
 
-[`clean_single_mineru_paper.py:3289`](AutoHySeeker/LiteratureClean/clean_single_mineru_paper.py#L3289) `split_into_sections()` 选主导层级（通常 `##`），按**所有**该层级标题切分 → 20-30 个 section/篇。
+MinerU 导出将所有标题标为 `#`（level 1），无层级区分。11 篇论文分三类：
 
-### 1.2 改为
+| 类型 | 论文数 | 标题特征 | 示例 |
+|------|--------|----------|------|
+| A. 编号型 | 7 篇 | `1. Introduction` `2.1 Methods` `1.1.1` | 大部分期刊论文 |
+| B. 全大写型 | 2 篇 | `INTRODUCTION` `RESULTS AND DISCUSSION` | ACS 期刊 |
+| C. 无编号无大写 | 2 篇 | `Cathode oxidation...` `Reaction mechanism` | Nature 系列 |
 
-只按「章」级切分（`#` 或首个 `##` Introduction/Methods/Results/Discussion/Conclusion 级别的标题），不再细化到 1.1、1.1.1。
+### 1.2 三策略检测（按优先级）
 
 ```
-改动后（~5-10 个 section）：
-  001-introduction/
-  002-methods/
-  003-results/
-  004-discussion/
-  005-conclusion/
+Strategy A: 编号检测
+  正则 ^(\d+(?:\.\d+)*)\.?\s 匹配编号
+  深度=1（如 "1." "2."）        → 章级边界
+  深度=2（如 "1.1" "2.3"）      → 节，归入章
+  深度=3（如 "1.1.1"）           → 子节，归入章
+  中文章节 （一）（二）           → 章级边界
+  无深度1时：按首数字归组        → 1.x→章1, 2.x→章2
+
+Strategy B: 全大写检测
+  全大写标题（≥5个大写字母）     → 章级边界
+  大小写混合标题                 → 节，归入最近的章
+
+Strategy C: 关键词 + 内容体量
+  关键词匹配：introduction, methods, results, discussion,
+              conclusion, mechanism, theoretical, computation
+  内容体量 > 2200 字符           → 未匹配关键词但内容充足，也作章
 ```
 
-### 1.3 影响
+### 1.3 实现效果
 
-| 文件 | 改动 |
-|------|------|
-| `clean_single_mineru_paper.py` | `split_into_sections()` 改为识别章级标题 |
-| `import_to_openviking.py` | 无需改动（`build_ov_index_skeleton()` 遍历 sections_by_heading，自动适配） |
+| 论文 | 旧 sections | 新 sections | 策略 |
+|------|------------|------------|------|
+| 2017_uchino | 9 | 7 | C（关键词） |
+| 2022_kim | 17 | 9 | B（全大写） |
+| 2023_a_effects | 26 | 5 | A（编号） |
+| 2023_uchino | 18 | 5 | A（编号） |
+| 2024_jung | 15 | 4 | A（编号） |
+| 2025_center | 20 | 5 | A（编号） |
+| 2025_peng | 18 | 5 | A（编号） |
+| 2025_sha | 26 | 8 | C（关键词+体量） |
+| 2025_wang | 15 | 5 | A（编号） |
+| 2026_he | 15 | 5 | A（编号） |
+| 2026_unknown | 46 | 4 | A（编号+归组） |
+
+### 1.4 段落切分规则
+
+```
+\n\n 切分 + 无长度下限
+仅过滤：单独图片链接 (![](figures/...)) + 单独子图标签 (a/b/c/I/II/III)
+覆盖率 ≥ 99%
+```
 
 ---
 
@@ -132,26 +163,29 @@ export_dir/
 
 > 实现位置：新建 `LiteratureClean/qa_pipeline.py`（应用层，不涉及 OpenViking 修改）
 
-### Stage ①：全局向量检索 L0（混合粒度）
+### Stage ①：混合检索 L0（语义 + 词面）
+
+> **更新 2026-06-09**：纯向量检索对专有名词（NiCoP-Cr₂O₃）匹配弱，改为混合分数。
 
 | 参数 | 值 |
 |------|-----|
 | 检索对象 | Paper L0（`.abstract.md`）+ Section L0（`.abstract.md`）混合向量库 |
-| 检索方式 | 向量语义相似度（`client.find()`） |
-| target_uri | `viking://resources/literature` |
-| Top-k | 15（简单查询可降至 10） |
-| 输出 | 混合粒度命中列表（论文 A、论文 B 的 S03 章节、论文 C 的 S05 章节...） |
+| Top-k | **20** |
+| 计分公式 | `L0_score = 0.55 × semantic_score + 0.45 × lexical_score` |
+| semantic_score | `client.find()` 返回的 bge-m3 cosine（归一化到 [0,1]） |
+| lexical_score | `0.75 × strong_match_score + 0.25 × generic_keyword_score` |
+| strong_match | 材料名/化学式（NiCoP、Cr₂O₃）、专有短语（voltage increase rate）、含字母数字连字符的专有词 |
+| generic_keyword | 普通关键词：voltage、degradation、stability、current、electrolysis 等 |
 
-### Stage ②：树检索 L1（收敛到章节级）
+### Stage ②：Section 独立重打分
 
 | 参数 | 值 |
 |------|-----|
-| 检索对象 | Stage ① 命中结果的 L1（`.overview.md`） |
-| 作用 | 将所有命中统一收敛到章节级 |
-| 逻辑 | 命中论文级 → 通过论文 L1 `.overview.md` 导航到相关章节 |
-|  | 命中章节级 → 直接确认 |
+| 输入 | Stage ① 命中结果展开的 section 列表 |
+| 计分公式 | `section_score = 0.55 × section_semantic + 0.45 × section_lexical` |
+| section_semantic | 读 section `.abstract.md` 文本，bge-m3 本地向量化后与查询算余弦 |
+| section_lexical | 对 section abstract 做同 Stage ① 的词面匹配 |
 | Top-k | 5 个最相关章节 |
-| 输出 | 5 个章节 URI |
 
 ### Stage ③：LLM Judge（段落选择）
 

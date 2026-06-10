@@ -1,8 +1,0 @@
----
-paper_id: "2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7"
-section_id: "S01_abstract"
-paragraph_id: "S01-P001"
-evidence_id: "EV-wang2025-0b96f7-S01-P001"
-chunk_index: 0
----
-Alkaline water electrolyzers (AWEs) play a pivotal role in the realm of large-scale hydrogen production. However, AWEs face significant challenges in electrode degradation particularly under dynamic operating conditions, induced by reverse current phenomenon during frequent startup/shutdown. Herein, this study aims to rationalize the degradation mechanisms of AWEs under these conditions. A three-electrode membrane electrode assembly (MEA) setup is first utilized to decouple polarization behaviors of anode and cathode in AWEs. Following a proposed accelerated stress testing protocol, the setup allows for tracking individual electrode performance transformations during frequent reverse current operation. Integrating operando cell studies with in situ and post-mortem characterizations, it is showed that continuous formation of highly active species, nickel (oxy)hydroxides, improves the anode performance for oxygen evolution reaction. On the contrary, irreversible oxidation of nickel to $\beta$ -nickel hydroxide results in a severe degradation of cathode, leading to material dissolution, poor electrical conductivity and loss of catalytic activity for hydrogen evolution reaction. These results provide insights in nickel-based electrode transformation mechanisms for alkaline water electrolysis and indicate that cathode with higher redox reversibility can potentially improve durability of AWEs under dynamic conditions.

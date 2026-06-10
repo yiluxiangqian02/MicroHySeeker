@@ -1,20 +1,38 @@
-章节定位：本章为引言部分，概述碱性水电解槽（AWE）在动态运行下面临的反向电流（RC）挑战及其对电极退化的影响，并提出本文的研究方法与目标。
+Section Positioning: This section serves as the Introduction of the paper, establishing the context, challenges, and research gap concerning reverse current (RC) phenomena in alkaline water electrolyzers (AWEs) during dynamic operation and shutdown cycles.
 
-逐段索引：  
-P001: 介绍碱性水电解槽（AWE）作为工业制氢的成熟技术。  
-P002: 阐述AWE的优势与动态运行受限的原因，重点指出低负载下气体交叉引发的安全问题及频繁启停需求。  
-P003: 指出频繁启停操作对电极/电催化剂造成额外应力，可能缩短系统寿命，引出反向电流（RC）导致的电极退化问题。  
-P004: 列出论文作者姓名。  
-P005: 标注第一作者所属机构部门。  
-P006: 提供通讯作者邮箱地址。  
-P007: 给出作者ORCID信息的DOI链接。  
-P008: 声明版权与开放获取许可信息。  
-P009: 补充另一作者所属机构部门。  
-P010: 展示图1，示意AWE堆栈在正常与停机状态下的电流流向及结构配置。  
-P011: 强调RC现象是AWE堆栈系统中最严峻的挑战之一。  
-P012: 详细描述双极型AWE堆栈结构、离子/电子连接方式，以及停机时因自放电产生的反向电流机制及其引发的逆向氧化还原反应。  
-P013: 指出现有工程解决方案（如保护电流）虽有效但增加系统复杂性与成本，强调深入理解RC机制的必要性。  
-P014: 综述现有RC研究的局限性，包括缺乏参比电极导致无法分离阴阳极过程，以及实验室装置难以模拟工业堆栈条件。  
-P015: 提出本文创新方法：采用定制三电极MEA装置与加速应力测试协议，以解耦并量化RC对电极性能的影响，并阐明退化机制。
+Paragraph Index:
+P001: Introduces alkaline water electrolyzers (AWEs) as a mature technology for industrial hydrogen production.  
+P002: Discusses AWE advantages and limitations, emphasizing challenges related to dynamic operation, gas crossover, safety shutdowns, and load fluctuations.  
+P003: Highlights the operational stress from frequent startups/shutdowns and introduces electrode degradation due to reverse current (RC) as a critical issue.  
+P004: Lists first group of authors (G. Wang et al.).  
+P005: Affiliation—Energy Storage and Distributed Resources Division.  
+P006: Institutional affiliation—Lawrence Berkeley National Laboratory.  
+P007: Location of the institution (Berkeley, CA).  
+P008: Corresponding author email addresses.  
+P009: Lists second group of authors (H. Li, J. Yano).  
+P010: Affiliation—Liquid Sunlight Alliance.  
+P011: Institutional affiliation—Lawrence Berkeley National Laboratory.  
+P012: Location of the institution (Berkeley, CA).  
+P013: Provides link to ORCID identifiers via DOI.  
+P014: Copyright and open-access licensing statement.  
+P015: Article DOI.  
+P016: Lists additional authors (H. Li, E. J. Crumlin).  
+P017: Affiliation—Chemical Sciences Division.  
+P018: Institutional affiliation—Lawrence Berkeley National Laboratory.  
+P019: Location of the institution (Berkeley, CA).  
+P020: Reiterates author E. J. Crumlin.  
+P021: Affiliation—Advanced Light Source.  
+P022: Institutional affiliation—Lawrence Berkeley National Laboratory.  
+P023: Location of the institution (Berkeley, CA).  
+P024: Reiterates author J. Yano.  
+P025: Affiliation—Molecular Biophysics and Integrated Bioimaging Division.  
+P026: Institutional affiliation—Lawrence Berkeley National Laboratory.  
+P027: Location of the institution (Berkeley, CA).  
+P028: Presents Figure 1, illustrating normal vs. shutdown current flow in bipolar AWE stacks.  
+P029: States that the RC phenomenon is a major challenge in AWE stack systems.  
+P030: Describes the bipolar stack architecture of AWEs and explains the origin and consequences of reverse current during shutdown.  
+P031: Notes existing mitigation strategies (e.g., protective current) and their drawbacks, underscoring the need for fundamental understanding of RC-induced degradation.  
+P032: Reviews prior studies on RC degradation, pointing out methodological limitations (e.g., lack of reference electrode, non-representative setups) and the need for better experimental models.  
+P033: Outlines the study’s approach: a custom three-electrode MEA setup, an accelerated stress test protocol, and combined characterization methods to investigate RC-driven degradation mechanisms.
 
-关键实体：Alkaline Water Electrolyzers (AWEs), Reverse Current (RC), three-electrode MEA setup, accelerated stress testing (AST), bipolar stack configuration, gas crossover, electrode degradation, hydrogen evolution reaction (HER), oxygen evolution reaction (OER)
+Key Entities: Alkaline water electrolyzers (AWEs), reverse current (RC) phenomenon, bipolar stack configuration, electrode degradation, three-electrode MEA setup, accelerated stress testing (AST), hydrogen evolution reaction (HER), oxygen evolution reaction (OER), dynamic operation, startup/shutdown cycles

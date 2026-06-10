@@ -1,0 +1,3 @@
+Section Role: This section provides authorship and affiliation details for the study.  
+Core Content: It lists the corresponding author, all contributing authors with their institutional affiliations and ORCID identifiers, equal contribution statement, and a declaration of no competing financial interests.  
+Key Entities: Yong-Tae Kim, Yoona Kim, Sang-Mun Jung, Kyu-Su Kim, Hyun-Yup Kim, Jaesub Kwon, Jinhyeon Lee, Hyun-Seok Cho, Pohang University of Science and Technology (POSTECH), Department of Materials Science and Engineering (MSE), Graduate Institute of Ferrous & Energy Materials Technology (GIFT), Korea Institute of Energy Research, ORCID, corresponding author, equal contribution, competing financial interest

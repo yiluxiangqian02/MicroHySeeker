@@ -56,11 +56,11 @@ This run processes one MinerU output folder into one LiteratureClean preprocessi
 
 ## Heading Directories Generated
 
-- `001-front-matter`
+- `001-relationship-between-the-redox-reactions-on-a-bipolar-plate-and`
 - `002-introduction`
-- `003-experiment-method`
-- `004-potential-profile-model`
-- `005-equivalent-circuit-model`
+- `003-experiment-method-and-analytical-model`
+- `004-experiment-method`
+- `005-potential-profile-model`
 - `006-results-and-discussion`
 - `007-conclusions`
 

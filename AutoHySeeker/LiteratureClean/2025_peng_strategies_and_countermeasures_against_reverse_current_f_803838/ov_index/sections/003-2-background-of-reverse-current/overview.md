@@ -1,7 +1,36 @@
-章节定位：本章节系统综述了电化学系统中反向电流现象的背景，包括其成因、危害、现有缓解策略及其研究缺口。
+Section Positioning: This section provides a comprehensive background on reverse current in electrochemical systems, detailing its origins, multifaceted impacts on electrode materials, and standard testing methodologies.
 
-逐段索引：  
-P001: 介绍反向电流在间歇性电源驱动的电化学系统（如可再生能源电解）中的普遍性、产生机制（如断电后电极电位失衡导致电子反向流动）、引发的副反应（如阴极氧化）、在大规模电解堆中的放大效应，以及现有缓解技术（如极化整流器和阴极保护）的成本与复杂性问题。  
-P002: 指出现有研究对反向电流触发机制、电极-电解质界面处的精确电化学路径、反向电流在停机期间的动态演化特征缺乏深入理解，并强调系统性专项研究的匮乏制约了高效通用缓解策略的开发。
+Paragraph Index:
+P001: Introduces reverse current as a common yet hazardous phenomenon in intermittent electrochemical operations, explaining its basic mechanism and systemic implications.
+P002: Highlights the knowledge gap regarding the precise electrochemical triggers and dynamic behavior of reverse current despite its recognized detrimental effects.
+P003: Section header introducing the origin of reverse current.
+P004: Describes how power interruptions in AEM systems disrupt redox species accumulation, leading to potential imbalances and reverse electron flow.
+P005: Explains localized reverse current generation in PEM fuel cells due to water/gas imbalances, membrane dehydration, and gas crossover.
+P006: Section header introducing the influence of reverse current.
+P007: Contrasts normal electrolysis reactions with those induced by reverse current, emphasizing resulting chemical and safety consequences.
+P008: Subsection header focusing on cathode oxidation under reverse current.
+P009: Begins discussion on cathode catalyst development in AEMWE, emphasizing cost-performance trade-offs.
+P010: Figure illustrating the stepwise emergence of reverse current in AEM systems during shutdown or fluctuation.
+P011: Details the use and vulnerability of nickel-based cathodes in alkaline environments under reverse current conditions.
+P012: Summarizes Wang et al.’s proposed degradation mechanism for Ni cathodes, including morphological changes observed via SEM.
+P013: Reports spectroscopic evidence (XPS) of nickel oxidation state changes and formation of Ni(OH)₂ and NiOOH under reverse current.
+P014: Shifts focus to PEM systems, where cathode degradation involves carbon support corrosion under high oxidative potentials.
+P015: Figure showing structural and spectroscopic characterization of Ni cathodes after reverse current exposure.
+P016: Describes carbon corrosion in PEM cathodes, leading to Pt detachment and performance loss.
+P017: Summarizes Okonkwo et al.’s findings on Pt oxidation, dissolution, and subsequent degradation pathways in PEMFCs.
+P018: Subsection header addressing anode reduction during reverse current events.
+P019: Explains how reverse current reduces anode oxides, disrupting catalytic activity and structural integrity.
+P020: Cites Wang et al. on phase transformations in Ni-based anodes during repeated startup/shutdown cycles.
+P021: Figure depicting anode degradation mechanisms and performance metrics after extensive cycling.
+P022: Provides Raman and electrochemical evidence of β-Ni(OH)₂ formation and declining OER performance.
+P023: Compares anode degradation in alkaline vs. PEM systems, noting IrO₂ reduction and Pt/carbon vulnerability in acidic environments.
+P024: Subsection header on energy waste and safety hazards from reverse current.
+P025: Discusses parasitic reactions, gas recombination risks, and system-level efficiency and safety impacts.
+P026: Section header introducing testing methods for reverse current resistance.
+P027: Emphasizes the severity of reverse current damage and the need for rigorous testing protocols.
+P028: Stresses the importance of standardized methodologies to evaluate long-term electrode durability.
+P029: Describes reverse-current chronopotentiometry as a direct durability assessment under constant stress.
+P030: Introduces cyclic voltammetry stress testing to evaluate cumulative damage from intermittent reverse currents.
+P031: Highlights post-mortem physical characterization (SEM, XRD, XPS) to correlate performance loss with material degradation.
 
-关键实体：reverse current, electrode degradation, intermittent power sources, electrolyzers, polarization rectifiers, cathodic protection, electrode-electrolyte interface, shutdown cycles, nickel cathodes, sacrificial anodes
+Key Entities: reverse current, nickel-based cathodes, proton exchange membrane (PEM), anion exchange membrane (AEM), carbon corrosion, platinum (Pt) catalysts, iridium dioxide (IrO₂), hydrogen evolution reaction (HER), oxygen evolution reaction (OER), cyclic voltammetry, chronopotentiometry

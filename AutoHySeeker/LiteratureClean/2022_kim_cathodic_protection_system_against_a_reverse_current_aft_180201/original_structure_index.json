@@ -1,7 +1,7 @@
 {
   "paper_id": "2022_kim_cathodic_protection_system_against_a_reverse_current_aft_180201",
-  "heading_count": 14,
-  "paragraph_count": 62,
+  "heading_count": 9,
+  "paragraph_count": 83,
   "headings": [
     {
       "heading_uid": "HRAW-001-b97ba7fd",
@@ -11,21 +11,7 @@
       "page_index": null,
       "block_order": 1,
       "paragraph_uid_list": [
-        "PRAW-000016",
-        "PRAW-000017",
-        "PRAW-000018",
-        "PRAW-000019"
-      ],
-      "inferred_type": "abstract"
-    },
-    {
-      "heading_uid": "HRAW-002-9ee22efc",
-      "heading_text": "INTRODUCTION",
-      "heading_level": 1,
-      "doc_heading_order": 2,
-      "page_index": null,
-      "block_order": 1,
-      "paragraph_uid_list": [
+        "PRAW-000001",
         "PRAW-000002",
         "PRAW-000003",
         "PRAW-000004",
@@ -35,20 +21,26 @@
         "PRAW-000008",
         "PRAW-000009",
         "PRAW-000010",
-        "PRAW-000011",
-        "PRAW-000012",
-        "PRAW-000013"
+        "PRAW-000011"
       ],
       "inferred_type": "none"
     },
     {
-      "heading_uid": "HRAW-004-18e13dda",
-      "heading_text": "Reverse-Current Simulation Model",
+      "heading_uid": "HRAW-002-9ee22efc",
+      "heading_text": "INTRODUCTION",
       "heading_level": 1,
-      "doc_heading_order": 4,
+      "doc_heading_order": 2,
       "page_index": null,
       "block_order": 1,
       "paragraph_uid_list": [
+        "PRAW-000012",
+        "PRAW-000013",
+        "PRAW-000014",
+        "PRAW-000015",
+        "PRAW-000016",
+        "PRAW-000017",
+        "PRAW-000018",
+        "PRAW-000019",
         "PRAW-000020",
         "PRAW-000021",
         "PRAW-000022",
@@ -56,19 +48,22 @@
         "PRAW-000024",
         "PRAW-000025",
         "PRAW-000026",
-        "PRAW-000027",
-        "PRAW-000028"
+        "PRAW-000027"
       ],
       "inferred_type": "none"
     },
     {
-      "heading_uid": "HRAW-005-fcbf8fd1",
-      "heading_text": "Mechanism of a Cathodic Protection System against Reverse-Current",
+      "heading_uid": "HRAW-003-ab3479bf",
+      "heading_text": "RESULTS AND DISCUSSION",
       "heading_level": 1,
-      "doc_heading_order": 5,
+      "doc_heading_order": 3,
       "page_index": null,
       "block_order": 1,
       "paragraph_uid_list": [
+        "PRAW-000028",
+        "PRAW-000029",
+        "PRAW-000030",
+        "PRAW-000031",
         "PRAW-000032",
         "PRAW-000033",
         "PRAW-000034",
@@ -88,117 +83,14 @@
         "PRAW-000048",
         "PRAW-000049",
         "PRAW-000050",
-        "PRAW-000051"
-      ],
-      "inferred_type": "none"
-    },
-    {
-      "heading_uid": "HRAW-006-65d60afd",
-      "heading_text": "Stability of the Alkaline Water-Electrolyzer Stack under Start-Up/Shutdown Conditions",
-      "heading_level": 1,
-      "doc_heading_order": 6,
-      "page_index": null,
-      "block_order": 1,
-      "paragraph_uid_list": [
-        "PRAW-000029",
-        "PRAW-000030",
-        "PRAW-000031"
-      ],
-      "inferred_type": "none"
-    },
-    {
-      "heading_uid": "HRAW-007-7ae76965",
-      "heading_text": "CONCLUSIONS",
-      "heading_level": 1,
-      "doc_heading_order": 7,
-      "page_index": null,
-      "block_order": 1,
-      "paragraph_uid_list": [
-        "PRAW-000052"
-      ],
-      "inferred_type": "none"
-    },
-    {
-      "heading_uid": "HRAW-009-99323f2c",
-      "heading_text": "Supporting Information",
-      "heading_level": 1,
-      "doc_heading_order": 9,
-      "page_index": null,
-      "block_order": 1,
-      "paragraph_uid_list": [
+        "PRAW-000051",
+        "PRAW-000052",
         "PRAW-000053",
-        "PRAW-000054"
-      ],
-      "inferred_type": "none"
-    },
-    {
-      "heading_uid": "HRAW-011-7d4a302d",
-      "heading_text": "Corresponding Author",
-      "heading_level": 1,
-      "doc_heading_order": 11,
-      "page_index": null,
-      "block_order": 1,
-      "paragraph_uid_list": [
-        "PRAW-000055"
-      ],
-      "inferred_type": "none"
-    },
-    {
-      "heading_uid": "HRAW-012-9d736348",
-      "heading_text": "Authors",
-      "heading_level": 1,
-      "doc_heading_order": 12,
-      "page_index": null,
-      "block_order": 1,
-      "paragraph_uid_list": [
-        "PRAW-000001"
-      ],
-      "inferred_type": "none"
-    },
-    {
-      "heading_uid": "HRAW-013-0204eb85",
-      "heading_text": "Author Contributions",
-      "heading_level": 1,
-      "doc_heading_order": 13,
-      "page_index": null,
-      "block_order": 1,
-      "paragraph_uid_list": [
-        "PRAW-000056"
-      ],
-      "inferred_type": "none"
-    },
-    {
-      "heading_uid": "HRAW-014-1977ecb6",
-      "heading_text": "Notes",
-      "heading_level": 1,
-      "doc_heading_order": 14,
-      "page_index": null,
-      "block_order": 1,
-      "paragraph_uid_list": [
-        "PRAW-000057"
-      ],
-      "inferred_type": "none"
-    },
-    {
-      "heading_uid": "HRAW-015-5c51cbbd",
-      "heading_text": "ACKNOWLEDGMENTS",
-      "heading_level": 1,
-      "doc_heading_order": 15,
-      "page_index": null,
-      "block_order": 1,
-      "paragraph_uid_list": [
-        "PRAW-000058"
-      ],
-      "inferred_type": "none"
-    },
-    {
-      "heading_uid": "HRAW-016-a8e1e012",
-      "heading_text": "REFERENCES",
-      "heading_level": 1,
-      "doc_heading_order": 16,
-      "page_index": null,
-      "block_order": 1,
-      "paragraph_uid_list": [
+        "PRAW-000054",
+        "PRAW-000055",
+        "PRAW-000056",
+        "PRAW-000057",
+        "PRAW-000058",
         "PRAW-000059",
         "PRAW-000060",
         "PRAW-000061",
@@ -207,15 +99,89 @@
       "inferred_type": "none"
     },
     {
-      "heading_uid": "HRAW-017-4eab6547",
-      "heading_text": "CAS BIOFINDER HELPS YOU FIND YOUR NEXT BREAKTHROUGH FASTER",
+      "heading_uid": "HRAW-004-689dc9fe",
+      "heading_text": "CONCLUSIONS",
       "heading_level": 1,
-      "doc_heading_order": 17,
+      "doc_heading_order": 4,
       "page_index": null,
       "block_order": 1,
       "paragraph_uid_list": [
-        "PRAW-000014",
-        "PRAW-000015"
+        "PRAW-000063"
+      ],
+      "inferred_type": "none"
+    },
+    {
+      "heading_uid": "HRAW-005-1701a4eb",
+      "heading_text": "ASSOCIATED CONTENT",
+      "heading_level": 1,
+      "doc_heading_order": 5,
+      "page_index": null,
+      "block_order": 1,
+      "paragraph_uid_list": [
+        "PRAW-000064",
+        "PRAW-000065",
+        "PRAW-000066"
+      ],
+      "inferred_type": "none"
+    },
+    {
+      "heading_uid": "HRAW-006-524f0845",
+      "heading_text": "AUTHOR INFORMATION",
+      "heading_level": 1,
+      "doc_heading_order": 6,
+      "page_index": null,
+      "block_order": 1,
+      "paragraph_uid_list": [
+        "PRAW-000067",
+        "PRAW-000068",
+        "PRAW-000069",
+        "PRAW-000070",
+        "PRAW-000071",
+        "PRAW-000072",
+        "PRAW-000073",
+        "PRAW-000074"
+      ],
+      "inferred_type": "none"
+    },
+    {
+      "heading_uid": "HRAW-007-80396246",
+      "heading_text": "ACKNOWLEDGMENTS",
+      "heading_level": 1,
+      "doc_heading_order": 7,
+      "page_index": null,
+      "block_order": 1,
+      "paragraph_uid_list": [
+        "PRAW-000075"
+      ],
+      "inferred_type": "none"
+    },
+    {
+      "heading_uid": "HRAW-008-2ae1c015",
+      "heading_text": "REFERENCES",
+      "heading_level": 1,
+      "doc_heading_order": 8,
+      "page_index": null,
+      "block_order": 1,
+      "paragraph_uid_list": [
+        "PRAW-000076",
+        "PRAW-000077",
+        "PRAW-000078",
+        "PRAW-000079",
+        "PRAW-000080"
+      ],
+      "inferred_type": "none"
+    },
+    {
+      "heading_uid": "HRAW-009-5fb4ab2b",
+      "heading_text": "CAS BIOFINDER HELPS YOU FIND YOUR NEXT BREAKTHROUGH FASTER",
+      "heading_level": 1,
+      "doc_heading_order": 9,
+      "page_index": null,
+      "block_order": 1,
+      "paragraph_uid_list": [
+        "PRAW-000081",
+        "PRAW-000082",
+        "PRAW-000083"
       ],
       "inferred_type": "none"
     }

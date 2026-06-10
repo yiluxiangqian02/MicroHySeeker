@@ -1,5 +1,5 @@
-研究对象：镍基硫化物异质界面电极用于碱性水电解中的抗反向电流反应。  
-核心发现：构建具有成分梯度的Ni/Ni₃S₂异质界面可显著提升电极在高电流密度和频繁启停工况下的结构稳定性与催化活性。  
-方法路线：通过原位热注入法在镍网上构筑致密梯度异质界面，并结合截面表征与理论计算揭示其稳定机制。  
-主要结论：该界面工程策略有效缓解晶格失配、增强界面结合力并促进电荷重分布，实现了兼具高活性与优异抗反向电流能力的工业级电解电极。  
-关键词：碱性水电解, 异质界面, 反向电流, 梯度 interlayer, 电极稳定性
+Research Object: Ni₃S₂/Ni mesh electrodes with Ni(11̅2)/Ni₃S₂(1̅20) heterointerfaces for alkaline water electrolysis.  
+Core Finding: The electrode achieves 1.79 V at 1000 mA cm⁻², operates stably for >1500 h at 1000 mA cm⁻² in 30 wt% KOH at 80°C, and withstands 3600 accelerated startup/shutdown cycles with negligible degradation.  
+Method: Gradient interlayer engineering via in situ thermal sulfidation creates a dense, compositionally graded heterointerface, characterized by cross-sectional TEM, EELS, 4D-STEM, and DFT-supported mechanistic analysis.  
+Conclusion: The heterointerface enhances interfacial adhesion, mitigates lattice mismatch, and enables intrinsic resistance to reverse current, resolving the activity–stability trade-off for renewable-coupled electrolyzers.  
+Keywords: Ni₃S₂, nickel mesh, heterointerface, reverse current resistance, alkaline water electrolysis, gradient interlayer, 1000 mA cm⁻², operational stability

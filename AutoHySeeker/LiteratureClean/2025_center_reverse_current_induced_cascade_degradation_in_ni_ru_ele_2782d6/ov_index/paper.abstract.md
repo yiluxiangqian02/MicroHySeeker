@@ -1,5 +1,5 @@
-研究对象：Ni-Ru电极在碱性水电解中受反向电流诱导的多阶段降解行为。  
-核心发现：反向电流引发从贵金属Ru流失到Ni基底腐蚀的级联退化过程。  
-方法路线：结合加速应力测试、全过程电化学监测及形貌与成分表征，追踪电极结构与性能演化。  
-主要结论：揭示了Ru氧化-电偶腐蚀-结构崩塌的三阶段降解机制，并证明降低反向电流幅值可有效抑制初始Ru氧化从而延缓整体失效。  
-关键词：反向电流, 碱性水电解, 电偶腐蚀, 多阶段降解, 加速应力测试
+Research Object: Ni-Ru (NR) electrodes subjected to reverse-current (RC) conditions in alkaline water electrolysis.  
+Core Finding: Under an accelerated stress test with 20% RC amplitude, NR electrodes exhibited a degradation rate of 4.756 mV h⁻¹ and a 214-mV overpotential increase at 400 mA cm⁻², culminating in complete Ru depletion and Ni substrate corrosion; reducing RC amplitude to 0% suppressed degradation to 0.257 mV h⁻¹.  
+Method: A high-resolution (1-s step) accelerated stress test (AST) combining square-wave potential cycling between regular and RC conditions, coupled with full-process electrochemical monitoring (LSV, EIS, CV), and post-mortem morphological/compositional analysis (SEM, TEM, EDS, ICP-MS).  
+Conclusion: Reverse current triggers a cascade of multistage degradation—initial Ru oxidation, galvanic Ni corrosion due to Ni-Ru co-exposure, and eventual structural collapse—providing a mechanistic foundation for designing RC-tolerant electrodes in renewable energy-driven electrolysis.  
+Keywords: Ni-Ru electrode, reverse current, accelerated stress test, galvanic corrosion, overpotential, degradation rate, alkaline water electrolysis, Ostwald ripening

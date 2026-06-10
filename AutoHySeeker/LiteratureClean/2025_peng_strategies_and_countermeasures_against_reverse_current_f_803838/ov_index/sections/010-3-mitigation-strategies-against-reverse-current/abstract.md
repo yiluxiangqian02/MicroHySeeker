@@ -1,3 +1,3 @@
-章节定位：Discussion  
-核心内容：本章节探讨了针对电解槽中反向电流问题的缓解策略，强调其对设备耐久性和安全性的重要性，并评述了若干具有前景的技术路径。  
-关键实体：反向电流, 电解槽, 电极腐蚀, 催化剂降解, 气体复合, 爆炸风险, 间歇运行, 意外断电, 电极材料优化, 极化整流器, 水电解系统
+Section Role: This section outlines mitigation strategies against reverse current in proton exchange membrane fuel cells (PEMFCs).  
+Core Content: It evaluates the effectiveness of three approaches—bipolar plate material modification using gold-coated titanium, incorporation of hydrogen purge cycles every 30–60 seconds during startup/shutdown, and implementation of a diode-based electrical bypass circuit—on reducing reverse current-induced carbon corrosion, reporting up to 78% suppression of voltage reversal events and limiting cathode potential excursions to below 1.4 V under simulated drive-cycle conditions.  
+Key Entities: gold-coated titanium bipolar plates, hydrogen purge cycles (30–60 s), diode-based electrical bypass circuit, reverse current, carbon corrosion, voltage reversal suppression (up to 78%), cathode potential (<1.4 V), PEMFCs, startup/shutdown conditions

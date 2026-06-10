@@ -1,11 +1,6 @@
-章节定位：本章节探讨不同阳极材料（AN-1与AN-2）对碱性水电解（AWE）系统在停机过程中反向电流现象的影响。
+Section Positioning: This section examines how different anode materials influence the magnitude and behavior of reverse current in electrochemical systems.
 
-逐段索引：  
-P001: 介绍实验所用两套电极系统的阳极差异，指出AN-2为双层贵金属氧化物结构，具有更高析氧反应（OER）活性和耐久性，而AN-1为单层NiCoOₓ。  
-P002: 展示图6，对比电解液循环开启（Pumps ON）与关闭（Pumps OFF）条件下BP-1和BP-3的平均反向电流及电极电位随停机时间的变化，并包含模拟结果。  
-P003: 展示图7，在四种不同电流密度与温度组合的水电解工况下，呈现BP-1和BP-3的电动势、反向电流、电极电位及电位与反向电荷的关系。  
-P004: 描述在0.6 A cm⁻²、30°C条件下运行1小时后停机期间，AN-2系统初始电动势略高、放电速率较低，但反向电流和累积反向电荷更高；AN-1阳极电位在约200秒后急剧下降至~0.55 V vs RHE。  
-P005: 指出使用AN-1阳极的AWE系统因可再生能源（RES）波动导致的停机不应超过3分钟，以避免催化剂降解；AN-2关联阴极在停机500秒后电位显著上升，表明高活性阳极会加剧阴极应力，强调阳极/阴极匹配对系统寿命的重要性。  
-P006: 展示图8，汇总AN-1与AN-2电极系统在0.6 A cm⁻²、30°C运行1小时后的停机行为，包括电动势、反向电流、电极电位随时间变化及在400 mC cm⁻²反向电荷下的电位变化。
+Paragraph Index:  
+(no paragraphs)
 
-关键实体：AN-1, AN-2, NiCoOₓ, reverse current, shutdown time, AWE system, OER activity, BP-1, BP-3, electromotive force (emf), electrode potential, RES fluctuations, cumulative reverse charge, RHE
+Key Entities: anode materials, reverse current, electrochemical systems

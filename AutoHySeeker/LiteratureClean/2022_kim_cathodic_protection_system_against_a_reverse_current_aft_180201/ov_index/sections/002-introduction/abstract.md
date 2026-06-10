@@ -1,3 +1,3 @@
-章节定位：Introduction  
-核心内容：本章节介绍了碱性水电解（AWE）作为可再生能源大规模储能手段的优势与挑战，重点阐述了其在启停过程中因反向电流导致的电极退化问题，并提出采用牺牲阳极的阴极保护策略以提升系统耐久性。  
-关键实体：碱性水电解（AWE）、反向电流、启停循环（SU/SD）、镍电极、牺牲阳极、阴极保护、氢气生产、零间隙电池设计、双极板、可再生能源间歇性
+Section Role: This section serves as the Introduction, establishing the context and motivation for the study.  
+Core Content: It outlines the challenges of integrating intermittent renewable energy into power grids, highlights the promise and limitations of alkaline water electrolysis (AWE) for large-scale energy storage, and identifies electrode degradation due to reverse-current during start-up/shut-down cycles as a critical durability issue, motivating the proposed cathodic protection strategy.  
+Key Entities: renewable energy, solar photovoltaics, wind turbines, energy storage, lithium-ion batteries, hydrogen production, water-splitting, alkaline water electrolysis (AWE), polymer electrolyte membrane water electrolysis (PEMWE), non-noble catalysts, transition metals, hydrogen evolution reaction (HER), zero-gap cell design, bipolar plates, start-up/shut-down (SU/SD) cycles, reverse-current flow, electrode degradation, cathodic protection, sacrificial anode

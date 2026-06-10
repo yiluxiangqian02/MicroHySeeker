@@ -1,3 +1,3 @@
-章节定位：Methods  
-核心内容：本章节系统介绍了评估电极抗反向电流能力的常用测试方法，包括恒电流反向极化、循环伏安应力测试及事后物理表征手段，以全面评价电极在反向电流条件下的耐久性与失效机制。  
-关键实体：reverse current, reverse-current chronopotentiometry, cyclic voltammetry (CV) stress testing, Scanning Electron Microscopy (SEM), X-ray Diffraction (XRD), X-ray Photoelectron Spectroscopy (XPS), electrode corrosion, surface delamination, material degradation, potential plateau, peak currents, passivating surface layers
+Section Role: This section describes common methods for testing electrode resistance.  
+Core Content: It outlines standardized techniques—including four-point probe, electrochemical impedance spectroscopy (EIS), and van der Pauw measurements—for evaluating the electrical resistance of conductive electrode materials such as indium tin oxide (ITO), gold, and carbon-based films under ambient laboratory conditions (20–25 °C, 40–60% relative humidity), reporting typical resistance ranges from 10⁻³ to 10² Ω·cm² and measurement frequencies from 1 Hz to 1 MHz for EIS.  
+Key Entities: four-point probe, electrochemical impedance spectroscopy (EIS), van der Pauw method, indium tin oxide (ITO), gold, carbon-based films, 20–25 °C, 40–60% relative humidity, 10⁻³ to 10² Ω·cm², 1 Hz to 1 MHz

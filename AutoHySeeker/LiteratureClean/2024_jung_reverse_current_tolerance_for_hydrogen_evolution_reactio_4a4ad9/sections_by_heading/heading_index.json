@@ -1,247 +1,30 @@
-{
-  "paper_id": "2024_jung_reverse_current_tolerance_for_hydrogen_evolution_reactio_4a4ad9",
-  "heading_count": 14,
-  "headings": [
-    {
-      "heading_uid": "HRAW-001-32fd2e89",
-      "heading_dirname": "001-front-matter",
-      "heading_text": "Reverse-Current Tolerance for Hydrogen Evolution Reaction Activity of Lead-Decorated Nickel Catalysts in Zero-Gap Alkaline Water Electrolysis Systems",
-      "heading_level": 1,
-      "doc_heading_order": 1,
-      "display_order": 1,
-      "paragraph_count": 2,
-      "paragraph_uids": [
-        "PRAW-000027",
-        "PRAW-000028"
-      ],
-      "path": "sections_by_heading/001-front-matter/"
-    },
-    {
-      "heading_uid": "HRAW-002-2812cee1",
-      "heading_dirname": "002-1-introduction",
-      "heading_text": "1. Introduction",
-      "heading_level": 1,
-      "doc_heading_order": 2,
-      "display_order": 2,
-      "paragraph_count": 13,
-      "paragraph_uids": [
-        "PRAW-000001",
-        "PRAW-000002",
-        "PRAW-000003",
-        "PRAW-000004",
-        "PRAW-000005",
-        "PRAW-000006",
-        "PRAW-000007",
-        "PRAW-000008",
-        "PRAW-000009",
-        "PRAW-000010",
-        "PRAW-000011",
-        "PRAW-000012",
-        "PRAW-000013"
-      ],
-      "path": "sections_by_heading/002-1-introduction/"
-    },
-    {
-      "heading_uid": "HRAW-004-e33c4ae7",
-      "heading_dirname": "003-2-1-degradation-tolerance-of-the-pb-ni-electrocatal",
-      "heading_text": "2.1. Degradation Tolerance of the Pb/Ni Electrocatalyst Under Reverse-Current Conditions",
-      "heading_level": 1,
-      "doc_heading_order": 4,
-      "display_order": 3,
-      "paragraph_count": 15,
-      "paragraph_uids": [
-        "PRAW-000029",
-        "PRAW-000030",
-        "PRAW-000031",
-        "PRAW-000032",
-        "PRAW-000033",
-        "PRAW-000034",
-        "PRAW-000035",
-        "PRAW-000036",
-        "PRAW-000037",
-        "PRAW-000038",
-        "PRAW-000039",
-        "PRAW-000040",
-        "PRAW-000041",
-        "PRAW-000042",
-        "PRAW-000043"
-      ],
-      "path": "sections_by_heading/003-2-1-degradation-tolerance-of-the-pb-ni-electrocatal/"
-    },
-    {
-      "heading_uid": "HRAW-005-9bca19ab",
-      "heading_dirname": "004-2-2-origin-of-the-reverse-current-tolerance-and-imp",
-      "heading_text": "2.2. Origin of the Reverse-Current Tolerance and Improved Catalytic Activity of the Pb/Ni Catalyst",
-      "heading_level": 1,
-      "doc_heading_order": 5,
-      "display_order": 4,
-      "paragraph_count": 10,
-      "paragraph_uids": [
-        "PRAW-000044",
-        "PRAW-000045",
-        "PRAW-000046",
-        "PRAW-000047",
-        "PRAW-000048",
-        "PRAW-000049",
-        "PRAW-000050",
-        "PRAW-000051",
-        "PRAW-000052",
-        "PRAW-000053"
-      ],
-      "path": "sections_by_heading/004-2-2-origin-of-the-reverse-current-tolerance-and-imp/"
-    },
-    {
-      "heading_uid": "HRAW-006-4a09d2a8",
-      "heading_dirname": "005-2-3-material-characterization-of-rc-tolerant-pb-ni",
-      "heading_text": "2.3. Material Characterization of RC Tolerant Pb/Ni Catalyst",
-      "heading_level": 1,
-      "doc_heading_order": 6,
-      "display_order": 5,
-      "paragraph_count": 4,
-      "paragraph_uids": [
-        "PRAW-000014",
-        "PRAW-000015",
-        "PRAW-000016",
-        "PRAW-000017"
-      ],
-      "path": "sections_by_heading/005-2-3-material-characterization-of-rc-tolerant-pb-ni/"
-    },
-    {
-      "heading_uid": "HRAW-007-61083a01",
-      "heading_dirname": "006-2-4-water-activation-effect-of-rc-tolerant-pb-ni-ca",
-      "heading_text": "2.4. Water Activation Effect of RC Tolerant Pb/Ni Catalyst: Improving Water-Dissociation Ability",
-      "heading_level": 1,
-      "doc_heading_order": 7,
-      "display_order": 6,
-      "paragraph_count": 4,
-      "paragraph_uids": [
-        "PRAW-000018",
-        "PRAW-000019",
-        "PRAW-000020",
-        "PRAW-000021"
-      ],
-      "path": "sections_by_heading/006-2-4-water-activation-effect-of-rc-tolerant-pb-ni-ca/"
-    },
-    {
-      "heading_uid": "HRAW-008-42cb5612",
-      "heading_dirname": "007-2-5-ligand-effect-in-rc-tolerant-pb-ni-catalyst-pro",
-      "heading_text": "2.5. Ligand Effect in RC Tolerant Pb/Ni Catalyst: Promoting Proton Desorption",
-      "heading_level": 1,
-      "doc_heading_order": 8,
-      "display_order": 7,
-      "paragraph_count": 10,
-      "paragraph_uids": [
-        "PRAW-000054",
-        "PRAW-000055",
-        "PRAW-000056",
-        "PRAW-000057",
-        "PRAW-000058",
-        "PRAW-000059",
-        "PRAW-000060",
-        "PRAW-000061",
-        "PRAW-000062",
-        "PRAW-000063"
-      ],
-      "path": "sections_by_heading/007-2-5-ligand-effect-in-rc-tolerant-pb-ni-catalyst-pro/"
-    },
-    {
-      "heading_uid": "HRAW-009-d91d28c7",
-      "heading_dirname": "008-2-6-reverse-current-tolerance-of-the-pb-ni-catalyst",
-      "heading_text": "2.6. Reverse-Current Tolerance of the Pb/Ni Catalyst in an Alkaline Water-Electrolyzer Stack",
-      "heading_level": 1,
-      "doc_heading_order": 9,
-      "display_order": 8,
-      "paragraph_count": 4,
-      "paragraph_uids": [
-        "PRAW-000064",
-        "PRAW-000065",
-        "PRAW-000066",
-        "PRAW-000067"
-      ],
-      "path": "sections_by_heading/008-2-6-reverse-current-tolerance-of-the-pb-ni-catalyst/"
-    },
-    {
-      "heading_uid": "HRAW-010-38873d6c",
-      "heading_dirname": "009-3-conclusion",
-      "heading_text": "3. Conclusion",
-      "heading_level": 1,
-      "doc_heading_order": 10,
-      "display_order": 9,
-      "paragraph_count": 2,
-      "paragraph_uids": [
-        "PRAW-000068",
-        "PRAW-000069"
-      ],
-      "path": "sections_by_heading/009-3-conclusion/"
-    },
-    {
-      "heading_uid": "HRAW-011-c05b3bd8",
-      "heading_dirname": "010-supporting-information",
-      "heading_text": "Supporting Information",
-      "heading_level": 1,
-      "doc_heading_order": 11,
-      "display_order": 10,
-      "paragraph_count": 1,
-      "paragraph_uids": [
-        "PRAW-000070"
-      ],
-      "path": "sections_by_heading/010-supporting-information/"
-    },
-    {
-      "heading_uid": "HRAW-012-15dd5f73",
-      "heading_dirname": "011-acknowledgements",
-      "heading_text": "Acknowledgements",
-      "heading_level": 1,
-      "doc_heading_order": 12,
-      "display_order": 11,
-      "paragraph_count": 1,
-      "paragraph_uids": [
-        "PRAW-000071"
-      ],
-      "path": "sections_by_heading/011-acknowledgements/"
-    },
-    {
-      "heading_uid": "HRAW-013-4680942b",
-      "heading_dirname": "012-conflict-of-interest",
-      "heading_text": "Conflict of Interest",
-      "heading_level": 1,
-      "doc_heading_order": 13,
-      "display_order": 12,
-      "paragraph_count": 1,
-      "paragraph_uids": [
-        "PRAW-000072"
-      ],
-      "path": "sections_by_heading/012-conflict-of-interest/"
-    },
-    {
-      "heading_uid": "HRAW-014-e654ce42",
-      "heading_dirname": "013-data-availability-statement",
-      "heading_text": "Data Availability Statement",
-      "heading_level": 1,
-      "doc_heading_order": 14,
-      "display_order": 13,
-      "paragraph_count": 1,
-      "paragraph_uids": [
-        "PRAW-000073"
-      ],
-      "path": "sections_by_heading/013-data-availability-statement/"
-    },
-    {
-      "heading_uid": "HRAW-015-0f2af617",
-      "heading_dirname": "014-keywords",
-      "heading_text": "Keywords",
-      "heading_level": 1,
-      "doc_heading_order": 15,
-      "display_order": 14,
-      "paragraph_count": 5,
-      "paragraph_uids": [
-        "PRAW-000022",
-        "PRAW-000023",
-        "PRAW-000024",
-        "PRAW-000025",
-        "PRAW-000026"
-      ],
-      "path": "sections_by_heading/014-keywords/"
-    }
-  ]
-}
+[
+  {
+    "dirname": "001-reverse-current-tolerance-for-hydrogen-evolution-reaction-activi",
+    "heading_uid": "HRAW-001-32fd2e89",
+    "heading_text": "Reverse-Current Tolerance for Hydrogen Evolution Reaction Activity of Lead-Decorated Nickel Catalysts in Zero-Gap Alkaline Water Electrolysis Systems",
+    "heading_order": 1,
+    "paragraph_count": 3
+  },
+  {
+    "dirname": "002-1-introduction",
+    "heading_uid": "HRAW-002-2812cee1",
+    "heading_text": "1. Introduction",
+    "heading_order": 2,
+    "paragraph_count": 25
+  },
+  {
+    "dirname": "003-2-results-and-discussion",
+    "heading_uid": "HRAW-003-b457bc41",
+    "heading_text": "2. Results and Discussion",
+    "heading_order": 3,
+    "paragraph_count": 55
+  },
+  {
+    "dirname": "004-3-conclusion",
+    "heading_uid": "HRAW-004-8f30e286",
+    "heading_text": "3. Conclusion",
+    "heading_order": 4,
+    "paragraph_count": 19
+  }
+]

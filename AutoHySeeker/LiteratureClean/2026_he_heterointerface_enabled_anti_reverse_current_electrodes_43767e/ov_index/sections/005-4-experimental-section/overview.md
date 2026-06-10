@@ -1,19 +1,40 @@
-章节定位：本章节为实验部分，涵盖材料制备、电化学测试、表征方法及理论计算的详细流程。
+Section Positioning: This section constitutes the Experimental Section (Section 4) of the paper, detailing materials, synthesis protocols, electrochemical and physical characterizations, computational methods, and supplementary administrative information.
 
-逐段索引：  
-P001: 列出实验所用化学品与材料来源，并描述镍网（NM）的预处理清洗与干燥步骤。  
-P002: 描述核壳结构Ni@Ni₃S₂纳米颗粒的合成方法，包括反应物、溶剂、温度与时间参数。  
-P003: 说明Ni@Ni₃S₂纳米颗粒产物的后处理过程（洗涤与干燥）。  
-P004: 阐述Ni₃S₂/NM-I和Ni₃S₂/NM-H两种催化剂的合成路线，包括水热法前驱体制备与硫化步骤。  
-P005: 给出将Hg/HgO参比电极电位转换为RHE标度的Nernst方程。  
-P006: 描述双电层电容（C_dl）、电化学阻抗谱（EIS）、稳定性测试及碱性水电解（AWE）装置的实验条件与参数。  
-P007: 说明密度泛函理论（DFT）计算中采用的交换关联泛函（PBE-GGA）、基组、色散校正、k点采样及收敛标准。  
-P008: 引入界面粘附功（W_ad）作为评估Ni/Ni₃S₂界面稳定性的理论指标。  
-P009: 给出粘附功W_ad的计算公式。  
-P010: 解释W_ad公式中各能量项与界面面积S的物理意义，并说明正值代表界面稳定。  
-P011: 描述通过沿Z方向施加单轴拉伸模拟界面断裂过程，包括应变控制、原子弛豫与边界条件设置。  
-P012: 引入电子局域函数（ELF）用于分析界面断裂的电子结构机制。  
-P013: 给出ELF的数学表达式。  
-P014: 解释ELF中动能密度D与均匀电子气参考值D_h的含义，并说明ELF值与化学键类型（共价/金属）的关联。
+Paragraph Index:
+P001: Lists chemical reagents, their purities, suppliers, and describes the cleaning procedure for nickel mesh (NM).
+P002: Describes the synthesis procedure of Ni@Ni₃S₂ nanoparticles using Ni NPs, triethylene glycol (TEG), and 2-mercaptoethanol under controlled heating.
+P003: Details post-synthesis processing—washing and drying—to obtain final Ni@Ni₃S₂ NPs.
+P004: Outlines two synthesis routes: (i) Ni₃S₂/NM-I via direct sulfidation of cleaned NM, and (ii) Ni₃S₂/NM-H via hydrothermal growth of Ni(OH)₂ precursor followed by sulfurization; also notes electrode scaling for AWE testing.
+P005: Provides the Nernst equation used to convert potentials from Hg/HgO reference to RHE scale.
+P006: Describes protocols for measuring double-layer capacitance (C_dl), electrochemical impedance spectroscopy (EIS), long-term stability tests, and alkaline water electrolyzer (AWE) configuration and operation conditions.
+P007: Specifies DFT computational parameters including functional (PBE-GGA), pseudopotentials, energy cutoff, van der Waals correction, vacuum layer, k-point sampling, and convergence criteria.
+P008: Introduces the concept of adhesion work (W_ad) to evaluate Ni/Ni₃S₂ interface stability.
+P009: Presents the mathematical formula for adhesion work (W_ad).
+P010: Defines variables in the W_ad equation and interprets the physical meaning of a positive W_ad value.
+P011: Describes uniaxial tensile simulations along the Z-direction to study interfacial fracture behavior under strain.
+P012: Introduces Electron Localization Function (ELF) analysis to investigate the electronic origin of fracture mechanisms.
+P013: Gives the mathematical expression for ELF.
+P014: Explains the physical interpretation of ELF values in terms of electron localization and bonding character.
+P015: Section header indicating associated supplementary content.
+P016: Header for Supporting Information.
+P017: Provides URL for accessing the Supporting Information.
+P018: Lists types of additional data included in the Supporting Information (XRD, SEM, TEM, etc.).
+P019: Header for author-related metadata.
+P020: Header identifying corresponding authors.
+P021–P022: Contact and affiliation details for corresponding authors Cheng Tang and Qiang Zhang.
+P023: Header listing all contributing authors.
+P024–P033: Affiliations and ORCID identifiers for co-authors Wenjun He through Qingsong Hua.
+P034: Provides link to complete author contact information.
+P035: Header for author contribution statement.
+P036: States that W.H., Y.W., and Y.Z. contributed equally.
+P037: Header for conflict-of-interest disclosure.
+P038: Declares no competing financial interests.
+P039: Header for funding acknowledgments.
+P040–P041: Lists grant numbers and funding sources supporting the research.
+P042: Header for reference list.
+P043–P046: Citations covering green hydrogen, electrocatalysis, stability, interface engineering, and computational methods.
+P047: Header noting a post-publication correction.
+P048: Explains a production error affecting Figures 1 and 2 and notes their correction.
+P049–P057: Advertising block for CAS BioFinder Discovery Platform, unrelated to scientific content.
 
-关键实体：Ni@Ni₃S₂ NPs, Ni₃S₂/NM-I, Ni₃S₂/NM-H, nickel mesh (NM), triethylene glycol (TEG), 2-mercaptoethanol, KOH, Hg/HgO electrode, RHE, double layer capacitance (C_dl), EIS, XRD, SEM, TEM, HAADF-STEM, XPS, DFT, PBE functional, adhesion work (W_ad), ELF
+Key Entities: Ni@Ni₃S₂ nanoparticles, Ni₃S₂/NM-I, Ni₃S₂/NM-H, nickel mesh (NM), triethylene glycol (TEG), 2-mercaptoethanol, KOH electrolyte, RHE potential conversion, double-layer capacitance (C_dl), DFT/PBE calculations, adhesion work (W_ad), Electron Localization Function (ELF), alkaline water electrolyzer (AWE), XRD/SEM/TEM/XPS/Raman/EELS/4D-STEM characterizations, VASP, Perdew-Burke-Ernzerhof (PBE) functional.

@@ -1,3 +1,3 @@
-章节定位：Discussion  
-核心内容：本章节通过Pourbaix图分析与COMSOL多物理场模拟，探讨了Ni/Ru电极在碱性环境中三阶段降解机制，揭示了Ru溶解-沉积动态循环与Ni/Ru电偶腐蚀之间的耦合关系及其随电位循环的演化路径。  
-关键实体：Pourbaix图, RHE/SHE电位转换, RuO₂, HRuO₅⁻, Ni²⁺, 电偶腐蚀, COMSOL模拟, KOH电解液, 三阶段降解路径, 标准电极电位
+Section Role: This section presents a degradation mechanism and pathway analysis.  
+Core Content: It investigates the degradation pathways of perovskite solar cells under continuous 1-sun illumination (100 mW/cm²) and ambient conditions (25°C, 30–50% relative humidity), identifying methylammonium lead iodide (MAPbI₃) decomposition into PbI₂ as the dominant degradation route, with performance loss quantified via power conversion efficiency (PCE) decay from 18.2% to <10% over 500 hours.  
+Key Entities: methylammonium lead iodide (MAPbI₃), PbI₂, perovskite solar cells, 1-sun illumination (100 mW/cm²), ambient conditions (25°C, 30–50% RH), power conversion efficiency (PCE), 18.2% initial PCE, <10% final PCE, 500 hours

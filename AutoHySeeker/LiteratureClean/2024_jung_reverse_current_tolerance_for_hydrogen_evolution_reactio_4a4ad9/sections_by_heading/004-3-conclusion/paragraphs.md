@@ -1,0 +1,21 @@
+# Section: 3. Conclusion
+
+- **S04-P001** (PRAW-000084): In this study, we have demonstrated a novel material-based approach to enhance the reverse-current (RC) tolerance of catalysts by directly decorating the Ni catalyst with Pb. The decoration of the Ni 
+- **S04-P002** (PRAW-000085): the RC cycle facilitates the oxidation of the Ni and $\mathrm{Pb / N_i}$ surface, enhancing the water-dissociation ability. Additionally, in the case of the ligand effect, the charge transfer from $\m
+- **S04-P003** (PRAW-000086): # Supporting Information
+- **S04-P004** (PRAW-000087): Supporting Information is available from the Wiley Online Library or from the author.
+- **S04-P005** (PRAW-000088): # Acknowledgements
+- **S04-P006** (PRAW-000089): S.-M.J. and Y.K. contributed equally to this work. This work was supported by a grant from the National Research Foundation of Korea (2019M3D1A1079306).
+- **S04-P007** (PRAW-000090): # Conflict of Interest
+- **S04-P008** (PRAW-000091): The authors declare no conflict of interest.
+- **S04-P009** (PRAW-000092): # Data Availability Statement
+- **S04-P010** (PRAW-000093): The data that support the findings of this study are available from the corresponding author upon reasonable request.
+- **S04-P011** (PRAW-000094): # Keywords
+- **S04-P012** (PRAW-000095): alkaline water electrolysis, hydrogen energy, Lead, load fluctuation, reverse current
+- **S04-P013** (PRAW-000096): Received: December 17, 2023
+- **S04-P014** (PRAW-000097): Revised: February 13, 2024
+- **S04-P015** (PRAW-000098): Published online: March 3, 2024
+- **S04-P016** (PRAW-000099): [1] a) A. S. Brouwer, M. van den Broek, A. Seebregts, A. Faaij, Renewable Sustain. Energy Rev. 2014, 33, 443; b) P. Colbertaldo, S. B. Agustin, S. Campanari, J. Brouwer, Int. J. Hydrogen Energy 2019, 
+- **S04-P017** (PRAW-000100): [3] a) J. Divisek, R. Jung, D. Britz, J. Appl. Electrochem. 1990, 20, 186; b) A. Kuhn, J. Booth, J. Appl. Electrochem. 1980, 10, 233; c) S. Holmin, L.-Å. Naslund, Å. S. Ingason, J. Rosen, E. Zimmerman
+- **S04-P018** (PRAW-000101): J. Electrochem. Sci. Technol. 2022, 13, 417; c) J. Kim, H. Jung, S.-M. Jung, J. Hwang, D. Y. Kim, N. Lee, K.-S. Kim, H. Kwon, Y.-T. Kim, J. W. Han, J. K. Kim, J. Am. Chem. Soc. 2020, 143, 1399; d) D. 
+- **S04-P019** (PRAW-000102): [27] a) J. Libra, K. Veltruská, V. Matolin, Phys. Rev. B 2007, 76, 165438; b) K. Gurtler, K. Jacobi, Surf. Sci. 1983, 134, 309; c) Y.-H. Lin, C.-H. Hsu, I. Jang, C.-J. Chen, P.-M. Chiu, D.-S. Lin, C.-

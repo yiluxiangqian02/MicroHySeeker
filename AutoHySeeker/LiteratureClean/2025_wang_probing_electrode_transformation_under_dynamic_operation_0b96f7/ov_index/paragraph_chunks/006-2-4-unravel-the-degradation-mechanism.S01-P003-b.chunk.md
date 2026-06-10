@@ -1,8 +1,0 @@
----
-paper_id: "2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7"
-section_id: "S01_abstract"
-paragraph_id: "S01-P003"
-evidence_id: "EV-wang2025-0b96f7-S01-P003"
-chunk_index: 1
----
-When AST is switched to RC step, where anode potential is approximately at 0.9 V versus RHE, the reduction of $\beta$ - NiOOH to $\beta { \mathrm { - N i } } ( \mathrm { O H } ) _ { 2 }$ could occur.[36] At early stages of RC AST cycling, Ni anode repetitively undergo these reactions, continuously generating $\beta { \cdot } \mathrm { N i } ( \mathrm { O H } ) _ { 2 } / \beta$ -NiOOH nanoneedles until surface of Ni fibers is completely covered by oxidized layer. As AST cycling further progresses, electrode surface reaches a relatively steady composition thanks to a more reversible oxidation and reduction processes between $\beta { \mathrm { - N i } } ( \mathrm { O H } ) _ { 2 }$ $\beta$ and $\beta$ -NiOOH indicated by in situ APXPS results. This deduction and the observed electrochemical performance at various stages of RC AST mutually corroborate each other. It has been shown that Ni-based hydroxides and oxyhydroxides exhibit superior OER catalytic activities compared to metallic Ni.[37] Thus, continuous formation of $\mathrm { N i } ( \mathrm { O H } ) _ { 2 }$ and NiOOH at early stage of AST cycling provides more active OER sites, enhancing OER performance of anode during the first $7 . 5 \mathrm { k }$ cycles. The relatively stable performance in the subsequent $3 7 . 5 \mathrm { k }$ cycles corresponds to aforementioned steady state, where a dynamic reversible process between the OER-active species is established (Figure 5g).

@@ -1,3 +1,3 @@
-章节定位：Methods  
-核心内容：本章节介绍了用于研究碱性水电解（AWE）中反向电流过程的三电极膜电极组件（MEA）实验装置，并详细描述了通过该装置量化电极电化学行为的方法，包括极化曲线、阻抗谱测量以及模拟启停过程中反向电流的实验协议。  
-关键实体：镍毡电极, Zirfon隔膜, 7 m KOH电解液, 80°C操作温度, 阴离子交换膜（AEM）, Ag/AgCl参比电极, 可逆氢电极（RHE）, 极化曲线, 电化学阻抗谱（EIS）, 欧姆过电位, 动力学过电位, 质量传输损失, 恒电位法（CA）, 启停循环, 反向电流（RC）, Ni(OH)₂, NiOOH, NiO₂
+Section Role: Methods  
+Core Content: This section details a quantitative electrochemical analysis of reverse current behavior in lithium-ion battery cells using cyclic voltammetry and galvanostatic cycling under controlled temperature (20–45 °C) and current density (0.1–2 C) conditions, measuring metrics including coulombic efficiency (95.2–99.7%), voltage hysteresis (30–120 mV), and capacity retention (>92% over 100 cycles).  
+Key Entities: lithium-ion battery cells, cyclic voltammetry, galvanostatic cycling, temperature (20–45 °C), current density (0.1–2 C), coulombic efficiency (95.2–99.7%), voltage hysteresis (30–120 mV), capacity retention (>92% over 100 cycles)

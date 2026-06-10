@@ -1,8 +1,0 @@
----
-paper_id: "2025_peng_strategies_and_countermeasures_against_reverse_current_f_803838"
-section_id: "S05_discussion_mechanism"
-paragraph_id: "S05-P035"
-evidence_id: "EV-peng2025-803838-S05-P035"
-chunk_index: 0
----
-The composition of the electrolyte is a critical, yet often overlooked, factor that fundamentally dictates the degradation pathways during a reverse current event and, consequently, imposes specific constraints on electrode design. While in a pure water system, the primary parasitic reaction on the cathode is OER, the presence of impurities, such as chloride ions in seawater, introduces the far more aggressive chlorine evolution reaction. Chlorine evolution reaction not only occurs at a lower potential than OER, thereby accelerating the onset of degradation, but its products—highly corrosive chlorine gas and hypochlorite species—can severely attack both the platinum catalyst and its carbon support. This necessitates a paradigm shift in cathode design for such applications; the catalyst must not only be efficient for the HER but also possess exceptional tolerance to chlorine-induced corrosion, a property not typically required for pure water operation. Furthermore, the presence of cations like $\mathrm{Mg}^{2+}$ and $\mathrm{Ca}^{2+}$ can lead to surface passivation through hydroxide precipitation, adding another layer of complexity. Therefore, the design and selection of robust cathode materials must be intrinsically linked to the intended electrolyte environment to ensure long-term operational stability.

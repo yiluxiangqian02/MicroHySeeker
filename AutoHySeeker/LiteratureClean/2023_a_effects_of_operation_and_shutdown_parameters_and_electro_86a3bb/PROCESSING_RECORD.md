@@ -34,7 +34,7 @@ This run processes one MinerU output folder into one LiteratureClean preprocessi
 - Raw MinerU images remain untouched in `D:\AI4S\MicroHySeeker\MicroHySeeker\AutoHySeeker\MinerU\output\Effects of operation and shutdown parameters and electrode materials on_99bf4606\images`.
 - Clean figure copies are stored under `D:\AI4S\MicroHySeeker\MicroHySeeker\AutoHySeeker\LiteratureClean\2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb\figures` as `FIGxxx/image_XXX.*`.
 - Clean table files are stored under `D:\AI4S\MicroHySeeker\MicroHySeeker\AutoHySeeker\LiteratureClean\2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb\tables` as `TABxxx/table.md`, `caption.md`, and optional rendered images.
-- Heading directories generated: 22
+- Heading directories generated: 5
 - Used image count: 18
 - Uncertain image count: 13
 - Table directory count: 0
@@ -56,28 +56,11 @@ This run processes one MinerU output folder into one LiteratureClean preprocessi
 
 ## Heading Directories Generated
 
-- `001-front-matter`
-- `002-highlights`
-- `003-abstract`
-- `004-1-introduction`
-- `005-2-1-construction-of-the-alkaline-water-electrolyzer-sy`
-- `006-2-2-the-bipolar-plate-stack-and-the-associated-manifol`
-- `007-2-3-basics-of-the-reverse-current-phenomenon-and-the-e`
-- `008-2-4-electrolysis-and-shutdown-conditions`
-- `009-2-5-fabrication-of-the-electrodes`
-- `010-2-6-modeling-approach`
-- `011-3-1-basic-water-electrolysis-performance-of-the-single`
-- `012-3-2-basic-behavior-of-the-electrolyzer-after-shutdown`
-- `013-3-3-effects-of-dissolved-gases-on-the-reverse-current`
-- `014-3-4-effects-of-the-electrolyte-circulation-on-the-reve`
-- `015-3-5-effects-of-the-electrolysis-current-and-temperatur`
-- `016-3-6-effects-of-anode-materials-on-the-reverse-current`
-- `017-4-conclusion`
-- `018-credit-authorship-contribution-statement`
-- `019-declaration-of-competing-interest`
-- `020-acknowledgements`
-- `021-appendix-a-supplementary-data`
-- `022-references`
+- `001-effects-of-operation-and-shutdown-parameters-and-electrode-mater`
+- `002-1-introduction`
+- `003-2-experimental`
+- `004-3-results-and-discussion`
+- `005-4-conclusion`
 
 ## Figures Generated
 

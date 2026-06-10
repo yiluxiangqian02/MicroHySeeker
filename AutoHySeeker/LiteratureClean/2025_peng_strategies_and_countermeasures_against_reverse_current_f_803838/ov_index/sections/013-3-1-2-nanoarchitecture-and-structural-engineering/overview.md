@@ -1,25 +1,6 @@
-章节定位：本章节聚焦于通过纳米结构设计与表面工程策略提升镍基阴极在反向电流条件下的抗氧化性能和长期稳定性。
+Section Positioning: This section introduces foundational concepts and design principles related to nanoarchitecture and structural engineering within the broader context of advanced materials or nanotechnology development.
 
-逐段索引：  
-P001: 综述性段落，概述除阴极保护和金属掺杂外的多种抗氧化策略，包括表面修饰、结构工程及保护层设计。  
-P002: 实验方法描述，介绍Xu等人通过电沉积制备W/Mo共掺杂CoP负载镍网（WMoCoP@NM）的合成路径。  
-P003: 性能与机理分析，展示WMoCoP@NM的形貌、电化学稳定性、抗反向电流能力及DFT计算揭示的电子结构调控机制。  
-P004: 材料合成流程说明，详述Zhang等人构建NiMoN@NC/NF核壳结构的水热-热解两步法及其温度优化依据。  
-P005: 图表说明，对应图5，展示WMoCoP@NM的制备、形貌、极化曲线及加速老化测试结果。  
-P006: 性能评估段落，报告NiMoN@NC-6/NF在酸性环境中的反向电流耐受性、HER活性及启停循环稳定性。  
-P007: 案例研究，介绍Zhang等人基于单一前驱体构建双功能催化剂NiMoFe@NC的策略及其在全解水中的耐久性表现。  
-P008: 背景知识铺垫，讨论镍基催化剂的局限性及钌基材料（如RuO₂）作为高效阴极候选的优势与未解机制。  
-P009: 实验观察与现象分析，Holmin等人研究RuO₂/Ni电极在极性反转下的表面结构演变与羟基化行为。  
-P010: 图表说明，对应图6，展示NiMoN@NC/NF的合成、形貌、酸性HER性能及启停测试电压变化。  
-P011: 机理解释，基于UV–vis检测到RuO₄²⁻，提出RuO₂在反向电流下溶解的化学路径。  
-P012: 动态保护机制引入，Sha等人设计NiCoP–Cr₂O₃催化剂，利用TOF-SIMS探究其自修复过程。  
-P013: 机理深化，详细描述Co、P、Ni在氧化-还原循环中分层形成保护壳并实现动态再生的过程。  
-P014: 图表说明，对应图7，展示NiMoFe基催化剂的合成、形貌及波动电流下的电压稳定性。  
-P015: 跨体系类比，指出动态操作稳定性问题同样存在于PEMWE系统，但降解机制不同。  
-P016: 问题延伸与解决方案引入，强调需同时解决阳极还原溶解与阴极氧化损伤，并引出IrO₂稳定性问题。  
-P017: 图表说明，对应图8，展示RuO₂/Ni电极在反向电流前后的SEM、XPS、XRD及溶解机理示意图。  
-P018: 图表说明，对应图9，呈现NiCoP–Cr₂O₃动态保护机制、TOF-SIMS元素分布及长期电解电压稳定性。  
-P019: 创新材料介绍，提出“不可还原”IrO₂（irr-IrO₂）通过高结晶度抑制初始还原步骤，阻断降解链反应。  
-P020: 结论性陈述，强调irr-IrO₂通过防止Ir溶解与迁移，保障燃料电池系统的长期运行稳定性。
+Paragraph Index:  
+(no paragraphs)
 
-关键实体：WMoCoP@NM, NiMoN@NC/NF, RuO₂, NiCoP–Cr₂O₃, irr-IrO₂, 反向电流, 动态自保护, 核壳结构, TOF-SIMS, DFT计算
+Key Entities: nanoarchitecture, structural engineering, nanoscale design, material properties, hierarchical structures

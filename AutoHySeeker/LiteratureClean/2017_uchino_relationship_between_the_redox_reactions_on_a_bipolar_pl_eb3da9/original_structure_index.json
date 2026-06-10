@@ -1,7 +1,7 @@
 {
   "paper_id": "2017_uchino_relationship_between_the_redox_reactions_on_a_bipolar_pl_eb3da9",
   "heading_count": 7,
-  "paragraph_count": 64,
+  "paragraph_count": 73,
   "headings": [
     {
       "heading_uid": "HRAW-001-29694c9f",
@@ -15,9 +15,11 @@
         "PRAW-000002",
         "PRAW-000003",
         "PRAW-000004",
-        "PRAW-000005"
+        "PRAW-000005",
+        "PRAW-000006",
+        "PRAW-000007"
       ],
-      "inferred_type": "abstract"
+      "inferred_type": "none"
     },
     {
       "heading_uid": "HRAW-002-535ffabb",
@@ -27,14 +29,26 @@
       "page_index": null,
       "block_order": 1,
       "paragraph_uid_list": [
-        "PRAW-000006",
-        "PRAW-000007",
         "PRAW-000008",
         "PRAW-000009",
         "PRAW-000010",
         "PRAW-000011",
         "PRAW-000012",
-        "PRAW-000013"
+        "PRAW-000013",
+        "PRAW-000014",
+        "PRAW-000015"
+      ],
+      "inferred_type": "none"
+    },
+    {
+      "heading_uid": "HRAW-003-908d512c",
+      "heading_text": "Experiment Method and Analytical Model",
+      "heading_level": 1,
+      "doc_heading_order": 3,
+      "page_index": null,
+      "block_order": 1,
+      "paragraph_uid_list": [
+        "PRAW-000016"
       ],
       "inferred_type": "none"
     },
@@ -46,11 +60,11 @@
       "page_index": null,
       "block_order": 1,
       "paragraph_uid_list": [
-        "PRAW-000014",
-        "PRAW-000015",
-        "PRAW-000016",
         "PRAW-000017",
-        "PRAW-000018"
+        "PRAW-000018",
+        "PRAW-000019",
+        "PRAW-000020",
+        "PRAW-000021"
       ],
       "inferred_type": "none"
     },
@@ -62,6 +76,9 @@
       "page_index": null,
       "block_order": 1,
       "paragraph_uid_list": [
+        "PRAW-000022",
+        "PRAW-000023",
+        "PRAW-000024",
         "PRAW-000025",
         "PRAW-000026",
         "PRAW-000027",
@@ -71,40 +88,23 @@
         "PRAW-000031",
         "PRAW-000032",
         "PRAW-000033",
-        "PRAW-000034"
+        "PRAW-000034",
+        "PRAW-000035",
+        "PRAW-000036",
+        "PRAW-000037",
+        "PRAW-000038",
+        "PRAW-000039"
       ],
-      "inferred_type": "abstract"
+      "inferred_type": "none"
     },
     {
-      "heading_uid": "HRAW-006-1da05de7",
-      "heading_text": "Equivalent Circuit Model",
+      "heading_uid": "HRAW-006-248c9b3f",
+      "heading_text": "Results and Discussion",
       "heading_level": 1,
       "doc_heading_order": 6,
       "page_index": null,
       "block_order": 1,
       "paragraph_uid_list": [
-        "PRAW-000019",
-        "PRAW-000020",
-        "PRAW-000021",
-        "PRAW-000022",
-        "PRAW-000023",
-        "PRAW-000024"
-      ],
-      "inferred_type": "none"
-    },
-    {
-      "heading_uid": "HRAW-007-c4104207",
-      "heading_text": "Results and Discussion",
-      "heading_level": 1,
-      "doc_heading_order": 7,
-      "page_index": null,
-      "block_order": 1,
-      "paragraph_uid_list": [
-        "PRAW-000035",
-        "PRAW-000036",
-        "PRAW-000037",
-        "PRAW-000038",
-        "PRAW-000039",
         "PRAW-000040",
         "PRAW-000041",
         "PRAW-000042",
@@ -125,24 +125,33 @@
         "PRAW-000057",
         "PRAW-000058",
         "PRAW-000059",
-        "PRAW-000060"
+        "PRAW-000060",
+        "PRAW-000061",
+        "PRAW-000062",
+        "PRAW-000063",
+        "PRAW-000064",
+        "PRAW-000065",
+        "PRAW-000066",
+        "PRAW-000067",
+        "PRAW-000068"
       ],
       "inferred_type": "none"
     },
     {
-      "heading_uid": "HRAW-008-46e6721c",
+      "heading_uid": "HRAW-007-0b8c1338",
       "heading_text": "Conclusions",
       "heading_level": 1,
-      "doc_heading_order": 8,
+      "doc_heading_order": 7,
       "page_index": null,
       "block_order": 1,
       "paragraph_uid_list": [
-        "PRAW-000061",
-        "PRAW-000062",
-        "PRAW-000063",
-        "PRAW-000064"
+        "PRAW-000069",
+        "PRAW-000070",
+        "PRAW-000071",
+        "PRAW-000072",
+        "PRAW-000073"
       ],
-      "inferred_type": "back_matter"
+      "inferred_type": "none"
     }
   ]
 }

@@ -5,7 +5,7 @@ Paper ID: `2022_kim_cathodic_protection_system_against_a_reverse_current_aft_180
 Source MinerU directory:
 
 ```text
-D:\AI4S\MicroHySeeker\MicroHySeeker\AutoHySeeker\MinerU\output\cathodic-protection-system-against-a-reverse-current-after-shut-down-in-zero-gap-alkaline-water-electrolysis
+D:\AI4S\MicroHySeeker\MicroHySeeker\AutoHySeeker\MinerU\output\cathodic-protection-system-against-a-reverse-current-after-shut-down-in_9f543e97
 ```
 
 Clean output directory:
@@ -31,10 +31,10 @@ This run processes one MinerU output folder into one LiteratureClean preprocessi
 
 ## Output Summary
 
-- Raw MinerU images remain untouched in `D:\AI4S\MicroHySeeker\MicroHySeeker\AutoHySeeker\MinerU\output\cathodic-protection-system-against-a-reverse-current-after-shut-down-in-zero-gap-alkaline-water-electrolysis\images`.
+- Raw MinerU images remain untouched in `D:\AI4S\MicroHySeeker\MicroHySeeker\AutoHySeeker\MinerU\output\cathodic-protection-system-against-a-reverse-current-after-shut-down-in_9f543e97\images`.
 - Clean figure copies are stored under `D:\AI4S\MicroHySeeker\MicroHySeeker\AutoHySeeker\LiteratureClean\2022_kim_cathodic_protection_system_against_a_reverse_current_aft_180201\figures` as `FIGxxx/image_XXX.*`.
 - Clean table files are stored under `D:\AI4S\MicroHySeeker\MicroHySeeker\AutoHySeeker\LiteratureClean\2022_kim_cathodic_protection_system_against_a_reverse_current_aft_180201\tables` as `TABxxx/table.md`, `caption.md`, and optional rendered images.
-- Heading directories generated: 14
+- Heading directories generated: 9
 - Used image count: 19
 - Uncertain image count: 10
 - Table directory count: 0
@@ -56,20 +56,15 @@ This run processes one MinerU output folder into one LiteratureClean preprocessi
 
 ## Heading Directories Generated
 
-- `001-front-matter`
+- `001-cathodic-protection-system-against-a-reverse-current-after-shutd`
 - `002-introduction`
-- `003-reverse-current-simulation-model`
-- `004-mechanism-of-a-cathodic-protection-system-against-re`
-- `005-stability-of-the-alkaline-water-electrolyzer-stack-u`
-- `006-conclusions`
-- `007-supporting-information`
-- `008-corresponding-author`
-- `009-authors`
-- `010-author-contributions`
-- `011-notes`
-- `012-acknowledgments`
-- `013-references`
-- `014-cas-biofinder-helps-you-find-your-next-breakthrough`
+- `003-results-and-discussion`
+- `004-conclusions`
+- `005-associated-content`
+- `006-author-information`
+- `007-acknowledgments`
+- `008-references`
+- `009-cas-biofinder-helps-you-find-your-next-breakthrough-faster`
 
 ## Figures Generated
 

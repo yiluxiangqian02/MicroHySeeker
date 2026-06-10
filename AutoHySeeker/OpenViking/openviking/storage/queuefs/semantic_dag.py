@@ -242,6 +242,24 @@ class SemanticDagExecutor:
         if not node:
             return
 
+        # Skip directories that don't need auto-generated summaries:
+        # 1) Single-file leaves = paragraph doc nodes
+        # 2) Pure containers = truncated doc nodes (children but no own files)
+        skip_overview = False
+        if not node.children_dirs and len(node.file_paths) == 1:
+            skip_overview = True  # paragraph node
+        elif node.children_dirs and not node.file_paths:
+            skip_overview = True  # pure container (truncated doc node)
+
+        if skip_overview:
+            logger.debug(f"Skipping overview for {dir_uri}")
+            parent_uri = self._parent.get(dir_uri)
+            if parent_uri is not None:
+                await self._on_child_done(parent_uri, dir_uri, "")
+            elif self._root_done:
+                self._root_done.set()
+            return
+
         async with node.lock:
             file_summaries = self._finalize_file_summaries(node)
             children_abstracts = self._finalize_children_abstracts(node)

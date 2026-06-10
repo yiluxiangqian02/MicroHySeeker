@@ -34,7 +34,7 @@ This run processes one MinerU output folder into one LiteratureClean preprocessi
 - Raw MinerU images remain untouched in `D:\AI4S\MicroHySeeker\MicroHySeeker\AutoHySeeker\MinerU\output\Dependence of the reverse current on the surface of electrode placed on_9ebe8347\images`.
 - Clean figure copies are stored under `D:\AI4S\MicroHySeeker\MicroHySeeker\AutoHySeeker\LiteratureClean\2023_uchino_dependence_of_the_reverse_current_on_the_surface_of_elec_38347e\figures` as `FIGxxx/image_XXX.*`.
 - Clean table files are stored under `D:\AI4S\MicroHySeeker\MicroHySeeker\AutoHySeeker\LiteratureClean\2023_uchino_dependence_of_the_reverse_current_on_the_surface_of_elec_38347e\tables` as `TABxxx/table.md`, `caption.md`, and optional rendered images.
-- Heading directories generated: 15
+- Heading directories generated: 5
 - Used image count: 5
 - Uncertain image count: 14
 - Table directory count: 5
@@ -56,21 +56,11 @@ This run processes one MinerU output folder into one LiteratureClean preprocessi
 
 ## Heading Directories Generated
 
-- `001-yosuke-uchino-a-b-takayuki-kobayashi-b-shinji-has`
-- `002-abstract`
-- `003-1-introduction`
-- `004-2-experimental`
-- `005-3-1-cell-characteristics`
-- `006-3-2-cell-voltage-behavior-after-electrolysis`
-- `007-3-2-1-case-of-non-replacement`
-- `008-3-3-ratio-of-gas-influence-to-give-cell-voltages`
-- `009-3-4-redox-couples`
-- `010-3-4-1-redox-couples-in-initial-stage`
-- `011-3-4-2-redox-couples-in-intermediate-stage`
-- `012-3-4-3-redox-couples-in-final-stage`
-- `013-4-conclusions`
-- `014-acknowledgment`
-- `015-nomenclature`
+- `001-dependence-of-the-reverse-current-on-the-surface-of-electrode-pl`
+- `002-1-introduction`
+- `003-2-experimental`
+- `004-3-results-and-discussion`
+- `005-4-conclusions`
 
 ## Figures Generated
 

@@ -1,12 +1,12 @@
 {
   "status": "fresh",
-  "generated_at": "2026-05-31T13:53:03.823138",
-  "source_checksum": "e7a639344a6eb340d3190ac00e64a4ef2bc8f274bde448ded2c93feabbcdffc5",
+  "generated_at": null,
+  "source_checksum": "6b0d1e0e343b8d6f25c2b5796fb869248d7741b6c3ba8513f828882806dd5d39",
   "source_items": [
-    "document_tree.json:ea4f5a4ad415580e26ba3964aac116529926ea78a6cef5cbed0891b4cf0eba05",
+    "document_tree.json:fe3d019de1f2586d64ff4694e25e3851aef36f31bbb1a9c8e1c4858bc65189f4",
     "full_clean.md:e860433af5b4aeed9158dbc6fe54df417ae908b0f22201e3dd0c566cfb418af8",
-    "image_manifest.json:639fef357df367452c588e952f32e6fcaffbb0231e4870e0ae49e79faa62f94b",
-    "paragraph_index.json:c173e5e4948fb6029d7b3920f34932d788114605ac651929d85eaffa2672d1d5",
+    "image_manifest.json:c1d483e4634f1c5c62486bf36d66039b412c2da538461a5024aff8a21af76d6f",
+    "paragraph_index.json:fc412c042786eda8874dbe1e9f440d10c9459bad1d7a82bf3749bace9e2b8800",
     "table_manifest.json:6ccd32a177b7ad4cb7b7660140d157c25bb8e1f348e85aa85a7b1c3d4afaf5b7"
   ],
   "based_on_preprocess_version": null,
@@ -15,7 +15,7 @@
   "llm_base_url": "https://router.shengsuanyun.com/api/v1",
   "targets": {
     "paper_targets_ok": true,
-    "section_targets_count": 14
+    "section_targets_count": 11
   },
-  "evaluated_at": "2026-06-04T14:30:20.455087"
+  "evaluated_at": "2026-06-09T14:51:29.164935"
 }

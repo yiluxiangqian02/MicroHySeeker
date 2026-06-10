@@ -1,239 +1,37 @@
-{
-  "paper_id": "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e",
-  "heading_count": 13,
-  "headings": [
-    {
-      "heading_uid": "HRAW-001-dcbbe410",
-      "heading_dirname": "001-front-matter",
-      "heading_text": "Heterointerface-Enabled Anti-Reverse-Current Electrodes for Alkaline Water Electrolyzers at $1000\\mathrm{mAcm}^{-2}$",
-      "heading_level": 1,
-      "doc_heading_order": 1,
-      "display_order": 1,
-      "paragraph_count": 4,
-      "paragraph_uids": [
-        "PRAW-000001",
-        "PRAW-000002",
-        "PRAW-000003",
-        "PRAW-000004"
-      ],
-      "path": "sections_by_heading/001-front-matter/"
-    },
-    {
-      "heading_uid": "HRAW-002-9ff10219",
-      "heading_dirname": "002-1-introduction",
-      "heading_text": "1. INTRODUCTION",
-      "heading_level": 1,
-      "doc_heading_order": 2,
-      "display_order": 2,
-      "paragraph_count": 10,
-      "paragraph_uids": [
-        "PRAW-000016",
-        "PRAW-000017",
-        "PRAW-000018",
-        "PRAW-000019",
-        "PRAW-000020",
-        "PRAW-000021",
-        "PRAW-000022",
-        "PRAW-000023",
-        "PRAW-000024",
-        "PRAW-000025"
-      ],
-      "path": "sections_by_heading/002-1-introduction/"
-    },
-    {
-      "heading_uid": "HRAW-003-2037b5ff",
-      "heading_dirname": "003-2-results-and-discussion",
-      "heading_text": "2. RESULTS AND DISCUSSION",
-      "heading_level": 1,
-      "doc_heading_order": 3,
-      "display_order": 3,
-      "paragraph_count": 22,
-      "paragraph_uids": [
-        "PRAW-000040",
-        "PRAW-000041",
-        "PRAW-000042",
-        "PRAW-000043",
-        "PRAW-000044",
-        "PRAW-000045",
-        "PRAW-000046",
-        "PRAW-000047",
-        "PRAW-000048",
-        "PRAW-000049",
-        "PRAW-000050",
-        "PRAW-000051",
-        "PRAW-000052",
-        "PRAW-000053",
-        "PRAW-000054",
-        "PRAW-000055",
-        "PRAW-000056",
-        "PRAW-000057",
-        "PRAW-000058",
-        "PRAW-000059",
-        "PRAW-000060",
-        "PRAW-000061"
-      ],
-      "path": "sections_by_heading/003-2-results-and-discussion/"
-    },
-    {
-      "heading_uid": "HRAW-004-c39a4b34",
-      "heading_dirname": "004-3-conclusions",
-      "heading_text": "3. CONCLUSIONS",
-      "heading_level": 1,
-      "doc_heading_order": 4,
-      "display_order": 4,
-      "paragraph_count": 1,
-      "paragraph_uids": [
-        "PRAW-000062"
-      ],
-      "path": "sections_by_heading/004-3-conclusions/"
-    },
-    {
-      "heading_uid": "HRAW-005-62ff258a",
-      "heading_dirname": "005-4-experimental-section",
-      "heading_text": "4. EXPERIMENTAL SECTION",
-      "heading_level": 1,
-      "doc_heading_order": 5,
-      "display_order": 5,
-      "paragraph_count": 14,
-      "paragraph_uids": [
-        "PRAW-000026",
-        "PRAW-000027",
-        "PRAW-000028",
-        "PRAW-000029",
-        "PRAW-000030",
-        "PRAW-000031",
-        "PRAW-000032",
-        "PRAW-000033",
-        "PRAW-000034",
-        "PRAW-000035",
-        "PRAW-000036",
-        "PRAW-000037",
-        "PRAW-000038",
-        "PRAW-000039"
-      ],
-      "path": "sections_by_heading/005-4-experimental-section/"
-    },
-    {
-      "heading_uid": "HRAW-007-1b530b5d",
-      "heading_dirname": "006-supporting-information",
-      "heading_text": "Supporting Information",
-      "heading_level": 1,
-      "doc_heading_order": 7,
-      "display_order": 6,
-      "paragraph_count": 2,
-      "paragraph_uids": [
-        "PRAW-000063",
-        "PRAW-000064"
-      ],
-      "path": "sections_by_heading/006-supporting-information/"
-    },
-    {
-      "heading_uid": "HRAW-009-f200f9c8",
-      "heading_dirname": "007-corresponding-authors",
-      "heading_text": "Corresponding Authors",
-      "heading_level": 1,
-      "doc_heading_order": 9,
-      "display_order": 7,
-      "paragraph_count": 2,
-      "paragraph_uids": [
-        "PRAW-000065",
-        "PRAW-000066"
-      ],
-      "path": "sections_by_heading/007-corresponding-authors/"
-    },
-    {
-      "heading_uid": "HRAW-010-07527515",
-      "heading_dirname": "008-authors",
-      "heading_text": "Authors",
-      "heading_level": 1,
-      "doc_heading_order": 10,
-      "display_order": 8,
-      "paragraph_count": 11,
-      "paragraph_uids": [
-        "PRAW-000005",
-        "PRAW-000006",
-        "PRAW-000007",
-        "PRAW-000008",
-        "PRAW-000009",
-        "PRAW-000010",
-        "PRAW-000011",
-        "PRAW-000012",
-        "PRAW-000013",
-        "PRAW-000014",
-        "PRAW-000015"
-      ],
-      "path": "sections_by_heading/008-authors/"
-    },
-    {
-      "heading_uid": "HRAW-011-613e64f6",
-      "heading_dirname": "009-author-contributions",
-      "heading_text": "Author Contributions",
-      "heading_level": 1,
-      "doc_heading_order": 11,
-      "display_order": 9,
-      "paragraph_count": 1,
-      "paragraph_uids": [
-        "PRAW-000067"
-      ],
-      "path": "sections_by_heading/009-author-contributions/"
-    },
-    {
-      "heading_uid": "HRAW-012-edaa0c5b",
-      "heading_dirname": "010-notes",
-      "heading_text": "Notes",
-      "heading_level": 1,
-      "doc_heading_order": 12,
-      "display_order": 10,
-      "paragraph_count": 1,
-      "paragraph_uids": [
-        "PRAW-000068"
-      ],
-      "path": "sections_by_heading/010-notes/"
-    },
-    {
-      "heading_uid": "HRAW-013-4b31be97",
-      "heading_dirname": "011-acknowledgments",
-      "heading_text": "ACKNOWLEDGMENTS",
-      "heading_level": 1,
-      "doc_heading_order": 13,
-      "display_order": 11,
-      "paragraph_count": 2,
-      "paragraph_uids": [
-        "PRAW-000069",
-        "PRAW-000070"
-      ],
-      "path": "sections_by_heading/011-acknowledgments/"
-    },
-    {
-      "heading_uid": "HRAW-014-3c3cb2b2",
-      "heading_dirname": "012-references",
-      "heading_text": "REFERENCES",
-      "heading_level": 1,
-      "doc_heading_order": 14,
-      "display_order": 12,
-      "paragraph_count": 4,
-      "paragraph_uids": [
-        "PRAW-000071",
-        "PRAW-000072",
-        "PRAW-000073",
-        "PRAW-000074"
-      ],
-      "path": "sections_by_heading/012-references/"
-    },
-    {
-      "heading_uid": "HRAW-015-7df30f2b",
-      "heading_dirname": "013-note-added-after-asap-publication",
-      "heading_text": "NOTE ADDED AFTER ASAP PUBLICATION",
-      "heading_level": 1,
-      "doc_heading_order": 15,
-      "display_order": 13,
-      "paragraph_count": 3,
-      "paragraph_uids": [
-        "PRAW-000075",
-        "PRAW-000076",
-        "PRAW-000077"
-      ],
-      "path": "sections_by_heading/013-note-added-after-asap-publication/"
-    }
-  ]
-}
+[
+  {
+    "dirname": "001-heterointerface-enabled-anti-reverse-current-electrodes-for-alka",
+    "heading_uid": "HRAW-001-dcbbe410",
+    "heading_text": "Heterointerface-Enabled Anti-Reverse-Current Electrodes for Alkaline Water Electrolyzers at $1000\\mathrm{mAcm}^{-2}$",
+    "heading_order": 1,
+    "paragraph_count": 10
+  },
+  {
+    "dirname": "002-1-introduction",
+    "heading_uid": "HRAW-002-9ff10219",
+    "heading_text": "1. INTRODUCTION",
+    "heading_order": 2,
+    "paragraph_count": 16
+  },
+  {
+    "dirname": "003-2-results-and-discussion",
+    "heading_uid": "HRAW-003-2037b5ff",
+    "heading_text": "2. RESULTS AND DISCUSSION",
+    "heading_order": 3,
+    "paragraph_count": 23
+  },
+  {
+    "dirname": "004-3-conclusions",
+    "heading_uid": "HRAW-004-c39a4b34",
+    "heading_text": "3. CONCLUSIONS",
+    "heading_order": 4,
+    "paragraph_count": 1
+  },
+  {
+    "dirname": "005-4-experimental-section",
+    "heading_uid": "HRAW-005-62ff258a",
+    "heading_text": "4. EXPERIMENTAL SECTION",
+    "heading_order": 5,
+    "paragraph_count": 57
+  }
+]

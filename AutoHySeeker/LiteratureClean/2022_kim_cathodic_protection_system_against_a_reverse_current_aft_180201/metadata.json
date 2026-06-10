@@ -10,12 +10,12 @@
   "journal": "",
   "document_type": "research_article",
   "raw_paths": {
-    "mineru_output_dir": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\cathodic-protection-system-against-a-reverse-current-after-shut-down-in-zero-gap-alkaline-water-electrolysis",
-    "full_md": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\cathodic-protection-system-against-a-reverse-current-after-shut-down-in-zero-gap-alkaline-water-electrolysis\\full.md",
-    "content_list_v2_json": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\cathodic-protection-system-against-a-reverse-current-after-shut-down-in-zero-gap-alkaline-water-electrolysis\\content_list_v2.json",
-    "layout_json": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\cathodic-protection-system-against-a-reverse-current-after-shut-down-in-zero-gap-alkaline-water-electrolysis\\layout.json",
-    "origin_pdf": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\cathodic-protection-system-against-a-reverse-current-after-shut-down-in-zero-gap-alkaline-water-electrolysis\\124e14ff-ad67-4c84-a743-100cdbd43007_origin.pdf",
-    "images_dir": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\cathodic-protection-system-against-a-reverse-current-after-shut-down-in-zero-gap-alkaline-water-electrolysis\\images"
+    "mineru_output_dir": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\cathodic-protection-system-against-a-reverse-current-after-shut-down-in_9f543e97",
+    "full_md": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\cathodic-protection-system-against-a-reverse-current-after-shut-down-in_9f543e97\\full.md",
+    "content_list_v2_json": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\cathodic-protection-system-against-a-reverse-current-after-shut-down-in_9f543e97\\content_list_v2.json",
+    "layout_json": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\cathodic-protection-system-against-a-reverse-current-after-shut-down-in_9f543e97\\layout.json",
+    "origin_pdf": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\cathodic-protection-system-against-a-reverse-current-after-shut-down-in_9f543e97\\124e14ff-ad67-4c84-a743-100cdbd43007_origin.pdf",
+    "images_dir": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\cathodic-protection-system-against-a-reverse-current-after-shut-down-in_9f543e97\\images"
   },
   "paper_short": "kim2022-180201",
   "clean_paths": {
@@ -27,15 +27,15 @@
   },
   "processing": {
     "mode": "single_paper_semi_automatic",
-    "processed_at": "2026-05-30T16:29:53",
+    "processed_at": "2026-06-07T19:01:28",
     "script": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\LiteratureClean\\clean_single_mineru_paper.py",
     "openviking_ingested": false,
     "batch_import": false,
     "section_recovery": {
       "content_list_hints": {
-        "front_count": 5,
-        "abstract_count": 2,
-        "back_count": 5
+        "front_count": 0,
+        "abstract_count": 1,
+        "back_count": 0
       },
       "layout_json_available": true
     }

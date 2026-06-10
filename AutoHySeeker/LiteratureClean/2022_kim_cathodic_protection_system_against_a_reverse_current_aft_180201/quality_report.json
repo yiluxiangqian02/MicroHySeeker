@@ -1,6 +1,6 @@
 {
   "paper_id": "2022_kim_cathodic_protection_system_against_a_reverse_current_aft_180201",
-  "generated_at": "2026-05-30T16:29:53",
+  "generated_at": "2026-06-07T19:01:28",
   "generated_files": [
     "metadata.json",
     "full_clean.md",
@@ -11,88 +11,74 @@
     "table_manifest.json",
     "sections_by_heading/"
   ],
-  "section_count": 8,
-  "paragraph_count": 62,
+  "section_count": 9,
+  "paragraph_count": 83,
   "figure_count": 7,
   "table_count": 0,
-  "evidence_count": 69,
-  "front_matter_count": 3,
-  "back_matter_count": 10,
-  "reference_paragraph_count": 0,
-  "conclusion_detected": true,
+  "evidence_count": 90,
+  "reference_paragraph_count": 32,
   "sections_summary": [
     {
-      "section_id": "S00_front_matter",
-      "section_title": "Front Matter",
-      "paragraph_count": 3
+      "section_id": "S01",
+      "section_title": "Cathodic Protection System against a Reverse-Current after Shutdown in Zero-Gap Alkaline Water Electrolysis",
+      "paragraph_count": 11
     },
     {
-      "section_id": "S01_abstract",
-      "section_title": "Abstract",
-      "paragraph_count": 2
+      "section_id": "S02",
+      "section_title": "INTRODUCTION",
+      "paragraph_count": 16
     },
     {
-      "section_id": "S02_introduction",
-      "section_title": "Introduction",
-      "paragraph_count": 12
+      "section_id": "S03",
+      "section_title": "RESULTS AND DISCUSSION",
+      "paragraph_count": 35
     },
     {
-      "section_id": "S03_methods_and_setup",
-      "section_title": "Methods And Setup",
-      "paragraph_count": 2
-    },
-    {
-      "section_id": "S04_results",
-      "section_title": "Result",
-      "paragraph_count": 12
-    },
-    {
-      "section_id": "S05_discussion_mechanism",
-      "section_title": "Discussion Mechanism",
-      "paragraph_count": 20
-    },
-    {
-      "section_id": "S06_conclusion",
-      "section_title": "Conclusion",
+      "section_id": "S04",
+      "section_title": "CONCLUSIONS",
       "paragraph_count": 1
     },
     {
-      "section_id": "S07_back_matter_or_supplementary",
-      "section_title": "Back Matter Or Supplementary",
-      "paragraph_count": 10
+      "section_id": "S05",
+      "section_title": "ASSOCIATED CONTENT",
+      "paragraph_count": 3
+    },
+    {
+      "section_id": "S06",
+      "section_title": "AUTHOR INFORMATION",
+      "paragraph_count": 8
+    },
+    {
+      "section_id": "S07",
+      "section_title": "ACKNOWLEDGMENTS",
+      "paragraph_count": 1
+    },
+    {
+      "section_id": "S08",
+      "section_title": "REFERENCES",
+      "paragraph_count": 5
+    },
+    {
+      "section_id": "S09",
+      "section_title": "CAS BIOFINDER HELPS YOU FIND YOUR NEXT BREAKTHROUGH FASTER",
+      "paragraph_count": 3
     }
   ],
   "warnings": [],
   "fact_layer_coverage": {
-    "total_paragraphs": 62,
-    "with_paragraph_uid": 62,
+    "total_paragraphs": 83,
+    "with_paragraph_uid": 83,
     "paragraph_uid_coverage": 1.0,
-    "with_heading_uid": 62,
+    "with_heading_uid": 83,
     "heading_uid_coverage": 1.0,
-    "with_heading_text": 62,
+    "with_heading_text": 83,
     "heading_text_coverage": 1.0,
-    "with_doc_heading_order": 62,
+    "with_doc_heading_order": 83,
     "doc_heading_order_coverage": 1.0,
     "with_page_index": 0,
     "page_index_coverage": 0.0,
-    "with_block_order": 62,
+    "with_block_order": 83,
     "block_order_coverage": 1.0
-  },
-  "tag_layer_coverage": {
-    "total_paragraphs": 62,
-    "with_macro_primary": 62,
-    "macro_primary_coverage": 1.0,
-    "with_macro_secondary": 4,
-    "macro_secondary_coverage": 0.0645,
-    "with_macro_confidence": 62,
-    "macro_confidence_coverage": 1.0,
-    "with_macro_reasons": 6,
-    "macro_reasons_coverage": 0.0968,
-    "tag_conflict_count": 26,
-    "tag_conflict_ratio": 0.4194,
-    "tag_conflict_high": 6,
-    "tag_conflict_medium": 0,
-    "tag_conflict_low": 20
   },
   "removed_noise_summary": "Filtered: empty blocks, <40 chars, heading-only, page numbers, noise patterns",
   "next_review_items": [
@@ -101,77 +87,5 @@
     "Review section title mappings in document_tree.json",
     "Confirm no important paragraphs were filtered as noise"
   ],
-  "missing_input_files": [],
-  "uncertainty_summary": {
-    "soft_uncertain_count": 0,
-    "needs_manual_review_count": 2,
-    "total_uncertain_count": 2
-  },
-  "soft_uncertain_items": [],
-  "needs_manual_review_items": [
-    {
-      "section_id": "S03_methods_and_setup",
-      "section_title": "Methods And Setup",
-      "original_heading": "CAS BIOFINDER HELPS YOU FIND YOUR NEXT BREAKTHROUGH FASTER",
-      "assigned_section_id": "S03_methods_and_setup",
-      "top_section_id": "S00_front_matter",
-      "top_score": 0,
-      "second_score": 0,
-      "score_gap": 0,
-      "uncertain_reasons": [
-        "low_top_score",
-        "low_score_gap"
-      ],
-      "confidence_level": "needs_manual_review",
-      "needs_manual_review": true
-    },
-    {
-      "section_id": "S04_results",
-      "section_title": "Result",
-      "original_heading": "Cathodic Protection System against a Reverse-Current after Shutdown in Zero-Gap Alkaline Water Electrolysis",
-      "assigned_section_id": "S04_results",
-      "top_section_id": "S04_results",
-      "top_score": 8,
-      "second_score": 8,
-      "score_gap": 0,
-      "uncertain_reasons": [
-        "low_score_gap"
-      ],
-      "confidence_level": "needs_manual_review",
-      "needs_manual_review": true
-    }
-  ],
-  "uncertain_items": [
-    {
-      "section_id": "S03_methods_and_setup",
-      "section_title": "Methods And Setup",
-      "original_heading": "CAS BIOFINDER HELPS YOU FIND YOUR NEXT BREAKTHROUGH FASTER",
-      "assigned_section_id": "S03_methods_and_setup",
-      "top_section_id": "S00_front_matter",
-      "top_score": 0,
-      "second_score": 0,
-      "score_gap": 0,
-      "uncertain_reasons": [
-        "low_top_score",
-        "low_score_gap"
-      ],
-      "confidence_level": "needs_manual_review",
-      "needs_manual_review": true
-    },
-    {
-      "section_id": "S04_results",
-      "section_title": "Result",
-      "original_heading": "Cathodic Protection System against a Reverse-Current after Shutdown in Zero-Gap Alkaline Water Electrolysis",
-      "assigned_section_id": "S04_results",
-      "top_section_id": "S04_results",
-      "top_score": 8,
-      "second_score": 8,
-      "score_gap": 0,
-      "uncertain_reasons": [
-        "low_score_gap"
-      ],
-      "confidence_level": "needs_manual_review",
-      "needs_manual_review": true
-    }
-  ]
+  "missing_input_files": []
 }

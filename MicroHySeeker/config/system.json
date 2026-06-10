@@ -1,5 +1,5 @@
 {
-  "rs485_port": "COM3",
+  "rs485_port": "COM10",
   "rs485_baudrate": 38400,
   "mock_mode": false,
   "auto_connect": true,
@@ -117,14 +117,14 @@
     {
       "channel_id": "1",
       "solution_name": "Ni",
-      "stock_concentration": 1.0,
+      "stock_concentration": 0.1,
       "pump_address": 1,
       "direction": "REV",
       "default_rpm": 200,
       "color": "#00FF00",
       "tube_diameter_mm": 1.0,
       "total_volume_ml": 500.0,
-      "remaining_volume_ml": 4.0
+      "remaining_volume_ml": 420.0
     },
     {
       "channel_id": "2",
@@ -136,7 +136,7 @@
       "color": "#00FF00",
       "tube_diameter_mm": 1.0,
       "total_volume_ml": 500.0,
-      "remaining_volume_ml": 260.0
+      "remaining_volume_ml": 468.0
     },
     {
       "channel_id": "3",
@@ -148,7 +148,7 @@
       "color": "#00FF00",
       "tube_diameter_mm": 1.0,
       "total_volume_ml": 500.0,
-      "remaining_volume_ml": 244.0
+      "remaining_volume_ml": 468.0
     },
     {
       "channel_id": "4",
@@ -160,7 +160,7 @@
       "color": "#55aa7f",
       "tube_diameter_mm": 1.0,
       "total_volume_ml": 1000.0,
-      "remaining_volume_ml": 280.0
+      "remaining_volume_ml": 950.0
     },
     {
       "channel_id": "5",
@@ -196,7 +196,7 @@
       "color": "#55aa7f",
       "tube_diameter_mm": 1.0,
       "total_volume_ml": 500.0,
-      "remaining_volume_ml": 308.0
+      "remaining_volume_ml": 244.0
     },
     {
       "channel_id": "8",
@@ -222,7 +222,7 @@
       "work_type": "Inlet",
       "tube_diameter_mm": 1.0,
       "total_volume_ml": 5000.0,
-      "remaining_volume_ml": 3608.0
+      "remaining_volume_ml": 4808.0
     },
     {
       "channel_id": "2",

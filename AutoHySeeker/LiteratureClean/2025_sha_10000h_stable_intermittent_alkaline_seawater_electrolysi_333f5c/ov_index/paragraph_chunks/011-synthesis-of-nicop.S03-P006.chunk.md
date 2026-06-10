@@ -1,8 +1,0 @@
----
-paper_id: "2025_sha_10000h_stable_intermittent_alkaline_seawater_electrolysi_333f5c"
-section_id: "S03_methods_and_setup"
-paragraph_id: "S03-P006"
-evidence_id: "EV-sha2025-333f5c-S03-P006"
-chunk_index: 0
----
-NiCoP was synthesized by phosphorization of NiCo–LDH in a tube furnace. Briefly, 0.5 g of ${ \bf N a H } _ { 2 } { \bf P } { \bf O } _ { 2 } { \bf \cdot H } _ { 2 } { \bf O }$ was placed upstream in a quartz tube to serve as the phosphorous source, whereas the obtained NiCo– LDH was placed at the centre of the quartz tube and then the quartz tube was heated at $3 0 0 ^ { \circ } \mathrm { C }$ for 2 h with a heating rate of $2 ^ { \circ } \mathrm { C } \mathsf { m i n } ^ { - 1 }$ in Ar atmosphere. After reaction, the furnace was turned off and naturally cooled to room temperature under Ar atmosphere to obtain NiCoP. The amount of ${ \sf N a H } _ { 2 } { \sf P O } _ { 2 } { \cdot } { \sf H } _ { 2 } { \cal O }$ depends on the NiCo–LDH surface area; specifically, $\mathbf { 0 . 5 8 }$ of ${ \mathsf { N a H } } _ { 2 } { \mathsf { P O } } _ { 2 } { \cdot } { \mathsf { H } } _ { 2 } { \mathsf { O } }$ corresponds to a NiCo–LDH area of $3 \times 4 \mathsf { c m } ^ { 2 }$ .

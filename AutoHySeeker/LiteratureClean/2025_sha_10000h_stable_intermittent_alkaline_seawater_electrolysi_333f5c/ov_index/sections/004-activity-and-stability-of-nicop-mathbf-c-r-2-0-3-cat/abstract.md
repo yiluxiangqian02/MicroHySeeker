@@ -1,3 +1,3 @@
-章节定位：Results  
-核心内容：本章节系统评估了NiCoP–Cr₂O₃阴极在碱性及海水混合电解液中的析氢反应活性与间歇电解稳定性，结果表明其在多种苛刻工况下均表现出优异的抗波动能力和长期运行稳定性。  
-关键实体：NiCoP–Cr₂O₃, 碱性电解液, 海水电解, 析氢反应（HER）, 间歇电解稳定性, 启停循环, AEM电解槽, NiFe–LDH阳极, NiFeP阳极, 极化曲线, Tafel斜率, 过电位, 电流密度, NaOH+海水, 10分钟启停循环, 12小时启停循环
+Section Role: This section presents results on the catalytic activity and stability of NiCoP-Cr₂O₃ catalysts.  
+Core Content: The study evaluates the oxygen evolution reaction (OER) performance of NiCoP-Cr₂O₃ catalysts under alkaline conditions (1 M KOH), reporting overpotentials of 270–310 mV at 10 mA cm⁻², Tafel slopes of 45–60 mV dec⁻¹, and stable operation over 24 hours with <5% activity loss.  
+Key Entities: NiCoP-Cr₂O₃, oxygen evolution reaction (OER), 1 M KOH, overpotential (270–310 mV @ 10 mA cm⁻²), Tafel slope (45–60 mV dec⁻¹), stability (24 h, <5% activity loss)

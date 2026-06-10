@@ -1,5 +1,5 @@
-研究对象：零间隙碱性水电解体系中镍基阴极在启停瞬态条件下因反向电流引发的氧化降解问题。  
-核心发现：反向电流导致镍阴极不可逆地氧化为β-Ni(OH)₂或NiO相，而维持其电位低于0.6 V<sub>RHE</sub>可保持其可逆性和析氢活性。  
-方法路线：通过构建模拟反向电流的自放电模型，结合XPS、循环伏安和电化学测试，提出并验证了基于牺牲阳极的阴极保护策略。  
-主要结论：连接铅等牺牲金属可有效抑制镍阴极的不可逆氧化，在模拟启停工况下显著提升碱性电解系统的稳定性和经济性。  
-关键词：碱性水电解, 反向电流, 阴极保护, 镍电极, 启停稳定性
+Research Object: Nickel-based cathodes in zero-gap alkaline water electrolysis systems subjected to reverse-current during transient shutdown conditions.  
+Core Finding: Irreversible oxidation of the nickel cathode under reverse-current is prevented by maintaining its potential below a critical threshold through cathodic protection.  
+Method: A sacrificial anode is electrically connected to the nickel cathode to preferentially oxidize and thereby stabilize the cathode potential during simulated shutdown-induced reverse-current events.  
+Conclusion: This cathodic protection strategy effectively mitigates electrode degradation, offering a simple and cost-efficient approach to enhance the durability of alkaline electrolyzers operating under intermittent renewable energy input.  
+Keywords: alkaline water electrolysis, reverse current, cathodic protection, nickel cathode, load fluctuation

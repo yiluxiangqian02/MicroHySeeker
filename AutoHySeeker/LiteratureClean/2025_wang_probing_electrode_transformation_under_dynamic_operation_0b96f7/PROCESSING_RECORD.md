@@ -34,7 +34,7 @@ This run processes one MinerU output folder into one LiteratureClean preprocessi
 - Raw MinerU images remain untouched in `D:\AI4S\MicroHySeeker\MicroHySeeker\AutoHySeeker\MinerU\output\Probing Electrode Transformation under Dynamic Operation for Alkaline W_4ff0d6af\images`.
 - Clean figure copies are stored under `D:\AI4S\MicroHySeeker\MicroHySeeker\AutoHySeeker\LiteratureClean\2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7\figures` as `FIGxxx/image_XXX.*`.
 - Clean table files are stored under `D:\AI4S\MicroHySeeker\MicroHySeeker\AutoHySeeker\LiteratureClean\2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7\tables` as `TABxxx/table.md`, `caption.md`, and optional rendered images.
-- Heading directories generated: 14
+- Heading directories generated: 5
 - Used image count: 13
 - Uncertain image count: 28
 - Table directory count: 0
@@ -56,20 +56,11 @@ This run processes one MinerU output folder into one LiteratureClean preprocessi
 
 ## Heading Directories Generated
 
-- `001-front-matter`
+- `001-probing-electrode-transformation-under-dynamic-operation-for-alk`
 - `002-1-introduction`
-- `003-2-1-quantify-electrochemical-behaviors-in-reverse-c`
-- `004-2-2-reverse-current-accelerated-stress-testing-ast`
-- `005-2-3-electrochemical-behaviors-of-anode-and-cathode`
-- `006-2-4-unravel-the-degradation-mechanism`
-- `007-3-conclusion`
-- `008-4-experimental-section`
-- `009-supporting-information`
-- `010-acknowledgements`
-- `011-conflict-of-interest`
-- `012-author-contributions`
-- `013-data-availability-statement`
-- `014-keywords`
+- `003-2-results-and-discussion`
+- `004-3-conclusion`
+- `005-4-experimental-section`
 
 ## Figures Generated
 

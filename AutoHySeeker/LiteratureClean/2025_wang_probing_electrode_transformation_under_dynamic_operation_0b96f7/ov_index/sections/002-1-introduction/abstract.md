@@ -1,3 +1,3 @@
-章节定位：Introduction  
-核心内容：本章节综述了碱性水电解槽（AWEs）在动态运行下面临的关键挑战，特别是由启停操作引发的反向电流（RC）现象及其对电极材料的降解机制，并提出需通过可控实验模拟RC过程以深入理解其影响。  
-关键实体：碱性水电解槽（AWEs）、反向电流（RC）、氢气/氧气交叉、可燃性气体混合物、双极板堆栈、零间隙电池、氢析出反应（HER）、氧析出反应（OER）、三电极MEA装置、加速应力测试（AST）、电极降解、启停循环
+Section Role: This section serves as the Introduction, establishing the context, challenges, and knowledge gaps related to dynamic operation and reverse current-induced degradation in alkaline water electrolyzers (AWEs).  
+Core Content: It outlines how AWEs face safety and durability issues during dynamic operation—particularly at low loads (25%–45% of rated full load) where H₂/O₂ gas crossover risks exceed 2 vol% H₂ in O₂ (≈50% of lower explosive limit)—and introduces a custom three-electrode MEA setup with accelerated stress testing (AST) to investigate reverse current (RC) effects on electrode degradation during startup/shutdown cycles.  
+Key Entities: alkaline water electrolyzers (AWEs), reverse current (RC), low-load operation (25%–45% rated full load), H₂/O₂ gas crossover, 2 vol% H₂ in O₂, lower explosive limit (≈50%), three-electrode MEA setup, reference electrode, zero-gap single cell, accelerated stress testing (AST), startup/shutdown cycles, electrode degradation

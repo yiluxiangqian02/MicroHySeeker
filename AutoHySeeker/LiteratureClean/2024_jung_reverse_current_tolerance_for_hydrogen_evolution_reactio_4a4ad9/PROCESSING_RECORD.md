@@ -34,7 +34,7 @@ This run processes one MinerU output folder into one LiteratureClean preprocessi
 - Raw MinerU images remain untouched in `D:\AI4S\MicroHySeeker\MicroHySeeker\AutoHySeeker\MinerU\output\Reverse‐Current Tolerance for Hydrogen Evolution Reaction Activity of L_66c3dfa7\images`.
 - Clean figure copies are stored under `D:\AI4S\MicroHySeeker\MicroHySeeker\AutoHySeeker\LiteratureClean\2024_jung_reverse_current_tolerance_for_hydrogen_evolution_reactio_4a4ad9\figures` as `FIGxxx/image_XXX.*`.
 - Clean table files are stored under `D:\AI4S\MicroHySeeker\MicroHySeeker\AutoHySeeker\LiteratureClean\2024_jung_reverse_current_tolerance_for_hydrogen_evolution_reactio_4a4ad9\tables` as `TABxxx/table.md`, `caption.md`, and optional rendered images.
-- Heading directories generated: 14
+- Heading directories generated: 4
 - Used image count: 15
 - Uncertain image count: 8
 - Table directory count: 0
@@ -56,20 +56,10 @@ This run processes one MinerU output folder into one LiteratureClean preprocessi
 
 ## Heading Directories Generated
 
-- `001-front-matter`
+- `001-reverse-current-tolerance-for-hydrogen-evolution-reaction-activi`
 - `002-1-introduction`
-- `003-2-1-degradation-tolerance-of-the-pb-ni-electrocatal`
-- `004-2-2-origin-of-the-reverse-current-tolerance-and-imp`
-- `005-2-3-material-characterization-of-rc-tolerant-pb-ni`
-- `006-2-4-water-activation-effect-of-rc-tolerant-pb-ni-ca`
-- `007-2-5-ligand-effect-in-rc-tolerant-pb-ni-catalyst-pro`
-- `008-2-6-reverse-current-tolerance-of-the-pb-ni-catalyst`
-- `009-3-conclusion`
-- `010-supporting-information`
-- `011-acknowledgements`
-- `012-conflict-of-interest`
-- `013-data-availability-statement`
-- `014-keywords`
+- `003-2-results-and-discussion`
+- `004-3-conclusion`
 
 ## Figures Generated
 

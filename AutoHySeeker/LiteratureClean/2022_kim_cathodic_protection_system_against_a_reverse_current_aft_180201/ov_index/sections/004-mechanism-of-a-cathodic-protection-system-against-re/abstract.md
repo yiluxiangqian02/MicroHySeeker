@@ -1,3 +1,3 @@
-章节定位：Results  
-核心内容：本章节通过电化学测试、材料表征和稳定性评估，验证了采用牺牲阳极（如Pb、Zn、Al、Sn）的阴极保护系统可有效抑制镍电极在反向电流作用下的氧化失活，并维持其析氢反应（HER）催化活性。  
-关键实体：Ni电极, 反向电流（RC）, 阴极保护, 牺牲阳极（Pb, Zn, Al, Sn, Cd, Fe, Mg, W, Cu）, 析氢反应（HER）, 氧化镍相（NiOOH, NiO₂, β-Ni(OH)₂）, 1 M KOH电解液, 恒电位法（CP）, 线性扫描伏安法（LSV）, Tafel斜率, 电化学阻抗谱（EIS）, XPS, XRD, ICP-MS, RCSF（反向电流稳定性因子）, pH值（12–14.7）
+Section Role: This section describes the mechanism underlying a cathodic protection system designed to mitigate corrosion.  
+Core Content: It explains how the system functions by polarizing the metal surface to a potential at which corrosion reactions are suppressed, primarily through the application of an external current or sacrificial anode.  
+Key Entities: cathodic protection, corrosion mitigation, metal surface, polarization, external current, sacrificial anode, electrochemical potential

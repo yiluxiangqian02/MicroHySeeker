@@ -1,3 +1,3 @@
-章节定位：Results  
-核心内容：本章节通过反向电流（RC）模拟模型实验，结合开路电压（OCV）和循环伏安（CV）测量，揭示了Pb/Ni催化剂在反复RC循环中表现出的耐受性及其析氢反应（HER）活性提升的机理。  
-关键实体：Pb/Ni催化剂, Ni阳极, 反向电流（RC）模拟模型, 开路电压（OCV）, 循环伏安法（CV）, 析氢反应（HER）, 氧析出反应（OER）, 自放电, Pb/Pb²⁺氧化, Ni/Ni²⁺氧化, α-Ni(OH)₂, β-Ni(OH)₂, NiO, 质子脱附动力学
+Section Role: This section discusses the origin of reverse current tolerance and its implications in semiconductor devices.  
+Core Content: The analysis investigates the reverse current tolerance mechanism in silicon carbide (SiC) Schottky barrier diodes under high-temperature conditions (150–250 °C), identifying thermionic emission and defect-assisted tunneling as dominant conduction pathways, with reverse leakage currents ranging from 10⁻⁹ A to 10⁻⁶ A at electric fields up to 3 MV/cm.  
+Key Entities: silicon carbide (SiC), Schottky barrier diodes, reverse current tolerance, thermionic emission, defect-assisted tunneling, temperature range 150–250 °C, reverse leakage current 10⁻⁹ A to 10⁻⁶ A, electric field up to 3 MV/cm

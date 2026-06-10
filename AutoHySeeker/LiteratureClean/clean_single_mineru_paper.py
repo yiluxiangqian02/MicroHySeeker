@@ -10,8 +10,10 @@ import argparse
 import hashlib
 import html as html_module
 import json
+import os
 import re
 import shutil
+import sys
 from dataclasses import dataclass, field
 from datetime import datetime
 from html.parser import HTMLParser
@@ -1241,12 +1243,10 @@ def build_section_recovery_hints(mineru_dir: Path, content_items: list[dict[str,
         low = txt.lower()
 
         if page_idx <= 1 and item_type in {"paragraph", "title"}:
-            if _is_front_matter_paragraph(txt, ""):
-                _push(front_snippets, txt)
-            if _is_abstract_like_paragraph(txt):
+            if "abstract" in txt.lower() or "摘要" in txt:
                 _push(abstract_snippets, txt)
 
-        if item_type in {"paragraph", "title"} and _is_back_matter_paragraph(txt, ""):
+        if item_type in {"paragraph", "title"} and page_idx >= max(0, len(content_items) - 5):
             _push(back_snippets, txt)
 
         # Guard for inline abstract label inside a long paragraph block.
@@ -2445,1011 +2445,148 @@ table, tabular-data, {table.table_id}
 # ============================================================================
 # NEW PIPELINE: sections/ structure, document_tree, paragraph_index
 # (replaces memory_cards/ generation from the old pipeline)
-# ============================================================================
-
-# -- Macro section rules (keyword merge + preserve original heading) --------
-_MACRO_SECTION_META: "dict[str, dict[str, Any]]" = {
-    "S00_front_matter": {
-        "title": "Front Matter",
-        "keywords": [
-            "title", "highlights", "graphical abstract", "author", "authors",
-            "affiliation", "affiliations", "corresponding author", "institute",
-            "university", "department", "received", "accepted", "published",
-            "article history", "email", "e-mail", "作者信息", "通讯作者",
-        ],
-    },
-    "S01_abstract": {
-        "title": "Abstract",
-        "keywords": ["abstract", "summary"],
-    },
-    "S02_introduction": {
-        "title": "Introduction",
-        "keywords": [
-            "introduction", "background", "related", "motivation",
-            "引言", "绪论", "研究背景", "研究背景与意义", "背景与意义", "研究意义", "国内外研究现状", "研究现状", "问题提出",
-        ],
-    },
-    "S03_methods_and_setup": {
-        "title": "Methods And Setup",
-        "keywords": [
-            "method", "experimental", "synthesis", "preparation", "fabrication",
-            "characterization", "measurement", "electrochemical measurement", "material",
-            "computation", "dft", "protocol", "cell assembly", "setup",
-            "system construction", "stack and manifold", "实验方法", "材料与方法", "实验部分", "材料制备", "合成", "制备",
-            "表征", "测试方法", "电化学测试", "计算方法", "模型设置", "实验条件", "工况设置",
-        ],
-    },
-    "S04_results": {
-        "title": "Result",
-        "keywords": [
-            "result", "performance", "activity", "her", "oer", "water electrolysis",
-            "seawater electrolysis", "stability", "durability", "10000 h", "intermittent",
-            "start-shutdown", "cycling", "current density", "cell voltage", "overpotential",
-            "tafel", "lsv", "eis", "faradaic efficiency", "结果", "结果与分析", "性能", "电化学性能", "稳定性",
-            "耐久性", "活性", "电解性能", "对比分析", "测试结果",
-        ],
-    },
-    "S05_discussion_mechanism": {
-        "title": "Discussion Mechanism",
-        "keywords": [
-            "mechanism", "reaction mechanism", "mechanism discussion", "insight", "structural evolution",
-            "corrosion", "oxidation", "reverse current", "reverse-current", "degradation",
-            "protection mechanism", "in situ", "operando", "xps", "xrd", "tem", "sem",
-            "raman", "theoretical calculation", "charge redistribution", "讨论", "机理", "机制", "失效机制", "反向电流",
-            "阴极氧化", "腐蚀", "衰减", "降解", "结构演化", "保护机制", "理论分析", "机理分析",
-        ],
-    },
-    "S06_conclusion": {
-        "title": "Conclusion",
-        "keywords": ["conclusion", "summary", "outlook", "perspective", "结论", "总结", "结论与展望", "总结与展望", "展望"],
-    },
-    "S07_back_matter_or_supplementary": {
-        "title": "Back Matter Or Supplementary",
-        "keywords": [
-            "supporting information", "supplementary information", "supplementary data",
-            "appendix", "appendices", "references", "bibliography", "acknowledgments",
-            "acknowledgement", "author contributions", "corresponding author",
-            "conflict of interest", "competing interests", "declaration of competing interest",
-            "data availability", "code availability", "notes", "additional information",
-            "credit authorship",
-            "主要参考文献",
-            "参考文献",
-            "致谢", "作者贡献", "通讯作者", "作者信息", "利益冲突", "数据可得性", "代码可得性", "补充信息", "附录", "声明",
-        ],
-    },
-}
-
-_MACRO_SECTION_ORDER = [
-    "S00_front_matter",
-    "S01_abstract",
-    "S02_introduction",
-    "S03_methods_and_setup",
-    "S04_results",
-    "S05_discussion_mechanism",
-    "S06_conclusion",
-    "S07_back_matter_or_supplementary",
-]
-
-_INTRO_KEYS = [
-    "introduction", "background", "related", "motivation", "引言", "绪论", "研究背景", "研究背景与意义", "背景与意义", "研究意义", "国内外研究现状", "研究现状", "问题提出",
-]
-_METHOD_KEYS = [
-    "method", "experimental", "synthesis", "preparation", "fabrication", "characterization",
-    "measurement", "electrochemical measurement", "material", "computation", "dft", "protocol",
-    "cell assembly", "setup", "system construction", "stack and manifold", "实验方法", "材料与方法", "实验部分", "材料制备", "合成", "制备", "表征", "测试方法", "电化学测试", "计算方法", "模型设置", "实验条件", "工况设置",
-]
-_RESULT_KEYS = [
-    "result", "performance", "activity", "her", "oer", "water electrolysis", "seawater electrolysis",
-    "stability", "durability", "10000 h", "intermittent", "start-shutdown", "cycling",
-    "current density", "cell voltage", "overpotential", "tafel", "lsv", "eis", "faradaic efficiency", "结果", "结果与分析", "性能", "电化学性能", "稳定性", "耐久性", "活性", "电解性能", "对比分析", "测试结果",
-]
-_MECH_KEYS = [
-    "mechanism", "reaction mechanism", "mechanism discussion", "insight", "structural evolution", "corrosion",
-    "oxidation", "reverse current", "reverse-current", "degradation", "protection mechanism",
-    "in situ", "operando", "xps", "xrd", "tem", "sem", "raman", "theoretical calculation",
-    "charge redistribution", "讨论", "机理", "机制", "失效机制", "反向电流", "阴极氧化", "腐蚀", "衰减", "降解", "结构演化", "保护机制", "理论分析", "机理分析",
-]
-_CONCLUSION_KEYS = ["conclusion", "summary", "outlook", "perspective", "结论", "总结", "结论与展望", "总结与展望", "展望"]
-_NON_RESEARCH_KEYS = [
-    "supporting information", "supplementary information", "supplementary data",
-    "appendix", "appendices", "references", "bibliography", "acknowledgments",
-    "acknowledgement", "author contributions", "corresponding author",
-    "conflict of interest", "competing interests", "declaration of competing interest",
-    "data availability", "code availability", "notes", "additional information",
-    "credit authorship", "参考文献", "主要参考文献", "致谢", "作者贡献", "通讯作者", "作者信息", "利益冲突", "数据可得性", "代码可得性", "补充信息", "附录", "声明",
-]
-_FRONT_MATTER_PATTERNS = [
-    r"\bhighlights\b",
-    r"\bgraphical abstract\b",
-    r"\barticle history\b",
-    r"https?://",
-    r"doi\.org/10\.",
-    r"\bdoi\b",
-    r"\breceived\b",
-    r"\baccepted\b",
-    r"\bpublished\b",
-    r"\bcorresponding author\b",
-    r"\bdata availability\b",
-    r"\bcode availability\b",
-    r"\be-?mail\b",
-    r"\baffiliation\b",
-    r"\buniversity\b",
-    r"\bdepartment\b",
-    r"\binstitute\b",
-]
-_FRONT_MATTER_RES = [re.compile(pattern, re.IGNORECASE) for pattern in _FRONT_MATTER_PATTERNS]
-_MACRO_SECTION_RULES_SOURCE = "defaults"
-_MACRO_SCORING: dict[str, int] = {
-    "strong": 5,
-    "normal": 2,
-    "preview": 1,
-    "negative": -4,
-    "position": 1,
-}
-_UNCERTAIN_POLICY: dict[str, int] = {
-    "min_top_score": 4,
-    "min_score_gap": 2,
-}
-_DOMAIN_DICTIONARY: dict[str, list[str]] = {
-    "strong_keywords": [
-        "electrochemical hydrogen evolution",
-        "seawater electrolysis",
-        "reverse current",
-        "start-shutdown",
-        "stability",
-        "her",
-        "oer",
-        "current density",
-        "cell voltage",
-        "overpotential",
-        "corrosion",
-        "oxidation",
-        "structural evolution",
-        "mechanism",
-    ],
-    "characterization_keywords": ["xps", "xrd", "tem", "sem", "raman", "ftir", "eds", "mapping"],
-}
-_DIRECT_RULES: dict[str, list[str]] = {
-    "S00_front_matter": ["articleinfo", "highlights", "graphical abstract", "article history", "author information", "affiliations", "作者信息", "通讯作者"],
-    "S02_introduction": ["introduction", "1. introduction", "引言", "绪论", "研究背景", "研究背景与意义", "背景与意义", "研究意义", "国内外研究现状", "研究现状", "问题提出"],
-    "S06_conclusion": ["conclusion", "conclusions", "summary", "结论", "总结", "结论与展望", "总结与展望", "展望"],
-    "S07_back_matter_or_supplementary": [
-        "supporting information", "supplementary information", "supplementary data",
-        "appendix", "references", "bibliography", "acknowledgments", "acknowledgement",
-        "author contributions", "corresponding author", "conflict of interest",
-        "competing interests", "declaration of competing interest", "data availability",
-        "code availability", "notes", "additional information", "credit authorship",
-        "credit authorship contribution statement", "主要参考文献", "参考文献", "致谢", "作者贡献", "通讯作者", "作者信息", "利益冲突", "数据可得性", "代码可得性", "补充信息", "附录", "声明",
-    ],
-}
-_BODY_SECTION_IDS: set[str] = {
-    "S01_abstract", "S02_introduction", "S03_methods_and_setup", "S04_results", "S05_discussion_mechanism", "S06_conclusion"
-}
-_NON_RESEARCH_SECTION_IDS: set[str] = {"S00_front_matter", "S07_back_matter_or_supplementary"}
-
-
-def _apply_macro_section_rules_from_yaml() -> None:
-    """Optionally override default macro-section rules from macro_section_rules.yaml."""
-    global _MACRO_SECTION_META
-    global _MACRO_SECTION_ORDER
-    global _INTRO_KEYS, _METHOD_KEYS, _RESULT_KEYS, _MECH_KEYS, _CONCLUSION_KEYS, _NON_RESEARCH_KEYS
-    global _FRONT_MATTER_PATTERNS, _FRONT_MATTER_RES, _MACRO_SECTION_RULES_SOURCE
-    global _MACRO_SCORING, _UNCERTAIN_POLICY, _DOMAIN_DICTIONARY
-    global _DIRECT_RULES, _BODY_SECTION_IDS, _NON_RESEARCH_SECTION_IDS
-
-    config_path = Path(__file__).with_name("macro_section_rules.yaml")
-    if yaml is None or not config_path.exists():
-        return
-
-    try:
-        payload = yaml.safe_load(config_path.read_text(encoding="utf-8")) or {}
-        sections_payload = payload.get("sections") or []
-        loaded_meta: dict[str, dict[str, Any]] = {}
-        for item in sections_payload:
-            sid = str(item.get("id", "")).strip()
-            title = str(item.get("title", "")).strip()
-            keywords = [
-                str(keyword).strip().lower()
-                for keyword in item.get("keywords", [])
-                if str(keyword).strip()
-            ]
-            if sid and title:
-                loaded_meta[sid] = {"title": title, "keywords": keywords}
-
-        if not loaded_meta:
-            return
-
-        requested_order = [sid for sid in payload.get("order", []) if sid in loaded_meta]
-        merged_order = requested_order or [sid for sid in _MACRO_SECTION_ORDER if sid in loaded_meta]
-        merged_order += [sid for sid in loaded_meta if sid not in merged_order]
-
-        front_matter_patterns = payload.get("front_matter_patterns") or _FRONT_MATTER_PATTERNS
-        scoring_payload = payload.get("scoring") or {}
-        uncertain_payload = payload.get("uncertain") or {}
-        domain_dictionary_payload = payload.get("domain_dictionary") or {}
-        direct_rules_payload = payload.get("direct_rules") or {}
-        manual_review_policy_payload = payload.get("manual_review_policy") or {}
-
-        _MACRO_SECTION_META = loaded_meta
-        _MACRO_SECTION_ORDER = merged_order
-        _INTRO_KEYS = list(_MACRO_SECTION_META.get("S02_introduction", {}).get("keywords", []))
-        _METHOD_KEYS = list(
-            (_MACRO_SECTION_META.get("S03_methods_and_setup") or _MACRO_SECTION_META.get("S03_methods") or {}).get("keywords", [])
-        )
-        _RESULT_KEYS = list(_MACRO_SECTION_META.get("S04_results", {}).get("keywords", []))
-        _MECH_KEYS = list(
-            (_MACRO_SECTION_META.get("S05_discussion_mechanism") or _MACRO_SECTION_META.get("S05_mechanism_discussion") or _MACRO_SECTION_META.get("S05_mechanism") or {}).get("keywords", [])
-        )
-        _CONCLUSION_KEYS = list(_MACRO_SECTION_META.get("S06_conclusion", {}).get("keywords", []))
-        _NON_RESEARCH_KEYS = list(
-            (_MACRO_SECTION_META.get("S07_back_matter_or_supplementary") or _MACRO_SECTION_META.get("S07_non_research_or_supplementary") or _MACRO_SECTION_META.get("S07_supplementary") or {}).get("keywords", [])
-        )
-        _FRONT_MATTER_PATTERNS = [str(pattern) for pattern in front_matter_patterns if str(pattern).strip()]
-        _FRONT_MATTER_RES = [re.compile(pattern, re.IGNORECASE) for pattern in _FRONT_MATTER_PATTERNS]
-        _MACRO_SCORING = {
-            "strong": int(scoring_payload.get("strong", _MACRO_SCORING["strong"])),
-            "normal": int(scoring_payload.get("normal", _MACRO_SCORING["normal"])),
-            "preview": int(scoring_payload.get("preview", _MACRO_SCORING["preview"])),
-            "negative": int(scoring_payload.get("negative", _MACRO_SCORING["negative"])),
-            "position": int(scoring_payload.get("position", _MACRO_SCORING["position"])),
-        }
-        _UNCERTAIN_POLICY = {
-            "min_top_score": int(uncertain_payload.get("min_top_score", _UNCERTAIN_POLICY["min_top_score"])),
-            "min_score_gap": int(uncertain_payload.get("min_score_gap", _UNCERTAIN_POLICY["min_score_gap"])),
-        }
-        _DOMAIN_DICTIONARY = {
-            "strong_keywords": [
-                str(item).strip().lower()
-                for item in domain_dictionary_payload.get("strong_keywords", _DOMAIN_DICTIONARY["strong_keywords"])
-                if str(item).strip()
-            ],
-            "characterization_keywords": [
-                str(item).strip().lower()
-                for item in domain_dictionary_payload.get("characterization_keywords", _DOMAIN_DICTIONARY["characterization_keywords"])
-                if str(item).strip()
-            ],
-        }
-        loaded_direct_rules: dict[str, list[str]] = {}
-        for sid, terms in direct_rules_payload.items():
-            sid_s = str(sid).strip()
-            if not sid_s:
-                continue
-            loaded_direct_rules[sid_s] = [str(term).strip().lower() for term in (terms or []) if str(term).strip()]
-        if loaded_direct_rules:
-            _DIRECT_RULES = loaded_direct_rules
-
-        body_sections = {str(item).strip() for item in manual_review_policy_payload.get("body_sections", []) if str(item).strip()}
-        non_research_sections = {str(item).strip() for item in manual_review_policy_payload.get("non_research_sections", []) if str(item).strip()}
-        if body_sections:
-            _BODY_SECTION_IDS = body_sections
-        if non_research_sections:
-            _NON_RESEARCH_SECTION_IDS = non_research_sections
-        _MACRO_SECTION_RULES_SOURCE = "yaml"
-    except Exception:
-        return
-
-
-_apply_macro_section_rules_from_yaml()
-
-_FIG_REF_RE = re.compile(r"\bFig(?:ure|s?)\.?\s*(\d+)\w*", re.IGNORECASE)
-_TAB_REF_RE = re.compile(r"\bTable\s+(\d+)\w*", re.IGNORECASE)
-_CONCLUSION_HEADING_RE = re.compile(r"^(?:\d+(?:\.\d+)*\s*[\.)-]?\s*)?(?:conclusion|conclusions|summary|结论|总结)\b", re.IGNORECASE)
-_BACK_MATTER_HEADING_RE = re.compile(
-    r"(?:^|\b)(references?|bibliography|credit authorship contribution statement|credit authorship|"
-    r"author contributions?|conflict of interest|declaration of competing interest|data availability|"
-    r"code availability|acknowledg?ements?|supporting information|supplementary information|"
-    r"supplementary data|appendix|appendices|notes?|主要参考文献|参考文献)(?:\b|$)",
-    re.IGNORECASE,
-)
-_REFERENCE_LIST_ITEM_RE = re.compile(r"^\s*(?:\[\d{1,4}\]|\d{1,4}[\.)])\s+[A-Z]", re.IGNORECASE | re.MULTILINE)
-_REFERENCE_CUE_RE = re.compile(
-    r"doi\.org/10\.|https?://|\bet\s+al\.\b|\b(?:int\.|j\.|chem\.|energy|science|electrochimica|appl\.)\b|"
-    r"\(19\d{2}\)|\(20\d{2}\)",
-    re.IGNORECASE,
-)
-_ABSTRACT_START_RE = re.compile(r"^\s*(?:\*\*)?\s*(?:abstract|摘要)\s*:?(?:\*\*)?\s*", re.IGNORECASE)
-_ABSTRACT_LEAD_CUE_RE = re.compile(
-    r"(?:\bthis study\b|\bin this work\b|\bherein\b|\bwe investigate\b|\bwe report\b|\bwe demonstrate\b|"
-    r"\bwe propose\b|\bwe present\b|\bwe reveal\b|\bwe develop\b|\bwe explore\b|"
-    r"本文|本研究|本工作|本文提出|本文研究|我们研究|我们提出)",
-    re.IGNORECASE,
-)
-_CONCLUSION_START_RE = re.compile(
-    r"^\s*(?:\d+(?:\.\d+)*\s*[\.)-]?\s*)?(?:conclusion|conclusions|summary|结论|总结|结论与展望)\b",
-    re.IGNORECASE,
-)
-_BACK_MATTER_CUE_RE = re.compile(
-    r"(?:credit authorship contribution statement|credit authorship|author contributions?|"
-    r"declaration of competing interest|competing interests?|data availability|code availability|"
-    r"acknowledg?ements?|参考文献|主要参考文献|作者贡献|利益冲突|数据可得性|代码可得性|致谢)",
-    re.IGNORECASE,
-)
-
-
-def _is_numbered_heading(title: str) -> bool:
-    return bool(re.match(r"^\s*\d+(?:\.\d+)*\s*[\.)-]?\s+", title))
-
-
-def _looks_like_front_matter_heading(title: str, section_text: str) -> bool:
-    normalized_title = re.sub(r"\s+", " ", title.strip())
-    title_word_count = len(re.findall(r"[A-Za-z0-9\-]+", normalized_title))
-    if _is_numbered_heading(normalized_title) or title_word_count < 8:
-        return False
-
-    probe = f"{normalized_title}\n{section_text[:1200]}".lower()
-    author_name_hits = len(re.findall(r"\b[A-Z][a-zA-Z\-]+\s+[A-Z][a-zA-Z\-]+\b", f"{title}\n{section_text[:500]}"))
-    affiliation_terms = ["university", "department", "institute", "affiliation", "school", "laboratory", "corresponding author"]
-    if author_name_hits >= 3 and any(term in probe for term in affiliation_terms):
-        return True
-    if any(p.search(probe) for p in _FRONT_MATTER_RES):
-        return True
-    if "e-mail" in probe or "email" in probe or "@" in probe:
-        return True
-    return False
-
-
-def _is_reference_paragraph(text: str) -> bool:
-    probe = text.strip()
-    if not probe:
-        return False
-
-    # Narrative body paragraphs often contain a few citations but are not references.
-    # Guard against false positives by requiring strong bibliography density.
-    low = probe.lower()
-    citation_markers = len(re.findall(r"\[\d{1,4}\]", probe))
-    year_markers = len(re.findall(r"\((?:19|20)\d{2}\)", probe))
-    doi_markers = len(re.findall(r"doi\.org/10\.|\bdoi\b", probe, flags=re.IGNORECASE))
-    url_markers = len(re.findall(r"https?://", probe, flags=re.IGNORECASE))
-    line_count = len([ln for ln in probe.splitlines() if ln.strip()])
-    list_item_lines = len(re.findall(r"^\s*(?:\[\d{1,4}\]|\d{1,4}[\.)])\s+", probe, flags=re.MULTILINE))
-
-    if "fig." in low or "figure" in low:
-        if doi_markers == 0 and list_item_lines == 0:
-            return False
-
-    if _REFERENCE_LIST_ITEM_RE.search(probe):
-        return True
-    if doi_markers >= 1 and citation_markers >= 1:
-        return True
-    if list_item_lines >= 2:
-        return True
-    if citation_markers >= 6 and year_markers >= 3:
-        return True
-    if line_count >= 4 and citation_markers >= 4 and (doi_markers + url_markers) >= 1:
-        return True
-    if year_markers >= 4 and citation_markers >= 4 and re.search(r"\bet\s+al\.\b", probe, flags=re.IGNORECASE):
-        return True
-    return False
-
-
-def _looks_like_research_body_paragraph(text: str) -> bool:
-    """Guard against moving narrative mechanism/result paragraphs into references."""
-    low = text.lower()
-    body_cues = [
-        "reverse current", "electrolysis", "electrode", "anode", "cathode",
-        "redox", "oxidation", "degradation", "temperature", "current density",
-        "shutdown", "fig.", "figure", "as shown in fig", "this means", "it can be concluded",
-    ]
-    cue_hits = sum(1 for cue in body_cues if cue in low)
-    has_equation_or_units = bool(re.search(r"\b\d+\s*(?:ma|a|v|mv|cm\^-2|oc|°c)\b", low))
-    if cue_hits >= 3:
-        return True
-    if cue_hits >= 2 and has_equation_or_units:
-        return True
-    return False
-
-
-def _classify_macro_section_id(title: str) -> str:
-    """Classify an original heading into one macro section by keyword heuristics."""
-    normalized = re.sub(r"\s+", " ", title.lower().strip())
-
-    if _CONCLUSION_HEADING_RE.search(normalized):
-        return "S06_conclusion"
-    if _BACK_MATTER_HEADING_RE.search(normalized):
-        return "S07_back_matter_or_supplementary"
-    if "主要参考文献" in normalized:
-        return "S07_back_matter_or_supplementary"
-    if "研究背景与意义" in normalized:
-        return "S02_introduction"
-
-    # Boundary rules: default to methods unless explicit mechanism cues appear.
-    mechanism_cues = ("corrosion", "oxidation", "mechanism", "degradation", "redox", "失效", "机理")
-    if "characterization" in normalized:
-        return "S05_discussion_mechanism" if any(cue in normalized for cue in mechanism_cues) else "S03_methods_and_setup"
-    if "theoretical calculation" in normalized:
-        return "S03_methods_and_setup"
-    if "equivalent circuit model" in normalized:
-        return "S05_discussion_mechanism" if any(cue in normalized for cue in mechanism_cues) else "S03_methods_and_setup"
-    if "electrolysis and shutdown conditions" in normalized:
-        return "S03_methods_and_setup"
-
-    if any(k in normalized for k in _NON_RESEARCH_KEYS):
-        return "S07_back_matter_or_supplementary"
-    if any(k in normalized for k in _CONCLUSION_KEYS if k != "summary") or "conclusion" in normalized:
-        return "S06_conclusion"
-    if "abstract" in normalized or normalized in {"summary", "abstract"}:
-        return "S01_abstract"
-    if any(k in normalized for k in _INTRO_KEYS):
-        return "S02_introduction"
-    if any(k in normalized for k in _METHOD_KEYS):
-        return "S03_methods_and_setup"
-    if any(k in normalized for k in _RESULT_KEYS):
-        return "S04_results"
-    if any(k in normalized for k in _MECH_KEYS):
-        return "S05_discussion_mechanism"
-
-    # Default for unknown technical headings: merge into methods to avoid fragment dirs.
-    return "S03_methods_and_setup"
-
-
-def _match_direct_section_rule(title: str) -> str | None:
-    """Direct whitelist mapping from heading title to section id."""
-    normalized = re.sub(r"\s+", " ", title.lower().strip())
-    for sid, terms in _DIRECT_RULES.items():
-        for term in terms:
-            if not term:
-                continue
-            if normalized == term or normalized.startswith(f"{term} ") or term in normalized:
-                return sid
-    return None
-
-
-def _build_macro_section_score_breakdown(original_heading: str, preview_text: str) -> dict[str, Any]:
-    """Score all macro sections for one original heading and keep a reviewable breakdown."""
-    normalized_heading = re.sub(r"\s+", " ", original_heading.lower().strip())
-    normalized_preview = re.sub(r"\s+", " ", preview_text.lower().strip())
-    preview_excerpt = preview_text[:240].replace("\n", " ").strip()
-    if len(preview_text) > 240:
-        preview_excerpt += "..."
-
-    strong_terms = set(_DOMAIN_DICTIONARY.get("strong_keywords", []))
-    section_scores: list[dict[str, Any]] = []
-
-    for sid in _MACRO_SECTION_ORDER:
-        meta = _MACRO_SECTION_META.get(sid)
-        if not meta:
-            continue
-        score = 0
-        heading_hits: list[dict[str, Any]] = []
-        preview_hits: list[dict[str, Any]] = []
-        position_hits: list[dict[str, Any]] = []
-
-        for keyword in meta.get("keywords", []):
-            if keyword in normalized_heading:
-                weight = _MACRO_SCORING["strong"] if keyword in strong_terms else _MACRO_SCORING["normal"]
-                score += weight
-                heading_hits.append({"term": keyword, "weight": weight})
-            elif keyword in normalized_preview:
-                weight = _MACRO_SCORING["preview"]
-                score += weight
-                preview_hits.append({"term": keyword, "weight": weight})
-
-        canonical_title = meta.get("title", "").lower()
-        if canonical_title and (
-            normalized_heading == canonical_title
-            or normalized_heading.startswith(canonical_title)
-            or any(normalized_heading == keyword for keyword in meta.get("keywords", []))
-        ):
-            score += _MACRO_SCORING["position"]
-            position_hits.append({"term": canonical_title, "weight": _MACRO_SCORING["position"]})
-
-        section_scores.append({
-            "section_id": sid,
-            "section_title": meta.get("title", sid),
-            "score": score,
-            "heading_hits": heading_hits,
-            "preview_hits": preview_hits,
-            "position_hits": position_hits,
-        })
-
-    ranked_scores = sorted(section_scores, key=lambda item: (-item["score"], _MACRO_SECTION_ORDER.index(item["section_id"])))
-    top = ranked_scores[0] if ranked_scores else None
-    second = ranked_scores[1] if len(ranked_scores) > 1 else None
-    return {
-        "rule_source": _MACRO_SECTION_RULES_SOURCE,
-        "scoring": dict(_MACRO_SCORING),
-        "uncertain_policy": dict(_UNCERTAIN_POLICY),
-        "heading": original_heading,
-        "preview_excerpt": preview_excerpt,
-        "top_section_id": top["section_id"] if top else None,
-        "top_score": top["score"] if top else 0,
-        "second_section_id": second["section_id"] if second else None,
-        "second_score": second["score"] if second else 0,
-        "score_gap": (top["score"] - second["score"]) if top and second else None,
-        "section_scores": ranked_scores,
-    }
-
-
-def _resolve_macro_section_assignment(
-    rule_section_id: str,
-    score_breakdown: dict[str, Any],
-) -> tuple[str, str, bool, list[str], str, bool]:
-    """Choose assigned macro section from score top1 when confident, otherwise fall back."""
-    top_section_id = str(score_breakdown.get("top_section_id") or "")
-    top_score = int(score_breakdown.get("top_score") or 0)
-    score_gap = score_breakdown.get("score_gap")
-    gap_value = int(score_gap) if isinstance(score_gap, int) else 0
-
-    uncertain_reasons: list[str] = []
-    if not top_section_id:
-        uncertain_reasons.append("missing_top_section")
-    if top_score < _UNCERTAIN_POLICY["min_top_score"]:
-        uncertain_reasons.append("low_top_score")
-    if score_gap is not None and gap_value < _UNCERTAIN_POLICY["min_score_gap"]:
-        uncertain_reasons.append("low_score_gap")
-
-    if uncertain_reasons:
-        if rule_section_id in _NON_RESEARCH_SECTION_IDS:
-            # Non-research/supplementary headings should not inflate manual review queue.
-            return rule_section_id, "uncertain_fallback", True, uncertain_reasons, "soft_uncertain", False
-        return rule_section_id, "uncertain_fallback", True, uncertain_reasons, "needs_manual_review", True
-
-    return top_section_id, "score_breakdown", False, [], "auto_accept", False
-
-
-def _is_front_matter_paragraph(text: str, original_heading: str) -> bool:
-    """Heuristic splitter: metadata-like blocks should go to S00_front_matter."""
-    probe = f"{original_heading}\n{text}".strip()
-    low = probe.lower()
-    if any(p.search(probe) for p in _FRONT_MATTER_RES):
-        return True
-    if "doi:" in low or "doi.org/" in low or "orcid" in low:
-        return True
-    if "e-mail" in low or "email" in low:
-        return True
-    # Title-page author blocks often look like a comma-separated list of names,
-    # optionally followed by affiliations or symbols, without sentence punctuation.
-    if len(text) <= 320 and text.count(",") >= 3:
-        author_tokens = re.findall(r"\b[A-Z][A-Za-z\-\.]+(?:\s+[A-Z][A-Za-z\-\.]+)+\*?", text)
-        if len(author_tokens) >= 3:
-            return True
-    # Author lines often have many comma-separated names with affiliation digits.
-    name_pairs = re.findall(r"\b[A-Z][a-zA-Z\-]+\s+[A-Z][a-zA-Z\-]+\d*(?:,\d+)*", text)
-    if len(name_pairs) >= 3 and text.count(",") >= 2 and re.search(r"\d", text):
-        return True
-    if "check for updates" in low or "these authors contributed equally" in low or "e-mail:" in low:
-        return True
-    # Affiliation footnotes are usually numbered and institution-heavy.
-    if re.match(r"^\d+\s", text.strip()) and re.search(
-        r"university|department|laboratory|institute|college|school|china|hong kong|state key",
-        low,
-    ):
-        return True
-    if "articleinfo" in low or "article info" in low or "publisher" in low or "journal" in low:
-        return True
-    # Metadata blocks are often short and contain many separators.
-    if len(low) <= 220 and (low.count(":") >= 2 or low.count(";") >= 2):
-        return True
-    return False
-
-
-def _is_abstract_like_paragraph(text: str) -> bool:
-    probe = text.strip()
-    if not probe:
-        return False
-    low = probe.lower()
-    if _ABSTRACT_START_RE.search(probe):
-        return True
-    if low.startswith("keywords") or low.startswith("keyword") or low.startswith("关键词"):
-        return True
-    if _ABSTRACT_LEAD_CUE_RE.search(probe):
-        return True
-    return False
-
-
-def _is_back_matter_paragraph(text: str, original_heading: str) -> bool:
-    probe = f"{original_heading}\n{text}".strip()
-    if not probe:
-        return False
-    if _BACK_MATTER_HEADING_RE.search(probe):
-        return True
-    if _BACK_MATTER_CUE_RE.search(probe):
-        return True
-    return _is_reference_paragraph(text)
-
-
-def _is_leading_abstract_paragraph(
-    text: str,
-    heading_order: int,
-    paragraph_in_heading: int,
-    leading_front_matter_count: int,
-    abstract_started: bool,
-    doc_heading_order: int,
-    page_estimate: int | None,
-) -> bool:
-    """Infer abstract-like paragraph in the first heading after metadata lines."""
-    if doc_heading_order != 1:
-        return False
-    if paragraph_in_heading > 8:
-        return False
-    if leading_front_matter_count <= 0:
-        return False
-    if page_estimate is not None and page_estimate > 1:
-        return False
-
-    low = text.strip().lower()
-    if not low:
-        return False
-    if _is_abstract_like_paragraph(text):
-        return True
-
-    if abstract_started and not _is_reference_paragraph(text):
-        return True
-
-    # Typical leading abstract block: long narrative paragraph right after title/authors.
-    token_count = len(re.findall(r"\S+", text))
-    if token_count >= 70 and not _is_reference_paragraph(text):
-        return True
-    return False
-
-
-def _renumber_section_paragraphs(
-    paragraphs: "list[dict[str, Any]]",
-    section_id: str,
-    macro_section_title: str,
-) -> "list[dict[str, Any]]":
-    """Reassign paragraph IDs after section-level post processing."""
-    sec_prefix = section_id.split("_")[0]
-    for idx, p in enumerate(paragraphs, start=1):
-        p["order"] = idx
-        p["paragraph_id"] = f"{sec_prefix}-P{idx:03d}"
-        p["macro_section_id"] = section_id
-        p["macro_section_title"] = macro_section_title
-        p["paragraph_in_heading"] = p.get("paragraph_in_heading") or idx
-    return paragraphs
-
-
-def _extract_paragraph_keywords(text: str, original_heading: str, macro_keywords: "list[str]") -> "list[str]":
-    """Extract lightweight retrieval keywords without LLM."""
-    source_low = f"{original_heading}\n{text[:500]}".lower()
-    out: "list[str]" = []
-
-    def _push(term: str) -> None:
-        t = term.strip()
-        if t and t not in out:
-            out.append(t)
-
-    # Keep macro-specific terms when they actually occur in heading/paragraph preview.
-    for k in macro_keywords:
-        if k in source_low:
-            _push(k)
-
-    # Capture standard scientific acronyms.
-    acronyms = re.findall(r"\b[A-Z]{2,8}\b", f"{original_heading}\n{text}")
-    for a in acronyms:
-        _push(a)
-
-    # Add salient lexical tokens as fallback.
-    stop = {
-        "the", "and", "with", "from", "that", "this", "were", "have", "which", "using",
-        "into", "their", "than", "also", "for", "our", "can", "will", "was", "are", "been",
-    }
-    for tok in re.findall(r"\b[a-z][a-z0-9\-]{3,}\b", source_low):
-        if tok in stop:
-            continue
-        _push(tok)
-        if len(out) >= 12:
-            break
-
-    return out[:12]
-
-
-def _macro_top_candidates(score_breakdown: dict[str, Any], top_n: int = 2) -> list[dict[str, Any]]:
-    section_scores = score_breakdown.get("section_scores") if isinstance(score_breakdown, dict) else None
-    if not isinstance(section_scores, list):
-        return []
-    out: list[dict[str, Any]] = []
-    for item in section_scores[:max(1, top_n)]:
-        out.append(
-            {
-                "section_id": item.get("section_id"),
-                "section_title": item.get("section_title"),
-                "score": item.get("score"),
-                "heading_hits": item.get("heading_hits") or [],
-                "preview_hits": item.get("preview_hits") or [],
-                "position_hits": item.get("position_hits") or [],
-            }
-        )
-    return out
-
-
-def _build_macro_trace_from_paragraph(p: dict[str, Any]) -> dict[str, Any]:
-    score_breakdown = p.get("heading_score_breakdown") or {}
-    return {
-        "rule_source": score_breakdown.get("rule_source"),
-        "decision": score_breakdown.get("decision") or p.get("heading_assigned_by"),
-        "assigned_section_id": score_breakdown.get("assigned_section_id") or p.get("macro_section_id"),
-        "top_section_id": score_breakdown.get("top_section_id"),
-        "second_section_id": score_breakdown.get("second_section_id"),
-        "top_score": score_breakdown.get("top_score"),
-        "second_score": score_breakdown.get("second_score"),
-        "score_gap": score_breakdown.get("score_gap"),
-        "confidence_level": score_breakdown.get("confidence_level"),
-        "is_uncertain": bool(score_breakdown.get("is_uncertain")),
-        "needs_manual_review": bool(score_breakdown.get("needs_manual_review")),
-        "uncertain_reasons": score_breakdown.get("uncertain_reasons") or [],
-        "top_candidates": _macro_top_candidates(score_breakdown, top_n=2),
-    }
-
-
-def _build_macro_conflict_from_paragraph(p: dict[str, Any]) -> dict[str, Any] | None:
-    trace = _build_macro_trace_from_paragraph(p)
-    reasons: list[str] = []
-    if trace.get("is_uncertain"):
-        reasons.extend([str(r) for r in trace.get("uncertain_reasons") or []])
-
-    macro_secondary = p.get("macro_secondary")
-    if macro_secondary:
-        reasons.append("paragraph_rerouted")
-
-    second_score = int(trace.get("second_score") or 0)
-    if second_score > 0 and trace.get("top_section_id") != trace.get("assigned_section_id"):
-        reasons.append("top_candidate_mismatch")
-
-    if not reasons:
-        return None
-
-    confidence = str(trace.get("confidence_level") or "")
-    if bool(trace.get("needs_manual_review")):
-        level = "high"
-    elif confidence == "soft_uncertain" or "paragraph_rerouted" in reasons:
-        level = "medium"
-    else:
-        level = "low"
-
-    return {
-        "conflict_level": level,
-        "conflict_reasons": sorted(set(reasons)),
-        "primary_section_id": p.get("macro_section_id"),
-        "secondary_section_id": macro_secondary,
-        "top_candidate_section_id": trace.get("top_section_id"),
-        "second_candidate_section_id": trace.get("second_section_id"),
-        "score_gap": trace.get("score_gap"),
-        "confidence_level": trace.get("confidence_level"),
-        "needs_manual_review": bool(trace.get("needs_manual_review")),
-    }
-
-
-def build_tag_conflicts_report(paper_id: str, sections: "list[dict[str, Any]]") -> dict[str, Any]:
-    """Build tag_conflicts.json for audit-friendly conflict tracing (C2/C3)."""
-    items: list[dict[str, Any]] = []
-    for sec in sections:
-        for p in sec.get("paragraphs", []):
-            conflict = _build_macro_conflict_from_paragraph(p)
-            if not conflict:
-                continue
-            items.append(
-                {
-                    "paper_id": paper_id,
-                    "paragraph_uid": p.get("paragraph_uid"),
-                    "paragraph_id": p.get("paragraph_id"),
-                    "heading_uid": p.get("source_heading_uid"),
-                    "heading_text": p.get("source_heading_text") or p.get("original_heading"),
-                    "doc_heading_order": p.get("source_doc_heading_order"),
-                    "macro_trace": _build_macro_trace_from_paragraph(p),
-                    "macro_conflict": conflict,
-                    "text_preview": (p.get("text") or "")[:220].replace("\n", " ").strip(),
-                }
-            )
-
-    high = sum(1 for i in items if (i.get("macro_conflict") or {}).get("conflict_level") == "high")
-    medium = sum(1 for i in items if (i.get("macro_conflict") or {}).get("conflict_level") == "medium")
-    low = sum(1 for i in items if (i.get("macro_conflict") or {}).get("conflict_level") == "low")
-    return {
-        "paper_id": paper_id,
-        "generated_at": datetime.now().isoformat(timespec="seconds"),
-        "total_conflicts": len(items),
-        "high_conflicts": high,
-        "medium_conflicts": medium,
-        "low_conflicts": low,
-        "items": items,
-    }
-
-
-def _detect_linked_figures(text: str) -> "list[str]":
-    """Extract figure refs like 'Fig. 2' → ['FIG002']."""
-    seen: "list[str]" = []
-    for m in _FIG_REF_RE.finditer(text):
-        fid = f"FIG{int(m.group(1)):03d}"
-        if fid not in seen:
-            seen.append(fid)
-    return seen
-
-
-def _detect_linked_tables(text: str) -> "list[str]":
-    """Extract table refs like 'Table 1' → ['TAB001']."""
-    seen: "list[str]" = []
-    for m in _TAB_REF_RE.finditer(text):
-        tid = f"TAB{int(m.group(1)):03d}"
-        if tid not in seen:
-            seen.append(tid)
-    return seen
-
-
-def _classify_evidence_type(section_id: str, linked_figs: "list[str]", linked_tabs: "list[str]") -> str:
-    """Infer evidence_type from context."""
-    sid = section_id.lower()
-    if "s00_front_matter" in sid or "s07_back_matter_or_supplementary" in sid:
-        return "non_research"
-    if linked_figs:
-        return "figure_reference"
-    if linked_tabs:
-        return "table_reference"
-    if "method" in sid or "experimental" in sid or "s03" in sid:
-        return "method"
-    if "result" in sid or "s04" in sid:
-        return "result"
-    if "mechanism" in sid or "discussion" in sid or "s05" in sid:
-        return "mechanism_discussion"
-    if "abstract" in sid or "s01" in sid:
-        return "abstract"
-    return "paragraph"
 
 
 def split_into_sections(clean_text: str) -> "list[dict[str, Any]]":
-    """Parse full_clean.md into a list of section dicts.
+    """Split clean markdown text at chapter-level headings only.
 
-        Returns macro-section list where each entry merges multiple original headings.
-        Each section dict includes:
-            section_title, section_id, order, text, subsections[]
+    Uses three strategies in order:
+      A. Numbered headings (1., 1.1, 1.1.1) → depth=1 is chapter
+      B. ALL-CAPS headings → chapter; mixed-case → sub-section
+      C. Keyword matching (Introduction, Methods, Results, Discussion,
+         Conclusion, Experimental, Background)
+
+    Sub-section headings are kept in the chapter text as paragraphs,
+    not split into separate sections.
     """
-    lines_raw = clean_text.splitlines()
+    import re
 
-    # Collect all headings with their level and line index
-    all_headings: "list[tuple[int, int, str]]" = []  # (line_idx, level, title)
-    for i, line in enumerate(lines_raw):
-        m = re.match(r"^(#{1,4})\s+(.+)", line)
-        if m:
-            all_headings.append((i, len(m.group(1)), m.group(2).strip()))
+    heading_re = re.compile(r"^(#{1,3})\s+(.+)$", re.MULTILINE)
+    matches = list(heading_re.finditer(clean_text))
 
-    # Choose dominant section level: prefer ## (2), fall back to # (1)
-    level_counts: "dict[int, int]" = {}
-    for _, lvl, _ in all_headings:
-        level_counts[lvl] = level_counts.get(lvl, 0) + 1
+    if len(matches) < 2:
+        return [{"heading_text": "Full Text", "text": clean_text,
+                 "level": 1, "heading_order": 1}]
 
-    section_level = 2
-    if level_counts.get(2, 0) >= 2:
-        section_level = 2
-    elif level_counts.get(1, 0) >= 2:
-        section_level = 1
+    titles = [m.group(2).strip() for m in matches]
 
-    section_headings = [(i, title) for i, lvl, title in all_headings if lvl == section_level]
+    # ── Strategy A: numbered headings ──────────────────────────────
+    _NUM_RE = re.compile(r"^(\d+(?:\.\d+)*)\.?\s")
+    _CN_NUM_RE = re.compile(r"^（([一二三四五六七八九十]+)）")
+    numbered = [_NUM_RE.match(t) for t in titles]
+    cn_numbered = [_CN_NUM_RE.match(t) for t in titles]
 
-    if not section_headings:
-        return [{
-            "section_title": _MACRO_SECTION_META["S01_abstract"]["title"],
-            "section_id": "S01_abstract",
-            "macro_section_title": _MACRO_SECTION_META["S01_abstract"]["title"],
-            "order": 1,
-            "text": clean_text,
-            "subsections": [{"original_heading": "Full Text", "text": clean_text}],
-            "macro_keywords": _MACRO_SECTION_META["S01_abstract"]["keywords"],
-        }]
+    if sum(1 for n in numbered if n) >= 2:
+        # Depth = number of dot-separated parts
+        depths = [len(n.group(1).split(".")) if n else 99 for n in numbered]
+        chapter_indices = [i for i, d in enumerate(depths) if d == 1]
+        if not chapter_indices:
+            # No depth-1: group by first-level number (1.x→1, 2.x→2)
+            group_nums = {}
+            for i, n in enumerate(numbered):
+                if n:
+                    first = n.group(1).split(".")[0]
+                    if first not in group_nums:
+                        group_nums[first] = i
+            chapter_indices = sorted(group_nums.values())
+        return _build_sections(clean_text, matches, chapter_indices)
 
-    grouped: "dict[str, dict[str, Any]]" = {}
+    if sum(1 for c in cn_numbered if c) >= 2:
+        chapter_indices = [i for i, c in enumerate(cn_numbered) if c]
+        return _build_sections(clean_text, matches, chapter_indices)
 
-    # Preamble before first section heading is treated as front matter.
-    first_heading_idx = section_headings[0][0]
-    preamble_text = "\n".join(lines_raw[:first_heading_idx]).strip()
-    if len(re.sub(r"\s+", " ", preamble_text)) >= 80:
-        sid = "S00_front_matter"
-        meta = _MACRO_SECTION_META[sid]
-        score_breakdown = _build_macro_section_score_breakdown("Front Matter (inferred)", preamble_text)
-        score_breakdown["decision"] = "preamble_inference"
-        score_breakdown["is_uncertain"] = False
-        score_breakdown["uncertain_reasons"] = []
-        score_breakdown["confidence_level"] = "auto_accept"
-        score_breakdown["needs_manual_review"] = False
-        score_breakdown["assigned_section_id"] = sid
-        score_breakdown["assigned_section_title"] = meta["title"]
-        score_breakdown["matches_assigned_section"] = score_breakdown.get("top_section_id") == sid
-        grouped[sid] = {
-            "section_title": meta["title"],
-            "macro_section_title": meta["title"],
-            "section_id": sid,
-            "subsections": [{
-                "original_heading": "Front Matter (inferred)",
-                "text": preamble_text,
-                "assigned_by": "preamble_inference",
-                "doc_heading_order": 0,
-                "heading_level": 0,
-                "score_breakdown": score_breakdown,
-            }],
-            "macro_keywords": meta["keywords"],
-        }
+    # ── Strategy B: ALL-CAPS detection ─────────────────────────────
+    _CAPS_RE = re.compile(r"^[A-Z][A-Z\s\-/]{4,}$")
+    caps = [_CAPS_RE.match(t) for t in titles]
+    if sum(1 for c in caps if c) >= 2:
+        chapter_indices = [i for i, c in enumerate(caps) if c]
+        return _build_sections(clean_text, matches, chapter_indices)
 
-    for i, (heading_line_idx, title) in enumerate(section_headings):
-        if i + 1 < len(section_headings):
-            next_line = section_headings[i + 1][0]
-        else:
-            next_line = len(lines_raw)
-
-        section_text = "\n".join(lines_raw[heading_line_idx + 1:next_line]).strip()
-        if not section_text:
+    # ── Strategy C: keyword matching + content volume ──────────────
+    _CHAPTER_KW = [
+        "introduction", "intro", "background",
+        "experimental", "method", "methods",
+        "result", "results", "results and discussion",
+        "discussion", "discussions",
+        "conclusion", "conclusions", "summary",
+        "mechanism", "activity and stability",
+        "theoretical", "computation",
+    ]
+    chapter_indices = []
+    for i, t in enumerate(titles):
+        low = re.sub(r"^\d+(?:\.\d+)*\s*", "", t.strip().lower())
+        if any(kw in low for kw in _CHAPTER_KW):
+            chapter_indices.append(i)
             continue
+        # Fallback: heading with large content (>2200 chars) is likely a chapter
+        if i > 0:  # skip paper title
+            start = matches[i].start()
+            end = matches[i + 1].start() if i + 1 < len(matches) else len(clean_text)
+            if end - start > 2200:
+                chapter_indices.append(i)
 
-        sid = _classify_macro_section_id(title)
-        score_breakdown = _build_macro_section_score_breakdown(title, section_text)
-        direct_sid = _match_direct_section_rule(title)
-        if direct_sid:
-            sid = direct_sid
-            assigned_by = "direct_rule"
-            is_uncertain = False
-            uncertain_reasons = []
-            confidence_level = "auto_accept"
-            needs_manual_review = False
-        else:
-            sid, assigned_by, is_uncertain, uncertain_reasons, confidence_level, needs_manual_review = _resolve_macro_section_assignment(sid, score_breakdown)
-        # Hard rule: first long unnumbered heading with author/affiliation cues must be front matter.
-        if i == 0 and _looks_like_front_matter_heading(title, section_text):
-            sid = "S00_front_matter"
-            assigned_by = "front_matter_hard_rule"
-            is_uncertain = False
-            uncertain_reasons = []
-            confidence_level = "auto_accept"
-            needs_manual_review = False
-        meta = _MACRO_SECTION_META[sid]
-        score_breakdown["decision"] = assigned_by
-        score_breakdown["is_uncertain"] = is_uncertain
-        score_breakdown["uncertain_reasons"] = list(uncertain_reasons)
-        score_breakdown["confidence_level"] = confidence_level
-        score_breakdown["needs_manual_review"] = needs_manual_review
-        score_breakdown["assigned_section_id"] = sid
-        score_breakdown["assigned_section_title"] = meta["title"]
-        score_breakdown["matches_assigned_section"] = score_breakdown.get("top_section_id") == sid
-        if sid not in grouped:
-            grouped[sid] = {
-                "section_title": meta["title"],
-                "macro_section_title": meta["title"],
-                "section_id": sid,
-                "subsections": [],
-                "macro_keywords": meta["keywords"],
-            }
-        grouped[sid]["subsections"].append({
-            "original_heading": title,
-            "text": section_text,
-            "doc_heading_order": i + 1,
-            "heading_level": section_level,
-            "assigned_by": assigned_by,
-            "is_uncertain": is_uncertain,
-            "uncertain_reasons": list(uncertain_reasons),
-            "confidence_level": confidence_level,
-            "needs_manual_review": needs_manual_review,
-            "score_breakdown": score_breakdown,
+    if len(chapter_indices) >= 2:
+        return _build_sections(clean_text, matches, chapter_indices)
+
+    # ── Fallback: use all headings ─────────────────────────────────
+    chapter_indices = list(range(1, len(matches)))
+    return _build_sections(clean_text, matches, chapter_indices)
+
+
+def _build_sections(
+    clean_text: str,
+    matches: "list[re.Match]",
+    chapter_indices: "list[int]",
+) -> "list[dict[str, Any]]":
+    """Build section dicts from heading match indices."""
+    import re
+
+    chapters = [c for c in chapter_indices if c > 0]  # skip index 0 (paper title)
+    # Pre-content before first chapter heading
+    first_chapter = chapters[0] if chapters else 1
+    pre_text = clean_text[:matches[first_chapter].start()].strip()
+
+    sections = []
+    heading_order = 0
+
+    # Front-matter (title page info)
+    if pre_text:
+        heading_order += 1
+        sections.append({
+            "heading_text": matches[0].group(2).strip(),
+            "text": pre_text,
+            "level": len(matches[0].group(1)),
+            "heading_order": heading_order,
         })
 
-    sections: "list[dict[str, Any]]" = []
-    order = 0
-    for sid in _MACRO_SECTION_ORDER:
-        sec = grouped.get(sid)
-        if not sec:
-            continue
-        order += 1
-        merged_parts: "list[str]" = []
-        for sub in sec["subsections"]:
-            merged_parts.append(f"## {sub['original_heading']}\n{sub['text']}")
-        sec["text"] = "\n\n".join(merged_parts).strip()
-        sec["order"] = order
-        sections.append(sec)
+    for ci in chapters:
+        heading_order += 1
+        heading_text = matches[ci].group(2).strip()
+        start_pos = matches[ci].start()
+
+        # End position: next chapter heading, or end of text
+        end_pos = len(clean_text)
+        for ni in chapters:
+            if ni > ci:
+                end_pos = matches[ni].start()
+                break
+
+        section_text = clean_text[start_pos:end_pos].strip()
+        if section_text:
+            # Strip the heading line itself from section text
+            heading_line_end = section_text.find("\n")
+            if heading_line_end > 0:
+                section_text = section_text[heading_line_end:].strip()
+
+        if section_text:
+            sections.append({
+                "heading_text": heading_text,
+                "text": section_text,
+                "level": len(matches[ci].group(1)),
+                "heading_order": heading_order,
+            })
 
     return sections
-
-
-# Noise patterns to filter out from paragraphs
-_PARA_NOISE_RES = [
-    re.compile(r"^Downloaded from", re.IGNORECASE),
-    re.compile(r"^Copyright\b", re.IGNORECASE),
-    re.compile(r"^Published by\b", re.IGNORECASE),
-    re.compile(r"^[©]\s*\d{4}"),
-    re.compile(r"^Received:\s+\d", re.IGNORECASE),
-    re.compile(r"^Accepted:\s+\d", re.IGNORECASE),
-    re.compile(r"^doi:\s+10\.", re.IGNORECASE),
-    re.compile(r"^\[\d+\]\s+[A-Z]"),          # numbered reference list item
-    re.compile(r"^\d+\s*$"),                   # bare page number
-    re.compile(r"^\d+\s+of\s+\d+", re.IGNORECASE),  # "5 of 12"
-]
-
-
 def split_section_paragraphs(
     section_text: str,
     section_id: str,
@@ -3508,590 +2645,303 @@ def split_section_paragraphs(
     return valid
 
 
+
 def build_sections_data(
     clean_text: str,
     paper_id: str,
     pages: "list[str]",
     recovery_hints: "dict[str, Any] | None" = None,
 ) -> "list[dict[str, Any]]":
-    """Split into sections, then apply paragraph-level section recovery.
+    """Split into chapter-level sections and process paragraphs.
 
-    Recovery precedence for one paragraph:
-    1) front_matter_detector -> S00
-    2) conclusion_start_detector -> S06
-    3) abstract_leading_detector -> S01
-    4) back_matter_detector -> S07
-    5) keep original heading-level section
+    No macro classification, no S00-S07, no detector-based recovery.
+    Paragraphs stay in their original chapter section.
     """
     sections = split_into_sections(clean_text)
-    hints = recovery_hints or {}
-    hint_front = [str(item) for item in hints.get("front_snippets", []) if str(item).strip()]
-    hint_abstract = [str(item) for item in hints.get("abstract_snippets", []) if str(item).strip()]
-    hint_back = [str(item) for item in hints.get("back_snippets", []) if str(item).strip()]
     paragraph_uid_seq = 0
-    front_matter_bucket: "list[dict[str, Any]]" = []
-    abstract_bucket: "list[dict[str, Any]]" = []
-    reference_bucket: "list[dict[str, Any]]" = []
-    conclusion_bucket: "list[dict[str, Any]]" = []
 
     for sec in sections:
-        paras_all: "list[dict[str, Any]]" = []
+        heading_order = sec.get("heading_order", 1)
+        heading_text = sec.get("heading_text", "")
+        heading_level = sec.get("level", 2)
+        heading_uid_seed = f"{heading_order}:{heading_text}"
+        heading_uid = f"HRAW-{heading_order:03d}-{hashlib.sha1(heading_uid_seed.encode('utf-8')).hexdigest()[:8]}"
+
+        paras_all = []
         para_order = 0
-        for heading_order, sub in enumerate(sec.get("subsections", []), start=1):
-            sec_prefix = sec["section_id"].split("_")[0]
-            heading_id = f"{sec_prefix}-H{heading_order:03d}"
-            paras = split_section_paragraphs(
-                sub.get("text", ""),
-                sec["section_id"],
-                paper_id,
-                pages,
-                sub.get("original_heading", sec["section_title"]),
-                sec.get("macro_section_title", sec["section_title"]),
-                sec.get("macro_keywords", []),
-                start_order=para_order,
-            )
-            for p in paras:
-                paragraph_uid_seq += 1
-                source_doc_heading_order = int(sub.get("doc_heading_order", heading_order) or heading_order)
-                source_heading_text = str(sub.get("original_heading", sec["section_title"]))
-                heading_uid_seed = f"{source_doc_heading_order}:{source_heading_text}"
-                source_heading_uid = f"HRAW-{source_doc_heading_order:03d}-{hashlib.sha1(heading_uid_seed.encode('utf-8')).hexdigest()[:8]}"
-                p["heading_id"] = heading_id
-                p["heading_order"] = heading_order
-                p["doc_heading_order"] = source_doc_heading_order
-                p["heading_assigned_by"] = sub.get("assigned_by")
-                p["heading_score_breakdown"] = sub.get("score_breakdown")
-                p["paragraph_uid"] = f"PRAW-{paragraph_uid_seq:06d}"
-                p["source_heading_uid"] = source_heading_uid
-                p["source_heading_display_order"] = int(source_doc_heading_order or 0)
-                p["source_heading_text"] = source_heading_text
-                p["source_heading_level"] = int(sub.get("heading_level", 0) or 0)
-                p["source_doc_heading_order"] = source_doc_heading_order
-                p["source_block_order"] = int(p.get("paragraph_in_heading", 0) or 0)
-                p["source_section_id"] = sec["section_id"]
-                p["source_section_title"] = sec["section_title"]
-            para_order += len(paras)
 
-            keep_paras: "list[dict[str, Any]]" = []
-            leading_front_matter_count = 0
-            leading_abstract_started = False
-            for p in paras:
-                is_front = _is_front_matter_paragraph(p["text"], p["original_heading"])
-                hinted_front = _matches_recovery_snippets(p["text"], hint_front)
-                hinted_abstract = _matches_recovery_snippets(p["text"], hint_abstract)
-                hinted_back = _matches_recovery_snippets(p["text"], hint_back)
-                is_leading_zone = p.get("doc_heading_order", 99) <= 2 and p.get("paragraph_in_heading", 99) <= 8
-                on_first_page = p.get("page_estimate") in (None, 1)
-                if (is_front or hinted_front) and is_leading_zone and on_first_page:
-                    p["inferred_type"] = "none"
-                    front_matter_bucket.append(p)
-                    leading_front_matter_count += 1
-                    continue
+        # Split section text into paragraphs (double-newline boundaries)
+        para_texts = [t.strip() for t in sec.get("text", "").split("\n\n") if t.strip()]
+        for pt in para_texts:
+            # Skip noise: isolated image links, sub-figure labels (a/b/c/I/II/III)
+            stripped = pt.strip()
+            if re.match(r"^!\[\]\([^)]+\)$", stripped):
+                continue
+            if re.match(r"^[a-fA-F]?\s*(I|II|III|IV|V|VI|VII|VIII|IX|X)\s*$", stripped):
+                continue
+            if re.match(r"^[a-fA-F]\s*$", stripped):
+                continue
+            para_order += 1
+            paragraph_uid_seq += 1
+            page_estimate = estimate_page(pt, pages) if pages else None
 
-                if _CONCLUSION_START_RE.search(p["text"].strip()):
-                    p["inferred_type"] = "conclusion"
-                    conclusion_bucket.append(p)
-                    continue
-
-                if _is_leading_abstract_paragraph(
-                    p["text"],
-                    p.get("heading_order", heading_order),
-                    p.get("paragraph_in_heading", 99),
-                    leading_front_matter_count,
-                    leading_abstract_started,
-                    p.get("doc_heading_order", heading_order),
-                    p.get("page_estimate"),
-                ) or (hinted_abstract and p.get("doc_heading_order", 99) <= 2):
-                    p["inferred_type"] = "abstract"
-                    abstract_bucket.append(p)
-                    leading_abstract_started = True
-                    continue
-
-                if (
-                    sec["section_id"] != "S07_back_matter_or_supplementary"
-                    and (_is_back_matter_paragraph(p["text"], p.get("original_heading", "")) or hinted_back)
-                    and not _looks_like_research_body_paragraph(p["text"])
-                ):
-                    p["inferred_type"] = "back_matter"
-                    reference_bucket.append(p)
-                    continue
-
-                if sec["section_id"] in {"S00_front_matter", "S03_methods_and_setup", "S04_results", "S05_discussion_mechanism"} and _is_abstract_like_paragraph(p["text"]):
-                    p["inferred_type"] = "abstract"
-                    abstract_bucket.append(p)
-                    leading_abstract_started = True
-                    continue
-
-                p["inferred_type"] = "none"
-
-                keep_paras.append(p)
-            paras_all.extend(keep_paras)
-
-        sec["paragraphs"] = _renumber_section_paragraphs(
-            paras_all,
-            sec["section_id"],
-            sec.get("macro_section_title", sec["section_title"]),
-        )
-
-    if front_matter_bucket:
-        fm_id = "S00_front_matter"
-        fm_meta = _MACRO_SECTION_META[fm_id]
-        fm_sec = next((s for s in sections if s["section_id"] == fm_id), None)
-        if not fm_sec:
-            fm_sec = {
-                "section_title": fm_meta["title"],
-                "macro_section_title": fm_meta["title"],
-                "section_id": fm_id,
-                "subsections": [{"original_heading": "Front Matter (inferred)", "text": ""}],
-                "macro_keywords": fm_meta["keywords"],
-                "paragraphs": [],
-                "order": 0,
+            para = {
+                "section_id": f"S{heading_order:02d}",
+                "section_title": heading_text,
+                "heading_id": f"H{heading_order:02d}",
+                "heading_order": heading_order,
+                "heading_uid": heading_uid,
+                "heading_text": heading_text,
+                "heading_level": heading_level,
+                "doc_heading_order": heading_order,
+                "paragraph_id": f"S{heading_order:02d}-P{para_order:03d}",
+                "paragraph_uid": f"PRAW-{paragraph_uid_seq:06d}",
+                "paragraph_in_heading": para_order,
+                "paragraph_order": para_order,
+                "text": pt,
+                "text_preview": pt[:200],
+                "inferred_type": "none",
+                "page_estimate": page_estimate,
+                "source_heading_uid": heading_uid,
+                "source_heading_display_order": heading_order,
+                "source_heading_text": heading_text,
+                "source_heading_level": heading_level,
+                "source_doc_heading_order": heading_order,
+                "source_block_order": para_order,
+                "source_section_id": heading_text,
+                "source_section_title": heading_text,
+                "keywords": [],
+                "linked_figures": [],
+                "linked_tables": [],
+                "token_count": len(pt.split()),
+                "paper_id": paper_id,
+                "page_index": page_estimate,
             }
-            sections.append(fm_sec)
+            paras_all.append(para)
 
-        for p in front_matter_bucket:
-            p["heading_id"] = "S00-H001"
-            p["heading_order"] = 1
-            p["heading_assigned_by"] = "front_matter_detector"
-            p["macro_section_id"] = fm_id
-            p["macro_section_title"] = fm_meta["title"]
-            if p.get("source_section_id") and p["source_section_id"] != fm_id:
-                p["macro_secondary"] = p["source_section_id"]
-        fm_sec["paragraphs"] = _renumber_section_paragraphs(
-            fm_sec.get("paragraphs", []) + front_matter_bucket,
-            fm_id,
-            fm_meta["title"],
-        )
+        sec["paragraphs"] = paras_all
+        sec["heading_uid"] = heading_uid
+        sec["heading_id"] = f"H{heading_order:02d}"
+        sec["section_id"] = f"S{heading_order:02d}"
+        sec["section_title"] = heading_text
 
-    if abstract_bucket:
-        abs_id = "S01_abstract"
-        abs_meta = _MACRO_SECTION_META[abs_id]
-        abs_sec = next((s for s in sections if s["section_id"] == abs_id), None)
-        if not abs_sec:
-            abs_sec = {
-                "section_title": abs_meta["title"],
-                "macro_section_title": abs_meta["title"],
-                "section_id": abs_id,
-                "subsections": [{"original_heading": "Abstract (inferred)", "text": ""}],
-                "macro_keywords": abs_meta["keywords"],
-                "paragraphs": [],
-                "order": 0,
-            }
-            sections.append(abs_sec)
-
-        for p in abstract_bucket:
-            p["heading_id"] = "S01-H001"
-            p["heading_order"] = 1
-            p["heading_assigned_by"] = "abstract_leading_detector"
-            p["macro_section_id"] = abs_id
-            p["macro_section_title"] = abs_meta["title"]
-            if p.get("source_section_id") and p["source_section_id"] != abs_id:
-                p["macro_secondary"] = p["source_section_id"]
-
-        abs_sec["paragraphs"] = _renumber_section_paragraphs(
-            abs_sec.get("paragraphs", []) + abstract_bucket,
-            abs_id,
-            abs_meta["title"],
-        )
-
-    if reference_bucket:
-        back_id = "S07_back_matter_or_supplementary"
-        back_meta = _MACRO_SECTION_META[back_id]
-        back_sec = next((s for s in sections if s["section_id"] == back_id), None)
-        if not back_sec:
-            back_sec = {
-                "section_title": back_meta["title"],
-                "macro_section_title": back_meta["title"],
-                "section_id": back_id,
-                "subsections": [{"original_heading": "References (inferred)", "text": ""}],
-                "macro_keywords": back_meta["keywords"],
-                "paragraphs": [],
-                "order": 0,
-            }
-            sections.append(back_sec)
-
-        for p in reference_bucket:
-            p["heading_id"] = "S07-H900"
-            p["heading_order"] = 900
-            p["heading_assigned_by"] = "back_matter_detector"
-            p["macro_section_id"] = back_id
-            p["macro_section_title"] = back_meta["title"]
-            p["original_heading"] = "References (inferred)"
-            if p.get("source_section_id") and p["source_section_id"] != back_id:
-                p["macro_secondary"] = p["source_section_id"]
-
-        back_sec["paragraphs"] = _renumber_section_paragraphs(
-            back_sec.get("paragraphs", []) + reference_bucket,
-            back_id,
-            back_meta["title"],
-        )
-
-    if conclusion_bucket:
-        con_id = "S06_conclusion"
-        con_meta = _MACRO_SECTION_META[con_id]
-        con_sec = next((s for s in sections if s["section_id"] == con_id), None)
-        if not con_sec:
-            con_sec = {
-                "section_title": con_meta["title"],
-                "macro_section_title": con_meta["title"],
-                "section_id": con_id,
-                "subsections": [{"original_heading": "Conclusion (inferred)", "text": ""}],
-                "macro_keywords": con_meta["keywords"],
-                "paragraphs": [],
-                "order": 0,
-            }
-            sections.append(con_sec)
-
-        for p in conclusion_bucket:
-            p["heading_id"] = "S06-H001"
-            p["heading_order"] = 1
-            p["heading_assigned_by"] = "conclusion_start_detector"
-            p["macro_section_id"] = con_id
-            p["macro_section_title"] = con_meta["title"]
-            if p.get("source_section_id") and p["source_section_id"] != con_id:
-                p["macro_secondary"] = p["source_section_id"]
-
-        con_sec["paragraphs"] = _renumber_section_paragraphs(
-            con_sec.get("paragraphs", []) + conclusion_bucket,
-            con_id,
-            con_meta["title"],
-        )
-
-    ordered: "list[dict[str, Any]]" = []
-    for sid in _MACRO_SECTION_ORDER:
-        for sec in sections:
-            if sec["section_id"] == sid and sec not in ordered:
-                ordered.append(sec)
-    for i, sec in enumerate(ordered, start=1):
-        sec["order"] = i
-    return ordered
+    return sections
 
 
+# ===========================================================================
+# 2. _build_heading_dirname (unchanged from original)
+# ===========================================================================
+# This is defined elsewhere in the file, not replaced here
+
+
+# ===========================================================================
+# 3. write_sections_dir (simplified: no detectors)
+# ===========================================================================
 def write_sections_dir(
-    clean_dir: Path,
+    clean_dir: "Path",
     paper_id: str,
     sections: "list[dict[str, Any]]",
     metadata: "dict[str, Any]",
+    clean_doi: str = "",
     evidence_short_ids: "dict[str, str] | None" = None,
 ) -> None:
-    """Write sections_by_heading/ tree (fact layer primary structure)."""
-    heading_root = clean_dir / "sections_by_heading"
-    heading_root.mkdir(exist_ok=True)
+    """Write sections_by_heading/ directory tree (chapter-level only).
 
-    # Remove legacy macro-section root to prevent S00-S07 from being treated as primary structure.
-    legacy_sections = clean_dir / "sections"
-    if legacy_sections.exists() and legacy_sections.is_dir():
-        shutil.rmtree(legacy_sections, ignore_errors=True)
+    Each section gets a directory with:
+      - heading.json
+      - paragraphs.md (index)
+      - paragraphs/{paragraph_uid}.md (individual paragraph files)
+    """
+    import json
+    from pathlib import Path
 
-    raw_paths = metadata.get("raw_paths", {})
-    source_pdf = raw_paths.get("source_pdf", "")
-    mineru_dir_s = raw_paths.get("mineru_output_dir", "")
-    mineru_full_md = str(Path(mineru_dir_s) / "full.md") if mineru_dir_s else ""
-    mineru_cl_v2 = str(Path(mineru_dir_s) / "content_list_v2.json") if mineru_dir_s else ""
+    sbh_root = clean_dir / "sections_by_heading"
+    sbh_root.mkdir(parents=True, exist_ok=True)
 
-    heading_map: "dict[str, dict[str, Any]]" = {}
-    heading_seq: "list[str]" = []
-    heading_dirname_map: dict[str, str] = {}
-    display_order_map: dict[str, int] = {}
+    heading_index_entries = []
+    evidence_lookup: dict[str, str] = {}
 
     for sec in sections:
-        for p in sec.get("paragraphs", []):
-            heading_uid = str(p.get("source_heading_uid") or "")
-            if not heading_uid:
-                continue
-            if heading_uid not in heading_map:
-                heading_map[heading_uid] = {
-                    "heading_uid": heading_uid,
-                    "heading_text": p.get("source_heading_text") or p.get("original_heading") or "",
-                    "heading_level": p.get("source_heading_level"),
-                    "doc_heading_order": p.get("source_doc_heading_order", 999999),
-                    "page_index": p.get("page_estimate"),
-                    "block_order": p.get("source_block_order", p.get("paragraph_in_heading")),
-                    "paragraphs": [],
-                }
-                heading_seq.append(heading_uid)
-            heading_map[heading_uid]["paragraphs"].append(p)
+        # Build directory name from heading text
+        heading_text = sec.get("heading_text", "Untitled")
+        heading_order = sec.get("heading_order", 1)
+        slug = _heading_slugify(heading_text)
+        dirname = f"{heading_order:03d}-{slug}"
+        sec_dir = sbh_root / dirname
+        sec_dir.mkdir(parents=True, exist_ok=True)
 
-    heading_seq.sort(
-        key=lambda hid: (
-            int(heading_map[hid].get("doc_heading_order") or 999999),
-            int(heading_map[hid].get("block_order") or 999999),
-            hid,
-        )
-    )
-
-    used_dirnames: set[str] = set()
-    heading_dir_max_len = _safe_heading_dirname_max_len(clean_dir, default_max=80)
-    paper_title = str(metadata.get("title") or "")
-    display_order = 0
-    for heading_uid in heading_seq:
-        item = heading_map[heading_uid]
-        display_order += 1
-        display_order_map[heading_uid] = display_order
-        item["display_order"] = display_order
-        item["is_title_page_heading"] = bool(
-            display_order == 1
-            and int(item.get("doc_heading_order") or 0) == 1
-            and _looks_like_document_title_heading(str(item.get("heading_text") or ""), paper_title)
-        )
-        if item["is_title_page_heading"]:
-            heading_dirname_map[heading_uid] = f"{display_order:03d}-front-matter"
-            used_dirnames.add(heading_dirname_map[heading_uid])
-        else:
-            heading_dirname_map[heading_uid] = _build_heading_dirname(
-                display_order,
-                str(item.get("heading_text") or ""),
-                used_names=used_dirnames,
-                max_len=heading_dir_max_len,
-            )
-
-    index_items: "list[dict[str, Any]]" = []
-
-    for heading_uid in heading_seq:
-        item = heading_map[heading_uid]
-        heading_dirname = heading_dirname_map[heading_uid]
-        heading_dir = heading_root / heading_dirname
-        heading_dir.mkdir(exist_ok=True)
-        paras_dir = heading_dir / "paragraphs"
-        paras_dir.mkdir(exist_ok=True)
-
-        paras = sorted(
-            item["paragraphs"],
-            key=lambda p: (
-                int(p.get("source_block_order", p.get("paragraph_in_heading", 999999)) or 999999),
-                str(p.get("paragraph_uid") or ""),
-            ),
-        )
-
-        paragraph_ids = [str(p.get("paragraph_id") or "") for p in paras]
-        paragraph_uids = [str(p.get("paragraph_uid") or "") for p in paras]
-        paragraph_paths = [f"paragraphs/{uid}.md" for uid in paragraph_uids if uid]
-        linked_figures = sorted({f for p in paras for f in p.get("linked_figures", [])})
-        linked_tables = sorted({t for p in paras for t in p.get("linked_tables", [])})
-
-        write_json(
-            heading_dir / "heading.json",
-            {
-                "paper_id": paper_id,
-                "heading_uid": heading_uid,
-                "heading_dirname": heading_dirname,
-                "heading_text": item.get("heading_text", ""),
-                "heading_level": item.get("heading_level"),
-                "doc_heading_order": item.get("doc_heading_order"),
-                "display_order": item.get("display_order"),
-                "is_title_page_heading": item.get("is_title_page_heading", False),
-                "page_index": item.get("page_index"),
-                "block_order": item.get("block_order"),
-                "paragraph_count": len(paragraph_uids),
-                "paragraph_ids": paragraph_ids,
-                "paragraph_uids": paragraph_uids,
-                "paragraph_paths": paragraph_paths,
-                "linked_figures": linked_figures,
-                "linked_tables": linked_tables,
-            },
-        )
-
-        toc_lines = [f"# Heading {heading_uid}", "", f"Heading: {item.get('heading_text', '')}", ""]
-        for p in paras:
-            pid = str(p.get("paragraph_id") or "")
-            puid = str(p.get("paragraph_uid") or "")
-            p["source_heading_dirname"] = heading_dirname
-            preview = p.get("text", "")[:150].replace("\n", " ").strip()
-            if len(p.get("text", "")) > 150:
-                preview += "..."
-            ev_id = _paragraph_evidence_id(paper_id, pid)
-            ev_short = evidence_short_ids.get(ev_id, "") if evidence_short_ids else ""
-            toc_lines += [
-                f"## {puid or pid}",
-                f"Paragraph ID: {pid}",
-                f"Paragraph UID: {puid}",
-                f"Macro Primary: {p.get('macro_section_id')}",
-                f"Macro Secondary: {p.get('macro_secondary') or 'none'}",
-                f"Preview: {preview}",
-                f"Path: paragraphs/{puid}.md" if puid else "Path: paragraphs/unknown.md",
-                f"Evidence ID: {ev_id}",
-                f"Evidence Short ID: {ev_short or 'none'}",
-                "",
-            ]
-        write_text(heading_dir / "paragraphs.md", "\n".join(toc_lines))
-
-        for p in paras:
-            pid = str(p.get("paragraph_id") or "")
-            puid = str(p.get("paragraph_uid") or "")
-            if not puid:
-                continue
-            page_str = str(p.get("page_estimate")) if p.get("page_estimate") is not None else "unknown"
-            figs_str = "\n".join(f"- {f}" for f in p.get("linked_figures", [])) or "- none"
-            tabs_str = "\n".join(f"- {t}" for t in p.get("linked_tables", [])) or "- none"
-            ev_id = _paragraph_evidence_id(paper_id, pid)
-            ev_short = evidence_short_ids.get(ev_id, "") if evidence_short_ids else ""
-            content = f"""# Paragraph {puid}
-
-Paper ID: {paper_id}
-Heading UID: {heading_uid}
-Heading Text: {item.get('heading_text', '')}
-Heading Level: {item.get('heading_level')}
-Doc Heading Order: {item.get('doc_heading_order')}
-Paragraph ID: {pid}
-Paragraph UID: {puid}
-Macro Primary: {p.get('macro_section_id')}
-Macro Secondary: {p.get('macro_secondary') or 'none'}
-Page: {page_str}
-Evidence ID: {ev_id}
-Evidence Short ID: {ev_short or 'none'}
-
-## Text
-
-{p.get('text', '')}
-
-## Linked Figures
-
-{figs_str}
-
-## Linked Tables
-
-{tabs_str}
-
-## Keywords
-
-{', '.join(p.get('keywords', [])) or 'none'}
-
-## Source
-
-- source_pdf: {source_pdf}
-- mineru_full_md: {mineru_full_md}
-- mineru_content_list_v2: {mineru_cl_v2}
-"""
-            write_text(paras_dir / f"{puid}.md", content)
-
-        index_items.append(
-            {
-                "heading_uid": heading_uid,
-                "heading_dirname": heading_dirname,
-                "heading_text": item.get("heading_text", ""),
-                "heading_level": item.get("heading_level"),
-                "doc_heading_order": item.get("doc_heading_order"),
-                "display_order": item.get("display_order"),
-                "paragraph_count": len(paragraph_uids),
-                "paragraph_uids": paragraph_uids,
-                "path": f"sections_by_heading/{heading_dirname}/",
-            }
-        )
-
-    write_json(
-        heading_root / "heading_index.json",
-        {
+        # heading.json
+        hinfo = {
             "paper_id": paper_id,
-            "heading_count": len(index_items),
-            "headings": index_items,
-        },
-    )
+            "heading_uid": sec.get("heading_uid", ""),
+            "heading_id": sec.get("heading_id", f"H{heading_order:02d}"),
+            "heading_text": heading_text,
+            "heading_level": sec.get("level", 2),
+            "heading_order": heading_order,
+        }
+        write_json(sec_dir / "heading.json", hinfo)
+
+        # paragraphs/
+        paras = sec.get("paragraphs", [])
+        paras_dir = sec_dir / "paragraphs"
+        paras_dir.mkdir(parents=True, exist_ok=True)
+
+        para_index_lines = [f"# Section: {heading_text}\n"]
+        for p in paras:
+            puid = p.get("paragraph_uid", "")
+            pid = p.get("paragraph_id", "")
+            ev_id = p.get("evidence_id", _paragraph_evidence_id(paper_id, pid))
+            p["evidence_id"] = ev_id
+            evidence_lookup[pid] = ev_id
+
+            # Write individual paragraph file
+            para_path = paras_dir / f"{puid}.md"
+            para_content = _format_paragraph_md(p, paper_id)
+            write_text(para_path, para_content)
+            p["content_path"] = str(para_path.relative_to(clean_dir))
+
+            # Index line
+            text_preview = p.get("text_preview", p.get("text", "")[:120])
+            para_index_lines.append(f"- **{pid}** ({puid}): {text_preview}")
+
+        # paragraphs.md index file
+        write_text(sec_dir / "paragraphs.md", "\n".join(para_index_lines))
+
+        heading_index_entries.append({
+            "dirname": dirname,
+            "heading_uid": sec.get("heading_uid", ""),
+            "heading_text": heading_text,
+            "heading_order": heading_order,
+            "paragraph_count": len(paras),
+        })
+
+    # heading_index.json
+    write_json(sbh_root / "heading_index.json", heading_index_entries)
 
 
+# ===========================================================================
+# 4. build_document_tree (simplified: no macro_tags)
+# ===========================================================================
 def build_document_tree(
     paper_id: str,
     metadata: "dict[str, Any]",
     sections: "list[dict[str, Any]]",
-) -> "dict[str, Any]":
-    """Build document_tree.json (paper → heading tree primary map)."""
-    all_paras = [p for s in sections for p in s.get("paragraphs", [])]
-    heading_map: dict[str, dict[str, Any]] = {}
-    for p in all_paras:
-        heading_uid = str(p.get("source_heading_uid") or "")
-        if not heading_uid:
-            continue
-        item = heading_map.setdefault(
-            heading_uid,
-            {
-                "heading_uid": heading_uid,
-                "heading_text": p.get("source_heading_text") or p.get("original_heading") or "",
-                "heading_level": p.get("source_heading_level"),
-                "doc_heading_order": p.get("source_doc_heading_order"),
-                "display_order": p.get("source_heading_display_order"),
-                "page_index": p.get("page_estimate"),
-                "paragraph_count": 0,
-                "paragraph_uids": [],
-                "macro_tags": set(),
-            },
-        )
-        item["paragraph_count"] += 1
-        if p.get("paragraph_uid"):
-            item["paragraph_uids"].append(p.get("paragraph_uid"))
-        if p.get("macro_section_id"):
-            item["macro_tags"].add(p.get("macro_section_id"))
-
-    headings = sorted(
-        heading_map.values(),
-        key=lambda x: (int(x.get("display_order") or x.get("doc_heading_order") or 999999), str(x.get("heading_uid") or "")),
-    )
-    for item in headings:
-        item["macro_tags"] = sorted(item.get("macro_tags") or [])
-
-    return {
+) -> dict[str, Any]:
+    """Build document tree from chapter-level sections (no macro_tags)."""
+    tree = {
         "paper_id": paper_id,
-        "title": metadata.get("title", ""),
-        "heading_count": len(headings),
-        "paragraph_count": len(all_paras),
-        "headings": headings,
+        "sections": [],
     }
+    for sec in sections:
+        heading_order = sec.get("heading_order", 0)
+        tree["sections"].append({
+            "heading_uid": sec.get("heading_uid", ""),
+            "heading_id": sec.get("heading_id", f"H{heading_order:02d}"),
+            "heading_text": sec.get("heading_text", ""),
+            "heading_order": heading_order,
+            "paragraph_count": len(sec.get("paragraphs", [])),
+            "paragraph_ids": [p.get("paragraph_id", "") for p in sec.get("paragraphs", [])],
+        })
+    return tree
 
 
+# ===========================================================================
+# 5. build_paragraph_index (simplified: no macro fields)
+# ===========================================================================
 def build_paragraph_index(
     paper_id: str,
     sections: "list[dict[str, Any]]",
     metadata: "dict[str, Any]",
     evidence_short_ids: "dict[str, str] | None" = None,
-) -> "list[dict[str, Any]]":
-    """Build paragraph_index.json — address book for all paragraphs."""
-    source_pdf = metadata.get("raw_paths", {}).get("source_pdf", "")
-    entries: "list[dict[str, Any]]" = []
+) -> list[dict[str, Any]]:
+    """Build flat paragraph index from chapter-level sections.
+
+    paragraph_id format: H{heading_order:02d}-P{paragraph_order:03d}
+    section_id: heading text
+    No macro_primary/macro_secondary/macro_confidence/macro_trace/macro_conflict.
+    """
+    index = []
     for sec in sections:
-        sid = sec["section_id"]
-        title = sec["section_title"]
+        heading_order = sec.get("heading_order", 0)
+        heading_text = sec.get("heading_text", "")
+        heading_uid = sec.get("heading_uid", "")
+
         for p in sec.get("paragraphs", []):
-            pid = p["paragraph_id"]
-            short_pid = pid.split("-", 1)[1]
-            preview = p["text"][:200].replace("\n", " ").strip()
-            ev_id = _paragraph_evidence_id(paper_id, pid)
-            entries.append({
-                "paragraph_uid": p.get("paragraph_uid"),
-                "macro_section_id": p["macro_section_id"],
-                "macro_section_title": p["macro_section_title"],
-                "macro_primary": sid,
-                "macro_secondary": p.get("macro_secondary"),
-                "macro_confidence": (p.get("heading_score_breakdown") or {}).get("confidence_level"),
-                "macro_reasons": (p.get("heading_score_breakdown") or {}).get("uncertain_reasons") or [],
-                "macro_trace": _build_macro_trace_from_paragraph(p),
-                "macro_conflict": _build_macro_conflict_from_paragraph(p),
-                "original_heading": p["original_heading"],
-                "heading_id": p.get("heading_id"),
-                "heading_order": p.get("heading_order"),
-                "heading_uid": p.get("source_heading_uid"),
-                "heading_text": p.get("source_heading_text") or p.get("original_heading"),
-                "heading_level": p.get("source_heading_level"),
-                "doc_heading_order": p.get("source_doc_heading_order", p.get("heading_order")),
-                "page_index": p.get("page_estimate"),
-                "block_order": p.get("source_block_order", p.get("paragraph_in_heading")),
-                "paragraph_in_heading": p.get("paragraph_in_heading"),
-                "inferred_type": p.get("inferred_type", "none"),
-                "paragraph_id": pid,
-                "content_path": f"sections_by_heading/{p.get('source_heading_dirname') or p.get('source_heading_uid')}/paragraphs/{p.get('paragraph_uid')}.md",
-                "text_preview": preview,
-                "evidence_id": ev_id,
-                "evidence_short_id": evidence_short_ids.get(ev_id) if evidence_short_ids else None,
-                "linked_figures": p["linked_figures"],
-                "linked_tables": p["linked_tables"],
-                "keywords": p.get("keywords", []),
-                "token_count": p.get("token_count"),
+            pid = p.get("paragraph_id", "")
+            ev_id = p.get("evidence_id", _paragraph_evidence_id(paper_id, pid))
+            p["evidence_id"] = ev_id
+
+            index.append({
                 "paper_id": paper_id,
-                "section_id": sid,
-                "section_title": title,
-                "paragraph_order": p["order"],
-                "page_number": p["page_estimate"],
-                "source_pdf_path": source_pdf,
-                "is_research_body": sid in _BODY_SECTION_IDS,
+                "section_id": sec.get("section_id", f"S{heading_order:02d}"),
+                "section_title": heading_text,
+                "heading_id": f"H{heading_order:02d}",
+                "heading_uid": heading_uid,
+                "heading_text": heading_text,
+                "heading_level": sec.get("level", 2),
+                "heading_order": heading_order,
+                "doc_heading_order": heading_order,
+                "paragraph_id": pid,
+                "paragraph_uid": p.get("paragraph_uid", ""),
+                "paragraph_order": p.get("paragraph_order", 0),
+                "content_path": p.get("content_path", ""),
+                "text_preview": p.get("text_preview", ""),
+                "evidence_id": ev_id,
+                "evidence_short_id": "",
+                "linked_figures": p.get("linked_figures", []),
+                "linked_tables": p.get("linked_tables", []),
+                "keywords": p.get("keywords", []),
+                "token_count": p.get("token_count", 0),
+                "inferred_type": p.get("inferred_type", "none"),
+                "page_index": p.get("page_estimate"),
+                "page_number": p.get("page_estimate"),
+                "source_pdf_path": metadata.get("raw_paths", {}).get("source_pdf", ""),
             })
-    return entries
+
+    return index
+
+
+# ===========================================================================
+# 6. Helper: format paragraph markdown
+# ===========================================================================
+def _format_paragraph_md(p: dict[str, Any], paper_id: str) -> str:
+    """Format a paragraph as a .md file for sections_by_heading."""
+    lines = [
+        f"# Paragraph {p.get('paragraph_uid', '')}",
+        "",
+        f"Paper ID: {paper_id}",
+        f"Heading UID: {p.get('heading_uid', '')}",
+        f"Heading Text: {p.get('heading_text', '')}",
+        f"Heading Level: {p.get('heading_level', 0)}",
+        f"Doc Heading Order: {p.get('doc_heading_order', 0)}",
+        f"Paragraph ID: {p.get('paragraph_id', '')}",
+        f"Paragraph UID: {p.get('paragraph_uid', '')}",
+        f"Page: {p.get('page_estimate', 'unknown')}",
+        f"Evidence ID: {p.get('evidence_id', '')}",
+        "",
+        "## Text",
+        "",
+        p.get("text", ""),
+        "",
+        "## Linked Figures",
+        "",
+        "\n".join(f"- {fid}" for fid in p.get("linked_figures", [])) or "- none",
+        "",
+        "## Linked Tables",
+        "",
+        "\n".join(f"- {tid}" for tid in p.get("linked_tables", [])) or "- none",
+        "",
+        "## Keywords",
+        "",
+        ", ".join(p.get("keywords", [])),
+        "",
+        "## Source",
+        "",
+        "- source_pdf:",
+        "- mineru_full_md:",
+        "- mineru_content_list_v2:",
+    ]
+    return "\n".join(lines)
 
 
 def build_original_structure_index(
@@ -4151,6 +3001,17 @@ def build_original_structure_index(
         "headings": headings,
     }
 
+
+
+def _classify_evidence_type(section_id: str, linked_figures: list, linked_tables: list) -> str:
+    """Classify evidence type based on linked figures/tables (no S00-S07 dependency)."""
+    if linked_figures and linked_tables:
+        return "figure_and_table"
+    if linked_figures:
+        return "figure"
+    if linked_tables:
+        return "table"
+    return "paragraph"
 
 def build_evidence_links_sections(
     paper_id: str,
@@ -4277,30 +3138,13 @@ def build_quality_report(
         return round(count / total, 4)
 
     with_heading_uid = sum(1 for p in all_paras if p.get("source_heading_uid"))
-    with_heading_text = sum(1 for p in all_paras if p.get("source_heading_text") or p.get("original_heading"))
+    with_heading_text = sum(1 for p in all_paras if p.get("source_heading_text"))
     with_doc_heading_order = sum(1 for p in all_paras if p.get("source_doc_heading_order") is not None)
     with_page_index = sum(1 for p in all_paras if p.get("page_estimate") is not None)
     with_block_order = sum(1 for p in all_paras if p.get("source_block_order") is not None)
     with_paragraph_uid = sum(1 for p in all_paras if p.get("paragraph_uid"))
 
-    with_macro_primary = sum(1 for p in all_paras if p.get("macro_section_id"))
-    with_macro_secondary = sum(1 for p in all_paras if p.get("macro_secondary"))
-    with_macro_confidence = sum(
-        1 for p in all_paras if (p.get("heading_score_breakdown") or {}).get("confidence_level")
-    )
-    with_macro_reasons = sum(
-        1 for p in all_paras if (p.get("heading_score_breakdown") or {}).get("uncertain_reasons")
-    )
-    tag_conflicts = [_build_macro_conflict_from_paragraph(p) for p in all_paras]
-    tag_conflicts = [c for c in tag_conflicts if c]
-    tag_conflicts_high = sum(1 for c in tag_conflicts if c.get("conflict_level") == "high")
-    tag_conflicts_medium = sum(1 for c in tag_conflicts if c.get("conflict_level") == "medium")
-    tag_conflicts_low = sum(1 for c in tag_conflicts if c.get("conflict_level") == "low")
-
-    front_matter_count = sum(len(s.get("paragraphs", [])) for s in sections if s.get("section_id") == "S00_front_matter")
-    back_matter_count = sum(len(s.get("paragraphs", [])) for s in sections if s.get("section_id") == "S07_back_matter_or_supplementary")
-    reference_paragraph_count = sum(1 for p in all_paras if _is_reference_paragraph(p.get("text", "")))
-    conclusion_detected = any(s.get("section_id") == "S06_conclusion" and len(s.get("paragraphs", [])) > 0 for s in sections)
+    reference_paragraph_count = sum(1 for p in all_paras if len(p.get("text", "").split()) < 20)
     generated = [f for f in [
         "metadata.json", "full_clean.md", "document_tree.json",
         "paragraph_index.json", "evidence_links.json",
@@ -4320,29 +3164,6 @@ def build_quality_report(
     if not all_paras:
         warnings.append("No paragraphs extracted")
 
-    for sec in sections:
-        for sub in sec.get("subsections", []):
-            score_breakdown = sub.get("score_breakdown") or {}
-            if not score_breakdown.get("is_uncertain"):
-                continue
-            item = {
-                "section_id": sec.get("section_id"),
-                "section_title": sec.get("section_title"),
-                "original_heading": sub.get("original_heading", ""),
-                "assigned_section_id": score_breakdown.get("assigned_section_id"),
-                "top_section_id": score_breakdown.get("top_section_id"),
-                "top_score": score_breakdown.get("top_score"),
-                "second_score": score_breakdown.get("second_score"),
-                "score_gap": score_breakdown.get("score_gap"),
-                "uncertain_reasons": score_breakdown.get("uncertain_reasons", []),
-                "confidence_level": score_breakdown.get("confidence_level", "soft_uncertain"),
-                "needs_manual_review": bool(score_breakdown.get("needs_manual_review", False)),
-            }
-            if item["needs_manual_review"]:
-                needs_manual_review_items.append(item)
-            else:
-                soft_uncertain_items.append(item)
-
     return {
         "paper_id": paper_id,
         "generated_at": datetime.now().isoformat(timespec="seconds"),
@@ -4352,10 +3173,7 @@ def build_quality_report(
         "figure_count": len(figures),
         "table_count": len(tables),
         "evidence_count": len(all_paras) + len(figures) + len(tables),
-        "front_matter_count": front_matter_count,
-        "back_matter_count": back_matter_count,
         "reference_paragraph_count": reference_paragraph_count,
-        "conclusion_detected": conclusion_detected,
         "sections_summary": [
             {"section_id": s["section_id"], "section_title": s["section_title"],
              "paragraph_count": len(s.get("paragraphs", []))}
@@ -4377,22 +3195,6 @@ def build_quality_report(
             "with_block_order": with_block_order,
             "block_order_coverage": _ratio(with_block_order, total_paras),
         },
-        "tag_layer_coverage": {
-            "total_paragraphs": total_paras,
-            "with_macro_primary": with_macro_primary,
-            "macro_primary_coverage": _ratio(with_macro_primary, total_paras),
-            "with_macro_secondary": with_macro_secondary,
-            "macro_secondary_coverage": _ratio(with_macro_secondary, total_paras),
-            "with_macro_confidence": with_macro_confidence,
-            "macro_confidence_coverage": _ratio(with_macro_confidence, total_paras),
-            "with_macro_reasons": with_macro_reasons,
-            "macro_reasons_coverage": _ratio(with_macro_reasons, total_paras),
-            "tag_conflict_count": len(tag_conflicts),
-            "tag_conflict_ratio": _ratio(len(tag_conflicts), total_paras),
-            "tag_conflict_high": tag_conflicts_high,
-            "tag_conflict_medium": tag_conflicts_medium,
-            "tag_conflict_low": tag_conflicts_low,
-        },
         "removed_noise_summary": "Filtered: empty blocks, <40 chars, heading-only, page numbers, noise patterns",
         "next_review_items": [
             "Verify page number estimates against source PDF",
@@ -4401,15 +3203,6 @@ def build_quality_report(
             "Confirm no important paragraphs were filtered as noise",
         ],
         "missing_input_files": [],
-        "uncertainty_summary": {
-            "soft_uncertain_count": len(soft_uncertain_items),
-            "needs_manual_review_count": len(needs_manual_review_items),
-            "total_uncertain_count": len(soft_uncertain_items) + len(needs_manual_review_items),
-        },
-        "soft_uncertain_items": soft_uncertain_items,
-        "needs_manual_review_items": needs_manual_review_items,
-        # Backward compatibility: keep uncertain_items but only as true manual review queue.
-        "uncertain_items": needs_manual_review_items,
     }
 
 
@@ -4521,7 +3314,32 @@ def build_package(mineru_dir: Path, clean_root: Path, overwrite: bool = False) -
     if clean_dir.exists():
         if not overwrite:
             raise FileExistsError(f"Output directory already exists. Use --overwrite to rebuild: {clean_dir}")
-        shutil.rmtree(clean_dir)
+        # Long-path-safe deletion: remove ov_index chunks first, then rmtree
+        ov = clean_dir / "ov_index"
+        if ov.exists():
+            for f in ov.rglob("*"):
+                if f.is_file():
+                    try:
+                        sp = str(f.resolve())
+                        if sys.platform == "win32" and len(sp) > 259:
+                            sp = "\\\\?\\" + sp
+                        os.unlink(sp)
+                    except OSError:
+                        pass
+            for d in sorted(ov.rglob("*"), reverse=True):
+                if d.is_dir():
+                    try:
+                        sp = str(d.resolve())
+                        if sys.platform == "win32" and len(sp) > 259:
+                            sp = "\\\\?\\" + sp
+                        os.rmdir(sp)
+                    except OSError:
+                        pass
+            try:
+                os.rmdir(str(ov.resolve()))
+            except OSError:
+                pass
+        shutil.rmtree(clean_dir, ignore_errors=True)
     clean_dir.mkdir(parents=True, exist_ok=True)
 
     figures = parse_figures(lines, pages, mineru_dir)
@@ -4583,7 +3401,6 @@ def build_package(mineru_dir: Path, clean_root: Path, overwrite: bool = False) -
     write_json(clean_dir / "evidence_links.json", build_evidence_links_sections(paper_id, sections_data, figures, tables, metadata, evidence_short_ids=evidence_short_ids))
     write_json(clean_dir / "image_manifest.json", image_manifest)
     write_table_manifest(clean_dir, tables)
-    write_json(clean_dir / "tag_conflicts.json", build_tag_conflicts_report(paper_id, sections_data))
     write_json(clean_dir / "quality_report.json", build_quality_report(clean_dir, paper_id, sections_data, figures, tables, metadata))
     write_processing_record(clean_dir, metadata, figures, image_manifest)
 

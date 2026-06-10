@@ -1,3 +1,3 @@
-章节定位：Results  
-核心内容：本章节系统研究了电解电流密度和电解液温度对碱性水电解（AWE）停机过程中反向电流现象的影响，发现电解液温度是主导因素，而电流密度在较高范围内对反向电流及累积电荷影响甚微。  
-关键实体：电解液温度（$T_{\mathrm{KOH}}$）、直流电流密度（$i$）、反向电流、累积反向电荷、电极电位、Ni-mesh电极、高活性涂层电催化剂、离子电导率、停机时间
+Section Role: This section presents experimental results examining the influence of operational parameters on electrolysis performance.  
+Core Content: It investigates how variations in electrolysis current and temperature affect key process outcomes, revealing consistent trends in efficiency and reaction behavior under different conditions.  
+Key Entities: electrolysis current, temperature, electrolysis efficiency, reaction behavior, operational parameters

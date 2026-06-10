@@ -1,0 +1,3 @@
+Section Role: This section serves as the Conclusion of the study.  
+Core Content: The study demonstrates that Pb-decorated Ni (Pb/Ni) catalysts exhibit significantly enhanced reverse-current (RC) tolerance—evidenced by RCSFη of 6.35 and −RCAFη of 14.11 mA cm⁻², fivefold higher than bare Ni—and improved HER activity in alkaline media due to synergistic water activation and ligand effects, with an AWE stack retaining performance over 30 shutdown/startup cycles versus a 10.5% current loss for bare Ni.  
+Key Entities: Pb/Ni catalyst, bare Ni, reverse-current (RC) tolerance, RCSFη (6.35), RCAFη (−14.11 mA cm⁻²), alkaline water electrolysis (AWE) stack, 30 SU/SD cycles, 10.5% current loss, water activation effect, ligand effect, proton adsorption energy, band center downshift

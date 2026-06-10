@@ -1,8 +1,0 @@
----
-paper_id: "2023_uchino_dependence_of_the_reverse_current_on_the_surface_of_elec_38347e"
-section_id: "S05_discussion_mechanism"
-paragraph_id: "S05-P010"
-evidence_id: "EV-uchino2023-38347e-S05-P010"
-chunk_index: 0
----
-The $U _ { \mathrm { 1 r . m } }$ and $U _ { 2 \mathrm { r } , \mathrm { m } }$ of 1.17 and $1 . 0 4 \mathrm { V }$ slightly decreased from the $U _ { \mathrm { 1 r . i } }$ and $U _ { 2 \mathrm { r } , \mathrm { i } } ,$ respectively. Like $U _ { \mathrm { 1 , m } }$ and $U _ { 2 , \mathrm { m } }$ , discharge of the initial redox reaction would decrease the cell voltages. The cathode on the bipolar plate would be oxidized from $\left[ \mathrm { N i } / \mathrm { N i } ( \mathrm { O H } ) _ { 2 } \right]$ (f 3) by the reverse current, however, the cathode potential would not reach that of $[ \mathrm { N i } / \mathrm { N i } ( \mathrm { O H } ) _ { 2 } ]$ (f1). Because $1 . 0 0 8 \mathrm { V }$ of the potential difference between $\mathrm { [ N i O _ { 2 } / N i O O H ] }$ (a) of $1 . 4 3 4 \mathrm { V } ,$ , which is the highest potential in Table 3, and $[ \mathrm { N i } / \mathrm { N i } ( \mathrm { O H } ) _ { 2 } ]$ (f1) of $0 . 4 2 6 \mathrm { V }$ would be too low to compare with the $U _ { \mathrm { 1 r . m } }$ of 1.17 V.

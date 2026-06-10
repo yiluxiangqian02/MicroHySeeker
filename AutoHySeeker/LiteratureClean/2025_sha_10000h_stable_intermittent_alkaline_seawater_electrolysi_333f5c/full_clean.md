@@ -140,8 +140,6 @@ II
 
 III
 
-IV
-
 ![](figures/FIG005/image_001.jpg)
 V
 
@@ -149,7 +147,6 @@ V
 VI
 Fig. 5 | Theoretical calculation. a–f, Oxygen migration procedure and the corresponding free energy diagrams from CoO to the interface of CoO and $\mathsf { C o P O } _ { 4 }$ (a,b; light blue, Co; red, O; purple, P; orange, O in CoPOx), from $\mathbf { C o P O _ { 4 } }$ [EVID: EVID_FIG005]
 
-f
 to the interface of $\mathsf { C o P O } _ { 4 }$ and CoO (c,d; light blue, Co; red, O; purple, P; orange, O in CoPO ) and from CoO to the interface of CoO and NiCoP (e,f; light blue, Co; red, O; purple, P; blue, Ni).
 
 # Theoretical insight

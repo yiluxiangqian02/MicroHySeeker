@@ -1,8 +1,0 @@
----
-paper_id: "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb"
-section_id: "S05_discussion_mechanism"
-paragraph_id: "S05-P005"
-evidence_id: "EV-a2023-86a3bb-S05-P005"
-chunk_index: 0
----
-cathode side to the anode side. Immediately after shutting down the electrolyzer, the BP acts as a charged battery having a certain emf. The emf of each BP is equal to the potential difference between the anode and the cathode on either side of this bipolar plate. It is noteworthy that the anode and cathode on either side of each BP are electrically connected through the body of the BP and ionically connected through the electrolyte that fills the cell compartments and manifolds; it is a close circuit. Initially, the emf of each BP is relatively high enough to drive electric current from the positively charged anode to the negatively charged cathode through the BP. Consequently, the ionic current flows from the chamber of the cathode to that of the anode through the separators and then through the electrolyte-filled manifold tubes, as shown in Fig. S4. Therefore, the stack and attached manifold assembly, shown schematically in Fig. 2 (a), from the electrical perspective can be represented by the equivalent electrical circuit shown in Fig. 2 (b). In this equivalent circuit emf1, emf2 and emf3 represent the electromotive forces of BP-1, BP-2, and BP-3, respectively. In addition, R1' and R2' stand for the ionic resistance of the longitudinal tube and horizontal tube, respectively. Moreover, $i_{\mathrm{k,j}}$ ( $\mathrm{k} = 1, 2, 3$ and $\mathrm{j} = 1, 2, 3, 4$ ) represent the ionic reverse current portions that measured experimentally by means of DC milliampere clamp meters.

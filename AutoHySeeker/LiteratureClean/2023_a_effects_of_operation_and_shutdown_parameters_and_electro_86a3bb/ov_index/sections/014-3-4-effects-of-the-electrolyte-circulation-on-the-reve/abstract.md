@@ -1,3 +1,3 @@
-章节定位：Results  
-核心内容：本章节研究了碱性水电解（AWE）系统停机期间电解液循环对反向电流现象及电极电位行为的影响，发现停机时停止电解液循环可显著降低反向电流并延缓电极电位变化，有利于电催化剂的长期稳定性。  
-关键实体：AWE系统, 电解液循环, 反向电流现象, AN-2电极, 4-cell堆栈, BP-1, BP-3, 离子电阻（R_eff）, 停机时间, 电极电位, N₂鼓泡, 动态运行, 耐久性
+Section Role: This section presents results examining the influence of electrolyte circulation on reactive electrochemical vapor evolution.  
+Core Content: It investigates how varying electrolyte flow conditions affect the dynamics and characteristics of vapor formation during electrochemical reactions.  
+Key Entities: electrolyte circulation, reactive electrochemical vapor evolution, flow conditions, vapor formation dynamics, electrochemical reactions

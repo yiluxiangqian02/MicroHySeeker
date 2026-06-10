@@ -1,0 +1,3 @@
+Section Role: This section presents the Conclusions of the study.  
+Core Content: It summarizes the identification of the Ni cathode deactivation mechanism under reverse-current conditions in anion-exchange membrane water electrolysis (AWE) systems, demonstrates the effectiveness of cathodic protection—particularly using Pb as a sacrificial anode—and proposes RCSF as a key metric for evaluating catalyst stability during transient operations.  
+Key Entities: Ni cathode, reverse-current flow (RC), β-Ni(OH)₂, NiO, RHE potential scale, cathodic protection system, sacrificial anode, Pb, alkaline medium, RCSF metric, AWE stack, shut-down/start-up (SU/SD) events, catalytic activity, electrode morphology

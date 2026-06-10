@@ -10,12 +10,12 @@
   "journal": "",
   "document_type": "research_article",
   "raw_paths": {
-    "mineru_output_dir": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\76ec4365-1c6d-4a2f-ae16-12acf100a2df_origin",
-    "full_md": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\76ec4365-1c6d-4a2f-ae16-12acf100a2df_origin\\full.md",
-    "content_list_v2_json": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\76ec4365-1c6d-4a2f-ae16-12acf100a2df_origin\\content_list_v2.json",
-    "layout_json": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\76ec4365-1c6d-4a2f-ae16-12acf100a2df_origin\\layout.json",
-    "origin_pdf": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\76ec4365-1c6d-4a2f-ae16-12acf100a2df_origin\\2f97a7fe-973c-48f7-8d5d-b07446f21e68_origin.pdf",
-    "images_dir": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\76ec4365-1c6d-4a2f-ae16-12acf100a2df_origin\\images"
+    "mineru_output_dir": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\面上项目-正文-2026-R3 (1)",
+    "full_md": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\面上项目-正文-2026-R3 (1)\\full.md",
+    "content_list_v2_json": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\面上项目-正文-2026-R3 (1)\\content_list_v2.json",
+    "layout_json": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\面上项目-正文-2026-R3 (1)\\layout.json",
+    "origin_pdf": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\面上项目-正文-2026-R3 (1)\\12cb23e6-3a7f-4649-a37e-f2f3f0952907_origin.pdf",
+    "images_dir": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\MinerU\\output\\面上项目-正文-2026-R3 (1)\\images"
   },
   "paper_short": "unknown2026-2d8d75",
   "clean_paths": {
@@ -27,7 +27,7 @@
   },
   "processing": {
     "mode": "single_paper_semi_automatic",
-    "processed_at": "2026-05-30T16:29:47",
+    "processed_at": "2026-06-07T19:01:29",
     "script": "D:\\AI4S\\MicroHySeeker\\MicroHySeeker\\AutoHySeeker\\LiteratureClean\\clean_single_mineru_paper.py",
     "openviking_ingested": false,
     "batch_import": false,

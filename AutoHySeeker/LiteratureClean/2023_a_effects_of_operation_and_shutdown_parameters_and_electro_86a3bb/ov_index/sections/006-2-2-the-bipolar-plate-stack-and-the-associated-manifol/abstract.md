@@ -1,3 +1,3 @@
-章节定位：Methods  
-核心内容：本章节详细描述了所采用的双极板碱性水电解（AWE）堆栈结构及其配套的歧管组件设计，包括电极腔室配置、隔膜材料、电流收集器形式以及电解液流道的对称性安排。  
-关键实体：Zirfon™ PERL (UTP 500) 膜, 双极板 (bipolar plate), 零间隙配置 (zero-gap configuration), 金属网格电流收集器, PTFE 歧管管路, 阳极腔室, 阴极腔室, 电解液流速, 离子电阻
+Section Role: This section describes the design and configuration of the bipolar plate stack and its associated manifolds within a fuel cell system.  
+Core Content: It outlines the structural arrangement, flow field geometry, and manifold integration critical for reactant distribution and electrical connectivity in the stack.  
+Key Entities: bipolar plate stack, manifolds, flow field geometry, reactant distribution, electrical connectivity, fuel cell system

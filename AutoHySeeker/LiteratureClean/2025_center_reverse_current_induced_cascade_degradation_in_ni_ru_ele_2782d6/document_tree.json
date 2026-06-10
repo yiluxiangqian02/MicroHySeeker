@@ -1,316 +1,133 @@
 {
   "paper_id": "2025_center_reverse_current_induced_cascade_degradation_in_ni_ru_ele_2782d6",
-  "title": "Reverse-Current Induced Cascade Degradation in Ni-Ru Electrodes: Tracing the Path from Noble Metal Loss to Substrate Corrosion",
-  "heading_count": 17,
-  "paragraph_count": 65,
-  "headings": [
+  "sections": [
     {
       "heading_uid": "HRAW-001-31b3ef9c",
+      "heading_id": "H01",
       "heading_text": "Reverse-Current Induced Cascade Degradation in Ni-Ru Electrodes: Tracing the Path from Noble Metal Loss to Substrate Corrosion",
-      "heading_level": 1,
-      "doc_heading_order": 1,
-      "display_order": 1,
-      "page_index": null,
-      "paragraph_count": 4,
-      "paragraph_uids": [
-        "PRAW-000001",
-        "PRAW-000002",
-        "PRAW-000003",
-        "PRAW-000004"
-      ],
-      "macro_tags": [
-        "S00_front_matter",
-        "S01_abstract"
+      "heading_order": 1,
+      "paragraph_count": 9,
+      "paragraph_ids": [
+        "S01-P001",
+        "S01-P002",
+        "S01-P003",
+        "S01-P004",
+        "S01-P005",
+        "S01-P006",
+        "S01-P007",
+        "S01-P008",
+        "S01-P009"
       ]
     },
     {
-      "heading_uid": "HRAW-002-9d7aea4c",
-      "heading_text": "Abstract",
-      "heading_level": 1,
-      "doc_heading_order": 2,
-      "display_order": 2,
-      "page_index": null,
-      "paragraph_count": 1,
-      "paragraph_uids": [
-        "PRAW-000047"
-      ],
-      "macro_tags": [
-        "S01_abstract"
-      ]
-    },
-    {
-      "heading_uid": "HRAW-003-e3db4264",
+      "heading_uid": "HRAW-002-4f7950ed",
+      "heading_id": "H02",
       "heading_text": "1 | Introduction",
-      "heading_level": 1,
-      "doc_heading_order": 3,
-      "display_order": 3,
-      "page_index": null,
+      "heading_order": 2,
       "paragraph_count": 8,
-      "paragraph_uids": [
-        "PRAW-000005",
-        "PRAW-000006",
-        "PRAW-000007",
-        "PRAW-000008",
-        "PRAW-000009",
-        "PRAW-000010",
-        "PRAW-000011",
-        "PRAW-000012"
-      ],
-      "macro_tags": [
-        "S02_introduction"
+      "paragraph_ids": [
+        "S02-P001",
+        "S02-P002",
+        "S02-P003",
+        "S02-P004",
+        "S02-P005",
+        "S02-P006",
+        "S02-P007",
+        "S02-P008"
       ]
     },
     {
-      "heading_uid": "HRAW-005-034192d8",
-      "heading_text": "2.1 | Degradation Assessment",
-      "heading_level": 1,
-      "doc_heading_order": 5,
-      "display_order": 5,
-      "page_index": null,
-      "paragraph_count": 5,
-      "paragraph_uids": [
-        "PRAW-000042",
-        "PRAW-000043",
-        "PRAW-000044",
-        "PRAW-000045",
-        "PRAW-000046"
-      ],
-      "macro_tags": [
-        "S04_results"
+      "heading_uid": "HRAW-003-7bb63258",
+      "heading_id": "H03",
+      "heading_text": "2 Results and Discussion",
+      "heading_order": 3,
+      "paragraph_count": 40,
+      "paragraph_ids": [
+        "S03-P001",
+        "S03-P002",
+        "S03-P003",
+        "S03-P004",
+        "S03-P005",
+        "S03-P006",
+        "S03-P007",
+        "S03-P008",
+        "S03-P009",
+        "S03-P010",
+        "S03-P011",
+        "S03-P012",
+        "S03-P013",
+        "S03-P014",
+        "S03-P015",
+        "S03-P016",
+        "S03-P017",
+        "S03-P018",
+        "S03-P019",
+        "S03-P020",
+        "S03-P021",
+        "S03-P022",
+        "S03-P023",
+        "S03-P024",
+        "S03-P025",
+        "S03-P026",
+        "S03-P027",
+        "S03-P028",
+        "S03-P029",
+        "S03-P030",
+        "S03-P031",
+        "S03-P032",
+        "S03-P033",
+        "S03-P034",
+        "S03-P035",
+        "S03-P036",
+        "S03-P037",
+        "S03-P038",
+        "S03-P039",
+        "S03-P040"
       ]
     },
     {
-      "heading_uid": "HRAW-006-e0d94cc5",
-      "heading_text": "2.2 | Electrochemical Behavior and Morphology Evolutions",
-      "heading_level": 1,
-      "doc_heading_order": 6,
-      "display_order": 6,
-      "page_index": null,
-      "paragraph_count": 6,
-      "paragraph_uids": [
-        "PRAW-000013",
-        "PRAW-000014",
-        "PRAW-000015",
-        "PRAW-000016",
-        "PRAW-000017",
-        "PRAW-000018"
-      ],
-      "macro_tags": [
-        "S03_methods_and_setup"
-      ]
-    },
-    {
-      "heading_uid": "HRAW-007-56efe849",
-      "heading_text": "2.3 | Solution and Interface Evolutions",
-      "heading_level": 1,
-      "doc_heading_order": 7,
-      "display_order": 7,
-      "page_index": null,
-      "paragraph_count": 7,
-      "paragraph_uids": [
-        "PRAW-000048",
-        "PRAW-000049",
-        "PRAW-000050",
-        "PRAW-000051",
-        "PRAW-000052",
-        "PRAW-000053",
-        "PRAW-000054"
-      ],
-      "macro_tags": [
-        "S05_discussion_mechanism"
-      ]
-    },
-    {
-      "heading_uid": "HRAW-008-b346148b",
-      "heading_text": "2.4 | Degradation Mechanism and Pathway Analysis",
-      "heading_level": 1,
-      "doc_heading_order": 8,
-      "display_order": 8,
-      "page_index": null,
-      "paragraph_count": 6,
-      "paragraph_uids": [
-        "PRAW-000057",
-        "PRAW-000056",
-        "PRAW-000058",
-        "PRAW-000059",
-        "PRAW-000060",
-        "PRAW-000055"
-      ],
-      "macro_tags": [
-        "S01_abstract",
-        "S05_discussion_mechanism",
-        "S07_back_matter_or_supplementary"
-      ]
-    },
-    {
-      "heading_uid": "HRAW-009-d2c3d2f7",
-      "heading_text": "2.5 | Sensitivity on the RC Amplitude",
-      "heading_level": 1,
-      "doc_heading_order": 9,
-      "display_order": 9,
-      "page_index": null,
-      "paragraph_count": 10,
-      "paragraph_uids": [
-        "PRAW-000019",
-        "PRAW-000020",
-        "PRAW-000021",
-        "PRAW-000022",
-        "PRAW-000023",
-        "PRAW-000024",
-        "PRAW-000025",
-        "PRAW-000026",
-        "PRAW-000027",
-        "PRAW-000028"
-      ],
-      "macro_tags": [
-        "S03_methods_and_setup"
-      ]
-    },
-    {
-      "heading_uid": "HRAW-010-3eb17ab8",
+      "heading_uid": "HRAW-004-5a246817",
+      "heading_id": "H04",
       "heading_text": "3 | Conclusions",
-      "heading_level": 1,
-      "doc_heading_order": 10,
-      "display_order": 10,
-      "page_index": null,
+      "heading_order": 4,
       "paragraph_count": 3,
-      "paragraph_uids": [
-        "PRAW-000061",
-        "PRAW-000062",
-        "PRAW-000063"
-      ],
-      "macro_tags": [
-        "S06_conclusion",
-        "S07_back_matter_or_supplementary"
+      "paragraph_ids": [
+        "S04-P001",
+        "S04-P002",
+        "S04-P003"
       ]
     },
     {
-      "heading_uid": "HRAW-012-80ee755b",
-      "heading_text": "4.1 | Electrode Preparation",
-      "heading_level": 1,
-      "doc_heading_order": 12,
-      "display_order": 12,
-      "page_index": null,
-      "paragraph_count": 1,
-      "paragraph_uids": [
-        "PRAW-000029"
-      ],
-      "macro_tags": [
-        "S03_methods_and_setup"
-      ]
-    },
-    {
-      "heading_uid": "HRAW-013-ea48dd39",
-      "heading_text": "4.2 | AST Setup and Electrochemical Measurement",
-      "heading_level": 1,
-      "doc_heading_order": 13,
-      "display_order": 13,
-      "page_index": null,
-      "paragraph_count": 6,
-      "paragraph_uids": [
-        "PRAW-000030",
-        "PRAW-000031",
-        "PRAW-000033",
-        "PRAW-000034",
-        "PRAW-000035",
-        "PRAW-000032"
-      ],
-      "macro_tags": [
-        "S01_abstract",
-        "S03_methods_and_setup",
-        "S07_back_matter_or_supplementary"
-      ]
-    },
-    {
-      "heading_uid": "HRAW-014-e4a250d8",
-      "heading_text": "4.3 | Configuration of the Electrolyzer Validation Experiment",
-      "heading_level": 1,
-      "doc_heading_order": 14,
-      "display_order": 14,
-      "page_index": null,
-      "paragraph_count": 1,
-      "paragraph_uids": [
-        "PRAW-000036"
-      ],
-      "macro_tags": [
-        "S03_methods_and_setup"
-      ]
-    },
-    {
-      "heading_uid": "HRAW-015-5c2bca7a",
-      "heading_text": "4.4 | Physical Characterization",
-      "heading_level": 1,
-      "doc_heading_order": 15,
-      "display_order": 15,
-      "page_index": null,
-      "paragraph_count": 3,
-      "paragraph_uids": [
-        "PRAW-000037",
-        "PRAW-000038",
-        "PRAW-000039"
-      ],
-      "macro_tags": [
-        "S03_methods_and_setup"
-      ]
-    },
-    {
-      "heading_uid": "HRAW-016-0cd3eeb8",
-      "heading_text": "4.5 | Dynamic Dissolution/Deposition and Osterwalder Ripening",
-      "heading_level": 1,
-      "doc_heading_order": 16,
-      "display_order": 16,
-      "page_index": null,
-      "paragraph_count": 1,
-      "paragraph_uids": [
-        "PRAW-000040"
-      ],
-      "macro_tags": [
-        "S03_methods_and_setup"
-      ]
-    },
-    {
-      "heading_uid": "HRAW-017-d3c01fc0",
-      "heading_text": "Acknowledgements",
-      "heading_level": 1,
-      "doc_heading_order": 17,
-      "display_order": 17,
-      "page_index": null,
-      "paragraph_count": 1,
-      "paragraph_uids": [
-        "PRAW-000064"
-      ],
-      "macro_tags": [
-        "S07_back_matter_or_supplementary"
-      ]
-    },
-    {
-      "heading_uid": "HRAW-018-16b14ece",
-      "heading_text": "Conflicts of Interest",
-      "heading_level": 1,
-      "doc_heading_order": 18,
-      "display_order": 18,
-      "page_index": null,
-      "paragraph_count": 1,
-      "paragraph_uids": [
-        "PRAW-000041"
-      ],
-      "macro_tags": [
-        "S03_methods_and_setup"
-      ]
-    },
-    {
-      "heading_uid": "HRAW-019-97acb72e",
-      "heading_text": "Data Availability Statement",
-      "heading_level": 1,
-      "doc_heading_order": 19,
-      "display_order": 19,
-      "page_index": null,
-      "paragraph_count": 1,
-      "paragraph_uids": [
-        "PRAW-000065"
-      ],
-      "macro_tags": [
-        "S07_back_matter_or_supplementary"
+      "heading_uid": "HRAW-005-ef1c1366",
+      "heading_id": "H05",
+      "heading_text": "4 | Experimental",
+      "heading_order": 5,
+      "paragraph_count": 24,
+      "paragraph_ids": [
+        "S05-P001",
+        "S05-P002",
+        "S05-P003",
+        "S05-P004",
+        "S05-P005",
+        "S05-P006",
+        "S05-P007",
+        "S05-P008",
+        "S05-P009",
+        "S05-P010",
+        "S05-P011",
+        "S05-P012",
+        "S05-P013",
+        "S05-P014",
+        "S05-P015",
+        "S05-P016",
+        "S05-P017",
+        "S05-P018",
+        "S05-P019",
+        "S05-P020",
+        "S05-P021",
+        "S05-P022",
+        "S05-P023",
+        "S05-P024"
       ]
     }
   ]

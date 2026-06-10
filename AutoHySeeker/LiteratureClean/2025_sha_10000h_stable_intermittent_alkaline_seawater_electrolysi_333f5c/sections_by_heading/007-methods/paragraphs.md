@@ -1,0 +1,32 @@
+# Section: Methods
+
+- **S07-P001** (PRAW-000046): # Materials
+- **S07-P002** (PRAW-000047): Nickel(ii) nitrate hexahydrate $( \mathsf { N i } ( \mathsf { N O } _ { 3 } ) _ { 2 } { \cdot } 6 \mathsf { H } _ { 2 } \mathsf { O }$ , $98 \%$ , Tianjin Fuchen Chemical Reagent Factory), iron(iii) n
+- **S07-P003** (PRAW-000048): # Synthesis of NiCo–LDH
+- **S07-P004** (PRAW-000049): NiCo–LDH was synthesized on nickel foam through a hydrothermal method. In a typical synthesis, a piece of commercial Ni foam $( 3 \times 4 \mathrm { c m } ^ { 2 } )$ was cleaned by ultrasonication wit
+- **S07-P005** (PRAW-000050): # Synthesis of NiCoP
+- **S07-P006** (PRAW-000051): NiCoP was synthesized by phosphorization of NiCo–LDH in a tube furnace. Briefly, 0.5 g of ${ \bf N a H } _ { 2 } { \bf P } { \bf O } _ { 2 } { \bf \cdot H } _ { 2 } { \bf O }$ was placed upstream in a
+- **S07-P007** (PRAW-000052): # Synthesis of NiCoP– $\mathbf { { C r } _ { 2 } 0 } _ { 3 }$
+- **S07-P008** (PRAW-000053): NiCoP– $\mathbf { \cdot C r } _ { 2 } \mathbf { O } _ { 3 }$ was prepared by electrodepositing chromium hydroxide onto NiCoP, followed by dehydration and calcination. First, chromium hydroxide was ele
+- **S07-P009** (PRAW-000054): # Synthesis of NiCoFeP
+- **S07-P010** (PRAW-000055): First, NiCoFe hydroxide was synthesized on nickel foam using a hydrothermal method. A piece of commercial Ni foam $( 3 \times 4 \thinspace \mathrm { c m } ^ { 2 } )$ was cleaned by ultrasonication wit
+- **S07-P011** (PRAW-000056): Afterwards, the autoclave was sealed and maintained at $1 2 0 { ^ \circ \mathrm { C } }$ for 6 h. After reaction, the sample was taken out and washed three times with deionized water and ethanol, resp
+- **S07-P012** (PRAW-000057): # Synthesis of NiFeP
+- **S07-P013** (PRAW-000058): NiFeP was synthesized by the same method as for NiCoFeP but using ${ \mathsf { N i } } ( { \mathsf { N O } } _ { 3 } ) _ { 2 } { \cdot } 6 { \mathsf { H } } _ { 2 } { \mathsf { O } }$ (0.66 mmol), $\m
+- **S07-P014** (PRAW-000059): # Synthesis of Ni $/ \mathbf { N i O } / \mathbf { C r } _ { 2 } \mathbf { O } _ { 3 }$
+- **S07-P015** (PRAW-000060): ${ \sf N i } / { \sf N i O } / { \sf C r } _ { 2 } { \sf O } _ { 3 }$ electrode was prepared by means of electrodeposition followed by vacuum calcination. First, an electrodeposition solution was prep
+- **S07-P016** (PRAW-000061): # Electrochemical measurement
+- **S07-P017** (PRAW-000062): All electrochemical measurements were performed on a threeelectrode setup using a CHI660E electrochemical workstation (Shanghai Chenhua Instrument Co., Ltd.). The as-prepared NiCoP– ${ \bf \cdot C r }
+- **S07-P018** (PRAW-000063): # AEM electrolyser measurement
+- **S07-P019** (PRAW-000064): The AEM electrolyser was assembled with NiFe–LDH as anode $( 4 \thinspace { \mathrm { c m } } ^ { 2 } )$ , NiCoP– $\mathbf { \cdot C r } _ { 2 } \mathbf { O } _ { 3 }$ as cathode $( 4 \thinspace { \ma
+- **S07-P020** (PRAW-000065): spectroscopy was measured by applying an AC voltage of 5 mV with a frequency from 1,000 kHz to 0.1 Hz. The intermittent stability test was conducted at 1 A cm−2 in 1 M KOH (at $6 0 ^ { \circ } \mathrm
+- **S07-P021** (PRAW-000066): # Operando Raman characterization
+- **S07-P022** (PRAW-000067): The operando Raman spectra were collected on a LabRAM ARA-MIS (HORIBA Jobin Yvon) using a PSU-H-FDA 532-nm laser source (Changchun New Industries Optoelectronics Technology Co., Ltd.). A LMPlanFLN $5 
+- **S07-P023** (PRAW-000068): # Operando ATR-SEIRAS characterization
+- **S07-P024** (PRAW-000069): The operando attenuated total reflectance surface-enhanced infrared absorption spectroscopy (ATR-SEIRAS) spectra were recorded on a Nicolet iS50 FTIR Spectrometer equipped with a mercury cadmium tellu
+- **S07-P025** (PRAW-000070): # Material characterization
+- **S07-P026** (PRAW-000071): Scanning electron microscopy (SEM) images were obtained on a Zeiss SUPRA 55 scanning electron microscope, which was operated at $2 0 \mathrm { k V } .$ X-ray powder diffraction patterns were recorded 
+- **S07-P027** (PRAW-000072): # HAADF-STEM characterization
+- **S07-P028** (PRAW-000073): The HAADF-STEM images were acquired using a Thermo Fisher Spectra 300 microscope equipped with an aberration corrector for the probe-forming lens, operated at $3 0 0 \mathsf { k V } .$ . Before imagin
+- **S07-P029** (PRAW-000074): # TOF-SIMS measurement
+- **S07-P030** (PRAW-000075): The TOF-SIMS spectra were obtained on a TOF.SIMS 5-100 (ION-TOF GmbH). For TOF-SIMS depth profiling, a ${ \mathsf { C } } { \mathsf { s } } ^ { + }$ ion beam (≈120 nA, 2 keV) was used to sputter a $2

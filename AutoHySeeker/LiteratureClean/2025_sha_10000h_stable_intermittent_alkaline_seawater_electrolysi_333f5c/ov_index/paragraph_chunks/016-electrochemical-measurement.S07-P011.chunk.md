@@ -1,8 +1,0 @@
----
-paper_id: "2025_sha_10000h_stable_intermittent_alkaline_seawater_electrolysi_333f5c"
-section_id: "S07_back_matter_or_supplementary"
-paragraph_id: "S07-P011"
-evidence_id: "EV-sha2025-333f5c-S07-P011"
-chunk_index: 0
----
-All electrochemical measurements were performed on a threeelectrode setup using a CHI660E electrochemical workstation (Shanghai Chenhua Instrument Co., Ltd.). The as-prepared NiCoP– ${ \bf \cdot C r } _ { 2 } { \bf O } _ { 3 }$ served as a working electrode $\scriptstyle \mathbf { 1 } \mathbf { c m } ^ { 2 }$ working area) and a NiCoFeP electrode and a $\mathsf { H g / H g O }$ electrode served as the counter electrode and the reference electrode, respectively. Cyclic voltammetry was measured at a scan rate of $2 \mathsf { m } \mathsf { V } \mathsf { s } ^ { - 1 }$ after 40 cycles of cyclic voltammetry activation with a scan rate of $1 0 0 \mathrm { \ m V s ^ { - 1 } }$ . Electrochemical impedance spectroscopy was measured by applying an AC voltage of $5 \mathsf { m } \mathsf { V }$ with a frequency from $1 , 0 0 0 \mathsf { k H z }$ to $0 . 1 \mathsf { H z }$ . All polarization curves were corrected for ohmic drop compensation with ohmic resistance obtained by electrochemical impedance spectroscopy. The Hg/HgO reference electrode against the RHE scale was directly measured by a two-electrode setup, consisting of a RHE and a $\mathsf { H g / H g O }$ reference electrode to be calibrated. An open circuit potential measurement was applied after RHE saturation of high-purity ${ \sf H } _ { 2 }$ gas, obtaining a stable potential. This potential is the difference between RHE and the $\mathsf { H g / H g O }$ reference electrode (Supplementary Figs. 58 and 59).

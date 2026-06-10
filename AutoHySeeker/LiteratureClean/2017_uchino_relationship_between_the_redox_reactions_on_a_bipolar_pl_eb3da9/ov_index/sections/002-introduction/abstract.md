@@ -1,3 +1,3 @@
-章节定位：Introduction  
-核心内容：本章节综述了碱性水电解技术在可再生能源储能中的应用背景，重点介绍了双极型电解槽的结构特点、漏电流与反向电流问题，并指出反向电流机制尚不明确，从而引出本研究旨在探究碱性水电解槽运行条件、电池电压与反向电流之间的关系。  
-关键实体：碱性水电解, 双极型电解槽, 单极型电解槽, 水电解制氢, 可再生能源, 漏电流, 反向电流, 电极, 离子交换膜, 电流密度, 电池电压
+Section Role: This section serves as the Introduction, establishing the context and motivation for the study.  
+Core Content: It outlines the challenges of integrating renewable energy with alkaline water electrolysis, reviews monopolar versus bipolar electrolyzer designs, identifies issues related to leak currents and reverse currents, and highlights the lack of mechanistic understanding of reverse current phenomena in alkaline systems.  
+Key Entities: alkaline water electrolysis, bipolar-type electrolyzer, monopolar-type electrolyzer, renewable energy intermittency, hydrogen production, ion exchange membrane, current density, cell voltage, leak current, reverse current, self-discharge, electrode degradation, operating conditions

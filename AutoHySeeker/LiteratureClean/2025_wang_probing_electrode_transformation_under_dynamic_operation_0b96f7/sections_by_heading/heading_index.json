@@ -1,255 +1,37 @@
-{
-  "paper_id": "2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7",
-  "heading_count": 14,
-  "headings": [
-    {
-      "heading_uid": "HRAW-001-df1ed5df",
-      "heading_dirname": "001-front-matter",
-      "heading_text": "Probing Electrode Transformation under Dynamic Operation for Alkaline Water Electrolysis",
-      "heading_level": 1,
-      "doc_heading_order": 1,
-      "display_order": 1,
-      "paragraph_count": 2,
-      "paragraph_uids": [
-        "PRAW-000040",
-        "PRAW-000041"
-      ],
-      "path": "sections_by_heading/001-front-matter/"
-    },
-    {
-      "heading_uid": "HRAW-002-2812cee1",
-      "heading_dirname": "002-1-introduction",
-      "heading_text": "1. Introduction",
-      "heading_level": 1,
-      "doc_heading_order": 2,
-      "display_order": 2,
-      "paragraph_count": 15,
-      "paragraph_uids": [
-        "PRAW-000001",
-        "PRAW-000002",
-        "PRAW-000003",
-        "PRAW-000004",
-        "PRAW-000005",
-        "PRAW-000006",
-        "PRAW-000007",
-        "PRAW-000008",
-        "PRAW-000009",
-        "PRAW-000010",
-        "PRAW-000011",
-        "PRAW-000012",
-        "PRAW-000013",
-        "PRAW-000014",
-        "PRAW-000015"
-      ],
-      "path": "sections_by_heading/002-1-introduction/"
-    },
-    {
-      "heading_uid": "HRAW-004-334fff58",
-      "heading_dirname": "003-2-1-quantify-electrochemical-behaviors-in-reverse-c",
-      "heading_text": "2.1. Quantify Electrochemical Behaviors in Reverse Current Process",
-      "heading_level": 1,
-      "doc_heading_order": 4,
-      "display_order": 3,
-      "paragraph_count": 9,
-      "paragraph_uids": [
-        "PRAW-000042",
-        "PRAW-000043",
-        "PRAW-000044",
-        "PRAW-000045",
-        "PRAW-000046",
-        "PRAW-000047",
-        "PRAW-000048",
-        "PRAW-000049",
-        "PRAW-000050"
-      ],
-      "path": "sections_by_heading/003-2-1-quantify-electrochemical-behaviors-in-reverse-c/"
-    },
-    {
-      "heading_uid": "HRAW-005-ddea5b8b",
-      "heading_dirname": "004-2-2-reverse-current-accelerated-stress-testing-ast",
-      "heading_text": "2.2. Reverse Current Accelerated-Stress Testing (AST)",
-      "heading_level": 1,
-      "doc_heading_order": 5,
-      "display_order": 4,
-      "paragraph_count": 5,
-      "paragraph_uids": [
-        "PRAW-000051",
-        "PRAW-000052",
-        "PRAW-000053",
-        "PRAW-000054",
-        "PRAW-000055"
-      ],
-      "path": "sections_by_heading/004-2-2-reverse-current-accelerated-stress-testing-ast/"
-    },
-    {
-      "heading_uid": "HRAW-006-537403c7",
-      "heading_dirname": "005-2-3-electrochemical-behaviors-of-anode-and-cathode",
-      "heading_text": "2.3. Electrochemical Behaviors of Anode and Cathode during Reverse Current AST",
-      "heading_level": 1,
-      "doc_heading_order": 6,
-      "display_order": 5,
-      "paragraph_count": 6,
-      "paragraph_uids": [
-        "PRAW-000056",
-        "PRAW-000057",
-        "PRAW-000058",
-        "PRAW-000059",
-        "PRAW-000060",
-        "PRAW-000061"
-      ],
-      "path": "sections_by_heading/005-2-3-electrochemical-behaviors-of-anode-and-cathode/"
-    },
-    {
-      "heading_uid": "HRAW-007-0b75d58c",
-      "heading_dirname": "006-2-4-unravel-the-degradation-mechanism",
-      "heading_text": "2.4. Unravel the Degradation Mechanism",
-      "heading_level": 1,
-      "doc_heading_order": 7,
-      "display_order": 6,
-      "paragraph_count": 12,
-      "paragraph_uids": [
-        "PRAW-000062",
-        "PRAW-000063",
-        "PRAW-000064",
-        "PRAW-000065",
-        "PRAW-000066",
-        "PRAW-000067",
-        "PRAW-000068",
-        "PRAW-000069",
-        "PRAW-000070",
-        "PRAW-000071",
-        "PRAW-000072",
-        "PRAW-000073"
-      ],
-      "path": "sections_by_heading/006-2-4-unravel-the-degradation-mechanism/"
-    },
-    {
-      "heading_uid": "HRAW-008-2bff91de",
-      "heading_dirname": "007-3-conclusion",
-      "heading_text": "3. Conclusion",
-      "heading_level": 1,
-      "doc_heading_order": 8,
-      "display_order": 7,
-      "paragraph_count": 1,
-      "paragraph_uids": [
-        "PRAW-000075"
-      ],
-      "path": "sections_by_heading/007-3-conclusion/"
-    },
-    {
-      "heading_uid": "HRAW-009-7b936880",
-      "heading_dirname": "008-4-experimental-section",
-      "heading_text": "4. Experimental Section",
-      "heading_level": 1,
-      "doc_heading_order": 9,
-      "display_order": 8,
-      "paragraph_count": 24,
-      "paragraph_uids": [
-        "PRAW-000016",
-        "PRAW-000017",
-        "PRAW-000018",
-        "PRAW-000019",
-        "PRAW-000020",
-        "PRAW-000021",
-        "PRAW-000022",
-        "PRAW-000023",
-        "PRAW-000024",
-        "PRAW-000025",
-        "PRAW-000026",
-        "PRAW-000027",
-        "PRAW-000028",
-        "PRAW-000029",
-        "PRAW-000030",
-        "PRAW-000031",
-        "PRAW-000032",
-        "PRAW-000033",
-        "PRAW-000034",
-        "PRAW-000035",
-        "PRAW-000036",
-        "PRAW-000037",
-        "PRAW-000038",
-        "PRAW-000039"
-      ],
-      "path": "sections_by_heading/008-4-experimental-section/"
-    },
-    {
-      "heading_uid": "HRAW-010-a0dbfe9a",
-      "heading_dirname": "009-supporting-information",
-      "heading_text": "Supporting Information",
-      "heading_level": 1,
-      "doc_heading_order": 10,
-      "display_order": 9,
-      "paragraph_count": 1,
-      "paragraph_uids": [
-        "PRAW-000076"
-      ],
-      "path": "sections_by_heading/009-supporting-information/"
-    },
-    {
-      "heading_uid": "HRAW-011-e0fafa1d",
-      "heading_dirname": "010-acknowledgements",
-      "heading_text": "Acknowledgements",
-      "heading_level": 1,
-      "doc_heading_order": 11,
-      "display_order": 10,
-      "paragraph_count": 2,
-      "paragraph_uids": [
-        "PRAW-000077",
-        "PRAW-000078"
-      ],
-      "path": "sections_by_heading/010-acknowledgements/"
-    },
-    {
-      "heading_uid": "HRAW-012-da9b5e4b",
-      "heading_dirname": "011-conflict-of-interest",
-      "heading_text": "Conflict of Interest",
-      "heading_level": 1,
-      "doc_heading_order": 12,
-      "display_order": 11,
-      "paragraph_count": 1,
-      "paragraph_uids": [
-        "PRAW-000079"
-      ],
-      "path": "sections_by_heading/011-conflict-of-interest/"
-    },
-    {
-      "heading_uid": "HRAW-013-0204eb85",
-      "heading_dirname": "012-author-contributions",
-      "heading_text": "Author Contributions",
-      "heading_level": 1,
-      "doc_heading_order": 13,
-      "display_order": 12,
-      "paragraph_count": 1,
-      "paragraph_uids": [
-        "PRAW-000080"
-      ],
-      "path": "sections_by_heading/012-author-contributions/"
-    },
-    {
-      "heading_uid": "HRAW-014-e654ce42",
-      "heading_dirname": "013-data-availability-statement",
-      "heading_text": "Data Availability Statement",
-      "heading_level": 1,
-      "doc_heading_order": 14,
-      "display_order": 13,
-      "paragraph_count": 1,
-      "paragraph_uids": [
-        "PRAW-000081"
-      ],
-      "path": "sections_by_heading/013-data-availability-statement/"
-    },
-    {
-      "heading_uid": "HRAW-015-0f2af617",
-      "heading_dirname": "014-keywords",
-      "heading_text": "Keywords",
-      "heading_level": 1,
-      "doc_heading_order": 15,
-      "display_order": 14,
-      "paragraph_count": 1,
-      "paragraph_uids": [
-        "PRAW-000074"
-      ],
-      "path": "sections_by_heading/014-keywords/"
-    }
-  ]
-}
+[
+  {
+    "dirname": "001-probing-electrode-transformation-under-dynamic-operation-for-alk",
+    "heading_uid": "HRAW-001-df1ed5df",
+    "heading_text": "Probing Electrode Transformation under Dynamic Operation for Alkaline Water Electrolysis",
+    "heading_order": 1,
+    "paragraph_count": 3
+  },
+  {
+    "dirname": "002-1-introduction",
+    "heading_uid": "HRAW-002-2812cee1",
+    "heading_text": "1. Introduction",
+    "heading_order": 2,
+    "paragraph_count": 33
+  },
+  {
+    "dirname": "003-2-results-and-discussion",
+    "heading_uid": "HRAW-003-b457bc41",
+    "heading_text": "2. Results and Discussion",
+    "heading_order": 3,
+    "paragraph_count": 44
+  },
+  {
+    "dirname": "004-3-conclusion",
+    "heading_uid": "HRAW-004-8f30e286",
+    "heading_text": "3. Conclusion",
+    "heading_order": 4,
+    "paragraph_count": 1
+  },
+  {
+    "dirname": "005-4-experimental-section",
+    "heading_uid": "HRAW-005-85467980",
+    "heading_text": "4. Experimental Section",
+    "heading_order": 5,
+    "paragraph_count": 44
+  }
+]

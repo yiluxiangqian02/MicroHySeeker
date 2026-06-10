@@ -204,13 +204,14 @@ class SemanticProcessor(DequeueHandlerBase):
                 except Exception as e:
                     logger.warning(f"Failed to list directory {msg.uri}: {e}")
 
-                # Process this directory
-                await self._process_single_directory(
-                    uri=msg.uri,
-                    context_type=msg.context_type,
-                    children_uris=children_uris,
-                    file_paths=file_paths,
-                )
+                # Skip single-file leaf directories (paragraph doc nodes)
+                if not children_uris and len(file_paths) == 1:
+                    await self._process_single_directory(
+                        uri=msg.uri,
+                        context_type=msg.context_type,
+                        children_uris=children_uris,
+                        file_paths=file_paths,
+                    )
 
                 logger.info(f"Completed semantic generation for: {msg.uri}")
                 self.report_success()
@@ -234,6 +235,13 @@ class SemanticProcessor(DequeueHandlerBase):
         file_paths: List[str],
     ) -> None:
         """Process single directory, generate .abstract.md and .overview.md."""
+        # Skip leaf directories that only contain a single content file
+        # (paragraph .md or chunk .md). These don't benefit from auto-generated
+        # summaries which would be blank without a configured VLM.
+        if not children_uris and len(file_paths) == 1:
+            logger.debug(f"Skipping single-file leaf directory: {uri}")
+            return
+
         viking_fs = get_viking_fs()
 
         # 1. Collect .abstract.md from subdirectories (already processed earlier)

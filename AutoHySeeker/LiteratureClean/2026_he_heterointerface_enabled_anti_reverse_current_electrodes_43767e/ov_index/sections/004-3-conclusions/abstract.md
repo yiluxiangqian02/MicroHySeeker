@@ -1,3 +1,3 @@
-章节定位：Conclusion  
-核心内容：本章节总结了一种通过梯度界面工程构建Ni₃S₂/NM-I异质结构电极的策略，该电极在碱性水电解中展现出优异的双功能活性、抗RC耐久性及工业级稳定性，并能有效应对可再生能源输入的间歇性挑战。  
-关键实体：Ni₃S₂/NM-I异质结构电极, 梯度晶格应变缓冲, Ni(11̄2)/Ni₃S₂(1̄20)异质界面, 碱性水电解, 双功能活性, 抗RC耐久性, 工业级稳定性, 间歇性可再生能源输入, 启停循环稳定性, 界面晶体工程
+Section Role: This section presents the Conclusions of the study.  
+Core Content: The authors demonstrate a gradient interlayer engineering strategy to fabricate a Ni₃S₂/NM-I heterostructured electrode featuring a crystallographically matched Ni(11̄2)/Ni₃S₂(1̄20) heterointerface with gradient lattice strain buffering, achieving industrial-grade performance with 500 and 1000 mA cm⁻² at 1.72 V and 1.79 V, respectively, 2000 h stability, and resilience to 3600 startup/shutdown cycles with negligible activity loss.  
+Key Entities: Ni₃S₂/NM-I heterostructured electrode, Ni(11̄2)/Ni₃S₂(1̄20) heterointerface, gradient lattice strain buffering, current densities of 500–1000 mA cm⁻², voltages of 1.72–1.79 V, 2000 h stability, 3600 startup/shutdown cycles, alkaline water electrolysis, anti-RC durability

@@ -1,7 +1,7 @@
 {
   "paper_id": "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e",
-  "heading_count": 13,
-  "paragraph_count": 77,
+  "heading_count": 5,
+  "paragraph_count": 107,
   "headings": [
     {
       "heading_uid": "HRAW-001-dcbbe410",
@@ -14,9 +14,15 @@
         "PRAW-000001",
         "PRAW-000002",
         "PRAW-000003",
-        "PRAW-000004"
+        "PRAW-000004",
+        "PRAW-000005",
+        "PRAW-000006",
+        "PRAW-000007",
+        "PRAW-000008",
+        "PRAW-000009",
+        "PRAW-000010"
       ],
-      "inferred_type": "abstract"
+      "inferred_type": "none"
     },
     {
       "heading_uid": "HRAW-002-9ff10219",
@@ -26,6 +32,11 @@
       "page_index": null,
       "block_order": 1,
       "paragraph_uid_list": [
+        "PRAW-000011",
+        "PRAW-000012",
+        "PRAW-000013",
+        "PRAW-000014",
+        "PRAW-000015",
         "PRAW-000016",
         "PRAW-000017",
         "PRAW-000018",
@@ -35,7 +46,8 @@
         "PRAW-000022",
         "PRAW-000023",
         "PRAW-000024",
-        "PRAW-000025"
+        "PRAW-000025",
+        "PRAW-000026"
       ],
       "inferred_type": "none"
     },
@@ -47,52 +59,6 @@
       "page_index": null,
       "block_order": 1,
       "paragraph_uid_list": [
-        "PRAW-000040",
-        "PRAW-000041",
-        "PRAW-000042",
-        "PRAW-000043",
-        "PRAW-000044",
-        "PRAW-000045",
-        "PRAW-000046",
-        "PRAW-000047",
-        "PRAW-000048",
-        "PRAW-000049",
-        "PRAW-000050",
-        "PRAW-000051",
-        "PRAW-000052",
-        "PRAW-000053",
-        "PRAW-000054",
-        "PRAW-000055",
-        "PRAW-000056",
-        "PRAW-000057",
-        "PRAW-000058",
-        "PRAW-000059",
-        "PRAW-000060",
-        "PRAW-000061"
-      ],
-      "inferred_type": "back_matter"
-    },
-    {
-      "heading_uid": "HRAW-004-c39a4b34",
-      "heading_text": "3. CONCLUSIONS",
-      "heading_level": 1,
-      "doc_heading_order": 4,
-      "page_index": null,
-      "block_order": 1,
-      "paragraph_uid_list": [
-        "PRAW-000062"
-      ],
-      "inferred_type": "none"
-    },
-    {
-      "heading_uid": "HRAW-005-62ff258a",
-      "heading_text": "4. EXPERIMENTAL SECTION",
-      "heading_level": 1,
-      "doc_heading_order": 5,
-      "page_index": null,
-      "block_order": 1,
-      "paragraph_uid_list": [
-        "PRAW-000026",
         "PRAW-000027",
         "PRAW-000028",
         "PRAW-000029",
@@ -105,121 +71,97 @@
         "PRAW-000036",
         "PRAW-000037",
         "PRAW-000038",
-        "PRAW-000039"
+        "PRAW-000039",
+        "PRAW-000040",
+        "PRAW-000041",
+        "PRAW-000042",
+        "PRAW-000043",
+        "PRAW-000044",
+        "PRAW-000045",
+        "PRAW-000046",
+        "PRAW-000047",
+        "PRAW-000048",
+        "PRAW-000049"
       ],
-      "inferred_type": "back_matter"
+      "inferred_type": "none"
     },
     {
-      "heading_uid": "HRAW-007-1b530b5d",
-      "heading_text": "Supporting Information",
+      "heading_uid": "HRAW-004-c39a4b34",
+      "heading_text": "3. CONCLUSIONS",
       "heading_level": 1,
-      "doc_heading_order": 7,
+      "doc_heading_order": 4,
       "page_index": null,
       "block_order": 1,
       "paragraph_uid_list": [
+        "PRAW-000050"
+      ],
+      "inferred_type": "none"
+    },
+    {
+      "heading_uid": "HRAW-005-62ff258a",
+      "heading_text": "4. EXPERIMENTAL SECTION",
+      "heading_level": 1,
+      "doc_heading_order": 5,
+      "page_index": null,
+      "block_order": 1,
+      "paragraph_uid_list": [
+        "PRAW-000051",
+        "PRAW-000052",
+        "PRAW-000053",
+        "PRAW-000054",
+        "PRAW-000055",
+        "PRAW-000056",
+        "PRAW-000057",
+        "PRAW-000058",
+        "PRAW-000059",
+        "PRAW-000060",
+        "PRAW-000061",
+        "PRAW-000062",
         "PRAW-000063",
-        "PRAW-000064"
-      ],
-      "inferred_type": "none"
-    },
-    {
-      "heading_uid": "HRAW-009-f200f9c8",
-      "heading_text": "Corresponding Authors",
-      "heading_level": 1,
-      "doc_heading_order": 9,
-      "page_index": null,
-      "block_order": 1,
-      "paragraph_uid_list": [
+        "PRAW-000064",
         "PRAW-000065",
-        "PRAW-000066"
-      ],
-      "inferred_type": "none"
-    },
-    {
-      "heading_uid": "HRAW-010-07527515",
-      "heading_text": "Authors",
-      "heading_level": 1,
-      "doc_heading_order": 10,
-      "page_index": null,
-      "block_order": 1,
-      "paragraph_uid_list": [
-        "PRAW-000005",
-        "PRAW-000006",
-        "PRAW-000007",
-        "PRAW-000008",
-        "PRAW-000009",
-        "PRAW-000010",
-        "PRAW-000011",
-        "PRAW-000012",
-        "PRAW-000013",
-        "PRAW-000014",
-        "PRAW-000015"
-      ],
-      "inferred_type": "none"
-    },
-    {
-      "heading_uid": "HRAW-011-613e64f6",
-      "heading_text": "Author Contributions",
-      "heading_level": 1,
-      "doc_heading_order": 11,
-      "page_index": null,
-      "block_order": 1,
-      "paragraph_uid_list": [
-        "PRAW-000067"
-      ],
-      "inferred_type": "none"
-    },
-    {
-      "heading_uid": "HRAW-012-edaa0c5b",
-      "heading_text": "Notes",
-      "heading_level": 1,
-      "doc_heading_order": 12,
-      "page_index": null,
-      "block_order": 1,
-      "paragraph_uid_list": [
-        "PRAW-000068"
-      ],
-      "inferred_type": "none"
-    },
-    {
-      "heading_uid": "HRAW-013-4b31be97",
-      "heading_text": "ACKNOWLEDGMENTS",
-      "heading_level": 1,
-      "doc_heading_order": 13,
-      "page_index": null,
-      "block_order": 1,
-      "paragraph_uid_list": [
+        "PRAW-000066",
+        "PRAW-000067",
+        "PRAW-000068",
         "PRAW-000069",
-        "PRAW-000070"
-      ],
-      "inferred_type": "none"
-    },
-    {
-      "heading_uid": "HRAW-014-3c3cb2b2",
-      "heading_text": "REFERENCES",
-      "heading_level": 1,
-      "doc_heading_order": 14,
-      "page_index": null,
-      "block_order": 1,
-      "paragraph_uid_list": [
+        "PRAW-000070",
         "PRAW-000071",
         "PRAW-000072",
         "PRAW-000073",
-        "PRAW-000074"
-      ],
-      "inferred_type": "none"
-    },
-    {
-      "heading_uid": "HRAW-015-7df30f2b",
-      "heading_text": "NOTE ADDED AFTER ASAP PUBLICATION",
-      "heading_level": 1,
-      "doc_heading_order": 15,
-      "page_index": null,
-      "block_order": 1,
-      "paragraph_uid_list": [
+        "PRAW-000074",
         "PRAW-000075",
         "PRAW-000076",
-        "PRAW-000077"
+        "PRAW-000077",
+        "PRAW-000078",
+        "PRAW-000079",
+        "PRAW-000080",
+        "PRAW-000081",
+        "PRAW-000082",
+        "PRAW-000083",
+        "PRAW-000084",
+        "PRAW-000085",
+        "PRAW-000086",
+        "PRAW-000087",
+        "PRAW-000088",
+        "PRAW-000089",
+        "PRAW-000090",
+        "PRAW-000091",
+        "PRAW-000092",
+        "PRAW-000093",
+        "PRAW-000094",
+        "PRAW-000095",
+        "PRAW-000096",
+        "PRAW-000097",
+        "PRAW-000098",
+        "PRAW-000099",
+        "PRAW-000100",
+        "PRAW-000101",
+        "PRAW-000102",
+        "PRAW-000103",
+        "PRAW-000104",
+        "PRAW-000105",
+        "PRAW-000106",
+        "PRAW-000107"
       ],
       "inferred_type": "none"
     }

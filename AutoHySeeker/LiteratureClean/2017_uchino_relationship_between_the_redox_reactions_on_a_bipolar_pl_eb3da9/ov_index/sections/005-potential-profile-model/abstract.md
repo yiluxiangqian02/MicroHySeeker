@@ -1,0 +1,3 @@
+Section Role: This section presents a theoretical model describing the one-dimensional potential profile of a bipolar water electrolyzer after electrolysis, focusing on the open-circuit and reverse-current conditions.  
+Core Content: It introduces a potential profile model that defines key voltages, overpotentials, and internal potentials to explain the origin and magnitude of reverse current driven by inter-cell potential differences through ionic conduction pathways.  
+Key Entities: bipolar electrolyzer, potential profile, reverse current, cell voltage (U₁, U₂), standard electrode potential (U₀), overpotentials (ηₐ, η꜀), inner potentials (Φ), bipolar plate, ionic conduction circuit, equivalent circuit model, internal resistance (R_int), manifold resistance (R_m)

@@ -1,0 +1,3 @@
+Section Role: This section presents the abstract of the paper, summarizing the problem, approach, and key findings.  
+Core Content: It describes a cathodic protection strategy using a sacrificial metal to prevent irreversible oxidation of nickel cathodes caused by reverse-current during shutdown in zero-gap alkaline water electrolysis, thereby enhancing system stability under intermittent renewable energy operation.  
+Key Entities: nickel (Ni) cathode, reverse-current, transient start-up/shut-down, β-Ni(OH)₂, NiO, hydrogen evolution reaction, cathodic protection, sacrificial anode, lead, alkaline media, reverse-current stability factor, zero-gap alkaline water electrolysis

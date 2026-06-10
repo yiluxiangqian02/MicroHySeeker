@@ -1,0 +1,165 @@
+{
+  "queries": [
+    {
+      "id": "Q1",
+      "query": "What causes reverse current in alkaline water electrolyzers?",
+      "level": "paper",
+      "expected": [
+        {"paper": "2017_uchino_relationship_between_the_redox_reactions_on_a_bipolar_pl_eb3da9", "section": "S06"},
+        {"paper": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb", "section": "S04"},
+        {"paper": "2025_peng_strategies_and_countermeasures_against_reverse_current_f_803838", "section": "S03"}
+      ]
+    },
+    {
+      "id": "Q2",
+      "query": "What strategies mitigate reverse current degradation in alkaline water electrolysis?",
+      "level": "paper",
+      "expected": [
+        {"paper": "2022_kim_cathodic_protection_system_against_a_reverse_current_aft_180201", "section": "S03"},
+        {"paper": "2025_peng_strategies_and_countermeasures_against_reverse_current_f_803838", "section": "S04"},
+        {"paper": "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e", "section": "S03"}
+      ]
+    },
+    {
+      "id": "Q3",
+      "query": "How does intermittent renewable energy affect water electrolysis durability?",
+      "level": "paper",
+      "expected": [
+        {"paper": "2025_sha_10000h_stable_intermittent_alkaline_seawater_electrolysi_333f5c", "section": "S02"},
+        {"paper": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb", "section": "S01"}
+      ]
+    },
+    {
+      "id": "Q4",
+      "query": "What nickel-based catalysts are used for HER in alkaline electrolysis?",
+      "level": "paper",
+      "expected": [
+        {"paper": "2024_jung_reverse_current_tolerance_for_hydrogen_evolution_reactio_4a4ad9", "section": "S03"},
+        {"paper": "2025_center_reverse_current_induced_cascade_degradation_in_ni_ru_ele_2782d6", "section": "S03"},
+        {"paper": "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e", "section": "S03"}
+      ]
+    },
+    {
+      "id": "Q5",
+      "query": "How is the cathodic protection system implemented in zero-gap AWE?",
+      "level": "section",
+      "expected": [
+        {"paper": "2022_kim_cathodic_protection_system_against_a_reverse_current_aft_180201", "section": "S03"}
+      ]
+    },
+    {
+      "id": "Q6",
+      "query": "What is the reaction mechanism of NiCoP-Cr2O3 during intermittent electrolysis?",
+      "level": "section",
+      "expected": [
+        {"paper": "2025_sha_10000h_stable_intermittent_alkaline_seawater_electrolysi_333f5c", "section": "S04"}
+      ]
+    },
+    {
+      "id": "Q7",
+      "query": "What experimental methods characterize electrode transformation under dynamic operation?",
+      "level": "section",
+      "expected": [
+        {"paper": "2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7", "section": "S05"}
+      ]
+    },
+    {
+      "id": "Q8",
+      "query": "How does Pb decoration on Ni catalyst improve reverse current tolerance?",
+      "level": "section",
+      "expected": [
+        {"paper": "2024_jung_reverse_current_tolerance_for_hydrogen_evolution_reactio_4a4ad9", "section": "S03"}
+      ]
+    },
+    {
+      "id": "Q9",
+      "query": "What is the effect of dissolved gases on reverse current?",
+      "level": "section",
+      "expected": [
+        {"paper": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb", "section": "S03"}
+      ]
+    },
+    {
+      "id": "Q10",
+      "query": "How was the NiCoP-Cr2O3 catalyst synthesized?",
+      "level": "section",
+      "expected": [
+        {"paper": "2025_sha_10000h_stable_intermittent_alkaline_seawater_electrolysi_333f5c", "section": "S07"}
+      ]
+    },
+    {
+      "id": "Q11",
+      "query": "What is the voltage increase rate of NiCoP-Cr2O3 cathode in seawater?",
+      "level": "paragraph",
+      "expected": [
+        {"paper": "2025_sha_10000h_stable_intermittent_alkaline_seawater_electrolysi_333f5c", "section": "S03"}
+      ],
+      "expected_paragraphs": [
+        {"paper": "2025_sha_10000h_stable_intermittent_alkaline_seawater_electrolysi_333f5c", "section": "S03", "paragraph_ids": ["S03-P002", "S03-P004", "S03-P005"]}
+      ]
+    },
+    {
+      "id": "Q12",
+      "query": "What current density range was tested in the 2017 Uchino reverse current study?",
+      "level": "paragraph",
+      "expected": [
+        {"paper": "2017_uchino_relationship_between_the_redox_reactions_on_a_bipolar_pl_eb3da9", "section": "S04"}
+      ],
+      "expected_paragraphs": [
+        {"paper": "2017_uchino_relationship_between_the_redox_reactions_on_a_bipolar_pl_eb3da9", "section": "S04", "paragraph_ids": ["S04-P001", "S04-P002", "S04-P003", "S04-P004", "S04-P005"]}
+      ]
+    },
+    {
+      "id": "Q13",
+      "query": "What anode materials were compared for their effect on reverse current?",
+      "level": "paragraph",
+      "expected": [
+        {"paper": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb", "section": "S04"}
+      ],
+      "expected_paragraphs": [
+        {"paper": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb", "section": "S04", "paragraph_ids": ["S04-P005", "S04-P007", "S04-P008", "S04-P009", "S04-P010", "S04-P012", "S04-P013", "S04-P016", "S04-P017", "S04-P018", "S04-P021", "S04-P023", "S04-P024", "S04-P025", "S04-P026", "S04-P027", "S04-P028"]}
+      ]
+    },
+    {
+      "id": "Q14",
+      "query": "How many hours of stable operation was achieved with NiCoP-Cr2O3 cathode?",
+      "level": "paragraph",
+      "expected": [
+        {"paper": "2025_sha_10000h_stable_intermittent_alkaline_seawater_electrolysi_333f5c", "section": "S01"}
+      ],
+      "expected_paragraphs": [
+        {"paper": "2025_sha_10000h_stable_intermittent_alkaline_seawater_electrolysi_333f5c", "section": "S01", "paragraph_ids": ["S01-P007", "S01-P009", "S01-P010"]}
+      ]
+    },
+    {
+      "id": "Q15",
+      "query": "如何防止碱性水电解槽关机时的反向电流？",
+      "level": "cross_lingual",
+      "expected": [
+        {"paper": "2022_kim_cathodic_protection_system_against_a_reverse_current_aft_180201", "section": "S03"},
+        {"paper": "2025_peng_strategies_and_countermeasures_against_reverse_current_f_803838", "section": "S04"},
+        {"paper": "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e", "section": "S03"}
+      ]
+    },
+    {
+      "id": "Q16",
+      "query": "磷酸盐钝化层如何保护阴极免受海水腐蚀？",
+      "level": "cross_lingual",
+      "expected": [
+        {"paper": "2025_sha_10000h_stable_intermittent_alkaline_seawater_electrolysi_333f5c", "section": "S04"}
+      ]
+    },
+    {
+      "id": "Q17",
+      "query": "What is the efficiency of PEM electrolysis with iridium catalysts?",
+      "level": "negative",
+      "expected": []
+    },
+    {
+      "id": "Q18",
+      "query": "How to synthesize MOF-based electrocatalysts for CO2 reduction?",
+      "level": "negative",
+      "expected": []
+    }
+  ]
+}

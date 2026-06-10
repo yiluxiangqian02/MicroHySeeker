@@ -5,7 +5,8 @@
       "Bash(grep \"\\\\.py$\")",
       "Bash(grep -r \"DataAnalystAgent\\\\|KnowledgeManagerAgent\\\\|ExperimentSupervisorAgent\\\\|data_analyst\\\\|knowledge_mgr\\\\|exp_supervisor\" /d/AI4S/MicroHySeeker/MicroHySeeker/AutoHySeeker/src/api --include=*.py)",
       "Bash(uv run:*)",
-      "Bash(\"D:/AI4S/MicroHySeeker/MicroHySeeker/AutoHySeeker/.venv_ov311/Scripts/python.exe\" -m py_compile \"D:/AI4S/MicroHySeeker/MicroHySeeker/AutoHySeeker/LiteratureClean/import_to_openviking.py\")"
+      "Bash(\"D:/AI4S/MicroHySeeker/MicroHySeeker/AutoHySeeker/.venv_ov311/Scripts/python.exe\" -m py_compile \"D:/AI4S/MicroHySeeker/MicroHySeeker/AutoHySeeker/LiteratureClean/import_to_openviking.py\")",
+      "Bash(PYTHONIOENCODING=utf-8 \".venv_ov311/Scripts/python.exe\" -c \"import py_compile; py_compile.compile\\('LiteratureClean/clean_single_mineru_paper.py', doraise=True\\); print\\('Syntax OK'\\)\")"
     ]
   }
 }

@@ -15,102 +15,102 @@
   "2022_kim_cathodic_protection_system_against_a_reverse_current_aft_180201": {
     "paper_id": "2022_kim_cathodic_protection_system_against_a_reverse_current_aft_180201",
     "target": "literature/2022_kim_cathodic_protection_system_against_a_reverse_current_aft_180201",
-    "timestamp": "2026-06-04T14:30:23.790812",
+    "timestamp": "2026-06-09T14:51:34.140958",
     "status": "ok",
     "uri": "viking://resources/literature/2022_kim_cathodic_protection_system_against_a_reverse_current_aft_180201/",
     "error": null,
     "stats": {
-      "included": 37,
+      "included": 83,
       "skipped_non_whitelist": 0,
       "missing_required": 0
     },
     "populate": {
-      "written": 30,
+      "written": 24,
       "skipped": 0
     }
   },
   "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb": {
     "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
     "target": "literature/2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
-    "timestamp": "2026-06-04T14:30:27.701281",
+    "timestamp": "2026-06-09T14:51:39.679453",
     "status": "ok",
     "uri": "viking://resources/literature/2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb/",
     "error": null,
     "stats": {
-      "included": 55,
+      "included": 104,
       "skipped_non_whitelist": 0,
       "missing_required": 0
     },
     "populate": {
-      "written": 46,
+      "written": 34,
       "skipped": 0
     }
   },
   "2023_uchino_dependence_of_the_reverse_current_on_the_surface_of_elec_38347e": {
     "paper_id": "2023_uchino_dependence_of_the_reverse_current_on_the_surface_of_elec_38347e",
     "target": "literature/2023_uchino_dependence_of_the_reverse_current_on_the_surface_of_elec_38347e",
-    "timestamp": "2026-06-04T14:30:33.342376",
+    "timestamp": "2026-06-09T14:51:46.525816",
     "status": "ok",
     "uri": "viking://resources/literature/2023_uchino_dependence_of_the_reverse_current_on_the_surface_of_elec_38347e/",
     "error": null,
     "stats": {
-      "included": 45,
+      "included": 92,
       "skipped_non_whitelist": 0,
       "missing_required": 0
     },
     "populate": {
-      "written": 32,
+      "written": 20,
       "skipped": 0
     }
   },
   "2025_center_reverse_current_induced_cascade_degradation_in_ni_ru_ele_2782d6": {
     "paper_id": "2025_center_reverse_current_induced_cascade_degradation_in_ni_ru_ele_2782d6",
     "target": "literature/2025_center_reverse_current_induced_cascade_degradation_in_ni_ru_ele_2782d6",
-    "timestamp": "2026-06-04T14:30:41.695465",
+    "timestamp": "2026-06-09T14:51:58.321801",
     "status": "ok",
     "uri": "viking://resources/literature/2025_center_reverse_current_induced_cascade_degradation_in_ni_ru_ele_2782d6/",
     "error": null,
     "stats": {
-      "included": 45,
+      "included": 84,
       "skipped_non_whitelist": 0,
       "missing_required": 0
     },
     "populate": {
-      "written": 36,
+      "written": 24,
       "skipped": 0
     }
   },
   "2025_sha_10000h_stable_intermittent_alkaline_seawater_electrolysi_333f5c": {
     "paper_id": "2025_sha_10000h_stable_intermittent_alkaline_seawater_electrolysi_333f5c",
     "target": "literature/2025_sha_10000h_stable_intermittent_alkaline_seawater_electrolysi_333f5c",
-    "timestamp": "2026-06-04T14:30:49.980665",
+    "timestamp": "2026-06-09T14:52:10.466257",
     "status": "ok",
     "uri": "viking://resources/literature/2025_sha_10000h_stable_intermittent_alkaline_seawater_electrolysi_333f5c/",
     "error": null,
     "stats": {
-      "included": 75,
+      "included": 86,
       "skipped_non_whitelist": 0,
       "missing_required": 0
     },
     "populate": {
-      "written": 52,
+      "written": 24,
       "skipped": 0
     }
   },
   "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e": {
     "paper_id": "2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e",
     "target": "literature/2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e",
-    "timestamp": "2026-06-04T14:31:00.013021",
+    "timestamp": "2026-06-09T14:52:23.436907",
     "status": "ok",
     "uri": "viking://resources/literature/2026_he_heterointerface_enabled_anti_reverse_current_electrodes_43767e/",
     "error": null,
     "stats": {
-      "included": 37,
+      "included": 107,
       "skipped_non_whitelist": 0,
       "missing_required": 0
     },
     "populate": {
-      "written": 28,
+      "written": 12,
       "skipped": 0
     }
   },
@@ -156,12 +156,12 @@
   "2017_uchino_relationship_between_the_redox_reactions_on_a_bipolar_pl_eb3da9": {
     "paper_id": "2017_uchino_relationship_between_the_redox_reactions_on_a_bipolar_pl_eb3da9",
     "target": "literature/2017_uchino_relationship_between_the_redox_reactions_on_a_bipolar_pl_eb3da9",
-    "timestamp": "2026-06-04T14:30:20.578248",
+    "timestamp": "2026-06-09T14:51:29.261323",
     "status": "ok",
     "uri": "viking://resources/literature/2017_uchino_relationship_between_the_redox_reactions_on_a_bipolar_pl_eb3da9/",
     "error": null,
     "stats": {
-      "included": 23,
+      "included": 73,
       "skipped_non_whitelist": 0,
       "missing_required": 0
     },
@@ -173,68 +173,68 @@
   "2024_jung_reverse_current_tolerance_for_hydrogen_evolution_reactio_4a4ad9": {
     "paper_id": "2024_jung_reverse_current_tolerance_for_hydrogen_evolution_reactio_4a4ad9",
     "target": "literature/2024_jung_reverse_current_tolerance_for_hydrogen_evolution_reactio_4a4ad9",
-    "timestamp": "2026-06-04T14:30:38.439592",
+    "timestamp": "2026-06-09T14:51:51.972586",
     "status": "ok",
     "uri": "viking://resources/literature/2024_jung_reverse_current_tolerance_for_hydrogen_evolution_reactio_4a4ad9/",
     "error": null,
     "stats": {
-      "included": 34,
+      "included": 102,
       "skipped_non_whitelist": 0,
       "missing_required": 0
     },
     "populate": {
-      "written": 30,
+      "written": 22,
       "skipped": 0
     }
   },
   "2025_peng_strategies_and_countermeasures_against_reverse_current_f_803838": {
     "paper_id": "2025_peng_strategies_and_countermeasures_against_reverse_current_f_803838",
     "target": "literature/2025_peng_strategies_and_countermeasures_against_reverse_current_f_803838",
-    "timestamp": "2026-06-04T14:30:45.604653",
+    "timestamp": "2026-06-09T14:52:03.679877",
     "status": "ok",
     "uri": "viking://resources/literature/2025_peng_strategies_and_countermeasures_against_reverse_current_f_803838/",
     "error": null,
     "stats": {
-      "included": 49,
+      "included": 108,
       "skipped_non_whitelist": 0,
       "missing_required": 0
     },
     "populate": {
-      "written": 38,
+      "written": 24,
       "skipped": 0
     }
   },
   "2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7": {
     "paper_id": "2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7",
     "target": "literature/2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7",
-    "timestamp": "2026-06-04T14:30:56.247146",
+    "timestamp": "2026-06-09T14:52:15.779407",
     "status": "ok",
     "uri": "viking://resources/literature/2025_wang_probing_electrode_transformation_under_dynamic_operation_0b96f7/",
     "error": null,
     "stats": {
-      "included": 37,
+      "included": 125,
       "skipped_non_whitelist": 0,
       "missing_required": 0
     },
     "populate": {
-      "written": 30,
+      "written": 20,
       "skipped": 0
     }
   },
   "2026_unknown_2026_2d8d75": {
     "paper_id": "2026_unknown_2026_2d8d75",
     "target": "literature/2026_unknown_2026_2d8d75",
-    "timestamp": "2026-06-04T14:31:03.672833",
+    "timestamp": "2026-06-09T14:52:30.348552",
     "status": "ok",
     "uri": "viking://resources/literature/2026_unknown_2026_2d8d75/",
     "error": null,
     "stats": {
-      "included": 96,
+      "included": 166,
       "skipped_non_whitelist": 0,
       "missing_required": 0
     },
     "populate": {
-      "written": 84,
+      "written": 10,
       "skipped": 0
     }
   }

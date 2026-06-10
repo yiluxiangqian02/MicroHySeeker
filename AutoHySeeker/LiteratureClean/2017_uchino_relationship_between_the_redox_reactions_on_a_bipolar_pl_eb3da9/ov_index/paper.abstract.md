@@ -1,5 +1,5 @@
-研究对象：碱性水电解槽中双极板上的氧化还原反应与停机后反向电流的关系。  
-核心发现：反向电流的产生与双极板两侧镍基电极的氧化态差异密切相关，且其大小受电解运行条件影响。  
-方法路线：通过构建双电池串联的双极型电解槽实验系统，结合电化学测量与等效电路模型，分析停机后反向电流与电池电压的动态变化。  
-主要结论：反向电流由双极板两侧NiO₂/NiOOH与H₂/H₂O氧化还原对之间的电势差驱动，最终因两侧氧化态趋于一致而停止，揭示了反向电流的内在机制。  
-关键词：碱性水电解, 反向电流, 双极板, 镍电极, 氧化还原反应
+Research Object: Alkaline water electrolyzer with nickel mesh electrodes and bipolar plate configuration.  
+Core Finding: The magnitude of the natural reverse current following shutdown is directly related to the prior operating current density, driven by redox reactions involving nickel oxide species and hydrogen.  
+Method: A two-cell bipolar electrolyzer was operated under controlled current densities, followed by open-circuit measurements of reverse current and cell voltages, supported by an equivalent circuit model and potential profile analysis.  
+Conclusion: The reverse current arises from a potential difference across the bipolar plate due to asymmetric redox states on its anode and cathode sides, ceasing once both sides reach a common oxidation state.  
+Keywords: alkaline water electrolysis, reverse current, bipolar plate, nickel electrode, redox reactions

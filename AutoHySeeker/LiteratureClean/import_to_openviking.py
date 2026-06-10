@@ -51,7 +51,7 @@ from typing import Any
 # ---------------------------------------------------------------------------
 HERE = Path(__file__).parent.resolve()                      # LiteratureClean/
 AUTOHYSEEKER = HERE.parent.resolve()                        # AutoHySeeker/
-OV_DATA_PATH = AUTOHYSEEKER / "data" / "openviking"
+OV_DATA_PATH = AUTOHYSEEKER / "data" / "openviking_v2"
 OV_CONF_PATH = AUTOHYSEEKER / "OpenViking" / ".local_dev" / "ov.conf"
 OPENVIKING_SRC_PATH = AUTOHYSEEKER / "OpenViking"
 AGENT_MODELS_PATH = AUTOHYSEEKER / "configs" / "agent_models.toml"
@@ -1132,8 +1132,8 @@ def regenerate_all_summaries(
 # Files entering the main index are identified by suffix (flat unique naming).
 # Layer 1 (paper): paper.abstract.md / paper.overview.md
 # Layer 2 (section): sections/{section_dir}/abstract.md / overview.md
-# Layer 3 (paragraph): sections/{section_dir}/{paragraph_id}[-split].chunk.md
-MAIN_INDEX_SUFFIXES = (".abstract.md", ".overview.md", ".chunk.md")
+# Layer 3 (paragraph): sections/{section_dir}/{paragraph_id}.md
+MAIN_INDEX_SUFFIXES = (".abstract.md", ".overview.md", ".chunk.md", ".md")
 
 # Section directory files that use plain names (no dot prefix)
 SECTION_INDEX_NAMES = frozenset({"abstract.md", "overview.md"})
@@ -1612,19 +1612,16 @@ def build_export_dir(paper_dir: Path, tmp_root: Path) -> Path:
     return export_dir, stats
 
 
-def build_paragraph_chunks(paper_dir: Path) -> int:
-    """H2: generate paragraph evidence chunk files from paragraph_index.json.
+def copy_paragraph_files(paper_dir: Path) -> int:
+    """Copy paragraph .md files into ov_index/sections for direct indexing.
 
-    Light length normalisation:
-      - < 30 words  → skip (DOIs, URLs, author lines — no evidence value)
-      - 30–350 words → use directly, one chunk file
-      - > 350 words  → split at sentence boundaries, producing -a, -b, -c …
+    Reads paragraph_index.json, copies each paragraph's .md file from
+    sections_by_heading/{dir}/paragraphs/ to ov_index/sections/{dir}/,
+    renaming to {paragraph_id}.md (e.g. S01-P001.md).
 
-    Output: ov_index/sections/{section_dir}/{paragraph_id}[-split].chunk.md
-    Returns the number of chunk files written.
+    No chunk splitting — the full paragraph .md goes into the main index.
+    Returns the number of paragraph files copied.
     """
-    import re
-
     para_index = paper_dir / "paragraph_index.json"
     if not para_index.is_file():
         return 0
@@ -1633,110 +1630,45 @@ def build_paragraph_chunks(paper_dir: Path) -> int:
         paragraphs = json.load(fh)
 
     sections_root = paper_dir / OV_INDEX_DIRNAME / "sections"
+    copied = 0
 
-    # Regex to extract the ## Text section from a paragraph .md file
-    _TEXT_RE = re.compile(r"## Text\s*\n\s*\n(.+?)(?=\n## |\Z)", re.DOTALL)
-
-    chunk_count = 0
-
+    # Group paragraphs by section_dir (derived from content_path)
+    section_map: dict[str, list[dict]] = {}
     for entry in paragraphs:
         content_rel = entry.get("content_path", "")
-        paragraph_id = entry.get("paragraph_id", "")
-        paper_id = entry.get("paper_id", paper_dir.name)
-        section_id = entry.get("section_id", "")
-        evidence_id = entry.get("evidence_id", "")
-
-        # Derive section_dir from content_path (sections_by_heading/<dir>/paragraphs/...)
-        parts = content_rel.replace("\\", "/").split("/")
-        section_dir = parts[1] if len(parts) >= 2 else parts[0] if parts else ""
-
-        if not section_dir or not paragraph_id:
+        parts = content_rel.replace(chr(92), chr(47)).split(chr(47))
+        section_dir = parts[1] if len(parts) >= 2 else ""
+        if not section_dir:
             continue
+        section_map.setdefault(section_dir, []).append(entry)
 
-        # Read raw paragraph text
-        raw_path = paper_dir / content_rel
-        if not raw_path.is_file():
-            continue
+    for section_dir, entries in section_map.items():
+        dest_dir = sections_root / section_dir
+        dest_dir.mkdir(parents=True, exist_ok=True)
 
-        with open(raw_path, "r", encoding="utf-8") as fh:
-            raw_text = fh.read()
-
-        m = _TEXT_RE.search(raw_text)
-        if not m:
-            continue
-        text = m.group(1).strip()
-        if not text:
-            continue
-
-        word_count = len(text.split())
-
-        if word_count < 30:
-            continue
-
-        if word_count <= 350:
-            # Direct use
-            sub_chunks = [(text, 0)]
-        else:
-            # Split at sentence boundaries
-            sentences = re.split(r"(?<=[.!?])\s+", text)
-            sub_chunks = []
-            buf: list[str] = []
-            buf_wc = 0
-            for sent in sentences:
-                sent_wc = len(sent.split())
-                if buf_wc + sent_wc > 300 and buf:
-                    sub_chunks.append((" ".join(buf), len(sub_chunks)))
-                    buf = [sent]
-                    buf_wc = sent_wc
-                else:
-                    buf.append(sent)
-                    buf_wc += sent_wc
-            if buf:
-                sub_chunks.append((" ".join(buf), len(sub_chunks)))
-
-        # Write chunks into ov_index/sections/{section_dir}/
-        section_chunks_dir = sections_root / section_dir
-        section_chunks_dir.mkdir(parents=True, exist_ok=True)
-
-        # Clean up old chunk files from previous runs (e.g. flat-named
-        # S01-P001.chunk.md) so the section directory only contains the
-        # current naming scheme (section_dir-prefixed).
-        for old in sorted(section_chunks_dir.glob("*.chunk.md")):
+        # Clean old chunk files from previous runs
+        for old in sorted(dest_dir.glob("*.chunk.md")):
             try:
                 old.unlink()
             except OSError:
                 pass
 
-        # Truncate section_dir so filename fits within Windows MAX_PATH
-        # when combined with deep paper_dir paths.
-        _sd = section_dir
-        if len(_sd) > 44:
-            _sd = _sd[:22] + ".." + _sd[-20:]
+        for entry in entries:
+            content_rel = entry.get("content_path", "")
+            paragraph_id = entry.get("paragraph_id", "")
+            if not paragraph_id:
+                continue
 
-        for chunk_text, idx in sub_chunks:
-            suffix = f"-{chr(ord('a') + idx)}" if len(sub_chunks) > 1 else ""
-            fname = f"{_sd}.{paragraph_id}{suffix}.chunk.md"
+            src = paper_dir / content_rel
+            if not src.is_file():
+                continue
 
-            frontmatter = "\n".join((
-                "---",
-                f'paper_id: "{paper_id}"',
-                f'section_id: "{section_id}"',
-                f'paragraph_id: "{paragraph_id}"',
-                f'evidence_id: "{evidence_id}"',
-                f"chunk_index: {idx}",
-                "---",
-                "",
-            ))
-            chunk_path = section_chunks_dir / fname
-            chunk_path_str = str(chunk_path)
-            if sys.platform == "win32" and len(chunk_path_str) > 259:
-                chunk_path_str = "\\\\?\\" + chunk_path_str
-            with open(chunk_path_str, "w", encoding="utf-8") as fh:
-                fh.write(frontmatter + chunk_text + "\n")
+            fname = f"{paragraph_id}.md"
+            shutil.copy2(src, dest_dir / fname)
+            copied += 1
 
-            chunk_count += 1
+    return copied
 
-    return chunk_count
 
 
 def build_main_index_export_dir(paper_dir: Path, tmp_root: Path) -> tuple[Path, dict[str, int]]:
@@ -1752,20 +1684,12 @@ def build_main_index_export_dir(paper_dir: Path, tmp_root: Path) -> tuple[Path, 
     }
 
     if not ov_index.exists():
-        stats["missing_required"] += 2
         return export_dir, stats
 
-    required = [
-        "paper.abstract.md",
-        "paper.overview.md",
-    ]
-    for rel in required:
-        src = ov_index / rel
-        if src.exists() and src.is_file():
-            _copy_dotfile_renamed(src, export_dir / rel)
-            stats["included"] += 1
-        else:
-            stats["missing_required"] += 1
+    # Paper-level .abstract.md / .overview.md are written directly to the
+    # OpenViking paper root by populate_directory_summaries() after import.
+    # We no longer export them as separate files — doing so creates
+    # redundant document nodes (paperabstract/, paperoverview/).
 
     sections_root = ov_index / "sections"
     if sections_root.exists():
@@ -1778,7 +1702,12 @@ def build_main_index_export_dir(paper_dir: Path, tmp_root: Path) -> tuple[Path, 
                 if not src.is_file():
                     continue
                 name = src.name
-                if not (name.endswith(MAIN_INDEX_SUFFIXES) or name in SECTION_INDEX_NAMES):
+                # Only export paragraph files (S01-P001.md etc.).
+                # Section abstract.md / overview.md are written directly
+                # to OpenViking by populate_directory_summaries().
+                if name in SECTION_INDEX_NAMES:
+                    continue
+                if not name.endswith(MAIN_INDEX_SUFFIXES):
                     continue
                 _copy_dotfile_renamed(src, dest_dir / name)
                 stats["included"] += 1
@@ -1848,10 +1777,10 @@ def import_paper(paper_dir: Path, client, dry_run: bool = False) -> dict:
         "error": None,
     }
 
-    # H2: generate paragraph evidence chunks before export
-    chunk_count = build_paragraph_chunks(paper_dir)
-    if chunk_count:
-        print(f"  paragraph chunks: {chunk_count} generated")
+    # Copy paragraph .md files for direct indexing (no chunk splitting)
+    para_count = copy_paragraph_files(paper_dir)
+    if para_count:
+        print(f"  paragraph files: {para_count} copied")
 
     if dry_run:
         with tempfile.TemporaryDirectory(prefix="ov_export_") as tmp_root:
@@ -1922,10 +1851,10 @@ def import_paper_with_backend(
     if backend != "ovpack":
         raise RuntimeError(f"unsupported import backend: {backend}")
 
-    # H2: generate paragraph evidence chunks before export
-    chunk_count = build_paragraph_chunks(paper_dir)
-    if chunk_count:
-        print(f"  paragraph chunks: {chunk_count} generated")
+    # Copy paragraph .md files for direct indexing (no chunk splitting)
+    para_count = copy_paragraph_files(paper_dir)
+    if para_count:
+        print(f"  paragraph files: {para_count} copied")
 
     paper_id = paper_dir.name
     target = f"literature/{paper_id}"

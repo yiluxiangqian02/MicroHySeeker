@@ -1,12 +1,6 @@
-章节定位：本章节系统表征了电极在加速应力测试（AST）过程中电解液成分与电极界面的三阶段演化行为。
+Section Positioning: This section details the temporal evolution of solution chemistry and interfacial phenomena during the experimental or simulated process under study.
 
-逐段索引：  
-P001: 说明本节研究目的，即通过多种表征手段追踪溶液与电极界面的动态演化过程，并引入ICP-MS用于成分分析。  
-P002: 展示图4内容概要，包括电解液金属离子浓度、沉淀物XPS拟合结果、电极截面EDS元素分布等多维度数据。  
-P003: 描述实验方法细节，包括ICP-MS与外观记录同步进行、XPS信号归一化处理，以及通过SEM/EDS线扫获取电极深度方向元素分布。  
-P004: 报告阶段1中电解液颜色由无色变为橙色的现象，并结合ICP-MS数据指出Ru浓度上升至0.60 mg/L，关联高价态Ru物种形成。  
-P005: 分析阶段1至阶段3中Ni与Ru浓度变化及沉淀物成分，指出Ni溶解、高价Ni/Ru氧化物形成及沉淀沉积现象，并引用文献支持颜色变化机制。  
-P006: 解释阶段3中Ni和Ru浓度下降的原因是Ni与RuO₂沉淀增加，并通过XPS峰强和Ni/Ru原子比变化推断Ru溶解主导该阶段降解。  
-P007: 基于截面EDS和原子百分比数据，揭示三个阶段中Ru信号消失、Ni/Ru共沉积及最终Ru完全耗尽的界面演化过程，并总结三阶段降解机制。
+Paragraph Index:  
+(no paragraphs)
 
-关键实体：Ru, Ni, RuO₂, ICP-MS, XPS, EDS, NR-AST, electrolyte solution, precipitates, oxidation states
+Key Entities: solution chemistry, interface dynamics, time evolution, concentration gradients, phase boundaries, reaction fronts, mass transport, interfacial tension

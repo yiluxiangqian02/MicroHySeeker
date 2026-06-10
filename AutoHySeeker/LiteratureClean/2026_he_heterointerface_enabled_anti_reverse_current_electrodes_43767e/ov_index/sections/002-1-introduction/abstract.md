@@ -1,3 +1,3 @@
-章节定位：Introduction  
-核心内容：本章节综述了碱性水电解（AWE）技术在绿氢生产中的关键瓶颈，特别是低电流密度、负载灵活性差及动态工况下由反向电流（RC）引发的电极失效问题，并提出通过梯度异质界面工程设计兼具高活性与高稳定性的电极材料。  
-关键实体：绿氢, 碱性水电解（AWE）, 氧析出反应（OER）, 氢析出反应（HER）, 反向电流（RC）, 镍基电极, Ni₃S₂, 梯度异质界面, 工业级电流密度（≥1000 mA cm⁻²）, 动态启停工况, 30 wt% KOH, 80–90 °C
+Section Role: This section is the Introduction, establishing the context, challenges, and knowledge gaps in alkaline water electrolysis (AWE) for green hydrogen production.  
+Core Content: It highlights the limitations of conventional AWE systems—specifically low current density (<400 mA cm⁻² at 1.8 V) and poor load flexibility (>40% minimum threshold)—and identifies reverse current (RC) during startup/shutdown cycles as a critical degradation mechanism under industrial conditions (30 wt% KOH, 80–90 °C), motivating the development of a gradient interlayer-engineered Ni₃S₂/Ni mesh electrode that achieves 1.79 V @ 1000 mA cm⁻² and >2000 h stability with 3600 RC cycles.  
+Key Entities: alkaline water electrolysis (AWE), green hydrogen, Ni₃S₂/Ni mesh electrode, reverse current (RC), oxygen evolution reaction (OER), hydrogen evolution reaction (HER), 30 wt% KOH, 80–90 °C, <400 mA cm⁻² at 1.8 V, >40% load flexibility threshold, 1.79 V @ 1000 mA cm⁻², >2000 h stability, 3600 startup/shutdown cycles, gradient heterointerface, Ni/Ni₃S₂ heterointerface buffer

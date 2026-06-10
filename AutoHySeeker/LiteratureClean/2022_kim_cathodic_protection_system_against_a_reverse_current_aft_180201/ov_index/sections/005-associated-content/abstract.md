@@ -1,0 +1,3 @@
+Section Role: This section serves as the Supporting Information, providing supplementary experimental and analytical details.  
+Core Content: It compiles additional data and methodological protocols that support the main findings of the study, including characterization results, electrochemical measurements, and reference information.  
+Key Entities: Experimental methods, reverse-current simulation model, Ni 2p XPS spectra, standard reduction potentials, Hg/HgO reference electrode calibration, HER polarization curves, overpotentials, CP measurements, OER polarization curves, SEM images, XRD profiles, Ni K-edge ex situ XANES spectra, RCSF comparison, evaluation protocols, chemical dissolution, electrochemical dissolution, Pb, Zn, Sn, Al prices

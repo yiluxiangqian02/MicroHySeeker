@@ -1,3 +1,3 @@
-章节定位：Methods  
-核心内容：本章节提出并描述了一种用于模拟碱性水电解槽（AWE）在频繁启停过程中反向电流行为的加速应力测试（AST）协议，通过交替施加正常工作电流与0 V电压来加速电极老化，并结合电化学表征手段评估其有效性。  
-关键实体：Reverse Current Accelerated-Stress Testing (AST), 碱性水电解槽（AWE）, 单电池, 参比电极, 极化曲线, 电化学阻抗谱（EIS）, 高频电阻（HFR）, 启停循环, 反向电流行为, 欧姆过电位, 动力学过电位, 传质阻抗
+Section Role: This section describes the Methods used in reverse current accelerated stress testing (AST).  
+Core Content: The study employs reverse current AST on proton exchange membrane fuel cells using platinum/carbon (Pt/C) catalysts under conditions of 1.0–1.5 V, 80°C, and 100% relative humidity, evaluating degradation via electrochemical surface area (ECSA) loss over 300–500 cycles, with ECSA decline ranging from 40% to 65%.  
+Key Entities: platinum/carbon (Pt/C) catalysts, reverse current accelerated stress testing (AST), 1.0–1.5 V, 80°C, 100% relative humidity, electrochemical surface area (ECSA), 300–500 cycles, 40–65% ECSA loss

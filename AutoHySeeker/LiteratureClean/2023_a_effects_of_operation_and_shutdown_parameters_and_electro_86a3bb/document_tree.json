@@ -1,393 +1,153 @@
 {
   "paper_id": "2023_a_effects_of_operation_and_shutdown_parameters_and_electro_86a3bb",
-  "title": "Effects of operation and shutdown parameters and electrode materials on the reverse current phenomenon in alkaline water analyzers",
-  "heading_count": 22,
-  "paragraph_count": 75,
-  "headings": [
+  "sections": [
     {
       "heading_uid": "HRAW-001-32a2621f",
+      "heading_id": "H01",
       "heading_text": "Effects of operation and shutdown parameters and electrode materials on the reverse current phenomenon in alkaline water analyzers",
-      "heading_level": 1,
-      "doc_heading_order": 1,
-      "display_order": 1,
-      "page_index": null,
-      "paragraph_count": 2,
-      "paragraph_uids": [
-        "PRAW-000001",
-        "PRAW-000002"
-      ],
-      "macro_tags": [
-        "S00_front_matter"
+      "heading_order": 1,
+      "paragraph_count": 13,
+      "paragraph_ids": [
+        "S01-P001",
+        "S01-P002",
+        "S01-P003",
+        "S01-P004",
+        "S01-P005",
+        "S01-P006",
+        "S01-P007",
+        "S01-P008",
+        "S01-P009",
+        "S01-P010",
+        "S01-P011",
+        "S01-P012",
+        "S01-P013"
       ]
     },
     {
-      "heading_uid": "HRAW-002-4f037d0d",
-      "heading_text": "HIGHLIGHTS",
-      "heading_level": 1,
-      "doc_heading_order": 2,
-      "display_order": 2,
-      "page_index": null,
-      "paragraph_count": 1,
-      "paragraph_uids": [
-        "PRAW-000003"
-      ],
-      "macro_tags": [
-        "S00_front_matter"
-      ]
-    },
-    {
-      "heading_uid": "HRAW-005-8663ac07",
-      "heading_text": "ABSTRACT",
-      "heading_level": 1,
-      "doc_heading_order": 5,
-      "display_order": 5,
-      "page_index": null,
-      "paragraph_count": 1,
-      "paragraph_uids": [
-        "PRAW-000004"
-      ],
-      "macro_tags": [
-        "S01_abstract"
-      ]
-    },
-    {
-      "heading_uid": "HRAW-006-a488834b",
+      "heading_uid": "HRAW-002-2812cee1",
+      "heading_id": "H02",
       "heading_text": "1. Introduction",
-      "heading_level": 1,
-      "doc_heading_order": 6,
-      "display_order": 6,
-      "page_index": null,
+      "heading_order": 2,
       "paragraph_count": 9,
-      "paragraph_uids": [
-        "PRAW-000005",
-        "PRAW-000006",
-        "PRAW-000007",
-        "PRAW-000008",
-        "PRAW-000009",
-        "PRAW-000010",
-        "PRAW-000011",
-        "PRAW-000012",
-        "PRAW-000013"
-      ],
-      "macro_tags": [
-        "S02_introduction"
+      "paragraph_ids": [
+        "S02-P001",
+        "S02-P002",
+        "S02-P003",
+        "S02-P004",
+        "S02-P005",
+        "S02-P006",
+        "S02-P007",
+        "S02-P008",
+        "S02-P009"
       ]
     },
     {
-      "heading_uid": "HRAW-008-c206dd51",
-      "heading_text": "2.1. Construction of the alkaline water electrolyzer system",
-      "heading_level": 1,
-      "doc_heading_order": 8,
-      "display_order": 8,
-      "page_index": null,
-      "paragraph_count": 3,
-      "paragraph_uids": [
-        "PRAW-000052",
-        "PRAW-000053",
-        "PRAW-000054"
-      ],
-      "macro_tags": [
-        "S01_abstract",
-        "S05_discussion_mechanism"
+      "heading_uid": "HRAW-003-a08e40af",
+      "heading_id": "H03",
+      "heading_text": "2. Experimental",
+      "heading_order": 3,
+      "paragraph_count": 38,
+      "paragraph_ids": [
+        "S03-P001",
+        "S03-P002",
+        "S03-P003",
+        "S03-P004",
+        "S03-P005",
+        "S03-P006",
+        "S03-P007",
+        "S03-P008",
+        "S03-P009",
+        "S03-P010",
+        "S03-P011",
+        "S03-P012",
+        "S03-P013",
+        "S03-P014",
+        "S03-P015",
+        "S03-P016",
+        "S03-P017",
+        "S03-P018",
+        "S03-P019",
+        "S03-P020",
+        "S03-P021",
+        "S03-P022",
+        "S03-P023",
+        "S03-P024",
+        "S03-P025",
+        "S03-P026",
+        "S03-P027",
+        "S03-P028",
+        "S03-P029",
+        "S03-P030",
+        "S03-P031",
+        "S03-P032",
+        "S03-P033",
+        "S03-P034",
+        "S03-P035",
+        "S03-P036",
+        "S03-P037",
+        "S03-P038"
       ]
     },
     {
-      "heading_uid": "HRAW-009-d6615769",
-      "heading_text": "2.2. The bipolar plate stack and the associated manifold assembly",
-      "heading_level": 1,
-      "doc_heading_order": 9,
-      "display_order": 9,
-      "page_index": null,
-      "paragraph_count": 2,
-      "paragraph_uids": [
-        "PRAW-000055",
-        "PRAW-000056"
-      ],
-      "macro_tags": [
-        "S01_abstract",
-        "S05_discussion_mechanism"
+      "heading_uid": "HRAW-004-e28b9fe9",
+      "heading_id": "H04",
+      "heading_text": "3. Results and discussion",
+      "heading_order": 4,
+      "paragraph_count": 28,
+      "paragraph_ids": [
+        "S04-P001",
+        "S04-P002",
+        "S04-P003",
+        "S04-P004",
+        "S04-P005",
+        "S04-P006",
+        "S04-P007",
+        "S04-P008",
+        "S04-P009",
+        "S04-P010",
+        "S04-P011",
+        "S04-P012",
+        "S04-P013",
+        "S04-P014",
+        "S04-P015",
+        "S04-P016",
+        "S04-P017",
+        "S04-P018",
+        "S04-P019",
+        "S04-P020",
+        "S04-P021",
+        "S04-P022",
+        "S04-P023",
+        "S04-P024",
+        "S04-P025",
+        "S04-P026",
+        "S04-P027",
+        "S04-P028"
       ]
     },
     {
-      "heading_uid": "HRAW-010-64583ed1",
-      "heading_text": "2.3. Basics of the reverse current phenomenon and the equivalent electrical circuit",
-      "heading_level": 1,
-      "doc_heading_order": 10,
-      "display_order": 10,
-      "page_index": null,
-      "paragraph_count": 3,
-      "paragraph_uids": [
-        "PRAW-000057",
-        "PRAW-000058",
-        "PRAW-000059"
-      ],
-      "macro_tags": [
-        "S05_discussion_mechanism"
-      ]
-    },
-    {
-      "heading_uid": "HRAW-011-7cbde4bc",
-      "heading_text": "2.4. Electrolysis and shutdown conditions",
-      "heading_level": 1,
-      "doc_heading_order": 11,
-      "display_order": 11,
-      "page_index": null,
-      "paragraph_count": 6,
-      "paragraph_uids": [
-        "PRAW-000014",
-        "PRAW-000015",
-        "PRAW-000016",
-        "PRAW-000017",
-        "PRAW-000018",
-        "PRAW-000019"
-      ],
-      "macro_tags": [
-        "S03_methods_and_setup"
-      ]
-    },
-    {
-      "heading_uid": "HRAW-012-cdbbc92d",
-      "heading_text": "2.5. Fabrication of the electrodes",
-      "heading_level": 1,
-      "doc_heading_order": 12,
-      "display_order": 12,
-      "page_index": null,
-      "paragraph_count": 1,
-      "paragraph_uids": [
-        "PRAW-000050"
-      ],
-      "macro_tags": [
-        "S01_abstract"
-      ]
-    },
-    {
-      "heading_uid": "HRAW-013-360f245c",
-      "heading_text": "2.6. Modeling approach",
-      "heading_level": 1,
-      "doc_heading_order": 13,
-      "display_order": 13,
-      "page_index": null,
-      "paragraph_count": 17,
-      "paragraph_uids": [
-        "PRAW-000020",
-        "PRAW-000021",
-        "PRAW-000022",
-        "PRAW-000023",
-        "PRAW-000024",
-        "PRAW-000025",
-        "PRAW-000026",
-        "PRAW-000027",
-        "PRAW-000028",
-        "PRAW-000029",
-        "PRAW-000030",
-        "PRAW-000031",
-        "PRAW-000032",
-        "PRAW-000033",
-        "PRAW-000034",
-        "PRAW-000035",
-        "PRAW-000036"
-      ],
-      "macro_tags": [
-        "S03_methods_and_setup"
-      ]
-    },
-    {
-      "heading_uid": "HRAW-015-aeb9e9e8",
-      "heading_text": "3.1. Basic water electrolysis performance of the single cell electrolyzer",
-      "heading_level": 1,
-      "doc_heading_order": 15,
-      "display_order": 15,
-      "page_index": null,
-      "paragraph_count": 1,
-      "paragraph_uids": [
-        "PRAW-000051"
-      ],
-      "macro_tags": [
-        "S04_results"
-      ]
-    },
-    {
-      "heading_uid": "HRAW-016-1aa55629",
-      "heading_text": "3.2. Basic behavior of the electrolyzer after shutdown",
-      "heading_level": 1,
-      "doc_heading_order": 16,
-      "display_order": 16,
-      "page_index": null,
-      "paragraph_count": 7,
-      "paragraph_uids": [
-        "PRAW-000037",
-        "PRAW-000043",
-        "PRAW-000038",
-        "PRAW-000039",
-        "PRAW-000040",
-        "PRAW-000041",
-        "PRAW-000042"
-      ],
-      "macro_tags": [
-        "S01_abstract",
-        "S03_methods_and_setup"
-      ]
-    },
-    {
-      "heading_uid": "HRAW-017-db47257f",
-      "heading_text": "3.3. Effects of dissolved gases on the reverse current phenomenon",
-      "heading_level": 1,
-      "doc_heading_order": 17,
-      "display_order": 17,
-      "page_index": null,
-      "paragraph_count": 2,
-      "paragraph_uids": [
-        "PRAW-000060",
-        "PRAW-000061"
-      ],
-      "macro_tags": [
-        "S05_discussion_mechanism"
-      ]
-    },
-    {
-      "heading_uid": "HRAW-018-c2af668c",
-      "heading_text": "3.4. Effects of the electrolyte circulation on the reverse current phenomenon",
-      "heading_level": 1,
-      "doc_heading_order": 18,
-      "display_order": 18,
-      "page_index": null,
-      "paragraph_count": 4,
-      "paragraph_uids": [
-        "PRAW-000062",
-        "PRAW-000063",
-        "PRAW-000064",
-        "PRAW-000065"
-      ],
-      "macro_tags": [
-        "S05_discussion_mechanism"
-      ]
-    },
-    {
-      "heading_uid": "HRAW-019-7747b909",
-      "heading_text": "3.5. Effects of the electrolysis current and temperature on the reverse current phenomenon",
-      "heading_level": 1,
-      "doc_heading_order": 19,
-      "display_order": 19,
-      "page_index": null,
-      "paragraph_count": 2,
-      "paragraph_uids": [
-        "PRAW-000066",
-        "PRAW-000067"
-      ],
-      "macro_tags": [
-        "S05_discussion_mechanism"
-      ]
-    },
-    {
-      "heading_uid": "HRAW-020-22111ab3",
-      "heading_text": "3.6. Effects of anode materials on the reverse current phenomenon",
-      "heading_level": 1,
-      "doc_heading_order": 20,
-      "display_order": 20,
-      "page_index": null,
-      "paragraph_count": 6,
-      "paragraph_uids": [
-        "PRAW-000044",
-        "PRAW-000045",
-        "PRAW-000046",
-        "PRAW-000047",
-        "PRAW-000048",
-        "PRAW-000049"
-      ],
-      "macro_tags": [
-        "S03_methods_and_setup"
-      ]
-    },
-    {
-      "heading_uid": "HRAW-021-c65c4454",
+      "heading_uid": "HRAW-005-f7904a3f",
+      "heading_id": "H05",
       "heading_text": "4. Conclusion",
-      "heading_level": 1,
-      "doc_heading_order": 21,
-      "display_order": 21,
-      "page_index": null,
-      "paragraph_count": 3,
-      "paragraph_uids": [
-        "PRAW-000068",
-        "PRAW-000069",
-        "PRAW-000070"
-      ],
-      "macro_tags": [
-        "S06_conclusion"
-      ]
-    },
-    {
-      "heading_uid": "HRAW-022-dd3f3e35",
-      "heading_text": "CRediT authorship contribution statement",
-      "heading_level": 1,
-      "doc_heading_order": 22,
-      "display_order": 22,
-      "page_index": null,
-      "paragraph_count": 1,
-      "paragraph_uids": [
-        "PRAW-000071"
-      ],
-      "macro_tags": [
-        "S07_back_matter_or_supplementary"
-      ]
-    },
-    {
-      "heading_uid": "HRAW-023-bbd399ba",
-      "heading_text": "Declaration of competing interest",
-      "heading_level": 1,
-      "doc_heading_order": 23,
-      "display_order": 23,
-      "page_index": null,
-      "paragraph_count": 1,
-      "paragraph_uids": [
-        "PRAW-000072"
-      ],
-      "macro_tags": [
-        "S07_back_matter_or_supplementary"
-      ]
-    },
-    {
-      "heading_uid": "HRAW-024-9162d9ad",
-      "heading_text": "Acknowledgements",
-      "heading_level": 1,
-      "doc_heading_order": 24,
-      "display_order": 24,
-      "page_index": null,
-      "paragraph_count": 1,
-      "paragraph_uids": [
-        "PRAW-000073"
-      ],
-      "macro_tags": [
-        "S07_back_matter_or_supplementary"
-      ]
-    },
-    {
-      "heading_uid": "HRAW-025-a9e02245",
-      "heading_text": "Appendix A. Supplementary data",
-      "heading_level": 1,
-      "doc_heading_order": 25,
-      "display_order": 25,
-      "page_index": null,
-      "paragraph_count": 1,
-      "paragraph_uids": [
-        "PRAW-000074"
-      ],
-      "macro_tags": [
-        "S07_back_matter_or_supplementary"
-      ]
-    },
-    {
-      "heading_uid": "HRAW-026-d41cf7da",
-      "heading_text": "References",
-      "heading_level": 1,
-      "doc_heading_order": 26,
-      "display_order": 26,
-      "page_index": null,
-      "paragraph_count": 1,
-      "paragraph_uids": [
-        "PRAW-000075"
-      ],
-      "macro_tags": [
-        "S07_back_matter_or_supplementary"
+      "heading_order": 5,
+      "paragraph_count": 16,
+      "paragraph_ids": [
+        "S05-P001",
+        "S05-P002",
+        "S05-P003",
+        "S05-P004",
+        "S05-P005",
+        "S05-P006",
+        "S05-P007",
+        "S05-P008",
+        "S05-P009",
+        "S05-P010",
+        "S05-P011",
+        "S05-P012",
+        "S05-P013",
+        "S05-P014",
+        "S05-P015",
+        "S05-P016"
       ]
     }
   ]

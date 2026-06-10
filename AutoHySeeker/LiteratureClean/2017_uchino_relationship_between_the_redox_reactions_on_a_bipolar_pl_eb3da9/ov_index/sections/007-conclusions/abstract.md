@@ -1,3 +1,3 @@
-章节定位：Discussion  
-核心内容：本章节探讨了碱性水电解槽在停机后产生反向电流的机理，分析了电解槽运行条件与电池电压之间的关系，并推断反向电流由双极板两侧氧化还原状态差异驱动，最终在两侧达到相同氧化还原态时停止。  
-关键实体：碱性水电解槽, 双极型电解槽, 反向电流, 电池电压, NiO₂/NiOOH, H₂/H₂O, 氧化还原对, 双极板, 阳极氧化物, 开路电压
+Section Role: This section presents the Conclusions of the study.  
+Core Content: The conclusions summarize the mechanism of reverse current in an alkaline water electrolyzer, linking it to redox reactions involving nickel-based species and hydrogen/water couples, with reverse current ceasing once redox equilibrium is reached across the bipolar plate.  
+Key Entities: bipolar-type alkaline water electrolyzer, reverse current, cell voltage, nickel oxide (NiO₂/NiOOH) redox couple, hydrogen/water (H₂/H₂O) redox couple, bipolar plate, anode, cathode, open circuit voltage, redox equilibrium

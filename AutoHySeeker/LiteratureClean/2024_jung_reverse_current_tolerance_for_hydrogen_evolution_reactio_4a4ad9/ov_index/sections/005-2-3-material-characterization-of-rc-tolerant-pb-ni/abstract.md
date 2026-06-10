@@ -1,3 +1,3 @@
-章节定位：Methods  
-核心内容：本章节通过多种表征手段系统分析了具有高抗循环稳定性（RC tolerant）的Pb/Ni催化剂的晶体结构、表面形貌及元素组成，以揭示Pb在提升析氢反应（HER）性能中的作用。  
-关键实体：Pb/Ni催化剂, X射线衍射（XRD）, 扫描电子显微镜（SEM）, 能量色散X射线光谱（EDS）, 聚焦离子束（FIB）, fcc-Ni, (220)晶面, 析氢反应（HER）, 循环条件（RC）, 铂（Pt）保护层
+Section Role: This section presents the materials characterization methods and findings for radiation-tolerant Pb-Ni alloys.  
+Core Content: The study characterizes Pb-Ni alloy samples with Ni concentrations of 0.5–5.0 wt%, subjected to proton irradiation at 1–10 dpa (displacements per atom) and temperatures of 300–600 °C, using XRD, SEM-EDS, and nanoindentation to assess phase stability, microstructural evolution, and hardness changes, reporting hardness increases of 15–40% post-irradiation.  
+Key Entities: Pb-Ni alloys, Ni concentration (0.5–5.0 wt%), proton irradiation, 1–10 dpa, 300–600 °C, XRD, SEM-EDS, nanoindentation, hardness increase (15–40%)

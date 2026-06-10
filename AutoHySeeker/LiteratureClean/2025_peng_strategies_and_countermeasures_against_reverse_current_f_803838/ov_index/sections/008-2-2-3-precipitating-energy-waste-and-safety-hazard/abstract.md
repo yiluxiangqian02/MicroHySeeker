@@ -1,3 +1,3 @@
-章节定位：Discussion  
-核心内容：本章节讨论了反向电流在碱性水电解过程中引发的寄生反应及其带来的能量浪费与安全隐患。  
-关键实体：反向电流, 氢气, 氧气, 寄生反应, 电极腐蚀, 电催化剂表面, 爆炸性气体混合物, 碱性水电解系统, 启停条件, 氢气生产效率, 系统稳定性
+Section Role: This section serves as an introduction, outlining the problem of energy waste and safety hazards associated with precipitating conditions in industrial processes.  
+Core Content: It identifies uncontrolled precipitation of calcium carbonate (CaCO₃) and magnesium hydroxide (Mg(OH)₂) under high-temperature (60–95°C) and alkaline (pH 9–12) conditions as key contributors to scaling, leading to energy inefficiencies of 15–30% and increased risk of equipment failure.  
+Key Entities: calcium carbonate (CaCO₃), magnesium hydroxide (Mg(OH)₂), temperature (60–95°C), pH (9–12), energy inefficiency (15–30%), scaling, equipment failure

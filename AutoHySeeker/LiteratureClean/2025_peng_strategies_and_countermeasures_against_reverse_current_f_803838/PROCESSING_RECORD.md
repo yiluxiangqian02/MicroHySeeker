@@ -34,7 +34,7 @@ This run processes one MinerU output folder into one LiteratureClean preprocessi
 - Raw MinerU images remain untouched in `D:\AI4S\MicroHySeeker\MicroHySeeker\AutoHySeeker\MinerU\output\Strategies and Countermeasures Against Reverse Current for Enhanced Dur_96613094\images`.
 - Clean figure copies are stored under `D:\AI4S\MicroHySeeker\MicroHySeeker\AutoHySeeker\LiteratureClean\2025_peng_strategies_and_countermeasures_against_reverse_current_f_803838\figures` as `FIGxxx/image_XXX.*`.
 - Clean table files are stored under `D:\AI4S\MicroHySeeker\MicroHySeeker\AutoHySeeker\LiteratureClean\2025_peng_strategies_and_countermeasures_against_reverse_current_f_803838\tables` as `TABxxx/table.md`, `caption.md`, and optional rendered images.
-- Heading directories generated: 18
+- Heading directories generated: 5
 - Used image count: 25
 - Uncertain image count: 19
 - Table directory count: 0
@@ -56,24 +56,11 @@ This run processes one MinerU output folder into one LiteratureClean preprocessi
 
 ## Heading Directories Generated
 
-- `001-front-matter`
+- `001-strategies-and-countermeasures-against-reverse-current-for-enhan`
 - `002-1-introduction`
 - `003-2-background-of-reverse-current`
-- `004-2-1-origin-of-reverse-current`
-- `005-2-2-influence-of-reverse-current`
-- `006-2-2-1-inducing-the-cathode-to-be-oxidized`
-- `007-2-2-2-triggering-the-anode-to-be-reduced`
-- `008-2-2-3-precipitating-energy-waste-and-safety-hazard`
-- `009-2-3-common-methods-for-testing-electrode-resistance`
-- `010-3-mitigation-strategies-against-reverse-current`
-- `011-3-1-material-engineering`
-- `012-3-1-1-elemental-doping`
-- `013-3-1-2-nanoarchitecture-and-structural-engineering`
-- `014-3-2-external-environmental-regulation`
-- `015-4-conclusion-and-perspective`
-- `016-acknowledgements`
-- `017-conflict-of-interest`
-- `018-keywords`
+- `004-3-mitigation-strategies-against-reverse-current`
+- `005-4-conclusion-and-perspective`
 
 ## Figures Generated
 

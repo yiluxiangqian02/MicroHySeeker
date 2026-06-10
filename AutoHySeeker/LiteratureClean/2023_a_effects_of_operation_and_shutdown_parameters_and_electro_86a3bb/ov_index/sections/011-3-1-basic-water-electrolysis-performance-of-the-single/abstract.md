@@ -1,3 +1,3 @@
-章节定位：Results  
-核心内容：本章节展示了基于零间隙构型的单电池碱性水电解槽在不同温度和电解质条件下的基础电解性能，比较了两种析氧反应（OER）电催化剂的性能差异。  
-关键实体：单电池碱性水电解槽, 零间隙构型, AN-1, AN-2, CA-1, 析氧反应（OER）电催化剂, 析氢反应（HER）电催化剂, 电流密度, 电化学阻抗, iR校正, KOH电解质（7 M）, 30°C, 80°C
+Section Role: This section presents experimental results on the basic water electrolysis performance of a single cell.  
+Core Content: It evaluates the operational characteristics and efficiency of a single electrolysis cell under standard testing conditions, focusing on its voltage–current behavior and gas production rates.  
+Key Entities: single-cell electrolyzer, water electrolysis, voltage–current density curve, hydrogen production rate, oxygen production rate, standard testing conditions, electrolysis efficiency
