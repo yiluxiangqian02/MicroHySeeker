@@ -30,6 +30,8 @@ _comm_logger: Optional[logging.Logger] = None
 _log_dir: Path = Path("./logs")
 _log_file: Optional[Path] = None
 _comm_log_file: Optional[Path] = None
+_run_comm_log_file: Optional[Path] = None
+_run_comm_handler: Optional[logging.Handler] = None
 _initialized: bool = False
 
 
@@ -142,6 +144,55 @@ def get_current_comm_log_file() -> Optional[Path]:
     return _comm_log_file
 
 
+def attach_run_comm_log(run_dir: str | Path,
+                        filename: str = "comm_log.log") -> Optional[Path]:
+    """Mirror RS485 TX/RX logs into one experiment run directory."""
+    global _run_comm_log_file, _run_comm_handler
+    if not _initialized:
+        init_app_logging()
+    if _comm_logger is None:
+        return None
+
+    detach_run_comm_log()
+    try:
+        run_path = Path(run_dir)
+        run_path.mkdir(parents=True, exist_ok=True)
+        _run_comm_log_file = run_path / filename
+        _run_comm_handler = logging.FileHandler(
+            str(_run_comm_log_file),
+            mode="w",
+            encoding="utf-8",
+        )
+        _run_comm_handler.setLevel(logging.DEBUG)
+        _run_comm_handler.setFormatter(logging.Formatter(_COMM_LOG_FMT, _DATE_FMT))
+        _comm_logger.addHandler(_run_comm_handler)
+        _comm_logger.debug(f"COMM_LOG_START run_dir={run_path}")
+        return _run_comm_log_file
+    except Exception:
+        _run_comm_log_file = None
+        _run_comm_handler = None
+        return None
+
+
+def detach_run_comm_log() -> None:
+    """Stop mirroring RS485 TX/RX logs into the active experiment directory."""
+    global _run_comm_log_file, _run_comm_handler
+    if _comm_logger is not None and _run_comm_handler is not None:
+        try:
+            _comm_logger.debug("COMM_LOG_END")
+            _comm_logger.removeHandler(_run_comm_handler)
+            _run_comm_handler.close()
+        except Exception:
+            pass
+    _run_comm_handler = None
+    _run_comm_log_file = None
+
+
+def get_current_run_comm_log_file() -> Optional[Path]:
+    """Return the active experiment-scoped communication log path."""
+    return _run_comm_log_file
+
+
 def log_comm(direction: str, addr: int, cmd_name: str, hex_str: str) -> None:
     """记录一条 RS485 通信日志到文件
     
@@ -188,6 +239,7 @@ def get_app_logger(name: str = "") -> logging.Logger:
 def shutdown_logging():
     """关闭日志系统（应用退出时调用）"""
     global _initialized
+    detach_run_comm_log()
     if _root_logger:
         for handler in _root_logger.handlers[:]:
             handler.close()

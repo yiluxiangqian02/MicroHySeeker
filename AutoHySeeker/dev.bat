@@ -40,12 +40,17 @@ netstat -ano | findstr "LISTENING" | findstr ":%MHS_PORT% " >nul 2>&1
 if not errorlevel 1 (
     echo [INFO]  MHS is running on port %MHS_PORT%. Checking if code was updated...
     python -c "
-import subprocess, os, sys
-runner = os.path.join(os.path.dirname(os.path.abspath('%~dpf0')), '..', 'MicroHySeeker', 'src', 'engine', 'runner.py')
-runner = os.path.normpath(runner)
-if not os.path.exists(runner):
+import os, sys
+mhs_src = os.path.join(os.path.dirname(os.path.abspath('%~dpf0')), '..', 'MicroHySeeker', 'src')
+mhs_src = os.path.normpath(mhs_src)
+if not os.path.exists(mhs_src):
     sys.exit(0)
-runner_mtime = os.path.getmtime(runner)
+latest_mtime = 0
+for root, dirs, files in os.walk(mhs_src):
+    dirs[:] = [d for d in dirs if d != '__pycache__']
+    for name in files:
+        if name.endswith('.py'):
+            latest_mtime = max(latest_mtime, os.path.getmtime(os.path.join(root, name)))
 try:
     r = __import__('urllib.request', fromlist=['urlopen']).urlopen('http://127.0.0.1:8100/api/system/health', timeout=2)
     import json
@@ -53,7 +58,7 @@ try:
     uptime = d.get('uptime_seconds', 0)
     import time
     proc_start = time.time() - uptime
-    if runner_mtime > proc_start:
+    if latest_mtime > proc_start:
         print('OUTDATED')
     else:
         print('OK')
@@ -61,10 +66,10 @@ except Exception:
     print('OK')
 " 2>nul | findstr /c:"OUTDATED" >nul 2>&1
     if not errorlevel 1 (
-        echo [WARN]  MHS runner.py has been updated but MHS is running old code!
+        echo [WARN]  MHS source code has been updated but MHS is running old code!
         echo         Recommend: restart MHS to apply fixes.
         echo.
-        choice /c YN /t 10 /d N /m "Restart MHS now? [Y=Yes, N=Skip, auto-N in 10s]"
+        choice /c YN /t 10 /d Y /m "Restart MHS now? [Y=Yes, N=Skip, auto-Y in 10s]"
         if errorlevel 2 (
             echo         Skipping MHS restart.
         ) else (

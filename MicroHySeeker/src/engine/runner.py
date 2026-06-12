@@ -2158,8 +2158,11 @@ class ExperimentWorker(QObject):
         if self.config:
             chi_exe = getattr(self.config, 'chi_exe_path', chi_exe)
             output_dir = getattr(self.config, 'chi_output_dir', output_dir)
+        if self.dm and self.dm.run_dir:
+            output_dir = str(self.dm.run_dir / "raw_chi")
 
         os.makedirs(output_dir, exist_ok=True)
+        self._emit_log(f"    CHI原始数据目录: {output_dir}")
 
         if not hasattr(self, '_chi_bridge') or self._chi_bridge is None:
             bridge_config = CHIBridgeConfig(
@@ -2281,9 +2284,13 @@ class ExperimentWorker(QObject):
                     ec,
                     on_cycle=_on_adt_cycle,
                     stop_flag=lambda: self._stop_flag,
+                    output_prefix=f"step_{step_index}_{technique}",
                 )
             else:
-                result = self._chi_bridge.run(ec)
+                result = self._chi_bridge.run(
+                    ec,
+                    output_name=f"step_{step_index}_{technique}",
+                )
             
             if self._stop_flag:
                 self._chi_bridge.stop()
@@ -2309,6 +2316,14 @@ class ExperimentWorker(QObject):
                         "ir_compensation_enabled": ir_enabled,
                         "ir_compensation_ohm": ir_ohm if ir_enabled else 0,
                     }
+                    if technique == "ADT":
+                        ec_params.update({
+                            "adt_num_cycles": getattr(ec, "adt_num_cycles", None),
+                            "adt_cathodic_current_mA": getattr(ec, "adt_cathodic_current_mA", None),
+                            "adt_anodic_potential_V": getattr(ec, "adt_anodic_potential_V", None),
+                            "adt_cathodic_duration_s": getattr(ec, "adt_cathodic_duration_s", None),
+                            "adt_anodic_duration_s": getattr(ec, "adt_anodic_duration_s", None),
+                        })
                     csv_path = self.dm.save_echem_csv(
                         step_index, technique,
                         result.data_points, result.headers,

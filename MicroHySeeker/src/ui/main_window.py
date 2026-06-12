@@ -589,17 +589,65 @@ class ExperimentProcessWidget(QFrame):
                 time_axis = arr[:, 0]
                 potential = arr[:, 1]
                 current = arr[:, 2]
-                pot_line = ax.plot(time_axis, potential, color='#1565C0', linewidth=1.6, label='Potential')[0]
-                cur_line = ax2.plot(time_axis, current, color='#D32F2F', linewidth=1.0, alpha=0.75, label='Current')[0]
-                ax.set_xlabel('t / s', fontsize=15, fontweight='bold')
-                ax.set_ylabel('E / V', fontsize=15, fontweight='bold', color='#1565C0')
-                ax2.set_ylabel('I / A', fontsize=15, fontweight='bold', color='#D32F2F')
-                ax.tick_params(axis='y', colors='#1565C0', labelsize=12, width=1.5)
-                ax2.tick_params(axis='y', colors='#D32F2F', labelsize=12, width=1.5)
-                ax.set_title('Accelerated Durability Test (ADT)', fontsize=16, fontweight='bold')
-                ax.legend([pot_line, cur_line], ['Potential', 'Current'], loc='upper right', fontsize=10, frameon=False)
-                for spine in ax2.spines.values():
-                    spine.set_linewidth(1.5)
+                red = '#D96B63'
+                blue = '#7DB7D6'
+                dark = '#222222'
+                if arr.shape[1] >= 5:
+                    phase = arr[:, 4]
+                    cp_mask = phase == 0
+                    ca_mask = phase == 1
+                else:
+                    cp_mask = np.isfinite(potential)
+                    ca_mask = np.isfinite(current)
+
+                def _plot_masked_segments(plot_ax, x, y, mask, **kwargs):
+                    start = None
+                    for idx, ok in enumerate(mask):
+                        if ok and start is None:
+                            start = idx
+                        if start is not None and (not ok or idx == len(mask) - 1):
+                            end = idx if not ok else idx + 1
+                            if end - start > 1:
+                                plot_ax.plot(x[start:end], y[start:end], **kwargs)
+                            elif end - start == 1:
+                                plot_ax.scatter(x[start:end], y[start:end], s=8,
+                                                color=kwargs.get('color'))
+                            start = None
+
+                _plot_masked_segments(
+                    ax, time_axis, current * 1000.0, ca_mask,
+                    color=red, linewidth=0.75,
+                )
+                _plot_masked_segments(
+                    ax2, time_axis, potential, cp_mask,
+                    color=blue, linewidth=0.75,
+                )
+                ax.axhline(0, color=dark, linewidth=0.65, alpha=0.65)
+                ax.set_xlabel('Time (s)', fontsize=7.0, labelpad=2.0)
+                ax.set_ylabel('Current (mA)', fontsize=7.0, color=red, labelpad=2.0)
+                ax2.set_ylabel('Potential (V)', fontsize=7.0, color=blue, labelpad=2.0)
+                ax.set_title('ADT response', fontsize=7.8, pad=3.0)
+                ax.tick_params(axis='both', which='major', labelsize=6.2,
+                               width=0.6, length=2.8, direction='out', pad=1.5)
+                ax2.tick_params(axis='y', which='major', labelsize=6.2,
+                                width=0.6, length=2.8, direction='out', pad=1.5)
+                ax.tick_params(axis='y', colors=red)
+                ax2.tick_params(axis='y', colors=blue)
+                ax.grid(False)
+                ax.spines['top'].set_visible(False)
+                ax2.spines['top'].set_visible(False)
+                ax.spines['left'].set_color(red)
+                ax2.spines['right'].set_color(blue)
+                ax.spines['bottom'].set_color(dark)
+                ax.spines['left'].set_linewidth(0.7)
+                ax.spines['bottom'].set_linewidth(0.7)
+                ax2.spines['right'].set_linewidth(0.7)
+                left_min, left_max = ax.get_ylim()
+                right_min, right_max = ax2.get_ylim()
+                left_span = max(abs(left_min), abs(left_max), 1e-12)
+                right_span = max(abs(right_min), abs(right_max), 1e-12)
+                ax.set_ylim(-left_span, left_span)
+                ax2.set_ylim(-right_span, right_span)
             elif tech_upper == "ADT" and arr.shape[1] >= 2:
                 ax.plot(arr[:, 0], arr[:, 1], color='#1565C0', linewidth=lw)
                 ax.set_xlabel('t / s', fontsize=15, fontweight='bold')
@@ -615,11 +663,14 @@ class ExperimentProcessWidget(QFrame):
                         color=line_color, linewidth=lw)
                 ax.set_title(tech_upper, fontsize=16, fontweight='bold')
             
-            ax.tick_params(labelsize=12, width=1.5)
-            ax.grid(True, alpha=0.3, color='#CCCCCC')
-            for spine in ax.spines.values():
-                spine.set_linewidth(1.5)
-            fig.tight_layout(pad=1.0)
+            if tech_upper != "ADT":
+                ax.tick_params(labelsize=12, width=1.5)
+                ax.grid(True, alpha=0.3, color='#CCCCCC')
+                for spine in ax.spines.values():
+                    spine.set_linewidth(1.5)
+                fig.tight_layout(pad=1.0)
+            else:
+                fig.tight_layout(pad=0.35)
             
             canvas.draw()
             buf = canvas.buffer_rgba()

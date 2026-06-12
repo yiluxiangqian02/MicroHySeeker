@@ -20,6 +20,7 @@ CHI 660F 电化学桥接层 —— ECSettings ↔ CHI660FController
 """
 
 import os
+import math
 import logging
 from typing import Optional, Tuple, Any, Callable
 from dataclasses import dataclass
@@ -373,12 +374,13 @@ class CHIBridge:
 
         num = getattr(ec_settings, 'adt_num_cycles', 100)
         cathodic_mA = getattr(ec_settings, 'adt_cathodic_current_mA', -250.0)
-        cathodic_A = abs(cathodic_mA) / 1000.0  # mA → A
+        cathodic_set_A = cathodic_mA / 1000.0
+        cathodic_abs_A = abs(cathodic_set_A)  # CHI CP macro expects magnitude.
 
         # 构造 CP 参数
         cp_params = CPParams(
-            cathodic_current=cathodic_A,
-            anodic_current=cathodic_A,
+            cathodic_current=cathodic_abs_A,
+            anodic_current=cathodic_abs_A,
             e_high=getattr(ec_settings, 'adt_cp_e_high', 2.0),
             e_low=getattr(ec_settings, 'adt_cp_e_low', -2.0),
             cathodic_time=getattr(ec_settings, 'adt_cathodic_duration_s', 3.0),
@@ -420,9 +422,22 @@ class CHIBridge:
         
         logger.info(
             f"ADT 批量执行: {num} 轮, "
-            f"CP ic={cathodic_A}A tc={cp_params.cathodic_time}s, "
+            f"CP ic={cathodic_set_A}A tc={cp_params.cathodic_time}s, "
             f"CA ei={anodic_v}V pw={ca_params.pulse_width}s"
         )
+
+        output_dir = self._controller._config.output_dir
+        try:
+            for name in os.listdir(output_dir):
+                lower = name.lower()
+                if (
+                    lower.startswith(f"{output_prefix.lower()}_c")
+                    and ("_cathodic." in lower or "_anodic." in lower)
+                    and lower.endswith((".csv", ".txt"))
+                ):
+                    os.remove(os.path.join(output_dir, name))
+        except Exception as cleanup_err:
+            logger.warning(f"ADT old file cleanup failed: {cleanup_err}")
 
         # ★ 批量执行: 一次性发送所有轮次
         batch_result = self._controller.run_adt_batch(
@@ -439,11 +454,18 @@ class CHIBridge:
         # 将每个 CP/CA 子文件的本地时间轴拼接成一个连续时间轴，
         # 这样主界面可直接画出 ADT 的交替脉冲波形。
         all_data = []
-        all_headers = ["time(s)", "potential(V)", "current(A)", "cycle"]
+        all_headers = [
+            "time(s)",
+            "potential(V)",
+            "current(A)",
+            "cycle",
+            "phase",
+            "set_current(A)",
+            "set_potential(V)",
+        ]
         time_offset = 0.0
         
         if batch_result.success:
-            output_dir = self._controller._config.output_dir
             for cycle in range(num):
                 c = cycle + 1
                 for suffix in ("cathodic", "anodic"):
@@ -452,19 +474,45 @@ class CHIBridge:
                     )
                     if os.path.isfile(csv_path):
                         headers, data = self._controller._parse_csv(csv_path)
-                        if headers:
-                            all_headers = list(headers) + ["cycle"]
                         if data:
                             if len(data) >= 2 and len(data[0]) >= 1 and len(data[1]) >= 1:
                                 step_gap = max(float(data[1][0]) - float(data[0][0]), 1e-6)
                             else:
                                 step_gap = 1e-3
+                            appended = False
                             for pt in data:
-                                row = list(pt)
-                                if row:
-                                    row[0] = float(row[0]) + time_offset
-                                all_data.append(row + [c])
-                            time_offset = float(all_data[-1][0]) + step_gap
+                                if len(pt) < 2:
+                                    continue
+                                t = float(pt[0]) + time_offset
+                                measured = float(pt[1])
+                                if suffix == "cathodic":
+                                    row = [
+                                        t,
+                                        measured,
+                                        cathodic_set_A,
+                                        c,
+                                        0,
+                                        cathodic_set_A,
+                                        math.nan,
+                                    ]
+                                else:
+                                    row = [
+                                        t,
+                                        anodic_v,
+                                        measured,
+                                        c,
+                                        1,
+                                        math.nan,
+                                        anodic_v,
+                                    ]
+                                all_data.append(row)
+                                appended = True
+                            if appended:
+                                time_offset = float(all_data[-1][0]) + step_gap
+                            else:
+                                logger.warning(f"ADT child file has no numeric rows: {csv_path}")
+                    else:
+                        logger.warning(f"ADT child file missing: {csv_path}")
                 
                 # 回调 (数据收集完每轮后)
                 if on_cycle:
