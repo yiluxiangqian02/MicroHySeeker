@@ -121,17 +121,17 @@ class FlushChannel:
 class ECSettings:
     """电化学设置"""
     technique: ECTechnique = ECTechnique.CV
-    e0: Optional[float] = None  # 起始电位 (V)
-    eh: Optional[float] = None  # 高电位 (V)
-    el: Optional[float] = None  # 低电位 (V)
-    ef: Optional[float] = None  # 最终电位 (V)
-    scan_rate: Optional[float] = None  # 扫描速率 (V/s)
-    sample_interval_ms: int = 100
-    sensitivity: Optional[float] = None  # 灵敏度 (A/V), None表示自动
+    e0: Optional[float] = -0.8  # 起始电位 (V)
+    eh: Optional[float] = -0.8  # 高电位 (V)
+    el: Optional[float] = -1.8  # 低电位 (V)
+    ef: Optional[float] = -0.8  # 最终电位 (V)
+    scan_rate: Optional[float] = 0.05  # 扫描速率 (V/s)
+    sample_interval_ms: int = 1
+    sensitivity: Optional[float] = 0.1  # 灵敏度 (A/V), None表示自动
     autosensitivity: bool = False
-    quiet_time_s: float = 0.0
-    run_time_s: Optional[float] = None
-    seg_num: int = 1
+    quiet_time_s: float = 2.0
+    run_time_s: Optional[float] = 120.0
+    seg_num: int = 6
     scan_dir: str = "FWD"
     
     # EIS 参数
@@ -145,30 +145,30 @@ class ECSettings:
     
     # ADT (加速耐久性测试) 参数 — 替代旧 OCPT
     adt_enabled: bool = False
-    adt_num_cycles: int = 100              # ADT 循环轮数
+    adt_num_cycles: int = 500              # ADT 循环轮数
     # -- CP (计时电位法) 完整参数 --
     adt_cathodic_current_mA: float = -250.0  # 阴极电流 ic (mA), 默认使用无 Booster 风险参数
-    adt_cp_anodic_current_mA: float = 250.0  # 阳极电流 ia (mA)
-    adt_cp_e_high: float = 2.0               # CP 电位上限 eh (V)
-    adt_cp_e_low: float = -2.0               # CP 电位下限 el (V)
+    adt_cp_anodic_current_mA: float = 0.0    # 阳极电流 ia (mA)
+    adt_cp_e_high: float = 10.0              # CP 电位上限 eh (V)
+    adt_cp_e_low: float = -10.0              # CP 电位下限 el (V)
     adt_cp_high_e_hold_time: float = 0.0     # 高电位保持时间 heht (s)
     adt_cp_low_e_hold_time: float = 0.0      # 低电位保持时间 leht (s)
     adt_cathodic_duration_s: float = 3.0     # 阴极时间 tc (s)
-    adt_cp_anodic_time_s: float = 3.0        # 阳极时间 ta (s)
+    adt_cp_anodic_time_s: float = 0.05       # 阳极时间 ta (s)
     adt_cp_polarity: str = 'n'               # 首步极性 pn: 'p'=阳极先, 'n'=阴极先
     adt_cp_sample_interval: float = 0.01     # CP 采样间隔 si (s)
-    adt_cp_segments: int = 2                 # CP 段数 cl
+    adt_cp_segments: int = 1                 # CP 段数 cl
     adt_cp_priority: str = 'time'            # 优先级: 'time'=时间优先, 'potential'=电位优先
     # -- CA (计时电流法) 完整参数 --
-    adt_anodic_potential_V: float = 1.5      # 初始电位 ei (V)
-    adt_ca_e_high: float = 1.5               # 高电位限 eh (V)
-    adt_ca_e_low: float = -0.5               # 低电位限 el (V)
+    adt_anodic_potential_V: float = 0.0      # 初始电位 ei (V)
+    adt_ca_e_high: float = 0.476             # 高电位限 eh (V)
+    adt_ca_e_low: float = -2.4               # 低电位限 el (V)
     adt_ca_polarity: str = 'p'               # 变化方向 pn: 'p'=正向, 'n'=负向
     adt_ca_steps: int = 1                    # 阶跃数 cl (1~320)
     adt_anodic_duration_s: float = 2.0       # 脉冲宽度 pw (s)
     adt_ca_sample_interval: float = 0.01     # CA 采样间隔 si (s)
     adt_ca_quiet_time: float = 0.0           # CA 静置时间 qt (s)
-    adt_ca_sensitivity: float = 0.001        # CA 灵敏度 sens (A/V)
+    adt_ca_sensitivity: float = 0.1          # CA 灵敏度 sens (A/V)
 
     # iR 补偿 (手动正反馈法)
     ir_compensation_enabled: bool = False  # 是否启用 iR 补偿
@@ -407,7 +407,7 @@ class Experiment:
 @dataclass
 class SystemConfig:
     """系统全局配置"""
-    rs485_port: str = "COM3"
+    rs485_port: str = "COM10"
     rs485_baudrate: int = 38400
     mock_mode: bool = False  # Mock模式，默认关闭（真实硬件）
     auto_connect: bool = True  # 启动时自动连接RS485
@@ -460,7 +460,7 @@ class SystemConfig:
                 calibration_data[k] = v
         
         config = SystemConfig(
-            rs485_port=data.get('rs485_port', 'COM3'),
+            rs485_port=data.get('rs485_port', 'COM10'),
             rs485_baudrate=data.get('rs485_baudrate', 38400),
             mock_mode=data.get('mock_mode', False),
             auto_connect=data.get('auto_connect', True),

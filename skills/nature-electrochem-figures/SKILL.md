@@ -216,6 +216,55 @@ Semantic color rules:
 - Many comparable samples: use `PALETTE_MULTI` in a stable order and keep the same color mapping across all related figures.
 - If color carries no meaning, use one color only and rely on labels, line style, or panels.
 
+## Marker And Highlight Rules
+
+Use markers as visual language, not decoration. Markers should either reveal sampling, compare discrete observations, or identify the key result.
+
+Default line markers:
+
+- Use open-circle markers for sampled electrochemistry traces, before/after comparisons, and long time-series where the sampling rhythm matters.
+- Keep marker fill white and marker edge the same color as the line.
+- Use `markevery` so markers are visible but not dense; aim for 25-40 visible markers per trace.
+- Do not place a marker on every raw point for dense CHI data.
+
+```python
+mark_step = max(1, len(x) // 34)
+ax.plot(
+    x, y,
+    color=BLUE,
+    linewidth=0.9,
+    marker="o",
+    markevery=mark_step,
+    markersize=2.5,
+    markerfacecolor="white",
+    markeredgecolor=BLUE,
+    markeredgewidth=0.65,
+)
+```
+
+Highlight markers:
+
+- Use a filled star, filled circle, or slightly larger outlined circle only for the main result, best sample, selected condition, or "this work" point.
+- Use at most 1-3 highlight markers in a normal panel.
+- Use `P15-01` for the primary highlight unless another semantic color is already established.
+- Keep highlight size modest: roughly 1.5-2.2 times the open-circle marker size.
+- If a highlight marker appears on a line, keep the line thin and let the marker carry the emphasis.
+
+```python
+ax.scatter(
+    [x_key], [y_key],
+    marker="*",
+    s=42,
+    facecolor=RED,
+    edgecolor=RED,
+    linewidth=0.5,
+    zorder=4,
+    label="This work",
+)
+```
+
+For literature or benchmark comparison plots, use small open circles for literature points and one filled star or filled circle for the current work. Add direct labels only when there are few points; otherwise use a compact legend.
+
 ## General Figure Types
 
 Use the same style for non-ADT figures.

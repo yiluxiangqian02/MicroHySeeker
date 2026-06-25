@@ -15,7 +15,7 @@
     "outlet":  {"address": 11, "pump_rpm": 200, "direction": "forward", "cycle_duration": 30},
     "transfer":{"address": 12, "pump_rpm": 200, "direction": "forward", "cycle_duration": 30}
   },
-  "rs485": {"port": "COM3", "baudrate": 38400},
+  "rs485": {"port": "COM10", "baudrate": 38400},
   "positioner": {"port": "COM5", "baudrate": 115200},
   "kafka": {"bootstrap.servers": "broker:9092", "username": "", "password": ""},
   "engineering_mode": false

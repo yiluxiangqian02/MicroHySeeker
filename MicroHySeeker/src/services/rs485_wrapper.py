@@ -81,6 +81,8 @@ class RS485Wrapper:
         self._mismatch_callback: Optional[Callable] = None  # callback(addr, desired, actual)
         self._mismatch_last_reported: Dict[int, float] = {} # addr -> last_report_timestamp(s)
 
+        self._last_error: str = ""
+
     def set_mock_mode(self, mock_mode: bool):
         """设置模拟模式
 
@@ -125,14 +127,15 @@ class RS485Wrapper:
     def list_available_ports() -> List[str]:
         """列出可用串口（实际检测到的端口）"""
         if not BACKEND_AVAILABLE:
-            return ['COM1', 'COM2', 'COM3']  # 默认端口
+            return ['COM1', 'COM2', 'COM3', 'COM10']  # 默认端口
         try:
             return RS485Driver.list_ports()
         except Exception as e:
             print(f"❌ 端口枚举失败: {e}")
-            return ['COM1', 'COM2', 'COM3']
+            return ['COM1', 'COM2', 'COM3', 'COM10']
         
     def open_port(self, port: str, baudrate: int = 38400) -> bool:
+        self._last_error = ""
         """打开串口连接
         
         通过LibContext获取PumpManager并连接。
@@ -177,6 +180,7 @@ class RS485Wrapper:
             
         except Exception as e:
             print(f"❌ RS485Wrapper: 连接异常 {e}")
+            self._last_error = str(e)
             import traceback
             traceback.print_exc()
             # 重置 LibContext 单例，避免后续重试复用损坏的 PumpManager
@@ -1521,24 +1525,25 @@ def get_rs485_instance(force_reload: bool = False) -> RS485Wrapper:
         try:
             import json
             from pathlib import Path
-            config_path = Path("config/system.json")
+            project_root = Path(__file__).resolve().parents[2]
+            config_path = project_root / "config" / "system.json"
             
             if config_path.exists():
                 with open(config_path, 'r', encoding='utf-8') as f:
                     config = json.load(f)
                 mock_mode = config.get('mock_mode', True)
-                rs485_port = config.get('rs485_port', 'COM3')
+                rs485_port = config.get('rs485_port', 'COM10')
                 baudrate = config.get('rs485_baudrate', 38400)
                 auto_connect = config.get('auto_connect', True)
             else:
                 mock_mode = True
-                rs485_port = 'COM3'
+                rs485_port = 'COM10'
                 baudrate = 38400
             
         except Exception as e:
             print(f"⚠️ 读取配置失败，使用默认Mock模式: {e}")
             mock_mode = True
-            rs485_port = 'COM3'
+            rs485_port = 'COM10'
             baudrate = 38400
         
         _rs485_instance.set_mock_mode(mock_mode)

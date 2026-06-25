@@ -35,6 +35,8 @@ import logging
 import subprocess
 import ctypes
 import ctypes.wintypes as wintypes
+import re
+from datetime import datetime
 from pathlib import Path
 from dataclasses import dataclass, field
 from typing import Optional, List, Dict, Any, Tuple
@@ -48,7 +50,7 @@ logger = logging.getLogger(__name__)
 # ============================================================
 
 # CHI 660F 默认安装路径
-DEFAULT_CHI_EXE = r"D:\CHI660F\chi660f.exe"
+DEFAULT_CHI_EXE = r"D:\AI4S\MicroHySeeker\MicroHySeeker\eChemSDL\chi660f光盘-250103\chi660f光盘-250103\chi660f\chi660f.exe"
 
 # Win32 消息常量
 WM_COMMAND = 0x0111
@@ -776,6 +778,7 @@ class CHI660FController:
         self._main_hwnd: Optional[int] = None
         self._process: Optional[subprocess.Popen] = None
         self._is_running = False
+        self._last_dialog_error = ""
         
         # 确保输出目录
         if not self._config.output_dir:
@@ -974,25 +977,12 @@ class CHI660FController:
             f"宏文本 {macro_size} 字符"
         )
         
-        # 自动计算超时: 每轮 (CP时间 + CA时间 + 余量) × 轮数 + 启动余量
         if timeout_override > 0:
-            original_timeout = self._config.timeout
-            self._config.timeout = timeout_override
-        else:
-            per_cycle_s = cp_params.cathodic_time + ca_params.pulse_width + 3.0
-            original_timeout = self._config.timeout
-            self._config.timeout = max(
-                per_cycle_s * num_cycles + 120.0,
-                600.0
-            )
+            logger.info("忽略 ADT timeout_override；实验执行不使用总时长超时")
+        logger.info("ADT 批量执行不使用总时长超时，等待明确完成/失败信号")
         
-        logger.info(f"ADT 批量超时设置: {self._config.timeout:.0f}s")
-        
-        try:
-            result = self._execute_macro_text(macro_text)
-            result.technique = f"ADT_batch_{num_cycles}cycles"
-        finally:
-            self._config.timeout = original_timeout
+        result = self._execute_macro_text(macro_text)
+        result.technique = f"ADT_batch_{num_cycles}cycles"
         
         return result
     
@@ -1100,7 +1090,10 @@ class CHI660FController:
                     result.data_points = data
                     logger.info(f"数据读取完成: {len(data)} 点, 列={headers}")
             else:
-                result.error_message = "实验执行超时或失败"
+                diag = self._collect_chi_gui_diagnostics()
+                result.error_message = "实验执行失败或未完成"
+                if diag:
+                    result.error_message += f"; {diag}"
             
             # 7. 关闭 Macro 对话框 (仅在对话框仍然打开时)
             if not macro_dialog_closed and self._config.auto_close_macro:
@@ -1271,13 +1264,14 @@ class CHI660FController:
             1. 检查 Macro 对话框的 Run 按钮是否重新启用 (最可靠)
             2. 如果有预期输出文件，检测文件是否生成且大小稳定
             3. 检测主窗口标题 *变化* (与初始标题不同且包含 Data)
-            4. 超时退出
+            4. 不使用总时长超时；没有明确完成/失败信号时持续等待
         """
-        timeout = self._config.timeout
         start = time.time()
         last_size = -1
         stable_count = 0
         run_btn_was_disabled = False  # 标记是否观测到 Run 按钮被禁用
+        is_adt_batch = self._is_adt_batch_expected_file(expected_file)
+        progress_snapshot = self._adt_progress_snapshot(expected_file) if is_adt_batch else None
         
         # 记录初始标题，用于检测 *变化* 而非静态匹配
         # 修复: 旧代码直接检查 'Data' in title，当 CHI660F 窗口保留了
@@ -1292,9 +1286,15 @@ class CHI660FController:
             except OSError as e:
                 logger.warning(f"删除旧输出文件失败: {e}")
         
-        logger.info(f"等待实验完成 (超时={timeout}s, 初始标题='{initial_title[:60]}')...")
+        if is_adt_batch:
+            logger.info(
+                f"等待 ADT 批量实验完成 "
+                f"(无总时长超时, 初始标题='{initial_title[:60]}')..."
+            )
+        else:
+            logger.info(f"等待实验完成 (无总时长超时, 初始标题='{initial_title[:60]}')...")
         
-        while time.time() - start < timeout:
+        while True:
             time.sleep(1.0)
             elapsed = time.time() - start
             
@@ -1347,6 +1347,18 @@ class CHI660FController:
                         else:
                             stable_count = 0
                         last_size = size
+
+            # ADT 批量宏会逐轮写出 child csv。只要文件还在新增或变大，
+            # 就说明 CHI 仍在工作，不应因为固定总时长而误杀。
+            if is_adt_batch:
+                current_snapshot = self._adt_progress_snapshot(expected_file)
+                if current_snapshot != progress_snapshot:
+                    progress_snapshot = current_snapshot
+                    count, total_size, last_cycle = current_snapshot
+                    logger.info(
+                        f"ADT raw 文件仍在更新: files={count}, "
+                        f"bytes={total_size}, last_cycle={last_cycle}, elapsed={elapsed:.0f}s"
+                    )
             
             # 方式3: 检查窗口标题 *变化*
             # 修复: 必须与初始标题不同才算完成，避免旧数据标题误判
@@ -1359,9 +1371,46 @@ class CHI660FController:
             
             if int(elapsed) % 10 == 0 and elapsed > 0:
                 logger.debug(f"实验进行中... ({int(elapsed)}s)")
-        
-        logger.warning(f"实验等待超时 ({timeout}s)")
-        return False
+
+    def _is_adt_batch_expected_file(self, expected_file: Optional[str]) -> bool:
+        if not expected_file:
+            return False
+        name = os.path.basename(expected_file)
+        return bool(re.search(r"_c\d+_(cathodic|anodic)\.(csv|txt)$", name, re.IGNORECASE))
+
+    def _adt_progress_snapshot(self, expected_file: Optional[str]) -> Tuple[int, int, int]:
+        """Return (matching_file_count, total_size, last_cycle) for ADT child files."""
+        if not expected_file:
+            return (0, 0, 0)
+        directory = os.path.dirname(expected_file) or "."
+        expected_name = os.path.basename(expected_file)
+        match = re.match(r"(.+)_c\d+_(?:cathodic|anodic)\.(csv|txt)$", expected_name, re.IGNORECASE)
+        if not match or not os.path.isdir(directory):
+            return (0, 0, 0)
+        prefix = match.group(1)
+        pattern = re.compile(
+            rf"^{re.escape(prefix)}_c(\d+)_(cathodic|anodic)\.(csv|txt)$",
+            re.IGNORECASE,
+        )
+        count = 0
+        total_size = 0
+        last_cycle = 0
+        try:
+            for name in os.listdir(directory):
+                child = pattern.match(name)
+                if not child:
+                    continue
+                path = os.path.join(directory, name)
+                try:
+                    stat = os.stat(path)
+                except OSError:
+                    continue
+                count += 1
+                total_size += stat.st_size
+                last_cycle = max(last_cycle, int(child.group(1)))
+        except OSError:
+            return (0, 0, 0)
+        return (count, total_size, last_cycle)
     
     # ----------------------------------------------------------
     # 辅助方法
@@ -1517,6 +1566,9 @@ class CHI660FController:
             if cls == '#32770' and 'CH Instruments' in title:
                 # 读取对话框内的静态文本，检测 Link failed
                 dialog_text = self._read_dialog_static_text(hwnd)
+                if dialog_text:
+                    self._last_dialog_error = f"{title}: {dialog_text[:500]}"
+                    self._capture_failure_screenshot("dialog")
                 if 'Link failed' in dialog_text or 'Link failed' in title:
                     logger.error(f"检测到 Link failed 错误: {dialog_text[:200]}")
                     link_failed = True
@@ -1530,6 +1582,9 @@ class CHI660FController:
             
             # Runtime Error 对话框
             if 'Runtime Error' in title or 'Microsoft Visual C++' in title:
+                dialog_text = self._read_dialog_static_text(hwnd)
+                self._last_dialog_error = f"{title}: {dialog_text[:500]}"
+                self._capture_failure_screenshot("runtime")
                 ok_btn = _find_child_by_id(hwnd, 1)
                 if not ok_btn:
                     ok_btn = _find_child_by_id(hwnd, 2)
@@ -1561,6 +1616,52 @@ class CHI660FController:
                 if text and len(text) > 1:
                     texts.append(text)
         return ' '.join(texts)
+
+    def _collect_chi_gui_diagnostics(self) -> str:
+        """Collect visible CHI GUI state for failure logs."""
+        parts = []
+        if self._main_hwnd:
+            title = _get_window_text(self._main_hwnd)
+            if title:
+                parts.append(f"CHI main title='{title[:160]}'")
+        if self._last_dialog_error:
+            parts.append(f"last_dialog='{self._last_dialog_error[:240]}'")
+
+        dialogs = []
+        for hwnd in _enum_toplevel():
+            title = _get_window_text(hwnd)
+            cls = _get_class_name(hwnd)
+            if cls == '#32770' or 'CHI' in title or 'Connecting' in title:
+                text = self._read_dialog_static_text(hwnd)
+                item = title
+                if text:
+                    item = f"{title}: {text}"
+                if item:
+                    dialogs.append(item[:240])
+        if dialogs:
+            parts.append("visible_dialogs=[" + " | ".join(dialogs[:5]) + "]")
+        screenshot = self._capture_failure_screenshot("failure")
+        if screenshot:
+            parts.append(f"failure_screenshot='{screenshot}'")
+        return "; ".join(parts)
+
+    def _capture_failure_screenshot(self, reason: str = "failure") -> str:
+        """Save a best-effort screenshot when CHI fails without a dialog."""
+        try:
+            from PIL import ImageGrab
+
+            output_dir = Path(self._config.output_dir)
+            output_dir.mkdir(parents=True, exist_ok=True)
+            ts = datetime.now().strftime("%Y%m%d_%H%M%S")
+            safe_reason = "".join(ch for ch in reason if ch.isalnum() or ch in ("-", "_"))
+            path = output_dir / f"chi_failure_{safe_reason}_{ts}.png"
+            img = ImageGrab.grab()
+            img.save(path)
+            logger.info(f"CHI failure screenshot saved: {path}")
+            return str(path)
+        except Exception as exc:
+            logger.warning(f"CHI failure screenshot failed: {exc}")
+            return ""
     
     def _extract_output_file(self, macro_text: str) -> Optional[str]:
         """从宏命令文本中提取预期输出文件路径

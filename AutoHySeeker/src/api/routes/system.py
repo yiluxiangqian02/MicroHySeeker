@@ -208,7 +208,12 @@ async def connect_mhs_rs485(req: _ConnectRequest) -> dict[str, Any]:
             if resp.status_code == 200:
                 record_activity("system", f"RS485 已连接到 {req.port}")
                 return resp.json()
-            return {"error": resp.text, "status_code": resp.status_code}
+            try:
+                payload = resp.json()
+                error = payload.get("detail") or payload.get("error") or resp.text
+            except Exception:
+                error = resp.text
+            return {"error": error, "status_code": resp.status_code}
     except httpx.ConnectError:
         return {"error": "MHS 离线，无法连接"}
     except Exception as exc:

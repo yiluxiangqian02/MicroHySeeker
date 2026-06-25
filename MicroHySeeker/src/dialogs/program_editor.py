@@ -628,16 +628,16 @@ class ProgramEditorDialog(QDialog):
         cv_page = QWidget()
         cv_lay = QGridLayout(cv_page); cv_lay.setSpacing(8)
         cv_lay.addWidget(QLabel("初始电位 E0(V):"), 0, 0)
-        self.ec_e0_spin = QDoubleSpinBox(); self.ec_e0_spin.setRange(-10,10); self.ec_e0_spin.setDecimals(3)
+        self.ec_e0_spin = QDoubleSpinBox(); self.ec_e0_spin.setRange(-10,10); self.ec_e0_spin.setDecimals(3); self.ec_e0_spin.setValue(-0.8)
         cv_lay.addWidget(self.ec_e0_spin, 0, 1)
         cv_lay.addWidget(QLabel("上限电位 Eh(V):"), 0, 2)
-        self.ec_eh_spin = QDoubleSpinBox(); self.ec_eh_spin.setRange(-10,10); self.ec_eh_spin.setDecimals(3); self.ec_eh_spin.setValue(0.8)
+        self.ec_eh_spin = QDoubleSpinBox(); self.ec_eh_spin.setRange(-10,10); self.ec_eh_spin.setDecimals(3); self.ec_eh_spin.setValue(-0.8)
         cv_lay.addWidget(self.ec_eh_spin, 0, 3)
         cv_lay.addWidget(QLabel("下限电位 El(V):"), 1, 0)
-        self.ec_el_spin = QDoubleSpinBox(); self.ec_el_spin.setRange(-10,10); self.ec_el_spin.setDecimals(3); self.ec_el_spin.setValue(-0.2)
+        self.ec_el_spin = QDoubleSpinBox(); self.ec_el_spin.setRange(-10,10); self.ec_el_spin.setDecimals(3); self.ec_el_spin.setValue(-1.8)
         cv_lay.addWidget(self.ec_el_spin, 1, 1)
         cv_lay.addWidget(QLabel("终止电位 Ef(V):"), 1, 2)
-        self.ec_ef_spin = QDoubleSpinBox(); self.ec_ef_spin.setRange(-10,10); self.ec_ef_spin.setDecimals(3)
+        self.ec_ef_spin = QDoubleSpinBox(); self.ec_ef_spin.setRange(-10,10); self.ec_ef_spin.setDecimals(3); self.ec_ef_spin.setValue(-0.8)
         cv_lay.addWidget(self.ec_ef_spin, 1, 3)
         cv_lay.addWidget(QLabel("扫描速率(V/s):"), 2, 0)
         self.ec_scanrate_spin = QDoubleSpinBox(); self.ec_scanrate_spin.setRange(0.0001,10); self.ec_scanrate_spin.setDecimals(4); self.ec_scanrate_spin.setValue(0.05)
@@ -646,13 +646,13 @@ class ProgramEditorDialog(QDialog):
         self.ec_scandir_combo = QComboBox(); self.ec_scandir_combo.addItems(["正向","反向"])
         cv_lay.addWidget(self.ec_scandir_combo, 2, 3)
         cv_lay.addWidget(QLabel("扫描段数:"), 3, 0)
-        self.ec_segments_spin = QSpinBox(); self.ec_segments_spin.setRange(1,100); self.ec_segments_spin.setValue(2)
+        self.ec_segments_spin = QSpinBox(); self.ec_segments_spin.setRange(1,100); self.ec_segments_spin.setValue(6)
         cv_lay.addWidget(self.ec_segments_spin, 3, 1)
         cv_lay.addWidget(QLabel("灵敏度(A/V):"), 3, 2)
         self.ec_sensitivity_edit = QComboBox()
         self.ec_sensitivity_edit.setEditable(True)
         self.ec_sensitivity_edit.addItems(["1e-1", "1e-2", "1e-3", "1e-4", "1e-5", "1e-6", "1e-7", "1e-8", "1e-9"])
-        self.ec_sensitivity_edit.setCurrentText("1e-3")
+        self.ec_sensitivity_edit.setCurrentText("1e-1")
         self.ec_sensitivity_edit.setToolTip("CHI 灵敏度档位，也可手动输入")
         cv_lay.addWidget(self.ec_sensitivity_edit, 3, 3)
         cv_lay.addWidget(QLabel("记录间隔(mV):"), 4, 0)
@@ -667,10 +667,10 @@ class ProgramEditorDialog(QDialog):
         lsv_page = QWidget()
         lsv_lay = QGridLayout(lsv_page); lsv_lay.setSpacing(8)
         lsv_lay.addWidget(QLabel("初始电位 E0(V):"), 0, 0)
-        self._lsv_e0 = QDoubleSpinBox(); self._lsv_e0.setRange(-10,10); self._lsv_e0.setDecimals(3)
+        self._lsv_e0 = QDoubleSpinBox(); self._lsv_e0.setRange(-10,10); self._lsv_e0.setDecimals(3); self._lsv_e0.setValue(-0.8)
         lsv_lay.addWidget(self._lsv_e0, 0, 1)
         lsv_lay.addWidget(QLabel("终止电位 Ef(V):"), 0, 2)
-        self._lsv_ef = QDoubleSpinBox(); self._lsv_ef.setRange(-10,10); self._lsv_ef.setDecimals(3); self._lsv_ef.setValue(1.0)
+        self._lsv_ef = QDoubleSpinBox(); self._lsv_ef.setRange(-10,10); self._lsv_ef.setDecimals(3); self._lsv_ef.setValue(-1.8)
         lsv_lay.addWidget(self._lsv_ef, 0, 3)
         lsv_lay.addWidget(QLabel("扫描速率(V/s):"), 1, 0)
         self._lsv_scanrate = QDoubleSpinBox(); self._lsv_scanrate.setRange(0.0001,10); self._lsv_scanrate.setDecimals(4); self._lsv_scanrate.setValue(0.05)
@@ -679,7 +679,7 @@ class ProgramEditorDialog(QDialog):
         self._lsv_sensitivity = QComboBox()
         self._lsv_sensitivity.setEditable(True)
         self._lsv_sensitivity.addItems(["1e-1", "1e-2", "1e-3", "1e-4", "1e-5", "1e-6", "1e-7", "1e-8", "1e-9"])
-        self._lsv_sensitivity.setCurrentText("1e-3")
+        self._lsv_sensitivity.setCurrentText("1e-1")
         lsv_lay.addWidget(self._lsv_sensitivity, 1, 3)
         lsv_lay.addWidget(QLabel("记录间隔(mV):"), 2, 0)
         self._lsv_interval = QDoubleSpinBox(); self._lsv_interval.setRange(0.1,100); self._lsv_interval.setDecimals(2); self._lsv_interval.setValue(1.0)
@@ -693,10 +693,10 @@ class ProgramEditorDialog(QDialog):
         it_page = QWidget()
         it_lay = QGridLayout(it_page); it_lay.setSpacing(8)
         it_lay.addWidget(QLabel("恒电位 E0(V):"), 0, 0)
-        self._it_e0 = QDoubleSpinBox(); self._it_e0.setRange(-10,10); self._it_e0.setDecimals(3); self._it_e0.setValue(0.2)
+        self._it_e0 = QDoubleSpinBox(); self._it_e0.setRange(-10,10); self._it_e0.setDecimals(3); self._it_e0.setValue(-1.6)
         it_lay.addWidget(self._it_e0, 0, 1)
         it_lay.addWidget(QLabel("运行时间(s):"), 0, 2)
-        self.ec_runtime_spin = QDoubleSpinBox(); self.ec_runtime_spin.setRange(0,100000); self.ec_runtime_spin.setDecimals(2); self.ec_runtime_spin.setValue(60.0)
+        self.ec_runtime_spin = QDoubleSpinBox(); self.ec_runtime_spin.setRange(0,100000); self.ec_runtime_spin.setDecimals(2); self.ec_runtime_spin.setValue(120.0)
         it_lay.addWidget(self.ec_runtime_spin, 0, 3)
         it_lay.addWidget(QLabel("采样间隔(ms):"), 1, 0)
         self._it_interval = QDoubleSpinBox(); self._it_interval.setRange(0.1,10000); self._it_interval.setDecimals(2); self._it_interval.setValue(100.0)
@@ -705,7 +705,7 @@ class ProgramEditorDialog(QDialog):
         self._it_sensitivity = QComboBox()
         self._it_sensitivity.setEditable(True)
         self._it_sensitivity.addItems(["1e-1", "1e-2", "1e-3", "1e-4", "1e-5", "1e-6", "1e-7", "1e-8", "1e-9"])
-        self._it_sensitivity.setCurrentText("1e-4")
+        self._it_sensitivity.setCurrentText("1e-1")
         it_lay.addWidget(self._it_sensitivity, 1, 3)
         it_lay.addWidget(QLabel("静置时间(s):"), 2, 0)
         self._it_quiettime = QDoubleSpinBox(); self._it_quiettime.setRange(0,1000); self._it_quiettime.setDecimals(2); self._it_quiettime.setValue(2.0)
@@ -748,7 +748,7 @@ class ProgramEditorDialog(QDialog):
         # == 总体控制 ==
         _adt_hdr = QHBoxLayout()
         _adt_hdr.addWidget(QLabel("循环轮数:"))
-        self._adt_cycles = QSpinBox(); self._adt_cycles.setRange(1, 10000); self._adt_cycles.setValue(100)
+        self._adt_cycles = QSpinBox(); self._adt_cycles.setRange(1, 10000); self._adt_cycles.setValue(500)
         _adt_hdr.addWidget(self._adt_cycles)
         _adt_hdr.addStretch()
         adt_main.addLayout(_adt_hdr)
@@ -762,20 +762,20 @@ class ProgramEditorDialog(QDialog):
         self._adt_cathodic_mA.setToolTip("阴极(负向)恒电流, 0 ~ -250000 mA")
         cp_grid.addWidget(self._adt_cathodic_mA, 0, 1)
         cp_grid.addWidget(QLabel("阳极电流 ia(mA):"), 0, 2)
-        self._adt_cp_anodic_mA = QDoubleSpinBox(); self._adt_cp_anodic_mA.setRange(0, 10000); self._adt_cp_anodic_mA.setDecimals(1); self._adt_cp_anodic_mA.setValue(250.0)
+        self._adt_cp_anodic_mA = QDoubleSpinBox(); self._adt_cp_anodic_mA.setRange(0, 10000); self._adt_cp_anodic_mA.setDecimals(1); self._adt_cp_anodic_mA.setValue(0.0)
         self._adt_cp_anodic_mA.setToolTip("阳极(正向)恒电流, 0 ~ 250000 mA")
         cp_grid.addWidget(self._adt_cp_anodic_mA, 0, 3)
         cp_grid.addWidget(QLabel("电位上限 Eh(V):"), 1, 0)
-        self._adt_cp_eh = QDoubleSpinBox(); self._adt_cp_eh.setRange(-10, 10); self._adt_cp_eh.setDecimals(3); self._adt_cp_eh.setValue(2.0)
+        self._adt_cp_eh = QDoubleSpinBox(); self._adt_cp_eh.setRange(-10, 10); self._adt_cp_eh.setDecimals(3); self._adt_cp_eh.setValue(10.0)
         cp_grid.addWidget(self._adt_cp_eh, 1, 1)
         cp_grid.addWidget(QLabel("电位下限 El(V):"), 1, 2)
-        self._adt_cp_el = QDoubleSpinBox(); self._adt_cp_el.setRange(-10, 10); self._adt_cp_el.setDecimals(3); self._adt_cp_el.setValue(-2.0)
+        self._adt_cp_el = QDoubleSpinBox(); self._adt_cp_el.setRange(-10, 10); self._adt_cp_el.setDecimals(3); self._adt_cp_el.setValue(-10.0)
         cp_grid.addWidget(self._adt_cp_el, 1, 3)
         cp_grid.addWidget(QLabel("阴极时间 tc(s):"), 2, 0)
         self._adt_cathodic_t = QDoubleSpinBox(); self._adt_cathodic_t.setRange(0.005, 100000); self._adt_cathodic_t.setDecimals(3); self._adt_cathodic_t.setValue(3.0)
         cp_grid.addWidget(self._adt_cathodic_t, 2, 1)
         cp_grid.addWidget(QLabel("阳极时间 ta(s):"), 2, 2)
-        self._adt_cp_anodic_t = QDoubleSpinBox(); self._adt_cp_anodic_t.setRange(0.005, 100000); self._adt_cp_anodic_t.setDecimals(3); self._adt_cp_anodic_t.setValue(3.0)
+        self._adt_cp_anodic_t = QDoubleSpinBox(); self._adt_cp_anodic_t.setRange(0.005, 100000); self._adt_cp_anodic_t.setDecimals(3); self._adt_cp_anodic_t.setValue(0.05)
         cp_grid.addWidget(self._adt_cp_anodic_t, 2, 3)
         cp_grid.addWidget(QLabel("高E保持时间(s):"), 3, 0)
         self._adt_cp_heht = QDoubleSpinBox(); self._adt_cp_heht.setRange(0, 100000); self._adt_cp_heht.setDecimals(2); self._adt_cp_heht.setValue(0.0)
@@ -789,7 +789,7 @@ class ProgramEditorDialog(QDialog):
         self._adt_cp_si = QDoubleSpinBox(); self._adt_cp_si.setRange(0.0025, 32); self._adt_cp_si.setDecimals(4); self._adt_cp_si.setValue(0.01)
         cp_grid.addWidget(self._adt_cp_si, 4, 1)
         cp_grid.addWidget(QLabel("段数 cl:"), 4, 2)
-        self._adt_cp_segments = QSpinBox(); self._adt_cp_segments.setRange(1, 1000000); self._adt_cp_segments.setValue(2)
+        self._adt_cp_segments = QSpinBox(); self._adt_cp_segments.setRange(1, 1000000); self._adt_cp_segments.setValue(1)
         self._adt_cp_segments.setToolTip("段数: 1=单方向, 2=一来一回(一个完整循环)")
         cp_grid.addWidget(self._adt_cp_segments, 4, 3)
         cp_grid.addWidget(QLabel("首步极性:"), 5, 0)
@@ -806,16 +806,16 @@ class ProgramEditorDialog(QDialog):
         ca_box.setStyleSheet("QGroupBox{font-weight:bold;border:1px solid #FFCC80;border-radius:4px;margin-top:6px;padding-top:14px;}")
         ca_grid = QGridLayout(ca_box); ca_grid.setSpacing(6)
         ca_grid.addWidget(QLabel("初始电位 ei(V):"), 0, 0)
-        self._adt_anodic_V = QDoubleSpinBox(); self._adt_anodic_V.setRange(-10, 10); self._adt_anodic_V.setDecimals(3); self._adt_anodic_V.setValue(1.5)
+        self._adt_anodic_V = QDoubleSpinBox(); self._adt_anodic_V.setRange(-10, 10); self._adt_anodic_V.setDecimals(3); self._adt_anodic_V.setValue(0.0)
         ca_grid.addWidget(self._adt_anodic_V, 0, 1)
         ca_grid.addWidget(QLabel("脉冲宽度 pw(s):"), 0, 2)
         self._adt_anodic_t = QDoubleSpinBox(); self._adt_anodic_t.setRange(1e-4, 1000); self._adt_anodic_t.setDecimals(4); self._adt_anodic_t.setValue(2.0)
         ca_grid.addWidget(self._adt_anodic_t, 0, 3)
         ca_grid.addWidget(QLabel("高电位限 Eh(V):"), 1, 0)
-        self._adt_ca_eh = QDoubleSpinBox(); self._adt_ca_eh.setRange(-10, 10); self._adt_ca_eh.setDecimals(3); self._adt_ca_eh.setValue(1.5)
+        self._adt_ca_eh = QDoubleSpinBox(); self._adt_ca_eh.setRange(-10, 10); self._adt_ca_eh.setDecimals(3); self._adt_ca_eh.setValue(0.476)
         ca_grid.addWidget(self._adt_ca_eh, 1, 1)
         ca_grid.addWidget(QLabel("低电位限 El(V):"), 1, 2)
-        self._adt_ca_el = QDoubleSpinBox(); self._adt_ca_el.setRange(-10, 10); self._adt_ca_el.setDecimals(3); self._adt_ca_el.setValue(-0.5)
+        self._adt_ca_el = QDoubleSpinBox(); self._adt_ca_el.setRange(-10, 10); self._adt_ca_el.setDecimals(3); self._adt_ca_el.setValue(-2.4)
         ca_grid.addWidget(self._adt_ca_el, 1, 3)
         ca_grid.addWidget(QLabel("变化方向:"), 2, 0)
         self._adt_ca_polarity = QComboBox(); self._adt_ca_polarity.addItem("正向 (p)", 'p'); self._adt_ca_polarity.addItem("负向 (n)", 'n')
@@ -834,7 +834,7 @@ class ProgramEditorDialog(QDialog):
         self._adt_sensitivity = QComboBox()
         self._adt_sensitivity.setEditable(True)
         self._adt_sensitivity.addItems(["1e-1", "1e-2", "1e-3", "1e-4", "1e-5", "1e-6", "1e-7", "1e-8", "1e-9"])
-        self._adt_sensitivity.setCurrentText("1e-3")
+        self._adt_sensitivity.setCurrentText("1e-1")
         self._adt_sensitivity.setToolTip("灵敏度, 0 = 自动灵敏度")
         ca_grid.addWidget(self._adt_sensitivity, 4, 1)
         adt_main.addWidget(ca_box)
@@ -1203,10 +1203,10 @@ class ProgramEditorDialog(QDialog):
             tech = ec.technique
             
             if tech == ECTechnique.CV:
-                self.ec_e0_spin.setValue(round(ec.e0 or 0, 3))
-                self.ec_eh_spin.setValue(round(ec.eh or 0.8, 3))
-                self.ec_el_spin.setValue(round(ec.el or -0.2, 3))
-                self.ec_ef_spin.setValue(round(ec.ef or 0, 3))
+                self.ec_e0_spin.setValue(round(ec.e0 if ec.e0 is not None else -0.8, 3))
+                self.ec_eh_spin.setValue(round(ec.eh if ec.eh is not None else -0.8, 3))
+                self.ec_el_spin.setValue(round(ec.el if ec.el is not None else -1.8, 3))
+                self.ec_ef_spin.setValue(round(ec.ef if ec.ef is not None else -0.8, 3))
                 self.ec_scanrate_spin.setValue(ec.scan_rate or 0.05)
                 self.ec_segments_spin.setValue(ec.seg_num)
                 if ec.sensitivity is not None:
@@ -1215,8 +1215,8 @@ class ProgramEditorDialog(QDialog):
                 self.ec_quiettime_spin.setValue(round(ec.quiet_time_s, 2))
                 
             elif tech == ECTechnique.LSV:
-                self._lsv_e0.setValue(round(ec.e0 or 0, 3))
-                self._lsv_ef.setValue(round(ec.ef or 1.0, 3))
+                self._lsv_e0.setValue(round(ec.e0 if ec.e0 is not None else -0.8, 3))
+                self._lsv_ef.setValue(round(ec.ef if ec.ef is not None else -1.8, 3))
                 self._lsv_scanrate.setValue(ec.scan_rate or 0.05)
                 if ec.sensitivity is not None:
                     self._lsv_sensitivity.setCurrentText(str(ec.sensitivity))
@@ -1224,8 +1224,8 @@ class ProgramEditorDialog(QDialog):
                 self._lsv_quiettime.setValue(round(ec.quiet_time_s, 2))
                 
             elif tech == ECTechnique.I_T:
-                self._it_e0.setValue(round(ec.e0 or 0.2, 3))
-                self.ec_runtime_spin.setValue(round(ec.run_time_s or 60, 2))
+                self._it_e0.setValue(round(ec.e0 if ec.e0 is not None else -1.6, 3))
+                self.ec_runtime_spin.setValue(round(ec.run_time_s or 120, 2))
                 self._it_interval.setValue(ec.sample_interval_ms if ec.sample_interval_ms else 100.0)
                 if ec.sensitivity is not None:
                     self._it_sensitivity.setCurrentText(str(ec.sensitivity))
@@ -1243,18 +1243,18 @@ class ProgramEditorDialog(QDialog):
                 self._eis_quiettime.setValue(round(ec.quiet_time_s, 2))
                 
             elif tech == ECTechnique.ADT:
-                self._adt_cycles.setValue(getattr(ec, 'adt_num_cycles', 100))
+                self._adt_cycles.setValue(getattr(ec, 'adt_num_cycles', 500))
                 # CP 参数
                 self._adt_cathodic_mA.setValue(getattr(ec, 'adt_cathodic_current_mA', -250.0))
-                self._adt_cp_anodic_mA.setValue(getattr(ec, 'adt_cp_anodic_current_mA', 250.0))
-                self._adt_cp_eh.setValue(getattr(ec, 'adt_cp_e_high', 2.0))
-                self._adt_cp_el.setValue(getattr(ec, 'adt_cp_e_low', -2.0))
+                self._adt_cp_anodic_mA.setValue(getattr(ec, 'adt_cp_anodic_current_mA', 0.0))
+                self._adt_cp_eh.setValue(getattr(ec, 'adt_cp_e_high', 10.0))
+                self._adt_cp_el.setValue(getattr(ec, 'adt_cp_e_low', -10.0))
                 self._adt_cathodic_t.setValue(getattr(ec, 'adt_cathodic_duration_s', 3.0))
-                self._adt_cp_anodic_t.setValue(getattr(ec, 'adt_cp_anodic_time_s', 3.0))
+                self._adt_cp_anodic_t.setValue(getattr(ec, 'adt_cp_anodic_time_s', 0.05))
                 self._adt_cp_heht.setValue(getattr(ec, 'adt_cp_high_e_hold_time', 0.0))
                 self._adt_cp_leht.setValue(getattr(ec, 'adt_cp_low_e_hold_time', 0.0))
                 self._adt_cp_si.setValue(getattr(ec, 'adt_cp_sample_interval', 0.01))
-                self._adt_cp_segments.setValue(getattr(ec, 'adt_cp_segments', 2))
+                self._adt_cp_segments.setValue(getattr(ec, 'adt_cp_segments', 1))
                 # CP polarity combo
                 cp_pol = getattr(ec, 'adt_cp_polarity', 'n')
                 cp_pol_idx = 0 if cp_pol == 'n' else 1
@@ -1264,10 +1264,10 @@ class ProgramEditorDialog(QDialog):
                 cp_pri_idx = 0 if cp_pri == 'time' else 1
                 self._adt_cp_priority.setCurrentIndex(cp_pri_idx)
                 # CA 参数
-                self._adt_anodic_V.setValue(getattr(ec, 'adt_anodic_potential_V', 1.5))
+                self._adt_anodic_V.setValue(getattr(ec, 'adt_anodic_potential_V', 0.0))
                 self._adt_anodic_t.setValue(getattr(ec, 'adt_anodic_duration_s', 2.0))
-                self._adt_ca_eh.setValue(getattr(ec, 'adt_ca_e_high', 1.5))
-                self._adt_ca_el.setValue(getattr(ec, 'adt_ca_e_low', -0.5))
+                self._adt_ca_eh.setValue(getattr(ec, 'adt_ca_e_high', 0.476))
+                self._adt_ca_el.setValue(getattr(ec, 'adt_ca_e_low', -2.4))
                 # CA polarity combo
                 ca_pol = getattr(ec, 'adt_ca_polarity', 'p')
                 ca_pol_idx = 0 if ca_pol == 'p' else 1
@@ -1411,7 +1411,7 @@ class ProgramEditorDialog(QDialog):
                 try:
                     ec.sensitivity = float(self.ec_sensitivity_edit.currentText())
                 except ValueError:
-                    ec.sensitivity = 0.001
+                    ec.sensitivity = 0.1
                     
             elif tech == ECTechnique.LSV:
                 ec.e0 = round(self._lsv_e0.value(), 3)
@@ -1422,7 +1422,7 @@ class ProgramEditorDialog(QDialog):
                 try:
                     ec.sensitivity = float(self._lsv_sensitivity.currentText())
                 except ValueError:
-                    ec.sensitivity = 0.001
+                    ec.sensitivity = 0.1
                     
             elif tech == ECTechnique.I_T:
                 ec.e0 = round(self._it_e0.value(), 3)
@@ -1432,7 +1432,7 @@ class ProgramEditorDialog(QDialog):
                 try:
                     ec.sensitivity = float(self._it_sensitivity.currentText())
                 except ValueError:
-                    ec.sensitivity = 1e-4
+                    ec.sensitivity = 0.1
                     
             elif tech == ECTechnique.EIS:
                 ec.e0 = round(self._eis_e0.value(), 3)
@@ -1474,8 +1474,8 @@ class ProgramEditorDialog(QDialog):
                     ec.adt_ca_sensitivity = float(self._adt_sensitivity.currentText())
                     ec.sensitivity = ec.adt_ca_sensitivity  # 兼容旧字段
                 except ValueError:
-                    ec.adt_ca_sensitivity = 1e-3
-                    ec.sensitivity = 1e-3
+                    ec.adt_ca_sensitivity = 0.1
+                    ec.sensitivity = 0.1
             
             # iR 补偿 (通用)
             ec.ir_compensation_enabled = self._ir_enabled_check.isChecked()

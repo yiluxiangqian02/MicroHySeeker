@@ -117,38 +117,38 @@
     {
       "channel_id": "1",
       "solution_name": "Ni",
-      "stock_concentration": 0.1,
+      "stock_concentration": 0.25,
       "pump_address": 1,
       "direction": "REV",
       "default_rpm": 200,
       "color": "#00FF00",
       "tube_diameter_mm": 1.0,
       "total_volume_ml": 500.0,
-      "remaining_volume_ml": 370.0
+      "remaining_volume_ml": 444.0
     },
     {
       "channel_id": "2",
       "solution_name": "Cr",
-      "stock_concentration": 1.0,
+      "stock_concentration": 0.25,
       "pump_address": 2,
       "direction": "REV",
       "default_rpm": 200,
       "color": "#00FF00",
       "tube_diameter_mm": 1.0,
       "total_volume_ml": 500.0,
-      "remaining_volume_ml": 468.0
+      "remaining_volume_ml": 400.0
     },
     {
       "channel_id": "3",
       "solution_name": "Pb",
-      "stock_concentration": 1.0,
+      "stock_concentration": 0.25,
       "pump_address": 3,
       "direction": "REV",
       "default_rpm": 200,
       "color": "#00FF00",
       "tube_diameter_mm": 1.0,
       "total_volume_ml": 500.0,
-      "remaining_volume_ml": 468.0
+      "remaining_volume_ml": 264.0
     },
     {
       "channel_id": "4",
@@ -160,55 +160,55 @@
       "color": "#55aa7f",
       "tube_diameter_mm": 1.0,
       "total_volume_ml": 1000.0,
-      "remaining_volume_ml": 800.0
+      "remaining_volume_ml": 230.0
     },
     {
       "channel_id": "5",
       "solution_name": "P",
-      "stock_concentration": 1.0,
+      "stock_concentration": 0.25,
       "pump_address": 7,
       "direction": "FWD",
       "default_rpm": 200,
       "color": "#ff5500",
       "tube_diameter_mm": 1.0,
       "total_volume_ml": 500.0,
-      "remaining_volume_ml": 500.0
+      "remaining_volume_ml": 463.96
     },
     {
       "channel_id": "6",
       "solution_name": "Co",
-      "stock_concentration": 1.0,
+      "stock_concentration": 0.25,
       "pump_address": 8,
       "direction": "FWD",
       "default_rpm": 200,
       "color": "#ff5500",
       "tube_diameter_mm": 1.0,
       "total_volume_ml": 500.0,
-      "remaining_volume_ml": 500.0
+      "remaining_volume_ml": 464.0
     },
     {
       "channel_id": "7",
       "solution_name": "HNO3",
-      "stock_concentration": 1.0,
+      "stock_concentration": 1.76,
       "pump_address": 10,
       "direction": "FWD",
       "default_rpm": 200,
       "color": "#55aa7f",
       "tube_diameter_mm": 1.0,
       "total_volume_ml": 500.0,
-      "remaining_volume_ml": 244.0
+      "remaining_volume_ml": 197.52272727272722
     },
     {
       "channel_id": "8",
       "solution_name": "Fe",
-      "stock_concentration": 1.0,
+      "stock_concentration": 0.25,
       "pump_address": 9,
       "direction": "FWD",
       "default_rpm": 200,
       "color": "#ff5500",
       "tube_diameter_mm": 1.0,
       "total_volume_ml": 50.0,
-      "remaining_volume_ml": 50.0
+      "remaining_volume_ml": 16.57
     }
   ],
   "flush_channels": [
@@ -217,19 +217,19 @@
       "pump_name": "冲洗泵1",
       "pump_address": 5,
       "direction": "REV",
-      "rpm": 100,
+      "rpm": 200,
       "cycle_duration_s": 30.0,
       "work_type": "Inlet",
       "tube_diameter_mm": 1.0,
       "total_volume_ml": 5000.0,
-      "remaining_volume_ml": 4808.0
+      "remaining_volume_ml": 3912.4772727272707
     },
     {
       "channel_id": "2",
       "pump_name": "冲洗泵2",
       "pump_address": 11,
       "direction": "FWD",
-      "rpm": 100,
+      "rpm": 200,
       "cycle_duration_s": 30.0,
       "work_type": "Transfer",
       "tube_diameter_mm": 1.0,
@@ -241,7 +241,7 @@
       "pump_name": "冲洗泵3",
       "pump_address": 12,
       "direction": "FWD",
-      "rpm": 100,
+      "rpm": 200,
       "cycle_duration_s": 30.0,
       "work_type": "Outlet",
       "tube_diameter_mm": 1.0,
@@ -252,59 +252,59 @@
   "calibration_data": {
     "1": {
       "test_volumes": [
-        1680.0,
-        1880.0,
-        2060.0,
-        2200.0,
-        2350.0,
-        2600.0,
-        2750.0,
-        2900.0,
-        3150.0,
-        3280.0
+        986.57,
+        1947.49,
+        2896.99,
+        3810.82,
+        4729.36,
+        5636.27,
+        6540.58,
+        7473.05,
+        8425.15,
+        9364.93
       ],
-      "slope_k": 89.06060606060606,
-      "intercept_b": -97.75757575757598,
-      "r_squared": 0.997500509563923,
-      "ul_per_encoder_count": 0.005435828006628788,
+      "slope_k": 92.56081818181818,
+      "intercept_b": 90.27600000000021,
+      "r_squared": 0.9999435834571444,
+      "ul_per_encoder_count": 0.005649464000355113,
       "calibration_method": "linear_regression"
     },
     "2": {
       "test_volumes": [
-        1600.0,
-        1850.0,
-        2100.0,
-        2280.0,
-        2400.0,
-        2600.0,
-        2750.0,
-        2950.0,
-        3100.0,
-        3300.0
+        768.44,
+        1642.18,
+        2607.52,
+        3542.38,
+        4431.76,
+        5278.46,
+        6191.18,
+        7105.61,
+        8007.11,
+        8947.29
       ],
-      "slope_k": 90.63636363636364,
-      "intercept_b": -135.45454545454558,
-      "r_squared": 0.9946883721581841,
-      "ul_per_encoder_count": 0.005532004616477273,
+      "slope_k": 90.5743696969697,
+      "intercept_b": -129.3973333333335,
+      "r_squared": 0.9998922872015368,
+      "ul_per_encoder_count": 0.005528220806699811,
       "calibration_method": "linear_regression"
     },
     "3": {
       "test_volumes": [
-        2080.0,
-        2390.0,
-        2500.0,
-        2750.0,
-        2950.0,
-        3130.0,
-        3400.0,
-        3570.0,
-        3790.0,
-        4000.0
+        891.88,
+        1858.62,
+        2867.94,
+        3786.17,
+        4785.37,
+        5760.92,
+        6785.97,
+        7766.23,
+        8787.47,
+        9816.23
       ],
-      "slope_k": 104.72727272727273,
-      "intercept_b": 18.90909090909081,
-      "r_squared": 0.997611532798576,
-      "ul_per_encoder_count": 0.006392045454545455,
+      "slope_k": 98.96212121212126,
+      "intercept_b": -132.23666666666978,
+      "r_squared": 0.9998743067007143,
+      "ul_per_encoder_count": 0.0060401685310132605,
       "calibration_method": "linear_regression"
     },
     "4": {
@@ -328,81 +328,100 @@
     },
     "7": {
       "test_volumes": [
-        2180.0,
-        2330.0,
-        2650.0,
-        2900.0,
-        3100.0,
-        3400.0,
-        3520.0,
-        3750.0,
-        3900.0,
-        4130.0
+        948.6,
+        1937.17,
+        2959.92,
+        4009.12,
+        5030.46,
+        6095.49,
+        7126.25,
+        8169.84,
+        9235.67,
+        10317.94
       ],
-      "slope_k": 109.6969696969697,
-      "intercept_b": 4.787878787878799,
-      "r_squared": 0.9933436485101967,
-      "ul_per_encoder_count": 0.006695371685606061,
+      "slope_k": 104.16944242424242,
+      "intercept_b": -146.273333333333,
+      "r_squared": 0.9999179078682089,
+      "ul_per_encoder_count": 0.006357998194839015,
       "calibration_method": "linear_regression"
     },
     "8": {
       "test_volumes": [
-        1900.0,
-        2100.0,
-        2300.0,
-        2500.0,
-        2680.0,
-        2890.0,
-        3030.0,
-        3200.0,
-        3400.0,
-        3600.0
+        978.96,
+        2034.07,
+        3070.14,
+        4091.18,
+        5117.23,
+        6133.27,
+        7204.61,
+        8167.84,
+        9179.36,
+        10162.22
       ],
-      "slope_k": 93.03030303030303,
-      "intercept_b": 62.12121212121201,
-      "r_squared": 0.9988215370463395,
-      "ul_per_encoder_count": 0.005678119081439394,
+      "slope_k": 102.128,
+      "intercept_b": -3.1520000000004074,
+      "r_squared": 0.9999093902314984,
+      "ul_per_encoder_count": 0.0062333984375,
       "calibration_method": "linear_regression"
     },
     "9": {
       "test_volumes": [
-        1880.0,
-        2080.0,
-        2250.0,
-        2490.0,
-        2680.0,
-        2860.0,
-        3000.0,
-        3200.0,
-        3420.0,
-        3580.0
+        916.13,
+        1906.51,
+        2846.59,
+        3921.54,
+        4838.58,
+        5806.11,
+        6891.68,
+        7913.53,
+        8754.41,
+        9881.26
       ],
-      "slope_k": 94.36363636363636,
-      "intercept_b": 7.4545454545455865,
-      "r_squared": 0.9985196736362277,
-      "ul_per_encoder_count": 0.005759499289772727,
+      "slope_k": 99.2934060606061,
+      "intercept_b": -93.5033333333362,
+      "r_squared": 0.9997122449511343,
+      "ul_per_encoder_count": 0.00606038855350379,
       "calibration_method": "linear_regression"
     },
     "10": {
       "test_volumes": [
-        1900.0,
-        2500.0,
-        2850.0,
-        3200.0,
-        4000.0,
-        4500.0,
-        5100.0,
-        5500.0,
-        6000.0,
-        6300.0
+        1598.7,
+        2956.71,
+        4310.32,
+        5608.72,
+        6890.98,
+        8123.45,
+        9380.56,
+        10632.26,
+        11791.68,
+        12958.92
       ],
-      "slope_k": 253.1818181818182,
-      "intercept_b": -3157.272727272728,
-      "r_squared": 0.9940362969932641,
-      "ul_per_encoder_count": 0.015452991832386364,
+      "slope_k": 126.20876363636364,
+      "intercept_b": 483.7479999999996,
+      "r_squared": 0.9994218590778056,
+      "ul_per_encoder_count": 0.007703171608664773,
       "calibration_method": "linear_regression"
     },
     "5": {
+      "test_volumes": [
+        6511.02,
+        12569.54,
+        17851.7,
+        23195.39,
+        28726.15,
+        34350.4,
+        39828.26,
+        45486.27,
+        50952.71,
+        56549.4
+      ],
+      "slope_k": 553.1656484848485,
+      "intercept_b": 1177.9733333333338,
+      "r_squared": 0.9999251438049513,
+      "ul_per_encoder_count": 0.0337625517874053,
+      "calibration_method": "linear_regression"
+    },
+    "6": {
       "test_volumes": [
         16500.0,
         18000.0,
@@ -419,25 +438,6 @@
       "intercept_b": 2134.545454545456,
       "r_squared": 0.9991232662432273,
       "ul_per_encoder_count": 0.04416725852272727,
-      "calibration_method": "linear_regression"
-    },
-    "6": {
-      "test_volumes": [
-        14000.0,
-        14700.0,
-        15900.0,
-        17000.0,
-        18300.0,
-        19500.0,
-        20500.0,
-        21750.0,
-        22800.0,
-        29400.0
-      ],
-      "slope_k": 568.6363636363636,
-      "intercept_b": 2354.545454545456,
-      "r_squared": 0.9986183130103824,
-      "ul_per_encoder_count": 0.03470680930397727,
       "calibration_method": "linear_regression"
     },
     "11": {

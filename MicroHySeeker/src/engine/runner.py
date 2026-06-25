@@ -471,8 +471,13 @@ class ExperimentWorker(QObject):
         if tech == "ADT":
             cyc = ec.adt_num_cycles or 100
             tc = ec.adt_cathodic_duration_s or 3.0
-            ta = ec.adt_cp_anodic_time_s or 3.0
-            return cyc * (tc + ta)
+            ta = ec.adt_anodic_duration_s or 2.0
+            # CHI ADT batch writes two child files per cycle and GUI/macro overhead
+            # is significant for long runs. Use a conservative estimate so the
+            # controller does not kill an otherwise healthy ADT near the end.
+            per_cycle_overhead = 6.0
+            startup_overhead = 300.0
+            return cyc * (tc + ta + per_cycle_overhead) + startup_overhead
 
         if tech == "i-t" and ec.run_time_s:
             return ec.run_time_s + (ec.quiet_time_s or 0)
@@ -2153,7 +2158,7 @@ class ExperimentWorker(QObject):
         from src.echem_sdl.hardware.chi_echem_bridge import CHIBridge, CHIBridgeConfig
         import os
 
-        chi_exe = r"D:\CHI660F\chi660f.exe"
+        chi_exe = r"D:\AI4S\MicroHySeeker\MicroHySeeker\eChemSDL\chi660f光盘-250103\chi660f光盘-250103\chi660f\chi660f.exe"
         output_dir = r"D:\CHI660F\data"
         if self.config:
             chi_exe = getattr(self.config, 'chi_exe_path', chi_exe)
@@ -2182,15 +2187,6 @@ class ExperimentWorker(QObject):
         # 动态同步 dummy cell 模式
         if hasattr(ec, 'use_dummy_cell'):
             self._chi_bridge._config.use_dummy_cell = ec.use_dummy_cell
-
-        # 动态调整超时: 至少 run_time + 120s，确保长时间实验不会被误判超时
-        run_time = getattr(ec, 'run_time_s', 0) or 0
-        if run_time > 0:
-            needed_timeout = run_time + 120
-            if self._chi_bridge._controller and hasattr(self._chi_bridge._controller, '_config'):
-                if self._chi_bridge._controller._config.timeout < needed_timeout:
-                    self._chi_bridge._controller._config.timeout = needed_timeout
-                    self._emit_log(f"    调整 CHI 超时: {needed_timeout:.0f}s")
 
         return True
 
@@ -2264,7 +2260,7 @@ class ExperimentWorker(QObject):
         # ADT 信息
         if getattr(ec, 'adt_enabled', False) or technique == "ADT":
             cyc = getattr(ec, 'adt_num_cycles', 100)
-            total_t = cyc * (getattr(ec, 'adt_cathodic_duration_s', 3) + getattr(ec, 'adt_anodic_duration_s', 2))
+            total_t = self._estimate_echem_duration(ec)
             self._emit_log(
                 f"    ADT 循环测试: {cyc}轮, 预计总时间 {total_t:.0f}s ({total_t/60:.1f}min)"
             )
@@ -2344,6 +2340,47 @@ class ExperimentWorker(QObject):
                 return True
             else:
                 self._emit_log(f"    ❌ 电化学测量失败: {result.error_message}", "ERROR")
+                if self.dm and step_index >= 0 and result.data_points:
+                    ec_params = {
+                        "e0": ec.e0, "eh": ec.eh, "el": ec.el, "ef": ec.ef,
+                        "scan_rate": ec.scan_rate, "seg_num": ec.seg_num,
+                        "run_time_s": ec.run_time_s,
+                        "sample_interval_ms": ec.sample_interval_ms,
+                        "elapsed_time": f"{result.elapsed_time:.1f}s",
+                        "partial_recovery": True,
+                        "failure_reason": result.error_message,
+                        "ir_compensation_enabled": ir_enabled,
+                        "ir_compensation_ohm": ir_ohm if ir_enabled else 0,
+                    }
+                    if technique == "ADT":
+                        ec_params.update({
+                            "adt_num_cycles": getattr(ec, "adt_num_cycles", None),
+                            "adt_cathodic_current_mA": getattr(ec, "adt_cathodic_current_mA", None),
+                            "adt_anodic_potential_V": getattr(ec, "adt_anodic_potential_V", None),
+                            "adt_cathodic_duration_s": getattr(ec, "adt_cathodic_duration_s", None),
+                            "adt_anodic_duration_s": getattr(ec, "adt_anodic_duration_s", None),
+                        })
+                    csv_path = self.dm.save_echem_csv(
+                        step_index, technique,
+                        result.data_points, result.headers,
+                        ec_params=ec_params,
+                    )
+                    if csv_path:
+                        self.dm.step_finished(
+                            step_index, False,
+                            details=f"{technique} failed; partial data saved, {len(result.data_points)} points",
+                            data_file=csv_path,
+                            data_points_count=len(result.data_points),
+                        )
+                        self._steps_already_finished.add(step_index)
+                        self._emit_log(
+                            f"    已保存失败前部分电化学数据: {csv_path} "
+                            f"({len(result.data_points)}点)",
+                            "WARNING",
+                        )
+                        self.echem_result.emit(
+                            technique, result.data_points, result.headers
+                        )
                 return False
                 
         except ImportError:

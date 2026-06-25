@@ -352,7 +352,15 @@ async def connect_port(
         raise HTTPException(500, f"连接失败: {exc}") from exc
 
     if not success:
-        raise HTTPException(400, f"打开串口 {body.port} 失败")
+        detail = f"打开串口 {body.port} 失败"
+        try:
+            rs485 = bridge._get_rs485()
+            last_error = getattr(rs485, "_last_error", "")
+            if last_error:
+                detail = f"{detail}: {last_error}"
+        except Exception:
+            pass
+        raise HTTPException(400, detail)
 
     return {
         "status": "connected",

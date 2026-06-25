@@ -22,6 +22,7 @@ CHI 660F 电化学桥接层 —— ECSettings ↔ CHI660FController
 import os
 import math
 import logging
+import re
 from typing import Optional, Tuple, Any, Callable
 from dataclasses import dataclass
 
@@ -204,7 +205,7 @@ class CHIBridgeConfig:
         force_restart: 连接时是否强制重启
         timeout: 单次实验超时 (秒)
     """
-    chi_exe_path: str = r"D:\CHI660F\chi660f.exe"
+    chi_exe_path: str = r"D:\AI4S\MicroHySeeker\MicroHySeeker\eChemSDL\chi660f光盘-250103\chi660f光盘-250103\chi660f\chi660f.exe"
     output_dir: str = r"D:\CHI660F\data"
     use_dummy_cell: bool = False
     force_restart: bool = False
@@ -465,7 +466,9 @@ class CHIBridge:
         ]
         time_offset = 0.0
         
-        if batch_result.success:
+        # Always collect child files. CHI may time out after writing usable
+        # partial ADT data; losing those rows makes failed runs undebuggable.
+        if True:
             for cycle in range(num):
                 c = cycle + 1
                 for suffix in ("cathodic", "anodic"):
@@ -511,11 +514,11 @@ class CHIBridge:
                                 time_offset = float(all_data[-1][0]) + step_gap
                             else:
                                 logger.warning(f"ADT child file has no numeric rows: {csv_path}")
-                    else:
+                    elif batch_result.success:
                         logger.warning(f"ADT child file missing: {csv_path}")
                 
                 # 回调 (数据收集完每轮后)
-                if on_cycle:
+                if on_cycle and batch_result.success:
                     on_cycle(c, num, {
                         "cathodic_success": True,
                         "anodic_success": True,
@@ -526,13 +529,70 @@ class CHIBridge:
             f"{len(all_data)} 数据点, 耗时 {elapsed:.1f}s"
         )
 
+        child_pattern = re.compile(
+            rf"^{re.escape(output_prefix)}_c(\d+)_(cathodic|anodic)\.(csv|txt)$",
+            re.IGNORECASE,
+        )
+        child_files = {}
+        try:
+            for name in os.listdir(output_dir):
+                match = child_pattern.match(name)
+                if not match:
+                    continue
+                cycle_no = int(match.group(1))
+                if 1 <= cycle_no <= num:
+                    child_files.setdefault(cycle_no, set()).add(match.group(2).lower())
+        except Exception as scan_err:
+            logger.warning(f"ADT child file diagnostic scan failed: {scan_err}")
+
+        complete_cycles = [
+            c for c, phases in child_files.items()
+            if {"cathodic", "anodic"}.issubset(phases)
+        ]
+        incomplete_cycles = []
+        for c, phases in sorted(child_files.items()):
+            missing = []
+            if "cathodic" not in phases:
+                missing.append("cathodic")
+            if "anodic" not in phases:
+                missing.append("anodic")
+            if missing:
+                incomplete_cycles.append((c, missing))
+
+        child_count = sum(len(phases) for phases in child_files.values())
+        last_cycle = max(child_files) if child_files else 0
+        diag_parts = [
+            f"ADT raw files={child_count}",
+            f"cycles_with_data={len(child_files)}/{num}",
+            f"complete_cycles={len(complete_cycles)}/{num}",
+            f"last_cycle={last_cycle}",
+            f"raw_dir={output_dir}",
+        ]
+        if incomplete_cycles:
+            shown = ", ".join(
+                f"c{c} missing {'/'.join(missing)}"
+                for c, missing in incomplete_cycles[:8]
+            )
+            if len(incomplete_cycles) > 8:
+                shown += f", ...(+{len(incomplete_cycles) - 8})"
+            diag_parts.append(f"incomplete={shown}")
+        recovery_diag = "; ".join(diag_parts)
+        if child_files:
+            logger.info(f"ADT raw recovery summary: {recovery_diag}")
+        elif not batch_result.success:
+            logger.warning(f"ADT failed and no child files were found: {recovery_diag}")
+
+        error_message = batch_result.error_message
+        if not batch_result.success:
+            error_message = (error_message + "; " if error_message else "") + recovery_diag
+
         return ExperimentResult(
             success=batch_result.success,
             data_points=all_data,
             headers=all_headers,
             elapsed_time=elapsed,
             data_file="",
-            error_message=batch_result.error_message,
+            error_message=error_message,
         )
 
 
@@ -546,7 +606,7 @@ _global_bridge: Optional[CHIBridge] = None
 
 def run_echem(
     ec_settings: ECSettings,
-    chi_exe: str = r"D:\CHI660F\chi660f.exe",
+    chi_exe: str = r"D:\AI4S\MicroHySeeker\MicroHySeeker\eChemSDL\chi660f光盘-250103\chi660f光盘-250103\chi660f\chi660f.exe",
     output_dir: str = r"D:\CHI660F\data",
     dummy: bool = False,
     force_restart: bool = False,
