@@ -233,6 +233,12 @@ class PrepSolStep:
     selected_solutions: Dict[str, bool] = field(default_factory=dict)
     # 新增：注液顺序编号 {溶液名称: 顺序号}，相同编号表示同时注液
     injection_order_numbers: Dict[str, int] = field(default_factory=dict)
+    # Prep strategy:
+    # - standard: use injection_order/injection_order_numbers directly.
+    # - solvent_transfer_first: inject solvent channels, run Transfer, then inject non-solvent channels.
+    prep_strategy: str = "standard"
+    # Used only by solvent_transfer_first. 0 means auto (solvent volume + 20 mL).
+    intermediate_transfer_volume_ul: float = 0.0
 
     def to_dict(self) -> Dict[str, Any]:
         return asdict(self)
@@ -248,6 +254,10 @@ class PrepSolStep:
             data['selected_solutions'] = {}
         if 'injection_order_numbers' not in data:
             data['injection_order_numbers'] = {}
+        if 'prep_strategy' not in data:
+            data['prep_strategy'] = "standard"
+        if 'intermediate_transfer_volume_ul' not in data:
+            data['intermediate_transfer_volume_ul'] = 0.0
         # injection_order 为空时，从 injection_order_numbers + selected_solutions 派生
         io = data.get('injection_order')
         if not io or (isinstance(io, str)):
@@ -417,6 +427,7 @@ class SystemConfig:
     flush_channels: List[FlushChannel] = field(default_factory=list)
     
     calibration_data: Dict[int, Dict[str, float]] = field(default_factory=dict)  # pump_address -> calibration
+    calibration_ui_state: Dict[str, Any] = field(default_factory=dict)
     
     data_dir: str = "./data"
 
@@ -442,6 +453,7 @@ class SystemConfig:
             'dilution_channels': [c.to_dict() for c in self.dilution_channels],
             'flush_channels': [c.to_dict() for c in self.flush_channels],
             'calibration_data': {str(k): v for k, v in self.calibration_data.items()},
+            'calibration_ui_state': self.calibration_ui_state,
             'data_dir': self.data_dir,
         }
 
@@ -465,6 +477,7 @@ class SystemConfig:
             mock_mode=data.get('mock_mode', False),
             auto_connect=data.get('auto_connect', True),
             calibration_data=calibration_data,
+            calibration_ui_state=data.get('calibration_ui_state', {}),
             data_dir=data.get('data_dir', './data'),
         )
         config.pumps = [PumpConfig.from_dict(p) for p in data.get('pumps', [])]

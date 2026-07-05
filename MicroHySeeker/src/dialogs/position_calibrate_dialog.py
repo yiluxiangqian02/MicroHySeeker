@@ -33,8 +33,9 @@ ENCODER_DIVISIONS_PER_REV = 16384
 
 # 测试圈数序列 (配液泵 和 功能泵 各自独立)
 NUM_TEST_POINTS = 10
-TEST_REVOLUTIONS_DILUTION = [20, 22, 24, 26, 28, 30, 32, 34, 36, 38]
-TEST_REVOLUTIONS_FLUSH = [20, 22, 24, 26, 28, 30, 32, 34, 36, 38]
+OLD_DEFAULT_TEST_REVOLUTIONS = [20, 22, 24, 26, 28, 30, 32, 34, 36, 38]
+TEST_REVOLUTIONS_DILUTION = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+TEST_REVOLUTIONS_FLUSH = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
 
 
 @dataclass
@@ -73,6 +74,8 @@ class PositionCalibrateDialog(QDialog):
         super().__init__(parent)
         self.config = config
         self.rs485 = get_rs485_instance()
+        self._last_test_revolutions_by_pump: Dict[int, int] = {}
+        self._load_saved_revolution_settings()
         
         # 12个泵的校准数据
         self.pump_data: Dict[int, PumpCalibrationData] = {}
@@ -90,6 +93,72 @@ class PositionCalibrateDialog(QDialog):
         self.setFont(FONT_NORMAL)
         self._init_ui()
         self._refresh_table()
+
+    def _get_position_calibration_ui_state(self) -> Dict:
+        state = getattr(self.config, "calibration_ui_state", None)
+        if not isinstance(state, dict):
+            state = {}
+            self.config.calibration_ui_state = state
+        return state.setdefault("position_calibration", {})
+
+    @staticmethod
+    def _normalize_revolutions(values, fallback: List[int]) -> List[int]:
+        if not isinstance(values, list) or len(values) != NUM_TEST_POINTS:
+            return list(fallback)
+        try:
+            if [int(v) for v in values] == OLD_DEFAULT_TEST_REVOLUTIONS:
+                return list(fallback)
+        except (TypeError, ValueError):
+            pass
+        normalized = []
+        for value, default in zip(values, fallback):
+            try:
+                rev = int(value)
+            except (TypeError, ValueError):
+                rev = int(default)
+            normalized.append(max(1, min(500, rev)))
+        return normalized
+
+    def _load_saved_revolution_settings(self):
+        global TEST_REVOLUTIONS_DILUTION, TEST_REVOLUTIONS_FLUSH
+
+        pos_state = self._get_position_calibration_ui_state()
+        TEST_REVOLUTIONS_DILUTION = self._normalize_revolutions(
+            pos_state.get("test_revolutions_dilution"),
+            TEST_REVOLUTIONS_DILUTION,
+        )
+        TEST_REVOLUTIONS_FLUSH = self._normalize_revolutions(
+            pos_state.get("test_revolutions_flush"),
+            TEST_REVOLUTIONS_FLUSH,
+        )
+
+        raw_by_pump = pos_state.get("last_test_revolutions_by_pump", {})
+        if isinstance(raw_by_pump, dict):
+            for key, value in raw_by_pump.items():
+                try:
+                    addr = int(key)
+                    rev = int(value)
+                except (TypeError, ValueError):
+                    continue
+                self._last_test_revolutions_by_pump[addr] = max(1, min(500, rev))
+
+    def _persist_revolution_settings(self, save_file: bool = True):
+        pos_state = self._get_position_calibration_ui_state()
+        pos_state["test_revolutions_dilution"] = list(TEST_REVOLUTIONS_DILUTION)
+        pos_state["test_revolutions_flush"] = list(TEST_REVOLUTIONS_FLUSH)
+        pos_state["last_test_revolutions_by_pump"] = {
+            str(addr): int(rev)
+            for addr, rev in sorted(self._last_test_revolutions_by_pump.items())
+        }
+        if self.selected_pump is not None and hasattr(self, "rev_spin"):
+            pos_state["last_selected_pump"] = int(self.selected_pump)
+            pos_state["last_test_revolution"] = int(self.rev_spin.value())
+
+        if save_file:
+            try:
+                self.config.save()
+            except Exception as e:
+                print(f"[Calibrate] 保存圈数设置失败: {e}")
     
     def _init_pump_data(self):
         """初始化12个泵的校准数据
@@ -516,6 +585,7 @@ class PositionCalibrateDialog(QDialog):
         
         # 重新设置右下角运行测试的默认值
         self.rev_spin.setValue(new_revs[0])
+        self._persist_revolution_settings(save_file=True)
         
         # 刷新表格
         self._refresh_table()
@@ -549,6 +619,13 @@ class PositionCalibrateDialog(QDialog):
             revs = self._get_revolutions_for_pump(pump_addr)
             for i, s in enumerate(self.rev_spins):
                 s.setValue(revs[i] if i < len(revs) else 20)
+
+            self.rev_spin.setValue(
+                self._last_test_revolutions_by_pump.get(
+                    pump_addr,
+                    revs[0] if revs else TEST_REVOLUTIONS_DILUTION[0],
+                )
+            )
             
             # 更新提示标签
             if pump_addr in self._flush_pump_addrs:
@@ -582,6 +659,8 @@ class PositionCalibrateDialog(QDialog):
         
         addr = self.selected_pump
         revolutions = self.rev_spin.value()
+        self._last_test_revolutions_by_pump[addr] = revolutions
+        self._persist_revolution_settings(save_file=True)
         encoder_counts = int(revolutions * ENCODER_DIVISIONS_PER_REV)
         speed = self.speed_spin.value()
         
@@ -746,6 +825,7 @@ class PositionCalibrateDialog(QDialog):
         """保存所有泵数据（校准结果 + 测试点体积）"""
         saved_count = 0
         volume_saved_count = 0
+        self._persist_revolution_settings(save_file=False)
         
         for addr, data in self.pump_data.items():
             # --- 始终保存测试点体积（即使尚未计算回归） ---

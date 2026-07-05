@@ -1,4 +1,0 @@
-timestamp,pump_addr,operation,direction,rpm,volume_ul,duration_s,mode,encoder_counts
-2026-04-09T18:30:35.362630,1,prep_sol_inject,REV,200,40000.0,137.07,position,-7376568
-2026-04-09T18:30:36.760845,2,prep_sol_inject,REV,200,16000.0,55.41,position,-2916746
-2026-04-09T18:30:38.317511,3,prep_sol_inject,REV,200,24000.0,70.7,position,-3751708

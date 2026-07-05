@@ -124,7 +124,7 @@
       "color": "#00FF00",
       "tube_diameter_mm": 1.0,
       "total_volume_ml": 500.0,
-      "remaining_volume_ml": 444.0
+      "remaining_volume_ml": 452.0
     },
     {
       "channel_id": "2",
@@ -136,7 +136,7 @@
       "color": "#00FF00",
       "tube_diameter_mm": 1.0,
       "total_volume_ml": 500.0,
-      "remaining_volume_ml": 400.0
+      "remaining_volume_ml": 392.0
     },
     {
       "channel_id": "3",
@@ -153,19 +153,19 @@
     {
       "channel_id": "4",
       "solution_name": "KOH",
-      "stock_concentration": 1.0,
+      "stock_concentration": 2.0,
       "pump_address": 6,
       "direction": "REV",
       "default_rpm": 200,
       "color": "#55aa7f",
       "tube_diameter_mm": 1.0,
       "total_volume_ml": 1000.0,
-      "remaining_volume_ml": 230.0
+      "remaining_volume_ml": 750.0
     },
     {
       "channel_id": "5",
       "solution_name": "P",
-      "stock_concentration": 0.25,
+      "stock_concentration": 1.0,
       "pump_address": 7,
       "direction": "FWD",
       "default_rpm": 200,
@@ -189,14 +189,14 @@
     {
       "channel_id": "7",
       "solution_name": "HNO3",
-      "stock_concentration": 1.76,
+      "stock_concentration": 2.0,
       "pump_address": 10,
       "direction": "FWD",
       "default_rpm": 200,
       "color": "#55aa7f",
       "tube_diameter_mm": 1.0,
       "total_volume_ml": 500.0,
-      "remaining_volume_ml": 197.52272727272722
+      "remaining_volume_ml": 455.0
     },
     {
       "channel_id": "8",
@@ -208,7 +208,7 @@
       "color": "#ff5500",
       "tube_diameter_mm": 1.0,
       "total_volume_ml": 50.0,
-      "remaining_volume_ml": 16.57
+      "remaining_volume_ml": 50.0
     }
   ],
   "flush_channels": [
@@ -222,7 +222,7 @@
       "work_type": "Inlet",
       "tube_diameter_mm": 1.0,
       "total_volume_ml": 5000.0,
-      "remaining_volume_ml": 3912.4772727272707
+      "remaining_volume_ml": 4555.0
     },
     {
       "channel_id": "2",
@@ -478,6 +478,9 @@
       "ul_per_encoder_count": 0.04416725852272727,
       "calibration_method": "linear_regression"
     }
+  },
+  "calibration_ui_state": {
+    "position_calibration": {}
   },
   "data_dir": "./data"
 }

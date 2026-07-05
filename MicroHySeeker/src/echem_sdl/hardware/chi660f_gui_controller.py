@@ -685,7 +685,7 @@ class MacroBuilder:
             f"eh = {p.e_high}",
             f"el = {p.e_low}",
             f"tc = {p.cathodic_time}",
-            f"ta = {p.anodic_time}",
+            f"ta = {max(0.05, p.anodic_time)}",
             f"pn = {p.polarity}",
             f"si = {p.sample_interval}",
             f"cl = {p.segments}",

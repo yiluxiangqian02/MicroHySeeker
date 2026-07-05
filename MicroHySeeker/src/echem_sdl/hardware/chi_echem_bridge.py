@@ -137,7 +137,7 @@ def _ec_to_cp(ec: ECSettings) -> CPParams:
         high_e_hold_time=getattr(ec, 'adt_cp_high_e_hold_time', 0.0),
         low_e_hold_time=getattr(ec, 'adt_cp_low_e_hold_time', 0.0),
         cathodic_time=getattr(ec, 'adt_cathodic_duration_s', 3.0),
-        anodic_time=getattr(ec, 'adt_cp_anodic_time_s', 3.0),
+        anodic_time=max(0.05, getattr(ec, 'adt_cp_anodic_time_s', 3.0)),
         polarity=getattr(ec, 'adt_cp_polarity', 'n'),
         sample_interval=getattr(ec, 'adt_cp_sample_interval', 0.01),
         segments=getattr(ec, 'adt_cp_segments', 2),
@@ -385,7 +385,7 @@ class CHIBridge:
             e_high=getattr(ec_settings, 'adt_cp_e_high', 2.0),
             e_low=getattr(ec_settings, 'adt_cp_e_low', -2.0),
             cathodic_time=getattr(ec_settings, 'adt_cathodic_duration_s', 3.0),
-            anodic_time=getattr(ec_settings, 'adt_cp_anodic_time_s', 3.0),
+            anodic_time=max(0.05, getattr(ec_settings, 'adt_cp_anodic_time_s', 3.0)),
             polarity='n',          # 阴极(负方向)先
             sample_interval=getattr(ec_settings, 'adt_cp_sample_interval', 0.01),
             segments=1,            # 单段 (仅阴极方向)

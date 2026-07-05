@@ -13,11 +13,13 @@ from PySide6.QtWidgets import (
     QPushButton, QLabel, QComboBox, QSpinBox, QDoubleSpinBox,
     QCheckBox, QTextEdit, QMessageBox, QGroupBox, QFormLayout,
     QScrollArea, QWidget, QStackedWidget, QFrame, QTableWidget,
-    QTableWidgetItem, QHeaderView, QGridLayout, QButtonGroup, QLineEdit
+    QTableWidgetItem, QHeaderView, QGridLayout, QButtonGroup, QLineEdit,
+    QAbstractItemView
 )
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QFont, QBrush, QColor
 from typing import Optional, List
+import copy
 
 from src.models import (
     ProgStep, Experiment, ProgramStepType, ECTechnique, ECSettings,
@@ -50,6 +52,81 @@ STEP_TYPE_COLORS = {
 }
 
 
+class StepTableWidget(QTableWidget):
+    """Step table that delegates row reordering to the backing experiment model."""
+
+    rows_move_requested = Signal(list, int)
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self._drag_source_rows: List[int] = []
+        self._press_pos = None
+        self._drag_started = False
+
+    def mousePressEvent(self, event):
+        try:
+            pos = event.position().toPoint()
+        except AttributeError:
+            pos = event.pos()
+
+        pressed_row = self.indexAt(pos).row()
+        if pressed_row >= 0:
+            self._drag_source_rows = [pressed_row]
+        else:
+            self._drag_source_rows = []
+        self._press_pos = pos
+        self._drag_started = False
+
+        super().mousePressEvent(event)
+
+    def mouseMoveEvent(self, event):
+        if self._press_pos is not None and self._drag_source_rows:
+            try:
+                pos = event.position().toPoint()
+            except AttributeError:
+                pos = event.pos()
+            if (pos - self._press_pos).manhattanLength() >= 6:
+                self._drag_started = True
+                event.accept()
+                return
+        super().mouseMoveEvent(event)
+
+    def mouseReleaseEvent(self, event):
+        if not self._drag_started:
+            self._press_pos = None
+            super().mouseReleaseEvent(event)
+            return
+
+        source_rows = list(self._drag_source_rows)
+        if not source_rows:
+            self._press_pos = None
+            event.ignore()
+            return
+
+        try:
+            pos = event.position().toPoint()
+        except AttributeError:
+            pos = event.pos()
+
+        target_row = self.indexAt(pos).row()
+        if target_row < 0:
+            target_row = 0 if pos.y() < 0 else self.rowCount()
+        else:
+            target_index = self.model().index(target_row, 1)
+            target_rect = self.visualRect(target_index)
+            if pos.y() >= target_rect.center().y():
+                target_row += 1
+
+        self.rows_move_requested.emit(source_rows, target_row)
+        self._drag_source_rows = []
+        self._press_pos = None
+        self._drag_started = False
+        event.accept()
+
+    def dropEvent(self, event):
+        event.ignore()
+
+
 class ProgramEditorDialog(QDialog):
     """
     单次实验程序编辑器
@@ -66,7 +143,7 @@ class ProgramEditorDialog(QDialog):
     def __init__(self, config: SystemConfig, experiment: Optional[Experiment] = None, parent=None):
         super().__init__(parent)
         self.config = config
-        self.experiment = experiment or Experiment(exp_id="exp_001", exp_name="新实验")
+        self.experiment = copy.deepcopy(experiment) if experiment else Experiment(exp_id="exp_001", exp_name="新实验")
         self.current_step: Optional[ProgStep] = None
         self.current_step_index = -1
         
@@ -91,19 +168,27 @@ class ProgramEditorDialog(QDialog):
         title_label.setFont(FONT_TITLE)
         left_layout.addWidget(title_label)
         
-        self.step_list = QTableWidget()
-        self.step_list.setColumnCount(2)
-        self.step_list.setHorizontalHeaderLabels(["步骤内容", "并行组"])
-        self.step_list.horizontalHeader().setSectionResizeMode(0, QHeaderView.Stretch)
-        self.step_list.horizontalHeader().setSectionResizeMode(1, QHeaderView.Fixed)
-        self.step_list.setColumnWidth(1, 50)
+        self.step_list = StepTableWidget()
+        self.step_list.setColumnCount(3)
+        self.step_list.setHorizontalHeaderLabels(["选择", "步骤内容", "并行组"])
+        self.step_list.horizontalHeader().setSectionResizeMode(0, QHeaderView.Fixed)
+        self.step_list.horizontalHeader().setSectionResizeMode(1, QHeaderView.Stretch)
+        self.step_list.horizontalHeader().setSectionResizeMode(2, QHeaderView.Fixed)
+        self.step_list.setColumnWidth(0, 44)
+        self.step_list.setColumnWidth(2, 50)
         self.step_list.setSelectionBehavior(QTableWidget.SelectRows)
-        self.step_list.setSelectionMode(QTableWidget.SingleSelection)
+        self.step_list.setSelectionMode(QTableWidget.ExtendedSelection)
         self.step_list.setEditTriggers(QTableWidget.NoEditTriggers)
+        self.step_list.setDragEnabled(False)
+        self.step_list.setAcceptDrops(False)
+        self.step_list.setDragDropOverwriteMode(False)
+        self.step_list.setDropIndicatorShown(False)
+        self.step_list.setDragDropMode(QAbstractItemView.NoDragDrop)
         self.step_list.verticalHeader().setVisible(False)
         self.step_list.setFont(FONT_NORMAL)
         self.step_list.setWordWrap(True)
         self.step_list.cellClicked.connect(self._on_step_cell_clicked)
+        self.step_list.rows_move_requested.connect(self._on_step_rows_move_requested)
         left_layout.addWidget(self.step_list)
         
         # 并行组设置
@@ -381,6 +466,17 @@ class ProgramEditorDialog(QDialog):
         self.ps_vol_spin.setDecimals(2)
         self.ps_vol_spin.setValue(80.00)  # 默认80mL
         param_layout.addRow("总体积(mL):", self.ps_vol_spin)
+
+        self.ps_strategy_combo = QComboBox()
+        self.ps_strategy_combo.addItem("标准注液", "standard")
+        self.ps_strategy_combo.addItem("溶剂 -> 转移 -> 试剂", "solvent_transfer_first")
+        param_layout.addRow("配液策略:", self.ps_strategy_combo)
+
+        self.ps_intermediate_transfer_spin = QDoubleSpinBox()
+        self.ps_intermediate_transfer_spin.setRange(0, 1000)
+        self.ps_intermediate_transfer_spin.setDecimals(2)
+        self.ps_intermediate_transfer_spin.setValue(0.00)
+        param_layout.addRow("策略转移体积(mL, 0=溶剂+20):", self.ps_intermediate_transfer_spin)
         
         layout.addWidget(param_group)
         layout.addStretch()
@@ -775,7 +871,7 @@ class ProgramEditorDialog(QDialog):
         self._adt_cathodic_t = QDoubleSpinBox(); self._adt_cathodic_t.setRange(0.005, 100000); self._adt_cathodic_t.setDecimals(3); self._adt_cathodic_t.setValue(3.0)
         cp_grid.addWidget(self._adt_cathodic_t, 2, 1)
         cp_grid.addWidget(QLabel("阳极时间 ta(s):"), 2, 2)
-        self._adt_cp_anodic_t = QDoubleSpinBox(); self._adt_cp_anodic_t.setRange(0.005, 100000); self._adt_cp_anodic_t.setDecimals(3); self._adt_cp_anodic_t.setValue(0.05)
+        self._adt_cp_anodic_t = QDoubleSpinBox(); self._adt_cp_anodic_t.setRange(0.05, 100000); self._adt_cp_anodic_t.setDecimals(3); self._adt_cp_anodic_t.setValue(0.05)
         cp_grid.addWidget(self._adt_cp_anodic_t, 2, 3)
         cp_grid.addWidget(QLabel("高E保持时间(s):"), 3, 0)
         self._adt_cp_heht = QDoubleSpinBox(); self._adt_cp_heht.setRange(0, 100000); self._adt_cp_heht.setDecimals(2); self._adt_cp_heht.setValue(0.0)
@@ -957,7 +1053,8 @@ class ProgramEditorDialog(QDialog):
     # === 事件处理 ===
     
     def _refresh_step_list(self):
-        """刷新步骤列表 - 两列表格：步骤内容 + 并行组"""
+        """刷新步骤列表 - 勾选 + 步骤内容 + 并行组"""
+        checked_rows = set(self._checked_step_rows()) if hasattr(self, "step_list") else set()
         self.step_list.setRowCount(0)
         for i, step in enumerate(self.experiment.steps):
             type_name = STEP_TYPE_NAMES.get(step.step_type, str(step.step_type))
@@ -972,20 +1069,102 @@ class ProgramEditorDialog(QDialog):
             row = self.step_list.rowCount()
             self.step_list.insertRow(row)
             
-            # 列0: 步骤内容
+            # 列0: 批量选择
+            check_item = QTableWidgetItem("")
+            check_item.setFlags(
+                Qt.ItemIsEnabled
+                | Qt.ItemIsSelectable
+                | Qt.ItemIsUserCheckable
+                | Qt.ItemIsDragEnabled
+            )
+            check_item.setCheckState(Qt.Checked if i in checked_rows else Qt.Unchecked)
+            check_item.setTextAlignment(Qt.AlignCenter)
+            check_item.setData(Qt.UserRole, i)
+            self.step_list.setItem(row, 0, check_item)
+
+            # 列1: 步骤内容
             item0 = QTableWidgetItem(text)
+            item0.setFlags(item0.flags() | Qt.ItemIsDragEnabled)
             item0.setForeground(QColor(color))
             item0.setToolTip(text)
-            self.step_list.setItem(row, 0, item0)
+            item0.setData(Qt.UserRole, i)
+            self.step_list.setItem(row, 1, item0)
             
-            # 列1: 并行组号
+            # 列2: 并行组号
             pg = getattr(step, 'parallel_group', 0) or 0
             pg_text = str(pg) if pg > 0 else ""
             item1 = QTableWidgetItem(pg_text)
+            item1.setFlags(item1.flags() | Qt.ItemIsDragEnabled)
             item1.setTextAlignment(Qt.AlignCenter)
+            item1.setData(Qt.UserRole, i)
             if pg > 0:
                 item1.setForeground(QColor("#E65100"))
-            self.step_list.setItem(row, 1, item1)
+            self.step_list.setItem(row, 2, item1)
+
+    def _checked_step_rows(self) -> List[int]:
+        """Return checked row indexes from the step table."""
+        rows = []
+        for row in range(self.step_list.rowCount()):
+            item = self.step_list.item(row, 0)
+            if item and item.checkState() == Qt.Checked:
+                rows.append(row)
+        return rows
+
+    def _clear_step_checks(self):
+        for row in range(self.step_list.rowCount()):
+            item = self.step_list.item(row, 0)
+            if item:
+                item.setCheckState(Qt.Unchecked)
+
+    def _target_step_rows(self) -> List[int]:
+        """Checked rows have priority; otherwise use selected rows."""
+        checked = self._checked_step_rows()
+        if checked:
+            return checked
+        selected = sorted({idx.row() for idx in self.step_list.selectedIndexes()})
+        return [row for row in selected if 0 <= row < len(self.experiment.steps)]
+
+    def _renumber_step_ids(self):
+        for i, step in enumerate(self.experiment.steps):
+            step.step_id = f"step_{i + 1}"
+
+    def _on_step_rows_move_requested(self, source_rows: List[int], target_row: int):
+        """Move complete steps after a table drag-and-drop request."""
+        row_count = len(self.experiment.steps)
+        source_rows = sorted({row for row in source_rows if 0 <= row < row_count})
+        if not source_rows:
+            self._refresh_step_list()
+            return
+
+        current_obj = self.current_step
+
+        old_steps = list(self.experiment.steps)
+        source_set = set(source_rows)
+        moving_steps = [old_steps[row] for row in source_rows]
+        remaining_steps = [step for row, step in enumerate(old_steps) if row not in source_set]
+
+        target_row = max(0, min(row_count, target_row))
+        adjusted_target = target_row - sum(1 for row in source_rows if row < target_row)
+        adjusted_target = max(0, min(len(remaining_steps), adjusted_target))
+
+        self.experiment.steps = (
+            remaining_steps[:adjusted_target]
+            + moving_steps
+            + remaining_steps[adjusted_target:]
+        )
+        self._renumber_step_ids()
+
+        self.current_step = None
+        self.current_step_index = -1
+        if current_obj is not None:
+            for idx, step in enumerate(self.experiment.steps):
+                if step is current_obj:
+                    self.current_step = step
+                    self.current_step_index = idx
+                    break
+        self._refresh_step_list()
+        if self.current_step_index >= 0:
+            self.step_list.selectRow(self.current_step_index)
     
     def _get_step_detail(self, step: ProgStep) -> str:
         """获取步骤的详细描述"""
@@ -1058,6 +1237,8 @@ class ProgramEditorDialog(QDialog):
     
     def _on_step_cell_clicked(self, row: int, col: int):
         """选中步骤 - 在右侧面板加载参数，可编辑后保存修改"""
+        if col == 0:
+            return
         if 0 <= row < len(self.experiment.steps):
             step = self.experiment.steps[row]
             self.current_step = step
@@ -1131,6 +1312,11 @@ class ProgramEditorDialog(QDialog):
             # 体积从μL转换为mL
             vol_ml = params.total_volume_ul / 1000.0
             self.ps_vol_spin.setValue(round(vol_ml, 2))
+            strategy = getattr(params, "prep_strategy", "standard") or "standard"
+            strategy_idx = self.ps_strategy_combo.findData(strategy)
+            self.ps_strategy_combo.setCurrentIndex(strategy_idx if strategy_idx >= 0 else 0)
+            transfer_ml = getattr(params, "intermediate_transfer_volume_ul", 0.0) / 1000.0
+            self.ps_intermediate_transfer_spin.setValue(round(transfer_ml, 2))
             
             # 加载每行溶液的配置（按溶液名称匹配）
             for row in range(self.recipe_table.rowCount()):
@@ -1179,6 +1365,8 @@ class ProgramEditorDialog(QDialog):
         else:
             # 没有配液参数时使用默认值
             self.ps_vol_spin.setValue(80.00)
+            self.ps_strategy_combo.setCurrentIndex(0)
+            self.ps_intermediate_transfer_spin.setValue(0.00)
     
     def _load_flush(self, step: ProgStep):
         # 从配置加载Inlet泵信息（只读）
@@ -1250,7 +1438,7 @@ class ProgramEditorDialog(QDialog):
                 self._adt_cp_eh.setValue(getattr(ec, 'adt_cp_e_high', 10.0))
                 self._adt_cp_el.setValue(getattr(ec, 'adt_cp_e_low', -10.0))
                 self._adt_cathodic_t.setValue(getattr(ec, 'adt_cathodic_duration_s', 3.0))
-                self._adt_cp_anodic_t.setValue(getattr(ec, 'adt_cp_anodic_time_s', 0.05))
+                self._adt_cp_anodic_t.setValue(max(0.05, getattr(ec, 'adt_cp_anodic_time_s', 0.05)))
                 self._adt_cp_heht.setValue(getattr(ec, 'adt_cp_high_e_hold_time', 0.0))
                 self._adt_cp_leht.setValue(getattr(ec, 'adt_cp_low_e_hold_time', 0.0))
                 self._adt_cp_si.setValue(getattr(ec, 'adt_cp_sample_interval', 0.01))
@@ -1325,6 +1513,10 @@ class ProgramEditorDialog(QDialog):
             
             # 体积从mL转换为μL
             params.total_volume_ul = round(self.ps_vol_spin.value() * 1000, 2)
+            params.prep_strategy = self.ps_strategy_combo.currentData() or "standard"
+            params.intermediate_transfer_volume_ul = round(
+                self.ps_intermediate_transfer_spin.value() * 1000, 2
+            )
             
             # 保存每行溶液的完整数据
             selected_solutions = {}
@@ -1454,7 +1646,7 @@ class ProgramEditorDialog(QDialog):
                 ec.adt_cp_e_high = round(self._adt_cp_eh.value(), 3)
                 ec.adt_cp_e_low = round(self._adt_cp_el.value(), 3)
                 ec.adt_cathodic_duration_s = round(self._adt_cathodic_t.value(), 3)
-                ec.adt_cp_anodic_time_s = round(self._adt_cp_anodic_t.value(), 3)
+                ec.adt_cp_anodic_time_s = max(0.05, round(self._adt_cp_anodic_t.value(), 3))
                 ec.adt_cp_high_e_hold_time = round(self._adt_cp_heht.value(), 2)
                 ec.adt_cp_low_e_hold_time = round(self._adt_cp_leht.value(), 2)
                 ec.adt_cp_sample_interval = round(self._adt_cp_si.value(), 4)
@@ -1621,6 +1813,21 @@ class ProgramEditorDialog(QDialog):
         工作流程：用户先在右侧配置参数，然后点击"添加"将步骤
         加入列表。步骤一旦添加到列表即为最终状态，不可修改。
         """
+        checked_rows = self._checked_step_rows()
+        if checked_rows:
+            copied_steps = []
+            for row in sorted(checked_rows):
+                if 0 <= row < len(self.experiment.steps):
+                    copied_steps.append(copy.deepcopy(self.experiment.steps[row]))
+            self.experiment.steps.extend(copied_steps)
+            self._renumber_step_ids()
+            self._refresh_step_list()
+            self._clear_step_checks()
+            self.step_list.clearSelection()
+            self.current_step = None
+            self.current_step_index = -1
+            return
+
         # 获取当前选中的类型
         selected_type = self._get_selected_step_type()
         
@@ -1657,9 +1864,12 @@ class ProgramEditorDialog(QDialog):
         self.current_step = new_step
         self._save_current_step()
         
-        # 添加到步骤列表
+        # 未勾选步骤时，按右侧面板当前配置追加一个新步骤
         self.experiment.steps.append(new_step)
+
+        self._renumber_step_ids()
         self._refresh_step_list()
+        self._clear_step_checks()
         
         # 清除 current_step（步骤已最终确定）
         self.current_step = None
@@ -1691,12 +1901,16 @@ class ProgramEditorDialog(QDialog):
     
     def _on_delete_step(self):
         """删除步骤"""
-        index = self.step_list.currentRow()
-        if 0 <= index < len(self.experiment.steps):
-            del self.experiment.steps[index]
+        rows = self._target_step_rows()
+        if rows:
+            for index in sorted(rows, reverse=True):
+                if 0 <= index < len(self.experiment.steps):
+                    del self.experiment.steps[index]
+            self._renumber_step_ids()
             self.current_step = None
             self.current_step_index = -1
             self._refresh_step_list()
+            self._clear_step_checks()
     
     def _on_move_up(self):
         """上移步骤"""
@@ -1704,6 +1918,7 @@ class ProgramEditorDialog(QDialog):
         if index > 0:
             self.experiment.steps[index], self.experiment.steps[index - 1] = \
                 self.experiment.steps[index - 1], self.experiment.steps[index]
+            self._renumber_step_ids()
             self._refresh_step_list()
             self.step_list.selectRow(index - 1)
     
@@ -1713,6 +1928,7 @@ class ProgramEditorDialog(QDialog):
         if 0 <= index < len(self.experiment.steps) - 1:
             self.experiment.steps[index], self.experiment.steps[index + 1] = \
                 self.experiment.steps[index + 1], self.experiment.steps[index]
+            self._renumber_step_ids()
             self._refresh_step_list()
             self.step_list.selectRow(index + 1)
     
@@ -1722,6 +1938,7 @@ class ProgramEditorDialog(QDialog):
         if index > 0:
             step = self.experiment.steps.pop(index)
             self.experiment.steps.insert(0, step)
+            self._renumber_step_ids()
             self._refresh_step_list()
             self.step_list.selectRow(0)
     
@@ -1859,6 +2076,6 @@ class ProgramEditorDialog(QDialog):
         self.experiment.tags = [t.strip() for t in tags_text.split(",") if t.strip()] if tags_text else []
         self.experiment.notes = self.exp_notes_edit.text().strip()
         
-        self.program_saved.emit(self.experiment)
+        self.program_saved.emit(copy.deepcopy(self.experiment))
         QMessageBox.information(self, "成功", "程序已保存")
         self.accept()

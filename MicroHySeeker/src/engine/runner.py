@@ -842,6 +842,36 @@ class ExperimentWorker(QObject):
             self._tank1_volume_ul = max(0, self._tank1_volume_ul - transferred)
         
         return result
+
+    def _execute_prep_intermediate_transfer(self, volume_ul: float) -> bool:
+        """Run the configured Transfer pump as an internal phase of a prep_sol step."""
+        if not self.config:
+            self._emit_log("  prep_sol strategy transfer failed: missing system config", "ERROR")
+            return False
+
+        transfer_ch = None
+        for ch in self.config.flush_channels:
+            if ch.work_type == "Transfer":
+                transfer_ch = ch
+                break
+
+        if not transfer_ch:
+            self._emit_log("  prep_sol strategy transfer failed: no Transfer pump configured", "ERROR")
+            return False
+
+        transfer_step = ProgStep(
+            step_id="prep_sol_intermediate_transfer",
+            step_type=ProgramStepType.TRANSFER,
+            pump_address=transfer_ch.pump_address,
+            pump_direction=transfer_ch.direction,
+            pump_rpm=transfer_ch.rpm,
+            volume_ul=volume_ul,
+        )
+        self._emit_log(
+            f"    prep strategy transfer: pump {transfer_ch.pump_address}, "
+            f"{volume_ul:,.2f}uL ({volume_ul / 1000.0:.2f}mL)"
+        )
+        return self._execute_transfer(transfer_step)
     
     def _interruptible_sleep(self, total_seconds: float, interval: float = 0.5) -> bool:
         """可中断的等待 — 每interval秒检查一次_stop_flag
@@ -1535,15 +1565,66 @@ class ExperimentWorker(QObject):
                 "is_solvent": params.solvent_flags.get(sol_name, False),
                 "use_position_mode": use_position_mode,
             })
+
+        prep_strategy = getattr(params, "prep_strategy", "standard") or "standard"
+        strategy_transfer_after_order = None
+        strategy_transfer_volume_ul = 0.0
+        strategy_transfer_done = False
+
+        if prep_strategy == "solvent_transfer_first":
+            solvent_tasks = [t for t in inject_tasks if t["is_solvent"]]
+            reagent_tasks = [t for t in inject_tasks if not t["is_solvent"]]
+            if solvent_tasks and reagent_tasks:
+                def _renumber_tasks(tasks, start_order):
+                    order_map = {}
+                    next_order = start_order
+                    for old_order in sorted({t["order_num"] for t in tasks}):
+                        order_map[old_order] = next_order
+                        next_order += 1
+                    for t in tasks:
+                        t["order_num"] = order_map[t["order_num"]]
+                    return next_order
+
+                next_order = _renumber_tasks(solvent_tasks, 1)
+                strategy_transfer_after_order = next_order - 1
+                _renumber_tasks(reagent_tasks, next_order + 1)
+                for t in solvent_tasks:
+                    t["strategy_phase"] = "pre_transfer"
+                for t in reagent_tasks:
+                    t["strategy_phase"] = "post_transfer"
+
+                solvent_volume_ul = sum(t["vol"] for t in solvent_tasks)
+                configured_transfer_ul = getattr(params, "intermediate_transfer_volume_ul", 0.0) or 0.0
+                strategy_transfer_volume_ul = (
+                    configured_transfer_ul
+                    if configured_transfer_ul > 0
+                    else solvent_volume_ul + 20000.0
+                )
+                self._emit_log(
+                    "    prep strategy: solvent -> transfer -> reagent; "
+                    f"solvent={solvent_volume_ul / 1000.0:.2f}mL, "
+                    f"transfer={strategy_transfer_volume_ul / 1000.0:.2f}mL"
+                )
+            else:
+                self._emit_log(
+                    "    prep strategy solvent_transfer_first ignored: needs at least one solvent and one reagent",
+                    "WARNING",
+                )
+
+        def _task_goes_to_tank2(task) -> bool:
+            return (
+                task["pump_addr"] in self.TANK2_PUMP_ADDRS
+                or task.get("strategy_phase") == "post_transfer"
+            )
         
         # ---- 液位动画准备：按烧杯汇总目标体积 ----
         tank1_total_ul = sum(
             t["vol"] for t in inject_tasks
-            if t["pump_addr"] not in self.TANK2_PUMP_ADDRS
+            if not _task_goes_to_tank2(t)
         )
         tank2_total_ul = sum(
             t["vol"] for t in inject_tasks
-            if t["pump_addr"] in self.TANK2_PUMP_ADDRS
+            if _task_goes_to_tank2(t)
         )
         # 跟踪每个泵已交付体积（实时更新）
         delivered_ul: Dict[int, float] = {t["pump_addr"]: 0.0 for t in inject_tasks}
@@ -1979,14 +2060,31 @@ class ExperimentWorker(QObject):
                                 progress = min(1.0, elapsed / est) if est > 0 else 1.0
                                 delivered_ul[addr] = task["vol"] * progress
                         
+                        def _task_currently_in_tank2(task) -> bool:
+                            return (
+                                _task_goes_to_tank2(task)
+                                or (
+                                    strategy_transfer_done
+                                    and task.get("strategy_phase") == "pre_transfer"
+                                )
+                            )
+
                         t1_del = sum(v for a, v in delivered_ul.items()
-                                     if a not in self.TANK2_PUMP_ADDRS)
+                                     if not _task_currently_in_tank2(next(t for t in inject_tasks if t["pump_addr"] == a)))
                         t2_del = sum(v for a, v in delivered_ul.items()
-                                     if a in self.TANK2_PUMP_ADDRS)
-                        if tank1_total_ul > 0:
-                            self._tank1_level = min(1.0, t1_del / tank1_total_ul)
-                        if tank2_total_ul > 0:
-                            self._tank2_level = min(1.0, t2_del / tank2_total_ul)
+                                     if _task_currently_in_tank2(next(t for t in inject_tasks if t["pump_addr"] == a)))
+                        current_tank1_total_ul = 0.0 if strategy_transfer_done else tank1_total_ul
+                        current_tank2_total_ul = (
+                            tank2_total_ul + tank1_total_ul
+                            if strategy_transfer_done
+                            else tank2_total_ul
+                        )
+                        if current_tank1_total_ul > 0:
+                            self._tank1_level = min(1.0, t1_del / current_tank1_total_ul)
+                        elif strategy_transfer_done:
+                            self._tank1_level = 0.0
+                        if current_tank2_total_ul > 0:
+                            self._tank2_level = min(1.0, t2_del / current_tank2_total_ul)
                         self._emit_tank_levels()
             
             # 批次等待结束 → 清除本批次所有运行指示（剩余的绿灯归灰）
@@ -2084,6 +2182,21 @@ class ExperimentWorker(QObject):
                                 )
                                 break
             
+            if (
+                strategy_transfer_after_order is not None
+                and order_num == strategy_transfer_after_order
+                and not strategy_transfer_done
+            ):
+                if stall_failures:
+                    self._emit_log(
+                        "    prep strategy transfer aborted: solvent batch did not finish cleanly",
+                        "ERROR",
+                    )
+                    return False
+                if not self._execute_prep_intermediate_transfer(strategy_transfer_volume_ul):
+                    return False
+                strategy_transfer_done = True
+
             # 批次间间隔
             time.sleep(0.5)
         
@@ -2091,26 +2204,34 @@ class ExperimentWorker(QObject):
         self.pump_batch_update.emit([], [])
         
         # 液位动画：确保达到目标液位 (1.0 = 虚线位置)
-        if tank1_total_ul > 0:
-            self._tank1_level = 1.0
-            self._tank1_volume_ul = tank1_total_ul
-        if tank2_total_ul > 0:
-            self._tank2_level = 1.0
-            self._tank2_volume_ul = tank2_total_ul
+        if strategy_transfer_done:
+            self._tank1_level = 0.0
+            self._tank1_volume_ul = 0.0
+            if tank2_total_ul > 0:
+                self._tank2_volume_ul += tank2_total_ul
+            if self._tank2_volume_ul > 0:
+                self._tank2_level = 1.0
+        else:
+            if tank1_total_ul > 0:
+                self._tank1_level = 1.0
+                self._tank1_volume_ul = tank1_total_ul
+            if tank2_total_ul > 0:
+                self._tank2_level = 1.0
+                self._tank2_volume_ul = tank2_total_ul
         self._emit_tank_levels()
         
         self._emit_log(f"  配液完成")
         
         # 保存配液结果
         if self.dm and step_index >= 0:
-            sol_names = [t["sol_name"] for t in inject_tasks]
-            sol_vols = ", ".join(f"{t['sol_name']}={t['vol']:.1f}μL" for t in inject_tasks)
+            executed_tasks = sorted(inject_tasks, key=lambda t: t["order_num"])
+            sol_vols = ", ".join(f"{t['sol_name']}={t['vol']:.1f}μL" for t in executed_tasks)
             self.dm.save_prep_sol_result(
                 step_index=step_index,
                 total_volume_ul=total_volume_ul,
                 volumes=volumes_to_inject,
                 concentrations=params.target_concentrations,
-                injection_order=list(params.injection_order),
+                injection_order=[t["sol_name"] for t in executed_tasks],
                 solvent_flags=params.solvent_flags,
             )
             self.dm.step_finished(
